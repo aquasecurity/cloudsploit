@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SQS Dead Letter Queue',
     category: 'SQS',
+    domain: 'Application Integration',
     description: 'Ensures that each Amazon SQS queue has Dead Letter Queue configured.',
     more_info: 'Amazon SQS queues should have dead letter queue configured to avoid data loss for unprocessed messages.',
     recommended_action: 'Update Amazon SQS queue and configure dead letter queue.',

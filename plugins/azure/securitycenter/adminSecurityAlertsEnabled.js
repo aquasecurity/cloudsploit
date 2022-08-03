@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Admin Security Alerts Enabled',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that security alerts are configured to be sent to admins',
     more_info: 'Enabling security alerts to be sent to admins ensures that detected vulnerabilities and security issues are sent to the subscription admins for quick remediation.',
     recommended_action: 'Ensure that security alerts are configured to be sent to subscription owners.',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Custom Role Logging',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures that logging and log alerts exist for custom role creation and changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in custom role should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
@@ -52,7 +53,6 @@ module.exports = {
 
             var metricExists = false;
             var metricName = '';
-            var missingMetricStr;
 
             var testMetrics = [
                 'resource.type="iam_role" AND protoPayload.methodName="google.iam.admin.v1.CreateRole"',
@@ -75,8 +75,6 @@ module.exports = {
 
                     if (missingMetrics.length > 2) {
                         return;
-                    } else if (missingMetrics.length > 0) {
-                        missingMetricStr = missingMetrics.join(', ');
                     } else if (missingMetrics.length === 0) {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
@@ -101,7 +99,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Log alert for custom role changes is enabled', region, alertPolicy.name);
                                 }
                             }
-                        })
+                        });
                     }
                 });
 

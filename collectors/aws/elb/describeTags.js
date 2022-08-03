@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var elb = new AWS.ELB(AWSConfig);
 
     async.eachLimit(collection.elb.describeLoadBalancers[AWSConfig.region].data, 15, function(lb, cb){
@@ -10,7 +11,7 @@ module.exports = function(AWSConfig, collection, callback) {
             'LoadBalancerNames': [lb.LoadBalancerName]
         };
 
-        elb.describeTags(params, function(err, data){
+        helpers.makeCustomCollectorCall(elb, 'describeTags', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.elb.describeTags[AWSConfig.region][lb.LoadBalancerName].err = err;
             }

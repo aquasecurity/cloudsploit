@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELB Logging Enabled',
     category: 'ELB',
+    domain: 'Content Delivery',
     description: 'Ensures load balancers have request logging enabled.',
     more_info: 'Logging requests to ELB endpoints is a helpful way ' + 
                 'of detecting and investigating potential attacks, ' + 
@@ -56,7 +57,8 @@ module.exports = {
                 var describeLoadBalancerAttributes = helpers.addSource(cache, source,
                     ['elb', 'describeLoadBalancerAttributes', region, lb.DNSName]);
 
-                if ( describeLoadBalancerAttributes.data && 
+                if (describeLoadBalancerAttributes &&
+                    describeLoadBalancerAttributes.data &&
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes && 
                     describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog) {
                     var accessLog = describeLoadBalancerAttributes.data.LoadBalancerAttributes.AccessLog;

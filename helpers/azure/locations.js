@@ -1,48 +1,56 @@
 // Source: https://azure.microsoft.com/en-us/global-infrastructure/services/
+// Source: az account list-locations -o table
 
 var locations = [
-    'eastasia',
-    'southeastasia',
-    'centralus',
-    'eastus',
-    'eastus2',
-    'westus',
-    'northcentralus',
-    'southcentralus',
-    'northeurope',
-    'westeurope',
-    'germanycentral',
-    'germanynortheast',
-    'germanywestcentral',
-    'germanynorth',
-    'switzerlandnorth',
-    'switzerlandwest',
-    'norwaywest',
-    'norwayeast',
-    'japanwest',
-    'japaneast',
-    'brazilsouth',
-    'australiaeast',
-    'australiasoutheast',
-    'southindia',
-    'centralindia',
-    'westindia',
-    'canadacentral',
-    'canadaeast',
-    'uksouth',
-    'ukwest',
-    'westcentralus',
-    'westus2',
-    'koreacentral',
-    'koreasouth',
-    'francecentral',
-    'francesouth',
-    'australiacentral',
-    'australiacentral2',
-    'southafricanorth',
-    'southafricawest',
-    'uaenorth',
-    'uaecentral'
+    'eastus',               // (US) East US
+    'eastus2',              // (US) East US 2
+    'southcentralus',       // (US) South Central US
+    'westus2',              // (US) West US 2
+    'westus3',              // (US) West US 3
+    'centralus',            // (US) Central US
+    'northcentralus',       // (US) North Central US
+    'westus',               // (US) West US
+    'eastus2euap',          // (US) East US 2 EUAP
+    'westcentralus',        // (US) West Central US
+    'centraluseuap',        // (US) Central US EUAP
+    'australiaeast',        // (Asia Pacific) Australia East
+    'southeastasia' ,       // (Asia Pacific) Southeast Asia
+    'centralindia',         // (Asia Pacific) Central India
+    'eastasia',             // (Asia Pacific) East Asia
+    'japaneast',            // (Asia Pacific) Japan East
+    'jioindiawest',         // (Asia Pacific) Jio India West
+    'koreacentral',         // (Asia Pacific) Korea Central
+    'australiacentral',     // (Asia Pacific) Australia Central
+    'australiacentral2',    // (Asia Pacific) Australia Central 2
+    'australiasoutheast',   // (Asia Pacific) Australia Southeast
+    'japanwest',            // (Asia Pacific) Japan West
+    'koreasouth',           // (Asia Pacific) Korea South
+    'jioindiacentral',      // (Asia Pacific) Jio India Central
+    'southindia',           // (Asia Pacific) South India
+    'westindia',            // (Asia Pacific) West India
+    'westeurope',           // (Europe) West Europe
+    'northeurope',          // (Europe) North Europe
+    'swedencentral',        // (Europe) Sweden Central
+    'uksouth',              // (Europe) UK South
+    'francecentral',        // (Europe) France Central
+    'germanywestcentral',   // (Europe) Germany West Central
+    'germanycentral',       // (Europe) Germany Central
+    'germanynortheast',     // (Europe) Germany Northeast
+    'germanynorth',         // (Europe) Germany North
+    'norwayeast',           // (Europe) Norway East
+    'switzerlandnorth',     // (Europe) Switzerland North
+    'francesouth',          // (Europe) France South
+    'norwaywest',           // (Europe) Norway West
+    'ukwest',               // (Europe) UK West
+    'switzerlandwest',      // (Europe) Switzerland West
+    'southafricawest',      // (Africa) South Africa West
+    'southafricanorth',     // (Africa) South Africa North
+    'uaenorth',             // (Middle East) UAE North
+    'uaecentral',           // (Middle East) UAE Central
+    'brazilsouth',          // (South America) Brazil South
+    'brazilsoutheast',      // (South America) Brazil Southeast
+    'canadacentral',        // (Canada) Canada Central
+    'canadaeast'            // (Canada) Canada East
 ];
 
 module.exports = {
@@ -90,5 +98,7 @@ module.exports = {
     resourceGroups: locations,
     policyDefinitions: locations,
     diagnosticSettingsOperations: ['global'],
-    databaseAccounts: locations
+    databaseAccounts: locations,
+    securityCenter: ['global'],
+    advisor: ['global']
 };

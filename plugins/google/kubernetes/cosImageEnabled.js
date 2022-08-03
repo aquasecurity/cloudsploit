@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'COS Image Enabled',
     category: 'Kubernetes',
+    domain: 'Containers',
     description: 'Ensures all Kubernetes cluster nodes have Container-Optimized OS enabled',
     more_info: 'Container-Optimized OS is optimized to enhance node security. It is backed by a team at Google that can quickly patch it.',
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Enable Container-Optimized OS on all Kubernetes cluster nodes',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -56,8 +57,8 @@ module.exports = {
                     cluster.nodePools.length) {
                     found = true;
                     cluster.nodePools.forEach(nodePool => {
-                        if (!nodePool.config || !nodePool.config.imageType || !nodePool.config.imageType === "COS") nonCosNodes.push(nodePool.name); 
-                    })
+                        if (!nodePool.config || !nodePool.config.imageType || !nodePool.config.imageType === 'COS') nonCosNodes.push(nodePool.name); 
+                    });
                 }
 
                 if (nonCosNodes.length) {
@@ -79,4 +80,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

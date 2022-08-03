@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Log Sinks Enabled',
     category: 'Logging',
+    domain: 'Management and Governance',
     description: 'Ensures a log sink is enabled to export all logs',
     more_info: 'Log sinks send log data to a storage service for archival and compliance. A log sink with no filter is necessary to ensure that all logs are being properly sent. If logs are sent to a storage bucket, the bucket must exist and bucket versioning should exist.',
     link: 'https://cloud.google.com/logging/docs/export/',
     recommended_action: 'Ensure a log sink is configured properly with an empty filter and a destination.',
-    apis: ['sinks:list', 'buckets:list', 'projects:get'],
+    apis: ['sinks:list', 'buckets:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -52,7 +53,7 @@ module.exports = {
                         bucketName = sink.destination.split('/')[1];
                     }
                     noSinks = false;
-                    sinkName = sink.name
+                    sinkName = sink.name;
                     sinkResource = helpers.createResourceName('sinks', sinkName, project);
                 }
             });

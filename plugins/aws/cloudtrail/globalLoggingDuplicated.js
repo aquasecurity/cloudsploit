@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudTrail Global Services Logging Duplicated',
     category: 'CloudTrail',
+    domain: 'Compliance',
     description: 'Ensures that AWS CloudTrail trails are not duplicating global services events in log files.',
     more_info: 'Only one trail should have Include Global Services feature enabled to avoid duplication of global services events in log files.',
     recommended_action: 'Update CloudTrail trails to log global services events enabled for only one trail',

@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Encrypted Snapshots',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Ensures EBS snapshots are encrypted at rest',
     more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html#encryption-support',
@@ -38,25 +39,14 @@ module.exports = {
                 return rcb();
             }
 
-            var unencryptedSnapshots = [];
-
             describeSnapshots.data.forEach(function(snapshot){
-                if (!snapshot.Encrypted){
-                    // arn:aws:ec2:region:account-id:snapshot/snapshot-id
-                    var arn = 'arn:aws:ec2:' + region + ':' + snapshot.OwnerId + ':snapshot/' + snapshot.SnapshotId;
-                    unencryptedSnapshots.push(arn);
+                var arn = 'arn:aws:ec2:' + region + ':' + snapshot.OwnerId + ':snapshot/' + snapshot.SnapshotId;
+                if (snapshot.Encrypted){
+                    helpers.addResult(results, 0, 'EBS snapshot is encrypted', region, arn);
+                } else {
+                    helpers.addResult(results, 2, 'EBS snapshot is unencrypted', region, arn);
                 }
             });
-
-            if (unencryptedSnapshots.length > 20) {
-                helpers.addResult(results, 2, 'More than 20 EBS snapshots are unencrypted', region);
-            } else if (unencryptedSnapshots.length) {
-                for (var u in unencryptedSnapshots) {
-                    helpers.addResult(results, 2, 'EBS snapshot is unencrypted', region, unencryptedSnapshots[u]);
-                }
-            } else {
-                helpers.addResult(results, 0, 'No unencrypted snapshots found', region);
-            }
 
             rcb();
         }, function(){

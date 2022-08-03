@@ -4,12 +4,13 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'SQL Cross DB Ownership Chaining',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures SQL database instances of SQL Server type have cross db ownership chaining flag disabled.',
     more_info: 'SQL databases of SQL Server provide cross DB ownership chaining flag. It is used to configure cross-database ownership chaining ' +
         'for all databases. It is enabled by default and should be disabled for security unless all required.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that cross DB ownership chaining flag is disabled for all SQLServer instances.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -79,4 +80,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

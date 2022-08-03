@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'VM Instances Least Privilege',
     category: 'Compute',
+    domain: 'Compute',
     description: 'Ensures that instances are not configured to use the default service account with full access to all cloud APIs',
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
     recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['instances:compute:list'],
     compliance: {
         pci: 'PCI has explicit requirements around default accounts and ' +
             'resources. PCI recommends removing all default accounts, ' +
@@ -63,7 +64,7 @@ module.exports = {
 
                     if (found) {
                         helpers.addResult(results, 2,
-                            `Instance Service account has full access` , region, resource);
+                            'Instance Service account has full access' , region, resource);
                     } else {
                         helpers.addResult(results, 0,
                             'Instance Service account follows least privilege' , region, resource);

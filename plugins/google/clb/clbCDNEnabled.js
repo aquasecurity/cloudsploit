@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'CLB CDN Enabled',
     category: 'CLB',
+    domain: 'Availability',
     description: 'Ensures that Cloud CDN is enabled on all load balancers',
     more_info: 'Cloud CDN increases speed and reliability as well as lowers server costs. Enabling CDN on load balancers creates a highly available system and is part of GCP best practices.',
     link: 'https://cloud.google.com/cdn/docs/quickstart',
     recommended_action: 'Enable Cloud CDN on all load balancers from the network services console.',
-    apis: ['backendServices:list', 'projects:get'],
+    apis: ['backendServices:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -69,4 +70,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

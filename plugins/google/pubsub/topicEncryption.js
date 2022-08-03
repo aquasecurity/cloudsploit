@@ -1,10 +1,10 @@
 var async = require('async');
-const { call } = require('../../../helpers/azure/auth');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
     title: 'Topic Encryption Enabled',
     category: 'Pub/Sub',
+    domain: 'Application Integration',
     description: 'Ensure that Google Pub/Sub topics are encrypted with desired encryption level.',
     more_info: 'Google encrypts all messages in topics by default. By using CSEK, only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/pubsub/docs/encryption',
@@ -72,9 +72,8 @@ module.exports = {
     
                     async.each(topics.data, (topic, tcp) => {
                         let currentEncryptionLevel;
-                        if (topic.kmsKeyName && topic.kmsKeyName.length) {
-                            let cryptoKey = keysObj[topic.kmsKeyName];
-                            currentEncryptionLevel = helpers.getProtectionLevel(cryptoKey, helpers.PROTECTION_LEVELS);
+                        if (topic.kmsKeyName && topic.kmsKeyName.length && keysObj[topic.kmsKeyName]) {
+                            currentEncryptionLevel = helpers.getProtectionLevel(keysObj[topic.kmsKeyName], helpers.PROTECTION_LEVELS);
                         } else {
                             currentEncryptionLevel = 1; //default
                         }
@@ -99,8 +98,8 @@ module.exports = {
                 });
             }
         ], function(){
-            callback(null, results, source)
+            callback(null, results, source);
         });
     }
-}
+};
                 

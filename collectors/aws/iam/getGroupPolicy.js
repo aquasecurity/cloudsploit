@@ -1,7 +1,8 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
     if (!collection.iam ||
@@ -25,11 +26,7 @@ module.exports = function(AWSConfig, collection, callback) {
         async.eachLimit(collection.iam.listGroupPolicies[AWSConfig.region][group.GroupName].data.PolicyNames, 5, function(policyName, pCb){
             collection.iam.getGroupPolicy[AWSConfig.region][group.GroupName][policyName] = {};
 
-            // Make the policy call
-            iam.getGroupPolicy({
-                PolicyName: policyName,
-                GroupName: group.GroupName
-            }, function(err, data){
+            helpers.makeCustomCollectorCall(iam, 'getGroupPolicy', {PolicyName: policyName, GroupName: group.GroupName}, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.iam.getGroupPolicy[AWSConfig.region][group.GroupName][policyName].err = err;
                 }

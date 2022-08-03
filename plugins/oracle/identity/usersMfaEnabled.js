@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/oracle');
 module.exports = {
     title: 'Users MFA Enabled',
     category: 'Identity',
+    domain: 'Identity and Access Management',
     description: 'Ensures a multi-factor authentication device is enabled for all users within the account.',
     more_info: 'User accounts should have an MFA device setup to enable two-factor authentication.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/usingmfa.htm',
@@ -16,10 +17,22 @@ module.exports = {
         pci: 'PCI requires MFA for all access to cardholder environments. ' +
             'Create an MFA key for user accounts.'
     },
+    setting: {
+        warn_federated_users: {
+            name: 'Warn Federated Users',
+            description: 'Give a WARN instead of FAIL result for federated users',
+            regex: '^(true|false)$',
+            default: 'false'
+        } 
+    },
 
     run: function (cache, settings, callback) {
         var results = [];
         var source = {};
+        var config = {
+            warn_federated_users: settings.warn_federated_users || this.setting.warn_federated_users.default
+        };
+        var warnFedUsers = (config.warn_federated_users == 'true');
 
         var region = helpers.objectFirstKey(cache['regionSubscription']['list']);
 
@@ -43,7 +56,9 @@ module.exports = {
                 if (user.isMfaActivated) {
                     helpers.addResult(results, 0, 'The user has MFA enabled', 'global', user.id);
                 } else {
-                    helpers.addResult(results, 2, 'The user has MFA disabled', 'global', user.id);
+                    if (user.identityProviderId && user.identityProviderId.length && warnFedUsers) {
+                        helpers.addResult(results, 1, 'The federated user has MFA disabled', 'global', user.id);
+                    } else helpers.addResult(results, 2, 'The user has MFA disabled', 'global', user.id);
                 }
             });
 

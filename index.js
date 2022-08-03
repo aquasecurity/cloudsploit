@@ -75,6 +75,10 @@ parser.add_argument('--cloud', {
     choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
     action: 'append'
 });
+parser.add_argument('--run-asl', {
+    help: 'When set, it will execute custom plugins.',
+    action: 'store_false'
+});
 
 let settings = parser.parse_args();
 let cloudConfig = {};
@@ -253,6 +257,14 @@ if (settings.remediate && settings.remediate.length) {
             KeyValue: config.credentials.azure_remediate.key_value,
             DirectoryID: config.credentials.azure_remediate.directory_id,
             SubscriptionID: config.credentials.azure_remediate.subscription_id
+        };
+    } else if (config.credentials.google_remediate && config.credentials.google_remediate.project) {
+        checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
+        cloudConfig = {
+            type: 'service_account',
+            project: config.credentials.google.project,
+            client_email: config.credentials.google.client_email,
+            private_key: config.credentials.google.private_key,
         };
     } else {
         console.error('ERROR: Config file does not contain any valid credential configs for remediation.');

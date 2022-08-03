@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Resources Usage Limits',
     category: 'Resources',
+    domain: 'Application Integration',
     description: 'Determines if resources are close to the Azure per-account limit',
     more_info: 'Azure limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     recommended_action: 'Check if resources are close to the account limit to avoid resource launch failures',

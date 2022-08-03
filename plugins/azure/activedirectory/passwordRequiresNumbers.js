@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Password Requires Numbers',
     category: 'Active Directory',
+    domain: 'Identity and Access Management',
     description: 'Ensures that all Azure passwords require numbers',
     more_info: 'Azure handles most password policy settings, including which character types are required. Azure requires 3 out of 4 of the following character types: lowercase, uppercase, special characters, and numbers.',
     link: 'https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',

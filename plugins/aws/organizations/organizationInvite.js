@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Organization Invite',
     category: 'Organizations',
+    domain: 'Management and Governance',
     description: 'Ensure all Organization invites are accepted',
     more_info: 'AWS Organizations invites should be accepted or rejected quickly so that member accounts can take advantage of all Organization features.',
     recommended_action: 'Enable all AWS Organizations features',
@@ -14,6 +15,8 @@ module.exports = {
         var source = {};
         var region = helpers.defaultRegion(settings);
         var listHandshakesForAccount = helpers.addSource(cache, source, ['organizations', 'listHandshakesForAccount', region]);
+
+        if (!listHandshakesForAccount) return callback(null, results, source);
 
         if (!listHandshakesForAccount.data || listHandshakesForAccount.err) {
             helpers.addResult(results, 3, 'Cannot list organization handshakes', 'global');

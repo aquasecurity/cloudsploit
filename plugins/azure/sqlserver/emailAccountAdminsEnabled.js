@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Email Account Admins Enabled',
     category: 'SQL Server',
+    domain: 'Databases',
     description: 'Ensures that email account admins is enabled in advanced data security for SQL servers.',
     more_info: 'Enabling email account admins in advanced data security on all SQL servers ensures that monitored data for unusual activity, vulnerabilities, and threats get sent to the account admins and subscription owners.',
     recommended_action: 'Ensure that also send email notification to admins and subscription owners is enabled in advanced threat protections for all SQL servers.',
@@ -44,17 +45,17 @@ module.exports = {
                     if (!serverSecurityAlertPolicies.data.length) {
                         helpers.addResult(results, 2, 'Database Threat Detection Policies are not enabled on the server', location, server.id);
                     } else {
-                        serverSecurityAlertPolicies.data.forEach(serverSecurityAlertPolicy => {
-                            if (serverSecurityAlertPolicy.state &&
-                                serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
-                                serverSecurityAlertPolicy.emailAccountAdmins) {
-                                helpers.addResult(results, 0,
-                                    'Email Account Admins is enabled on the SQL server', location, server.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'Email Account Admins is not enabled on the SQL server', location, server.id);
-                            }
-                        });
+                        let emailAccountsAdmins = serverSecurityAlertPolicies.data.find(serverSecurityAlertPolicy =>
+                            serverSecurityAlertPolicy.state &&
+                            serverSecurityAlertPolicy.state.toLowerCase() == 'enabled' &&
+                            serverSecurityAlertPolicy.emailAccountAdmins);
+                        if (emailAccountsAdmins) {
+                            helpers.addResult(results, 0,
+                                'Email Account Admins is enabled on the SQL server', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2,
+                                'Email Account Admins is not enabled on the SQL server', location, server.id);
+                        }
                     }
                 }
             });

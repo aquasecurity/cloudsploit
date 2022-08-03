@@ -85,18 +85,66 @@ function findOpenPorts(cache, groups, ports, service, region, results) {
     return;
 }
 
-function getEncryptionLevel(kmsKey) {
+function getEncryptionLevel(kmsKey, encryptionLevels) {
     if (kmsKey.Origin) {
         if (kmsKey.Origin === 'Aliyun_KMS') {
             if (kmsKey.ProtectionLevel) {
-                if (kmsKey.ProtectionLevel.toUpperCase() == 'SOFTWARE') return 3;
-                if (kmsKey.ProtectionLevel.toUpperCase() == 'HSM') return 5;
+                if (kmsKey.ProtectionLevel.toUpperCase() == 'SOFTWARE') return encryptionLevels.indexOf('alibabacmk');
+                if (kmsKey.ProtectionLevel.toUpperCase() == 'HSM') return encryptionLevels.indexOf('cloudhsm');
             }
         }
-        if (kmsKey.Origin === 'EXTERNAL') return 4;
+        if (kmsKey.Origin === 'EXTERNAL') return encryptionLevels.indexOf('externalcmk');
     }
 
-    return 0;
+    return encryptionLevels.indexOf('none');
+}
+
+function normalizePolicyDocument(doc) {
+    /*
+    Convert a policy document for RAM into a normalized object that can be used
+    by plugins to check policy attributes.
+    Returns an array of statements with normalized effect, action, and resource.
+    */
+
+    if (typeof doc === 'string') {
+        // Need to parse to JSON
+        try {
+            // Need to urldecode
+            if (doc.charAt(0) === '%') doc = decodeURIComponent(doc);
+            doc = JSON.parse(doc);
+        } catch (e) {
+            //Could not parse policy document into JSON
+            return false;
+        }
+    }
+
+    if (typeof doc !== 'object') {
+        //Could not parse policy document. Not valid JSON
+        return false;
+    }
+
+    if (!doc.Statement) return false;
+
+    var statementsToReturn = [];
+
+    // If Statement is an object, convert to array
+    if (!Array.isArray(doc.Statement)) doc.Statement = [doc.Statement];
+
+    for (var statement of doc.Statement) {
+        if (!statement.Effect || !statement.Effect.length ||
+            !statement.Action || !statement.Action.length) {
+            break;
+        }
+
+        if (typeof statement.Effect !== 'string') break;
+
+        if (!Array.isArray(statement.Action)) statement.Action = [statement.Action];
+        if (statement.Resource && !Array.isArray(statement.Resource)) statement.Resource = [statement.Resource];
+
+        statementsToReturn.push(statement);
+    }
+
+    return statementsToReturn;
 }
 
 module.exports = {
@@ -104,4 +152,5 @@ module.exports = {
     createArn: createArn,
     findOpenPorts: findOpenPorts,
     getEncryptionLevel: getEncryptionLevel,
+    normalizePolicyDocument: normalizePolicyDocument
 };

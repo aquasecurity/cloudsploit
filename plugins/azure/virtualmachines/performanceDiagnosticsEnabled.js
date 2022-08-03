@@ -5,6 +5,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'Virtual Machine Performance Diagnostics Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that performance diagnostics is enabled on virtual machines.',
     more_info: 'The performance diagnostics tool helps in troubleshooting performance issues that can affect a Windows or Linux virtual machine (VM).',
     recommended_action: 'Enable performance diagnostics on Azure virtual machines',

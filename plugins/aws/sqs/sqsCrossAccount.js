@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SQS Cross Account Access',
     category: 'SQS',
+    domain: 'Application Integration',
     description: 'Ensures SQS policies disallow cross-account access',
     more_info: 'SQS policies should be carefully restricted to prevent publishing or reading from the queue from unexpected sources. Queue policies can be used to limit these privileges.',
     recommended_action: 'Update the SQS policy to prevent access from external accounts.',
@@ -84,7 +85,7 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listQueues.data, function(queue, cb){
+            listQueues.data.forEach(queue => {
                 var getQueueAttributes = helpers.addSource(cache, source,
                     ['sqs', 'getQueueAttributes', region, queue]);
 
@@ -96,8 +97,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query SQS for queue: ' + queue,
                         region);
-
-                    return cb();
+                    return;
                 }
 
                 var queueArn = getQueueAttributes.data.Attributes.QueueArn;
@@ -106,7 +106,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'The SQS queue does not use a custom policy',
                         region, queueArn);
-                    return cb();
+                    return;
                 }
 
                 try {
@@ -116,7 +116,7 @@ module.exports = {
                         'The SQS queue policy could not be parsed to valid JSON.',
                         region, queueArn);
 
-                    return cb();
+                    return;
                 }
 
                 var globalActions = [];
@@ -125,18 +125,33 @@ module.exports = {
                 var statements = helpers.normalizePolicyDocument(policy);
 
                 for (var statement of statements) {
-                    if (!statement.Effect || statement.Effect !== 'Allow') continue;
-                    if (!statement.Principal) continue;
+                    if (!statement.Effect || statement.Effect !== 'Allow' || !statement.Principal) continue;
+
+                    var crossAccountAccess = false;
+                    var conditionalPrincipals = (statement.Condition) ?
+                        helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId) : [];
 
                     if (helpers.globalPrincipal(statement.Principal)) {
-                        if (statement.Condition && helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId)) continue;
-                        for (var a in statement.Action) {
-                            if (globalActions.indexOf(statement.Action[a]) === -1) {
-                                globalActions.push(statement.Action[a]);
+                        // if (statement.Condition && helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId)) continue;
+                        if (statement.Condition && conditionalPrincipals.length) {
+                            for (let principal of conditionalPrincipals) {
+                                if (helpers.crossAccountPrincipal(principal, accountId)) {
+                                    crossAccountAccess = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (var a in statement.Action) {
+                                if (globalActions.indexOf(statement.Action[a]) === -1) {
+                                    globalActions.push(statement.Action[a]);
+                                }
                             }
                         }
-                    } else {
-                        let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
+                    }
+
+                    if (helpers.crossAccountPrincipal(statement.Principal, accountId)) crossAccountAccess = true;
+
+                    if (crossAccountAccess) {
                         if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
                             (conditionalPrincipals && conditionalPrincipals.length)) {
                             let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
@@ -150,15 +165,11 @@ module.exports = {
                             if (!crossAccountPrincipals.length) continue;
 
                             let crossAccount = false;
-                            let orgAccount;
 
                             for (let principal of crossAccountPrincipals) {
                                 if (config.sqs_whitelisted_aws_account_principals.includes(principal)) continue;
-
-                                if (whitelistOrganization) {
-                                    orgAccount = organizationAccounts.find(account => principal.includes(account));
-                                    if (orgAccount) continue;
-                                }
+                                if (whitelistOrganization &&
+                                    organizationAccounts.find(account => principal.includes(account))) continue;
 
                                 crossAccount = true;
                                 break;
@@ -188,11 +199,9 @@ module.exports = {
                         'The SQS queue policy does not allow global or cross-account access.',
                         region, queueArn);
                 }
-
-                cb();
-            }, function(){
-                rcb();
             });
+
+            rcb();
         }, function(){
             callback(null, results, source);
         });

@@ -2,6 +2,19 @@ var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
 var async = require('async');
 
+const defualyPolicyAssignments = {
+    adaptiveApplicationControlsMonitoringEffect: 'AuditIfNotExists',
+    diskEncryptionMonitoringEffect: 'AuditIfNotExists',
+    endpointProtectionMonitoringEffect: 'AuditIfNotExists',
+    identityRemoveExternalAccountWithWritePermissionsMonitoringEffect: 'AuditIfNotExists',
+    disableIPForwardingMonitoringEffect: 'AuditIfNotExists',
+    jitNetworkAccessMonitoringEffect: 'AuditIfNotExists',
+    nextGenerationFirewallMonitoringEffect: 'AuditIfNotExists',
+    identityDesignateLessThanOwnersMonitoringEffect: 'AuditIfNotExists',
+    systemUpdatesMonitoringEffect: 'AuditIfNotExists',
+    systemConfigurationsMonitoringEffect: 'AuditIfNotExists'
+};
+
 function addResult(results, status, message, region, resource, custom) {
     // Override unknown results for known error messages
     if (status == 3 && message && typeof message == 'string') {
@@ -41,8 +54,7 @@ function addResult(results, status, message, region, resource, custom) {
     });
 }
 
-function findOpenPorts(ngs, protocols, service, location, results) {
-    let found = false;
+function findOpenPorts(ngs, protocols, service, location, results, checkAllPorts) {
     var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
 
     for (let sGroups of ngs) {
@@ -67,6 +79,7 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                     break;
                 }
             }
+
             if (sourceFound) {
                 for (let protocol in protocols) {
                     let ports = protocols[protocol];
@@ -76,8 +89,10 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                             securityRule.properties['direction'] &&
                             securityRule.properties['direction'] === 'Inbound' &&
                             securityRule.properties['protocol'] &&
-                            (securityRule.properties['protocol'] === protocol || securityRule.properties['protocol'] === '*')) {
+                            typeof securityRule.properties['protocol'] == 'string' &&
+                            (securityRule.properties['protocol'].toUpperCase() === protocol || securityRule.properties['protocol'].toUpperCase() === '*')) {
                             if (securityRule.properties['destinationPortRange']) {
+
                                 if (securityRule.properties['destinationPortRange'].toString().indexOf("-") > -1) {
                                     let portRange = securityRule.properties['destinationPortRange'].split("-");
                                     let startPort = portRange[0];
@@ -87,20 +102,22 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                             ` port ` + ports + ` open to ` + sourceFilter;
                                         strings.push(string);
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
-                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port ) {
+                                } else if (parseInt(securityRule.properties['destinationPortRange']) === port) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
+                                } else if (checkAllPorts &&
+                                    openPrefix.includes(securityRule.properties['destinationPortRange'])) {
+                                    var openAllstring = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
+                                        (ports === '*' ? ` and all ports` : ` port ` + ports) + ` open to ` + sourceFilter;
+                                    if (strings.indexOf(openAllstring) === -1) strings.push(openAllstring);
                                 }
                             } else if (securityRule.properties['destinationPortRanges']) {
                                 if (securityRule.properties['destinationPortRanges'].indexOf(port.toString()) > -1) {
                                     var string = `Security Rule "` + securityRule['name'] + `": ` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                         ` port ` + ports + ` open to ` + sourceFilter;
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 } else {
                                     for (let portRange of securityRule.properties['destinationPortRanges']){
                                         if (portRange.toString().indexOf("-") > -1) {
@@ -112,7 +129,6 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                                                     ` port ` + ports + ` open to ` + sourceFilter;
                                                 strings.push(string);
                                                 if (strings.indexOf(string) === -1) strings.push(string);
-                                                found = true;
                                                 break;
                                             }
                                         }
@@ -129,11 +145,18 @@ function findOpenPorts(ngs, protocols, service, location, results) {
                 'Security group:(' + sGroups.name +
                 ') has ' + service + ': ' + strings.join(' and '), location,
                 resource);
-        }
-    }
+        } else {
+            let strings = [];
 
-    if (!found) {
-        addResult(results, 0, 'No public open ports found', location);
+            for (const key in protocols) {
+                strings.push(`${key.toUpperCase()}:${protocols[key]}`);
+            }
+            if (strings.length){
+                addResult(results, 0,
+                    `Security group:( ${sGroups.name}) does not have ${strings.join(', ')} open *`,
+                    location, resource);
+            }
+        }
     }
 
     return;
@@ -176,10 +199,13 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
         return;
     }
 
-    if (policyAssignment.parameters &&
-        policyAssignment.parameters[param] &&
-        policyAssignment.parameters[param].value &&
-        (policyAssignment.parameters[param].value == 'AuditIfNotExists' || policyAssignment.parameters[param].value == 'Audit')) {
+    const policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) ||
+    defualyPolicyAssignments[param] || '';
+
+    if (!policyAssignmentStatus.length) {
+        addResult(results, 0,
+            text + ' is no supported', location, policyAssignment.id);
+    } else if (policyAssignmentStatus == 'AuditIfNotExists' || policyAssignmentStatus == 'Audit') {
         addResult(results, 0,
             text + ' is enabled', location, policyAssignment.id);
     } else {
@@ -188,7 +214,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     }
 }
 
-function checkLogAlerts(activityLogAlerts, conditionResource, text, results, location) {
+function checkLogAlerts(activityLogAlerts, conditionResource, text, results, location, parentConditionResource) {
     if (!activityLogAlerts) return;
 
     if (activityLogAlerts.err || !activityLogAlerts.data) {
@@ -218,11 +244,18 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
 
         if (!allConditions || !allConditions.allOf || !allConditions.allOf.length) continue;
 
-
         var conditionOperation = allConditions.allOf.filter((d) => {
-            return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1);
+            return (d.equals && d.equals.toLowerCase().indexOf(conditionResource) > -1 ||
+                (parentConditionResource && d.equals && d.equals.toLowerCase().indexOf(parentConditionResource) > -1));
         });
+
         if (conditionOperation && conditionOperation.length) {
+            if (conditionResource.includes('microsoft.security') && allConditions.allOf.every(condition => condition.field && condition.field == 'category' &&
+                condition.equals && condition.equals.toLowerCase() == 'security')) {
+                alertCreateUpdateEnabled = (!alertCreateUpdateEnabled && activityLogAlertResource.enabled ? true : alertCreateUpdateEnabled);
+                break;
+            }
+
             allConditions.allOf.forEach(condition => {
                 if (condition.field && (condition.field === 'resourceType') && (condition.equals && (condition.equals.toLowerCase() === conditionResource))) {
                     alertCreateDeleteEnabled = (!alertCreateDeleteEnabled && activityLogAlertResource.enabled ? true : alertCreateDeleteEnabled);
@@ -231,11 +264,17 @@ function checkLogAlerts(activityLogAlerts, conditionResource, text, results, loc
                 } else if (condition.equals && condition.equals.toLowerCase().indexOf(conditionResource + '/delete') > -1) {
                     alertDeleteEnabled = (!alertDeleteEnabled && activityLogAlertResource.enabled ? true : alertDeleteEnabled);
                 }
-            })
+            });
         }
     }
 
-    if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||
+    if (conditionResource == 'microsoft.security/policies' && alertCreateUpdateEnabled) {
+        addResult(results, 0,
+            `Log Alert for ${text} write/update is enabled`, location, subscriptionId);
+    } else if (conditionResource == 'microsoft.security/policies' && !alertCreateUpdateEnabled) {
+        addResult(results, 2,
+            `Log Alert for ${text} write/update is not enabled`, location, subscriptionId);
+    } else if ((alertCreateDeleteEnabled && alertDeleteEnabled && alertCreateUpdateEnabled) ||
         (alertCreateUpdateEnabled && alertDeleteEnabled) ||
         (alertCreateDeleteEnabled && !alertDeleteEnabled && !alertCreateUpdateEnabled)) {
         addResult(results, 0,

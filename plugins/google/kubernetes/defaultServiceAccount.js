@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Default Service Account',
     category: 'Kubernetes',
+    domain: 'Containers',
     description: 'Ensures all Kubernetes cluster nodes are not using the default service account.',
     more_info: 'Kubernetes cluster nodes should use customized service accounts that have minimal privileges to run. This reduces the attack surface in the case of a malicious attack on the cluster.',
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Ensure that no Kubernetes cluster nodes are using the default service account',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -58,7 +59,7 @@ module.exports = {
                         found = true;
                         if (nodePool.config &&
                             nodePool.config.serviceAccount &&
-                            nodePool.config.serviceAccount === "default") defaultSaNodes.push(nodePool.name);
+                            nodePool.config.serviceAccount === 'default') defaultSaNodes.push(nodePool.name);
                     });
                 }
 

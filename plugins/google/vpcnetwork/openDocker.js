@@ -4,18 +4,19 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open Docker',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determine if Docker port 2375 or 2376 is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Docker should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP ports 2375 and 2376 to known IP addresses.',
-    apis: ['firewalls:list', 'projects:get'],
+    apis: ['firewalls:list'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
 
-        async.each(regions.firewalls, function (region, rcb) {
+        async.each(regions.firewalls, function(region, rcb) {
             let firewalls = helpers.addSource(
                 cache, source, ['firewalls', 'list', region]);
 
@@ -37,12 +38,12 @@ module.exports = {
 
             let service = 'Docker';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
     }
-}
+};

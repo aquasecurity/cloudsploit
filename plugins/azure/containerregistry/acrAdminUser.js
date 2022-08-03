@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'ACR Admin User',
     category: 'Container Registry',
+    domain: 'Containers',
     description: 'Ensures that the admin user is not enabled on container registries',
     more_info: 'Azure Container Registries have an admin user that is designed for testing. This should be disabled by default to avoid sharing confidential admin credentials.',
     recommended_action: 'Ensure that the admin user is disabled for each container registry.',

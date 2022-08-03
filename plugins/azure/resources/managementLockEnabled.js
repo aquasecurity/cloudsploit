@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Management Lock Enabled',
     category: 'Resources',
+    domain: 'Application Integration',
     description: 'Ensures that resources tagged as locked are actually locked',
     more_info: 'Enabling Management Locks ensures that critical resources cannot be inadvertently modified or deleted.',
     recommended_action: '1. Go to Resources. 2. Select the resource. 3. Select the Locks blade under settings on the left side. 4. Add a lock 5. Enter the Tags Blade and  add cloudsploitLock as a tag with true as its value.',

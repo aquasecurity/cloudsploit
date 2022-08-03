@@ -28,6 +28,15 @@ const createCacheNoEncryption = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
     };
 };
@@ -64,6 +73,15 @@ const createCacheSSE = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
     };
 };
@@ -100,6 +118,15 @@ const createCacheAWSKMS = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
         kms: {
             describeKey: {
@@ -150,6 +177,15 @@ const createCacheAWSCMK = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
         kms: {
             describeKey: {
@@ -200,6 +236,15 @@ const createCacheExternalCMK = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
         kms: {
             describeKey: {
@@ -250,6 +295,15 @@ const createCacheHSM = () => {
                     },
                 },
             },
+            getBucketLocation: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
+                }
+            }
         },
         kms: {
             describeKey: {
@@ -264,6 +318,32 @@ const createCacheHSM = () => {
                 },
             },
         },
+    };
+};
+
+const createCacheStaticWebsite = () => {
+    return {
+        s3: {
+            listBuckets: {
+                'us-east-1': {
+                    data: [{
+                        Name: 'mybucket',
+                    }],
+                },
+            },
+            getBucketWebsite: {
+                'us-east-1': {
+                    mybucket: {
+                        data: {
+                            "IndexDocument": {
+                                "Suffix": "index.html"
+                            }                            
+                        },
+                    },
+                },
+            },
+        },
+        
     };
 };
 
@@ -295,6 +375,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'awskms' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -302,6 +383,16 @@ describe('s3Encryption', function () {
         it('should PASS BucketPolicy=SSE, Configured=SSE', function (done) {
             const cache = createCacheSSE();
             s3Encryption.run(cache, { s3_required_encryption_level: 'sse' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should PASS if s3_unencrypted_static_websites if enabled and bucket has static website hosting enabled', function (done) {
+            const cache = createCacheStaticWebsite();
+            s3Encryption.run(cache, { s3_allow_unencrypted_static_websites: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -313,6 +404,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'awskms' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -322,6 +414,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -331,6 +424,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'externalcmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -340,6 +434,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'cloudhsm' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -349,6 +444,7 @@ describe('s3Encryption', function () {
             s3Encryption.run(cache, { s3_required_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });

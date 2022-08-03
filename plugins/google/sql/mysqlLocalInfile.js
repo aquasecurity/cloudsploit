@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'MySQL Local Infile Disabled',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures SQL instances for MySQL type does not have local infile flag enabled.',
     more_info: 'SQL instances for MySQL type database provides local_infile flag, which can be used to load data from client or server systems. It controls the load data statements for database. Anyone using this server can access any file on the client system. For security reasons it should be disabled.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that local infile flag is disabled for all MySQL instances.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -79,4 +80,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

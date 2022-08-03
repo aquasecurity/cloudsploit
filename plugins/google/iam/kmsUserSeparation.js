@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'KMS User Separation',
     category: 'IAM',
+    domain: 'Identity and Access Management',
     description: 'Ensures that no users have the KMS admin role and any one of the CryptoKey roles.',
     more_info: 'Ensuring that no users have the KMS admin role and any one of the CryptoKey roles follows separation of duties, where no user should have access to resources out of the scope of duty.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have both the KMS admin role and any of CryptoKey roles attached.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -47,7 +48,7 @@ module.exports = {
             var notSeparated = [];
             iamPolicy.bindings.forEach(roleBinding => {
                 if (roleBinding.role === 'roles/cloudkms.admin') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members)
+                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
                 }
             });
 
@@ -55,17 +56,17 @@ module.exports = {
                 if (roleBinding.role === 'roles/cloudkms.cryptoKeyDecrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypterDecrypter' &&
                     roleBinding.members) {
                     notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1)
+                        return (serviceAccountUsers.indexOf(member) > -1);
                     }).concat(notSeparated);
                 }
             });
@@ -76,7 +77,7 @@ module.exports = {
                     let accountName = (account.includes(':')) ? account.split(':')[1] : account;
                     let resource = helpers.createResourceName('serviceAccounts', accountName, project);
                     helpers.addResult(results, 2,
-                        `Account has the KMS admin role and one or more CryptoKey roles`, region, resource);
+                        'Account has the KMS admin role and one or more CryptoKey roles', region, resource);
                 });
             } else {
                 helpers.addResult(results, 0, 'No accounts have a KMS admin role or a CryptoKey key role', region);

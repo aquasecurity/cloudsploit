@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'PostgreSQL Log Checkpoints Enabled',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensure that log_checkpoints flag is enabled for PostgreSQL instances.',
     more_info: 'When log_checkpoints flag is enabled, instance checkpoints and restart points are logged in the server log.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -75,4 +76,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

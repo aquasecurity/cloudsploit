@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Default VPC In Use',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines whether the default VPC is being used for launching VM instances',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
-    apis: ['networks:list', 'instances:compute:list', 'projects:get'],
+    apis: ['networks:list', 'instances:compute:list'],
     compliance: {
         pci: 'PCI has explicit requirements around default accounts and ' +
             'resources. PCI recommends removing all default accounts, ' +
@@ -51,10 +52,10 @@ module.exports = {
             var vpcUrl = '';
 
             networks.data.forEach(network => {
-               if (network.name == 'default') {
+                if (network.name == 'default') {
                     defVPC = true;
                     vpcUrl = network.selfLink;
-               }
+                }
             });
             if (!defVPC)  {
                 helpers.addResult(results, 0, 'No default VPC found', 'global');
@@ -65,7 +66,7 @@ module.exports = {
             async.each(regions.zones, function(location, icb){
                 location.forEach(loc => {
                     let instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', loc]);
+                        ['instances', 'compute','list', loc]);
 
                     if (instances && instances.data && instances.data.length) {
                         instances.data.forEach(instance => {
@@ -94,4 +95,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

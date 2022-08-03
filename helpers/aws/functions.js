@@ -63,8 +63,11 @@ function addResult(results, status, message, region, resource, custom){
     }
 }
 
-function findOpenPorts(groups, ports, service, region, results) {
-    var found = false;
+function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
+    if (config.ec2_skip_unused_groups) {
+        var usedGroups = getUsedSecurityGroups(cache, results, region);
+        if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
+    }
 
     for (var g in groups) {
         var string;
@@ -90,7 +93,6 @@ function findOpenPorts(groups, ports, service, region, results) {
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${port}`;
                                     openV4Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -99,7 +101,6 @@ function findOpenPorts(groups, ports, service, region, results) {
                             if (permission.FromPort <= port && permission.ToPort >= port) {
                                 string = `${permission.IpProtocol.toUpperCase()}:${port}`;
                                 if (openV4Ports.indexOf(string) === -1) openV4Ports.push(string);
-                                found = true;
                             }
                         }
                     }
@@ -121,7 +122,6 @@ function findOpenPorts(groups, ports, service, region, results) {
                                 if (permission.FromPort <= i && permission.ToPort >= i) {
                                     string = `some of ${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                     openV6Ports.push(string);
-                                    found = true;
                                     break;
                                 }
                             }
@@ -130,7 +130,6 @@ function findOpenPorts(groups, ports, service, region, results) {
                             if (permission.FromPort <= portV6 && permission.ToPort >= portV6) {
                                 var stringV6 = `${permission.IpProtocol.toUpperCase()}:${portV6}`;
                                 if (openV6Ports.indexOf(stringV6) === -1) openV6Ports.push(stringV6);
-                                found = true;
                             }
                         }
                     }
@@ -152,15 +151,28 @@ function findOpenPorts(groups, ports, service, region, results) {
                 }
             }
 
-            addResult(results, 2, resultsString,
-                region, resource);
+            if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                    region, resource);
+            } else {
+                addResult(results, 2, resultsString,
+                    region, resource);
+            }
+        } else {
+            let strings = [];
+
+            for (const key in ports) {
+                strings.push(`${key.toUpperCase()}:${ports[key]}`);
+            }
+
+            if (strings.length){
+                addResult(results, 0,
+                    `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have ${strings.join(', ')} open to 0.0.0.0/0 or ::0`,
+                    region, resource);
+            }
         }
     }
-
-    if (!found) {
-        addResult(results, 0, 'No public open ports found', region);
-    }
-
+ 
     return;
 }
 
@@ -245,8 +257,8 @@ function userGlobalAccess(statement, restrictedPermissions) {
 
 function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     if (typeof principal === 'string' &&
-        /^[0-9]{12}$/.test(principal) &&
-        principal !== accountId) {
+        (/^[0-9]{12}$/.test(principal) || /^arn:aws:.*/.test(principal)) &&
+        !principal.includes(accountId)) {
         if (fetchPrincipals) return [principal];
         return true;
     }
@@ -259,7 +271,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var principals = [];
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:(iam|sts)::[0-9]{12}.*/.test(awsPrincipals[a]) &&
+        if (/^arn:aws:.*/.test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
@@ -355,6 +367,8 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
+        var foundValid = false;
+
         for (var operator of Object.keys(statement.Condition)) {
             var defaultOperator = operator;
             if (operator.includes(':')) defaultOperator = operator.split(':')[1];
@@ -362,23 +376,27 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
             var subCondition = statement.Condition[operator];
             for (var key of Object.keys(subCondition)) {
                 let keyLower = key.toLowerCase();
-                if (!allowedConditionKeys.some(conditionKey => keyLower.includes(conditionKey.toLowerCase()))) return false;
+                if (!allowedConditionKeys.find(conditionKey => conditionKey.toLowerCase() == keyLower)) continue;
+
                 var value = subCondition[key];
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
-                iamConditionOperators.arn[effect].includes(defaultOperator)) {
+                    iamConditionOperators.arn[effect].includes(defaultOperator)) {
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
+                        foundValid = true;
                         values.push(value);
-                        return values;
-                    } 
-                    if (!value.length || value === '*') return false;
-                    else if (/^[0-9]{12}$/.test(value) || /^arn:aws:(iam|sts)::.+/.test(value)) values.push(value);
+                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                        foundValid = true;
+                        values.push(value);
+                    }
                 } else if (defaultOperator === 'Bool') {
-                    if ((effect === 'Allow' && !value) || effect === 'Deny' && value) return false;
+                    if ((effect === 'Allow' && value) || effect === 'Deny' && !value) foundValid = true;
                 } else if (iamConditionOperators.ipaddress[effect].includes(defaultOperator)) {
-                    if (value === '0.0.0.0/0' || value === '::/0') return false;
-                } else return false;
+                    if (value !== '0.0.0.0/0' && value !== '::/0') foundValid = true;
+                }
             }
         }
+
+        if (!foundValid) return false;
         if (fetchConditionPrincipals) return values;
     }
 
@@ -453,9 +471,13 @@ function getS3BucketLocation(cache, region, bucketName) {
         ['s3', 'getBucketLocation', region, bucketName]);
 
     if (getBucketLocation && getBucketLocation.data) {
-        if (getBucketLocation.data.LocationConstraint) return getBucketLocation.data.LocationConstraint;
+        if (getBucketLocation.data.LocationConstraint &&
+            regions.all.includes(getBucketLocation.data.LocationConstraint)) return getBucketLocation.data.LocationConstraint;
+        else if (getBucketLocation.data.LocationConstraint &&
+        !regions.all.includes(getBucketLocation.data.LocationConstraint)) return 'global';
         else return 'us-east-1';
     }
+
     return 'global';
 }
 
@@ -680,21 +702,26 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
             function(rCb) {
                 if (!settings.input || (openIpRange && (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) && (openIpv6Range && (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length))) return rCb();
 
-                var newIpRange = settings.input[ipv4InputKey] ? {CidrIp: settings.input[ipv4InputKey]} : null;
-                var newIpv6Range = settings.input[ipv6InputKey] ? {CidrIpv6: settings.input[ipv6InputKey]} : null;
-                if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
-                if (ipv6Description && newIpv6Range) newIpRange.Description = ipv6Description;
-
                 if (openIpRange && !localIpExists && settings.input[ipv4InputKey]) {
-                    params.IpPermissions[0].IpRanges.push(newIpRange);
-                    finalIpRanges.push(newIpRange);
+                    var newIpCidrRange = settings.input[ipv4InputKey].split(',');
+                    for (var newIpCidr of newIpCidrRange) {
+                        var newIpRange = {CidrIp: newIpCidr};
+                        if (ipDescription && newIpRange) newIpRange.Description = ipDescription;
+                        params.IpPermissions[0].IpRanges.push(newIpRange);
+                        finalIpRanges.push(newIpRange);
+                    }
                 } else if (!openIpRange || (openIpRange && localIpExists) || (!settings.input[ipv4InputKey] || !settings.input[ipv4InputKey].length)) {
                     params.IpPermissions[0].IpRanges = null;
                 }
 
                 if (openIpv6Range && !localIpV6Exists && settings.input[ipv6InputKey]) {
-                    params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
-                    finalIpv6Ranges.push(newIpv6Range);
+                    var newIpv6CidrRange = settings.input[ipv6InputKey].split(',');
+                    for (var newIpv6Cidr of newIpv6CidrRange) {
+                        var newIpv6Range = {CidrIpv6: newIpv6Cidr};
+                        if (ipv6Description && newIpv6Range) newIpv6Range.Description = ipv6Description;
+                        params.IpPermissions[0].Ipv6Ranges.push(newIpv6Range);
+                        finalIpv6Ranges.push(newIpv6Range);
+                    }
                 } else if (!openIpv6Range || (openIpv6Range && localIpV6Exists) || (!settings.input[ipv6InputKey] || !settings.input[ipv6InputKey].length)) {
                     params.IpPermissions[0].Ipv6Ranges = null;
                 }
@@ -830,6 +857,416 @@ function getOrganizationAccounts(listAccounts, accountId) {
     return orgAccountIds;
 }
 
+function getUsedSecurityGroups(cache, results, region) {
+    let result = [];
+    const describeNetworkInterfaces = helpers.addSource(cache, {},
+        ['ec2', 'describeNetworkInterfaces', region]);
+    
+    if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
+        return  result['Error'];
+    }
+
+    const listFunctions = helpers.addSource(cache, {},
+        ['lambda', 'listFunctions', region]);
+    
+    if (!listFunctions || listFunctions.err || !listFunctions.data) {
+        helpers.addResult(results, 3,
+            'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
+        return  result['Error'];
+    }
+
+    describeNetworkInterfaces.data.forEach(interface => {
+        if (interface.Groups) {
+            interface.Groups.forEach(group => {
+                if (!result.includes(group.GroupId)) result.push(group.GroupId);
+            });
+        }
+    });
+
+    listFunctions.data.forEach(func => {
+        if (func.VpcConfig && func.VpcConfig.SecurityGroupIds) {
+            func.VpcConfig.SecurityGroupIds.forEach(group => {
+                if (!result.includes(group)) result.push(group);
+            });
+        }
+    });
+
+    return result;
+}
+
+function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
+    let response = [];
+    let privateRouteTables = [];
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Routes &&
+            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnetRTMap[subnet.SubnetId] && privateRouteTables.includes(subnetRTMap[subnet.SubnetId])) response.push(subnet.SubnetId);
+    });
+
+    return response;
+}
+
+function getSubnetRTMap(subnets, routeTables) {
+    let subnetRTMap = {};
+    let vpcRTMap = {};
+
+    routeTables.forEach(routeTable => {
+        if (routeTable.RouteTableId && routeTable.Associations && routeTable.Associations.length) {
+            routeTable.Associations.forEach(association => {
+                if (association.SubnetId && !subnetRTMap[association.SubnetId]) subnetRTMap[association.SubnetId] =  routeTable.RouteTableId;
+            });
+        }
+        if (routeTable.VpcId && routeTable.RouteTableId && routeTable.Associations &&
+            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId; 
+    });
+
+    subnets.forEach(subnet => {
+        if (subnet.SubnetId && subnet.VpcId &&
+            !subnetRTMap[subnet.SubnetId] && vpcRTMap[subnet.VpcId]) subnetRTMap[subnet.SubnetId] = vpcRTMap[subnet.VpcId];
+    });
+
+    return subnetRTMap;
+}
+
+var isRateError = function(err) {
+    let isError = false;
+    var rateError = {message: 'rate', statusCode: 429};
+    if (err && err.statusCode && rateError.statusCode == err.statusCode){
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1){
+        isError = true;
+    }
+
+    return isError;
+};
+
+function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
+    async.retry({
+        times: apiRetryAttempts,
+        interval: function(retryCount){
+            let retryExponential = 3;
+            let retryLeveler = 3;
+            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+            retries.push({seconds: Math.round(retry_seconds/1000)});
+            return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
+        }
+    }, function(cb) {
+        executor[callKey](params, function(err, data) {
+            return cb(err, data);
+        });
+    }, function(err, result) {
+        callback(err, result);
+    });
+}
+
+var debugApiCalls = function(call, service, debugMode, finished) {
+    if (!debugMode) return;
+    finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
+};
+
+var logError = function(service, call, region, err, errorsLocal, apiCallErrorsLocal, apiCallTypeErrorsLocal, totalApiCallErrorsLocal, errorSummaryLocal, errorTypeSummaryLocal, debugMode) {
+    totalApiCallErrorsLocal++;
+
+    if (!errorSummaryLocal[service]) errorSummaryLocal[service] = {};
+
+    if (!errorSummaryLocal[service][call]) errorSummaryLocal[service][call] = {};
+
+    if (err.code && !errorSummaryLocal[service][call][err.code]) {
+        apiCallErrorsLocal++;
+        errorSummaryLocal[service][call][err.code] = {};
+        errorSummaryLocal[service][call][err.code].total = apiCallErrorsLocal;
+        errorSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (err.code && !errorTypeSummaryLocal[err.code]) errorTypeSummaryLocal[err.code] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service]) errorTypeSummaryLocal[err.code][service] = {};
+    if (err.code && !errorTypeSummaryLocal[err.code][service][call]) {
+        apiCallTypeErrorsLocal++;
+        errorTypeSummaryLocal[err.code][service][call] = {};
+        errorTypeSummaryLocal[err.code][service][call].total = apiCallTypeErrorsLocal;
+        errorTypeSummaryLocal.total = totalApiCallErrorsLocal;
+    }
+
+    if (debugMode){
+        if (!errorsLocal[service]) errorsLocal[service] = {};
+        if (!errorsLocal[service][call]) errorsLocal[service][call] = {};
+        if (err.code && !errorsLocal[service][call][err.code]) {
+            errorsLocal[service][call][err.code] = {};
+            errorsLocal[service][call][err.code].total = apiCallErrorsLocal;
+            if (err.requestId) {
+                errorsLocal[service][call][err.code][err.requestId] = {};
+                if (err.statusCode) errorsLocal[service][call][err.code][err.requestId].statusCode = err.statusCode;
+                if (err.message) errorsLocal[service][call][err.code][err.requestId].message = err.message;
+                if (err.time) errorsLocal[service][call][err.code][err.requestId].time = err.time;
+                if (region) errorsLocal[service][call][err.code][err.requestId].region = region;
+            }
+        }
+    }
+};
+
+var collectRateError = function(err, rateError) {
+    let isError = false;
+
+    if (err && err.statusCode && rateError && rateError.statusCode == err.statusCode) {
+        isError = true;
+    } else if (err && rateError && rateError.message && err.message &&
+        err.message.toLowerCase().indexOf(rateError.message.toLowerCase()) > -1) {
+        isError = true;
+    }
+
+    return isError;
+};
+
+var processIntegration = function(serviceName, settings, collection, calls, postcalls, debugMode, iCb) {
+    let localEvent = {};
+    let localSettings = {};
+    localSettings = settings;
+
+    localEvent.collection = {};
+    localEvent.previousCollection = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = {};
+
+    localEvent.collection[serviceName.toLowerCase()] = collection[serviceName.toLowerCase()] ? collection[serviceName.toLowerCase()] : {};
+    localEvent.previousCollection[serviceName.toLowerCase()] = settings.previousCollection && settings.previousCollection[serviceName.toLowerCase()] ? settings.previousCollection[serviceName.toLowerCase()] : {};
+
+    if (!localSettings.identifier) localSettings.identifier = {};
+    localSettings.identifier.service = serviceName.toLowerCase();
+
+    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+        localEvent.collection = collectionReturned;
+
+        processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+            localEvent.previousCollection = previousCollectionReturned;
+            localSettings.integration(localEvent, function() {
+                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                return iCb();
+            });
+        });
+    });
+};
+
+var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
+    if (localCollection == undefined ||
+        (localCollection &&
+            (JSON.stringify(localCollection)==='{}' ||
+                localCollection[serviceName.toLowerCase()] == undefined ||
+                JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
+        return callback(null);
+    }
+
+    let callsMap = Object.keys(calls[serviceName]);
+    let foundData=[];
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        reliesOnFound(calls, localCollection, serviceName)) {
+        foundData = reliesOnData(calls, localCollection, serviceName);
+    }
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration') &&
+        integrationReliesOnFound(calls, localCollection, serviceName)) {
+        foundData = integrationReliesOnData(calls, localCollection, serviceName);
+
+        if (foundData &&
+            Object.keys(foundData).length){
+            for (let d of Object.keys(foundData)){
+                localEventCollection[d]=foundData[d];
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        foundData=[];
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            reliesOnFound(postcall, localCollection, serviceName)){
+            foundData = reliesOnData(postcall, localCollection, serviceName);
+        }
+
+        if (postCallsMap.find(mycall => mycall == 'sendIntegration') &&
+            integrationReliesOnFound(postcall, localCollection, serviceName)){
+            foundData = integrationReliesOnData(postcall, localCollection, serviceName);
+
+            if (foundData &&
+                Object.keys(foundData).length){
+                for (let d of Object.keys(foundData)){
+                    localEventCollection[d]=foundData[d];
+                }
+            }
+        }
+    }
+
+    localSettings.identifier.service = serviceName.toLowerCase();
+    return callback(localEventCollection);
+};
+
+var reliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+            }
+
+            return allRelies;
+        }
+    }
+};
+
+var integrationReliesOnFound = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+            Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+var reliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.reliesOnCalls &&
+            calls[serviceName].sendIntegration.reliesOnCalls.length) {
+
+            let allRelies = true;
+
+            for (let rc of calls[serviceName].sendIntegration.reliesOnCalls) {
+                let svc = rc.split(':')[0];
+                let svcCall = rc.split(':')[1];
+                if (!(localCollection[svc.toLowerCase()] &&
+                    localCollection[svc.toLowerCase()][svcCall] &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]) &&
+                    Object.keys(localCollection[svc.toLowerCase()][svcCall]).length>0)){
+                    allRelies = false;
+                }
+
+                return allRelies ? localCollection[svc.toLowerCase()] : [];
+            }
+        }
+    }
+};
+
+var integrationReliesOnData = function(calls, localCollection, serviceName){
+    let callsMap = Object.keys(calls[serviceName]);
+
+    if (callsMap.find(mycall => mycall == 'sendIntegration')) {
+        if (localCollection &&
+            calls[serviceName] &&
+            calls[serviceName].sendIntegration &&
+            calls[serviceName].sendIntegration.enabled &&
+            calls[serviceName].sendIntegration.integrationReliesOn &&
+            calls[serviceName].sendIntegration.integrationReliesOn.serviceName &&
+                Array.isArray(calls[serviceName].sendIntegration.integrationReliesOn.serviceName) &&
+                calls[serviceName].sendIntegration.integrationReliesOn.serviceName.length) {
+
+            let serviceReliedOn = {};
+            for (let serv of calls[serviceName].sendIntegration.integrationReliesOn.serviceName) {
+                if (localCollection[serv.toLowerCase()]) {
+                    serviceReliedOn[serv.toLowerCase()] = localCollection[serv.toLowerCase()];
+                }
+            }
+
+            return serviceReliedOn;
+        } else {
+            return {};
+        }
+    }
+};
+
+var callsCollected = function(serviceName, localCollection, calls, postcalls) {
+    var callsFoundMap = {};
+    let serviceCallMap = Object.keys(localCollection[serviceName.toLowerCase()]);
+
+    for (let call of serviceCallMap){
+        if (!(localCollection[serviceName.toLowerCase()] &&
+            localCollection[serviceName.toLowerCase()][call] &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]) &&
+            Object.keys(localCollection[serviceName.toLowerCase()][call]).length>0)){
+            return false;
+        }
+    }
+
+    if (calls[serviceName]) {
+        let callsMap = Object.keys(calls[serviceName]);
+        for (let checkCall of serviceCallMap) {
+            if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (reliesOnFound(calls, localCollection, serviceName)==false) return false;
+
+                if (callsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall)){
+                    callsFoundMap[checkCall]=true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    for (let postcall of postcalls) {
+        if (!postcall[serviceName]) continue;
+        let postCallsMap = Object.keys(postcall[serviceName]);
+
+        for (let checkCall of serviceCallMap) {
+            if (callsFoundMap[checkCall]) continue;
+            if (reliesOnFound(postcall, localCollection, serviceName)==false) return false;
+
+            if (postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall)){
+                if (!(postCallsMap.find(mycall => mycall != 'sendIntegration' && mycall == checkCall) == serviceCallMap.find(mycall => mycall == checkCall))){
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+};
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -855,5 +1292,14 @@ module.exports = {
     getDenyPermissionsMap: getDenyPermissionsMap,
     isEffectivePolicyStatement: isEffectivePolicyStatement,
     getS3BucketLocation: getS3BucketLocation,
-    getOrganizationAccounts: getOrganizationAccounts
+    getOrganizationAccounts: getOrganizationAccounts,
+    getUsedSecurityGroups: getUsedSecurityGroups,
+    getPrivateSubnets: getPrivateSubnets,
+    getSubnetRTMap: getSubnetRTMap,
+    makeCustomCollectorCall: makeCustomCollectorCall,
+    debugApiCalls: debugApiCalls,
+    logError: logError,
+    collectRateError: collectRateError,
+    processIntegration: processIntegration,
+    callsCollected: callsCollected
 };

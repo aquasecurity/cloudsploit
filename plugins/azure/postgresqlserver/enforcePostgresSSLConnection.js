@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Enforce PostgreSQL SSL Connection',
     category: 'PostgreSQL Server',
+    domain: 'Databases',
     description: 'Ensures SSL connections are enforced on PostgreSQL Servers',
     more_info: 'SSL prevents infiltration attacks by encrypting the data stream between the server and application.',
     recommended_action: 'Ensure the connection security settings of each PostgreSQL server are configured to enforce SSL connections.',

@@ -10,3 +10,4 @@ vscode/*
 coverage/
 .nyc_output
 config.js
+package-lock.json

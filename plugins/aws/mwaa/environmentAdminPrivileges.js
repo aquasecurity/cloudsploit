@@ -6,6 +6,7 @@ var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 module.exports = {
     title: 'Environment Admin Privileges',
     category: 'MWAA',
+    domain: 'Compute',
     description: 'Ensures no Amazon MWAA environment available in your AWS account has admin privileges.',
     more_info: 'Amazon MWAA environments should have most-restrictive IAM permissions for security best practices.',
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/manage-access.html',

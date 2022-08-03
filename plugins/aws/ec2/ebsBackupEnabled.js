@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'EBS Backup Enabled',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Checks whether EBS Backup is enabled',
     more_info: 'EBS volumes should have backups in the form of snapshots.',
     recommended_action: 'Ensure that each EBS volumes contain at least .',

@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Network Policy Enabled',
     category: 'Kubernetes',
+    domain: 'Containers',
     description: 'Ensures all Kubernetes clusters have network policy enabled',
     more_info: 'Kubernetes network policy creates isolation between cluster pods, this creates a more secure environment with only specified connections allowed.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy',
     recommended_action: 'Enable network policy on all Kubernetes clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -63,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

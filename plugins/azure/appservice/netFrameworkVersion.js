@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: '.NET Framework Version',
     category: 'App Service',
+    domain: 'Application Integration',
     description: 'Ensures the latest version of the .NET Framework is installed for all App Services.',
     more_info: 'Installing the latest version of the .NET framework will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of the .NET framework for all .NET-based App Services',

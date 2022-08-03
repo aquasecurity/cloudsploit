@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Service Account Managed Keys',
     category: 'IAM',
+    domain: 'Identity and Access Management',
     description: 'Ensures that service account keys are being managed by Google.',
     more_info: 'Service account keys should be managed by Google to ensure that they are as secure as possible, including key rotations and restrictions to the accessibility of the keys.',
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
@@ -24,7 +25,7 @@ module.exports = {
             if (keys.err || !keys.data) {
                 helpers.addResult(results, 3, 'Unable to query service account keys, check permissions.', region, null, null, keys.err);
                 return rcb();
-            };
+            }
 
             if (!keys.data.length) {
                 helpers.addResult(results, 0, 'No service account keys found', region);
@@ -51,4 +52,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

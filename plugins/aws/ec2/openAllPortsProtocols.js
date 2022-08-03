@@ -4,11 +4,20 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Open All Ports Protocols',
     category: 'EC2',
+    domain: 'Compute',
     description: 'Determine if security group has all ports or protocols open to the public',
     more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
-    apis: ['EC2:describeSecurityGroups'],
+    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
+    settings: {
+        ec2_skip_unused_groups: {
+            name: 'EC2 Skip Unused Groups',
+            description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
+            regex: '^(true|false)$',
+            default: 'false',
+        }
+    },
     compliance: {
         hipaa: 'HIPAA requires strict access controls to networks and services ' +
                 'processing sensitive data. Security groups are the built-in ' +
@@ -20,6 +29,12 @@ module.exports = {
     },
 
     run: function(cache, settings, callback) {
+        var config = {
+            ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
+        };
+
+        config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
+        
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -41,8 +56,10 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
             var groups = describeSecurityGroups.data;
+            if (config.ec2_skip_unused_groups) {
+                var usedGroups = helpers.getUsedSecurityGroups(cache, results, region, rcb);
+            }
 
             for (var g in groups) {
                 var strings = [];
@@ -60,13 +77,11 @@ module.exports = {
                             if (!permission.FromPort && (!permission.ToPort || permission.ToPort === 65535)) {
                                 var string = 'all ports open to 0.0.0.0/0';
                                 if (strings.indexOf(string) === -1) strings.push(string);
-                                found = true;
                             }
 
                             if (permission.IpProtocol === '-1') {
                                 var stringO = 'all protocols open to 0.0.0.0/0';
                                 if (strings.indexOf(stringO) === -1) strings.push(stringO);
-                                found = true;
                             }
                         }
                     }
@@ -78,29 +93,32 @@ module.exports = {
                             if (!permission.FromPort && (!permission.ToPort || permission.ToPort === 65535)) {
                                 var stringV6 = 'all ports open to ::/0';
                                 if (strings.indexOf(stringV6) === -1) strings.push(stringV6);
-                                found = true;
                             }
 
                             if (permission.IpProtocol === '-1') {
                                 var stringP = 'all protocols open to ::/0';
                                 if (strings.indexOf(stringP) === -1) strings.push(stringP);
-                                found = true;
                             }
                         }
                     }
                 }
 
                 if (strings.length) {
-                    helpers.addResult(results, 2,
-                        'Security group: ' + groups[g].GroupId +
-                        ' (' + groups[g].GroupName +
-                        ') has ' + strings.join(' and '), region,
-                        resource);
+                    if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                        helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Security group: ' + groups[g].GroupId +
+                            ' (' + groups[g].GroupName +
+                            ') has ' + strings.join(' and '), region,
+                            resource);
+                    }
+                } else {
+                    helpers.addResult(results, 0,
+                        `Security group: ${groups[g].GroupId} (${groups[g].GroupName}) does not have all ports or protocols open to the public`,
+                        region, resource);
                 }
-            }
-
-            if (!found) {
-                helpers.addResult(results, 0, 'No public open ports found', region);
             }
 
             rcb();

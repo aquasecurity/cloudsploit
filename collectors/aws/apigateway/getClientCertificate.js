@@ -1,10 +1,11 @@
 var AWS = require('aws-sdk');
 var async = require('async');
+var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, callback) {
+module.exports = function(AWSConfig, collection, retries, callback) {
     var apigateway = new AWS.APIGateway(AWSConfig);
 
-    async.eachLimit(collection.apigateway.getRestApis[AWSConfig.region].data, 15, function(api, cb){
+    async.eachLimit(collection.apigateway.getRestApis[AWSConfig.region].data, 5, function(api, cb){
         if (!collection.apigateway.getStages ||
             !collection.apigateway.getStages[AWSConfig.region] ||
             !collection.apigateway.getStages[AWSConfig.region][api.id] ||
@@ -13,12 +14,14 @@ module.exports = function(AWSConfig, collection, callback) {
             return cb();
         }
 
-        async.each(collection.apigateway.getStages[AWSConfig.region][api.id].data.item, function(stage, pCb){
+        async.eachLimit(collection.apigateway.getStages[AWSConfig.region][api.id].data.item, 3, function(stage, pCb){
             collection.apigateway.getClientCertificate[AWSConfig.region][stage.clientCertificateId] = {};
 
-            apigateway.getClientCertificate({
+            let params = {
                 clientCertificateId: stage.clientCertificateId
-            }, function(err, data){
+            };
+
+            helpers.makeCustomCollectorCall(apigateway, 'getClientCertificate', params, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.apigateway.getClientCertificate[AWSConfig.region][stage.clientCertificateId].err = err;
                     return pCb();

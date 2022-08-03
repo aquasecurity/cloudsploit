@@ -4,12 +4,13 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'PostgreSQL Max Connections',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensure that max_connections is configured with optimal value for PostgreSQL instances.',
     more_info: 'An optimal value should be set for max_connections (maximum number of client connections) to meet the database workload requirements. ' +
         'If this no value is set for max_connections flag, instance assumes default value which is calculated per instance memory size.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
     settings: {
         min_postgres_max_connections: {
             name: 'Minimum PostgreSQL Max Connections',
@@ -69,7 +70,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() == 'READ_REPLICA_INSTANCE') return;
 
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
@@ -107,4 +108,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

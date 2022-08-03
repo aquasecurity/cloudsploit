@@ -20,7 +20,6 @@
         "helpers/google/functions.js",
         "helpers/oracle/functions.js",
         "plugins/github/",
-        "plugins/google/",
         "plugins/oracle/",
         "*.spec.js"
     ],

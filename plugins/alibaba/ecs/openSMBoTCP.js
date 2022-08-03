@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Open SMBoTCP',
     category: 'ECS',
+    domain: 'Compute',
     description: 'Ensure that security groups does not have TCP port 445 for Windows SMB over TCP open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMBoTCP should be restricted to known IP addresses.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',

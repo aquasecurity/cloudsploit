@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SQS Public Access',
     category: 'SQS',
+    domain: 'Application Integration',
     description: 'Ensures that SQS queues are not publicly accessible',
     more_info: 'SQS queues should be not be publicly accessible to prevent unauthorized actions.',
     recommended_action: 'Update the SQS queue policy to prevent public access.',

@@ -3,6 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Domain Transfer Lock',
     category: 'Route53',
+    domain: 'Content Delivery',
     description: 'Ensures domains have the transfer lock set',
     more_info: 'To avoid having a domain maliciously transferred to a third-party, all domains should enable the transfer lock unless actively being transferred.',
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-from-route-53.html',

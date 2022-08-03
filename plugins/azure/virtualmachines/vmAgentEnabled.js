@@ -5,6 +5,7 @@ var helpers = require('../../../helpers/azure/');
 module.exports = {
     title: 'VM Agent Enabled',
     category: 'Virtual Machines',
+    domain: 'Compute',
     description: 'Ensures that the VM Agent is enabled for virtual machines',
     more_info: 'The VM agent must be enabled on Azure virtual machines in order to enable Azure Security Center for data collection.',
     recommended_action: 'Enable the VM agent for all virtual machines.',

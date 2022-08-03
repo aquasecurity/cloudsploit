@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Open SMTP',
     category: 'VPC Network',
+    domain: 'Network Access Control',
     description: 'Determines if TCP port 25 for SMTP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SMTP should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP port 25 to known IP addresses.',
-    apis: ['firewalls:list', 'projects:get'],
+    apis: ['firewalls:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,7 +38,7 @@ module.exports = {
 
             let service = 'SMTP';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){
@@ -45,4 +46,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

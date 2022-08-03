@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Redshift Cluster Default Port',
     category: 'Redshift',
+    domain: 'Databases',
     description: 'Ensures that Amazon Redshift clusters are not using port "5439" (default port) for database access.',
     more_info: 'Amazon Redshift clusters should not use the default port for database access to ensure cluster security.',
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/gsg/rs-gsg-launch-sample-cluster.html',

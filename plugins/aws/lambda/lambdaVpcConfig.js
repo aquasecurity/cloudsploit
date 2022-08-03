@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Lambda VPC Config',
     category: 'Lambda',
+    domain: 'Serverless',
     description: 'Ensures Lambda functions are created in a VPC.',
     more_info: 'Lambda functions should be created in an AWS VPC to avoid exposure to the Internet and to enable communication with VPC resources through NACLs and security groups.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/vpc.html',
@@ -14,7 +15,7 @@ module.exports = {
             name: 'Lambda Functions Whitelisted',
             description: 'A comma-delimited list of known lambda function Function Names that should be whitelisted',
             regex: '^.{1,255}$',
-            default: 'Aqua-CSPM-Token-Rotator-Function'
+            default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
         }
     },
 
@@ -54,9 +55,16 @@ module.exports = {
             for (var f in listFunctions.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var lambdaFunction = listFunctions.data[f];
+                let whitelisted = false;
+                if (config.lambda_whitelist.length) {
+                    config.lambda_whitelist.forEach(whitelist => {
+                        if (lambdaFunction.FunctionName.indexOf(whitelist) > -1) {
+                            whitelisted = true;
+                        }
+                    });
+                }
 
-                if (config.lambda_whitelist.length &&
-                    config.lambda_whitelist.indexOf(lambdaFunction.FunctionName)>-1) {
+                if (whitelisted) {
                     helpers.addResult(results, 0,
                         'The function ' + lambdaFunction.FunctionName + ' is whitelisted.',
                         region, lambdaFunction.FunctionArn);

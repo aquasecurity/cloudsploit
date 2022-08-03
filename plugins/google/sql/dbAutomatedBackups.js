@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'DB Automated Backups',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures automated backups are enabled for SQL instances',
     more_info: 'Google provides a simple method of backing up SQL instances at a regular interval. This should be enabled to provide an option for restoring data in the event of a database compromise or hardware failure.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,7 +44,7 @@ module.exports = {
             }
 
             sqlInstances.data.forEach(sqlInstance => {
-                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === "READ_REPLICA_INSTANCE") return;
+                if (sqlInstance.instanceType && sqlInstance.instanceType.toUpperCase() === 'READ_REPLICA_INSTANCE') return;
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.settings &&
@@ -63,4 +64,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

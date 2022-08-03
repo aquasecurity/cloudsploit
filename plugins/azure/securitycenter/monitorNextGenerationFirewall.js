@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Monitor Next Generation Firewall',
     category: 'Security Center',
+    domain: 'Management and Governance',
     description: 'Ensures that Next Generation Firewall (NGFW) Monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will search for deployments where a NGFW is recommended.',
     recommended_action: 'Enable Next Generation Firewall Monitoring by ensuring AuditIfNotExists setting is used for \'All network ports should be restricted on network security groups associated to your virtual machine\' from the Azure Security Center.',

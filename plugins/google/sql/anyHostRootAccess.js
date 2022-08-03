@@ -4,11 +4,12 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Any Host Root Access',
     category: 'SQL',
+    domain: 'Databases',
     description: 'Ensures SQL instances root user cannot be accessed from any host',
     more_info: 'Root access for SQL instance should only be allowed from whitelisted IPs to ensure secure access only from trusted entities.',
     link: 'https://cloud.google.com/sql/docs/mysql/create-manage-users',
     recommended_action: 'Ensure that root access for SQL instances are not allowed from any host.',
-    apis: ['instances:sql:list', 'users:list', 'projects:get'],
+    apis: ['instances:sql:list', 'users:list'],
 
     run: function(cache, settings, callback) {
         var results = [];

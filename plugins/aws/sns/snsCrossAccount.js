@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SNS Cross Account Access',
     category: 'SNS',
+    domain: 'Application Integration',
     description: 'Ensures SNS policies disallow cross-account access',
     more_info: 'SNS topic policies should be carefully restricted to to subscribe or send messages. Topic policies can be used to limit these privileges.',
     recommended_action: 'Update the SNS policy to prevent access from external accounts.',
@@ -26,7 +27,7 @@ module.exports = {
             name: 'SNS Topic Policy Allowed Condition Keys',
             description: 'Comma separated list of AWS IAM condition keys that should be allowed i.e. aws:SourceAccount,aws:PrincipalArn',
             regex: '^.*$',
-            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner,sns:Endpoint'
         },
     },
 

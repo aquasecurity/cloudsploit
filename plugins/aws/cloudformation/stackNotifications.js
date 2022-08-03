@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'CloudFormation Stack SNS Notifications',
     category: 'CloudFormation',
+    domain: 'Application Integration',
     description: 'Ensures that AWS CloudFormation stacks have SNS topic associated.',
     more_info: 'AWS CloudFormation stacks should have SNS topic associated to ensure stack events monitoring.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-view-stack-data-resources.html',

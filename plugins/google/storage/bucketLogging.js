@@ -4,10 +4,11 @@ var helpers = require('../../../helpers/google');
 module.exports = {
     title: 'Bucket Logging',
     category: 'Storage',
+    domain: 'Storage',
     description: 'Ensures object logging is enabled on storage buckets',
     more_info: 'Storage bucket logging helps maintain an audit trail of access that can be used in the event of a security incident.',
     link: 'https://cloud.google.com/storage/docs/access-logs',
-    recommended_action: 'Bucket Logging can only be enabled by using the Command Line Interface and the log bucket must already be created. Use this command to enable Logging: gsutil logging set on -b gs://[LOG_BUCKET_NAME] -o AccessLog \ gs://[BUCKET_NAME]',
+    recommended_action: 'Bucket Logging can only be enabled by using the Command Line Interface and the log bucket must already be created. Use this command to enable Logging: gsutil logging set on -b gs://[LOG_BUCKET_NAME] -o AccessLog \ gs://[BUCKET_NAME]', // eslint-disable-line no-useless-escape
     apis: ['buckets:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
@@ -58,4 +59,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}
+};

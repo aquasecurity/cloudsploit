@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'AWS Glue Job Bookmark Encryption Enabled',
     category: 'Glue',
+    domain: 'Content Delivery',
     description: 'Ensures that AWS Glue job bookmark encryption is enabled.',
     more_info: 'AWS Glue security configuration should have job bookmark encryption enabled in order to encrypt the bookmark data before it is sent to Amazon S3.',
     recommended_action: 'Recreate Glue security configurations and enable job bookmark encryption',

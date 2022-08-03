@@ -68,18 +68,17 @@ function addResult(results, status, message, region, resource, custom, err, requ
     }
 }
 
-function findOpenPorts(ngs, protocols, service, location, results, cache, callback, source) {
+function findOpenPorts(ngs, protocols, service, location, results, cache, source) {
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
-        return callback(null, results, source);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        return;
     }
 
     var project = projects.data[0].name;
-    let found = false;
     for (let sgroups of ngs) {
         let strings = [];
         let resource = createResourceName('firewalls', sgroups.name, project, 'global');
@@ -109,13 +108,11 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
                                             var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                                 ` port ` + port + ` open to ` + sourcefilter; strings.push(string);
                                             if (strings.indexOf(string) === -1) strings.push(string);
-                                            found = true;
                                         }
                                     } else if (parseInt(portRange) === port) {
                                         var string = `` + (protocol === '*' ? `All protocols` : protocol.toUpperCase()) +
                                             ` port ` + port + ` open to ` + sourcefilter;
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
                                 });
                             }
@@ -130,25 +127,26 @@ function findOpenPorts(ngs, protocols, service, location, results, cache, callba
                 ') has ' + service + ': ' + strings.join(' and '), location,
                 resource);
         }
-    }
-
-    if (!found) {
-        shared.addResult(results, 0, 'No public open ports found', location);
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have ' + service + ' port open ' , location,
+                resource);
+        }
     }
 }
 
-function findOpenAllPorts(ngs, location, results, cache, callback, source) {
+function findOpenAllPorts(ngs, location, results, cache, source) {
     let projects = shared.addSource(cache, source,
         ['projects','get', 'global']);
 
     if (!projects || projects.err || !projects.data || !projects.data.length) {
-        helpers.addResult(results, 3,
-            'Unable to query for projects: ' + helpers.addError(projects), 'global', null, null, (projects) ? projects.err : null);
-        return callback(null, results, source);
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        return;
     }
 
     var project = projects.data[0].name;
-    let found = false;
     let protocols = {'tcp': '*', 'udp' : '*'};
     for (let sgroups of ngs) {
         let strings = [];
@@ -175,12 +173,10 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
                                     if (parseInt(startPort) === 0 && parseInt(endPort) === 65535) {
                                         var string = 'all ports open to the public';
                                         if (strings.indexOf(string) === -1) strings.push(string);
-                                        found = true;
                                     }
                                 } else if (portRange === 'all') {
                                     var string = 'all ports open to the public';
                                     if (strings.indexOf(string) === -1) strings.push(string);
-                                    found = true;
                                 }
                             });
                         }
@@ -191,8 +187,6 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
                         (sourceAddressPrefix.includes('*') || sourceAddressPrefix.includes('') || sourceAddressPrefix.includes('0.0.0.0/0') || sourceAddressPrefix.includes('<nw>/0') || sourceAddressPrefix.includes('/0') || sourceAddressPrefix.includes('internet'))) {
                         var string = 'all ports open to the public';
                         if (strings.indexOf(string) === -1) strings.push(string);
-                        found = true;
-
                     }
                 }
             }
@@ -203,10 +197,12 @@ function findOpenAllPorts(ngs, location, results, cache, callback, source) {
                 ') has ' + strings.join(' and '), location,
                 resource);
         }
-    }
-
-    if (!found) {
-        shared.addResult(results, 0, 'No public open ports found', location);
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have all ports open to the public', location,
+                resource);
+        }
     }
 }
 
@@ -242,7 +238,7 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
 }
 
 function getProtectionLevel(cryptographickey, encryptionLevels) {
-    if (cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
+    if (cryptographickey && cryptographickey.versionTemplate && cryptographickey.versionTemplate.protectionLevel) {
         if (cryptographickey.versionTemplate.protectionLevel == 'SOFTWARE') return encryptionLevels.indexOf('cloudcmek');
         else if (cryptographickey.versionTemplate.protectionLevel == 'HSM') return encryptionLevels.indexOf('cloudhsm');
         else if (cryptographickey.versionTemplate.protectionLevel == 'EXTERNAL') return encryptionLevels.indexOf('external');
@@ -280,6 +276,41 @@ function createResourceName(resourceType, resourceId, project, locationType, loc
     return resourceName;
 }
 
+function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEnabled, ifNotFound, displayName, results, resource) {
+    let isEnabled = false;
+    if (orgPolicies && orgPolicies.policies) {
+        let policyToCheck = orgPolicies.policies.find(policy => (
+            policy.constraint &&
+            policy.constraint.includes(constraintName)));
+        if (policyToCheck) {
+            if (constraintType == 'listPolicy' && policyToCheck.listPolicy) {
+                if (policyToCheck.listPolicy.allValues) {
+                    isEnabled = policyToCheck.listPolicy.allValues == 'ALLOW' ? false : true;
+                } else if ((policyToCheck.listPolicy.allowedValues && policyToCheck.listPolicy.allowedValues.length) || (policyToCheck.listPolicy.deniedValues && policyToCheck.listPolicy.deniedValues.length)) {
+                    isEnabled = true;
+                }
+            } else if (constraintType == 'booleanPolicy' && policyToCheck.booleanPolicy && policyToCheck.booleanPolicy.enforced) {
+                isEnabled = true;
+            }
+        } else {
+            isEnabled = ifNotFound;
+        }
+    } 
+    let successMessage = `"${displayName}" constraint is enforced at the organization level.`;
+    let failureMessage = `"${displayName}" constraint is not enforced at the organization level.`;
+    let status, message;
+    if (isEnabled) {
+        status = shouldBeEnabled ? 0 : 2;
+        message = shouldBeEnabled ? successMessage : failureMessage;
+    } else {
+        status = shouldBeEnabled ? 2 : 0;
+        message = shouldBeEnabled ? failureMessage : successMessage;
+    }
+
+    shared.addResult(results, status, message, 'global', resource);
+
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -288,5 +319,6 @@ module.exports = {
     createResourceName: createResourceName,
     getProtectionLevel: getProtectionLevel,
     listToObj: listToObj,
-    createResourceName: createResourceName
+    createResourceName: createResourceName,
+    checkOrgPolicy: checkOrgPolicy
 };

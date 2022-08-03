@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Managed NAT Gateway In Use',
     category: 'Virtual Networks',
+    domain: 'Network Access Control',
     description: 'Ensure Azure Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network.',
     more_info: 'To meet your organization\'s security compliance requirements.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/nat-overview',

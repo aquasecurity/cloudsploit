@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/alibaba');
 module.exports = {
     title: 'Open Custom Ports',
     category: 'ECS',
+    domain: 'Compute',
     description: 'Ensure that defined custom ports are not open to public.',
     more_info: 'Security groups should restrict access to ports from known networks.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',

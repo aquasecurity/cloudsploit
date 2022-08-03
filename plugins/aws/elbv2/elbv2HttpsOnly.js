@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ELBv2 HTTPS Only',
     category: 'ELBv2',
+    domain: 'Content Delivery',
     description: 'Ensures ELBs are configured to only accept' +
         ' connections on HTTPS ports.',
     more_info: 'For maximum security, ELBs can be configured to only'+
@@ -51,7 +52,7 @@ module.exports = {
                 var non_https_listener = [];
                 var noListeners = true;
                 var elbArn = lb.LoadBalancerArn;
-                if (describeListeners.data && describeListeners.data.Listeners && describeListeners.data.Listeners.length) {
+                if (describeListeners && describeListeners.data && describeListeners.data.Listeners && describeListeners.data.Listeners.length) {
                     noListeners = false;
                     describeListeners.data.Listeners.forEach(function(listener){
                         // if it is not https add errors to results

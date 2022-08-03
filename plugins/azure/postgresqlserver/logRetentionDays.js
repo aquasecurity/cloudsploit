@@ -4,6 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Log Retention Period',
     category: 'PostgreSQL Server',
+    domain: 'Databases',
     description: 'Ensures logs are configured to be retained for 4 or more days for PostgreSQL servers',
     more_info: 'Having a long log retention policy ensures that all critical logs are stored for long enough to access and view in case of a security incident.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_retention_days setting set to 4 or more days.',
