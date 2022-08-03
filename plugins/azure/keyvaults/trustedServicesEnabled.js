@@ -34,7 +34,7 @@ module.exports = {
 
             vaults.data.forEach((vault) => {
                 if (vault.networkAcls){
-                    if (vault.networkAcls && vault.networkAcls.bypass && vault.networkAcls.bypass === "None") {
+                    if (vault.networkAcls && vault.networkAcls.bypass && vault.networkAcls.bypass === 'None') {
                         helpers.addResult(results, 2,
                             'no trusted Microsoft Azure cloud services are allowed to access the key vault resources', location, vault.id);
                     } else {
