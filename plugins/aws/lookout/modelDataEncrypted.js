@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Model Data Encrypted',
-    category: 'Lookout',
+    category: 'Lookoutvision',
     domain: 'Management and Governance',
     description: 'Ensure that Lookout for Vision model data is encrypted using desired KMS encryption level',
     more_info: 'By default, trained models and manifest files are encrypted in Amazon S3 using server-side encryption with KMS keys stored in AWS Key Management Service (SSE-KMS). ' +

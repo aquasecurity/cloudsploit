@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/azure/');
 
 module.exports = {
     title: 'No Unattached Disk Volumes',
-    category: 'Virtual Machines',
+    category: 'Disks',
     domain: 'Compute',
     description: 'Ensures that the Azure virtual machines have no unattached disk volumes.',
     more_info: 'When a virtual machine (VM) in Azure is deleted, by default, any disks that are attached to the VM aren\'t deleted. Those disks need to be deleted to save cost for unused resources.',

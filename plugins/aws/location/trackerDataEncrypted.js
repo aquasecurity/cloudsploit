@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Tracker Data Encrypted',
-    category: 'Location',
+    category: 'Geo',
     domain: 'Application Integration',
     description: 'Ensure that Amazon Location tracker data is encrypted using desired KMS encryption level',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +

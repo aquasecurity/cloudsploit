@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Web Server Public Access',
-    category: 'MWAA',
+    category: 'AirFlow',
     domain: 'Compute',
     description: 'Ensures web access to the Apache Airflow UI in your MWAA environment is not public.',
     more_info: 'To restrict access to the Apache Airflow UI, environment should be configured to be accessible only from within the VPC selected.',

@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'DocumentDB Cluster Encrypted',
-    category: 'DocumentDB',
+    category: 'RDS',
     domain: 'Databases',
     description: 'Ensure that data at-rest in encrypted in AWS DocumentDB clusters using desired encryption level.',
     more_info: 'Amazon DocumentDB integrates with AWS KMS and uses a method known as envelope encryption to protect your data. ' +

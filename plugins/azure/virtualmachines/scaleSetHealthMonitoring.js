@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Scale Sets Health Monitoring Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Sets',
     domain: 'Compute',
     description: 'Ensures that health monitoring is enabled for virtual machine scale sets.',
     more_info: 'Scale set health monitoring feature reports on VM health from inside the scale set instance and can be configured to probe on an application endpoint and update the status of the application on that instance. That instance status is checked by Azure to determine whether an instance is eligible for upgrade operations.',

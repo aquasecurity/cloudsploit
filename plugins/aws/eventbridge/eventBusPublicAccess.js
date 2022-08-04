@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Event Bus Public Access',
-    category: 'EventBridge',
+    category: 'Events',
     domain: 'Management and Governance',
     severity: 'HIGH',
     description: 'Ensure that EventBridge event bus is configured to prevent exposure to public access.',

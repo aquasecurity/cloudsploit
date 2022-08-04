@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'MSK Cluster Public Access',
-    category: 'MSK',
+    category: 'Kafka',
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensure that public access feature within the cluster is disabled for your Amazon MSK clusters.',

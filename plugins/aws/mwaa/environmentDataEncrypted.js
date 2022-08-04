@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Environment Data Encrypted',
-    category: 'MWAA',
+    category: 'AirFlow',
     domain: 'Compute',
     description: 'Ensure that AWS MWAA environment data is encrypted',
     more_info: 'Amazon MWAA encrypts data saved to persistent media with AWS-manager keys by default. ' +
