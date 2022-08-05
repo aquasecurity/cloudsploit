@@ -11,6 +11,8 @@ const encryptionLevelMap = {
 };
 
 function statementTargetsAction(statement, targetAction) {
+    if (!statement.Action) return false;
+
     return Array.isArray(statement.Action)
         ? statement.Action.find(action => minimatch(targetAction, action))
         : minimatch(targetAction, statement.Action);
