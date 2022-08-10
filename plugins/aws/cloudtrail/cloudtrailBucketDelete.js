@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'CloudTrail Bucket Delete Policy',
-    category: 'CloudTrail',
+    category: 'S3',
     domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token',
     more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',

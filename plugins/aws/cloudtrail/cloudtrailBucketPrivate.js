@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'CloudTrail Bucket Private',
-    category: 'CloudTrail',
+    category: 'S3',
     domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',

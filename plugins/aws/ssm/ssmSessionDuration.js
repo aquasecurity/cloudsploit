@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'SSM Session Duration',
-    category: 'SSM',
+    category: 'EC2',
     domain: 'Identity Access and Management',
     severity: 'LOW',
     description: 'Ensure that all active sessions in the AWS Session Manager do not exceed the duration set in the settings.',
