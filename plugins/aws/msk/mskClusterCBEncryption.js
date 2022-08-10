@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'MSK Cluster Client Broker Encryption',
-    category: 'Kafka',
+    category: 'MSK',
     domain: 'Compute',
     severity: 'LOW',
     description: 'Ensure that only TLS encryption between the client and broker feature is enabled for your Amazon MSK clusters.',

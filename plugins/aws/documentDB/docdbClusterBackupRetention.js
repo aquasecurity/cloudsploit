@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'DocumentDB Cluster Backup Retention',
-    category: 'RDS',
+    category: 'DocumentDB',
     domain: 'Databases',
     description: 'Ensure that your Amazon DocumentDB clusters have set a minimum backup retention period.',
     more_info: 'DocumentDB cluster provides feature to retain incremental backups between 1 and 35 allowing you to quickly restore to any point within the backup retention period. Ensure that you have sufficient backup retention period configured in order to restore your data in the event of failure.',
