@@ -68,6 +68,11 @@ function call(OracleConfig, options, callback) {
             });
         });
 
+        request.on('error', (e) => {
+            console.log('ERROR:', e);
+            callback({code: e.code});
+        });
+
         // Create signature
         signature.sign(request, {
             key: OracleConfig.privateKey,
