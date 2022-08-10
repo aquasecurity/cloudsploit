@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'MSK Cluster Encryption In-Transit',
-    category: 'Kafka',
+    category: 'MSK',
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensure that TLS encryption within the cluster feature is enabled for your Amazon MSK clusters.',
