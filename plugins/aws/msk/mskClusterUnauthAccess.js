@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'MSK Cluster Unauthenticated Access',
-    category: 'Kafka',
+    category: 'MSK',
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensure that unauthenticated access feature is disabled for your Amazon MSK clusters.',
