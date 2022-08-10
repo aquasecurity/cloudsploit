@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/oracle');
 
 module.exports = {
     title: 'NFS Public Access',
-    category: 'Subnets',
+    category: 'File Storage',
     domain: 'Storage',
     description: 'Ensures that all file systems do not have public access.',
     more_info: 'All network file systems should be configured to only allow access from trusted sources.',
