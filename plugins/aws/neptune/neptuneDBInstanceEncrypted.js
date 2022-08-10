@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Neptune Database Instance Encrypted',
-    category: 'RDS',
+    category: 'Neptune',
     domain: 'Databases',
     description: 'Ensure that your AWS Neptune database instances are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Neptune encrypted instances provide an additional layer of data protection by helping to secure your data from unauthorized access to the underlying storage. ' +
