@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'CloudWatch Log Groups Encrypted',
-    category: 'Logs',
+    category: 'CloudWatchLogs',
     domain: 'Compliance',
     description: 'Ensure that the CloudWatch Log groups are encrypted using desired encryption level.',
     more_info: 'Log group data is always encrypted in CloudWatch Logs. You can optionally use AWS Key Management Service for this encryption. ' +

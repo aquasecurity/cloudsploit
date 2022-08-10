@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Access Analyzer Active Findings',
-    category: 'Analyzer',
+    category: 'IAM',
     domain: 'Management and Governance',
     description: 'Ensure that IAM Access analyzer findings are reviewed and resolved by taking all necessary actions.',
     more_info: 'IAM Access Analyzer helps you evaluate access permissions across your AWS cloud environment and gives insights into intended access to your resources. It can monitor the access policies associated with S3 buckets, KMS keys, SQS queues, IAM roles and Lambda functions for permissions changes. ' +
