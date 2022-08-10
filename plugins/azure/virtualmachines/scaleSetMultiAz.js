@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Scale Set Multi Az',
-    category: 'Virtual Machine Scale Sets',
+    category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that Virtual Machine Scale Sets are created to be cross-AZ for high availability',
     more_info: 'Having Virtual Machine Scale Sets in multiple zones increases durability and availability. If there is a catastrophic instance in one zone, the scale set will still be available.',
