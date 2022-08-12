@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open Elasticsearch',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Determine if TCP port 9200 for Elasticsearch is open to the public',
+    description: 'Determine if TCP port 9200 or 9300 for Elasticsearch is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Elasticsearch should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 9200 to known IP addresses',
@@ -57,7 +57,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [9200]
+            'tcp': [9200, 9300]
         };
 
         var service = 'Elasticsearch';
@@ -91,9 +91,9 @@ module.exports = {
         var putCall = this.actions.remediate;
         var pluginName = 'openElasticsearch';
         var protocol = 'tcp';
-        var port = 9200;
+        var ports = [9200,9300];
 
-        helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
+        helpers.remediateOpenPorts(putCall, pluginName, protocol, ports, config, cache, settings, resource, remediation_file, function(error, action) {
             if (error && (error.length || Object.keys(error).length)) {
                 remediation_file['post_remediate']['actions'][pluginName]['error'] = error;
                 settings.remediation_file = remediation_file;
