@@ -5,7 +5,7 @@ module.exports = {
     title: 'Internet Gateways Associated with VPC',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Ensure Internet Gateways are associated with atleast one VPC.',
+    description: 'Ensure Internet Gateways are associated with at least one available VPC.',
     more_info: 'Internet Gateways allow communication between instances in VPC and the internet. They provide a target in VPC route tables for internet-routable traffic and also perform network address translation (NAT) for instances that have been assigned public IPv4 addresses. By default, AWS VPC has a limit of 5 internet gateways per region, so it is a best practice to make sure they are always associated with a VPC and remove any unused internet gateways.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html',
     recommended_action: 'Check if Internet Gateways have VPC Attached to them.',
