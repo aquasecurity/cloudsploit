@@ -1933,6 +1933,12 @@ var postcalls = [
                 reliesOnCall: 'describeDBParameterGroups',
                 override: true
             },
+            describeDBSnapshotAttributes: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBSnapshots',
+                filterKey: 'DBSnapshotIdentifier',
+                filterValue: 'DBSnapshotIdentifier'
+            },
             sendIntegration: {
                 enabled: true
             }
