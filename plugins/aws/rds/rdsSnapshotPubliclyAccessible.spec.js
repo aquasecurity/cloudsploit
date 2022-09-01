@@ -21,7 +21,7 @@ const describeDBSnapshots = [
         "PercentProgress": 100,
         "StorageType": "gp2",
         "Encrypted": false,
-        "DBSnapshotArn": "arn:aws:rds:us-east-1:101363889637:snapshot:database-1-final-snapshot",
+        "DBSnapshotArn": "arn:aws:rds:us-east-1:000011112222:snapshot:database-1-final-snapshot",
         "IAMDatabaseAuthenticationEnabled": false,
         "ProcessorFeatures": [],
         "DbiResourceId": "db-AVTEMNYVJCF3INR3EROOHGZXQQ",
@@ -63,6 +63,7 @@ const describeDBSnapshotAttributes = [
 ];
 
 const createCache = (snapshot, attribute) => {
+    let snapshotIdentifier = snapshot && snapshot.length ? snapshot[0].DBSnapshotIdentifier : null
     return {
         rds:{
             describeDBSnapshots: {
@@ -72,7 +73,7 @@ const createCache = (snapshot, attribute) => {
             },
             describeDBSnapshotAttributes: {
                 'us-east-1': {
-                    [snapshot[0].DBSnapshotIdentifier]: {
+                    [snapshotIdentifier]: {
                         data: attribute
                     },
                 },
@@ -117,20 +118,32 @@ const createNullCache = () => {
 
 describe('rdsSnapshotPubliclyAccessible', function () {
     describe('run', function () {
-        it('should PASS if RDS Snapshot is not publicly accessible', function (done) {
+        it('should PASS if RDS nnapshot is not publicly accessible', function (done) {
             const cache = createCache([describeDBSnapshots[0]], describeDBSnapshotAttributes[0]);
             rdsSnapshotPubliclyAccessible.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('is not publicly exposed');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
         
-        it('should FAIL if RDS Snapshot is publicly accessible', function (done) {
+        it('should FAIL if RDS nnapshot is publicly accessible', function (done) {
             const cache = createCache([describeDBSnapshots[0]], describeDBSnapshotAttributes[1]);
             rdsSnapshotPubliclyAccessible.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('is publicly exposed');
                 expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if no RDS nnapshots found', function (done) {
+            const cache = createCache([]);
+            rdsSnapshotPubliclyAccessible.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('No RDS snapshots');
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
