@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
 var plugin = require('./apiKeyRotation');
 
-
 const apiKeys = [
         {
           "name": "projects/my-project/locations/global/keys/my-key-1",
@@ -13,6 +12,11 @@ const apiKeys = [
           "displayName": "API key 2",
           "createTime": '2021-04-07T17:23:05.126949Z',
 
+        },
+        {
+            "name": "projects/my-project/locations/global/keys/my-key-3",
+            "displayName": "API key 3",
+            "createTime": new Date().setMonth(new Date().getMonth() - 2)
         }
 ];
 
@@ -77,7 +81,6 @@ describe('restrictedAPIKeys', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('which is equal to or less than');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -86,6 +89,23 @@ describe('restrictedAPIKeys', function () {
                 [apiKeys[0]],
                 null
                 );
+
+            plugin.run(cache, {}, callback);
+        });
+
+        it('should give warning result if google cloud api key rotation date is older than warn interval', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(1);
+                expect(results[0].message).to.include('which is greater than');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                [apiKeys[2]],
+                null
+            );
 
             plugin.run(cache, {}, callback);
         });

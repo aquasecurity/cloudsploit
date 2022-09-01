@@ -10,8 +10,14 @@ module.exports = {
     recommended_action: 'Ensure that all your Google Cloud API keys are regenerated (rotated) after a specific period.',
     apis: ['apiKeys:list'],
     settings: {
-        api_keys_rotation_interval: {
-            name: 'API Keys Rotation Interval',
+        api_keys_rotation_warn_interval: {
+            name: 'API Keys Rotation Warn Interval',
+            description: 'Return a warning result when api keys exceed this number of days without being rotated',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: '45'
+        },
+        api_keys_rotation_fail_interval: {
+            name: 'API Keys Rotation Fail Interval',
             description: 'Return a failing result when api keys exceed this number of days without being rotated',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '90'
@@ -22,7 +28,8 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var apiKeyRotationInterval = parseInt(settings.api_keys_rotation_interval || this.settings.api_keys_rotation_interval.default);
+        var apiKeyRotationFailInterval = parseInt(settings.api_keys_rotation_fail_interval || this.settings.api_keys_rotation_fail_interval.default);
+        var apiKeyRotationWarnInterval = parseInt(settings.api_keys_rotation_warn_interval || this.settings.api_keys_rotation_warn_interval.default);
 
         let projects = helpers.addSource(cache, source,
             ['projects', 'get', 'global']);
@@ -51,12 +58,15 @@ module.exports = {
         apiKeys.data.forEach(key => {  
             var diffInDays = helpers.daysBetween(key.createTime, new Date());
 
-            if (diffInDays > apiKeyRotationInterval) {
+            if (diffInDays > apiKeyRotationFailInterval) {
                 helpers.addResult(results, 2,
-                    `API Key was last rotated ${diffInDays} days ago which is greater than ${apiKeyRotationInterval}`, 'global', key.name);
+                    `API Key was last rotated ${diffInDays} days ago which is greater than ${apiKeyRotationFailInterval}`, 'global', key.name);
+            } else if (diffInDays > apiKeyRotationWarnInterval) {
+                helpers.addResult(results, 1,
+                    `API Key was last rotated ${diffInDays} days ago which is greater than ${apiKeyRotationWarnInterval}`, 'global', key.name);
             } else {
                 helpers.addResult(results, 0,
-                    `API Key was last rotated ${diffInDays} days ago which is equal to or less than ${apiKeyRotationInterval}`, 'global', key.name);
+                    `API Key was last rotated ${diffInDays} days ago`, 'global', key.name);
             }
         });
 
