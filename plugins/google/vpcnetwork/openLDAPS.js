@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Open LDAP SSL',
+    title: 'Open LDAPS',
     category: 'VPC Network',
     domain: 'Network Access Control',
     description: 'Determines if TCP port 636 for LDAP SSL is open to the public',
@@ -36,7 +36,7 @@ module.exports = {
                 'tcp': [636]
             };
 
-            let service = 'LDAP SSL';
+            let service = 'LDAPS';
 
             helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 

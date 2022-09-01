@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const openLDAPSSL = require('./openLDAPSSL');
+const openLDAPS = require('./openLDAPS');
 
 const firewalls = [
     {
@@ -62,11 +62,11 @@ const createNullCache = () => {
     };
 };
 
-describe('openLDAPSSL', function () {
+describe('openLDAPS', function () {
     describe('run', function () {
         it('should PASS if no open ports found', function (done) {
             const cache = createCache([firewalls[1]]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
@@ -76,7 +76,7 @@ describe('openLDAPSSL', function () {
 
         it('should FAIL if firewall rule has TCP port 636 for LDAP is open to public', function (done) {
             const cache = createCache([firewalls[0]]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
@@ -86,7 +86,7 @@ describe('openLDAPSSL', function () {
 
         it('should PASS if no firewall rules found', function (done) {
             const cache = createCache([]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
@@ -96,7 +96,7 @@ describe('openLDAPSSL', function () {
 
         it('should UNKNWON if unable to describe firewall rules', function (done) {
             const cache = createCache([], { message: 'Unable to query firewall rules'});
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('global');
@@ -106,7 +106,7 @@ describe('openLDAPSSL', function () {
 
         it('should not return anything if describe firewall rules response not found', function (done) {
             const cache = createNullCache();
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
