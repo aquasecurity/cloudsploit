@@ -31,7 +31,7 @@ var newRegions = [
 
 module.exports = {
     default: ['us-east-1'],
-    all: regions,
+    all: [...regions, ...newRegions],
     optin: ['ap-east-1', 'me-south-1', 'ap-southeast-3'],   // Regions that AWS disables by default
     accessanalyzer: [...regions, ...newRegions],
     acm: [...regions, ...newRegions],
