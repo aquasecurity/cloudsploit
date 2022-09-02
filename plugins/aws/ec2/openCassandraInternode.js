@@ -91,7 +91,7 @@ module.exports = {
         var putCall = this.actions.remediate;
         var pluginName = 'openCassandraInternode';
         var protocol = 'tcp';
-        var port = 7001;
+        var port = 7000;
 
         helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
             if (error && (error.length || Object.keys(error).length)) {
