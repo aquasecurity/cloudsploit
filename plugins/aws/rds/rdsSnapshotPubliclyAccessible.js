@@ -50,8 +50,8 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to describe Snapshot attributes "${snapshotIdentifier}": ${helpers.addError(describeDBSnapshotAttributes)}`,
                         region, resource);
-                        
-                        return;
+
+                    return;
                 }
 
                 let publicSnapshot;
@@ -63,11 +63,11 @@ module.exports = {
 
                 if (publicSnapshot){
                     helpers.addResult(results, 2,
-                        `RDS Snapshot is publicly exposed`,
+                        'RDS Snapshot is publicly exposed',
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        `RDS Snapshot is not publicly exposed`,
+                        'RDS Snapshot is not publicly exposed',
                         region, resource);
                 }
             });
