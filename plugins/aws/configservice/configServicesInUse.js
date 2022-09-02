@@ -45,7 +45,6 @@ module.exports = {
             'auditmanager': 'auditmanager',
             'apigateway': 'apigateway' ,
             'cloudfront': 'cfn',
-            'cloudwatch': 'cw',
             'dynamodb': 'dynamodb',
             'documentdb': 'documentdb',
             'ec2':'ec2',
@@ -174,14 +173,14 @@ module.exports = {
             for (let resource of discoveredResources.data){
                 if (resource.resourceType){
                     let newResource = resource.resourceType.split('::');
-                    if (newResource[1].length > 1 && !usedServices.includes(newResource[1].toLowerCase())) usedServices.push(newResource[1].toLowerCase())
-                };
+                    if (newResource[1].length > 1 && !usedServices.includes(newResource[1].toLowerCase())) usedServices.push(newResource[1].toLowerCase());
+                }
             }
 
-            let array = []
+            let array = [];
             for (let value of usedServices){
                 if (allServices[value]) array.push(allServices[value]);
-            };
+            }
 
             array = array.filter(service => !config.config_service_in_use.includes(service));
             if (array.length){
