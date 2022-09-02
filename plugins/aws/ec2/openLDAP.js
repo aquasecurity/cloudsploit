@@ -57,7 +57,8 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [389]
+            'tcp': [389],
+            'udp': [389]
         };
 
         var service = 'LDAP';
