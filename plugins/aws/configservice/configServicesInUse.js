@@ -7,7 +7,7 @@ module.exports = {
     category: 'ConfigService',
     domain: 'Management and Governance',
     severity: 'MEDIUM',
-    description: 'Ensures that AWS ConfigService is in use for different resource types in a region.',
+    description: 'Ensures that AWS ConfigService is in use that enables you to assess, and evaluate the configurations of your AWS resources.',
     more_info: 'AWS ConfigService is a fully managed service that provides you with a detailed inventory of your AWS resources and their current configurations. This service also records your configuration history and notifies you when your configurations change.',
     recommended_action: 'Enable the AWS Config Service settings for recorder checks to start recording.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/how-does-config-work.html',
