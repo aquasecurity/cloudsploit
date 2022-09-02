@@ -299,7 +299,6 @@ module.exports = {
         'iamRoleLastUsed'               : require(__dirname + '/plugins/aws/iam/iamRoleLastUsed.js'),
         'maxPasswordAge'                : require(__dirname + '/plugins/aws/iam/maxPasswordAge.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/aws/iam/minPasswordLength.js'),
-        'usersToChangePasswords'        : require(__dirname + '/plugins/aws/iam/usersToChangePasswords.js'),
         'noUserIamPolicies'             : require(__dirname + '/plugins/aws/iam/noUserIamPolicies.js'),
         'passwordExpiration'            : require(__dirname + '/plugins/aws/iam/passwordExpiration.js'),
         'passwordRequiresLowercase'     : require(__dirname + '/plugins/aws/iam/passwordRequiresLowercase.js'),
