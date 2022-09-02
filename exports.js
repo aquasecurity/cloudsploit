@@ -154,6 +154,7 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/aws/ec2/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/aws/ec2/openCassandraThrift.js'),
         'openLDAP'                      : require(__dirname + '/plugins/aws/ec2/openLDAP.js'),
+        'openLDAPSSL'                   : require(__dirname + '/plugins/aws/ec2/openLDAPSSL.js'),
         'openMemcached'                 : require(__dirname + '/plugins/aws/ec2/openMemcached.js'),
         'openRedis'                     : require(__dirname + '/plugins/aws/ec2/openRedis.js'),
         'vpcElasticIpLimit'             : require(__dirname + '/plugins/aws/ec2/vpcElasticIpLimit.js'),
