@@ -57,7 +57,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [7001]
+            'tcp': [7000]
         };
 
         var service = 'Cassandra Internode';
