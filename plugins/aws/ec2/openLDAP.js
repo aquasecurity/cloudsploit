@@ -90,7 +90,7 @@ module.exports = {
         var remediation_file = settings.remediation_file;
         var putCall = this.actions.remediate;
         var pluginName = 'openLDAP';
-        var protocol = 'tcp';
+        var protocol = ['tcp','udp'];
         var port = 389;
 
         helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
