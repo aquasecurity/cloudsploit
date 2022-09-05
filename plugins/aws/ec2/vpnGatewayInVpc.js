@@ -42,7 +42,6 @@ module.exports = {
 
             describeVpnGateways.data.forEach(function(vpn){
                 var resource = `arn:${awsOrGov}:vpc:${region}:${accountId}:vpn-gateway/${vpn.VpnGatewayId}`;
-                // var vpnAttached = false;
                 if (vpn.VpcAttachments && vpn.VpcAttachments.length) {
                     let attached = vpn.VpcAttachments.find(attachment => attachment.VpcId && attachment.State && attachment.State.toUpperCase() == 'ATTACHED');
                     
