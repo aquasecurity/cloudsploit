@@ -110,15 +110,6 @@ module.exports = {
 
         'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
 
-        'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
-        'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
-        'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
-        'securityGroupRfc1918'          : require(__dirname + '/plugins/aws/ec2/securityGroupRfc1918.js'),
-        'elasticIpLimit'                : require(__dirname + '/plugins/aws/ec2/elasticIpLimit.js'),
-        'unassociatedElasticIp'         : require(__dirname + '/plugins/aws/ec2/unassociatedElasticIp.js'),
-        'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
-        'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
-        'vpnGatewayInVpc'               : require(__dirname + '/plugins/aws/ec2/vpnGatewayInVpc.js'),
         'instanceLimit'                 : require(__dirname + '/plugins/aws/ec2/instanceLimit.js'),
         'instanceVcpusLimit'            : require(__dirname + '/plugins/aws/ec2/instanceVcpusLimit.js'),
         'instanceMaxCount'              : require(__dirname + '/plugins/aws/ec2/instanceMaxCount.js'),
