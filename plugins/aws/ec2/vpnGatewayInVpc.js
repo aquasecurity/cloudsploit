@@ -59,8 +59,6 @@ module.exports = {
                         `Virtual Private Gateway is not associated with VPC`,
                         region, resource);
                 }
-
-              
             });
 
             rcb();
