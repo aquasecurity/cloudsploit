@@ -967,6 +967,7 @@ module.exports = {
         'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
         'openCustomPorts'               : require(__dirname + '/plugins/google/vpcnetwork/openCustomPorts.js'),
         'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
+        'openMemcached'                 : require(__dirname + '/plugins/google/vpcnetwork/openMemcached.js'),
         'openSNMP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSNMP.js'),
         'openLDAP'                      : require(__dirname + '/plugins/google/vpcnetwork/openLDAP.js'),
         'openElasticsearch'             : require(__dirname + '/plugins/google/vpcnetwork/openElasticsearch.js'),
