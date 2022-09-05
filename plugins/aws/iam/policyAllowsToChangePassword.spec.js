@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const usersToChangePasswords = require('./usersToChangePasswords');
+const policyAllowsToChangePassword = require('./policyAllowsToChangePassword');
 
 const getAccountPasswordPolicy = [
     {
@@ -75,11 +75,11 @@ const createNullCache = () => {
     };
 };
 
-describe('usersToChangePasswords', function () {
+describe('policyAllowsToChangePassword', function () {
     describe('run', function () {
         it('should PASS if Password policy allow users to change their password', function (done) {
             const cache = createCache(getAccountPasswordPolicy[0]);
-            usersToChangePasswords.run(cache, {}, (err, results) => {
+            policyAllowsToChangePassword.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -88,7 +88,7 @@ describe('usersToChangePasswords', function () {
 
         it('should FAIL if Password policy does not allow users to change their password', function (done) {
             const cache = createCache(getAccountPasswordPolicy[1]);
-            usersToChangePasswords.run(cache, {}, (err, results) => {
+            policyAllowsToChangePassword.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -97,7 +97,7 @@ describe('usersToChangePasswords', function () {
 
         it('should FAIL if account does not have a password policy', function (done) {
             const cache = createErrorCodeCache();
-            usersToChangePasswords.run(cache, {}, (err, results) => {
+            policyAllowsToChangePassword.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -106,7 +106,7 @@ describe('usersToChangePasswords', function () {
 
         it('should UNKNOWN if unable to get account password policy', function (done) {
             const cache = createErrorCache();
-            usersToChangePasswords.run(cache, {}, (err, results) => {
+            policyAllowsToChangePassword.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -115,7 +115,7 @@ describe('usersToChangePasswords', function () {
 
         it('should not return anything if get account password policy response not found', function (done) {
             const cache = createNullCache();
-            usersToChangePasswords.run(cache, {}, (err, results) => {
+            policyAllowsToChangePassword.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

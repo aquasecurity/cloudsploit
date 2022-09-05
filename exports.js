@@ -243,7 +243,7 @@ module.exports = {
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
 
-        'elasticacheDefaultPorts'    : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
+        'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrClusterInVPC'               : require(__dirname + '/plugins/aws/emr/emrClusterInVPC.js'),
@@ -323,7 +323,7 @@ module.exports = {
         'iamUserPresent'                : require(__dirname + '/plugins/aws/iam/iamUserPresent.js'),
         'rolePolicyUnusedServices'      : require(__dirname + '/plugins/aws/iam/rolePolicyUnusedServices.js'),
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
-        'usersToChangePasswords'        : require(__dirname + '/plugins/aws/iam/usersToChangePasswords.js'),
+        'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
 
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),

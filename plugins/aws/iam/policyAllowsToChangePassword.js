@@ -1,19 +1,19 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Policy Allow Users To Change Their Password',
+    title: 'Password Policy Allows To Change Password',
     category: 'IAM',
     domain: 'Identity and Access management',
-    description: 'Ensure IAM password policy allows users to change their passwords',
-    more_info: 'You disable the option for all users to change their own passwords and you use an IAM policy to grant permissions to only some users. This approach allows those users to change their own passwords and optionally other credentials like their own access keys.',
+    description: 'Ensure IAM password policy allows users to change their passwords.',
+    more_info: 'Password policy should allow users to rotate their passwords as a security best practice.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
     recommended_action: 'Update the password policy for users to change their passwords',
     apis: ['IAM:getAccountPasswordPolicy'],
     remediation_description: 'The password policy for password to be changed by users will be set to true.',
-    remediation_min_version: '202006221808',
+    remediation_min_version: '202209040720',
     apis_remediate: ['IAM:getAccountPasswordPolicy'],
     remediation_inputs: {
-        passwordRequiresLowercaseCreatePolicy: {
+        allowUsersToChangePasswordsCreatePolicy: {
             name: 'Create Password Policy',
             description: 'Whether to create a new password policy if one does not already exist.',
             regex: '^(true|false)$',
@@ -66,8 +66,9 @@ module.exports = {
     remediate: function(config, cache, settings, resource, callback) {
         var remediation_file = settings.remediation_file;
         var putCall = this.actions.remediate;
-        var pluginName = 'usersToChangePasswords';
-        var passwordKey = 'AllowsUsersToChangePasswords';
+        var pluginName = 'policyAllowsToChangePassword';
+        var passwordKey = 'AllowUsersToChangePassword';
+
         var input = {};
         input[passwordKey] = true;
 
