@@ -200,6 +200,7 @@ var asl = function(source, input, resourceMap, callback) {
     // Split apis into service:api
     // TODO: support conditions that use different APIs
     var service = input.conditions[0].service;
+    var subService = (input.conditions[0].subservice) ? input.conditions[0].subservice : null;
     var api = input.conditions[0].api;
     var resourcePath;
     if (resourceMap &&
@@ -209,12 +210,15 @@ var asl = function(source, input, resourceMap, callback) {
     }
 
     if (!source[service]) return callback(`Source data did not contain service: ${service}`);
-    if (!source[service][api]) return callback(`Source data did not contain API: ${api}`);
+    if (subService && !source[service][subService]) return callback(`Source data did not contain service: ${service}:${subService}`);
+    if (subService && !source[service][subService][api]) return callback(`Source data did not contain API: ${api}`);
+    if (!subService && !source[service][api]) return callback(`Source data did not contain API: ${api}`);
 
     var results = [];
+    let data = subService ? source[service][subService][api] : source[service][api];
 
-    for (var region in source[service][api]) {
-        var regionVal = source[service][api][region];
+    for (var region in data) {
+        var regionVal = data;
         if (typeof regionVal !== 'object') continue;
         if (regionVal.err) {
             results.push({
@@ -269,7 +273,7 @@ var asl = function(source, input, resourceMap, callback) {
         }
     }
 
-    callback(null, results, source[service][api]);
+    callback(null, results, data);
 };
 
 module.exports = asl;
