@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2', 'IAM'
+    'EC2'
 ];
 
 var calls = [
@@ -1470,7 +1470,7 @@ var postcalls = [
                 sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: ['ELBv2']
+                    serviceName: ['ELBv2', 'IAM']
                 }
             }
         },
@@ -1480,6 +1480,12 @@ var postcalls = [
                 reliesOnCall: 'describeRepositories',
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
+            },
+            listTagsForResource:{
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRepositories',
+                filterKey: 'resourceArn',
+                filterValue: 'repositoryArn'
             },
             sendIntegration: {
                 enabled: true
@@ -1554,10 +1560,7 @@ var postcalls = [
                 reliesOnCall: 'describeTargetGroups',
                 filterKey: 'TargetGroupArn',
                 filterValue: 'TargetGroupArn'
-            },
-            sendIntegration: {
-                enabled: true
-            },
+            }
         },
         EMR: {
             describeCluster: {
@@ -1635,6 +1638,14 @@ var postcalls = [
                 reliesOnService: 'elbv2',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeTags: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+            },
+            sendIntegration: {
+                enabled: true
             },
         },
         EMR: {
@@ -1776,11 +1787,7 @@ var postcalls = [
                 rateLimit: 500
             },
             sendIntegration: {
-                sendLast: true,
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: ['EC2']
-                }
+                enabled: true
             }
         },
         ECS: {
