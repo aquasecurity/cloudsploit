@@ -18,6 +18,7 @@
 
 var async = require('async');
 var collectors = require(__dirname + '/index.js');
+var collectData = require(__dirname + '/../../helpers/shared.js');
 
 // Standard calls that contain top-level operations
 var calls = {
@@ -225,6 +226,16 @@ var calls = {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/settings?api-version=2021-06-01'
         }
+    },
+    publicIPAddresses: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/publicIPAddresses?api-version=2021-08-01'
+        }
+    },
+    privateDnsZones: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/privateDnsZones?api-version=2018-09-01'
+        }
     }
 };
 
@@ -327,11 +338,24 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/administrators?api-version=2017-12-01'
         }
     },
+    recordSets: {
+        list: {
+            reliesOnPath: 'privateDnsZones.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/ALL?api-version=2018-09-01'
+        }
+    },
     virtualMachines: {
         get: {
             reliesOnPath: 'virtualMachines.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}?api-version=2020-12-01'
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['networkInterfaces', 'publicIPAddresses', 'recordSets']
+            }
         }
     },
     virtualMachineExtensions: {
@@ -493,6 +517,44 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/upgradeProfiles/default?api-version=2020-03-01'
         }
+    },
+    functions: {
+        config: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/config?api-version=2022-03-01'
+        },
+        usages: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/usages?api-version=2022-03-01'
+        },
+        list: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/functions?api-version=2021-03-01'
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['webApps']
+            }
+        }
+    },
+    registries: {
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['replications']
+            }
+        }
+    },
+    replications: {
+        list: {
+            reliesOnPath: 'registries.list',
+            properties: ['id'],
+            url: 'https://management.azure.com{id}/replications?api-version=2019-05-01'
+        }
     }
 };
 
@@ -592,6 +654,8 @@ var collect = function(AzureConfig, settings, callback) {
 
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
 
+    let services = [];
+
     // Login using the Azure config
     helpers.login(AzureConfig, function(loginErr, loginData) {
         if (loginErr) return callback(loginErr);
@@ -636,6 +700,36 @@ var collect = function(AzureConfig, settings, callback) {
             }
         };
 
+        let integrationCall = function(collection, settings, service, calls, postcalls, cback) {
+            let collect = JSON.parse(JSON.stringify(collection));
+            collect = Object.keys(collect).reduce((accumulator, key) => {
+                accumulator[key.toLowerCase()] = collect[key];
+                return accumulator;
+            }, {});
+
+            settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+                accumulator[key.toLowerCase()] = settings.previousCollection[key];
+                return accumulator;
+            }, {});
+
+            if (collect[service.toLowerCase()] &&
+                Object.keys(collect[service.toLowerCase()]) &&
+                Object.keys(collect[service.toLowerCase()]).length &&
+                collectData.callsCollected(service, collect, calls, postcalls)
+            ) {
+                try {
+                    collectData.processIntegration(service, settings, collect, calls, postcalls, false,function() {
+                        cback();
+                    });
+                } catch (e) {
+                    console.log(`Error in storing ${service} service data: ${JSON.stringify(e)}`);
+                    cback();
+                }
+            } else {
+                cback();
+            }
+        };
+        
         async.series([
             // Calls - process the simple calls
             function(cb) {
@@ -658,10 +752,33 @@ var collect = function(AzureConfig, settings, callback) {
                         if (!collection[service][one]) collection[service][one] = {};
                         processTopCall(collection[service][one], service, subCallObj, subCallCb);
                     }, function() {
-                        callCb();
+                        if (settings.identifier && calls[service].sendIntegration && calls[service].sendIntegration.enabled) {
+                            if (!calls[service].sendIntegration.integrationReliesOn) {
+                                integrationCall(collection, settings, service, calls, [], function() {
+                                    callCb();
+                                });
+                            } else {
+                                services.push(service);
+                                callCb();
+                            }
+                        } else {
+                            callCb();
+                        }
                     });
                 }, function() {
-                    cb();
+                    if (settings.identifier) {
+                        async.each(services, function(serv, callB) {
+                            integrationCall(collection, settings, serv, calls, [], callB);
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            services = [];
+                            cb();
+                        });
+                    } else {
+                        cb();
+                    }
                 });
             },
 
@@ -735,10 +852,33 @@ var collect = function(AzureConfig, settings, callback) {
                         if (!collection[service][one]) collection[service][one] = {};
                         processTopCall(collection[service][one], service, subCallObj, subCallCb);
                     }, function() {
-                        callCb();
+                        if (settings.identifier && postcalls[service].sendIntegration && postcalls[service].sendIntegration.enabled) {
+                            if (!postcalls[service].sendIntegration.integrationReliesOn) {
+                                integrationCall(collection, settings, service, [], [postcalls], function() {
+                                    callCb();
+                                });
+                            } else {
+                                services.push(service);
+                                callCb();
+                            }
+                        } else {
+                            callCb();
+                        }
                     });
                 }, function() {
-                    cb();
+                    if (settings.identifier) {
+                        async.each(services, function(serv, callB) {
+                            integrationCall(collection, settings, serv, [], [postcalls], callB);
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            services = [];
+                            cb();
+                        });
+                    } else {
+                        cb();
+                    }
                 });
             },
 
@@ -843,10 +983,33 @@ var collect = function(AzureConfig, settings, callback) {
                             });
                         }
                     }, function() {
-                        callCb();
+                        if (settings.identifier && tertiarycalls[service].sendIntegration && tertiarycalls[service].sendIntegration.enabled) {
+                            if (!tertiarycalls[service].sendIntegration.integrationReliesOn) {
+                                integrationCall(collection, settings, service, [], [tertiarycalls], function() {
+                                    callCb();
+                                });
+                            } else {
+                                services.push(service);
+                                callCb();
+                            }
+                        } else {
+                            callCb();
+                        }
                     });
                 }, function() {
-                    cb();
+                    if (settings.identifier) {
+                        async.each(services, function(serv, callB) {
+                            integrationCall(collection, settings, serv, [], [tertiarycalls], callB);
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            services = [];
+                            cb();
+                        });
+                    } else {
+                        cb();
+                    }
                 });
             },
 
@@ -877,10 +1040,33 @@ var collect = function(AzureConfig, settings, callback) {
                             }
                         });
                     }, function(){
-                        callCb();
+                        if (settings.identifier && specialcalls[service].sendIntegration && specialcalls[service].sendIntegration.enabled) {
+                            if (!specialcalls[service].sendIntegration.integrationReliesOn) {
+                                integrationCall(collection, settings, service, [], [specialcalls], function() {
+                                    callCb();
+                                });
+                            } else {
+                                services.push(service);
+                                callCb();
+                            }
+                        } else {
+                            callCb();
+                        }
                     });
                 }, function() {
-                    cb();
+                    if (settings.identifier) {
+                        async.each(services, function(serv, callB) {
+                            integrationCall(collection, settings, serv, [], [specialcalls], callB);
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            services = [];
+                            cb();
+                        });
+                    } else {
+                        cb();
+                    }
                 });
             },
 
