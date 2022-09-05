@@ -1,5 +1,5 @@
 var parse = function(obj, path) {
-    // (Array.isArray(obj)) return [obj];
+    //(Array.isArray(obj)) return [obj];
     if (typeof path == 'string' && path.includes('.')) path = path.split('.');
     if (Array.isArray(path) && path.length && typeof obj === 'object') {
         var localPath = path.shift();
@@ -449,6 +449,7 @@ var asl = function(source, input, resourceMap, callback) {
     if (!input.conditions || !input.conditions.length) return callback('No conditions provided for input');
 
     let service = input.conditions[0].service;
+    var subService = (input.conditions[0].subservice) ? input.conditions[0].subservice : null;
     let api = input.conditions[0].api;
     let resourcePath;
     if (resourceMap &&
@@ -458,11 +459,15 @@ var asl = function(source, input, resourceMap, callback) {
     }
 
     if (!source[service]) return callback(`Source data did not contain service: ${service}`);
-    if (!source[service][api]) return callback(`Source data did not contain API: ${api}`);
+    if (subService && !source[service][subService]) return callback(`Source data did not contain service: ${service}:${subService}`);
+    if (subService && !source[service][subService][api]) return callback(`Source data did not contain API: ${api}`);
+    if (!subService && !source[service][api]) return callback(`Source data did not contain API: ${api}`);
 
-    let results = [];
-    for (let region in source[service][api]) {
-        let regionVal = source[service][api][region];
+    var results = [];
+    let data = subService ? source[service][subService][api] : source[service][api];
+
+    for (let region in data) {
+        let regionVal = data[region];
         if (typeof regionVal !== 'object') continue;
         if (regionVal.err) {
             results.push({
@@ -509,7 +514,7 @@ var asl = function(source, input, resourceMap, callback) {
         }
     }
 
-    callback(null, results, source[service][api]);
+    callback(null, results, data);
 };
 
 module.exports = asl;
