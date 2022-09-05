@@ -968,6 +968,12 @@ module.exports = {
         'openCustomPorts'               : require(__dirname + '/plugins/google/vpcnetwork/openCustomPorts.js'),
         'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
         'openMemcached'                 : require(__dirname + '/plugins/google/vpcnetwork/openMemcached.js'),
+        'openSNMP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSNMP.js'),
+        'openLDAP'                      : require(__dirname + '/plugins/google/vpcnetwork/openLDAP.js'),
+        'openElasticsearch'             : require(__dirname + '/plugins/google/vpcnetwork/openElasticsearch.js'),
+        'openCassandraClient'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraClient.js'),
+        'openCassandraMonitoring'       : require(__dirname + '/plugins/google/vpcnetwork/openCassandraMonitoring.js'),
+        'openCassandraThrift'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraThrift.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),

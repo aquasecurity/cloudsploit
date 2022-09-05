@@ -37,7 +37,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         }, function(){
             setTimeout(function(){
                 cb();
-            }, 100);
+            }, 200);
         });
     }, function(){
         callback();

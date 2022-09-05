@@ -21,6 +21,7 @@ var async = require('async');
 var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
+var collectData = require(__dirname + '/../../helpers/shared.js');
 
 // Override max sockets
 var agent = new https.Agent({maxSockets: 100});
@@ -396,8 +397,8 @@ var collect = function(AWSConfig, settings, callback) {
                         collection[serviceLower] &&
                         Object.keys(collection[serviceLower]) &&
                         Object.keys(collection[serviceLower]).length &&
-                        helpers.callsCollected(serviceName, collection, helpers.calls, helpers.postcalls)) {
-                        helpers.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
+                        collectData.callsCollected(serviceName, collection, helpers.calls, helpers.postcalls)) {
+                        collectData.processIntegration(serviceName, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
                             return serviceCb();
                         });
                     } else {
@@ -413,9 +414,9 @@ var collect = function(AWSConfig, settings, callback) {
                         if (collection[serv.toLowerCase()] &&
                             Object.keys(collection[serv.toLowerCase()]) &&
                             Object.keys(collection[serv.toLowerCase()]).length &&
-                            helpers.callsCollected(serv, collection, helpers.calls, helpers.postcalls)
+                            collectData.callsCollected(serv, collection, helpers.calls, helpers.postcalls)
                         ) {
-                            helpers.processIntegration(serv, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
+                            collectData.processIntegration(serv, settings, collection, helpers.calls, helpers.postcalls, debugMode, function() {
                                 console.log(`Integration for service ${serv} processed.`);
                             });
                         }
