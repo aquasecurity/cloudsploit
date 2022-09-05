@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const openLDAPSSL = require('./openLDAPSSL');
+const openLDAPS = require('./openLDAPS');
 
 const describeSecurityGroups = [
     {
@@ -251,11 +251,11 @@ const createNullCache = () => {
     };
 };
 
-describe('openLDAPSSL', function () {
+describe('openLDAPS', function () {
     describe('run', function () {
         it('should PASS if no public open ports found', function (done) {
             const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -264,7 +264,7 @@ describe('openLDAPSSL', function () {
 
         it('should FAIL if security group has LDAP SSL TCP port open to public', function (done) {
             const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -273,7 +273,7 @@ describe('openLDAPSSL', function () {
 
         it('should WARN if security group is unused', function (done) {
             const cache = createCache([describeSecurityGroups[2]], [describeNetworkInterfaces[0]], []);
-            openLDAPSSL.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
+            openLDAPS.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(1);
                 done();
@@ -282,7 +282,7 @@ describe('openLDAPSSL', function () {
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -291,7 +291,7 @@ describe('openLDAPSSL', function () {
 
         it('should UNKNWON unable to describe security groups', function (done) {
             const cache = createCache(null, { message: 'Unable to describe security groups'});
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -300,7 +300,7 @@ describe('openLDAPSSL', function () {
 
         it('should not return anything if describe security groups response not found', function (done) {
             const cache = createNullCache();
-            openLDAPSSL.run(cache, {}, (err, results) => {
+            openLDAPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
