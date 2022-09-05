@@ -48,16 +48,16 @@ module.exports = {
                     
                     if (attached) {
                         helpers.addResult(results, 0,
-                            `Virtual Private Gateway is associated with VPC`,
+                            'Virtual Private Gateway is associated with VPC',
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Virtual Private Gateway is not associated with VPC`,
+                            'Virtual Private Gateway is not associated with VPC',
                             region, resource);
                     }
                 } else {
                     helpers.addResult(results, 2,
-                        `Virtual Private Gateway is not associated with VPC`,
+                        'Virtual Private Gateway is not associated with VPC',
                         region, resource);
                 }
 
