@@ -100,5 +100,7 @@ module.exports = {
     diagnosticSettingsOperations: ['global'],
     databaseAccounts: locations,
     securityCenter: ['global'],
-    advisor: ['global']
+    advisor: ['global'],
+    publicIPAddresses: locations,
+    privateDnsZones: ['global']
 };
