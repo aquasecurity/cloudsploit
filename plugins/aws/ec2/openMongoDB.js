@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     description: 'Determine if TCP port 27017 or 27018 or 27019 for MongoDB is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Kibana should be restricted to known IP addresses.',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MongoDB should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 27017 or 27018 or 27019 to known IP addresses',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
-    remediation_min_version: '202006020730',
+    remediation_min_version: '202209040730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     remediation_inputs: {
         openMongoDBReplacementIpAddress: {
@@ -92,18 +92,29 @@ module.exports = {
         var pluginName = 'openMongoDB';
         var protocol = 'tcp';
         var ports = [27017, 27018, 27019];
+        var actions = [];
+        var errors = [];
 
-        helpers.remediateOpenPorts(putCall, pluginName, protocol, ports, config, cache, settings, resource, remediation_file, function(error, action) {
-            if (error && (error.length || Object.keys(error).length)) {
-                remediation_file['post_remediate']['actions'][pluginName]['error'] = error;
+        async.each(ports,function(port, cb) {
+            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors;
                 settings.remediation_file = remediation_file;
-                return callback(error, null);
+                return callback(errors, null);
             } else {
-                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
                 settings.remediation_file = remediation_file;
-                return callback(null, action);
+                return callback(null, actions);
             }
         });
-
     }
 };

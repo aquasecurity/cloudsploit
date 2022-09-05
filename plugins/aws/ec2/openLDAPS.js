@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Open LDAP SSL',
+    title: 'Open LDAPS',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Determine if TCP port 636 for LDAP is open to the public',
+    description: 'Determine if TCP port 636 for LDAP SSL is open to the public',
     more_info: 'LDAP SSL port 636 is used for Secure LDAP authentication. Allowing Inbound traffic from any IP address to TCP port 636 is vulnerable to DoS attacks. It is a best practice to block port 636 from the public internet.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 636 to known IP addresses.',
@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
-    remediation_min_version: '202006020730',
+    remediation_min_version: '202209040730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     remediation_inputs: {
         openLDAPSSLReplacementIpAddress: {
@@ -60,7 +60,7 @@ module.exports = {
             'tcp': [636]
         };
 
-        var service = 'LDAPSSL';
+        var service = 'LDAPS';
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -89,9 +89,9 @@ module.exports = {
     remediate: function(config, cache, settings, resource, callback) {
         var remediation_file = settings.remediation_file;
         var putCall = this.actions.remediate;
-        var pluginName = 'openLDAPSSL';
+        var pluginName = 'openLDAPS';
         var protocol = 'tcp';
-        var port = 389;
+        var port = 636;
 
         helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
             if (error && (error.length || Object.keys(error).length)) {

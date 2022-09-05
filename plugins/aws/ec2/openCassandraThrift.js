@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
-    remediation_min_version: '202006020730',
+    remediation_min_version: '202209040730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     remediation_inputs: {
         openCassandraThriftReplacementIpAddress: {

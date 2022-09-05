@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open Memcached',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Determine if TCP or UDP port 11211 for DNS is open to the public',
+    description: 'Determine if TCP or UDP port 11211 for Memcached is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Memcached should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP and UDP port 11211 to known IP addresses',
@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
-    remediation_min_version: '202006020730',
+    remediation_min_version: '202209040730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     remediation_inputs: {
         openMemcachedReplacementIpAddress: {

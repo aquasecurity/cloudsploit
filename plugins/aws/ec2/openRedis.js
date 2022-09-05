@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     description: 'Determine if TCP port 6379 for Redis is open to the public',
-    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
+    more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Redis should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 6379 to known IP addresses',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
@@ -18,11 +18,8 @@ module.exports = {
             default: 'false',
         }
     },
-    compliance: {
-        cis1: '4.2 Ensure no security groups allow ingress from 0.0.0.0/0 to port 6379'
-    },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
-    remediation_min_version: '202006020730',
+    remediation_min_version: '202209040730',
     apis_remediate: ['EC2:describeSecurityGroups'],
     remediation_inputs: {
         openRedisReplacementIpAddress: {
