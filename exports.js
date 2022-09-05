@@ -968,6 +968,7 @@ module.exports = {
         'openCustomPorts'               : require(__dirname + '/plugins/google/vpcnetwork/openCustomPorts.js'),
         'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraThrift.js'),        
+        'openCassandraInternode'        : require(__dirname + '/plugins/google/vpcnetwork/openCassandraInternode.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
