@@ -108,6 +108,8 @@ module.exports = {
         'dynamoContinuousBackups'       : require(__dirname + '/plugins/aws/dynamodb/dynamoContinuousBackups.js'),
         'dynamoTableBackupExists'       : require(__dirname + '/plugins/aws/dynamodb/dynamoTableBackupExists.js'),
 
+        'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
+
         'appTierInstanceIamRole'        : require(__dirname + '/plugins/aws/ec2/appTierInstanceIamRole.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroup.js'),
         'launchWizardSecurityGroups'    : require(__dirname + '/plugins/aws/ec2/launchWizardSecurityGroups'),
@@ -117,9 +119,6 @@ module.exports = {
         'subnetIpAvailability'          : require(__dirname + '/plugins/aws/ec2/subnetIpAvailability.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
         'vpnGatewayInVpc'               : require(__dirname + '/plugins/aws/ec2/vpnGatewayInVpc.js'),
-
-        'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
-
         'instanceLimit'                 : require(__dirname + '/plugins/aws/ec2/instanceLimit.js'),
         'instanceVcpusLimit'            : require(__dirname + '/plugins/aws/ec2/instanceVcpusLimit.js'),
         'instanceMaxCount'              : require(__dirname + '/plugins/aws/ec2/instanceMaxCount.js'),
@@ -175,8 +174,6 @@ module.exports = {
         'ebsSnapshotPrivate'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPrivate.js'),
         'ebsSnapshotPublic'             : require(__dirname + '/plugins/aws/ec2/ebsSnapshotPublic.js'),
         'unusedSecurityGroups'          : require(__dirname + '/plugins/aws/ec2/unusedSecurityGroups.js'),
-        'unusedSecurityGroups'          : require(__dirname + '/plugins/aws/ec2/unusedSecurityGroups.js'),
-
         'natMultiAz'                    : require(__dirname + '/plugins/aws/ec2/natMultiAz.js'),
         'defaultVpcInUse'               : require(__dirname + '/plugins/aws/ec2/defaultVpcInUse.js'),
         'defaultVpcExists'              : require(__dirname + '/plugins/aws/ec2/defaultVpcExists.js'),
