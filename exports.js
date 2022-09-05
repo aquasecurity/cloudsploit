@@ -139,6 +139,17 @@ module.exports = {
         'openVNCClient'                 : require(__dirname + '/plugins/aws/ec2/openVNCClient.js'),
         'openVNCServer'                 : require(__dirname + '/plugins/aws/ec2/openVNCServer.js'),
         'openElasticsearch'             : require(__dirname + '/plugins/aws/ec2/openElasticsearch.js'),
+        'openMongoDB'                   : require(__dirname + '/plugins/aws/ec2/openMongoDB.js'),
+        'openCassandraClient'           : require(__dirname + '/plugins/aws/ec2/openCassandraClient.js'),
+        'openCassandraInternode'        : require(__dirname + '/plugins/aws/ec2/openCassandraInternode.js'),
+        'openCassandraMonitoring'       : require(__dirname + '/plugins/aws/ec2/openCassandraMonitoring.js'),
+        'openCassandraThrift'           : require(__dirname + '/plugins/aws/ec2/openCassandraThrift.js'),
+        'openLDAP'                      : require(__dirname + '/plugins/aws/ec2/openLDAP.js'),
+        'openLDAPS'                     : require(__dirname + '/plugins/aws/ec2/openLDAPS.js'),
+        'openSNMP'                      : require(__dirname + '/plugins/aws/ec2/openSNMP.js'),
+        'openMemcached'                 : require(__dirname + '/plugins/aws/ec2/openMemcached.js'),
+        'openInternalWeb'               : require(__dirname + '/plugins/aws/ec2/openInternalWeb.js'),
+        'openRedis'                     : require(__dirname + '/plugins/aws/ec2/openRedis.js'),
         'vpcElasticIpLimit'             : require(__dirname + '/plugins/aws/ec2/vpcElasticIpLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/aws/ec2/classicInstances.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/aws/ec2/flowLogsEnabled.js'),
@@ -233,7 +244,7 @@ module.exports = {
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
 
-        'elasticacheDefaultPorts'    : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
+        'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
         'emrClusterInVPC'               : require(__dirname + '/plugins/aws/emr/emrClusterInVPC.js'),
@@ -312,8 +323,9 @@ module.exports = {
         'iamSupportPolicy'              : require(__dirname + '/plugins/aws/iam/iamSupportPolicy.js'),
         'iamUserPresent'                : require(__dirname + '/plugins/aws/iam/iamUserPresent.js'),
         'rolePolicyUnusedServices'      : require(__dirname + '/plugins/aws/iam/rolePolicyUnusedServices.js'),
-
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
+        'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
+
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),
         'videostreamDataEncrypted'      : require(__dirname + '/plugins/aws/kinesisvideo/videostreamDataEncrypted.js'),
@@ -905,7 +917,7 @@ module.exports = {
         'bucketCMKEncryption'           : require(__dirname + '/plugins/oracle/objectstore/bucketCMKEncryption.js'),
         'bucketVersioning'              : require(__dirname + '/plugins/oracle/objectstore/bucketVersioning.js'),
         'bucketObjectEvents'            : require(__dirname + '/plugins/oracle/objectstore/bucketObjectEvents.js'),
-        'bucketWriteLogsEnabled' : require(__dirname + '/plugins/oracle/objectstore/bucketWriteLogsEnabled.js'),
+        'bucketWriteLogsEnabled'        : require(__dirname + '/plugins/oracle/objectstore/bucketWriteLogsEnabled.js'),
 
         'nfsPublicAccess'               : require(__dirname + '/plugins/oracle/filestorage/nfsPublicAccess.js'),
         'nfsPolicyProtection'           : require(__dirname + '/plugins/oracle/filestorage/nfsPolicyProtection.js'),
