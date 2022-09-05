@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const vpnGatewayAssociatedVPC = require('./vpnGatewayAssociatedVPC');
+const vpnGatewayInVpc = require('./vpnGatewayInVpc');
 
 const describeVpnGateways = [
     {
@@ -72,11 +72,11 @@ const createNullCache = () => {
 };
 
 
-describe('vpnGatewayAssociatedVPC', function () {
+describe('vpnGatewayInVpc', function () {
     describe('run', function () {
         it('should PASS if Virtual Private Gateway is associated with VPC', function (done) {
             const cache = createCache([describeVpnGateways[0]]);
-            vpnGatewayAssociatedVPC.run(cache, {}, (err, results) => {
+            vpnGatewayInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -87,7 +87,7 @@ describe('vpnGatewayAssociatedVPC', function () {
 
         it('should FAIL if Virtual Private Gateway is not associated with VPC', function (done) {
             const cache = createCache([describeVpnGateways[1]]);
-            vpnGatewayAssociatedVPC.run(cache, {}, (err, results) => {
+            vpnGatewayInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -98,7 +98,7 @@ describe('vpnGatewayAssociatedVPC', function () {
 
         it('should PASS if No Virtual Private Gateways found', function (done) {
             const cache = createCache([]);
-            vpnGatewayAssociatedVPC.run(cache, {}, (err, results) => {
+            vpnGatewayInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -109,7 +109,7 @@ describe('vpnGatewayAssociatedVPC', function () {
 
         it('should UNKNOWN if unable to describe Virtual Private Gateways', function (done) {
             const cache = createErrorCache();
-            vpnGatewayAssociatedVPC.run(cache, {}, (err, results) => {
+            vpnGatewayInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -120,7 +120,7 @@ describe('vpnGatewayAssociatedVPC', function () {
 
         it('should not return anything if describe Virtual Private Gateways response not found', function (done) {
             const cache = createNullCache();
-            vpnGatewayAssociatedVPC.run(cache, {}, (err, results) => {
+            vpnGatewayInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

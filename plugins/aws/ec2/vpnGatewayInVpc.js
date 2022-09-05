@@ -2,12 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Virtual Private Gateway Associated VPC',
+    title: 'Virtual Private Gateway In VPC',
     category: 'EC2',
     domain: 'Compute',
     description: 'Ensure Virtual Private Gateways are associated with atleast one VPC.',
-    more_info: 'Virtual Private Gateways allow communication between cloud infrastructure and the remote customer network. They help in establishing VPN connection between VPC and the customer gateway. By default, AWS VPC has a limit of 5 virtual private gateways per region, so it is a best practice to make sure virtual private gateways are always associated with a VPC and remove any unused virtual private gateways.',
-    link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/delete-vpn.html',
+    more_info: 'Virtual Private Gateways allow communication between cloud infrastructure and the remote customer network. They help in establishing VPN connection between VPC and the customer gateway. ' +
+        'Make sure virtual private gateways are always associated with a VPC to meet security and regulatory compliance requirements within your organization.',
+    link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/SetUpVPNConnections.html',
     recommended_action: 'Check if virtual private gateways have vpc associated',
     apis: ['EC2:describeVpnGateways', 'STS:getCallerIdentity'],
 
