@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
-// const { athena, finspace, healthlake } = require('../../../helpers/aws/regions');
 
 module.exports = {
     title: 'AWS Services In Use',
@@ -13,9 +12,15 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/how-does-config-work.html',
     apis: ['ConfigService:describeConfigurationRecorderStatus', 'ConfigService:getDiscoveredResourceCounts'],
     settings: {
-        allowed_services_list: {
-            name: 'Allowed Service List',
-            description: 'Comma separated list of allowed services such as ec2,iam,s3',
+        permitted_services_list: {
+            name: 'Permitted Service List',
+            description: 'Comma separated list of permitted services such as ec2,iam,s3. Choose only one setting at a time.',
+            regex: '^.*$',
+            default:''
+        },
+        unpermitted_services_list: {
+            name: 'Unpermitted Service List',
+            description: 'Comma separated list of unpermitted services such as ec2,iam,s3. Choose only one setting at a time.',
             regex: '^.*$',
             default:''
         },
@@ -27,27 +32,31 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            allowed_services_list:(settings.allowed_services_list || this.settings.allowed_services_list.default)
+            permitted_services_list:(settings.permitted_services_list || this.settings.permitted_services_list.default),
+            unpermitted_services_list:(settings.unpermitted_services_list || this.settings.unpermitted_services_list.default)
         };
 
-        config.allowed_services_list = config.allowed_services_list.replace(/\s/g, '');
+        config.permitted_services_list = config.permitted_services_list.replace(/\s/g, '');
+        config.unpermitted_services_list = config.unpermitted_services_list.replace(/\s/g, '');
 
-        if (!config.allowed_services_list.length) return callback(null, results, source);
+        if (!config.permitted_services_list.length && !config.unpermitted_services_list.length) return callback(null, results, source);
+
+        var checkPermitted = (config.permitted_services_list.length > 0);
         
-        config.allowed_services_list = config.allowed_services_list.toLowerCase().split(',');
+        config.permitted_services_list = config.permitted_services_list.toLowerCase().split(',');
 
         const allServices = {
-            'accessanalyzer': 'accessanalyzer',
+            'accessanalyzer': 'aa',
             'appflow': 'af',
             'appmesh': 'am',
             'apprunner': 'ar',
             'athena': 'athena',
-            'auditmanager': 'auditmanager',
-            'apigateway': 'apigateway' ,
+            'auditmanager': 'auditmngr',
+            'apigateway': 'agway' ,
             'cloudfront': 'cfn',
-            'dynamodb': 'dynamodb',
-            'documentdb': 'documentdb',
-            'ec2':'ec2',
+            'dynamodb': 'dynamo',
+            'documentdb': 'docdb',
+            'ec2': 'ec2',
             'ecr': 'ecr',
             'ecs': 'ecs',
             'efs': 'efs',
@@ -62,30 +71,30 @@ module.exports = {
             'frauddetector': 'fd',
             'fsx': 'fsx',
             'glue': 'glue',
-            'healthake': 'healthlake',
+            'healthake': 'hlake',
             'imagebuilder': 'ib',
             'kendra': 'kendra',
             'lex': 'lex',
             'location': 'location',
-            'managedblockchain': 'mnb',
-            'memorydb': 'memorydb',
+            'managedblockchain': 'mbc',
+            'memorydb': 'memdb',
             'mq': 'mq',
             'msk': 'msk',
             'mwaa': 'mwaa',
             'neptune': 'neptune', 
-            'guardduty': 'guardduty',
+            'guardduty': 'gd',
             'elasticsearch': 'es',
             'opensearch': 'opensearch',
-            'organizations': 'organizations',
+            'organizations': 'orgs',
             'proton': 'proton',
-            'route53': 'route53',
+            'route53': 'r53',
             'qldb': 'qldb',
             'kinesis': 'kinesis',
             'redshift': 'redshift',
             'rds': 'rds',
             'sagemaker': 'sagemaker',
             's3': 's3',
-            'autoscaling': 'autoscaling',
+            'autoscaling': 'as',
             'backup': 'backup',
             'acm': 'acm',
             'cloudformation': 'cfn',
@@ -102,18 +111,18 @@ module.exports = {
             'codepipeline': 'cp',
             'config': 'config',
             'connect': 'connect',
-            'devopsguru': 'devopsguru',
+            'devopsguru': 'dog',
             'elasticbeanstalk': 'ebs',
             'iam': 'iam',
             'kms':  'kms',
             'lambda': 'lambda',
-            'networkfirewall': 'networkfirewall',
-            'secretsmanager': 'secretsmanager',
-            'servicecatalog': 'servicecatalog',
+            'networkfirewall': 'nf',
+            'secretsmanager': 'sm',
+            'servicecatalog': 'sc',
             'shield': 'shield',
             'sns': 'sns',
             'sqs': 'sqs',
-            'stepfunctions': 'stepfunctions',
+            'stepfunctions': 'sf',
             'ssm': 'ssm',
             'waf': 'waf',
             'timestreamwrite':'tsw',
@@ -182,13 +191,24 @@ module.exports = {
                 if (allServices[value]) usedServicesShorthand.push(allServices[value]);
             }
 
-            usedServicesShorthand = usedServicesShorthand.filter(service => !config.allowed_services_list.includes(service));
-            if (usedServicesShorthand.length){
-                helpers.addResult(results, 2,
-                    'These unpermitted services are being used: ' + usedServicesShorthand.join(','), region);
+            if (checkPermitted) {
+                usedServicesShorthand = usedServicesShorthand.filter(service => !config.permitted_services_list.includes(service));
+                if (usedServicesShorthand.length){
+                    helpers.addResult(results, 2,
+                        'These unpermitted services are being used: ' + usedServicesShorthand.join(','), region);
+                } else {
+                    helpers.addResult(results, 0,
+                        'Only allowed services are being used', region);
+                }
             } else {
-                helpers.addResult(results, 0,
-                    'Only allowed services are being used', region);
+                usedServicesShorthand = usedServicesShorthand.filter(service => config.unpermitted_services_list.includes(service));
+                if (usedServicesShorthand.length){
+                    helpers.addResult(results, 2,
+                        'These unpermitted services are being used: ' + usedServicesShorthand.join(','), region);
+                } else {
+                    helpers.addResult(results, 0,
+                        'Only allowed services are being used', region);
+                }
             }
 
             rcb();  
