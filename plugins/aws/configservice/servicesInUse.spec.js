@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const configServicesInUse = require('./configServicesInUse');
+const servicesInUse = require('./servicesInUse');
 
 const describeConfigurationRecorderStatus = [
     {
@@ -261,33 +261,33 @@ const createCache = (recorderStatus, resourcesCount, recordStatusErr, resourcesC
     };
 };
 
-describe('configServicesInUse', () => {
+describe('servicesInUse', () => {
     describe('run', () => {   
-        it('should PASS if Allowed services are being used', (done) => {
+        it('should PASS if only allowed services are being usedd', (done) => {
             const cache = createCache([describeConfigurationRecorderStatus[0]], getDiscoveredResourceCounts[1]["resourceCounts"]);
-            configServicesInUse.run(cache, {config_service_in_use: 'iam, ec2, cw, cfn'}, (err, results) => {
+            servicesInUse.run(cache, {allowed_services_list: 'iam, ec2, cw, cfn'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Allowed services are being used');
+                expect(results[0].message).to.include('Only allowed services are being used');
                 done();
             });
         });
 
-        it('should FAIL if These services are being used which are not allowed', (done) => {
+        it('should FAIL if unpermitted services are being used', (done) => {
             const cache = createCache([describeConfigurationRecorderStatus[0]], getDiscoveredResourceCounts[0]["resourceCounts"]);
-            configServicesInUse.run(cache, {config_service_in_use: 'iam, ec2, cw, cfn'}, (err, results) => {
+            servicesInUse.run(cache, {allowed_services_list: 'iam, ec2, cw, cfn'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('These services are being used which are not allowed');
+                expect(results[0].message).to.include('These unpermitted services are being used');
                 done();
             });
         });
 
         it('should FAIL if Config service is not enabled', function (done) {
             const cache = createCache([]);
-            configServicesInUse.run(cache, {config_service_in_use: 'iam, ec2, cw, cfn'}, (err, results) => {;
+            servicesInUse.run(cache, {allowed_services_list: 'iam, ec2, cw, cfn'}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -298,7 +298,7 @@ describe('configServicesInUse', () => {
 
         it('should UNKNOWN if Unable to query config service', (done) => {
             const cache = createCache(null, null, null);
-            configServicesInUse.run(cache, {config_service_in_use: 'iam, ec2, cw, cfn'}, (err, results) => {
+            servicesInUse.run(cache, {allowed_services_list: 'iam, ec2, cw, cfn'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

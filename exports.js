@@ -95,7 +95,7 @@ module.exports = {
         'configComplaintRules'          : require(__dirname + '/plugins/aws/configservice/configComplaintRules.js'),
         'configDeliveryFailing'         : require(__dirname + '/plugins/aws/configservice/configDeliveryFailing.js'),
         'configServiceMissingBucket'    : require(__dirname + '/plugins/aws/configservice/configServiceMissingBucket.js'),
-        'configServicesInUse'           : require(__dirname + '/plugins/aws/configservice/configServicesInUse.js'),
+        'servicesInUse'                 : require(__dirname + '/plugins/aws/configservice/servicesInUse.js'),
 
         'devOpsGuruNotificationEnabled' : require(__dirname + '/plugins/aws/devopsguru/devOpsGuruNotificationEnabled.js'),
        

@@ -3,19 +3,19 @@ var helpers = require('../../../helpers/aws');
 // const { athena, finspace, healthlake } = require('../../../helpers/aws/regions');
 
 module.exports = {
-    title: 'AWS Config Services In Use',
+    title: 'AWS Services In Use',
     category: 'ConfigService',
     domain: 'Management and Governance',
     severity: 'MEDIUM',
-    description: 'Ensures that AWS ConfigService is in use that enables you to assess, and evaluate the configurations of your AWS resources.',
-    more_info: 'AWS ConfigService is a fully managed service that provides you with a detailed inventory of your AWS resources and their current configurations. This service also records your configuration history and notifies you when your configurations change.',
-    recommended_action: 'Enable the AWS Config Service settings for recorder checks to start recording.',
+    description: 'Ensures that only permitted services are being used in you AWS cloud account.',
+    more_info: 'Use only permitted AWS services in your cloud account in order to meet security and compliance requirements within your organization.',
+    recommended_action: 'Delete resources from unpermitted services within your AWS cloud account.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/how-does-config-work.html',
     apis: ['ConfigService:describeConfigurationRecorderStatus', 'ConfigService:getDiscoveredResourceCounts'],
     settings: {
-        config_service_in_use: {
-            name: 'Config Service In Use',
-            description: 'Comma separated list of resource types that are is use i.e. iam,ec2',
+        allowed_services_list: {
+            name: 'Allowed Service List',
+            description: 'Comma separated list of allowed services such as ec2,iam,s3',
             regex: '^.*$',
             default:''
         },
@@ -27,14 +27,14 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            config_service_in_use:(settings.config_service_in_use || this.settings.config_service_in_use.default)
+            allowed_services_list:(settings.allowed_services_list || this.settings.allowed_services_list.default)
         };
 
-        config.config_service_in_use = config.config_service_in_use.replace(/\s/g, '');
+        config.allowed_services_list = config.allowed_services_list.replace(/\s/g, '');
 
-        if (!config.config_service_in_use.length) return callback(null, results, source);
+        if (!config.allowed_services_list.length) return callback(null, results, source);
         
-        config.config_service_in_use = config.config_service_in_use.toLowerCase().split(',');
+        config.allowed_services_list = config.allowed_services_list.toLowerCase().split(',');
 
         const allServices = {
             'accessanalyzer': 'accessanalyzer',
@@ -173,23 +173,24 @@ module.exports = {
             for (let resource of discoveredResources.data){
                 if (resource.resourceType){
                     let newResource = resource.resourceType.split('::');
-                    if (newResource[1].length > 1 && !usedServices.includes(newResource[1].toLowerCase())) usedServices.push(newResource[1].toLowerCase());
+                    if (newResource.length > 1 && !usedServices.includes(newResource[1].toLowerCase())) usedServices.push(newResource[1].toLowerCase());
                 }
             }
 
-            let array = [];
+            let usedServicesShorthand = [];
             for (let value of usedServices){
-                if (allServices[value]) array.push(allServices[value]);
+                if (allServices[value]) usedServicesShorthand.push(allServices[value]);
             }
 
-            array = array.filter(service => !config.config_service_in_use.includes(service));
-            if (array.length){
+            usedServicesShorthand = usedServicesShorthand.filter(service => !config.allowed_services_list.includes(service));
+            if (usedServicesShorthand.length){
                 helpers.addResult(results, 2,
-                    'These services are being used which are not allowed: ' + array.join(','), region);
+                    'These unpermitted services are being used: ' + usedServicesShorthand.join(','), region);
             } else {
                 helpers.addResult(results, 0,
-                    'Allowed services are being used', region);
+                    'Only allowed services are being used', region);
             }
+
             rcb();  
         }, function(){
             callback(null, results, source);
