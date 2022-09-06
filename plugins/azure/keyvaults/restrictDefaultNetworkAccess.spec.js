@@ -234,11 +234,11 @@ describe('restrictDefaultNetworkAccess', function() {
             auth.run(createCache(null, null, {}, {}), {}, callback);
         });
 
-        it('should give passing result if All networks cannot access the selected Microsoft Azure Key Vault', function(done) {
+        it('should give passing result if Key Vault does not allow access to all networks', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('All networks cannot access the selected Microsoft Azure Key Vault');
+                expect(results[0].message).to.include('Key Vault does not allow access to all networks');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -246,11 +246,11 @@ describe('restrictDefaultNetworkAccess', function() {
             auth.run(createCache(null, [listVaults[0]]), {}, callback);
         });
 
-        it('should give failing result if All networks can access the selected Microsoft Azure Key Vault', function(done) {
+        it('should give failing result if Key Vault allows access to all networks', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('All networks can access the selected Microsoft Azure Key Vault');
+                expect(results[0].message).to.include('Key Vault allows access to all networks');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

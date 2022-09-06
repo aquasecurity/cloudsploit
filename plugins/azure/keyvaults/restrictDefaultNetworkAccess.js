@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Restrict Default Network Access for Azure Key Vaults',
+    title: 'Key Vault Restrict Default Network Access',
     category: 'Key Vaults',
     domain: 'Application Integration',
-    description: 'Ensure that your Microsoft Azure Key Vaults are configured to deny access to traffic from all networks.',
+    description: 'Ensure that Microsoft Azure Key Vaults are configured to deny access to traffic from all networks.',
     more_info: 'Access to Azure Key Vaults should be granted to specific Virtual Networks, which allow a secure network boundary for specific applications, or to public IP addresses/IP address ranges, which can enable connections from trusted Internet services and on-premises networks.',
-    recommended_action: 'Ensure that Microsoft Azure Key Vaults could be accessed by specific Virtual Networks.',
+    recommended_action: 'Ensure that Microsoft Azure Key Vaults can only be accessed by specific Virtual Networks.',
     link: 'https://docs.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints',
     apis: ['vaults:list'],
 
@@ -34,16 +34,17 @@ module.exports = {
 
             vaults.data.forEach((vault) => {
                 if (vault.networkAcls){
-                    if (vault.networkAcls && vault.networkAcls.defaultAction && vault.networkAcls.defaultAction === 'Allow') {
+                    if (vault.networkAcls && ((!vault.networkAcls.defaultAction) ||
+                        (vault.networkAcls.defaultAction  && vault.networkAcls.defaultAction === 'Allow'))) {
                         helpers.addResult(results, 2,
-                            'All networks can access the selected Microsoft Azure Key Vault', location, vault.id);
+                            'Key Vault allows access to all networks', location, vault.id);
                     } else {
                         helpers.addResult(results, 0,
-                            'All networks cannot access the selected Microsoft Azure Key Vault', location, vault.id);
+                            'Key Vault does not allow access to all networks', location, vault.id);
                     }
                 } else {
                     helpers.addResult(results, 0,
-                        'Network Acls are not configured', location, vault.id);
+                        'Network Acl is not configured for Key Vault', location, vault.id);
                 }
             });
 
