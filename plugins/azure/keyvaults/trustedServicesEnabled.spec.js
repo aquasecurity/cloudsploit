@@ -3,7 +3,7 @@ var auth = require('./trustedServicesEnabled');
 
 const listVaults = [
     {
-        "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.KeyVault/vaults/xZbb",  
+        "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.KeyVault/vaults/xZbb",  
         "name": "xZbb",
         "type": "Microsoft.KeyVault/vaults",
         "location": "eastus",
@@ -26,11 +26,11 @@ const listVaults = [
         },
         "privateEndpointConnections": [
           {
-            "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.KeyVault/vaults/xZbb/privateEndpointConnections/sadeed",
+            "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.KeyVault/vaults/xZbb/privateEndpointConnections/sadeed",
             "properties": {
               "provisioningState": "Succeeded",
               "privateEndpoint": {
-                "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.Network/privateEndpoints/sadeed"
+                "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Network/privateEndpoints/sadeed"
               },
               "privateLinkServiceConnectionState": {
                 "status": "Approved",
@@ -97,7 +97,7 @@ const listVaults = [
         "provisioningState": "Succeeded"
     },
     {
-        "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.KeyVault/vaults/xZbb",  
+        "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.KeyVault/vaults/xZbb",  
         "name": "xZbb",
         "type": "Microsoft.KeyVault/vaults",
         "location": "eastus",
@@ -120,11 +120,11 @@ const listVaults = [
         },
         "privateEndpointConnections": [
           {
-            "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.KeyVault/vaults/xZbb/privateEndpointConnections/sadeed",
+            "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.KeyVault/vaults/xZbb/privateEndpointConnections/sadeed",
             "properties": {
               "provisioningState": "Succeeded",
               "privateEndpoint": {
-                "id": "/subscriptions/1234/resourceGroups/sadeedrg/providers/Microsoft.Network/privateEndpoints/sadeed"
+                "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Network/privateEndpoints/sadeed"
               },
               "privateLinkServiceConnectionState": {
                 "status": "Approved",
