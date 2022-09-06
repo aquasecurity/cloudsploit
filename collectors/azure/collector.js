@@ -481,7 +481,7 @@ var postcalls = {
             properties: ['vaultUri'],
             url: '{vaultUri}certificates?api-version=7.3',
             vault: true
-        }
+        },
     },
     databases: {
         listByServer: {

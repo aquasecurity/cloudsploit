@@ -810,6 +810,7 @@ module.exports = {
         'allowedCertificateKeyTypes'    : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
         'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
         'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
+        'restrictDefaultNetworkAccess'  : require(__dirname + '/plugins/azure/keyvaults/restrictDefaultNetworkAccess.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
