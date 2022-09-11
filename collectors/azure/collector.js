@@ -106,7 +106,7 @@ var calls = {
     },
     networkWatchers: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2020-03-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2022-01-01'
         }
     },
     policyAssignments: {
@@ -300,7 +300,7 @@ var postcalls = {
         listByServer: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/failoverGroups?api-version=2017-03-01-preview'
+            url: 'https://management.azure.com/{id}/failoverGroups?api-version=2021-02-01-preview'
         }
     },
     serverAutomaticTuning: {
@@ -448,6 +448,7 @@ var postcalls = {
             reliesOnPath: 'webApps.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/config/appsettings/list?api-version=2021-02-01',
+            post: true
         },
         getBackupConfiguration: {
             reliesOnPath: 'webApps.list',
@@ -570,17 +571,17 @@ var tertiarycalls = {
         listByEndpoint: {
             reliesOnPath: 'endpoints.listByProfile',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
         listByLoadBalancer: {
             reliesOnPath: 'loadBalancers.listAll',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
         listByNetworkSecurityGroup: {
             reliesOnPath: 'networkSecurityGroups.listAll',
@@ -592,7 +593,7 @@ var tertiarycalls = {
         listByDatabase: {
             reliesOnPath: 'databases.listByServer',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2017-10-01-preview'
+            url: 'https://management.azure.com/{id}/backupShortTermRetentionPolicies?api-version=2020-11-01-preview'
         }
     },
     getCertificatePolicy: {
