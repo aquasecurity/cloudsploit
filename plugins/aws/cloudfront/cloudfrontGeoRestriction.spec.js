@@ -27,7 +27,33 @@ const listDistributions = [
                 ]
             }
         },
-    }
+    },
+    {
+        "Id": "E1A8WDMPAL5GUL",
+        "ARN": "arn:aws:cloudfront::111122223333:distribution/E1A8WDMPAL5GUL",
+        "Restrictions": {
+            "GeoRestriction": {
+                "RestrictionType": "blacklist",
+                "Quantity": 1,
+                "Items": [
+                    "AF"
+                ]
+            }
+        },
+    },
+    {
+        "Id": "E1A8WDMPAL5GUL",
+        "ARN": "arn:aws:cloudfront::111122223333:distribution/E1A8WDMPAL5GUL",
+        "Restrictions": {
+            "GeoRestriction": {
+                "RestrictionType": "whitelist",
+                "Quantity": 1,
+                "Items": [
+                    "AF"
+                ]
+            }
+        },
+    },
 ];
 
 const createCache = (data, err) => {
@@ -56,23 +82,45 @@ const createNullCache = () => {
 
 describe('cloudfrontGeoRestriction', function () {
     describe('run', function () {
-        it('should PASS if geo restriction is enabled within CloudFront distribution.', function (done) {
+        it('should PASS if CloudFront distribution is whitelisting required geographic locations', function (done) {
             const cache = createCache([listDistributions[0]]);
-            cloudfrontGeoRestriction.run(cache, {}, (err, results) => {
+            cloudfrontGeoRestriction.run(cache, {cloudfront_whitelisted_geo_locations: 'AR'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Geo restriction feature is enabled within CloudFront distribution.');
+                expect(results[0].message).to.include('CloudFront distribution is whitelisting required geographic locations');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should FAIL if geo restriction is not enabled within CloudFront distribution.', function (done) {
+        it('should PASS if Geo restriction feature is enabled within CloudFront distribution', function (done) {
+            const cache = createCache([listDistributions[0]]);
+            cloudfrontGeoRestriction.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Geo restriction feature is enabled within CloudFront distribution');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
+        it('should FAIL if geo restriction is not enabled within CloudFront distribution', function (done) {
             const cache = createCache([listDistributions[1]]);
             cloudfrontGeoRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Geo restriction feature is not enabled within CloudFront distribution.');
+                expect(results[0].message).to.include('Geo restriction feature is not enabled within CloudFront distribution');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
+        it('should FAIL if CloudFront distribution does not have required locations whitelisted', function (done) {
+            const cache = createCache([listDistributions[3]]);
+            cloudfrontGeoRestriction.run(cache, {cloudfront_whitelisted_geo_locations: 'AR'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('CloudFront distribution does not have these locations whitelisted');
                 expect(results[0].region).to.equal('global');
                 done();
             });
