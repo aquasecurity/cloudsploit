@@ -260,7 +260,7 @@ describe('dataDisksEncrypted', function () {
     describe('run', function () {
         it('should FAIL if disk is not encrypted', function (done) {
             const cache = createCache([describeDisks[3]], listKeys);
-            dataDisksEncrypted.run(cache, {}, (err, results) => {
+            dataDisksEncrypted.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Data disk is not encrypted');
@@ -271,7 +271,7 @@ describe('dataDisksEncrypted', function () {
 
         it('should FAIL if Data disk is not encrypted to target encryption level', function (done) {
             const cache = createCache([describeDisks[0]], listKeys);
-            dataDisksEncrypted.run(cache, { data_disks_encryption_level: 'alibabacmk' }, (err, results) => {
+            dataDisksEncrypted.run(cache, { data_disks_encryption_level: 'alibabacmk', china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Data disk is not encrypted');
@@ -282,7 +282,7 @@ describe('dataDisksEncrypted', function () {
 
         it('should PASS if data disks are encrypted', function (done) {
             const cache = createCache([describeDisks[0]], listKeys);
-            dataDisksEncrypted.run(cache, {}, (err, results) => {
+            dataDisksEncrypted.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Data disk is encrypted');
@@ -293,7 +293,7 @@ describe('dataDisksEncrypted', function () {
 
         it('should PASS if no ECS disks found', function (done) {
             const cache = createCache([]);
-            dataDisksEncrypted.run(cache, {}, (err, results) => {
+            dataDisksEncrypted.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No ECS disks found');
@@ -304,7 +304,7 @@ describe('dataDisksEncrypted', function () {
 
         it('should UNKNOWN if unable to query ECS disks', function (done) {
             const cache = createCache([], null, null, { err: 'Unable to query ECS disks' });
-            dataDisksEncrypted.run(cache, {}, (err, results) => {
+            dataDisksEncrypted.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query ECS disks');

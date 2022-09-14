@@ -214,7 +214,7 @@ describe('securityNotificationsEnabled', function () {
     describe('run', function () {
         it('should FAIL if security notifications are not enabled', function (done) {
             const cache = createCache(describeNoticeConfig[1]);
-            securityNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Security notifications are not enabled');
@@ -225,7 +225,7 @@ describe('securityNotificationsEnabled', function () {
 
         it('should PASS if security notifications are enabled for all alerts', function (done) {
             const cache = createCache(describeNoticeConfig[0]);
-            securityNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Security notifications are enabled for all alerts');
@@ -236,7 +236,7 @@ describe('securityNotificationsEnabled', function () {
 
         it('should PASS if no TDS notice config found', function (done) {
             const cache = createCache([]);
-            securityNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No TDS notice config found');
@@ -247,7 +247,7 @@ describe('securityNotificationsEnabled', function () {
 
         it('should UNKNOWN if Unable to query TDS notice config', function (done) {
             const cache = createCache([], { err: 'Unable to query TDS notice config' });
-            securityNotificationsEnabled.run(cache, {}, (err, results) => {
+            securityNotificationsEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query TDS notice config');

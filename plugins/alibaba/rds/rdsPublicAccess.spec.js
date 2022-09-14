@@ -75,7 +75,7 @@ describe('rdsPublicAccess', function () {
     describe('run', function () {
         it('should FAIL if RDS DB instance is publicly accessible', function (done) {
             const cache = createCache(describeDBInstances, describeInstanceWhitelist[1], null, null);
-            rdsPublicAccess.run(cache, {}, (err, results) => {
+            rdsPublicAccess.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('RDS DB instance is publicly accessible');
@@ -86,7 +86,7 @@ describe('rdsPublicAccess', function () {
 
         it('should PASS if RDS DB instance is not publicly accessible', function (done) {
             const cache = createCache(describeDBInstances, describeInstanceWhitelist[0]);
-            rdsPublicAccess.run(cache, {}, (err, results) => {
+            rdsPublicAccess.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RDS DB instance is not publicly accessible');
@@ -97,7 +97,7 @@ describe('rdsPublicAccess', function () {
 
         it('should PASS if no RDS DB instances found', function (done) {
             const cache = createCache([]);
-            rdsPublicAccess.run(cache, {}, (err, results) => {
+            rdsPublicAccess.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RDS DB instances found');
@@ -108,7 +108,7 @@ describe('rdsPublicAccess', function () {
 
         it('should UNKNOWN if unable to query RDS DB instances', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RDS DB instances' });
-            rdsPublicAccess.run(cache, {}, (err, results) => {
+            rdsPublicAccess.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RDS DB instances');
@@ -119,7 +119,7 @@ describe('rdsPublicAccess', function () {
 
         it('should UNKNOWN if Unable to query DB IP Array List', function (done) {
             const cache = createCache([describeDBInstances[0]], {}, null, { err: 'Unable to query DB IP Array List' });
-            rdsPublicAccess.run(cache, {}, (err, results) => {
+            rdsPublicAccess.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query DB IP Array List');

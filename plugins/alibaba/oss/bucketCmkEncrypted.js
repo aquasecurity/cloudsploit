@@ -33,6 +33,7 @@ module.exports = {
         var results = [];
         var source = {};
 
+        var regions = helpers.regions(settings);
         var region = helpers.defaultRegion(settings);
 
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', region, 'data']);
@@ -68,6 +69,8 @@ module.exports = {
 
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
+
+            if (bucketLocation !== region && !regions.includes(bucketLocation)) return;
 
             var getBucketInfo = helpers.addSource(cache, source,
                 ['oss', 'getBucketInfo', region, bucket.name]);

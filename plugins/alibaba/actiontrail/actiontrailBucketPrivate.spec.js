@@ -161,7 +161,7 @@ describe('actiontrailBucketPrivate', function () {
     describe('run', function () {
         it('should FAIL if ActionTrail trail Bucket ACL allows public access', function (done) {
             const cache = createCache(listBuckets, null, [describeTrails[1]], null, getBucketInfo[1]);
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('ActionTrail trail Bucket ACL allows public-read-write access');
@@ -172,7 +172,7 @@ describe('actiontrailBucketPrivate', function () {
 
         it('should PASS if ActionTrail trail Bucket ACL allows private access', function (done) {
             const cache = createCache(listBuckets, null, [describeTrails[0]], null, getBucketInfo[0]);
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('ActionTrail trail Bucket ACL allows private access');
@@ -183,7 +183,7 @@ describe('actiontrailBucketPrivate', function () {
 
         it('should PASS if no ActionTrail trail found', function (done) {
             const cache = createCache(listBuckets, null, []);
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No ActionTrail trail found');
@@ -194,7 +194,7 @@ describe('actiontrailBucketPrivate', function () {
 
         it('should PASS if no ActionTrail trail with OSS bucket destination found', function (done) {
             const cache = createCache(listBuckets, null, [describeTrails[2]], null);
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No ActionTrail trail with OSS bucket destination found');
@@ -205,7 +205,7 @@ describe('actiontrailBucketPrivate', function () {
 
         it('should UNKNOWN if unable to query ActionTrail trails', function (done) {
             const cache = createCache(listBuckets, null, [], { err: 'Unable to query ActionTrail trails' });
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query ActionTrail trails');
@@ -216,7 +216,7 @@ describe('actiontrailBucketPrivate', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, null, describeTrails, null, null, { err: 'Unable to query OSS bucket info' });
-            actiontrailBucketPrivate.run(cache, {}, (err, results) => {
+            actiontrailBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');

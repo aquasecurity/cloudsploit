@@ -83,7 +83,7 @@ describe('bucketLifecycle', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have lifecycle policies', function (done) {
             const cache = createCache(listBuckets, getBucketLifecycle[2], null, getBucketLifecycleErr);
-            bucketLifecycle.run(cache, {}, (err, results) => {
+            bucketLifecycle.run(cache, { china: true }, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(2);
               expect(results[0].message).to.include('No lifecycle policy exists');
@@ -94,7 +94,7 @@ describe('bucketLifecycle', function () {
 
         it('should PASS if bucket has lifecycle policies enabled', function (done) {
             const cache = createCache(listBuckets, getBucketLifecycle[0]);
-            bucketLifecycle.run(cache, {}, (err, results) => {
+            bucketLifecycle.run(cache, { china: true }, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(0);
               expect(results[0].message).to.include('OSS bucket has lifecycle policy enabled');
@@ -105,7 +105,7 @@ describe('bucketLifecycle', function () {
 
         it('should PASS if bucket has lifecycle policies disabled', function (done) {
           const cache = createCache(listBuckets, getBucketLifecycle[1]);
-          bucketLifecycle.run(cache, {}, (err, results) => {
+          bucketLifecycle.run(cache, { china: true }, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
             expect(results[0].message).to.include('OSS bucket does not have lifecycle policy enabled');
@@ -116,7 +116,7 @@ describe('bucketLifecycle', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            bucketLifecycle.run(cache, {}, (err, results) => {
+            bucketLifecycle.run(cache, { china: true }, (err, results) => {
               expect(results.length).to.equal(1);
               expect(results[0].status).to.equal(0);
               expect(results[0].message).to.include('No OSS buckets found');
@@ -127,7 +127,7 @@ describe('bucketLifecycle', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            bucketLifecycle.run(cache, {}, (err, results) => {
+            bucketLifecycle.run(cache, { china: true }, (err, results) => {
               expect(results[0].message).to.include('Unable to query for OSS buckets');
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -138,7 +138,7 @@ describe('bucketLifecycle', function () {
 
         it('should UNKNOWN if Unable to query OSS bucket lifecycle policy info', function (done) {
             const cache = createCache(listBuckets, {}, null, 'Unable to query OSS bucket lifecycle policy info');
-            bucketLifecycle.run(cache, {}, (err, results) => {
+            bucketLifecycle.run(cache, { china: true }, (err, results) => {
               expect(results[0].message).to.include('Unable to query OSS bucket lifecycle policy info');
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

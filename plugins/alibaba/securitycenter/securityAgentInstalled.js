@@ -17,7 +17,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
 
         async.each(regions.tds, function(region, rcb) {
             var describeFieldStatistics = helpers.addSource(cache, source,

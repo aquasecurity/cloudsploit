@@ -117,7 +117,7 @@ describe('bucketTransferAcceleration', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have transfer acceleration enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[0]);
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have transfer acceleration enabled');
@@ -128,7 +128,7 @@ describe('bucketTransferAcceleration', function () {
 
         it('should FAIL if bucket info does not have transfer acceleration property', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[2]);
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have transfer acceleration enabled');
@@ -139,7 +139,7 @@ describe('bucketTransferAcceleration', function () {
 
         it('should PASS if bucket has transfer acceleration enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[1]);
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket has transfer acceleration enabled');
@@ -150,7 +150,7 @@ describe('bucketTransferAcceleration', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -161,7 +161,7 @@ describe('bucketTransferAcceleration', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -172,7 +172,7 @@ describe('bucketTransferAcceleration', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, {}, null, { err: 'Unable to query OSS bucket info' });
-            bucketTransferAcceleration.run(cache, {}, (err, results) => {
+            bucketTransferAcceleration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');

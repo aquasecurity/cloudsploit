@@ -78,7 +78,7 @@ describe('inactiveUserDisabled', function () {
             const loginDate = new Date(getUserData[0].LastLoginDate);
             const diffInDays = helpers.daysBetween(currentDate, loginDate);
             const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[0], null, null);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include(`RAM user inactive for`);
@@ -90,7 +90,7 @@ describe('inactiveUserDisabled', function () {
             const loginDate = new Date(getUserData[0].LastLoginDate);
             const diffInDays = helpers.daysBetween(currentDate, loginDate);
             const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[1], {Code : 'EntityNotExist.User.LoginProfile'}, null);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include(`RAM user inactive for`);
@@ -102,7 +102,7 @@ describe('inactiveUserDisabled', function () {
             const loginDate = new Date(getUserData[1].LastLoginDate);
             const diffInDays = helpers.daysBetween(currentDate, loginDate);
             const cache = createCache([listUsers[1]], getUserData[1], getUserLoginProfile[0], null, null);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 //expect(results[0].status).to.equal(0);
                 //expect(results[0].message).to.include(`RAM user last activity was ${diffInDays} days ago`);
@@ -112,7 +112,7 @@ describe('inactiveUserDisabled', function () {
         });
         it('should PASS if No RAM users found', function (done) {
             const cache = createCache([]);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RAM users found');
@@ -122,7 +122,7 @@ describe('inactiveUserDisabled', function () {
         });
         it('should UNKNOWN if Unable to query login profile', function (done) {
             const cache = createCache([listUsers[0]], getUserData[0], getUserLoginProfile[0], {}, null);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query user login profile');
@@ -132,7 +132,7 @@ describe('inactiveUserDisabled', function () {
         });
         it('should UNKNOWN if Unable to query RAM users', function (done) {
             const cache = createCache(null, null, null, null);
-            inactiveUserDisabled.run(cache, {}, (err, results) => {
+            inactiveUserDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM users');
