@@ -49,7 +49,7 @@ describe('rdsAuditingEnabled', function () {
     describe('run', function () {
         it('should FAIL if RDS DB instance does not have sql auditing enabled', function (done) {
             const cache = createCache(describeDBInstances, describeSqlAudit[1]);
-            rdsAuditingEnabled.run(cache, {}, (err, results) => {
+            rdsAuditingEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('RDS DB instance does not have sql auditing enabled');
@@ -60,7 +60,7 @@ describe('rdsAuditingEnabled', function () {
 
         it('should PASS if RDS DB instance have sql auditing enabled', function (done) {
             const cache = createCache(describeDBInstances, describeSqlAudit[0]);
-            rdsAuditingEnabled.run(cache, {}, (err, results) => {
+            rdsAuditingEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RDS DB instance have sql auditing enabled');
@@ -71,7 +71,7 @@ describe('rdsAuditingEnabled', function () {
 
         it('should PASS if no RDS DB instances found', function (done) {
             const cache = createCache([]);
-            rdsAuditingEnabled.run(cache, {}, (err, results) => {
+            rdsAuditingEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RDS DB instances found');
@@ -82,7 +82,7 @@ describe('rdsAuditingEnabled', function () {
 
         it('should UNKNOWN if unable to query RDS DB instances', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RDS DB instances' });
-            rdsAuditingEnabled.run(cache, {}, (err, results) => {
+            rdsAuditingEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RDS DB instances');
@@ -93,7 +93,7 @@ describe('rdsAuditingEnabled', function () {
 
         it('should UNKNOWN if unable to query DB sql auditing policy', function (done) {
             const cache = createCache([describeDBInstances[0]], {}, null, { err: 'Unable to query DB sql auditing policy' });
-            rdsAuditingEnabled.run(cache, {}, (err, results) => {
+            rdsAuditingEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query DB sql auditing policy');

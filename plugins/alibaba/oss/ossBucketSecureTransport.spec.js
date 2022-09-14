@@ -113,7 +113,7 @@ describe('ossBucketSecureTransport', function () {
     describe('run', function () {
         it('should PASS if OSS bucket has secure transport enabled', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[0]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('OSS bucket has secure transport enabled');
@@ -124,7 +124,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should FAIL if OSS bucket does not have secure transport enabled', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[1]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('OSS bucket does not have secure transport enabled');
@@ -135,7 +135,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should FAIL if no OSS bucket policy found', function (done) {
             const cache = createCache(listBuckets, getBucketPolicy[2]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No OSS bucket policy found');
@@ -146,7 +146,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -157,7 +157,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -168,7 +168,7 @@ describe('ossBucketSecureTransport', function () {
 
         it('should UNKNOWN if unable to query OSS bucket policy', function (done) {
             const cache = createCache([listBuckets[0]], {}, null, { err: 'Unable to query OSS bucket policy' });
-            ossBucketSecureTransport.run(cache, {}, (err, results) => {
+            ossBucketSecureTransport.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket policy');

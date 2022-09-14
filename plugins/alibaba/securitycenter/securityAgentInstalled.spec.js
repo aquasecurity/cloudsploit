@@ -55,7 +55,7 @@ describe('securityAgentInstalled', function () {
     describe('run', function () {
         it('should FAIL if there are unprotected assets', function (done) {
             const cache = createCache(describeFieldStatistics[1]);
-            securityAgentInstalled.run(cache, {}, (err, results) => {
+            securityAgentInstalled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('There are 2 unprotected assets');
@@ -66,7 +66,7 @@ describe('securityAgentInstalled', function () {
 
         it('should PASS if there are no unprotected assets', function (done) {
             const cache = createCache(describeFieldStatistics[0]);
-            securityAgentInstalled.run(cache, {}, (err, results) => {
+            securityAgentInstalled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('There are no unprotected assets');
@@ -77,7 +77,7 @@ describe('securityAgentInstalled', function () {
 
         it('should UNKNOWN if Unable to query TDS field statistics', function (done) {
             const cache = createCache([], { err: 'Unable to query TDS field statictics' });
-            securityAgentInstalled.run(cache, {}, (err, results) => {
+            securityAgentInstalled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query TDS field statistics');

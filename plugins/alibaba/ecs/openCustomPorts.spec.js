@@ -100,7 +100,7 @@ describe('openCustomPorts', function () {
     describe('run', function () {
         it('should PASS if no public open ports found', function (done) {
             const cache = createCache(describeSecurityGroups, describeSecurityGroupAttribute[0]);
-            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22', china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No public open ports found');
@@ -111,7 +111,7 @@ describe('openCustomPorts', function () {
 
         it('should FAIL if security group has custom ports open to public', function (done) {
             const cache = createCache(describeSecurityGroups, describeSecurityGroupAttribute[1]);
-            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:60,tcp:65-70' }, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:60,tcp:65-70', china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('has custom:TCP:60, some of TCP:65-70 open to 0.0.0.0/0');
@@ -122,7 +122,7 @@ describe('openCustomPorts', function () {
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22', china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No security groups found');
@@ -133,7 +133,7 @@ describe('openCustomPorts', function () {
 
         it('should UNKNWON unable to describe security groups', function (done) {
             const cache = createCache(null, { message: 'Unable to describe security groups'});
-            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22' }, (err, results) => {
+            openCustomPorts.run(cache, { restricted_open_ports: 'tcp:22', china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to describe security groups');

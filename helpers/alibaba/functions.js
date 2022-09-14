@@ -12,11 +12,12 @@ function createArn(service, account, resourceType, resourceId, region) {
 
 function findOpenPorts(cache, groups, ports, service, region, results) {
     var found = false;
+    var defRegion = defaultRegion({});
 
     for (var group of groups) {
         if (!group.SecurityGroupId) continue;
 
-        var accountId = helpers.addSource(cache, {}, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
+        var accountId = helpers.addSource(cache, {}, ['sts', 'GetCallerIdentity', defRegion, 'data']);
 
         var resource = createArn('ecs', accountId, 'securitygroup', group.SecurityGroupId, region);
 

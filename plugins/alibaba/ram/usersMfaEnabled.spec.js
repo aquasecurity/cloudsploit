@@ -58,7 +58,7 @@ describe('usersMfaEnabled', function () {
     describe('run', function () {
         it('should FAIL if RAM user does not have MFA device configured', function (done) {
             const cache = createCache([listUsers[1]], null, null, getUserMfa[1]);
-            usersMfaEnabled.run(cache, {}, (err, results) => {
+            usersMfaEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('RAM user does not have MFA device configured');
@@ -69,7 +69,7 @@ describe('usersMfaEnabled', function () {
 
         it('should PASS if RAM user has MFA device configured', function (done) {
             const cache = createCache([listUsers[0]], getUserMfa[0]);
-            usersMfaEnabled.run(cache, {}, (err, results) => {
+            usersMfaEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RAM user has MFA device configured');
@@ -80,7 +80,7 @@ describe('usersMfaEnabled', function () {
 
         it('should PASS if No RAM users found', function (done) {
             const cache = createCache([]);
-            usersMfaEnabled.run(cache, {}, (err, results) => {
+            usersMfaEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RAM users found');
@@ -91,7 +91,7 @@ describe('usersMfaEnabled', function () {
 
         it('should UNKNOWN if Unable to query RAM users', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RAM users' });
-            usersMfaEnabled.run(cache, {}, (err, results) => {
+            usersMfaEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM users');

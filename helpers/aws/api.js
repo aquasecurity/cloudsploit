@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2', 'IAM'
+    'EC2'
 ];
 
 var calls = {
@@ -1537,7 +1537,7 @@ var postcalls = [
                 sendLast: true,
                 enabled: true,
                 integrationReliesOn: {
-                    serviceName: ['ELBv2']
+                    serviceName: ['ELBv2', 'IAM']
                 }
             }
         },
@@ -1547,6 +1547,12 @@ var postcalls = [
                 reliesOnCall: 'describeRepositories',
                 filterKey: 'repositoryName',
                 filterValue: 'repositoryName'
+            },
+            listTagsForResource:{
+                reliesOnService: 'ecr',
+                reliesOnCall: 'describeRepositories',
+                filterKey: 'resourceArn',
+                filterValue: 'repositoryArn'
             },
             sendIntegration: {
                 enabled: true
@@ -1648,6 +1654,11 @@ var postcalls = [
                 reliesOnCall: 'describeTargetGroups',
                 filterKey: 'TargetGroupArn',
                 filterValue: 'TargetGroupArn'
+            },
+            describeTags: {
+                reliesOnService: 'elbv2',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
             },
             sendIntegration: {
                 enabled: true
@@ -1759,11 +1770,7 @@ var postcalls = [
                 override: true
             },
             sendIntegration: {
-                sendLast: true,
-                enabled: true,
-                integrationReliesOn: {
-                    serviceName: ['EC2']
-                }
+                enabled: true
             }
         },
         Kendra: {
@@ -1932,6 +1939,12 @@ var postcalls = [
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBParameterGroups',
                 override: true
+            },
+            describeDBSnapshotAttributes: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBSnapshots',
+                filterKey: 'DBSnapshotIdentifier',
+                filterValue: 'DBSnapshotIdentifier'
             },
             sendIntegration: {
                 enabled: true

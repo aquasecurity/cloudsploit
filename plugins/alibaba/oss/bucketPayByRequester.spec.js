@@ -47,7 +47,7 @@ describe('bucketRequestPayment', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have pay per requester enabled', function (done) {
             const cache = createCache(listBuckets, getBucketRequestPayment[1]);
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have pay-by-requester feature enabled');
@@ -57,7 +57,7 @@ describe('bucketRequestPayment', function () {
         });
         it('should FAIL if payer property is not returned', function (done) {
             const cache = createCache(listBuckets, getBucketRequestPayment[2]);
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have pay-by-requester feature enabled');
@@ -68,7 +68,7 @@ describe('bucketRequestPayment', function () {
 
         it('should PASS if bucket has pay per requester enabled', function (done) {
             const cache = createCache(listBuckets, getBucketRequestPayment[0]);
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket has pay-by-requester feature enabled');
@@ -79,7 +79,7 @@ describe('bucketRequestPayment', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -90,7 +90,7 @@ describe('bucketRequestPayment', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -101,7 +101,7 @@ describe('bucketRequestPayment', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, {}, null, { err: 'Unable to query OSS bucket info' });
-            bucketRequestPayment.run(cache, {}, (err, results) => {
+            bucketRequestPayment.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');
