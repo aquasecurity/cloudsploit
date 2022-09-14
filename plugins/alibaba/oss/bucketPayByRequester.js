@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
 
+        var regions = helpers.regions(settings);
         var region = helpers.defaultRegion(settings);
 
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', region, 'data']);
@@ -38,6 +39,8 @@ module.exports = {
                 ['oss', 'getBucketRequestPayment', region, bucket.name]);
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
+
+            if (bucketLocation !== region && !regions.includes(bucketLocation)) return;
 
             var resource = helpers.createArn('oss', accountId, 'bucket', bucket.name, bucketLocation);
 

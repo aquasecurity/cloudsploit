@@ -506,7 +506,7 @@ describe("rdsLogConnectionEnabled", function () {
   describe("run", function () {
     it("should FAIL if RDS DB instance does not have log_connections parameter enabled", function (done) {
       const cache = createCache(describeDBInstances, describeParameters[0]);
-      rdsLogConnectionEnabled.run(cache, {}, (err, results) => {
+      rdsLogConnectionEnabled.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(2);
         expect(results[0].message).to.include(
@@ -519,7 +519,7 @@ describe("rdsLogConnectionEnabled", function () {
 
     it("should PASS if RDS DB instance has log_connections parameter enabled", function (done) {
       const cache = createCache(describeDBInstances, describeParameters[1]);
-      rdsLogConnectionEnabled.run(cache, {}, (err, results) => {
+      rdsLogConnectionEnabled.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(0);
         expect(results[0].message).to.include(
@@ -532,7 +532,7 @@ describe("rdsLogConnectionEnabled", function () {
 
     it("should PASS if no RDS DB instances found", function (done) {
       const cache = createCache([]);
-      rdsLogConnectionEnabled.run(cache, {}, (err, results) => {
+      rdsLogConnectionEnabled.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(0);
         expect(results[0].message).to.include("No RDS DB instances found");
@@ -545,7 +545,7 @@ describe("rdsLogConnectionEnabled", function () {
       const cache = createCache([], null, {
         err: "Unable to query RDS DB instances",
       });
-      rdsLogConnectionEnabled.run(cache, {}, (err, results) => {
+      rdsLogConnectionEnabled.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(3);
         expect(results[0].message).to.include(
@@ -560,7 +560,7 @@ describe("rdsLogConnectionEnabled", function () {
       const cache = createCache([describeDBInstances[0]], {}, null, {
         err: "Unable to query DB parameters",
       });
-      rdsLogConnectionEnabled.run(cache, {}, (err, results) => {
+      rdsLogConnectionEnabled.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(3);
         expect(results[0].message).to.include("Unable to query DB parameters");

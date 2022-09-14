@@ -15,7 +15,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
 
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);

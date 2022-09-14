@@ -26,7 +26,7 @@ module.exports = {
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
 
-        var accountId = helpers.addSource(cache, {}, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
+        var accountId = helpers.addSource(cache, { china: true }, ['sts', 'GetCallerIdentity', defaultRegion, 'data']);
 
         async.each(regions.ecs, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -50,7 +50,7 @@ module.exports = {
                 var strings = [];
                 var resource = helpers.createArn('ecs', accountId, 'securitygroup', group.SecurityGroupId, region);
 
-                var describeSecurityGroupAttribute = helpers.addSource(cache, {},
+                var describeSecurityGroupAttribute = helpers.addSource(cache, { china: true },
                     ['ecs', 'DescribeSecurityGroupAttribute', region, group.SecurityGroupId]);
         
                 if (!describeSecurityGroupAttribute || describeSecurityGroupAttribute.err || !describeSecurityGroupAttribute.data) {

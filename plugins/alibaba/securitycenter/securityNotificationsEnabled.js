@@ -15,7 +15,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
 
         var securityItemsMap = {
             'yundun_security_Weekreport': 'Vulnerabilities',

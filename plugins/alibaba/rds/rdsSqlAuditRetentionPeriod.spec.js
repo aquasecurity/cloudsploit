@@ -51,7 +51,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
     describe('run', function () {
         it('should FAIL if RDS DB instance does not have sql audit log retention greater than 180 days', function (done) {
             const cache = createCache(describeDBInstances, describeSqlCollectorRetention[0]);
-            rdsSqlAuditRetentionPeriod.run(cache, {}, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].message).to.include('is lesser than 180 days');
                 expect(results[0].status).to.equal(2);
@@ -62,7 +62,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it(`should FAIL if RDS DB instance does not have sql audit log retention greater than set days limit`, function (done) {
             const cache = createCache(describeDBInstances, describeSqlCollectorRetention[0]);
-            rdsSqlAuditRetentionPeriod.run(cache, { sqlAuditRetentionPeriod: '300' }, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { sqlAuditRetentionPeriod: '300', china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].message).to.include(`is lesser than`);
                 expect(results[0].status).to.equal(2);
@@ -73,7 +73,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it('should PASS if RDS DB instance have sql audit log retention greater than 180 days', function (done) {
             const cache = createCache(describeDBInstances, describeSqlCollectorRetention[1]);
-            rdsSqlAuditRetentionPeriod.run(cache, {}, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].message).to.include('is greater than');
                 expect(results[0].status).to.equal(0);
@@ -84,7 +84,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it(`should PASS if RDS DB instance have sql audit log retention greater than set days limit`, function (done) {
             const cache = createCache(describeDBInstances, describeSqlCollectorRetention[1]);
-            rdsSqlAuditRetentionPeriod.run(cache, { sqlAuditRetentionPeriod: '365' }, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { sqlAuditRetentionPeriod: '365', china: true }, (err, results) => {
                 expect(results.length).to.be.above(1);
                 expect(results[0].message).to.include(`is greater than or equal to`);
                 expect(results[0].status).to.equal(0);
@@ -95,7 +95,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it('should PASS if no RDS DB instances found', function (done) {
             const cache = createCache([]);
-            rdsSqlAuditRetentionPeriod.run(cache, {}, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('No RDS DB instances found');
                 expect(results[0].status).to.equal(0);
@@ -106,7 +106,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it('should UNKNOWN if unable to query RDS DB instances', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RDS DB instances' });
-            rdsSqlAuditRetentionPeriod.run(cache, {}, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('Unable to query RDS DB instances');
                 expect(results[0].status).to.equal(3);
@@ -117,7 +117,7 @@ describe('rdsSqlAuditRetentionPeriod', function () {
 
         it('should UNKNOWN if unable to query DB sql audit log retention', function (done) {
             const cache = createCache([describeDBInstances[0]], {}, null, { err: 'Unable to query DB sql audit log retention' });
-            rdsSqlAuditRetentionPeriod.run(cache, {}, (err, results) => {
+            rdsSqlAuditRetentionPeriod.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('Unable to query DB sql audit log retention');
                 expect(results[0].status).to.equal(3);

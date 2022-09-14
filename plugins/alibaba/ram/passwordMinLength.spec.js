@@ -54,7 +54,7 @@ describe('passwordMinLength', function () {
 
         it('should PASS if RAM password security policy require minimum length of 14 or greater', function (done) {
             const cache = createCache(getPasswordPolicy[0]);
-            passwordMinLength.run(cache, {}, (err, results) => {
+            passwordMinLength.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RAM password security policy requires minimum length of 15 which is equal to or greater than desired limit of 14');
@@ -65,7 +65,7 @@ describe('passwordMinLength', function () {
 
         it('should UNKNOWN if unable to query RAM password policy', function (done) {
             const cache = createCache({});
-            passwordMinLength.run(cache, {}, (err, results) => {
+            passwordMinLength.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM password policy');

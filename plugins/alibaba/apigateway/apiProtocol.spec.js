@@ -184,7 +184,7 @@ describe('apiProtocol', () => {
    describe('run', () => {       
         it('should PASS if API has HTTPS protocol configured', done => {
             const cache = createCache([describeApis], describeApi[0]);
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('API has HTTPS protocol configured');
@@ -195,7 +195,7 @@ describe('apiProtocol', () => {
 
         it('should FAIL if API does not HTTPS protocol configured', done => {
             const cache = createCache([describeApis], describeApi[1]);
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('API does not have HTTPS protocol configured');
@@ -206,7 +206,7 @@ describe('apiProtocol', () => {
 
         it('should FAIL if API response does not have RequestConfig property', done => {
             const cache = createCache([describeApis], describeApi[2]);
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('API does not have HTTPS protocol configured');
@@ -217,7 +217,7 @@ describe('apiProtocol', () => {
 
         it('should PASS if no APIs are found', done => {
             const cache = createCache({}, {});
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No APIs found');
@@ -228,7 +228,7 @@ describe('apiProtocol', () => {
 
         it('should UNKNOWN if unable to describe APIs', done => {
             const cache = errorCache();
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('cn-hangzhou');
@@ -238,7 +238,7 @@ describe('apiProtocol', () => {
 
         it('should not return anything if response not received', done => {
             const cache = nullCache();
-            apiProtocol.run(cache, {}, (err, results) => {
+            apiProtocol.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

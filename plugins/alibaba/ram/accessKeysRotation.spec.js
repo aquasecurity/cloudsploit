@@ -74,7 +74,7 @@ describe('accessKeysRotation', function () {
     describe('run', function () {
         it('should FAIL if RAM user access keys are not rotated every 90 days or less', function (done) {
             const cache = createCache([listUsers[0]], getUserLoginProfile[0], null, null);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('which is greater than');
@@ -85,7 +85,7 @@ describe('accessKeysRotation', function () {
 
         it('should PASS if RAM user access keys are not rotated every 90 days or less', function (done) {
             const cache = createCache([listUsers[0]], getUserLoginProfile[1], null, null);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('which is equal to or less than');
@@ -96,7 +96,7 @@ describe('accessKeysRotation', function () {
 
         it('should PASS if RAM user does not have any access keys', function (done) {
             const cache = createCache([listUsers[1]], getUserLoginProfile[2], null, null);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RAM user does not have any access keys');
@@ -107,7 +107,7 @@ describe('accessKeysRotation', function () {
 
         it('should PASS if No RAM users found', function (done) {
             const cache = createCache([]);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RAM users found');
@@ -118,7 +118,7 @@ describe('accessKeysRotation', function () {
 
         it('should UNKNOWN if unable to query user access keys', function (done) {
             const cache = createCache([listUsers[0]], null, [], null);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query user access keys');
@@ -129,7 +129,7 @@ describe('accessKeysRotation', function () {
 
         it('should UNKNOWN if unable to query RAM users', function (done) {
             const cache = createCache(null, null, null, null);
-            accessKeysRotation.run(cache, {}, (err, results) => {
+            accessKeysRotation.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM users');

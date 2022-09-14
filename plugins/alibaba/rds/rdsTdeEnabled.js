@@ -15,7 +15,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
 
         var supportedEngines = ['sqlserver 2012_ent_ag', 'sqlserver 2016_ent_ag', 'sqlserver 2017_ent_ag', 'sqlserver 2019_ent_ag', 'mysql 5.6'];

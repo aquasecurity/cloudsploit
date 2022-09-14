@@ -14,7 +14,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
 
         var unsupportedEngines = ['sqlserver 2012', 'sqlserver 2016', 'sqlserver 2017', 'mariadb tx'];
