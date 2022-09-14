@@ -82,12 +82,12 @@ const createNullCache = () => {
 
 describe('cloudfrontGeoRestriction', function () {
     describe('run', function () {
-        it('should PASS if CloudFront distribution is whitelisting reguired geographic locations', function (done) {
+        it('should PASS if CloudFront distribution is whitelisting required geographic locations', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontGeoRestriction.run(cache, {cloudfront_whitelisted_geo_locations: 'AR'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('CloudFront distribution is whitelisting reguired geographic locations');
+                expect(results[0].message).to.include('CloudFront distribution is whitelisting required geographic locations');
                 expect(results[0].region).to.equal('global');
                 done();
             });

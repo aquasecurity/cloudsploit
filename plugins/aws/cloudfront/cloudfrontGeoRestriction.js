@@ -63,7 +63,7 @@ module.exports = {
                             'global', distribution.ARN);
                     } else {
                         helpers.addResult(results, 0,
-                            'CloudFront distribution is whitelisting reguired geographic locations',
+                            'CloudFront distribution is whitelisting required geographic locations',
                             'global', distribution.ARN);
                     }
                 } else if (distribution.Restrictions.GeoRestriction.RestrictionType.toLowerCase() === 'blacklist') {
@@ -76,7 +76,7 @@ module.exports = {
                             'global', distribution.ARN);
                     } else {
                         helpers.addResult(results, 0,
-                            'CloudFront distribution is whitelisting reguired geographic locations',
+                            'CloudFront distribution is whitelisting required geographic locations',
                             'global', distribution.ARN);
                     }
                 } else {
