@@ -1063,6 +1063,7 @@ module.exports = {
         'bucketUniformAccess'           : require(__dirname + '/plugins/google/storage/bucketUniformAccess.js'),
         'bucketLifecycleConfigured'     : require(__dirname + '/plugins/google/storage/bucketLifecycleConfigured.js'),
         'bucketEncryption'              : require(__dirname + '/plugins/google/storage/bucketEncryption.js'),
+        'bucketLabelsAdded'             : require(__dirname + '/plugins/google/storage/bucketLabelsAdded.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
