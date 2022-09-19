@@ -1026,6 +1026,7 @@ module.exports = {
         'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
         'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
         'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
+        'diskLabelsAdded'               : require(__dirname + '/plugins/google/compute/diskLabelsAdded.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
