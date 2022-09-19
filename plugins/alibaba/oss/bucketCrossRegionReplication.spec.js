@@ -116,7 +116,7 @@ describe('bucketCrossRegionReplication', function () {
     describe('run', function () {
         it('should FAIL if bucket does not have cross region replication enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[0]);
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have cross region replication enabled');
@@ -127,7 +127,7 @@ describe('bucketCrossRegionReplication', function () {
 
         it('should FAIL if bucket info does not have cross region replication property', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[2]);
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have cross region replication enabled');
@@ -138,7 +138,7 @@ describe('bucketCrossRegionReplication', function () {
 
         it('should PASS if bucket has cross region replication enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[1]);
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket has cross region replication enabled');
@@ -149,7 +149,7 @@ describe('bucketCrossRegionReplication', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -160,7 +160,7 @@ describe('bucketCrossRegionReplication', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -171,7 +171,7 @@ describe('bucketCrossRegionReplication', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, {}, null, { err: 'Unable to query OSS bucket info' });
-            bucketCrossRegionReplication.run(cache, {}, (err, results) => {
+            bucketCrossRegionReplication.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');

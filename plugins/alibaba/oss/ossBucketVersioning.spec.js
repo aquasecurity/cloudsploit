@@ -73,7 +73,7 @@ describe('ossBucketVersioning', function () {
     describe('run', function () {
         it('should FAIL if bucket versioning is not enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[1]);
-            ossBucketVersioning.run(cache, {}, (err, results) => {
+            ossBucketVersioning.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket does not have versioning enabled');
@@ -84,7 +84,7 @@ describe('ossBucketVersioning', function () {
 
         it('should PASS if bucket versioning is enabled', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[0]);
-            ossBucketVersioning.run(cache, {}, (err, results) => {
+            ossBucketVersioning.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket has versioning enabled');
@@ -95,7 +95,7 @@ describe('ossBucketVersioning', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            ossBucketVersioning.run(cache, {}, (err, results) => {
+            ossBucketVersioning.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -106,7 +106,7 @@ describe('ossBucketVersioning', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            ossBucketVersioning.run(cache, {}, (err, results) => {
+            ossBucketVersioning.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -117,7 +117,7 @@ describe('ossBucketVersioning', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, {}, null, { err: 'Unable to query OSS bucket info' });
-            ossBucketVersioning.run(cache, {}, (err, results) => {
+            ossBucketVersioning.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');

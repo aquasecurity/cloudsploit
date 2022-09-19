@@ -4,7 +4,7 @@ var networkPolicyEnabled = require('./networkPolicyEnabled.js');
 const describeClusters = [
     {
 		"name": "aqua-cluster2",
-		"cluster_id": "cc377f7509590489da921de83a1cad919",
+		"cluster_id": "cc377f7509590489da921de83a1cad918",
 		"size": 2,
 		"region_id": "us-west-1",
 		"state": "initial",
@@ -156,7 +156,7 @@ describe('networkPolicyEnabled', function () {
     describe('run', function () {
         it('should FAIL if Cluster does not have NetworkPolicy enabled', function (done) {
             const cache = createCache([describeClusters[1]]);
-            networkPolicyEnabled.run(cache, {}, (err, results) => {
+            networkPolicyEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Cluster does not have NetworkPolicy enabled');
@@ -167,7 +167,7 @@ describe('networkPolicyEnabled', function () {
 
         it('should PASS if Cluster has NetworkPolicy enabled', function (done) {
             const cache = createCache([describeClusters[0]]);
-            networkPolicyEnabled.run(cache, {}, (err, results) => {
+            networkPolicyEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Cluster has NetworkPolicy enabled');
@@ -178,7 +178,7 @@ describe('networkPolicyEnabled', function () {
 
         it('should PASS if No ACK clusters found', function (done) {
             const cache = createCache([]);
-            networkPolicyEnabled.run(cache, {}, (err, results) => {
+            networkPolicyEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No ACK clusters');
@@ -189,7 +189,7 @@ describe('networkPolicyEnabled', function () {
 
         it('should UNKNOWN if unable to query ACK clusters', function (done) {
             const cache = createCache(null, { err: 'error' });
-            networkPolicyEnabled.run(cache, {}, (err, results) => {
+            networkPolicyEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query ACK clusters');

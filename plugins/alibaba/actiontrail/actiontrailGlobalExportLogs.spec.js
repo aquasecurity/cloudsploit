@@ -79,7 +79,7 @@ describe('actiontrailGlobalExportLogs', function () {
     describe('run', function () {
         it('should FAIL if ActionTrail does not have global trail to log all events', function (done) {
             const cache = createCache([describeTrails[2]]);
-            actiontrailGlobalExportLogs.run(cache, {}, (err, results) => {
+            actiontrailGlobalExportLogs.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('ActionTrail does not have global trail to log all events');
@@ -90,7 +90,7 @@ describe('actiontrailGlobalExportLogs', function () {
 
         it('should FAIL if ActionTrail has global trail to log all events but does not export logs to OSS bucket', function (done) {
             const cache = createCache([describeTrails[1]]);
-            actiontrailGlobalExportLogs.run(cache, {}, (err, results) => {
+            actiontrailGlobalExportLogs.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('ActionTrail has global trail to log all events but does not export logs to OSS bucket');
@@ -101,7 +101,7 @@ describe('actiontrailGlobalExportLogs', function () {
 
         it('should PASS if ActionTrail has global trails to log all events', function (done) {
             const cache = createCache([describeTrails[0]]);
-            actiontrailGlobalExportLogs.run(cache, {}, (err, results) => {
+            actiontrailGlobalExportLogs.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('ActionTrail has a global trail to log all events');
@@ -112,7 +112,7 @@ describe('actiontrailGlobalExportLogs', function () {
 
         it('should UNKNOWN if unable to query ActionTrail trails', function (done) {
             const cache = createCache([], { err: 'Unable to query ActionTrail trails' });
-            actiontrailGlobalExportLogs.run(cache, {}, (err, results) => {
+            actiontrailGlobalExportLogs.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query ActionTrail trails');

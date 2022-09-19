@@ -5,11 +5,11 @@ module.exports = {
     title: 'Open NetBIOS',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    description: 'Determines if UDP port 137 or 138 for NetBIOS is open to the public',
+    description: 'Determines if UDP port 137, 138 or 139 for NetBIOS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as NetBIOS should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
-    recommended_action: 'Restrict UDP ports 137 and 138 to known IP addresses.',
-    apis: ['firewalls:list', 'projects:get'],
+    recommended_action: 'Restrict UDP ports 137, 138 and 139 to known IP addresses.',
+    apis: ['firewalls:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,12 +33,12 @@ module.exports = {
             }
 
             let ports = {
-                'udp': [137,138]
+                'udp': [137,138,139]
             };
 
             let service = 'NetBIOS';
 
-            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, callback, source);
+            helpers.findOpenPorts(firewalls.data, ports, service, region, results, cache, source);
 
             rcb();
         }, function(){

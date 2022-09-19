@@ -10,11 +10,23 @@ module.exports = {
     recommended_action: 'Ensure that a BYOK key is set for the Transparent Data Encryption of each SQL Server.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/transparent-data-encryption-byok-azure-sql',
     apis: ['servers:listSql', 'encryptionProtectors:listByServer'],
+    settings: {
+        sql_tde_protector_encryption_key: {
+            name: 'SQL Server TDE Protector Encryption Key Type',
+            description: 'Desired encryption key for SQL Server transparent data encryption; default=service-managed key, cmk=customer-managed key',
+            regex: '(default|byok)',
+            default: 'byok'
+        }
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            sql_tde_protector_encryption_key: settings.sql_tde_protector_encryption_key || this.settings.sql_tde_protector_encryption_key.default
+        };
 
         async.each(locations.servers, function(location, rcb) {
 
@@ -46,16 +58,21 @@ module.exports = {
                         helpers.addResult(results, 0, 'No SQL Server Encryption Protectors found for server', location, server.id);
                     } else {
                         encryptionProtectors.data.forEach(encryptionProtector => {
-                            if ((encryptionProtector.kind &&
-                                encryptionProtector.kind.toLowerCase() != 'azurekeyvault') ||
-                                (encryptionProtector.serverKeyType ||
-                                    encryptionProtector.serverKeyType.toLowerCase() != 'azurekeyvault') ||
-                                !encryptionProtector.uri) {
-                                helpers.addResult(results, 2,
-                                    'SQL Server TDE protector is not encrypted with BYOK', location, encryptionProtector.id);
+                            if (config.sql_tde_protector_encryption_key == 'byok') {
+                                if ((encryptionProtector.kind &&
+                                    encryptionProtector.kind.toLowerCase() != 'azurekeyvault') ||
+                                    (encryptionProtector.serverKeyType &&
+                                        encryptionProtector.serverKeyType.toLowerCase() != 'azurekeyvault') ||
+                                    !encryptionProtector.uri) {
+                                    helpers.addResult(results, 2,
+                                        'SQL Server TDE protector is not encrypted with BYOK', location, encryptionProtector.id);
+                                } else {
+                                    helpers.addResult(results, 0,
+                                        'SQL Server TDE protector is encrypted with BYOK', location, encryptionProtector.id);
+                                }
                             } else {
                                 helpers.addResult(results, 0,
-                                    'SQL Server TDE protector is encrypted with BYOK', location, encryptionProtector.id);
+                                    'SQL Server TDE protector is encrypted with service-managed key', location, encryptionProtector.id);
                             }
                         });
                     }

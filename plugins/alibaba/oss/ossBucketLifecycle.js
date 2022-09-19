@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
 
+        var regions = helpers.regions(settings);
         var region = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'GetCallerIdentity', region, 'data']);
         var listBuckets = helpers.addSource(cache, source, ['oss', 'listBuckets', region]);
@@ -39,6 +40,8 @@ module.exports = {
             
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
+
+            if (bucketLocation !== region && !regions.includes(bucketLocation)) return;
 
             var resource = helpers.createArn('oss', accountId, 'bucket', bucket.name, bucketLocation);
 

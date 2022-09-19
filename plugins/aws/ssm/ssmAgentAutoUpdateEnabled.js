@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'SSM Agent Auto Update Enabled',
-    category: 'SSM',
+    category: 'EC2',
     domain: 'Identity Access and Management',
     description: 'Ensures the SSM agent is configured to automatically update to new versions',
     more_info: 'To ensure the latest version of the SSM agent is installed, it should be configured to consume automatic updates.',
@@ -69,7 +69,7 @@ module.exports = {
             describeInstanceInformation.data.forEach(function(instance) {
                 var resource = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
-                if (associatedInstances.includes(resource) || associatedInstances.includes('*')) {
+                if (associatedInstances.includes(instance.InstanceId) || associatedInstances.includes('*')) {
                     helpers.addResult(results, 0, 
                         'Instance has SSM Agent auto update enabled', region, resource);
                 } else {

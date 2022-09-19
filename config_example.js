@@ -37,6 +37,14 @@ module.exports = {
             // directory_id: process.env.AZURE_DIRECTORY_ID || '',
             // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
         },
+        google_remediate: {
+            // OPTION 1: If using a credential JSON file, enter the path below
+            // credential_file: process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/file.json',
+            // OPTION 2: If using hard-coded credentials, enter them below
+            // project: process.env.GOOGLE_PROJECT_ID || 'my-project',
+            // client_email: process.env.GOOGLE_CLIENT_EMAIL || 'cloudsploit@your-project-name.iam.gserviceaccount.com',
+            // private_key: process.env.GOOGLE_PRIVATE_KEY || '-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n'
+        },
         google: {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/file.json',

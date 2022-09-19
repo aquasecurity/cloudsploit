@@ -261,6 +261,14 @@ if (settings.remediate && settings.remediate.length) {
             DirectoryID: config.credentials.azure_remediate.directory_id,
             SubscriptionID: config.credentials.azure_remediate.subscription_id
         };
+    } else if (config.credentials.google_remediate && config.credentials.google_remediate.project) {
+        checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
+        cloudConfig = {
+            type: 'service_account',
+            project: config.credentials.google.project,
+            client_email: config.credentials.google.client_email,
+            private_key: config.credentials.google.private_key,
+        };
     } else {
         console.error('ERROR: Config file does not contain any valid credential configs for remediation.');
         process.exit(1);

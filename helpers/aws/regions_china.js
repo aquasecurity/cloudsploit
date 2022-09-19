@@ -75,6 +75,7 @@ module.exports = {
     guardduty: [],
     wafregional: [],
     wafv2: [],
+    waf: regions,
     workspaces: ['cn-northwest-1'],
     xray: regions,
     resourcegroupstaggingapi: regions,
@@ -111,4 +112,13 @@ module.exports = {
     lookoutmetrics: regions,
     forecastservice: regions,
     lexmodelsv2: regions,
+    fsx: regions,
+    wisdom: regions,
+    voiceid: regions,
+    appmesh: regions,
+    frauddetector: regions,
+    imagebuilder: regions,
+    computeoptimizer: regions,
+    appconfig: regions
+
 };

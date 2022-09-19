@@ -100,7 +100,7 @@ describe('openOracleAutoDataWarehouse', function () {
     describe('run', function () {
         it('should PASS if no public open ports found', function (done) {
             const cache = createCache(describeSecurityGroups, describeSecurityGroupAttribute[0]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            openOracleAutoDataWarehouse.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No public open ports found');
@@ -111,7 +111,7 @@ describe('openOracleAutoDataWarehouse', function () {
 
         it('should FAIL if security group has Oracle Auto Data Warehouse TCP 1522 port open to public', function (done) {
             const cache = createCache(describeSecurityGroups, describeSecurityGroupAttribute[1]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            openOracleAutoDataWarehouse.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('has Oracle Auto Data Warehouse:TCP:1522 open to 0.0.0.0/0');
@@ -122,7 +122,7 @@ describe('openOracleAutoDataWarehouse', function () {
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            openOracleAutoDataWarehouse.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No security groups found');
@@ -133,7 +133,7 @@ describe('openOracleAutoDataWarehouse', function () {
 
         it('should UNKNWON unable to describe security groups', function (done) {
             const cache = createCache(null, { message: 'Unable to describe security groups'});
-            openOracleAutoDataWarehouse.run(cache, {}, (err, results) => {
+            openOracleAutoDataWarehouse.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to describe security groups');

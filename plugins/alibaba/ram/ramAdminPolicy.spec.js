@@ -79,7 +79,7 @@ describe('ramAdminPolicy', function () {
     describe('run', function () {
         it('should FAIL if Policy provides admin (*:*) access and attachment count is greater than 0', function (done) {
             const cache = createCache([listPolicies[2]], getPolicy[1]);
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Policy provides admin (*:*) access and attachment count is');
@@ -90,7 +90,7 @@ describe('ramAdminPolicy', function () {
 
         it('should PASS if Policy provides admin (*:*) access but attachment count is 0', function (done) {
             const cache = createCache([listPolicies[1]], getPolicy[2]);
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Policy provides admin (*:*) access but attachment count is 0');
@@ -101,7 +101,7 @@ describe('ramAdminPolicy', function () {
 
         it('should PASS if Policy does not provide admin (*:*) access', function (done) {
             const cache = createCache([listPolicies[0]], getPolicy[0]);
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Policy does not provide admin (*:*) access');
@@ -112,7 +112,7 @@ describe('ramAdminPolicy', function () {
 
         it('should PASS if No RAM policies found', function (done) {
             const cache = createCache([]);
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RAM policies found');
@@ -123,7 +123,7 @@ describe('ramAdminPolicy', function () {
 
         it('should UNKNOWN if Unable to query RAM policies', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RAM policies' });
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RAM policies');
@@ -134,7 +134,7 @@ describe('ramAdminPolicy', function () {
 
         it('should UNKNOWN if Unable to get RAM policy', function (done) {
             const cache = createCache([listPolicies[1]], {}, null, {err: 'Unable to query RAM policy'});
-            ramAdminPolicy.run(cache, {}, (err, results) => {
+            ramAdminPolicy.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to get RAM policy');

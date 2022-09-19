@@ -92,7 +92,7 @@ describe('ossBucketPrivate', function () {
     describe('run', function () {
         it('should FAIL if bucket ACL allows public-read-write access', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[1]);
-            ossBucketPrivate.run(cache, {}, (err, results) => {
+            ossBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket ACL allows public-read-write access');
@@ -103,7 +103,7 @@ describe('ossBucketPrivate', function () {
 
         it('should PASS if bucket ACL allows private access', function (done) {
             const cache = createCache(listBuckets, getBucketInfo[0]);
-            ossBucketPrivate.run(cache, {}, (err, results) => {
+            ossBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket ACL allows private access');
@@ -114,7 +114,7 @@ describe('ossBucketPrivate', function () {
 
         it('should PASS if no OSS buckets found', function (done) {
             const cache = createCache([]);
-            ossBucketPrivate.run(cache, {}, (err, results) => {
+            ossBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No OSS buckets found');
@@ -125,7 +125,7 @@ describe('ossBucketPrivate', function () {
 
         it('should UNKNOWN if unable to query for OSS buckets', function (done) {
             const cache = createCache([], null, { err: 'Unable to query for OSS buckets' });
-            ossBucketPrivate.run(cache, {}, (err, results) => {
+            ossBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for OSS buckets');
@@ -136,7 +136,7 @@ describe('ossBucketPrivate', function () {
 
         it('should UNKNOWN if unable to query OSS bucket info', function (done) {
             const cache = createCache(listBuckets, {}, null, { err: 'Unable to query OSS bucket info' });
-            ossBucketPrivate.run(cache, {}, (err, results) => {
+            ossBucketPrivate.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query OSS bucket info');

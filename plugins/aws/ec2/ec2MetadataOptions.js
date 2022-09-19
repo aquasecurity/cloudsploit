@@ -54,15 +54,11 @@ module.exports = {
                 }
             }
 
-            var message = 'Instances using insecure V1 endpoint: ' + instancesInsecure.length + '; ' +
-                          'instances using secure V2 endpoint: ' + instancesTokensRequired.length + '; ' +
-                          'instances with disabled endpoints: ' + instancesEndpointDisabled.length;
-
             var totalCount = instancesInsecure.length + instancesTokensRequired.length + instancesEndpointDisabled.length;
 
             if (!totalCount) {
                 helpers.addResult(results, 0, 'No instances found', region);
-            } else if (totalCount <= 20) {
+            } else {
                 // Add individual results
                 for (var iArn of instancesEndpointDisabled) {
                     helpers.addResult(results, 0, 'Instance has instance metadata endpoint disabled', region, iArn);
@@ -75,11 +71,7 @@ module.exports = {
                 for (var kArn of instancesInsecure) {
                     helpers.addResult(results, 2, 'Instance has instance metadata endpoint enabled and does not require HttpTokens', region, kArn);
                 }
-            } else if (instancesInsecure.length) {
-                helpers.addResult(results, 2, message, region);
-            } else {
-                helpers.addResult(results, 0, message, region);
-            }
+            } 
             
             return rcb();
         }, function(){

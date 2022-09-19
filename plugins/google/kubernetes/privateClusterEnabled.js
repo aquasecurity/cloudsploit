@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes private clusters only have internal ip ranges, which ensures that their workloads are isolated from the public internet.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters',
     recommended_action: 'Ensure that all Kubernetes clusters have private cluster enabled.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -52,7 +52,9 @@ module.exports = {
 
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
 
-                if (cluster.privateCluster) {
+                if (cluster.privateClusterConfig &&
+                    cluster.privateClusterConfig.privateEndpoint &&
+                    cluster.privateClusterConfig.privateEndpoint.length) {
                     helpers.addResult(results, 0, 'Private cluster is enabled on the Kubernetes cluster', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Private cluster is disabled on the Kubernetes cluster', region, resource);

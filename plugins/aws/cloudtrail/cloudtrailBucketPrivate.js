@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'CloudTrail Bucket Private',
-    category: 'CloudTrail',
+    category: 'S3',
     domain: 'Compliance',
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
@@ -18,6 +18,17 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var defaultRegion = helpers.defaultRegion(settings);
+
+        var listBuckets = helpers.addSource(cache, source,
+            ['s3', 'listBuckets', defaultRegion]);
+
+        if (!listBuckets || listBuckets.err || !listBuckets.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
+            return callback(null, results, source);
+        }
 
         async.each(regions.cloudtrail, function(region, rcb){
 
@@ -42,6 +53,13 @@ module.exports = {
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
 
+                if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
+                    helpers.addResult(results, 2,
+                        'Unable to locate S3 bucket, it may have been deleted',
+                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                    return cb(); 
+                }
+
                 var s3Region = helpers.defaultRegion(settings);
 
                 var getBucketAcl = helpers.addSource(cache, source,
@@ -51,7 +69,6 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketAcl),
                         region, 'arn:aws:s3:::' + trail.S3BucketName);
-
                     return cb();
                 }
 
