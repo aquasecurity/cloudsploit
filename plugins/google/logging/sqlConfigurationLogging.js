@@ -61,7 +61,7 @@ module.exports = {
                 if (metric.filter) {
                     if (metricExists) break;
 
-                    if (metric.filter.trim().indexOf(testMetrics) > -1) {
+                    if (metric.filter.replace(/'/g, '"').trim().indexOf(testMetrics) > -1) {
                         if (metric.disabled) disabled = true;
                         else {
                             disabled = false;

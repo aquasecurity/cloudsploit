@@ -55,7 +55,7 @@ module.exports = {
             var metricName = '';
 
             var testMetrics = [
-                'resource.type="iam_role" AND protoPayload.methodName="google.iam.admin.v1.CreateRole"',
+                'resource.type=iam_role AND protoPayload.methodName="google.iam.admin.v1.CreateRole"',
 
                 'protoPayload.methodName="google.iam.admin.v1.DeleteRole"',
                 'protoPayload.methodName="google.iam.admin.v1.UpdateRole"'
@@ -64,7 +64,8 @@ module.exports = {
             metrics.data.forEach(metric => {
                 if (metric.filter) {
                     if (metricExists) return;
-                    var checkMetrics = metric.filter.trim().split(' OR ');
+                    var metricFilter = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']iam_role["']/g, 'iam_role').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
+                    var checkMetrics = metricFilter.split(' OR ');
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {

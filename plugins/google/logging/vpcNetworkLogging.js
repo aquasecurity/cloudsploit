@@ -70,7 +70,7 @@ module.exports = {
             for (let metric of metrics.data) {
                 if (metric.filter) {
                     if (metricExists) continue;
-                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
+                    var checkMetrics = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']gce_network["']/g, 'gce_network').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {

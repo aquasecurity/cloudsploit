@@ -60,15 +60,15 @@ module.exports = {
             var testMetrics = [
                 '(protoPayload.serviceName="cloudresourcemanager.googleapis.com") AND (ProjectOwnership',
                 'projectOwnerInvitee)',
-                '(protoPayload.serviceData.policyDelta.bindingDeltas.action="REMOVE" AND protoPayload.serviceData.policyDelta.bindingDeltas.role="roles/owner")',
-                '(protoPayload.serviceData.policyDelta.bindingDeltas.action="ADD" AND protoPayload.serviceData.policyDelta.bindingDeltas.role="roles/owner")'
+                '(protoPayload.serviceData.policyDelta.bindingDeltas.action=REMOVE AND protoPayload.serviceData.policyDelta.bindingDeltas.role=roles/owner)',
+                '(protoPayload.serviceData.policyDelta.bindingDeltas.action=ADD AND protoPayload.serviceData.policyDelta.bindingDeltas.role=roles/owner)'
             ];
 
             let disabled = false;
             for (let metric of metrics.data) {
                 if (metric.filter) {
                     if (metricExists) break;
-                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
+                    var checkMetrics = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["'](ADD|REMOVE|roles\/owner)["']/g, '$1').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {

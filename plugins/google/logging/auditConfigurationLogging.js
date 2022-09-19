@@ -56,14 +56,15 @@ module.exports = {
             var metricExists = false;
             var metricName = '';
 
-            var testMetrics = 'protoPayload.methodName="SetIamPolicy" AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*';
+            var testMetrics = 'protoPayload.methodName=SetIamPolicy AND protoPayload.serviceData.policyDelta.auditConfigDeltas:*';
 
 
             metrics.data.forEach(metric => {
                 if (metric.filter) {
                     if (metricExists) return;
 
-                    if (metric.filter === testMetrics) {
+                    var metricFilter = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']/g, '').replace(/\s+/g, ' ').trim();
+                    if (metricFilter === testMetrics) {
                         metricExists = true;
                         metricName = metric.metricDescriptor.type;
                     } else {

@@ -65,7 +65,8 @@ module.exports = {
                 if (metric.filter) {
                     if (metricExists) break;
 
-                    if (metric.filter.trim() === testMetrics) {
+                    var metricFilter = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']gcs_bucket["']/g, 'gcs_bucket').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
+                    if (metricFilter === testMetrics) {
                         if (metric.disabled) disabled = true;
                         else {
                             disabled = false;

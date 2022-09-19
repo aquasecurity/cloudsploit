@@ -55,15 +55,16 @@ module.exports = {
             var metricName = '';
 
             var testMetrics = [
-                'resource.type="gce_firewall_rule" AND protoPayload.methodName="v1.compute.firewalls.patch"',
-                'protoPayload.methodName="v1.compute.firewalls.insert"'
+                'resource.type=gce_firewall_rule AND protoPayload.methodName="v1.compute.firewalls.patch"',
+                'protoPayload.methodName="v1.compute.firewalls.insert"',
+                'protoPayload.methodName="v1.compute.firewalls.delete"'
             ];
 
             let disabled = false;
             for (let metric of metrics.data) {
                 if (metric.filter) {
                     if (metricExists) continue;
-                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
+                    var checkMetrics = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']gce_firewall_rule["']/g, 'gce_firewall_rule').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
                     var missingMetrics = [];
                     testMetrics.forEach(testMetric => {
                         if (checkMetrics.indexOf(testMetric) === -1) {

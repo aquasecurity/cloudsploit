@@ -55,7 +55,7 @@ module.exports = {
             var metricName = '';
 
             var testMetrics = [
-                'resource.type="gce_route" AND protoPayload.methodName="beta.compute.routes.patch"',
+                'resource.type=gce_route AND protoPayload.methodName="beta.compute.routes.patch"',
                 'protoPayload.methodName="beta.compute.routes.insert"'
             ];
 
@@ -63,7 +63,7 @@ module.exports = {
             for (let metric of metrics.data) {
                 if (metric.filter) {
                     if (metricExists) continue;
-                    var checkMetrics = metric.filter.trim().replace(/\r|\n/g, '');
+                    var checkMetrics = metric.filter.replace(/\r?\n|\r/g, ' ').replace(/["']gce_route["']/g, 'gce_route').replace(/'/g, '"').replace(/\s+/g, ' ').trim();
                     var missingMetrics = [];
 
                     testMetrics.forEach(testMetric => {
