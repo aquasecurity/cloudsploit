@@ -64,6 +64,8 @@ module.exports = {
             disksInRegion.forEach(disk => {
                 if (!disk.id || !disk.creationTimestamp) return;
 
+                if (disk.name && disk.name.startsWith('gke-')) return;
+
                 let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);    
 
                 if (disk.resourcePolicies && disk.resourcePolicies.length) {
