@@ -23,13 +23,8 @@ module.exports = {
                 if (!listClusters) return rcb();
 
                 if (listClusters.err || !listClusters.data) {
-                    helpers.addResult(
-                        results,
-                        3,
-                        'Unable to query for ECS clusters: ' +
-              helpers.addError(listClusters),
-                        region
-                    );
+                    helpers.addResult(results, 3, 
+                    'Unable to query for ECS clusters: ' + helpers.addError(listClusters), region);
                     return rcb();
                 }
 
@@ -38,25 +33,17 @@ module.exports = {
                     return rcb();
                 }
      
-                for (var c in listClusters.data) {
-                    var clsuterARN = listClusters.data[c];
+                for (var clusterARN of listClusters.data) {
                     var describeCluster = helpers.addSource(cache, source,
-                    ['ecs', 'describeCluster', region, clsuterARN ]);
-                    var arn = clsuterARN;
+                    ['ecs', 'describeCluster', region, clusterARN ]);
             
                     if (
                         !describeCluster ||
             describeCluster.err ||
             !describeCluster.data
                     ) {
-                        helpers.addResult(
-                            results,
-                            3,
-                            'Unable to describe ECS cluster: ' +
-                                helpers.addError(describeCluster),
-                            region,
-                            arn
-                        );
+                        helpers.addResult(results, 3,
+                         'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
                         continue;
                     }
 
@@ -66,34 +53,28 @@ module.exports = {
                     ) {   
             
                         for ( var index in describeCluster.data.clusters) {
-             
+                            let containerInsightsEnabled = false;
                             const cluster = describeCluster.data.clusters[index];
                             if (cluster.settings.length > 0){ 
                                 for (var item of cluster.settings ){ 
                                     if (item.name === 'containerInsights' ){
 
                                         if ( item.value === 'enabled'){
-
-                                            helpers.addResult(
-                                                results,
-                                                0,
-                                                'ECS cluster container Insights is enabled',
-                                                region,
-                                                arn
-                                            );
-                                        } else {
-                                            helpers.addResult(
-                                                results,
-                                                2,
-                                                'ECS cluster container insights  not enabled',
-                                                region,
-                                                arn
-                                            );
+                                             containerInsightsEnabled = true
+                                             break;
                                         }
                                     }
 
                                 }
                             }
+                             if(containerInsightsEnabled){
+                                    helpers.addResult(results, 0,
+                                    'ECS cluster container Insights is enabled', region, clusterARN);
+                                }
+                                else {
+                                    helpers.addResult(results, 2,
+                                                'ECS cluster container insights  not enabled',region, clusterARN);
+                                }
              
                         }            
                     } 
