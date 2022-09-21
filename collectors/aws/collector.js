@@ -28,9 +28,9 @@ AWS.config.update({httpOptions: {agent: agent}});
 
 var rateError = {message: 'rate', statusCode: 429};
 
-var apiRetryAttempts = 2;
+var apiRetryAttempts = 10;
 var apiRetryBackoff = 500;
-var apiRetryCap = 1000;
+var apiRetryCap = 5000;
 
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
@@ -183,7 +183,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey}[${retryCount}] again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -207,7 +207,7 @@ var collect = function(AWSConfig, settings, callback) {
                                         let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                         let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+                                        console.log(`Trying ${callKey}[${retryCount}] again in: ${retry_seconds/1000} seconds`);
                                         retries.push({seconds: Math.round(retry_seconds/1000)});
                                         return retry_seconds;
                                     },
@@ -337,7 +337,7 @@ var collect = function(AWSConfig, settings, callback) {
                                             let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
                                             let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                            console.log(`Trying ${callKey} again in: ${retry_seconds/1000} seconds`);
+                                            console.log(`Trying ${callKey}[${retryCount}] again in: ${retry_seconds/1000} seconds`);
                                             retries.push({seconds: Math.round(retry_seconds/1000)});
                                             return retry_seconds;
                                         },
