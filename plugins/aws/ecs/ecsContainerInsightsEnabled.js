@@ -7,8 +7,7 @@ module.exports = {
     domain: 'Containers',
     description:
       'Ensure that ECS clusters have CloudWatch Container Insights feature enabled.',
-    more_info:
-      'CloudWatch Container Insights provides monitoring and troubleshooting solution for containerized applications and microservices that collects, aggregates and summarizes resource utilization such as CPU, memory, disk, and network.',
+    more_info: 'CloudWatch Container Insights provides monitoring and troubleshooting solution for containerized applications and microservices that collects, aggregates and summarizes resource utilization such as CPU, memory, disk, and network.',
     recommended_action: 'Enabled container insights feature for ECS clusters.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
@@ -19,14 +18,9 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(
-            regions.ecs,
-            function(region, rcb){
-                var listClusters = helpers.addSource(cache, source, [
-                    'ecs',
-                    'listClusters',
-                    region
-                ]);
+        async.each(regions.ecs, function(region, rcb){
+                var listClusters = helpers.addSource(cache, source, 
+                ['ecs','listClusters',region]);
                 if (!listClusters) return rcb();
 
                 if (listClusters.err || !listClusters.data) {
@@ -47,12 +41,8 @@ module.exports = {
      
                 for (var c in listClusters.data) {
                     var clsuterARN = listClusters.data[c];
-                    var describeCluster = helpers.addSource(cache, source, [
-                        'ecs',
-                        'describeCluster',
-                        region,
-                        clsuterARN
-                    ]);
+                    var describeCluster = helpers.addSource(cache, source,
+                    ['ecs', 'describeCluster', region, clsuterARN ]);
                     var arn = clsuterARN;
             
                     if (
