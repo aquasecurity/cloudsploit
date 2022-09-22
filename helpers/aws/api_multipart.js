@@ -870,6 +870,10 @@ var calls = [
             getTagKeys: {
                 property: 'TagKeys',
                 paginate: 'PaginationToken'
+            },
+            getResources :{
+                property: 'ResourceTagMappingList',
+                paginate: 'PaginationToken'
             }
         },
         Route53: {

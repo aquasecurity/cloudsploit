@@ -2,22 +2,15 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Lambda Tracing Enabled',
+    title: 'Lambda Has Tags',
     category: 'Lambda',
     domain: 'Serverless',
-    description: 'Ensures AWS Lambda functions have active tracing for X-Ray.',
-    more_info: 'AWS Lambda functions should have active tracing in order to gain visibility into the functions execution and performance.',
-    link: 'https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html',
-    recommended_action: 'Modify Lambda functions to activate tracing',
-    apis: ['Lambda:listFunctions'],
-    settings: {
-        lambda_whitelist: {
-            name: 'Lambda Functions Whitelisted',
-            description: 'A comma-delimited list of known lambda function Function Names that should be whitelisted',
-            regex: '^.{1,255}$',
-            default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
-        }
-    },
+    description: 'Ensures AWS Lambda functions have tags.',
+    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-tags.html',
+    recommended_action: 'Modify Lambda configurations and new tags',
+    apis: ['Lambda:listFunctions', 'ResourceGroupsTaggingAPI:getResources'],
+  
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -40,7 +33,14 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Lambda functions found', region);
                 return rcb();
             }
-            console.log(listFunctions.data)
+            let existingLambdaARNList = []
+            for (var lambdaFunc of listFunctions.data) {
+                if (!lambdaFunc.FunctionArn) continue;
+                existingLambdaARNList.push(lambdaFunc.FunctionArn);
+            }
+            if(existingLambdaARNList.length){
+                helpers.checkTags(cache, 'lambda', existingLambdaARNList, region, results)
+            }
             
             rcb();
         }, function(){
