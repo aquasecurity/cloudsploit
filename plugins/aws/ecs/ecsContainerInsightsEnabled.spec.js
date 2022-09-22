@@ -41,11 +41,11 @@ describe('ECSContainerInsightsEnabled', function () {
             ecs.run(cache, {}, callback);
         })
 
-        it('should give error result if ecs container insights is disabled', function (done) {
+        it('should give error result if ecs cluster has container insights disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('ECS cluster container insights  not enabled')
+                expect(results[0].message).to.include('ECS cluster does not have container insights enabled')
                 done()
             };
 
@@ -65,7 +65,7 @@ describe('ECSContainerInsightsEnabled', function () {
         it('should give error result if unable to query ecs cluster', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
+                expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('Unable to query for ECS clusters')
                 done()
             };
@@ -86,7 +86,7 @@ describe('ECSContainerInsightsEnabled', function () {
         it('should give passing result if unable to describe the cluster', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
+                expect(results[0].status).to.equal(2)
                 expect(results[0].message).to.include('Unable to describe ECS cluster')
                 done()
         };
@@ -99,11 +99,11 @@ describe('ECSContainerInsightsEnabled', function () {
             ecs.run(cache, {}, callback);
         })
 
-        it('should give passing result if ecs container insights is enabled', function (done) {
+        it('should give passing result if ecs cluster has container insights is enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('ECS cluster container Insights is enabled')
+                expect(results[0].message).to.include('ECS cluster has container Insights enabled')
                 done()
             };
 
