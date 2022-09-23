@@ -1,0 +1,53 @@
+var async = require('async');
+var helpers = require('../../../helpers/aws');
+
+module.exports = {
+    title: 'EFS Has Tags',
+    category: 'EFS',
+    domain: 'Storage',
+    description: 'Ensure EFS File systems have tags',
+    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    link: 'https://docs.aws.amazon.com/efs/latest/ug/manage-fs-tags.html',
+    recommended_action: 'Add new tags for efs file system.',
+    apis: ['EFS:describeFileSystems', 'ResourceGroupsTaggingAPI:getResources'],
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var regions = helpers.regions(settings);
+
+        async.each(regions.efs, function(region, rcb) {
+            var describeFileSystems = helpers.addSource(cache, source,
+                ['efs', 'describeFileSystems', region]);
+
+            if (!describeFileSystems) return rcb();
+
+            if (describeFileSystems.err || !describeFileSystems.data) {
+                helpers.addResult(
+                    results, 3,
+                    'Unable to query for EFS file systems: ' + helpers.addError(describeFileSystems), region);
+                return rcb();
+            }
+
+            if (describeFileSystems.data.length === 0){
+                helpers.addResult(results, 0, 'No EFS file systems present', region);
+                return rcb();
+            }
+            for(efs of describeFileSystems.data) {
+                const { FileSystemArn, Tags} = efs;
+
+                if(Tags.length === 0){
+                    helpers.addResult(
+                    results, 2, 'EFS file system have no tags.', region, FileSystemArn);
+                } else{
+                    helpers.addResult(
+                    results, 0, 'EFS file system have tags.', region, FileSystemArn);
+                }
+            }
+
+            rcb();
+        }, function() {
+            callback(null, results, source);
+        });
+    }
+};
