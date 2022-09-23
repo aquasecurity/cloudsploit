@@ -23,7 +23,7 @@ module.exports = {
                 if (!listClusters) return rcb();
 
                 if (listClusters.err || !listClusters.data) {
-                    helpers.addResult(results, 2, 
+                    helpers.addResult(results, 3, 
                     'Unable to query for ECS clusters: ' + helpers.addError(listClusters), region);
                     return rcb();
                 }
@@ -42,7 +42,7 @@ module.exports = {
             describeCluster.err ||
             !describeCluster.data
                     ) {
-                        helpers.addResult(results, 2,
+                        helpers.addResult(results, 3,
                          'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
                         continue;
                     }

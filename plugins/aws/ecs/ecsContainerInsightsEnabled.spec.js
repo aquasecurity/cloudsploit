@@ -62,10 +62,10 @@ describe('ECSContainerInsightsEnabled', function () {
 
             ecs.run(cache, {}, callback);
         })
-        it('should give error result if unable to query ecs cluster', function (done) {
+        it('should give Unknown result if unable to query ecs cluster', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(2)
+                expect(results[0].status).to.equal(3)
                 expect(results[0].message).to.include('Unable to query for ECS clusters')
                 done()
             };
@@ -83,10 +83,10 @@ describe('ECSContainerInsightsEnabled', function () {
             ecs.run(cache, {}, callback);
         })
 
-        it('should give passing result if unable to describe the cluster', function (done) {
+        it('should give unknown result if unable to describe the cluster', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(2)
+                expect(results[0].status).to.equal(3)
                 expect(results[0].message).to.include('Unable to describe ECS cluster')
                 done()
         };
