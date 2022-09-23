@@ -1035,7 +1035,7 @@ var checkTags = function(cache, resourceName,resourceList, region, results) {
     const allResources = helpers.addSource(cache, {},
         ['resourcegroupstaggingapi', 'getResources', region]);
     if (!allResources || allResources.err || !allResources.data) {
-        helpers.addResult(results, 2,
+        helpers.addResult(results, 3,
             'Unable to query resource group tagging api: ' + helpers.addError(allResources), region);
         return  results['Error'];
     }

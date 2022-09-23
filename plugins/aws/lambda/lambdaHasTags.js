@@ -24,7 +24,7 @@ module.exports = {
             if (!listFunctions) return rcb();
 
             if (listFunctions.err || !listFunctions.data) {
-                helpers.addResult(results, 2,
+                helpers.addResult(results, 3,
                     `Unable to query for Lambda functions: ${helpers.addError(listFunctions)}`, region);
                 return rcb();
             }
