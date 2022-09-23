@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/efs/latest/ug/manage-fs-tags.html',
     recommended_action: 'Add new tags for efs file system.',
-    apis: ['EFS:describeFileSystems', 'ResourceGroupsTaggingAPI:getResources'],
+    apis: ['EFS:describeFileSystems'],
 
     run: function(cache, settings, callback) {
         var results = [];
