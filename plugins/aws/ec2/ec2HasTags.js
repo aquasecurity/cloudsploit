@@ -33,16 +33,16 @@ module.exports = {
             }
             for(var instances of describeInstances.data){
                 const { OwnerId } = instances;
-                    for(var instance of instances.Instances){
-                    
-                        const { Tags, InstanceId } = instance;
-                        const ARN = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
-                        if(Tags.length === 0){
-                            helpers.addResult(results, 2, 'EC2 Instance has no tags', region, ARN);
-                        }else {
-                            helpers.addResult(results, 0, 'EC2 Instance has tags specified', region, ARN);
-                        }
+                for(var instance of instances.Instances){
+                
+                    const { Tags, InstanceId } = instance;
+                    const ARN = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
+                    if(Tags.length === 0){
+                        helpers.addResult(results, 2, 'EC2 Instance has no tags', region, ARN);
+                    }else {
+                        helpers.addResult(results, 0, 'EC2 Instance has tags specified', region, ARN);
                     }
+                }
             }
             
             return rcb();
