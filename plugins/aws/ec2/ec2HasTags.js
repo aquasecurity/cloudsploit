@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure EC2 Instances have tags',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html',
-    recommended_action: 'Modify EC2 instances to add new tags',
+    recommended_action: 'Add tags for ec2 instance',
     apis: ['EC2:describeInstances'],
 
     run: function(cache, settings, callback) {
