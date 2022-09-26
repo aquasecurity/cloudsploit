@@ -310,7 +310,7 @@ const createErrorCache = () => {
 			describeInstances: {
 				'us-east-1': {
 					err: {
-						message: 'bad error'
+						message: 'error'
 					}
 				}
 			}
