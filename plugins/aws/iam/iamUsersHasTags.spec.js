@@ -21,7 +21,6 @@ const listUsers = [
 ];
 
 const createCache = (listUsers) => {
-    var usersName = (listUsers && listUsers.length) ? listUsers[0].usersName : null; 
     return {
         iam: {
             listUsers: {
@@ -50,7 +49,7 @@ const createErrorCache = () => {
 
 describe('iamUserHasTags', function () {
     describe('run', function () {
-        it('should give passing result if user has tags', function (done) {
+        it('should give passing result if iam user has tags', function (done) {
             const cache = createCache([listUsers[1]]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -59,7 +58,7 @@ describe('iamUserHasTags', function () {
             });
         });
 
-        it('should give failing result if user has no tags', function (done) {
+        it('should give failing result if iam user has no tags', function (done) {
             const cache = createCache([listUsers[0]]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -68,7 +67,7 @@ describe('iamUserHasTags', function () {
             });
         });
         
-        it('should give unknown result if error in lsiting users', function (done) {
+        it('should give unknown result if error in lsiting iam users', function (done) {
             const cache = createErrorCache();
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -77,7 +76,7 @@ describe('iamUserHasTags', function () {
             });
         });
 
-        it('should give passing result if no user found', function (done) {
+        it('should give passing result if no iam user found', function (done) {
             const cache = createCache([]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

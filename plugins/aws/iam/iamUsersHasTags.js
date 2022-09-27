@@ -33,10 +33,10 @@ module.exports = {
         } 
         for(user of listUsers.data) {
             if(user.Tags.length === 0){
-                helpers.addResult(results, 2, 'IAM User has no Tag', 'global', user.Arn);
+                helpers.addResult(results, 2, 'IAM User does not have Tags', 'global', user.Arn);
             }
             else {
-                helpers.addResult(results, 0, 'IAM User has Tag specified', 'global', user.Arn);
+                helpers.addResult(results, 0, 'IAM User have Tags specified', 'global', user.Arn);
 
             }
         }
