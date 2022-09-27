@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const enableDetailMonitoring = require('./enableDetailmonitoring.js');
+const enableDetailMonitoring = require('./enableDetailMonitoring.js');
 
 describeInstances = [
 	{
