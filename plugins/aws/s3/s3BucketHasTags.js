@@ -27,7 +27,7 @@ module.exports = {
         }
 
         if (!listBuckets.data.length) {
-            helpers.addResult(results, 0, 'No S3 buckets to check');
+            helpers.addResult(results, 0, 'No S3 bucket found');
             return callback(null, results, source);
         }
 
