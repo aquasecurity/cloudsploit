@@ -44,7 +44,7 @@ const createErrorCache = () => {
 
 describe('iamRolesHasTags', function () {
     describe('run', function () {
-        it('should give passing result if user has tags', function (done) {
+        it('should give passing result if iam role has tags', function (done) {
             const cache = createCache([listUsers[1]]);
             iamRolesHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -53,7 +53,7 @@ describe('iamRolesHasTags', function () {
             });
         });
 
-        it('should give failing result if user has no tags', function (done) {
+        it('should give failing result if iam role has no tags', function (done) {
             const cache = createCache([listUsers[0]]);
             iamRolesHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -62,7 +62,7 @@ describe('iamRolesHasTags', function () {
             });
         });
         
-        it('should give unknown result if error in lsiting users', function (done) {
+        it('should give unknown result if error in lsiting Roles', function (done) {
             const cache = createErrorCache();
             iamRolesHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -71,7 +71,7 @@ describe('iamRolesHasTags', function () {
             });
         });
 
-        it('should give passing result if no user found', function (done) {
+        it('should give passing result if no iam role found', function (done) {
             const cache = createCache([]);
             iamRolesHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
