@@ -573,7 +573,7 @@ module.exports = {
         // 'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         // 'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
-        'iamRolesHasTags'    : require(__dirname + '/plugins/aws/iam/iamRolesHasTags.js'),
+        'securityGroupHasTags'    : require(__dirname + '/plugins/aws/ec2/securityGroupsHasTags.js'),
 
     },
     azure : {
