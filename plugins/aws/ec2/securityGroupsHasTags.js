@@ -20,8 +20,6 @@ module.exports = {
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
 
-            if (!describeSecurityGroups) return rcb();
-
             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
@@ -35,9 +33,9 @@ module.exports = {
             for( var sg of describeSecurityGroups.data) {
                 const arn = `arn:aws:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`
                 if(sg.Tags.length === 0) {
-                    helpers.addResult(results, 2, "Security group has no tags", region, arn);
+                    helpers.addResult(results, 2, "Security group does not have tags", region, arn);
                 }else{
-                    helpers.addResult(results, 0, "Security group has tags", region, arn);
+                    helpers.addResult(results, 0, "Security group have tags", region, arn);
                 }
             }
 

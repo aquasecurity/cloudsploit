@@ -50,16 +50,6 @@ const createErrorCache = () => {
     };
 };
 
-const createNullCache = () => {
-    return {
-        ec2:{
-            describeSecurityGroups: {
-                'us-east-1': null,
-            },
-        },
-    };
-};
-
 describe('securityGroupsHasTags', function () {
     describe('run', function () {
         it('should PASS if default security group has Tags', function (done) {
