@@ -224,9 +224,8 @@ describe('ebsUnusedVolumes', function () {
         it('should PASS if EBS volume is attached to EC2 instance', function (done) {
             const cache = createCache([describeInstances[0]], [describeVolumes[1]]);
             ebsUnusedVolumes.run(cache, {}, (err, results) => {
-                console.log(results);
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
