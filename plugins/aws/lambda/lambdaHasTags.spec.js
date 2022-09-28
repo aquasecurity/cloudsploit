@@ -78,7 +78,7 @@ describe('lambdaHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('lambda has tags')
+                expect(results[0].message).to.include('lambda function has tags')
                 done()
             };
 
@@ -99,7 +99,7 @@ describe('lambdaHasTags', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1)
                     expect(results[0].status).to.equal(2)
-                    expect(results[0].message).to.include('lambda does not have any tags')
+                    expect(results[0].message).to.include('lambda function does not have any tags')
                     done()
                 };
 
