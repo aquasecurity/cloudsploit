@@ -43,7 +43,7 @@ describe('eksClusterHasTags', function () {
             eksClusterHasTags.run(cache, {}, callback);
         })
 
-        it('should give passing result if EKS Clusters found.', function (done) {
+        it('should give passing result if EKS Clusters not found.', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
