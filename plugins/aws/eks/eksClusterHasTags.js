@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-using-tags.html',
     recommended_action: 'Modify EKS Cluster and tags.',
-    apis: ['EKS:listClusters', 'ResourceGroupsTaggingAPI:getResources'],
+    apis: ['EKS:listClusters', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -40,9 +40,9 @@ module.exports = {
 
             const ARNList = []
             for (var c in listClusters.data) {
-            var clusterName = listClusters.data[c];
+                var clusterName = listClusters.data[c];
             var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
-            ARNList.push(arn)
+                ARNList.push(arn)
             }
             
             helpers.checkTags(cache,'eks clsuters', ARNList, region, results)

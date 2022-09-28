@@ -1048,7 +1048,6 @@ var checkTags = function(cache, resourceName,resourceList, region, results) {
            filteredResourceARN.push(resource.ResourceARN)
         }
     })
-    console.log(resourceARNPrefix, filteredResourceARN)
     resourceList.map(arn=>{
         if(filteredResourceARN.includes(arn))
         {   
