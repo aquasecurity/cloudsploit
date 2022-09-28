@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure EKS Cluster have tags',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-using-tags.html',
-    recommended_action: 'Modify EKS Cluster and tags.',
+    recommended_action: 'Modify EKS Cluster and add tags.',
     apis: ['EKS:listClusters', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
