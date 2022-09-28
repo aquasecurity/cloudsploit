@@ -71,7 +71,7 @@ describe('s3BucketHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('s3 has tags')
+                expect(results[0].message).to.include('s3 bucket has tags')
                 done()
             };
 
@@ -92,7 +92,7 @@ describe('s3BucketHasTags', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1)
                     expect(results[0].status).to.equal(2)
-                    expect(results[0].message).to.include('s3 does not have any tags')
+                    expect(results[0].message).to.include('s3 bucket does not have any tags')
                     done()
                 };
 

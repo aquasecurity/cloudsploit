@@ -36,7 +36,7 @@ module.exports = {
             const arn = `arn:aws:s3:::${bucket.Name}`
             arnList.push(arn)
         }
-        helpers.checkTags(cache, 's3',arnList, region, results)
+        helpers.checkTags(cache, 's3 bucket',arnList, region, results)
         callback(null, results, source);
     }
 };
