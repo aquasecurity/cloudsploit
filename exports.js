@@ -573,6 +573,7 @@ module.exports = {
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
+        'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
