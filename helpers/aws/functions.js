@@ -1055,7 +1055,7 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
         } else {
             helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
         }
-    })
+    });
 }
 
 module.exports = {
