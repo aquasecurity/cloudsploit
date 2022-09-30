@@ -200,7 +200,7 @@ module.exports = {
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
         'vpnGatewayInVpc'               : require(__dirname + '/plugins/aws/ec2/vpnGatewayInVpc.js'),
         'internetGatewayInVpc'          : require(__dirname + '/plugins/aws/ec2/internetGatewayInVpc.js'),
-        'enableDetailMonitoring'        : require(__dirname+ '/plugins/aws/ec2/enableDetailMonitoring.js'),
+        'enableDetailedMonitoring'      : require(__dirname+ '/plugins/aws/ec2/enableDetailedMonitoring.js'),
         
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
