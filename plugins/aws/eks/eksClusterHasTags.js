@@ -39,7 +39,7 @@ module.exports = {
 
             const ARNList = []
             for (var clusterName of listClusters.data) {
-            var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
+                var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
                 ARNList.push(arn)
             }
             
