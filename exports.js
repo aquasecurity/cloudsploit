@@ -1027,6 +1027,7 @@ module.exports = {
         'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
         'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
         'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
+        'snapshotLabelsAdded'           : require(__dirname + '/plugins/google/compute/snapshotLabelsAdded.js'),
         'diskLabelsAdded'               : require(__dirname + '/plugins/google/compute/diskLabelsAdded.js'),
         'imageLabelsAdded'              : require(__dirname + '/plugins/google/compute/imageLabelsAdded.js'),
         'instanceLabelsAdded'           : require(__dirname + '/plugins/google/compute/instanceLabelsAdded.js'),
