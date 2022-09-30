@@ -203,6 +203,7 @@ module.exports = {
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
+        'efsHasTags'                    : require(__dirname + '/plugins/aws/efs/efsHasTags.js'),
 
         'dockerfileTemplateEncrypted'   : require(__dirname + '/plugins/aws/imagebuilder/dockerfileTemplateEncrypted.js'),
 
@@ -574,7 +575,6 @@ module.exports = {
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
-        'efsHasTags'                    : require(__dirname + '/plugins/aws/efs/efsHasTags.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
