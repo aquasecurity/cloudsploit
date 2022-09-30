@@ -92,7 +92,7 @@ describe('eksClusterHasTags', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
-                    expect(results[0].message).to.include('eks clsuters does not have any tags');
+                    expect(results[0].message).to.include('EKS cluster does not have any tags');
                     done();
                 };
 
