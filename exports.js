@@ -387,7 +387,8 @@ module.exports = {
         'bucketTransferAcceleration'    : require(__dirname + '/plugins/aws/s3/bucketTransferAcceleration'),
         'bucketDnsCompliantName'        : require(__dirname + '/plugins/aws/s3/bucketDnsCompliantName.js'),
         'versionedBucketsLC'            : require(__dirname + '/plugins/aws/s3/versionedBucketsLC.js'),
-
+        's3BucketHasTags'               : require(__dirname + '/plugins/aws/s3/s3BucketHasTags.js'),
+        
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
         'notebookInstanceInVpc'         : require(__dirname + '/plugins/aws/sagemaker/notebookInstanceInVpc.js'),
@@ -574,7 +575,6 @@ module.exports = {
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
-        's3BucketHasTags'               : require(__dirname + '/plugins/aws/s3/s3BucketHasTags.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
