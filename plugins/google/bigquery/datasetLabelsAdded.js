@@ -49,10 +49,10 @@ module.exports = {
                 if (dataset.labels &&
                     Object.keys(dataset.labels).length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(dataset.labels).length} labels found for the dataset`, region, resource);
+                        `${Object.keys(dataset.labels).length} labels found for BigQuery dataset`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The dataset does not have any labels added.', region, resource);
+                        'BigQuery dataset does not have any labels', region, resource);
                 }
             });
 

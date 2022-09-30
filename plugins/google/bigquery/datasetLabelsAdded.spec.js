@@ -78,7 +78,7 @@ describe('datasetLabelsAdded', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('labels found for the dataset');
+                expect(results[0].message).to.include('labels found for BigQuery dataset');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -95,7 +95,7 @@ describe('datasetLabelsAdded', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The dataset does not have any labels added.');
+                expect(results[0].message).to.include('BigQuery dataset does not have any labels');
                 expect(results[0].region).to.equal('global');
                 done()
             };
