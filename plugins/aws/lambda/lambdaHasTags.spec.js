@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var lambda = require('./lambdaHasTags');
 
@@ -27,10 +26,10 @@ describe('lambdaHasTags', function () {
     describe('run', function () {
         it('should give unknown result if unable to list the lambda functions', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for Lambda functions')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Lambda functions');
+                done();
             };
 
             const cache = createCache(
@@ -38,14 +37,14 @@ describe('lambdaHasTags', function () {
             );
 
             lambda.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if no lambda function found in region', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No Lambda functions found')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Lambda functions found');
+                done();
             };
 
             const cache = createCache(
@@ -53,14 +52,14 @@ describe('lambdaHasTags', function () {
             );
 
             lambda.run(cache, {}, callback);
-        })
+        });
 
         it('should give unknown result if unable to query resource group tagging api', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query resource group tagging api')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query all resources from group');
+                done();
             };
 
             const cache = createCache(
@@ -72,14 +71,14 @@ describe('lambdaHasTags', function () {
             );
 
             lambda.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if lambda function has tags', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('lambda function has tags')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('lambda function has tags');
+                done();
             };
 
             const cache = createCache(
@@ -95,12 +94,12 @@ describe('lambdaHasTags', function () {
             lambda.run(cache, {}, callback);
         })
 
-        it('should give passing result if lambda function does not have tags', function (done) {
+        it('should give failing result if lambda function does not have tags', function (done) {
                 const callback = (err, results) => {
-                    expect(results.length).to.equal(1)
-                    expect(results[0].status).to.equal(2)
-                    expect(results[0].message).to.include('lambda function does not have any tags')
-                    done()
+                    expect(results.length).to.equal(1);
+                    expect(results[0].status).to.equal(2);
+                    expect(results[0].message).to.include('lambda function does not have any tags');
+                    done();
                 };
 
                const cache = createCache(
@@ -115,7 +114,7 @@ describe('lambdaHasTags', function () {
             );
 
             lambda.run(cache, {}, callback);
-        })
+        });
 
-    })
-})
+    });
+});
