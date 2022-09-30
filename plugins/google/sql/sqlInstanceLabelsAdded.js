@@ -51,10 +51,10 @@ module.exports = {
                 if (sqlInstance.settings && sqlInstance.settings.userLabels &&
                     Object.keys(sqlInstance.settings.userLabels).length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(sqlInstance.settings.userLabels).length} labels found for the SQL database.`, region, resource);
+                        `${Object.keys(sqlInstance.settings.userLabels).length} labels found for the SQL database`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The SQL database does not have any labels added.', region, resource);
+                        'SQL database does not have any labels', region, resource);
                 }
             });
 
