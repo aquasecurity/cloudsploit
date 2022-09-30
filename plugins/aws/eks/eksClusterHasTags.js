@@ -5,7 +5,7 @@ module.exports = {
     title: 'EKS Cluster Has Tags',
     category: 'EKS',
     domain: 'Containers',
-    description: 'Ensure EKS Cluster have tags',
+    description: 'Ensure that AWS EKS Clusters have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-using-tags.html',
     recommended_action: 'Modify EKS Cluster and add tags.',
@@ -27,25 +27,23 @@ module.exports = {
             if (!listClusters) return rcb();
 
             if (listClusters.err || !listClusters.data) {
-                helpers.addResult(
-                    results, 3,
+                helpers.addResult(results, 3,
                     'Unable to query for EKS clusters: ' + helpers.addError(listClusters), region);
                 return rcb();
             }
 
-            if (listClusters.data.length === 0){
+            if (listClusters.data.length) {
                 helpers.addResult(results, 0, 'No EKS clusters present', region);
                 return rcb();
             }
 
             const ARNList = [];
-            for (var c in listClusters.data){
-                var clusterName = listClusters.data[c];
+            for (var clusterName of listClusters.data) {
                 var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
                 ARNList.push(arn);
             }
             
-            helpers.checkTags(cache,'eks clsuters', ARNList, region, results);
+            helpers.checkTags(cache,'EKS cluster', ARNList, region, results);
 
             rcb();
         }, function() {
