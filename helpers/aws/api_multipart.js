@@ -874,7 +874,7 @@ var calls = [
             getResources :{
                 property: 'ResourceTagMappingList',
                 paginate: 'PaginationToken'
-        }
+            }
         },
         Route53: {
             listHostedZones: {
