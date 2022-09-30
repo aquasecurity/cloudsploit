@@ -1044,7 +1044,7 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
     const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0].toLowerCase()}:`;
     const filteredResourceARN = [];
     allResources.data.map(resource => {
-        if((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
+        if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
            filteredResourceARN.push(resource.ResourceARN)
         }
     });
