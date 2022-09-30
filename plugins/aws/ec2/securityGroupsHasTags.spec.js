@@ -63,32 +63,32 @@ describe('securityGroupsHasTags', function () {
             });
         });
 
-        // it('should FAIL if default security group does not Tags', function (done) {
-        //     const cache = createCache([describeSecurityGroups[0]]);
-        //     securityGroupsHasTags.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(2);
-        //         done();
-        //     });
-        // });
+        it('should FAIL if default security group does not Tags', function (done) {
+            const cache = createCache([describeSecurityGroups[0]]);
+            securityGroupsHasTags.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
 
-        // it('should PASS if no security groups found', function (done) {
-        //     const cache = createCache([]);
-        //     securityGroupsHasTags.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(0);
-        //         done();
-        //     });
-        // });
+        it('should PASS if no security groups found', function (done) {
+            const cache = createCache([]);
+            securityGroupsHasTags.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
 
-        // it('should UNKNWON unable to describe security groups', function (done) {
-        //     const cache = createErrorCache();
-        //     securityGroupsHasTags.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(3);
-        //         done();
-        //     });
-        // });
+        it('should UNKNWON unable to describe security groups', function (done) {
+            const cache = createErrorCache();
+            securityGroupsHasTags.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
 
     });
 });

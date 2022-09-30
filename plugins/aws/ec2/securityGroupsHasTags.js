@@ -19,7 +19,9 @@ module.exports = {
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
-                console.log(describeSecurityGroups.err)
+
+            if (!describeSecurityGroups) return rcb();
+
             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
