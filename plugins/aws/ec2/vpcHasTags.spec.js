@@ -53,16 +53,6 @@ const createErrorCache = () => {
     };
 };
 
-const createNullCache = () => {
-    return {
-        ec2: {
-            describeVpcs: {
-                'us-east-1': null,
-            },
-        },
-    };
-};
-
 describe('vpcHasTags', function () {
     describe('run', function () {
         it('should FAIL if VPC does not have tags', function (done) {

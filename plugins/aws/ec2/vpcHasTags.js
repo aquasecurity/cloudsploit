@@ -5,7 +5,7 @@ module.exports = {
     title: 'VPC Has Tags',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Ensure VPC have tags',
+    description: 'Ensure that AWS VPC have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/amazon-vpc-resources-support-tag-on-create/',
     recommended_action: 'Modify VPC and add new tags',
@@ -36,11 +36,10 @@ module.exports = {
                 var vpc = describeVpcs.data[v];
                 // arn:${Partition}:ec2:${Region}:${Account}:vpc/${VpcId}
                 var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + vpc.OwnerId + ':vpc/' + vpc.VpcId;
-                if(vpc.Tags.length === 0) {
+                if (!vpc.Tags.length) {
                     helpers.addResult(results, 2, 'VPC does not have tags',region, arn);
-                }
-                else{
-                    helpers.addResult(results, 0, 'VPC have tags', region, arn)
+                } else {
+                    helpers.addResult(results, 0, 'VPC have tags', region, arn);
                 }
                 
             }
