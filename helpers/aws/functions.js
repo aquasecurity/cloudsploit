@@ -1090,5 +1090,5 @@ module.exports = {
     debugApiCalls: debugApiCalls,
     logError: logError,
     collectRateError: collectRateError,
-    checkTags
+    checkTags: checkTags
 };
