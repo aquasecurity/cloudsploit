@@ -27,25 +27,23 @@ module.exports = {
             if (!listClusters) return rcb();
 
             if (listClusters.err || !listClusters.data) {
-                helpers.addResult(
-                    results, 3,
+                helpers.addResult(results, 3,
                     'Unable to query for EKS clusters: ' + helpers.addError(listClusters), region);
                 return rcb();
             }
 
-            if (listClusters.data.length === 0){
+            if (listClusters.data.length){
                 helpers.addResult(results, 0, 'No EKS clusters present', region);
                 return rcb();
             }
 
             const ARNList = []
-            for (var c in listClusters.data) {
-                var clusterName = listClusters.data[c];
+            for (var clusterName of listClusters.data) {
             var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
                 ARNList.push(arn)
             }
             
-            helpers.checkTags(cache,'eks clsuters', ARNList, region, results)
+            helpers.checkTags(cache,'EKS cluster', ARNList, region, results)
 
             rcb();
         }, function() {

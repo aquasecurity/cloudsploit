@@ -1031,17 +1031,17 @@ var collectRateError = function(err, rateError) {
     return isError;
 };
 
-var checkTags = function(cache, resourceName,resourceList, region, results) {
+var checkTags = function(cache, resourceName, resourceList, region, results) {
     const allResources = helpers.addSource(cache, {},
     ['resourcegroupstaggingapi', 'getResources', region]);
     
     if (!allResources || allResources.err || !allResources.data) {
         helpers.addResult(results, 3,
-            'Unable to query resource group tagging api:' + helpers.addError(allResources), region);
-        return  results['Error'];
+            'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
+        return;
     }
 
-    const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0]}:`;
+    const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0].toLowerCase()}:`;
     const filteredResourceARN = [];
     allResources.data.map(resource => {
         if((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
