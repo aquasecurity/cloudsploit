@@ -221,6 +221,7 @@ module.exports = {
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
         'eksLatestPlatformVersion'      : require(__dirname + '/plugins/aws/eks/eksLatestPlatformVersion.js'),
+        'eksClusterHasTags'             : require(__dirname + '/plugins/aws/eks/eksClusterHasTags.js'),
       
         'kendraIndexEncrypted'          : require(__dirname + '/plugins/aws/kendra/kendraIndexEncrypted.js'),
       
@@ -573,7 +574,6 @@ module.exports = {
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
-        'eksClusterHasTags'             : require(__dirname + '/plugins/aws/eks/eksClusterHasTags.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

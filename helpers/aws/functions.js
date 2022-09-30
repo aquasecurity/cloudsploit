@@ -1033,7 +1033,7 @@ var collectRateError = function(err, rateError) {
 
 var checkTags = function(cache, resourceName,resourceList, region, results) {
     const allResources = helpers.addSource(cache, {},
-    ['resourcegroupstaggingapi', 'getResources', region]);
+        ['resourcegroupstaggingapi', 'getResources', region]);
     
     if (!allResources || allResources.err || !allResources.data) {
         helpers.addResult(results, 3,
@@ -1044,19 +1044,18 @@ var checkTags = function(cache, resourceName,resourceList, region, results) {
     const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0]}:`;
     const filteredResourceARN = [];
     allResources.data.map(resource => {
-        if((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
-           filteredResourceARN.push(resource.ResourceARN)
+        if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
+            filteredResourceARN.push(resource.ResourceARN);
         }
-    })
+    });
     resourceList.map(arn=>{
-        if(filteredResourceARN.includes(arn))
-        {   
+        if (filteredResourceARN.includes(arn)){   
             helpers.addResult(results, 0, `${resourceName} has tags`, region, arn);
-        } else{
+        } else {
             helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
         }
-    })
-}
+    });
+};
 
 module.exports = {
     addResult: addResult,

@@ -38,14 +38,14 @@ module.exports = {
                 return rcb();
             }
 
-            const ARNList = []
-            for (var c in listClusters.data) {
+            const ARNList = [];
+            for (var c in listClusters.data){
                 var clusterName = listClusters.data[c];
-            var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
-                ARNList.push(arn)
+                var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
+                ARNList.push(arn);
             }
             
-            helpers.checkTags(cache,'eks clsuters', ARNList, region, results)
+            helpers.checkTags(cache,'eks clsuters', ARNList, region, results);
 
             rcb();
         }, function() {

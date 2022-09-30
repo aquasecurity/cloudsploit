@@ -33,33 +33,33 @@ describe('eksClusterHasTags', function () {
     describe('run', function () {
         it('should give unknown result if unable to list eks clusters', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query for EKS clusters')
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for EKS clusters');
                 done()
             };
 
             const cache = createCache(null, []);
             eksClusterHasTags.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if EKS Clusters not found.', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No EKS clusters present')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No EKS clusters present');
+                done();
             };
             const cache = createCache([], null);
             eksClusterHasTags.run(cache, {}, callback);
-        })
+        });
 
         it('should give unknown result if unable to query resource group tagging api', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(3)
-                expect(results[0].message).to.include('Unable to query resource group tagging api')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query resource group tagging api');
+                done();
             };
 
             const cache = createCache(
@@ -68,14 +68,14 @@ describe('eksClusterHasTags', function () {
             );
 
             eksClusterHasTags.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if EKS Clusters have tags', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('eks clsuters has tags')
-                done()
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('eks clsuters has tags');
+                done();
             };
 
             const cache = createCache(
@@ -86,14 +86,14 @@ describe('eksClusterHasTags', function () {
                 }]
             );
             eksClusterHasTags.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if eks cluster does not have tags', function (done) {
                 const callback = (err, results) => {
-                    expect(results.length).to.equal(1)
-                    expect(results[0].status).to.equal(2)
-                    expect(results[0].message).to.include('eks clsuters does not have any tags')
-                    done()
+                    expect(results.length).to.equal(1);
+                    expect(results[0].status).to.equal(2);
+                    expect(results[0].message).to.include('eks clsuters does not have any tags');
+                    done();
                 };
 
                const cache = createCache(
@@ -105,7 +105,7 @@ describe('eksClusterHasTags', function () {
             );
 
             eksClusterHasTags.run(cache, {}, callback);
-        })
+        });
 
-    })
-})
+    });
+});
