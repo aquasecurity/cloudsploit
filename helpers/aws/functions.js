@@ -1049,8 +1049,7 @@ var checkTags = function(cache, resourceName,resourceList, region, results) {
         }
     })
     resourceList.map(arn=>{
-        if(filteredResourceARN.includes(arn))
-        {   
+        if(filteredResourceARN.includes(arn)) {   
             helpers.addResult(results, 0, `${resourceName} has tags`, region, arn);
         } else{
             helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
