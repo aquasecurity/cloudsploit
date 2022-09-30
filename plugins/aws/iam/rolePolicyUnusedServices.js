@@ -348,18 +348,21 @@ module.exports = {
                                     (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
                                     continue;
                                 }
+                             
+                                if (statement.Action && statement.Action.length &&
+                                    statement.Resource && statement.Resource.length) {
+                                    let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
+                                        statement.Action[0].split(':')[1].toLowerCase();
+                                    if (statement.Action.length > 1 || statement.Action[0] !== '*') {
+                                        for (let action of statement.Action) {
+                                            let resourceAction = action.split(':')[1].toLowerCase();
 
-                                let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
-                                    statement.Action[0].split(':')[1].toLowerCase();
-                                if (statement.Action.length > 1 || statement.Action[0] !== '*') {
-                                    for (let action of statement.Action) {
-                                        let resourceAction = action.split(':')[1].toLowerCase();
-
-                                        if (allServices[service]) {
-                                            for (let supportedResource of allServices[service]) {
-                                                if (resourceAction.includes(supportedResource)) {
-                                                    if (!allResources[service] || !allResources[service].includes(supportedResource)) {
-                                                        if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                            if (allServices[service]) {
+                                                for (let supportedResource of allServices[service]) {
+                                                    if (resourceAction.includes(supportedResource)) {
+                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                        }
                                                     }
                                                 }
                                             }
