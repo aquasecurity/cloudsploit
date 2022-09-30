@@ -5,7 +5,7 @@ module.exports = {
     title: 'Lambda Has Tags',
     category: 'Lambda',
     domain: 'Serverless',
-    description: 'Ensures AWS Lambda functions have tags.',
+    description: 'Ensures that AWS Lambda functions have tags.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-tags.html',
     recommended_action: 'Modify Lambda function configurations and  add new tags',
@@ -33,13 +33,13 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Lambda functions found', region);
                 return rcb();
             }
-            let existingLambdaARNList = []
+            let existingLambdaARNList = [];
             for (var lambdaFunc of listFunctions.data) {
                 if (!lambdaFunc.FunctionArn) continue;
                 existingLambdaARNList.push(lambdaFunc.FunctionArn);
             }
-            if(existingLambdaARNList.length){
-                helpers.checkTags(cache, 'lambda function', existingLambdaARNList, region, results)
+            if (existingLambdaARNList.length){
+                helpers.checkTags(cache, 'lambda function', existingLambdaARNList, region, results);
             }
             
             rcb();
