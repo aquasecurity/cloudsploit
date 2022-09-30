@@ -5,7 +5,7 @@ module.exports = {
     title: 'IAM Users Has Tags',
     category: 'IAM',
     domain: 'Identity and Access management',
-    description:  'Ensure IAM users have tags',
+    description:  'Ensure that AWS IAM Users have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags_users.html',
     recommended_action: 'Modify IAM User and add tags',
@@ -24,18 +24,17 @@ module.exports = {
     
         if (listUsers.err || !listUsers.data) {
             helpers.addResult(results, 3,
-                'Unable to query for users: ' + helpers.addError(listUsers));
+                'Unable to query for iam users: ' + helpers.addError(listUsers));
             return callback(null, results, source);
         }
     
         if (!listUsers.data.length) {
-            helpers.addResult(results, 0, 'No users found', 'global');
+            helpers.addResult(results, 0, 'No iam users found', 'global');
         } 
-        for(user of listUsers.data) {
-            if(user.Tags.length === 0){
+        for (var user of listUsers.data) {
+            if (!user.Tags.length){
                 helpers.addResult(results, 2, 'IAM User does not have Tags', 'global', user.Arn);
-            }
-            else {
+            } else {
                 helpers.addResult(results, 0, 'IAM User have Tags specified', 'global', user.Arn);
 
             }
