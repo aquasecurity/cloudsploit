@@ -19,7 +19,9 @@ module.exports = {
         async.each(regions.rds, function(region, rcb) {
             var describeDBInstances = helpers.addSource(cache, source,
                 ['rds', 'describeDBInstances', region]);
-            console.log(describeDBInstances)
+
+            if (!describeDBInstances) return rcb();
+
             if (describeDBInstances.err || !describeDBInstances.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for RDS instances: ' + helpers.addError(describeDBInstances), region);
