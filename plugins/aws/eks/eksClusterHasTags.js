@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (listClusters.data.length) {
+            if (!listClusters.data.length) {
                 helpers.addResult(results, 0, 'No EKS clusters present', region);
                 return rcb();
             }
