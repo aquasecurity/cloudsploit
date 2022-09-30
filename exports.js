@@ -327,6 +327,7 @@ module.exports = {
         'rolePolicyUnusedServices'      : require(__dirname + '/plugins/aws/iam/rolePolicyUnusedServices.js'),
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
+        'iamRolesHasTags'              : require(__dirname + '/plugins/aws/iam/iamRolesHasTags.js'),
 
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),
@@ -574,7 +575,6 @@ module.exports = {
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
-        'iamRolesHasTags'              : require(__dirname + '/plugins/aws/iam/iamRolesHasTags.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
