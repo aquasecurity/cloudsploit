@@ -3,13 +3,13 @@ const async = require('async');
 const helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'EC2 Instances Detailed monitoring',
+    title: 'Instance Detailed Monitoring',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Ensure that EC2 instances have enabled detailed monitoring.',
-    more_info: 'By default, your instance is enabled for basic monitoring.After you enable detailed monitoring,EC2 console displays monitoring graphs with a 1-minute period.',
+    description: 'Ensure that EC2 instances have detailed monitoring feature enabled.',
+    more_info: 'By default, your instance is enabled for basic monitoring. After you enable detailed monitoring, EC2 console displays monitoring graphs with a 1-minute period.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html',
-    recommended_action: 'Modify EC2 instance to enable detail monitoring',
+    recommended_action: 'Modify EC2 instance to enable detailed monitoring',
     apis: ['EC2:describeInstances'],
 
     run: function(cache, settings, callback) {
@@ -25,12 +25,12 @@ module.exports = {
 
             if (describeInstances.err || !describeInstances.data) {
                 helpers.addResult(results, 3, `Unable to query for instances:
-               ${helpers.addError(describeInstances)}`, region);
+                   ${helpers.addError(describeInstances)}`, region);
                 return rcb();
             }
 
             if (!describeInstances.data.length) {
-                helpers.addResult(results, 0, 'No instances found', region);
+                helpers.addResult(results, 0, 'No EC2 instances found', region);
                 return rcb();
             }
 
