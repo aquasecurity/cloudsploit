@@ -917,7 +917,7 @@ var calls = {
             property: 'TagKeys',
             paginate: 'PaginationToken'
         },
-        getResources : {
+        getResources: {
             property: 'ResourceTagMappingList',
             paginate: 'PaginationToken'
         }
