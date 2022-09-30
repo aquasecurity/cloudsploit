@@ -4,7 +4,7 @@ module.exports = {
     title: 'IAM Roles Have Tags',
     category: 'IAM',
     domain: 'Identity and Access management',
-    description: 'Ensure IAM roles have tags',
+    description: 'Ensure that AWS IAM Roles have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html',
     recommended_action: 'Modify Roles to add tags.',
@@ -33,11 +33,10 @@ module.exports = {
         }
         for (var role of listRoles.data){
             const {Arn, Tags} = role;
-            if(Tags.length  === 0) {
-                helpers.addResult(results, 2, 'IAM Role does not have tags',Arn);
-            }
-            else{
-                helpers.addResult(results, 0, 'IAM Role have tags',Arn);
+            if (!Tags.length) {
+                helpers.addResult(results, 2, 'IAM Role does not have tags', Arn);
+            } else {
+                helpers.addResult(results, 0, 'IAM Role have tags', Arn);
 
             }
         }
