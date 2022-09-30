@@ -59,7 +59,7 @@ describe('dnsZoneLabelsAdded', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('labels found for the managed zone');
+                expect(results[0].message).to.include('labels found for DNS managed zone');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -92,7 +92,7 @@ describe('dnsZoneLabelsAdded', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('does not have any labels added');
+                expect(results[0].message).to.include('does not have any labels');
                 expect(results[0].region).to.equal('global');
                 done()
             };

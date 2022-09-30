@@ -49,10 +49,10 @@ module.exports = {
                 if (managedZone.labels &&
                     Object.keys(managedZone.labels).length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(managedZone.labels).length} labels found for the managed zone.`, region, resource);
+                        `${Object.keys(managedZone.labels).length} labels found for DNS managed zone`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The managed zone does not have any labels added.', region, resource);
+                        'DNS managed zone does not have any labels', region, resource);
                 }
 
             });
