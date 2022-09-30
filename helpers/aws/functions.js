@@ -1031,6 +1031,33 @@ var collectRateError = function(err, rateError) {
     return isError;
 };
 
+var checkTags = function(cache, resourceName, resourceList, region, results) {
+    const allResources = helpers.addSource(cache, {},
+        ['resourcegroupstaggingapi', 'getResources', region]);
+    
+    if (!allResources || allResources.err || !allResources.data) {
+        helpers.addResult(results, 3,
+            'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
+        return;
+    }
+
+    const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0].toLowerCase()}:`;
+    const filteredResourceARN = [];
+    allResources.data.map(resource => {
+        if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
+            filteredResourceARN.push(resource.ResourceARN);
+        }
+    });
+
+    resourceList.map(arn => {
+        if (filteredResourceARN.includes(arn)) {   
+            helpers.addResult(results, 0, `${resourceName} has tags`, region, arn);
+        } else {
+            helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
+        }
+    });
+};
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -1063,5 +1090,6 @@ module.exports = {
     makeCustomCollectorCall: makeCustomCollectorCall,
     debugApiCalls: debugApiCalls,
     logError: logError,
-    collectRateError: collectRateError
+    collectRateError: collectRateError,
+    checkTags: checkTags
 };
