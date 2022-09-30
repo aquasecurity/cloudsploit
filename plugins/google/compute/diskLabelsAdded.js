@@ -69,10 +69,10 @@ module.exports = {
                 if (disk.labels &&
                     Object.keys(disk.labels).length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(disk.labels).length} labels found for the disk`, region, resource);
+                        `${Object.keys(disk.labels).length} labels found for compute disk`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'The disk does not have any labels added.', region, resource);
+                        'Compute disk does not have any labels', region, resource);
                 }
 
             });
