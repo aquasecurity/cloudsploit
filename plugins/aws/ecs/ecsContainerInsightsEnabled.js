@@ -18,70 +18,66 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.ecs, function(region, rcb){
-                var listClusters = helpers.addSource(cache, source, 
+
+            var listClusters = helpers.addSource(cache, source, 
                 ['ecs','listClusters',region]);
-                if (!listClusters) return rcb();
+            if (!listClusters) return rcb();
 
-                if (listClusters.err || !listClusters.data) {
-                    helpers.addResult(results, 3, 
+            if (listClusters.err || !listClusters.data) {
+                helpers.addResult(results, 3, 
                     'Unable to query for ECS clusters: ' + helpers.addError(listClusters), region);
-                    return rcb();
-                }
+                return rcb();
+            }
 
-                if (listClusters.data.length === 0) {
-                    helpers.addResult(results, 0, 'No ECS clusters present', region);
-                    return rcb();
-                }
-     
-                for (var clusterARN of listClusters.data) {
-                    var describeCluster = helpers.addSource(cache, source,
+            if (!listClusters.data.length) {
+                helpers.addResult(results, 0, 'No ECS clusters present', region);
+                return rcb();
+            }
+
+            for (var clusterARN of listClusters.data) {
+                var describeCluster = helpers.addSource(cache, source,
                     ['ecs', 'describeCluster', region, clusterARN ]);
-            
-                    if (
-                        !describeCluster ||
-            describeCluster.err ||
-            !describeCluster.data
-                    ) {
-                        helpers.addResult(results, 3,
-                         'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
-                        continue;
-                    }
+        
+                if (!describeCluster || describeCluster.err ||!describeCluster.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
+                    continue;
+                }
 
-                    if (
-                        describeCluster.data.clusters &&
-                        describeCluster.data.clusters.length
-                    ) {   
-            
-                        for ( var index in describeCluster.data.clusters) {
+                if (
+                    describeCluster.data.clusters &&
+                    describeCluster.data.clusters.length
+                ) {   
+        
+                    for ( var index in describeCluster.data.clusters) {
 
-                            let containerInsightsEnabled = false;
-                            const cluster = describeCluster.data.clusters[index];
-                            if (cluster.settings.length > 0){ 
-                                for (var item of cluster.settings ){ 
-                                    if (item.name === 'containerInsights' ){
+                        let containerInsightsEnabled = false;
+                        const cluster = describeCluster.data.clusters[index];
+                        if (cluster.settings.length > 0){ 
+                            for (var item of cluster.settings ){ 
+                                if (item.name === 'containerInsights' ){
 
-                                        if ( item.value === 'enabled'){
-                                             containerInsightsEnabled = true
-                                             break;
-                                        }
+                                    if (item.value === 'enabled'){
+                                        containerInsightsEnabled = true;
+                                        break;
                                     }
                                 }
                             }
-                            if(containerInsightsEnabled){
-                                helpers.addResult(results, 0,
+                        }
+                        if (containerInsightsEnabled){
+                            helpers.addResult(results, 0,
                                 'ECS cluster has container Insights enabled', region, clusterARN);
-                            } else {
-                                helpers.addResult(results, 2,
+                        } else {
+                            helpers.addResult(results, 2,
                                 'ECS cluster does not have container insights enabled',region, clusterARN);
-                                }             
-                        }            
-                    } 
-                }
-                rcb();
-            },
-            function(){
-                callback(null, results, source);
+                        }             
+                    }            
+                } 
             }
-        );
+            rcb();
+        },
+        function(){
+            callback(null, results, source);
+        });
     }
 };
