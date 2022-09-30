@@ -45,7 +45,8 @@ module.exports = {
                         `Unable to get clusters description: ${helpers.addError(describeReplicationGroups)}`,
                         region, resource);
                 } else {
-                    if (describeReplicationGroups.data.MultiAZ === 'enabled') {
+                    if (describeReplicationGroups.data.ReplicationGroups &&
+                        describeReplicationGroups.data.ReplicationGroups.some(group => group.MultiAZ && group.MultiAZ.toLowerCase() === 'enabled')) {
                         helpers.addResult(results, 0,
                             'Cluster has Multi-AZ feature enabled', region, resource);
                     } else {
