@@ -182,7 +182,7 @@ module.exports = {
         'unusedVpcInternetGateways'     : require(__dirname + '/plugins/aws/ec2/unusedVpcInternetGateways.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/aws/ec2/managedNatGateway.js'),
         'allowedCustomPorts'            : require(__dirname + '/plugins/aws/ec2/allowedCustomPorts.js'),
-         'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
+        'ebsUnusedVolumes'              : require(__dirname + '/plugins/aws/ec2/ebsUnusedVolumes.js'),
         'publicIpAddress'               : require(__dirname + '/plugins/aws/ec2/publicIpAddress.js'),
         'unusedVirtualPrivateGateway'   : require(__dirname + '/plugins/aws/ec2/unusedVirtualPrivateGateway.js'),
         'vpcSubnetInstancesPresent'     : require(__dirname + '/plugins/aws/ec2/vpcSubnetInstancesPresent.js'),
@@ -820,7 +820,7 @@ module.exports = {
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
 
-       'checkAdvisorRecommendations'   : require(__dirname + '/plugins/azure/advisor/checkAdvisorRecommendations.js'),
+        'checkAdvisorRecommendations'   : require(__dirname + '/plugins/azure/advisor/checkAdvisorRecommendations.js'),
 
         'enableDefenderForStorage'      : require(__dirname + '/plugins/azure/defender/enableDefenderForStorage.js'),
         'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
