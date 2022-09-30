@@ -71,7 +71,8 @@ const createCache = (groups) => {
         rds:{
             describeDBInstances: {
                 'us-east-1': {
-                    data: groups
+                    data: groups,
+                    err: null
                 },
             },
         },
