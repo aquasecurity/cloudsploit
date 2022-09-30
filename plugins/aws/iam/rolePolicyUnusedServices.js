@@ -65,6 +65,7 @@ module.exports = {
             default: 'false'
         }
     },
+
     run: function(cache, settings, callback) {
         var config = {
             iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
