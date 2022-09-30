@@ -1045,7 +1045,7 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
     const filteredResourceARN = [];
     allResources.data.map(resource => {
         if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
-           filteredResourceARN.push(resource.ResourceARN)
+            filteredResourceARN.push(resource.ResourceARN);
         }
     });
 
@@ -1056,7 +1056,7 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
             helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
         }
     });
-}
+};
 
 module.exports = {
     addResult: addResult,
