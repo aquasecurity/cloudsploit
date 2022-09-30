@@ -221,6 +221,7 @@ module.exports = {
         'eksSecretsEncrypted'           : require(__dirname + '/plugins/aws/eks/eksSecretsEncrypted.js'),
         'eksSecurityGroups'             : require(__dirname + '/plugins/aws/eks/eksSecurityGroups.js'),
         'eksLatestPlatformVersion'      : require(__dirname + '/plugins/aws/eks/eksLatestPlatformVersion.js'),
+        'eksClusterHasTags'             : require(__dirname + '/plugins/aws/eks/eksClusterHasTags.js'),
       
         'kendraIndexEncrypted'          : require(__dirname + '/plugins/aws/kendra/kendraIndexEncrypted.js'),
       
@@ -1027,6 +1028,9 @@ module.exports = {
         'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
         'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
         'snapshotLabelsAdded'           : require(__dirname + '/plugins/google/compute/snapshotLabelsAdded.js'),
+        'diskLabelsAdded'               : require(__dirname + '/plugins/google/compute/diskLabelsAdded.js'),
+        'imageLabelsAdded'              : require(__dirname + '/plugins/google/compute/imageLabelsAdded.js'),
+        'instanceLabelsAdded'           : require(__dirname + '/plugins/google/compute/instanceLabelsAdded.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
@@ -1056,6 +1060,7 @@ module.exports = {
         'sqlCMKEncryption'              : require(__dirname + '/plugins/google/sql/sqlCMKEncryption.js'),
         'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
         'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
+        'sqlInstanceLabelsAdded'        : require(__dirname + '/plugins/google/sql/sqlInstanceLabelsAdded.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -1064,6 +1069,7 @@ module.exports = {
         'bucketUniformAccess'           : require(__dirname + '/plugins/google/storage/bucketUniformAccess.js'),
         'bucketLifecycleConfigured'     : require(__dirname + '/plugins/google/storage/bucketLifecycleConfigured.js'),
         'bucketEncryption'              : require(__dirname + '/plugins/google/storage/bucketEncryption.js'),
+        'bucketLabelsAdded'             : require(__dirname + '/plugins/google/storage/bucketLabelsAdded.js'),
 
         'clbHttpsOnly'                  : require(__dirname + '/plugins/google/clb/clbHttpsOnly.js'),
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
@@ -1111,6 +1117,7 @@ module.exports = {
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
+        'dnsZoneLabelsAdded'            : require(__dirname + '/plugins/google/dns/dnsZoneLabelsAdded.js'),
 
         'auditLoggingEnabled'           : require(__dirname + '/plugins/google/logging/auditLoggingEnabled.js'),
         'projectOwnershipLogging'       : require(__dirname + '/plugins/google/logging/projectOwnershipLogging.js'),
@@ -1125,9 +1132,11 @@ module.exports = {
 
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
         'tablesCMKEncrypted'            : require(__dirname + '/plugins/google/bigquery/tablesCMKEncrypted.js'),
+        'datasetLabelsAdded'            : require(__dirname + '/plugins/google/bigquery/datasetLabelsAdded.js'),
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
         'deadLetteringEnabled'          : require(__dirname + '/plugins/google/pubsub/deadLetteringEnabled.js'),
+        'topicLabelsAdded'              : require(__dirname + '/plugins/google/pubsub/topicLabelsAdded.js'),
 
         'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js'),
         'dataflowJobsEncryption'        : require(__dirname + '/plugins/google/dataflow/dataflowJobsEncryption.js'),
@@ -1138,6 +1147,7 @@ module.exports = {
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
+        'cloudFunctionLabelsAdded'      : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionLabelsAdded.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
