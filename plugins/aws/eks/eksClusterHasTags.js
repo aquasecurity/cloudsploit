@@ -32,15 +32,15 @@ module.exports = {
                 return rcb();
             }
 
-            if (listClusters.data.length){
+            if (listClusters.data.length) {
                 helpers.addResult(results, 0, 'No EKS clusters present', region);
                 return rcb();
             }
 
-            const ARNList = []
+            const ARNList = [];
             for (var clusterName of listClusters.data) {
                 var arn = 'arn:' + awsOrGov + ':eks:' + region + ':' + accountId + ':cluster/' + clusterName;
-                ARNList.push(arn)
+                ARNList.push(arn);
             }
             
             helpers.checkTags(cache,'EKS cluster', ARNList, region, results)
