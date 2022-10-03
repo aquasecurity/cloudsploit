@@ -39,13 +39,13 @@ module.exports = {
                 for (const instance of reservation.Instances) {
                     const arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
-                        if (instance.Monitoring && instance.Monitoring.State && instance.Monitoring.State.toLowerCase() === 'enabled') {
-                            helpers.addResult(results, 0,
-                                'Instance has enabled detailed monitoring', region, arn);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'Instance does not have enabled detailed monitoring', region, arn);
-                        }
+                    if (instance.Monitoring && instance.Monitoring.State && instance.Monitoring.State.toLowerCase() === 'enabled') {
+                        helpers.addResult(results, 0,
+                            'Instance has enabled detailed monitoring', region, arn);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Instance does not have enabled detailed monitoring', region, arn);
+                    }
                 }
             }
 
