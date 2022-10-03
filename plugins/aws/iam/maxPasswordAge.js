@@ -95,11 +95,11 @@ module.exports = {
         if (!passwordPolicy.MaxPasswordAge) {
             helpers.addResult(results, 2, 'Password policy does not specify a maximum password age');
         } else if (passwordPolicy.MaxPasswordAge > config.max_password_age_fail) {
-            helpers.addResult(results, 2, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than one year', 'global', null, custom);
+            helpers.addResult(results, 2, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is more than ${config.max_password_age_fail}`, 'global', null, custom);
         } else if (passwordPolicy.MaxPasswordAge > config.max_password_age_warn) {
-            helpers.addResult(results, 1, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than six months', 'global', null, custom);
+            helpers.addResult(results, 1, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is more than ${config.max_password_age_warn}`, 'global', null, custom);
         } else {
-            helpers.addResult(results, 0, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is suitable', 'global', null, custom);
+            helpers.addResult(results, 0, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is suitable`, 'global', null, custom);
         }
 
         callback(null, results, source);
