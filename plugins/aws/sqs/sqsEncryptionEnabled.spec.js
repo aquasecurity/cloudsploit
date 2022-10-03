@@ -43,7 +43,7 @@ const getQueueAttributes = [
           "MaximumMessageSize": "262144",
           "MessageRetentionPeriod": "345600",
           "DelaySeconds": "0",
-          "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__owner_statement\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::101363889637:root\"},\"Action\":\"SQS:*\",\"Resource\":\"arn:aws:sqs:us-east-1:101363889637:mine1\"}]}",
+          "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__owner_statement\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::000011112222:root\"},\"Action\":\"SQS:*\",\"Resource\":\"arn:aws:sqs:us-east-1:000011112222:mine1\"}]}",
           "ReceiveMessageWaitTimeSeconds": "0",
           "SqsManagedSseEnabled": "true"
         }
@@ -63,7 +63,7 @@ const getQueueAttributes = [
           "MaximumMessageSize": "262144",
           "MessageRetentionPeriod": "345600",
           "DelaySeconds": "0",
-          "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"appman-infrastructure-sqs-ce-status-sync\",\"Statement\":[{\"Sid\":\"appman-infrastructure-sqs-ce-status-sync-policy\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::101363889637:root\"},\"Action\":\"SQS:*\",\"Resource\":\"arn:aws:sqs:us-east-1:101363889637:akhtarqueue\"},{\"Effect\":\"Allow\",\"Action\":\"kms:*\",\"Resource\":\"arn:aws:sqs:us-east-1:101363889637:akhtarqueue\"},{\"Sid\":\"appman-infrastructure-sns-sqs-ce-status-sync-policy\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"SQS:SendMessage\",\"Resource\":\"arn:aws:sqs:us-east-1:101363889637:akhtarqueue\",\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:sns:eu-west-1:827604522863:applicant-manager-status-changed\"}}}]}",
+          "Policy": "{\"Version\":\"2012-10-17\",\"Id\":\"appman-infrastructure-sqs-ce-status-sync\",\"Statement\":[{\"Sid\":\"appman-infrastructure-sqs-ce-status-sync-policy\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::000011112222:root\"},\"Action\":\"SQS:*\",\"Resource\":\"arn:aws:sqs:us-east-1:000011112222:akhtarqueue\"},{\"Effect\":\"Allow\",\"Action\":\"kms:*\",\"Resource\":\"arn:aws:sqs:us-east-1:000011112222:akhtarqueue\"},{\"Sid\":\"appman-infrastructure-sns-sqs-ce-status-sync-policy\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"SQS:SendMessage\",\"Resource\":\"arn:aws:sqs:us-east-1:000011112222:akhtarqueue\",\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:sns:eu-west-1:827604522863:applicant-manager-status-changed\"}}}]}",
           "ReceiveMessageWaitTimeSeconds": "0",
           "SqsManagedSseEnabled": "false"
         }

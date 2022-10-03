@@ -3,7 +3,7 @@ var anomalyDetectorEncrypted = require('./anomalyDetectorEncrypted');
 
 const listAnomalyDetectors = [    
     {
-        "AnomalyDetectorArn": "arn:aws:lookoutmetrics:us-east-1:101363889637:AnomalyDetector:sadeed1",
+        "AnomalyDetectorArn": "arn:aws:lookoutmetrics:us-east-1:000011112222:AnomalyDetector:sadeed1",
         "AnomalyDetectorName": "sadeed1",
         "CreationTime": "2021-12-16T14:55:07.608000+05:00",
         "LastModificationTime": "2021-12-16T14:55:07.609000+05:00",
@@ -30,7 +30,7 @@ const describeAnomalyDetector = [
         "CreationTime": "2021-12-16T14:55:07.608000+05:00",
         "LastModificationTime": "2021-12-16T14:55:07.609000+05:00",
         "Status": "INACTIVE",
-        "KmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+        "KmsKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
     },
     {
         "AnomalyDetectorArn": "arn:aws:lookoutmetrics:us-east-1:000011112222:AnomalyDetector:sadeed2",

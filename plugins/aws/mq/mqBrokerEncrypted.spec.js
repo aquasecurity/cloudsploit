@@ -23,7 +23,7 @@ const listBrokers = [
         "HostInstanceType": "mq.t3.micro"
     },
     {
-        "BrokerArn": "arn:aws:mq:us-east-1:101363889637:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
         "BrokerId": "b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
         "BrokerName": "mybr1",
         "BrokerState": "CREATION_IN_PROGRESS",
@@ -100,7 +100,7 @@ const describeBroker = [
     {
         "AuthenticationStrategy": "simple",
         "AutoMinorVersionUpgrade": true,
-        "BrokerArn": "arn:aws:mq:us-east-1:101363889637:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
+        "BrokerArn": "arn:aws:mq:us-east-1:000011112222:broker:mybr1:b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
         "BrokerId": "b-043833c7-190c-4ebf-bbe7-8d930f9f9124",
         "BrokerInstances": [],
         "BrokerName": "mybr1",

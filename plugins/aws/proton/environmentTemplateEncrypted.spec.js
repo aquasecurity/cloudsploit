@@ -24,7 +24,7 @@ const getEnvironmentTemplate = [
             "arn": "arn:aws:proton:us-east-1:000111222333:environment-template/sadeed1",
             "createdAt": "2021-11-18T17:01:54.758000+05:00",
             "displayName": "call me brown boy",
-            "encryptionKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+            "encryptionKey": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
             "lastModifiedAt": "2021-11-18T17:01:54.758000+05:00",
             "name": "sadeed1"
         }

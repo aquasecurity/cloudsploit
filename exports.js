@@ -200,6 +200,7 @@ module.exports = {
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/aws/ec2/excessiveSecurityGroups.js'),
         'vpnGatewayInVpc'               : require(__dirname + '/plugins/aws/ec2/vpnGatewayInVpc.js'),
         'internetGatewayInVpc'          : require(__dirname + '/plugins/aws/ec2/internetGatewayInVpc.js'),
+        'enableDetailedMonitoring'      : require(__dirname + '/plugins/aws/ec2/enableDetailedMonitoring.js'),
         'ec2HasTags'                    : require(__dirname + '/plugins/aws/ec2/ec2HasTags.js'),
         'securityGroupHasTags'          : require(__dirname + '/plugins/aws/ec2/securityGroupsHasTags.js'),
         'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags'),
@@ -582,8 +583,7 @@ module.exports = {
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
 
-        'ecsClustersHaveTags'          : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
-
+        'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

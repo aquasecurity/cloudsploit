@@ -44,8 +44,8 @@ module.exports = {
                     }
                 }
             }
-            
-            return rcb();
+
+            rcb();
         }, function(){
             callback(null, results, source);
         });

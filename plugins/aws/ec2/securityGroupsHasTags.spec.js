@@ -56,7 +56,6 @@ describe('securityGroupsHasTags', function () {
         it('should PASS if default security group has Tags', function (done) {
             const cache = createCache([describeSecurityGroups[1]]);
             securityGroupsHasTags.run(cache, {}, (err, results) => {
-                console.log(results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();

@@ -165,7 +165,7 @@ const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
                       "ApplicationId": "wt4b09t",
                       "Id": "nt17dsn",
                       "Name": "testConfig",
-                      "LocationUri": "s3://bucket1/mine/AWSLogs/101363889637/Config/test",
+                      "LocationUri": "s3://bucket1/mine/AWSLogs/000011112222/Config/test",
                       "ValidatorTypes": [
                           "LAMBDA"
                       ],
