@@ -37,13 +37,14 @@ module.exports = {
                 var vpc = describeVpcs.data[v];
                 // arn:${Partition}:ec2:${Region}:${Account}:vpc/${VpcId}
                 var arn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + vpc.OwnerId + ':vpc/' + vpc.VpcId;
-                if (!vpc.Tags.length) {
-                    helpers.addResult(results, 2, 'VPC does not have tags',region, arn);
+                if (!vpc.Tags || !vpc.Tags.length) {
+                    helpers.addResult(results, 2, 'VPC does not have tags', region, arn);
                 } else {
-                    helpers.addResult(results, 0, 'VPC have tags', region, arn);
+                    helpers.addResult(results, 0, 'VPC has tags', region, arn);
                 }
                 
             }
+
             return rcb();
         }, function(){
             callback(null, results, source);
