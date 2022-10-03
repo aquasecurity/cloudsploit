@@ -206,6 +206,7 @@ module.exports = {
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
+        'efsHasTags'                    : require(__dirname + '/plugins/aws/efs/efsHasTags.js'),
 
         'dockerfileTemplateEncrypted'   : require(__dirname + '/plugins/aws/imagebuilder/dockerfileTemplateEncrypted.js'),
 
