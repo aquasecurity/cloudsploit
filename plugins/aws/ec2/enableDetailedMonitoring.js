@@ -39,18 +39,14 @@ module.exports = {
                 for (const instance of reservation.Instances) {
                     const arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
-                    if (!instance.Monitoring) {
-                        helpers.addResult(results, 3, 'Unable to get instance monitoring details', region, arn);
-                        continue;
-                    } else {
-                        if (instance.Monitoring.State === 'enabled') {
+                        if (instance.Monitoring && instance.Monitoring.State === 'enabled') {
                             helpers.addResult(results, 0,
-                                'Instance have detailed monitoring enabled', region, arn);
+                                'Instance has enabled detailed monitoring', region, arn);
                         } else {
                             helpers.addResult(results, 2,
-                                'Instance does not have detailed monitoring enabled', region, arn);
+                                'Instance does not have enabled detailed monitoring', region, arn);
                         }
-                    }
+                    
                 }
             }
 
