@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that EC2 instances have detailed monitoring feature enabled.',
     more_info: 'By default, your instance is enabled for basic monitoring. After you enable detailed monitoring, EC2 console displays monitoring graphs with a 1-minute period.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html',
-    recommended_action: 'Modify EC2 instance to enable detailed monitoring',
+    recommended_action: 'Modify EC2 instance to enable detailed monitoring.',
     apis: ['EC2:describeInstances'],
 
     run: function(cache, settings, callback) {
@@ -39,7 +39,7 @@ module.exports = {
                 for (const instance of reservation.Instances) {
                     const arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
-                        if (instance.Monitoring && instance.Monitoring.State === 'enabled') {
+                        if (instance.Monitoring && instance.Monitoring.State && instance.Monitoring.State.toLowerCase() === 'enabled') {
                             helpers.addResult(results, 0,
                                 'Instance has enabled detailed monitoring', region, arn);
                         } else {
