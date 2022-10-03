@@ -4,7 +4,7 @@ var iotsitewiseDataEncrypted = require('./iotsitewiseDataEncrypted');
 var describeDefaultEncryptionConfiguration = [
     {
         "encryptionType": "KMS_BASED_ENCRYPTION",
-        "kmsKeyArn": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
+        "kmsKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         "configurationStatus": {
             "state": "ACTIVE"
         }

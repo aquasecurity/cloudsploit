@@ -14,7 +14,7 @@ const getRecommendationSummaries =  [
             }
         ],
         "recommendationResourceType": "EbsVolume",
-        "accountId": "101363889637",
+        "accountId": "000011112222",
         "currentPerformanceRiskRatings": {
             "high": 0,
             "medium": 0,
@@ -34,7 +34,7 @@ const getRecommendationSummaries =  [
             }
         ],
         "recommendationResourceType": "EbsVolume",
-        "accountId": "101363889637",
+        "accountId": "000011112222",
         "currentPerformanceRiskRatings": {
             "high": 0,
             "medium": 0,
@@ -54,7 +54,7 @@ const getRecommendationSummaries =  [
             }
         ],
         "recommendationResourceType": "EbsVolume",
-        "accountId": "101363889637",
+        "accountId": "000011112222",
         "currentPerformanceRiskRatings": {
             "high": 0,
             "medium": 0,

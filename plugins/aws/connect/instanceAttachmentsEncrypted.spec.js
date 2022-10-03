@@ -26,7 +26,7 @@ const instanceAttachmentStorageConfigs = [
                     "BucketPrefix": "connect/akhtar/Attachments",
                     "EncryptionConfig": {
                         "EncryptionType": "KMS",
-                        "KeyId": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+                        "KeyId": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
                     }
                 }
             }

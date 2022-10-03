@@ -34,7 +34,7 @@ const describeCacheClusters = [
         "AuthTokenEnabled": false,
         "TransitEncryptionEnabled": false,
         "AtRestEncryptionEnabled": false,
-        "ARN": "arn:aws:elasticache:us-east-1:101363889637:cluster:sadeed-001",
+        "ARN": "arn:aws:elasticache:us-east-1:000011112222:cluster:sadeed-001",
     },
     {
         "CacheClusterId": "sadeed-001",
