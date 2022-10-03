@@ -80,10 +80,10 @@ const getImageRecipe = [
     {
         "requestId": "ebeb7bb6-9ff6-43b5-aaf7-40f3f6c5f0e3",
         "imageRecipe": {
-            "arn": "arn:aws:imagebuilder:us-east-1:101363889637:image-recipe/mine3/3.0.0",
+            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:image-recipe/mine3/3.0.0",
             "name": "mine3",
             "platform": "Linux",
-            "owner": "101363889637",
+            "owner": "000011112222",
             "version": "3.0.0",
             "components": [
                 {
@@ -100,7 +100,7 @@ const getImageRecipe = [
                     "ebs": {
                         "encrypted": true,
                         "deleteOnTermination": true,
-                        "kmsKeyId": "arn:aws:kms:us-east-1:101363889637:alias/aws/ebs",
+                        "kmsKeyId": "arn:aws:kms:us-east-1:000011112222:alias/aws/ebs",
                         "volumeSize": 8,
                         "volumeType": "gp2"
                     }
@@ -119,10 +119,10 @@ const getImageRecipe = [
     {
         "requestId": "1e87da1a-92f6-4486-97dc-98a039ad4c3a",
         "imageRecipe": {
-            "arn": "arn:aws:imagebuilder:us-east-1:101363889637:image-recipe/myrecipe1/1.0.2",
+            "arn": "arn:aws:imagebuilder:us-east-1:000011112222:image-recipe/myrecipe1/1.0.2",
             "name": "myrecipe1",
             "platform": "Linux",
-            "owner": "101363889637",
+            "owner": "000011112222",
             "version": "1.0.2",
             "components": [
                 {
@@ -139,7 +139,7 @@ const getImageRecipe = [
                     "ebs": {
                         "encrypted": true,
                         "deleteOnTermination": true,
-                        "kmsKeyId": "arn:aws:kms:us-east-1:101363889637:alias/sadeed-k1",
+                        "kmsKeyId": "arn:aws:kms:us-east-1:000011112222:alias/sadeed-k1",
                         "volumeSize": 1,
                         "volumeType": "gp2"
                     }

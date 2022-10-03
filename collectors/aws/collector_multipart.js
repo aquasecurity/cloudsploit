@@ -38,6 +38,7 @@ var rateError = {message: 'rate', statusCode: 429};
 var apiRetryAttempts = 2;
 var apiRetryBackoff = 500;
 var apiRetryCap = 1000;
+var hasReturned = false;
 
 // Loop through all of the top-level collectors for each service
 var collect = function(AWSConfig, settings, callback) {
@@ -82,6 +83,7 @@ var collect = function(AWSConfig, settings, callback) {
     var AWSEC2 = new AWS.EC2(AWSConfig);
     var params = {AllRegions: true};
     var excludeRegions = [];
+    var timeoutCheck;
 
     AWSEC2.describeRegions(params, function(err, accountRegions) {
         if (err) {
@@ -94,7 +96,17 @@ var collect = function(AWSConfig, settings, callback) {
                 });
             }
         }
+        if (settings.context && settings.context.getRemainingTimeInMillis) {
+            timeoutCheck = setInterval(function(){
+                if (process.env['LOCAL']) return 37000;
 
+                if (settings.context.getRemainingTimeInMillis() < 15000) {
+                    clearInterval(timeoutCheck);
+                    hasReturned = true;
+                    return callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+                }
+            }, 4000);
+        }
         async.eachOfLimit(helpers.callsMultipart[callsPart], 10, function(call, service, serviceCb) {
             if (callsPart >= CALLS_CONFIG.CALLS_PARTS) return serviceCb();
             var serviceName = service;
@@ -253,7 +265,12 @@ var collect = function(AWSConfig, settings, callback) {
             if (settings.part > CALLS_CONFIG.CALLS_PARTS) {
                 callsPart = settings.part - CALLS_CONFIG.CALLS_PARTS - 1;
             } else {
-                return callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors);
+                if (timeoutCheck) {
+                    clearInterval(timeoutCheck);
+                }
+                if (!hasReturned) {
+                    return callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors);
+                }
             }
 
             async.eachOfLimit(helpers.postcallsMultipart[callsPart], 10, function(serviceObj, service, serviceCb) {
@@ -422,7 +439,12 @@ var collect = function(AWSConfig, settings, callback) {
                         }
                     }
                 }
-                callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+                if (timeoutCheck) {
+                    clearInterval(timeoutCheck);
+                }
+                if (!hasReturned) {
+                    callback(null, collection, runApiCalls, errorSummary, errorTypeSummary, errors, retries);
+                }
             });
         });
     });

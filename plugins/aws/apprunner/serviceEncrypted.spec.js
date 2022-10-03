@@ -36,7 +36,7 @@ const describeService = [
                 },
                 "AutoDeploymentsEnabled": false,
                 "AuthenticationConfiguration": {
-                    "ConnectionArn": "arn:aws:apprunner:us-east-1:101363889637:connection/apprunner-connection/5497e544592748d29d92b57252d791b0"
+                    "ConnectionArn": "arn:aws:apprunner:us-east-1:000011112222:connection/apprunner-connection/5497e544592748d29d92b57252d791b0"
                 }
             },
             "InstanceConfiguration": {
@@ -44,7 +44,7 @@ const describeService = [
                 "Memory": "2048"
             },
             "EncryptionConfiguration": {
-                "KmsKey": "arn:aws:kms:us-east-1:101363889637:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
+                "KmsKey": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
             },
             "HealthCheckConfiguration": {
                 "Protocol": "TCP",
@@ -55,7 +55,7 @@ const describeService = [
                 "UnhealthyThreshold": 5
             },
             "AutoScalingConfigurationSummary": {
-                "AutoScalingConfigurationArn": "arn:aws:apprunner:us-east-1:101363889637:autoscalingconfiguration/DefaultConfiguration/1/00000000000000000000000000000001",
+                "AutoScalingConfigurationArn": "arn:aws:apprunner:us-east-1:000011112222:autoscalingconfiguration/DefaultConfiguration/1/00000000000000000000000000000001",
                 "AutoScalingConfigurationName": "DefaultConfiguration",
                 "AutoScalingConfigurationRevision": 1
             }
