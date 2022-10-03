@@ -32,12 +32,13 @@ module.exports = {
                 helpers.addResult(results, 0, 'No security groups present', region);
                 return rcb();
             }
+
             for (var sg of describeSecurityGroups.data) {
                 const arn = `arn:aws:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`;
-                if (!sg.Tags.length) {
+                if (!sg.Tags || !sg.Tags.length) {
                     helpers.addResult(results, 2, 'Security group does not have tags', region, arn);
                 } else {
-                    helpers.addResult(results, 0, 'Security group have tags', region, arn);
+                    helpers.addResult(results, 0, 'Security group has tags', region, arn);
                 }
             }
 
