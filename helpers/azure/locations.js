@@ -102,5 +102,6 @@ module.exports = {
     securityCenter: ['global'],
     advisor: ['global'],
     publicIPAddresses: locations,
-    privateDnsZones: ['global']
+    privateDnsZones: ['global'],
+    privateEndpoints: locations,
 };
