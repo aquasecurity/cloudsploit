@@ -6,7 +6,7 @@ module.exports = {
     domain: 'Storage',
     description: 'Ensure that AWS S3 Bucket have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Add tags to S3 bucket',
+    recommended_action: 'Modify S3 buckets and add tags.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/CostAllocTagging.html',
     apis: ['S3:listBuckets', 'ResourceGroupsTaggingAPI:getResources'],
 
@@ -27,7 +27,7 @@ module.exports = {
         }
 
         if (!listBuckets.data.length) {
-            helpers.addResult(results, 0, 'No S3 bucket found');
+            helpers.addResult(results, 0, 'No S3 buckets found');
             return callback(null, results, source);
         }
 
@@ -36,7 +36,7 @@ module.exports = {
             const arn = `arn:aws:s3:::${bucket.Name}`;
             arnList.push(arn);
         }
-        helpers.checkTags(cache, 'S3 bucket',arnList, region, results);
+        helpers.checkTags(cache, 'S3 bucket', arnList, region, results);
         callback(null, results, source);
     }
 };

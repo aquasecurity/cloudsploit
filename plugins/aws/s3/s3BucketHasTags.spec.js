@@ -40,7 +40,7 @@ describe('s3BucketHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No S3 bucket found');
+                expect(results[0].message).to.include('No S3 buckets found');
                 done();
             };
             const cache = createCache([], null);
