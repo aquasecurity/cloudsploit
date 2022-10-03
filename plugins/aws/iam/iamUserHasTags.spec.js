@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const iamUserHasTags = require('./iamUsersHasTags.js');
+const iamUserHasTags = require('./iamUserHasTags.js');
 
 const listUsers = [
     {
