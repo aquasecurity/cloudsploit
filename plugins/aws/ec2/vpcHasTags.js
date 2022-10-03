@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No VPCs present', region);
                 return rcb();
             }
+
             for (var v in describeVpcs.data) {
                 var vpc = describeVpcs.data[v];
                 // arn:${Partition}:ec2:${Region}:${Account}:vpc/${VpcId}
