@@ -46,7 +46,6 @@ module.exports = {
                             helpers.addResult(results, 2,
                                 'Instance does not have enabled detailed monitoring', region, arn);
                         }
-                    
                 }
             }
 
