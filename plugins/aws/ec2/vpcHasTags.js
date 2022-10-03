@@ -42,7 +42,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0, 'VPC has tags', region, arn);
                 }
-                
             }
 
             return rcb();
