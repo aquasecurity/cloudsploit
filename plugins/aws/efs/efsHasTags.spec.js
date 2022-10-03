@@ -39,7 +39,6 @@ describe('efsHasTags', function () {
             };
 
             const cache = createCache(null);
-
             efsHasTags.run(cache, {}, callback);
         });
 
@@ -47,7 +46,7 @@ describe('efsHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('EFS file system have no tags.');
+                expect(results[0].message).to.include('EFS file system does not have tags associated');
                 done();
             };
 
@@ -72,7 +71,7 @@ describe('efsHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('EFS file system have tags.')
+                expect(results[0].message).to.include('EFS file system has tags')
                 done()
             };
 
