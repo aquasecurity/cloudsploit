@@ -38,9 +38,9 @@ module.exports = {
                     const { Tags, InstanceId } = instance;
                     const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
                     if (!Tags || !Tags.length){
-                        helpers.addResult(results, 2, 'EC2 Instance has no tags', region, arn);
+                        helpers.addResult(results, 2, 'EC2 Instance does not have tags associated', region, arn);
                     } else {
-                        helpers.addResult(results, 0, 'EC2 Instance has tags specified', region, arn);
+                        helpers.addResult(results, 0, 'EC2 Instance has tags associated', region, arn);
                     }
                 }
             }
