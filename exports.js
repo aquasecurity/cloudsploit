@@ -368,6 +368,7 @@ module.exports = {
         'elasticacheRedisMultiAZ'       : require(__dirname + '/plugins/aws/elasticache/elasticacheRedisMultiAZ.js'),
         'idleElastiCacheNode'           : require(__dirname + '/plugins/aws/elasticache/idleElastiCacheNode.js'),
         'elasticaheDesiredNodeType'     : require(__dirname + '/plugins/aws/elasticache/elasticaheDesiredNodeType.js'),
+        'elastiCacheClusterHasTags'     : require(__dirname + '/plugins/aws/elasticache/elasticCacheClusterHasTags.js'),
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
