@@ -175,5 +175,15 @@ describe('cloudtrailBucketAccessLogging', function () {
                 done();
             });
         });
+
+        it('should PASS if bucket gets whitelisted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketLogging[1]);
+            cloudtrailBucketAccessLogging.run(cache, { whitelist_ct_bucket_access_loggings:'codepipeline-cloudtrail' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Bucket has been whitelisted');
+                done();
+            });
+        });
     });
 });

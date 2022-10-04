@@ -13,8 +13,21 @@ module.exports = {
     compliance: {
         cis1: '2.3 Ensure the S3 bucket used to store CloudTrail logs is not publicly accessible'
     },
+    settings: {
+        whitelist_ct_bucket_private: {
+            name: 'Whitelist Cloud Trail Private Bucket',
+            description: 'All buckets with this regex should get whitelisted',
+            regex: '^.*$',
+            default: '',
+        }
 
+    },
     run: function(cache, settings, callback) {
+        var config = {
+            whitelist_ct_bucket_private: settings.whitelist_ct_bucket_private ||  this.settings.whitelist_ct_bucket_private.default
+        };
+        var regBucket;
+        if (config.whitelist_ct_bucket_private.length) regBucket= new RegExp(config.whitelist_ct_bucket_private); 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -52,6 +65,12 @@ module.exports = {
                 if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
+
+                if (regBucket && regBucket.test(trail.S3BucketName)) {
+                    helpers.addResult(results, 0, 
+                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName)
+                    return cb();
+                }
 
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,

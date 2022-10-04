@@ -18,8 +18,21 @@ module.exports = {
              'helps audit the bucket in which these logs are stored.',
         cis1: '2.6 Ensure CloudTrail bucket access logging is enabled'
     },
+    settings: {
+        whitelist_ct_bucket_access_loggings: {
+            name: 'Whitelist Cloud Trail Bucket Access Loggings',
+            description: 'All buckets with this regex should get whitelisted',
+            regex: '^.*$',
+            default: '',
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            whitelist_ct_bucket_access_loggings: settings.whitelist_ct_bucket_access_loggings ||  this.settings.whitelist_ct_bucket_access_loggings.default
+        };
+        var regBucket;
+        if(config.whitelist_ct_bucket_access_loggings.length) regBucket= new RegExp(config.whitelist_ct_bucket_access_loggings); 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -56,7 +69,13 @@ module.exports = {
                 if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
-                
+
+                if (regBucket && regBucket.test(trail.S3BucketName)) {
+                    helpers.addResult(results, 0, 
+                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName)
+                    return cb();
+                }
+
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,
                         'Unable to locate S3 bucket, it may have been deleted',

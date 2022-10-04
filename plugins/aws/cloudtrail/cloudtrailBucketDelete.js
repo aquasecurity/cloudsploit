@@ -16,8 +16,21 @@ module.exports = {
                 'strict access controls for users modifying the environments in which ' +
                 'HIPAA data is stored.'
     },
+    settings: {
+        whitelist_ct_bucket_delete: {
+            name: 'Whitelist Cloud Trail Bucket Delete',
+            description: 'All buckets with this regex should get whitelisted',
+            regex: '^.*$',
+            default: '',
+        }
+    },
 
     run: function(cache, settings, callback) {
+        var config = {
+            whitelist_ct_bucket_delete: settings.whitelist_ct_bucket_delete ||  this.settings.whitelist_ct_bucket_delete.default
+        };
+        var regBucket;
+        if(config.whitelist_ct_bucket_delete.length) regBucket= new RegExp(config.whitelist_ct_bucket_delete); 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -54,6 +67,12 @@ module.exports = {
                 if (!trail.S3BucketName || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) return cb();
                 // Skip CloudSploit-managed events bucket
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
+
+                if (regBucket && regBucket.test(trail.S3BucketName)) {
+                    helpers.addResult(results, 0, 
+                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName)
+                    return cb();
+                }
 
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,
