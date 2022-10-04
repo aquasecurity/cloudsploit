@@ -44,8 +44,7 @@ module.exports = {
                 }
 
                 if (describeCluster.data.clusters && describeCluster.data.clusters.length) {   
-                    for ( var index in describeCluster.data.clusters) {
-
+                    for (var index in describeCluster.data.clusters) {
                         let containerInsightsEnabled = false;
                         const cluster = describeCluster.data.clusters[index];
                         if (cluster.settings.length > 0){ 
