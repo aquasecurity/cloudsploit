@@ -35,7 +35,7 @@ module.exports = {
 
             for (var clusterARN of listClusters.data) {
                 var describeCluster = helpers.addSource(cache, source,
-                    ['ecs', 'describeCluster', region, clusterARN ]);
+                    ['ecs', 'describeCluster', region, clusterARN]);
         
                 if (!describeCluster || describeCluster.err ||!describeCluster.data) {
                     helpers.addResult(results, 3,
