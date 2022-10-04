@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Modify Roles to add tags.',
     apis: ['IAM:listRoles'],
     run: function(cache, settings, callback) {
-
         var results = [];
         var source = {};
 
