@@ -32,7 +32,7 @@ module.exports = {
         } 
 
         for (var user of listUsers.data) {
-            if (!user.Tags.length){
+            if (!user.Tags || !user.Tags.length){
                 helpers.addResult(results, 2, 'IAM User does not have Tags', 'global', user.Arn);
             } else {
                 helpers.addResult(results, 0, 'IAM User has tags', 'global', user.Arn);
