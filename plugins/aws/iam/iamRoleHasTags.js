@@ -29,7 +29,7 @@ module.exports = {
             helpers.addResult(results, 0, 'No IAM roles found');
             return callback(null, results, source);
         }
-        for (var role of listRoles.data){
+        for (var role of listRoles.data) {
             const {Arn, Tags} = role;
             if (!Tags.length) {
                 helpers.addResult(results, 2, 'IAM Role does not have tags', Arn);
