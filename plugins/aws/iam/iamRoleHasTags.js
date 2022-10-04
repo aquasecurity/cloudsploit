@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'IAM Roles Have Tags',
+    title: 'IAM Role Has Tags',
     category: 'IAM',
     domain: 'Identity and Access management',
     description: 'Ensure that AWS IAM Roles have tags associated.',
