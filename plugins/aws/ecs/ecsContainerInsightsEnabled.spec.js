@@ -119,5 +119,6 @@ describe('ECSContainerInsightsEnabled', function () {
             );
             ecs.run(cache, {}, callback);
         });
+        
     });
 })
