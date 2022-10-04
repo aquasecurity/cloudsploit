@@ -31,7 +31,7 @@ module.exports = {
         }
         for (var role of listRoles.data) {
             const {Arn, Tags} = role;
-            if (!Tags.length) {
+            if (!Tags || !Tags.length) {
                 helpers.addResult(results, 2, 'IAM Role does not have tags', Arn);
             } else {
                 helpers.addResult(results, 0, 'IAM Role have tags', Arn);
