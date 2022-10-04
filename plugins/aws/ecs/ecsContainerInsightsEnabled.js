@@ -47,7 +47,8 @@ module.exports = {
                     for (var index in describeCluster.data.clusters) {
                         let containerInsightsEnabled = false;
                         const cluster = describeCluster.data.clusters[index];
-                        if (cluster.settings.length > 0){ 
+                        
+                        if (cluster.settings.length > 0) { 
                             for (var item of cluster.settings ){ 
                                 if (item.name === 'containerInsights' ){
 
