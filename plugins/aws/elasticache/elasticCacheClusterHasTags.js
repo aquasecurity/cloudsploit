@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/Tagging-Resources.html',
     recommended_action: 'Modify ElastiCache cluster and add tags.',
-    apis: ['ElastiCache:describeCacheClusters', 'ResourceGroupsTaggingAPI:getResources',],
+    apis: ['ElastiCache:describeCacheClusters', 'ResourceGroupsTaggingAPI:getResources'],
 
     run: function(cache, settings, callback) {
         var results = [];
