@@ -43,10 +43,7 @@ module.exports = {
                     continue;
                 }
 
-                if (
-                    describeCluster.data.clusters &&
-                    describeCluster.data.clusters.length
-                ) {   
+                if (describeCluster.data.clusters && describeCluster.data.clusters.length) {   
         
                     for ( var index in describeCluster.data.clusters) {
 
