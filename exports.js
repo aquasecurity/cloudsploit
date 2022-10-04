@@ -303,6 +303,7 @@ module.exports = {
         'iamUserAdmins'                 : require(__dirname + '/plugins/aws/iam/iamUserAdmins.js'),
         'iamUserNameRegex'              : require(__dirname + '/plugins/aws/iam/iamUserNameRegex.js'),
         'iamUserUnauthorizedToEdit'     : require(__dirname + '/plugins/aws/iam/iamUserUnauthorizedToEdit'),
+        'iamUserHasTags'                : require(__dirname + '/plugins/aws/iam/iamUserHasTags.js'),
         'iamRolePolicies'               : require(__dirname + '/plugins/aws/iam/iamRolePolicies.js'),
         'iamRoleLastUsed'               : require(__dirname + '/plugins/aws/iam/iamRoleLastUsed.js'),
         'maxPasswordAge'                : require(__dirname + '/plugins/aws/iam/maxPasswordAge.js'),
