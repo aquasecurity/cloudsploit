@@ -68,7 +68,7 @@ module.exports = {
 
                 if (regBucket && regBucket.test(trail.S3BucketName)) {
                     helpers.addResult(results, 0, 
-                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName)
+                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
                     return cb();
                 }
 

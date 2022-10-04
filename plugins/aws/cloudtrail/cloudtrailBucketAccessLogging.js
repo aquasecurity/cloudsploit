@@ -32,7 +32,7 @@ module.exports = {
             whitelist_ct_bucket_access_loggings: settings.whitelist_ct_bucket_access_loggings ||  this.settings.whitelist_ct_bucket_access_loggings.default
         };
         var regBucket;
-        if(config.whitelist_ct_bucket_access_loggings.length) regBucket= new RegExp(config.whitelist_ct_bucket_access_loggings); 
+        if (config.whitelist_ct_bucket_access_loggings.length) regBucket= new RegExp(config.whitelist_ct_bucket_access_loggings); 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -72,7 +72,7 @@ module.exports = {
 
                 if (regBucket && regBucket.test(trail.S3BucketName)) {
                     helpers.addResult(results, 0, 
-                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName)
+                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
                     return cb();
                 }
 
