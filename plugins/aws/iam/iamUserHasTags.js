@@ -37,7 +37,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'IAM User has tags', 'global', user.Arn);
             }
         }
-
         return callback(null, results, source);
     }  
 };
