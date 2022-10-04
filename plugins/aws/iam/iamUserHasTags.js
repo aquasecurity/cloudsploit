@@ -30,6 +30,7 @@ module.exports = {
         if (!listUsers.data.length) {
             helpers.addResult(results, 0, 'No iam users found', 'global');
         } 
+
         for (var user of listUsers.data) {
             if (!user.Tags.length){
                 helpers.addResult(results, 2, 'IAM User does not have Tags', 'global', user.Arn);
