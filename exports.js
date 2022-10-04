@@ -583,7 +583,7 @@ module.exports = {
 
         'fraudDetectorDataEncrypted'    : require(__dirname + '/plugins/aws/frauddetector/fraudDetectorDataEncrypted.js'),
 
-        'ecsContainerInsightsEnabled'    : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
+        'ecsContainerInsightsEnabled'   : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
     },
     azure : {
