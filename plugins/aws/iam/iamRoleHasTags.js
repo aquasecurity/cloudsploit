@@ -35,7 +35,6 @@ module.exports = {
                 helpers.addResult(results, 2, 'IAM Role does not have tags', Arn);
             } else {
                 helpers.addResult(results, 0, 'IAM Role have tags', Arn);
-
             }
         }
         return callback(null, results, source);
