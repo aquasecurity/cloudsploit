@@ -59,7 +59,7 @@ module.exports = {
                                 }
                             }
                         }
-                        if (containerInsightsEnabled){
+                        if (containerInsightsEnabled) {
                             helpers.addResult(results, 0,
                                 'ECS cluster has container Insights enabled', region, clusterARN);
                         } else {
