@@ -33,10 +33,7 @@ describe('ECSContainerInsightsEnabled', function () {
                 done()
             };
 
-            const cache = createCache(
-                [],
-                {}
-            );
+            const cache = createCache([], {});
 
             ecs.run(cache, {}, callback);
         })
