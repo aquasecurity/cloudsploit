@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No ElastiCache clusters found', region);
                 return rcb();
             }
+
             const ARNList = [];
             for (var cluster of describeCacheClusters.data) {
                 ARNList.push(cluster.ARN);
