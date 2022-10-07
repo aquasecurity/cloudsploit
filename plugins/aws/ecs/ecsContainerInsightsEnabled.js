@@ -38,7 +38,7 @@ module.exports = {
                     ['ecs', 'describeCluster', region, clusterARN]);
         
                 if (!describeCluster || describeCluster.err ||!describeCluster.data ||
-                    describeCluster.data.clusters || describeCluster.data.clusters.length) {
+                    !describeCluster.data.clusters || !describeCluster.data.clusters.length) {
                     helpers.addResult(results, 3,
                         'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
                     continue;
