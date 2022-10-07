@@ -45,7 +45,7 @@ module.exports = {
                 }
 
                 const cluster = describeCluster.data.clusters[0];
-                let containerInsightsEnabled = (cluster.settings && cluster.settings.length) ? cluster.settings.find(item => item.name == 'containerInsights' && item.value == ''enabled) : false;
+                let containerInsightsEnabled = (cluster.settings && cluster.settings.length) ? cluster.settings.find(item => item.name == 'containerInsights' && item.value == 'enabled') : false;
 
                 if (containerInsightsEnabled) {
                     helpers.addResult(results, 0,
