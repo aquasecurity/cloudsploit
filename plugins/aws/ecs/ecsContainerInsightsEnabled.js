@@ -52,7 +52,7 @@ module.exports = {
                         'ECS cluster has container insights enabled', region, clusterARN);
                 } else {
                     helpers.addResult(results, 2,
-                         'ECS cluster does not have container insights enabled', region, clusterARN);
+                        'ECS cluster does not have container insights enabled', region, clusterARN);
                 }             
             }
             rcb();
