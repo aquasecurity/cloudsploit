@@ -25,6 +25,7 @@ var regions = [
     'me-dubai-1',
     'uk-cardiff-1',
     'us-sanjose-1',
+    'mx-queretaro-1',
     'eu-marseille-1',
     'il-jerusalem-1',
     'eu-milan-1',
