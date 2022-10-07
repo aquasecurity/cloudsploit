@@ -196,7 +196,13 @@ module.exports = {
             description: 'Checks for the number of running instances in the eu-stockholm-1 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 50
-        }
+        },
+        instance_count_region_threshold_mx_queretaro_1: {
+            name: 'Instance Count Region Threshold: mx-queretaro-1',
+            description: 'Checks for the number of running instances in the mx-queretaro-1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 50
+        },
     },
 
     run: function(cache, settings, callback) {
@@ -224,7 +230,8 @@ module.exports = {
             instance_count_region_threshold_ap_chuncheon_1: settings.instance_count_region_threshold_ap_chuncheon_1 || this.settings.instance_count_region_threshold_ap_chuncheon_1.default,
             instance_count_region_threshold_me_dubai_1: settings.instance_count_region_threshold_me_dubai_1 || this.settings.instance_count_region_threshold_me_dubai_1.default,
             instance_count_region_threshold_uk_cardiff_1: settings.instance_count_region_threshold_uk_cardiff_1 || this.settings.instance_count_region_threshold_uk_cardiff_1.default,
-            instance_count_region_threshold_us_sanjose_1: settings.instance_count_region_threshold_us_sanjose_1 || this.settings.instance_count_region_threshold_us_sanjose_1.default
+            instance_count_region_threshold_us_sanjose_1: settings.instance_count_region_threshold_us_sanjose_1 || this.settings.instance_count_region_threshold_us_sanjose_1.default,
+            instance_count_region_threshold_mx_queretaro_1: settings.instance_count_region_threshold_mx_queretaro_1 || this.settings.instance_count_region_threshold_mx_queretaro_1.default
         };
 
         for (c in config) {
