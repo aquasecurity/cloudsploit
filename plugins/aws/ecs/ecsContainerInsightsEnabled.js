@@ -37,37 +37,23 @@ module.exports = {
                 var describeCluster = helpers.addSource(cache, source,
                     ['ecs', 'describeCluster', region, clusterARN]);
         
-                if (!describeCluster || describeCluster.err ||!describeCluster.data) {
+                if (!describeCluster || describeCluster.err ||!describeCluster.data ||
+                    describeCluster.data.clusters || describeCluster.data.clusters.length) {
                     helpers.addResult(results, 3,
                         'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
                     continue;
                 }
 
-                if (describeCluster.data.clusters && describeCluster.data.clusters.length) {   
-                    for (var index in describeCluster.data.clusters) {
-                        let containerInsightsEnabled = false;
-                        const cluster = describeCluster.data.clusters[index];
-                        
-                        if (cluster.settings.length > 0) { 
-                            for (var item of cluster.settings ){ 
-                                if (item.name === 'containerInsights' ){
+                const cluster = describeCluster.data.clusters[0];
+                let containerInsightsEnabled = (cluster.settings && cluster.settings.length) ? cluster.settings.find(item => item.name == 'containerInsights' && item.value == ''enabled) : false;
 
-                                    if (item.value === 'enabled'){
-                                        containerInsightsEnabled = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (containerInsightsEnabled) {
-                            helpers.addResult(results, 0,
-                                'ECS cluster has container Insights enabled', region, clusterARN);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'ECS cluster does not have container insights enabled',region, clusterARN);
-                        }             
-                    }            
-                } 
+                if (containerInsightsEnabled) {
+                    helpers.addResult(results, 0,
+                        'ECS cluster has container insights enabled', region, clusterARN);
+                } else {
+                    helpers.addResult(results, 2,
+                         'ECS cluster does not have container insights enabled', region, clusterARN);
+                }             
             }
             rcb();
         },
