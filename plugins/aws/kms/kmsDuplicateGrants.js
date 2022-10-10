@@ -15,7 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
+       
         async.each(regions.kms, function(region, rcb){
             var listKeys = helpers.addSource(cache, source,
                 ['kms', 'listKeys', region]);
@@ -75,8 +75,8 @@ module.exports = {
                     let dupGrant = listGrants.data.Grants.filter(grant => grant.KeyId === entry.KeyId &&
                         grant.Name === entry.Name &&
                         grant.GranteePrincipal == entry.GranteePrincipal &&
-                        (grant.Operations && entry.Operations) ? JSON.stringify(grant.Operations) == JSON.stringify(entry.Operations) : true &&
-                        (grant.Constraints && entry.Constraints) ? JSON.stringify(grant.Constraints) == JSON.stringify(entry.Constraints) : true);
+                        ((grant.Operations && entry.Operations) ? JSON.stringify(grant.Operations) == JSON.stringify(entry.Operations) : true) &&
+                        ((grant.Constraints && entry.Constraints) ? JSON.stringify(grant.Constraints) == JSON.stringify(entry.Constraints) : true));
                     if (dupGrant && dupGrant.length > 1) found = true;
                 }
                 

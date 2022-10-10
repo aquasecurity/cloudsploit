@@ -15,7 +15,6 @@ module.exports = {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
-
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
 
@@ -37,7 +36,7 @@ module.exports = {
             if (!zone.Id) return cb();
 
             var resource = `arn:aws:route53:::${zone.Id}`;
-
+            var baseZone = zone.Name;
             var listResourceRecordSets = helpers.addSource(cache, source,
                 ['route53', 'listResourceRecordSets', region, zone.Id]);
 
@@ -57,13 +56,15 @@ module.exports = {
 
             var spfDisabledDnsRecords = [];
             listResourceRecordSets.data.ResourceRecordSets.forEach(recordSet => {
-                if (recordSet.Type && recordSet.Type.toUpperCase() === 'TXT' && recordSet.ResourceRecords && recordSet.ResourceRecords.length) {
-                    recordSet.ResourceRecords.forEach(record => {
-                        if (record.Value && !record.Value.includes('v=spf1') && !spfDisabledDnsRecords.includes(recordSet.Name)) {
-                            spfDisabledDnsRecords.push(recordSet.Name);                           
-                        }
-                    });
-                }  
+                if (recordSet.Name && recordSet.Name === baseZone) {
+                    if (recordSet.Type && recordSet.Type.toUpperCase() === 'TXT' && recordSet.ResourceRecords && recordSet.ResourceRecords.length) {
+                        recordSet.ResourceRecords.forEach(record => {
+                            if (record.Value && !record.Value.includes('v=spf1') && !spfDisabledDnsRecords.includes(recordSet.Name)) {
+                                spfDisabledDnsRecords.push(recordSet.Name);                           
+                            }
+                        });
+                    }  
+                }
             });
 
             if (spfDisabledDnsRecords.length) {
