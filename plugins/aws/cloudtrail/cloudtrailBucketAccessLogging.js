@@ -19,9 +19,9 @@ module.exports = {
         cis1: '2.6 Ensure CloudTrail bucket access logging is enabled'
     },
     settings: {
-        whitelist_ct_bucket_access_loggings: {
-            name: 'Whitelist Cloud Trail Bucket Access Loggings',
-            description: 'All buckets with this regex should get whitelisted',
+        whitelist_ct_access_logging_buckets: {
+            name: 'Whitelist Cloud Trail Access Logging Buckets',
+            description: 'All buckets against this regex will be whitelisted',
             regex: '^.*$',
             default: '',
         }
@@ -29,10 +29,10 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var config = {
-            whitelist_ct_bucket_access_loggings: settings.whitelist_ct_bucket_access_loggings ||  this.settings.whitelist_ct_bucket_access_loggings.default
+            whitelist_ct_access_logging_buckets: settings.whitelist_ct_access_logging_buckets ||  this.settings.whitelist_ct_access_logging_buckets.default
         };
         var regBucket;
-        if (config.whitelist_ct_bucket_access_loggings.length) regBucket= new RegExp(config.whitelist_ct_bucket_access_loggings); 
+        if (config.whitelist_ct_access_logging_buckets.length) regBucket= new RegExp(config.whitelist_ct_access_logging_buckets); 
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -72,7 +72,7 @@ module.exports = {
 
                 if (regBucket && regBucket.test(trail.S3BucketName)) {
                     helpers.addResult(results, 0, 
-                        'Bucket has been whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
+                        'Bucket is whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
                     return cb();
                 }
 

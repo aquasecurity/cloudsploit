@@ -178,10 +178,10 @@ describe('cloudtrailBucketDelete', function () {
 
         it('should PASS if bucket gets whitelisted', function (done) {
             const cache = createCache([trails[2]], [listBuckets[1]], getBucketVersioning[1]);
-            cloudtrailBucketDelete.run(cache, { whitelist_ct_bucket_delete: 'codepipeline-cloudtrail' }, (err, results) => {
+            cloudtrailBucketDelete.run(cache, { whitelist_ct_deleted_buckets: 'codepipeline-cloudtrail' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Bucket has been whitelisted');
+                expect(results[0].message).to.include('Bucket is whitelisted');
                 done();
             });
         });
