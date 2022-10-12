@@ -3,24 +3,49 @@ const iamUserHasTags = require('./iamUserHasTags.js');
 
 const listUsers = [
     {
-        UserName: 'test1',
-        UserId: 'AIDAYE32SRU545SJ5O6AI',
-        Arn: 'arn:aws:iam::000111222333:user/test1',
-        CreateDate: '2021-09-23T10:58:24.000Z',
-        PasswordLastUsed: '2021-10-04T13:02:00.000Z',
-        Tags: []
-    }, 
-    {
-        UserName: 'test2',
-        UserId: 'AIDAYE32SRU545SJ5O6AI',
-        Arn: 'arn:aws:iam::000111222333:user/test2',
-        CreateDate: '2021-09-23T10:58:24.000Z',
-        PasswordLastUsed: '2021-10-04T13:02:00.000Z',
-        Tags: [{"Name" : "tag", "Value": "val"}]
-    }   
+        "Path": "/",
+        "UserName": "cloudsploit",
+        "UserId": "AIDARPGOCGXSSUH7TNLM4",
+        "Arn": "arn:aws:iam::000011111:user/cloudsploit",
+        "CreateDate": "2021-12-12T13:15:54+00:00"
+    },
+    { 
+        "Path": "/",
+        "UserName": "testUser",
+        "UserId": "AIDARPGOCGXSUSX63OQEM",
+        "Arn": "arn:aws:iam::0000111111112:user/testUser",
+        "CreateDate": "2022-10-10T11:41:15+00:00"
+    }
 ];
 
-const createCache = (listUsers) => {
+const getUser = [
+    {
+        "User": {
+            "Path": "/",
+            "UserName": "cloudsploit",
+            "UserId": "AIDARPGOCGXSSUH7TNLM4",
+            "Arn": "arn:aws:iam::000011111:user/cloudsploit",
+            "CreateDate": "2021-12-12T13:15:54+00:00",
+            "Tags": [
+                {
+                    "Key": "tag",
+                    "Value": "tag"
+                }
+            ]
+        }
+    },
+    {
+        "User": {
+            "Path": "/",
+            "UserName": "testUser",
+            "UserId": "AIDARPGOCGXSUSX63OQEM",
+            "Arn": "arn:aws:iam::0000111111112:user/testUser",
+            "CreateDate": "2022-10-10T11:41:15+00:00",
+        }
+    }
+]
+const createCache = (listUsers,getUser) => {
+    var userName = (listUsers && listUsers.length) ? listUsers[0].UserName : null; 
     return {
         iam: {
             listUsers: {
@@ -29,6 +54,14 @@ const createCache = (listUsers) => {
                     err: null
                 },
             },
+            getUser: {
+                'us-east-1': {
+                    [userName]:{   
+                        data: getUser,
+                        err: null    
+                    }              
+                }
+            }
         }
     };
 };
@@ -49,25 +82,27 @@ const createErrorCache = () => {
 
 describe('iamUserHasTags', function () {
     describe('run', function () {
-        it('should give passing result if iam user has tags', function (done) {
-            const cache = createCache([listUsers[1]]);
+        it('Should PASS if IAM user has tags', function (done) {
+            const cache = createCache([listUsers[0]],getUser[0]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('IAM User has tags');
                 done();
             });
         });
 
-        it('should give failing result if iam user has no tags', function (done) {
-            const cache = createCache([listUsers[0]]);
+        it('Should FAIL if IAM user has tags', function (done) {
+            const cache = createCache([listUsers[1]],getUser[1]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('IAM User does not have tags');
                 done();
             });
         });
         
-        it('should give unknown result if error in lsiting iam users', function (done) {
+        it('Should UNKNOWN if error in listing IAM user', function (done) {
             const cache = createErrorCache();
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -76,7 +111,7 @@ describe('iamUserHasTags', function () {
             });
         });
 
-        it('should give passing result if no iam user found', function (done) {
+        it('Should PASS if no IAM user found', function (done) {
             const cache = createCache([]);
             iamUserHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

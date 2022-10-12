@@ -2112,6 +2112,13 @@ var postcalls = [
                 filterKey: 'PolicyArn',
                 filterValue: 'Arn',
                 rateLimit: 500
+            },
+            getUser: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listUsers',
+                filterKey: 'UserName',
+                filterValue: 'UserName',
+                rateLimit: 500
             }
         },
         LookoutVision: {
