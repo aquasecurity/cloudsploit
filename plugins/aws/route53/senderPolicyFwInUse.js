@@ -15,7 +15,6 @@ module.exports = {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
-
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
 
@@ -28,6 +27,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        
         if (!listHostedZones.data.length) {
             helpers.addResult(results, 0, 'No Route53 Hosted Zones found', region);
             return callback(null, results, source);
@@ -55,25 +55,17 @@ module.exports = {
                 return cb();
             }
 
-            var spfDisabledDnsRecords = [];
-            listResourceRecordSets.data.ResourceRecordSets.forEach(recordSet => {
-                if (recordSet.Type && recordSet.Type.toUpperCase() === 'TXT' && recordSet.ResourceRecords && recordSet.ResourceRecords.length) {
-                    recordSet.ResourceRecords.forEach(record => {
-                        if (record.Value && !record.Value.includes('v=spf1') && !spfDisabledDnsRecords.includes(recordSet.Name)) {
-                            spfDisabledDnsRecords.push(recordSet.Name);                           
-                        }
-                    });
-                }  
-            });
+            let enabled = listResourceRecordSets.data.ResourceRecordSets.find(recordSet =>
+                recordSet.Type && recordSet.Type.toUpperCase() == 'TXT' &&
+                recordSet.ResourceRecords.find(record => record.Value && record.Value.toLowerCase().includes('v=spf1')));
 
-            if (spfDisabledDnsRecords.length) {
+            if (!enabled) {
                 helpers.addResult(results, 2,
-                    `Hosted Zone has these SPF disabled DNS records: ${spfDisabledDnsRecords.join(', ')}`,
+                    'Hosted Zone has does not have SPF enabled',
                     region, resource);
-                
             } else {
                 helpers.addResult(results, 0,
-                    'Hosted Zone has SPF enabled for all DNS records',
+                    'Hosted Zone has SPF enabled',
                     region, resource);
             }
 
