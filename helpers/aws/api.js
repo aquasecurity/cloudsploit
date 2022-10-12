@@ -2126,6 +2126,12 @@ var postcalls = [
                 reliesOnCall: 'listRoles',
                 filterKey: 'RoleName',
                 filterValue: 'RoleName'
+            },
+            getUser: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listUsers',
+                filterKey: 'UserName',
+                filterValue: 'UserName'
             }
         },
         EKS:{

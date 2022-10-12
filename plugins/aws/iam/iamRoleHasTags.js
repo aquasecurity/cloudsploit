@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html',
     recommended_action: 'Modify Roles to add tags.',
-    apis: ['IAM:listRoles'],
+    apis: ['IAM:listRoles', 'IAM:getRole'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -29,15 +29,27 @@ module.exports = {
             helpers.addResult(results, 0, 'No IAM roles found');
             return callback(null, results, source);
         }
+        
         for (var role of listRoles.data) {
-            const {Arn, Tags} = role;
-            if (!Tags || !Tags.length) {
-                helpers.addResult(results, 2, 'IAM Role does not have tags', Arn);
-            } else {
-                helpers.addResult(results, 0, 'IAM Role have tags', Arn);
+            if (!role.RoleName) continue;
+
+            var getRole = helpers.addSource(cache, source,
+                ['iam', 'getRole', region, role.RoleName]);
+              
+            if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
+                continue;
             }
+            
+            if (!getRole.data.Role.Tags || !getRole.data.Role.Tags.length) {
+                helpers.addResult(results, 2, 'IAM Role does not have tags', role.Arn);
+            } else {
+                helpers.addResult(results, 0, 'IAM Role has tags', role.Arn);
+            } 
+
         }
+        
         return callback(null, results, source);
     }
 };
-

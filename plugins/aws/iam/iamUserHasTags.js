@@ -1,4 +1,3 @@
-
 var helpers = require('../../../helpers/aws');
       
 module.exports = {
@@ -9,7 +8,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags_users.html',
     recommended_action: 'Modify IAM User and add tags',
-    apis: ['IAM:listUsers'],
+    apis: ['IAM:listUsers', 'IAM:getUser'],
           
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,15 +31,25 @@ module.exports = {
         } 
 
         for (var user of listUsers.data) {
-            if (!user.Tags || !user.Tags.length){
-                helpers.addResult(results, 2, 'IAM User does not have Tags', 'global', user.Arn);
-            } else {
-                helpers.addResult(results, 0, 'IAM User has tags', 'global', user.Arn);
+            if (!user.UserName) continue;
+
+            var getUser = helpers.addSource(cache, source,
+                ['iam', 'getUser', region, user.UserName]);
+
+            if (!getUser || getUser.err || !getUser.data || !getUser.data.User) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM user details: ' + user.UserName + ': ' + helpers.addError(getUser), 'global', user.Arn);
+                continue;
             }
+            
+            if (!getUser.data.User.Tags || !getUser.data.User.Tags.length) {
+                helpers.addResult(results, 2, 'IAM User does not have tags', user.Arn);
+            } else {
+                helpers.addResult(results, 0, 'IAM User has tags', user.Arn);
+            }
+            
         }
+
         return callback(null, results, source);
     }  
 };
-   
-
-         
