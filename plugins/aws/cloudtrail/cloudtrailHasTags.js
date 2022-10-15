@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudTrail has tags',
+    title: 'CloudTrail Has Tags',
     category: 'CloudTrail',
     domain: 'Compliance',
-    description: 'Ensure that Cloud trails have tags',
+    description: 'Ensure that Cloudtrail have tags',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify ClouTrail trails and tags',
+    recommended_action: 'Modify  cloudtrail and tags',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_AddTags.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:listTags'],
 
