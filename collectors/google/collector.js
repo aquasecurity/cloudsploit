@@ -95,6 +95,14 @@ var calls = {
                 paginationKey: 'pageSize'
             }
         },
+        bigtable: {
+            list: {
+                url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
+                location: null,
+                pagination: true,
+                paginationKey: 'pageToken'
+            }  
+        },
         manyApi: true,
     },
     instanceTemplates: {
