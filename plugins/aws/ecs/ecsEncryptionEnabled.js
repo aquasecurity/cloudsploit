@@ -11,14 +11,12 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/security-network.html',
     apis: ['ECS:listClusters','ECS:describeCluster'],
 
-
     run: function(cache, settings, callback){
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
         async.each(regions.ecs, function(region, rcb){
-
             var listClusters = helpers.addSource(cache, source, 
                 ['ecs','listClusters',region]);
             if (!listClusters) return rcb();
