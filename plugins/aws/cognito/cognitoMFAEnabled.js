@@ -30,7 +30,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No User pool found', region);
                 return rcb();
             }
-
             for (let userPool of userPools.data) {
                 var describeUserPool = helpers.addSource(cache, source,
                     ['cognitoidentityserviceprovider', 'describeUserPool', region, userPool.Id]);
