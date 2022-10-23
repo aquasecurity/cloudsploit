@@ -186,16 +186,31 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    CognitoIdentityServiceProvider: {
+        listUserPools: {
+            property: 'UserPools',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 60
+            }
+        },
+        describeUserPool:{
+            property: 'UserPool',
+        }
+    },
     CodePipeline: {
         listPipelines: {
             property: 'pipelines',
-            paginate: 'nextToken'
+            paginate: 'nextToken',
         }
     },
     ComputeOptimizer: {
         getRecommendationSummaries : {
             property: 'recommendationSummaries',
-            paginate: 'nextToken'
+            paginate: 'nextToken',
+            params: {
+                MaxResults: 100
+            }
         }
     },
     Comprehend: {
@@ -333,6 +348,7 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+   
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'
@@ -1512,6 +1528,13 @@ var postcalls = [
             },
             sendIntegration: {
                 enabled: true
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
             }
         },
         EC2: {

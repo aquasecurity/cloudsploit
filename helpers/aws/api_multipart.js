@@ -876,6 +876,18 @@ var calls = [
                 paginate: 'PaginationToken'
             }
         },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 60
+                }
+            },
+            describeUserPool: {
+                property: 'UserPool',
+            }
+        },
         Route53: {
             listHostedZones: {
                 property: 'HostedZones',
