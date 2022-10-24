@@ -109,6 +109,5 @@ describe('ebsVolumeHasTags', function () {
                 done();
             });
         });
-
     });
 });
