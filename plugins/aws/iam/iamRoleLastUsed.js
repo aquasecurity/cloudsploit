@@ -110,11 +110,11 @@ module.exports = {
             }
 
             //Skip roles with user defined tags
-            if (config.iam_role_policies_ignore_tag?.length) {
-                if(config.iam_role_policies_ignore_tag.split(':').length == 2){
+            if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
+                if (config.iam_role_policies_ignore_tag.split(':').length == 2){
                     var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
                     var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
-                    if (getRole.data.Role?.Tags?.length){
+                    if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
                         if (getRole.data.Role.Tags.find(tag =>
                             tag.Key == key && value.test(tag.Value))) return cb();
                     }
