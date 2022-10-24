@@ -75,6 +75,7 @@ describe('ebsVolumeHasTags', function () {
             ebsVolumeHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('EBS volume has tags');
                 done();
             });
         });
@@ -84,15 +85,17 @@ describe('ebsVolumeHasTags', function () {
             ebsVolumeHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('EBS volume does not have tags');
                 done();
             });
         });
 
-        it('should FAIL if no EBS volumes found', function (done) {
+        it('should PASS if no EBS volumes found', function (done) {
             const cache = createCache([]);
             ebsVolumeHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No EBS Volumes found');
                 done();
             });
         });
@@ -102,6 +105,7 @@ describe('ebsVolumeHasTags', function () {
             ebsVolumeHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for EBS Volumes');
                 done();
             });
         });

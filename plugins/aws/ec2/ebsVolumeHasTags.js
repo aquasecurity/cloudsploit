@@ -40,9 +40,9 @@ module.exports = {
                 var volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
 
                 if (!volume.Tags || !volume.Tags.length) {
-                    helpers.addResult(results, 2, 'EBS volume have no tags associated.', region, volumeArn);
+                    helpers.addResult(results, 2, 'EBS volume does not have tags', region, volumeArn);
                 } else {
-                    helpers.addResult(results, 0, 'EBS volume have tags.', region, volumeArn);
+                    helpers.addResult(results, 0, 'EBS volume has tags', region, volumeArn);
                 }
             }
 
