@@ -28,7 +28,7 @@ module.exports = {
             }
 
             if (!describeLoadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No load balancers present', region);
+                helpers.addResult(results, 0, 'No load balancers found', region);
                 return rcb();
             }
             const arnList = [];
