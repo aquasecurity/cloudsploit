@@ -22,7 +22,7 @@ const createCache = (tableData, rgData) => {
          sts: {
             getCallerIdentity: {
                 'us-east-1': {
-                data: '101363884315'
+                data: '111122222'
                 }
             }
          }
@@ -88,7 +88,7 @@ describe('dynamoTableHasTags', function () {
             const cache = createCache(
                 ['MyModelTypeTable'],
                 [{
-                    "ResourceARN": "arn:aws:dynamodb:us-east-1:101363884315:table/MyModelTypeTable",
+                    "ResourceARN": "arn:aws:dynamodb:us-east-1:111122222:table/MyModelTypeTable",
                     "Tags": [{key:"key1", value:"value"}],
                 }]
             );
@@ -106,7 +106,7 @@ describe('dynamoTableHasTags', function () {
                const cache = createCache(
                 ['MyModelTypeTable'],
                 [{
-                    "ResourceARN": "arn:aws:dynamodb:us-east-1:101363884315:table/MyModelTypeTable",
+                    "ResourceARN": "arn:aws:dynamodb:us-east-1:111122222:table/MyModelTypeTable",
                     "Tags": [],
                 }]
             );
