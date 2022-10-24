@@ -17,7 +17,6 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.cloudtrail, function(region, rcb){
-
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
 
