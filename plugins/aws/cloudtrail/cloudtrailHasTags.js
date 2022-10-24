@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compliance',
     description: 'Ensure that Cloudtrail have tags',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify  cloudtrail and tags',
+    recommended_action: 'Modify  cloudtrail and add tags',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_AddTags.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:listTags'],
 
