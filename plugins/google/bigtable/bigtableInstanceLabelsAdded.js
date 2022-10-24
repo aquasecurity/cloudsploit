@@ -26,7 +26,6 @@ module.exports = {
         }
 
         async.each(regions.instances.bigtable, function(region, rcb){
-
             let instances =  helpers.addSource(
                 cache, source, ['instances', 'bigtable', 'list', region]);
 
