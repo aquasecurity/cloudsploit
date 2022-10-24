@@ -48,9 +48,9 @@ module.exports = {
                 if (!listTags.data.ResourceTagList || 
                 !listTags.data.ResourceTagList[0].TagsList || 
                 !listTags.data.ResourceTagList[0].TagsList.length){
-                    helpers.addResult(results, 2, 'Cloudtrail does not have tags associated.', region, trail.TrailARNs);
+                    helpers.addResult(results, 2, 'Cloudtrail does not have tags', region, trail.TrailARNs);
                 } else {
-                    helpers.addResult(results, 0, 'Cloudtrail have tags associated.', region, trail.TrailARNs) ;
+                    helpers.addResult(results, 0, 'Cloudtrail has tags', region, trail.TrailARNs) ;
                 }
             }    
             rcb();
