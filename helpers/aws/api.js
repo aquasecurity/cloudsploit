@@ -186,6 +186,18 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    CognitoIdentityServiceProvider: {
+        listUserPools: {
+            property: 'UserPools',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 60
+            }
+        },
+        describeUserPool:{
+            property: 'UserPool',
+        }
+    },
     CodePipeline: {
         listPipelines: {
             property: 'pipelines',
@@ -1514,6 +1526,13 @@ var postcalls = [
                 enabled: true
             }
         },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
+            }
+        },
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
@@ -2044,7 +2063,13 @@ var postcalls = [
                 reliesOnService: 'wafv2',
                 reliesOnCall: 'listWebACLs',
                 override: true
+            },
+            GetWebACLForResource: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'describeUserPool',
+                override: true
             }
+
         },
         GuardDuty: {
             getDetector: {
