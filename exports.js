@@ -588,6 +588,8 @@ module.exports = {
 
         'ecsContainerInsightsEnabled'   : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
+
+        'cognitoHasWafEnabled'          : require(__dirname + '/plugins/aws/cognito/cognitoHasWafEnabled.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

@@ -1704,6 +1704,11 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getWebACLForResource: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
             }
         },
         ECS: {

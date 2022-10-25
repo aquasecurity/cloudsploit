@@ -193,9 +193,6 @@ var calls = {
             params: {
                 MaxResults: 60
             }
-        },
-        describeUserPool:{
-            property: 'UserPool',
         }
     },
     CodePipeline: {
@@ -2064,9 +2061,9 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true
             },
-            GetWebACLForResource: {
+            getWebACLForResource: {
                 reliesOnService: 'cognitoidentityserviceprovider',
-                reliesOnCall: 'describeUserPool',
+                reliesOnCall: 'listUserPools',
                 override: true
             }
 
