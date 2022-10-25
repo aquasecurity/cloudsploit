@@ -23,7 +23,7 @@ module.exports = {
             if (!userPools) return rcb();
 
             if (userPools.err || !userPools.data){
-                helpers.addResult(results, 3,  'Unable to query api: ' + helpers.addError(describeUserPool), region);
+                helpers.addResult(results, 3,  'Unable to query api: ' + helpers.addError(userPools), region);
                 return rcb();
             }
             if (!userPools.data.length){

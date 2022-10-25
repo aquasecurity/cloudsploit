@@ -189,6 +189,18 @@ var calls = [
                 paginate: 'nextToken'
             }
         },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 60
+                }
+            },
+            describeUserPool:{
+                property: 'UserPool',
+            }
+        },
         Comprehend: {
             listEntitiesDetectionJobs: {
                 property: 'EntitiesDetectionJobPropertiesList',
@@ -1524,6 +1536,13 @@ var postcalls = [
             listNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
+                override: true
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
                 override: true
             }
         },
