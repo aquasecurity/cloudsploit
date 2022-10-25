@@ -39,7 +39,6 @@ module.exports = {
                 var webACLResource = helpers.addSource(cache, source,
                     ['wafv2', 'getWebACLForResource', region, userPool.Id]);
               
-
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
                         'Unable to query for wafv2: ' + helpers.addError(webACLResource), region);
