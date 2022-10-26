@@ -41,7 +41,7 @@ module.exports = {
               
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
-                        'Unable to query for wafv2: ' + helpers.addError(webACLResource), region);
+                        'Unable to query for wafv2 api: ' + helpers.addError(webACLResource), region);
 
                     return rcb();
                 }
