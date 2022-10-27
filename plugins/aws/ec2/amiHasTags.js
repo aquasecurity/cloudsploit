@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that AMIs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/12/amazon-machine-images-support-tag-on-create-tag-based-access-control/',
-    recommended_action: 'Modify AMI and add new tags.',
+    recommended_action: 'Modify AMI and add tags.',
     apis: ['EC2:describeImages'],
 
     run: function(cache, settings, callback) {
