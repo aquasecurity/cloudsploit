@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that ELBv2 have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
-    recommended_action: 'Modify ELB and Add tags',
+    recommended_action: 'Modify ELBv2 and add tags',
     apis: ['ELBv2:describeLoadBalancers', 'ResourceGroupsTaggingAPI:getResources'],
     run: function(cache, settings, callback) {
         var results = [];
