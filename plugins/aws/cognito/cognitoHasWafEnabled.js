@@ -41,7 +41,6 @@ module.exports = {
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
                         'Unable to query for wafv2 api: ' + helpers.addError(webACLResource), region);
-
                     return rcb();
                 }
                 var arn = 'arn:' + awsOrGov + ':cognito-idp:' + region + ':' + accountId + ':userpool/' + userPool.Id;
