@@ -5,7 +5,7 @@ module.exports = {
     title: 'ELBv2 Has Tags',
     category: 'ELBv2',
     domain: 'Content Delivery',
-    description: 'Ensure that ELBv2 have tags',
+    description: 'Ensure that ELBv2 have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
     recommended_action: 'Modify ELB and Add tags',
