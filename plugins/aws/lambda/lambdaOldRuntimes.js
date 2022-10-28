@@ -49,8 +49,6 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
-
             for (var f in listFunctions.data) {
                 // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
                 var lambdaFunction = listFunctions.data[f];
@@ -61,20 +59,20 @@ module.exports = {
                     return d.id == lambdaFunction.Runtime;
                 });
 
-                    var version = lambdaFunction.Runtime;
-                    var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? deprecatedRuntime[0].endOfLifeDate : null;
-                    let today = new Date();
-                    let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
-                    today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
-                    if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
-                        helpers.addResult(results, 2,
-                            'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
-                            region, lambdaFunction.FunctionArn);
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Lambda is running the current version: ' + version,
-                            region, lambdaFunction.FunctionArn);
-                    }   
+                var version = lambdaFunction.Runtime;
+                var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? deprecatedRuntime[0].endOfLifeDate : null;
+                let today = new Date();
+                let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
+                today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
+                if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
+                    helpers.addResult(results, 2,
+                        'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
+                        region, lambdaFunction.FunctionArn);
+                } else {
+                    helpers.addResult(results, 0,
+                        'Lambda is running the current version: ' + version,
+                        region, lambdaFunction.FunctionArn);
+                }   
             }
             rcb();
         }, function(){
