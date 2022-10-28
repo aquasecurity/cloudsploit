@@ -134,6 +134,7 @@ describe('elbHasTags', function () {
                 done();
             });
         });
+        
          it('should give unknown result if unable to query resource group tagging api', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
