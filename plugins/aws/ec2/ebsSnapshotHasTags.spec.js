@@ -74,6 +74,8 @@ describe('ebsSnapShotHasTags', function () {
             ebsSnapShotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS Snapshot have tags');
                 done();
             });
         });
@@ -83,6 +85,8 @@ describe('ebsSnapShotHasTags', function () {
             ebsSnapShotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS Snapshot has no Tags associated');
                 done();
             });
         });
@@ -92,6 +96,8 @@ describe('ebsSnapShotHasTags', function () {
             ebsSnapShotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No EBS snapshots present');
                 done();
             });
         });
@@ -101,6 +107,8 @@ describe('ebsSnapShotHasTags', function () {
             ebsSnapShotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for EBS Snapshots');
                 done();
             });
         });

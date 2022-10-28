@@ -34,12 +34,14 @@ module.exports = {
                 return rcb();
             }
             for (let snapshot of describeSnapshots.data){
+                if (!snapshot.OwnerId || !snapshot.SnapshotId) continue;
+
                 var resourceARN = `arn:${awsOrGov}:${region}:${snapshot.OwnerId}:snapshot/${snapshot.SnapshotId}`;
 
                 if (!snapshot.Tags || !snapshot.Tags.length) {
-                    helpers.addResult(results, 2, 'EBS Snapshot has no Tags associated.', region, resourceARN);
+                    helpers.addResult(results, 2, 'EBS Snapshot has no Tags associated', region, resourceARN);
                 } else {
-                    helpers.addResult(results, 0, 'EBS Snapshot have tags.', region, resourceARN);
+                    helpers.addResult(results, 0, 'EBS Snapshot have tags', region, resourceARN);
                 }
             }
             rcb();
