@@ -34,6 +34,8 @@ module.exports = {
             }
             const ARNList= [];
             for ( var cert of listCertificates.data){
+                if (!cert.CertificateArn) continue;
+                
                 ARNList.push(cert.CertificateArn);
             }
             helpers.checkTags(cache, 'ACM certificate', ARNList, region, results);

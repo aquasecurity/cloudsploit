@@ -28,6 +28,7 @@ describe('acmCertificateHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to list ACM certificates');
                 done()
             };
@@ -40,6 +41,7 @@ describe('acmCertificateHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No ACM certificates found');
                 done();
             };
@@ -51,6 +53,7 @@ describe('acmCertificateHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query all resources');
                 done();
             };
@@ -69,6 +72,7 @@ describe('acmCertificateHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('ACM certificate has tags');
                 done();
             };
@@ -88,6 +92,7 @@ describe('acmCertificateHasTags', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
+                    expect(results[0].region).to.equal('us-east-1');
                     expect(results[0].message).to.include('ACM certificate does not have any tags');
                     done();
                 };
