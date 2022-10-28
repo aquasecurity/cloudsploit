@@ -29,6 +29,7 @@ module.exports = {
             { 'id':'python2.7', 'name': 'Python 2.7', 'endOfLifeDate': '2022-02-14' },
             { 'id':'python3.5', 'name': 'Python 3.5', 'endOfLifeDate': '2020-09-13' },
             { 'id':'ruby2.5', 'name': 'Ruby 2.5', 'endOfLifeDate': '2022-03-31' },
+            { 'id':'nodejs16.x', 'name': 'Node.js 16', 'endOfLifeDate': '2023-03-31'}
         ];
 
         async.each(regions.lambda, function(region, rcb){
@@ -56,25 +57,25 @@ module.exports = {
 
                 if (!lambdaFunction.Runtime) continue;
 
-                var deprecatedRunTime = deprecatedRuntimes.filter((d) => {
+                var deprecatedRuntime = deprecatedRuntimes.filter((d) => {
                     return d.id == lambdaFunction.Runtime;
                 });
 
-                if (deprecatedRunTime && deprecatedRunTime.length>0){
-                    found = true;
-
-                    helpers.addResult(results, 2,
-                        'Function is using out-of-date runtime: ' + deprecatedRunTime[0].name + ' end of life: ' + deprecatedRunTime[0].endOfLifeDate,
-                        region, lambdaFunction.FunctionArn);
-                }
+                    var version = lambdaFunction.Runtime;
+                    var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? deprecatedRuntime[0].endOfLifeDate : null;
+                    let today = new Date();
+                    let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
+                    today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
+                    if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
+                        helpers.addResult(results, 2,
+                            'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
+                            region, lambdaFunction.FunctionArn);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Lambda is running the current version: ' + version,
+                            region, lambdaFunction.FunctionArn);
+                    }   
             }
-
-            if (!found) {
-                helpers.addResult(results, 0,
-                    'No functions using out-of-date runtimes',
-                    region);
-            }
-            
             rcb();
         }, function(){
             callback(null, results, source);
