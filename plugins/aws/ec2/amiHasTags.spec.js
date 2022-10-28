@@ -58,7 +58,7 @@ describe('amiHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('AMI have tags associated');
+                expect(results[0].message).to.include('AMI has tags');
                 done();
             });
         });
