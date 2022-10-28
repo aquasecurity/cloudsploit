@@ -22,7 +22,7 @@ const createCache = (tableData, rgData) => {
          sts: {
             getCallerIdentity: {
                 'us-east-1': {
-                data: '101363884315'
+                data: '1111222222222'
                 }
             }
          }
@@ -35,6 +35,7 @@ describe('dynamoTableHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for DynamoDB tables');
                 done();
             };
@@ -50,6 +51,7 @@ describe('dynamoTableHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No DynamoDB tables found');
                 done();
             };
@@ -65,6 +67,7 @@ describe('dynamoTableHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query all resources from group');
                 done();
             };
@@ -81,6 +84,7 @@ describe('dynamoTableHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('DynamoDB table has tags');
                 done();
             };
@@ -88,7 +92,7 @@ describe('dynamoTableHasTags', function () {
             const cache = createCache(
                 ['MyModelTypeTable'],
                 [{
-                    "ResourceARN": "arn:aws:dynamodb:us-east-1:101363884315:table/MyModelTypeTable",
+                    "ResourceARN": "arn:aws:dynamodb:us-east-1:1111222222222:table/MyModelTypeTable",
                     "Tags": [{key:"key1", value:"value"}],
                 }]
             );
@@ -99,6 +103,7 @@ describe('dynamoTableHasTags', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
+                    expect(results[0].region).to.equal('us-east-1');
                     expect(results[0].message).to.include('DynamoDB table does not have any tags');
                     done();
                 };
@@ -106,7 +111,7 @@ describe('dynamoTableHasTags', function () {
                const cache = createCache(
                 ['MyModelTypeTable'],
                 [{
-                    "ResourceARN": "arn:aws:dynamodb:us-east-1:101363884315:table/MyModelTypeTable",
+                    "ResourceARN": "arn:aws:dynamodb:us-east-1:1111222222222:table/MyModelTypeTable",
                     "Tags": [],
                 }]
             );
