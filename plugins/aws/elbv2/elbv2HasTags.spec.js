@@ -88,6 +88,8 @@ describe('elbHasTags', function () {
             elbHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('elasticloadbalancing has tags');
                 done();
             });
         });
@@ -97,6 +99,8 @@ describe('elbHasTags', function () {
             elbHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('elasticloadbalancing does not have any tags');
                 done();
             });
         });
@@ -106,6 +110,8 @@ describe('elbHasTags', function () {
             elbHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No load balancers present');
                 done();
             });
         });
@@ -115,6 +121,8 @@ describe('elbHasTags', function () {
             elbHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for load balancers');
                 done();
             });
         });
@@ -130,6 +138,8 @@ describe('elbHasTags', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query all resources from group tagging api');
                 done();
             };
 
