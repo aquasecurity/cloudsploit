@@ -35,6 +35,8 @@ describe('amiHasTags', function () {
             amiHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for AMIs');
                 done();
             });
         });
@@ -44,6 +46,8 @@ describe('amiHasTags', function () {
             amiHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No AMIs found');
                 done();
             });
         });
@@ -53,6 +57,8 @@ describe('amiHasTags', function () {
             amiHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('AMI have tags associated');
                 done();
             });
         });
@@ -62,6 +68,8 @@ describe('amiHasTags', function () {
             amiHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('AMI does not have any tags');
                 done();
             });
         });

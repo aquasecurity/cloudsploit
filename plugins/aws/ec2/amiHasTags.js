@@ -34,6 +34,8 @@ module.exports = {
             }
 
             for (var ami of describeImages.data) {
+                if (!ami.ImageId) continue;
+                
                 const arn ='arn:aws:ec2:' + region + '::image/' + ami.ImageId;
                 if (!ami.Tags || !ami.Tags.length) {
                     helpers.addResult(results, 2, 'AMI does not have any tags', region, arn);
