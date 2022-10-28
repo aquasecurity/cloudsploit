@@ -36,6 +36,8 @@ module.exports = {
             }
             const arnList = [];
             for (let lb of describeLoadBalancers.data){
+                if (!lb.LoadBalancerName) continue;
+
                 var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
                 arnList.push(elbArn);
             }
