@@ -16,7 +16,7 @@ const describeUserPool = [
       MfaConfiguration: 'OFF',
       EstimatedNumberOfUsers: 0,
       UserPoolTags: {},
-      Arn: 'arn:aws:cognito-idp:us-east-1:10136388154:userpool/us-east-1_cbDh8sCFGH',
+      Arn: 'arn:aws:cognito-idp:us-east-1:1111222222222:userpool/us-east-1_cbDh8sCFGH',
     },
     {
       Id: 'us-east-1_cbDh8sCFGH',
@@ -25,7 +25,7 @@ const describeUserPool = [
       MfaConfiguration: 'ON',
       EstimatedNumberOfUsers: 0,
       UserPoolTags: {},
-      Arn: 'arn:aws:cognito-idp:us-east-1:10136388154:userpool/us-east-1_cbDh8sCFGH',
+      Arn: 'arn:aws:cognito-idp:us-east-1:1111222222222:userpool/us-east-1_cbDh8sCFGH',
     }
 ]
 
