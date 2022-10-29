@@ -57,6 +57,7 @@ describe('cognitoMFAEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query api:');
                 done()
             };
@@ -69,6 +70,7 @@ describe('cognitoMFAEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No User pool found');
                 done();
             };
@@ -80,6 +82,7 @@ describe('cognitoMFAEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for Cognito');
                 done();
             };
@@ -92,6 +95,7 @@ describe('cognitoMFAEnabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Cognito has MFA enabled');
                 done();
             };
@@ -104,6 +108,7 @@ describe('cognitoMFAEnabled', function () {
                 const callback = (err, results) => {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
+                    expect(results[0].region).to.equal('us-east-1');
                     expect(results[0].message).to.include('MFA not enabled for cognito');
                     done();
                 };

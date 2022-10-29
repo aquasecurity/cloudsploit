@@ -31,6 +31,9 @@ module.exports = {
                 return rcb();
             }
             for (let userPool of userPools.data) {
+
+                if (!userPool.Id) continue;
+
                 var describeUserPool = helpers.addSource(cache, source,
                     ['cognitoidentityserviceprovider', 'describeUserPool', region, userPool.Id]);
 
@@ -38,7 +41,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for Cognito: ' + helpers.addError(describeUserPool), region);
                     
-                    return rcb();
+                    continue;
                 }
                 if (describeUserPool.data.MfaConfiguration && describeUserPool.data.MfaConfiguration == 'ON'){
                     helpers.addResult(results, 0, 'Cognito has MFA enabled', region, describeUserPool.data.Arn);
