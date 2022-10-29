@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'EKS Cluster Has Tags',
-    category: 'EKS',
-    domain: 'Containers',
-    description: 'Ensure that AWS EKS Clusters have tags associated.',
-    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    link: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-using-tags.html',
-    recommended_action: 'Modify EKS Cluster and add tags.',
+    title: 'COgnito UserPool Has WAF Enabled',
+    category: 'CognitoIdentityServiceProvider',
+    domain: 'Identity Service Provider',
+    description: 'Ensure that Cognito UserPool has WAF enabled.',
+    more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL.',
+    link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html',
+    recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable WAF from properties ',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'WAFV2:getWebACLForResource', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -36,6 +36,9 @@ module.exports = {
                 return rcb();
             }
             for (let userPool of userPools.data) {
+                
+                if (!userPool.Id) continue;
+
                 var webACLResource = helpers.addSource(cache, source,
                     ['wafv2', 'getWebACLForResource', region, userPool.Id]);
               
@@ -43,7 +46,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for wafv2 api: ' + helpers.addError(webACLResource), region);
 
-                    return rcb();
+                    continue;
                 }
                 var arn = 'arn:' + awsOrGov + ':cognito-idp:' + region + ':' + accountId + ':userpool/' + userPool.Id;
                 if (webACLResource.data.WebACL){
