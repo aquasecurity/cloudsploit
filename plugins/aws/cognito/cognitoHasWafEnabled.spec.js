@@ -22,7 +22,7 @@ const createCache = (poolList, waf) => {
         sts: {
             getCallerIdentity: {
                 'us-east-1': {
-                data: '101363884315'
+                data: '11111222222'
                 }
             }
         },
