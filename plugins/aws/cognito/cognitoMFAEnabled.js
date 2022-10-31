@@ -30,7 +30,6 @@ module.exports = {
                 return rcb();
             }
             for (let userPool of userPools.data) {
-
                 if (!userPool.Id) continue;
 
                 var describeUserPool = helpers.addSource(cache, source,
