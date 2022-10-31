@@ -60,7 +60,7 @@ describe('acmCertificateHasTags', function () {
 
             const cache = createCache(
                 [{
-                    CertificateArn: 'arn:aws:acm:us-east-1:101363889637:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
+                    CertificateArn: 'arn:aws:acm:us-east-1:000011112222:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
                 }],
                 null
             );
@@ -78,10 +78,10 @@ describe('acmCertificateHasTags', function () {
             };
             const cache = createCache(
                [{
-                    CertificateArn: 'arn:aws:acm:us-east-1:101363889637:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
+                    CertificateArn: 'arn:aws:acm:us-east-1:000011112222:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
                 }],
                 [{
-                    "ResourceARN": 'arn:aws:acm:us-east-1:101363889637:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8',
+                    "ResourceARN": 'arn:aws:acm:us-east-1:000011112222:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8',
                     "Tags": [{key:"key1", value:"value"}],
                 }]
             );
@@ -99,10 +99,10 @@ describe('acmCertificateHasTags', function () {
 
                const cache = createCache(
                  [{
-                    CertificateArn: 'arn:aws:acm:us-east-1:101363889637:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
+                    CertificateArn: 'arn:aws:acm:us-east-1:000011112222:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8'
                 }],
                 [{
-                    "ResourceARN":'arn:aws:acm:us-east-1:101363889637:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8',
+                    "ResourceARN":'arn:aws:acm:us-east-1:000011112222:certificate/f256ec8d-80d9-4473-a2b2-ac32cb6fe6e8',
                     "Tags": [],
                 }]
             );

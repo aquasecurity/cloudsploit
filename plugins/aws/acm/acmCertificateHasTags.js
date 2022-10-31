@@ -8,8 +8,8 @@ module.exports = {
     description: 'Ensure that ACM Certificates have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/tags.html',
-    recommended_action: 'Modify ACM certificate and add tags',
-    apis: ['ACM:listCertificates', 'ResourceGroupsTaggingAPI:getResources',],
+    recommended_action: 'Modify ACM certificate and add tags.',
+    apis: ['ACM:listCertificates', 'ResourceGroupsTaggingAPI:getResources'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
             const ARNList= [];
-            for ( var cert of listCertificates.data){
+            for (var cert of listCertificates.data){
                 if (!cert.CertificateArn) continue;
                 
                 ARNList.push(cert.CertificateArn);
