@@ -8,8 +8,8 @@ module.exports = {
     description: 'Ensure that DynamoDB tables have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tagging.html',
-    recommended_action: 'Modify dynamoDB table and add tags',
-    apis: ['DynamoDB:listTables',  'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
+    recommended_action: 'Modify DynamoDB table and add tags.',
+    apis: ['DynamoDB:listTables', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];

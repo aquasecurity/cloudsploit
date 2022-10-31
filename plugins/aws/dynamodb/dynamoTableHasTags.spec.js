@@ -22,7 +22,7 @@ const createCache = (tableData, rgData) => {
          sts: {
             getCallerIdentity: {
                 'us-east-1': {
-                data: '1111222222222'
+                    data: '1111222222222'
                 }
             }
          }
