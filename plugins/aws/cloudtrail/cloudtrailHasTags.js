@@ -5,9 +5,9 @@ module.exports = {
     title: 'CloudTrail Has Tags',
     category: 'CloudTrail',
     domain: 'Compliance',
-    description: 'Ensure that Cloudtrail have tags',
+    description: 'Ensure that AWS CloudTrail trails have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify  cloudtrail and add tags',
+    recommended_action: 'Modify CloudTrail trails and add tags.',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_AddTags.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:listTags'],
 
@@ -24,7 +24,7 @@ module.exports = {
 
             if (describeTrails.err || !describeTrails.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for trails: ${helpers.addError(describeTrails)}`, region);
+                    `Unable to query for CloudTrail trails: ${helpers.addError(describeTrails)}`, region);
                 return rcb();
             }
 
@@ -32,8 +32,9 @@ module.exports = {
                 helpers.addResult(results, 0, 'CloudTrail is not enabled', region);
                 return rcb();
             }
+
             for (let trail of describeTrails.data){
-                if (!trail.TrailARN) return rcb();
+                if (!trail.TrailARN) continue;
                 
                 let listTags = helpers.addSource(cache, source,
                     ['cloudtrail', 'listTags', region, trail.TrailARN]);
@@ -41,15 +42,15 @@ module.exports = {
                 if (listTags.err || !listTags.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for listTags api: ${helpers.addError(listTags)}`, region);
-                    return rcb();
+                    continue;
                 }
 
                 if (!listTags.data.ResourceTagList || 
-                !listTags.data.ResourceTagList[0].TagsList || 
-                !listTags.data.ResourceTagList[0].TagsList.length){
+                    !listTags.data.ResourceTagList[0].TagsList || 
+                    !listTags.data.ResourceTagList[0].TagsList.length){
                     helpers.addResult(results, 2, 'Cloudtrail does not have tags', region, trail.TrailARNs);
                 } else {
-                    helpers.addResult(results, 0, 'Cloudtrail has tags', region, trail.TrailARNs) ;
+                    helpers.addResult(results, 0, 'Cloudtrail has tags', region, trail.TrailARNs);
                 }
             }    
             rcb();
