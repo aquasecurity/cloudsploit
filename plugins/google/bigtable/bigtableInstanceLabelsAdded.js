@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Instance Labels Added',
+    title: 'BigTable Instance Labels Added',
     category: 'BigTable',
     domain: 'Databases',
     description: 'Ensure that all BigTable instances have labels added.',
