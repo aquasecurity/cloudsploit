@@ -39,16 +39,15 @@ module.exports = {
                 let listTags = helpers.addSource(cache, source,
                     ['cloudtrail', 'listTags', region, trail.TrailARN]);
 
-                if (listTags.err || !listTags.data) {
+                if (listTags.err || !listTags.data || !listTags.data.ResourceTagList || !listTags.data.ResourceTagList.length) {
                     helpers.addResult(results, 3,
                         `Unable to query for listTags api: ${helpers.addError(listTags)}`, region);
                     continue;
                 }
 
-                if (!listTags.data.ResourceTagList || 
-                    !listTags.data.ResourceTagList[0].TagsList || 
+                if (!listTags.data.ResourceTagList[0].TagsList || 
                     !listTags.data.ResourceTagList[0].TagsList.length){
-                    helpers.addResult(results, 2, 'Cloudtrail does not have tags', region, trail.TrailARNs);
+                    helpers.addResult(results, 2, 'CloudTrail trail does not have tags', region, trail.TrailARN);
                 } else {
                     helpers.addResult(results, 0, 'Cloudtrail has tags', region, trail.TrailARNs);
                 }
