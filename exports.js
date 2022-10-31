@@ -207,7 +207,6 @@ module.exports = {
         'enableDetailedMonitoring'      : require(__dirname + '/plugins/aws/ec2/enableDetailedMonitoring.js'),
         'ec2HasTags'                    : require(__dirname + '/plugins/aws/ec2/ec2HasTags.js'),
         'securityGroupHasTags'          : require(__dirname + '/plugins/aws/ec2/securityGroupsHasTags.js'),
-        'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags'),
         'networkAclHasTags'             : require(__dirname + '/plugins/aws/ec2/networkAclHasTags.js'),
         'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags.js'),
         'ebsVolumeHasTags'              : require(__dirname + '/plugins/aws/ec2/ebsVolumeHasTags.js'),
