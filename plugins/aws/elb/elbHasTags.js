@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ELB has Tags',
+    title: 'ELB Has Tags',
     category: 'ELB',
     domain: 'Content Delivery',
-    description: 'Ensure that ELB have tags associated.',
+    description: 'Ensure that ELBs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
     recommended_action: 'Modify ELB and add tags.',
@@ -42,7 +42,7 @@ module.exports = {
                 var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
                 arnList.push(elbArn);
             }
-            helpers.checkTags(cache, 'elasticloadbalancing', arnList, region, results);
+            helpers.checkTags(cache, 'ELB', arnList, region, results);
             return rcb();
         }, function(){
             callback(null, results, source);
