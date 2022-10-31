@@ -23,12 +23,12 @@ module.exports = {
 
             if (describeLoadBalancers.err || !describeLoadBalancers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for load balancers: ' + helpers.addError(describeLoadBalancers), region);
+                    'Unable to query for Application/Network load balancers: ' + helpers.addError(describeLoadBalancers), region);
                 return rcb();
             }
 
             if (!describeLoadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No load balancers found', region);
+                helpers.addResult(results, 0, 'No Application/Network load balancers found', region);
                 return rcb();
             }
             const arnList = [];

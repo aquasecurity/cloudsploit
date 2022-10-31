@@ -111,13 +111,13 @@ describe('elbHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No load balancers found');
+                expect(results[0].message).to.include('No Application/Network load balancers found');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to describe load balancers', function (done) {
-            const cache = createCache(null, { message: "Unable to describe load balancers" });
+            const cache = createCache(null, { message: "Unable to describe Application/Network load balancers" });
             elbHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
