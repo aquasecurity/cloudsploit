@@ -100,7 +100,7 @@ describe('networkAclHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Network ACL has no tags')
+                expect(results[0].message).to.include('Network ACL does not have tags')
                 done();
             });
         });

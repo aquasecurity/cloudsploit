@@ -5,7 +5,7 @@ module.exports = {
     title: 'Network ACL Has Tags',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Ensure that Network ACLs have tags',
+    description: 'Ensure that Network ACLs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Update Network ACL and Add Tags',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
@@ -37,11 +37,12 @@ module.exports = {
                 return rcb();
             }
             for (let nAcl of describeNetworkAcls.data) {
+                if (!nAcl.NetworkAclId) continue;
 
                 var resourceARN = `arn:${awsOrGov}:ec2:${region}:${accountId}:network-acl/${nAcl.NetworkAclId}`;
 
                 if (!nAcl.Tags || !nAcl.Tags.length) {
-                    helpers.addResult(results, 2, 'Network ACL has no tags', region, resourceARN);
+                    helpers.addResult(results, 2, 'Network ACL does not have tags', region, resourceARN);
                 } else {
                     helpers.addResult(results, 0, 'Network ACLs has Tags', region, resourceARN);
                 }
