@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'COgnito UserPool Has WAF Enabled',
+    title: 'Cognito User Pool Has WAF Enabled',
     category: 'CognitoIdentityServiceProvider',
     domain: 'Identity Service Provider',
     description: 'Ensure that Cognito UserPool has WAF enabled.',
