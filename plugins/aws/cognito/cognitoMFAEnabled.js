@@ -44,7 +44,7 @@ module.exports = {
                 if (describeUserPool.data.MfaConfiguration && describeUserPool.data.MfaConfiguration == 'ON'){
                     helpers.addResult(results, 0, 'Cognito has MFA enabled', region, describeUserPool.data.Arn);
                 } else {
-                    helpers.addResult(results, 2, 'MFA not enabled for cognito', region, describeUserPool.data.Arn);
+                    helpers.addResult(results, 2, 'Cognito does not have MFA enabled', region, describeUserPool.data.Arn);
                 }
             }
 
