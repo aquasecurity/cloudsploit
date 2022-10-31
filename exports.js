@@ -255,6 +255,7 @@ module.exports = {
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
+        'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
