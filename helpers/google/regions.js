@@ -81,7 +81,8 @@ module.exports = {
     instances: {
         compute: regions,
         sql: ['global'],
-        spanner: ['global']
+        spanner: ['global'],
+        bigtable:['global']
     },
     instanceGroupManagers: regions,
     functions: [
