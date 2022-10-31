@@ -49,7 +49,7 @@ module.exports = {
                     !listTags.data.ResourceTagList[0].TagsList.length){
                     helpers.addResult(results, 2, 'CloudTrail trail does not have tags', region, trail.TrailARN);
                 } else {
-                    helpers.addResult(results, 0, 'Cloudtrail has tags', region, trail.TrailARNs);
+                    helpers.addResult(results, 0, 'CloudTrail trail has tags', region, trail.TrailARN);
                 }
             }    
             rcb();
