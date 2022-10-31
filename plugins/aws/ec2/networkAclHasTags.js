@@ -42,7 +42,7 @@ module.exports = {
                 var resourceARN = `arn:${awsOrGov}:ec2:${region}:${accountId}:network-acl/${nAcl.NetworkAclId}`;
 
                 if (!nAcl.Tags || !nAcl.Tags.length) {
-                    helpers.addResult(results, 2, 'Network ACL has no tags', region, resourceARN);
+                    helpers.addResult(results, 2, 'Network ACL does not have tags', region, resourceARN);
                 } else {
                     helpers.addResult(results, 0, 'Network ACLs has Tags', region, resourceARN);
                 }
