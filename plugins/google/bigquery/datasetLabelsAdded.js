@@ -44,6 +44,8 @@ module.exports = {
             }
 
             datasets.data.forEach(dataset => {
+                if (!dataset.id) return;
+
                 let resource = helpers.createResourceName('datasets', dataset.id.split(':')[1] || dataset.id, project);
 
                 if (dataset.labels &&
