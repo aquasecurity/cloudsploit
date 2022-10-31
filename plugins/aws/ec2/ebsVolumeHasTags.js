@@ -36,6 +36,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No EBS Volumes found', region);
                 return rcb();
             }
+
             for (let volume of describeVolumes.data) {
                 if (!volume.VolumeId) continue;
 
