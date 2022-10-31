@@ -42,7 +42,7 @@ module.exports = {
                 var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
                 arnList.push(elbArn);
             }
-            helpers.checkTags(cache, 'ELB', arnList, region, results);
+            helpers.checkTags(cache, 'ElasticLoadbalancing', arnList, region, results);
             return rcb();
         }, function(){
             callback(null, results, source);
