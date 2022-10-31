@@ -38,7 +38,6 @@ module.exports = {
                 if (!describeUserPool || describeUserPool.err || !describeUserPool.data){
                     helpers.addResult(results, 3,
                         'Unable to query for Cognito: ' + helpers.addError(describeUserPool), region);
-                    
                     continue;
                 }
                 if (describeUserPool.data.MfaConfiguration && describeUserPool.data.MfaConfiguration == 'ON'){
