@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeImages = helpers.addSource(cache, source,
@@ -36,7 +37,7 @@ module.exports = {
             for (var ami of describeImages.data) {
                 if (!ami.ImageId) continue;
                 
-                const arn ='arn:aws:ec2:' + region + '::image/' + ami.ImageId;
+                const arn ='arn:' + awsOrGov + ':ec2:' + region + '::image/' + ami.ImageId;
                 if (!ami.Tags || !ami.Tags.length) {
                     helpers.addResult(results, 2, 'AMI does not have any tags', region, arn);
                 } else {

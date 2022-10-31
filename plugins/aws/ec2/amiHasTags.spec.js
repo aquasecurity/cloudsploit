@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 const amiHasTags = require('./amiHasTags');
 
-describeImages = [
+var describeImages = [
    { 
     Tags: [{ Key: 'key', value: 'value' }],
     ImageId: 'ami-046b09f5340dfd8gb'
