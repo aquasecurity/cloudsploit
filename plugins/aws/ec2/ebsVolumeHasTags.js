@@ -38,6 +38,7 @@ module.exports = {
             }
             for (let volume of describeVolumes.data) {
                 if (!volume.VolumeId) continue;
+
                 var volumeArn = 'arn:' + awsOrGov + ':ec2:' + region + ':' + accountId + ':volume/' + volume.VolumeId;
 
                 if (!volume.Tags || !volume.Tags.length) {
