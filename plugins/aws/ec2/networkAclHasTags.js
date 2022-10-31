@@ -38,6 +38,7 @@ module.exports = {
             }
             for (let nAcl of describeNetworkAcls.data) {
                 if (!nAcl.NetworkAclId) continue;
+
                 var resourceARN = `arn:${awsOrGov}:ec2:${region}:${accountId}:network-acl/${nAcl.NetworkAclId}`;
 
                 if (!nAcl.Tags || !nAcl.Tags.length) {
