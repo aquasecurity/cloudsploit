@@ -75,7 +75,7 @@ describe('ebsSnapShotHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EBS Snapshot have tags');
+                expect(results[0].message).to.include('EBS Snapshot has tags');
                 done();
             });
         });
@@ -86,7 +86,7 @@ describe('ebsSnapShotHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EBS Snapshot has no Tags associated');
+                expect(results[0].message).to.include('EBS Snapshot does not have tags');
                 done();
             });
         });
