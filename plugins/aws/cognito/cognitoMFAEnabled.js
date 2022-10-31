@@ -19,7 +19,6 @@ module.exports = {
             var userPools = helpers.addSource(cache, source,
                 ['cognitoidentityserviceprovider', 'listUserPools', region]);
             
-            
             if (!userPools) return rcb();
 
             if (userPools.err || !userPools.data){
