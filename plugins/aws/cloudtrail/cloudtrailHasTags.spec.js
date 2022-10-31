@@ -85,7 +85,7 @@ describe('cloudtrailHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for trails');
+                expect(results[0].message).to.include('Unable to query for CloudTrail trails');
                 done();
             });
         });
@@ -106,7 +106,7 @@ describe('cloudtrailHasTags', function () {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(3);
             expect(results[0].region).to.equal('us-east-1');
-            expect(results[0].message).to.include('Unable to query for listTags api');
+            expect(results[0].message).to.include('Unable to list trail tags');
             done();
         });
     });
@@ -117,7 +117,7 @@ describe('cloudtrailHasTags', function () {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
             expect(results[0].region).to.equal('us-east-1');
-            expect(results[0].message).to.include('Cloudtrail does not have tags');
+            expect(results[0].message).to.include('CloudTrail trail does not have tags');
             done();
         });
     });
@@ -127,7 +127,7 @@ describe('cloudtrailHasTags', function () {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
             expect(results[0].region).to.equal('us-east-1');
-            expect(results[0].message).to.include('Cloudtrail has tags');
+            expect(results[0].message).to.include('CloudTrail trail has tags');
             done();
         });
     });

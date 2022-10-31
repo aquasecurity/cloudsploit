@@ -41,7 +41,7 @@ module.exports = {
 
                 if (listTags.err || !listTags.data || !listTags.data.ResourceTagList || !listTags.data.ResourceTagList.length) {
                     helpers.addResult(results, 3,
-                        `Unable to query for listTags api: ${helpers.addError(listTags)}`, region);
+                        `Unable to list trail tags: ${helpers.addError(listTags)}`, region);
                     continue;
                 }
 
