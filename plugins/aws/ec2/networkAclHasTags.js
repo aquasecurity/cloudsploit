@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Network ACL Has Tags',
+    title: 'Network ACL has Tags',
     category: 'EC2',
     domain: 'Compute',
     description: 'Ensure that Network ACLs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Update Network ACL and Add Tags',
+    recommended_action: 'Modify Network ACL and add Tags',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     apis: ['EC2:describeNetworkAcls', 'STS:getCallerIdentity'],
 
@@ -44,7 +44,7 @@ module.exports = {
                 if (!nAcl.Tags || !nAcl.Tags.length) {
                     helpers.addResult(results, 2, 'Network ACL does not have tags', region, resourceARN);
                 } else {
-                    helpers.addResult(results, 0, 'Network ACLs has Tags', region, resourceARN);
+                    helpers.addResult(results, 0, 'Network ACL has tags', region, resourceARN);
                 }
             }
 
