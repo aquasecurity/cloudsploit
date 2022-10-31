@@ -35,7 +35,6 @@ module.exports = {
                 return rcb();
             }
             for (let userPool of userPools.data) {
-                
                 if (!userPool.Id) continue;
 
                 var webACLResource = helpers.addSource(cache, source,
@@ -44,7 +43,6 @@ module.exports = {
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
                         'Unable to query for wafv2 api: ' + helpers.addError(webACLResource), region);
-
                     continue;
                 }
                 var arn = 'arn:' + awsOrGov + ':cognito-idp:' + region + ':' + accountId + ':userpool/' + userPool.Id;
