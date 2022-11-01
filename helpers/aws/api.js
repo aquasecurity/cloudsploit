@@ -342,7 +342,6 @@ var calls = {
             paginate: 'NextToken'
         }
     },
-   
     EC2: {
         describeAccountAttributes: {
             property: 'AccountAttributes'
