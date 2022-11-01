@@ -1194,6 +1194,8 @@ module.exports = {
         'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js'),
         'disableServiceAccountCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js'),
 
+        'dataprocClusterLabelsAdded'    : require(__dirname + '/plugins/google/dataproc/dataprocClusterLabelsAdded.js'),
+        
         'bigtableInstanceLabelsAdded'   : require(__dirname + '/plugins/google/bigtable/bigtableInstanceLabelsAdded.js'),
     },
     alibaba: {
