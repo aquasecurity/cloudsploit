@@ -191,7 +191,7 @@ var calls = {
             property: 'UserPools',
             paginate: 'NextToken',
             params: {
-                MaxResults: 50
+                MaxResults: 100
             }
         },
     },
@@ -206,7 +206,7 @@ var calls = {
             property: 'recommendationSummaries',
             paginate: 'nextToken',
             params: {
-                MaxResults: 100
+                MaxResults: 50
             }
         }
     },
