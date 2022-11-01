@@ -189,18 +189,6 @@ var calls = [
                 paginate: 'nextToken'
             }
         },
-        CognitoIdentityServiceProvider: {
-            listUserPools: {
-                property: 'UserPools',
-                paginate: 'NextToken',
-                params: {
-                    MaxResults: 60
-                }
-            },
-            describeUserPool:{
-                property: 'UserPool',
-            }
-        },
         Comprehend: {
             listEntitiesDetectionJobs: {
                 property: 'EntitiesDetectionJobPropertiesList',
@@ -888,18 +876,7 @@ var calls = [
                 paginate: 'PaginationToken'
             }
         },
-        CognitoIdentityServiceProvider: {
-            listUserPools: {
-                property: 'UserPools',
-                paginate: 'NextToken',
-                params: {
-                    MaxResults: 60
-                }
-            },
-            describeUserPool: {
-                property: 'UserPool',
-            }
-        },
+       
         Route53: {
             listHostedZones: {
                 property: 'HostedZones',
@@ -1135,7 +1112,16 @@ var calls = [
                 property: 'infrastructureConfigurationSummaryList',
                 paginate: 'nextToken'
             }
-        }
+        },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+        },
     }
 ];
 
@@ -1536,13 +1522,6 @@ var postcalls = [
             listNodegroups: {
                 reliesOnService: 'eks',
                 reliesOnCall: 'listClusters',
-                override: true
-            }
-        },
-        CognitoIdentityServiceProvider: {
-            describeUserPool: {
-                reliesOnService: 'cognitoidentityserviceprovider',
-                reliesOnCall: 'listUserPools',
                 override: true
             }
         },
@@ -2268,6 +2247,14 @@ var postcalls = [
                 reliesOnCall: 'listImageRecipes',
                 filterKey: 'imageRecipeArn',
                 filterValue: 'arn'
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
             }
         },
     },

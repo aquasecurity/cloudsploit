@@ -191,12 +191,9 @@ var calls = {
             property: 'UserPools',
             paginate: 'NextToken',
             params: {
-                MaxResults: 60
+                MaxResults: 50
             }
         },
-        describeUserPool:{
-            property: 'UserPool',
-        }
     },
     CodePipeline: {
         listPipelines: {
@@ -1534,7 +1531,8 @@ var postcalls = [
             describeUserPool: {
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
-                override: true
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
             }
         },
         EC2: {

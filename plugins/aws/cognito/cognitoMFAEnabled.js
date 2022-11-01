@@ -34,13 +34,12 @@ module.exports = {
 
                 var describeUserPool = helpers.addSource(cache, source,
                     ['cognitoidentityserviceprovider', 'describeUserPool', region, userPool.Id]);
-
-                if (!describeUserPool || describeUserPool.err || !describeUserPool.data){
+                if (!describeUserPool || describeUserPool.err || !describeUserPool.data || !describeUserPool.data.UserPool){
                     helpers.addResult(results, 3,
                         'Unable to query for Cognito: ' + helpers.addError(describeUserPool), region);
                     continue;
                 }
-                if (describeUserPool.data.MfaConfiguration && describeUserPool.data.MfaConfiguration == 'ON'){
+                if (describeUserPool.data.UserPool.MfaConfiguration && describeUserPool.data.UserPool.MfaConfiguration == 'ON'){
                     helpers.addResult(results, 0, 'Cognito has MFA enabled', region, describeUserPool.data.Arn);
                 } else {
                     helpers.addResult(results, 2, 'Cognito does not have MFA enabled', region, describeUserPool.data.Arn);

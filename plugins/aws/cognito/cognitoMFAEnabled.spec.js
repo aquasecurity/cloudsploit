@@ -42,7 +42,7 @@ const createCache = (poolList, describe) => {
                 'us-east-1':{
                     'us-east-1_cbDh8sCFGH':{
                     err: null,
-                    data: describe
+                    data: { UserPool: describe }
                 }
                 }
             }
