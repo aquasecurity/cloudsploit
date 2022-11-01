@@ -44,7 +44,6 @@ module.exports = {
             }
 
             clusters.data.forEach(cluster => {
-
                 if (!cluster.clusterName) return;
 
                 let resource = helpers.createResourceName('clusters', cluster.clusterName, project, 'region', region);
