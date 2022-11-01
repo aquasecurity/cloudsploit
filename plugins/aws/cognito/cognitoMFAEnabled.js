@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that cognito user pool has MFA enabled.',
     more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa.html',
-    recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable MFA from signin experience ',
+    recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable MFA from sign in experience',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'CognitoIdentityServiceProvider:describeUserPool'],
     run: function(cache, settings, callback) {
         var results = [];
