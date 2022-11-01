@@ -27,7 +27,7 @@ const createCache = (poolList, waf) => {
             }
         },
         wafv2: {
-            getWebACLForResource: {
+            getWebACLForCognitoResource: {
             'us-east-1':{
                 'us-east-1_cbDh8sCFGH': {
                     err: null,

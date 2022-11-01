@@ -1705,7 +1705,7 @@ var postcalls = [
                 override: true,
                 rateLimit: 600
             },
-            getWebACLForResource: {
+            getWebACLForCognitoResource: {
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true

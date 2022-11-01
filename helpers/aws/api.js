@@ -1523,13 +1523,6 @@ var postcalls = [
                 enabled: true
             }
         },
-        CognitoIdentityServiceProvider: {
-            describeUserPool: {
-                reliesOnService: 'cognitoidentityserviceprovider',
-                reliesOnCall: 'listUserPools',
-                override: true
-            }
-        },
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',
@@ -2061,7 +2054,7 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true
             },
-            getWebACLForResource: {
+            getWebACLForCognitoResource: {
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true
