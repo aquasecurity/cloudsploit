@@ -1111,7 +1111,16 @@ var calls = [
                 property: 'infrastructureConfigurationSummaryList',
                 paginate: 'nextToken'
             }
-        }
+        },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 60
+                }
+            },
+        },
     }
 ];
 
