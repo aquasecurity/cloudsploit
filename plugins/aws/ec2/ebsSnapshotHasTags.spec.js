@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const ebsSnapShotHasTags = require('./ebsSnapShotHasTags');
+const ebsSnapShotHasTags = require('./ebsSnapshotHasTags');
 
 const describeSnapshots = [
     {

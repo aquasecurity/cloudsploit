@@ -204,7 +204,7 @@ module.exports = {
         'ec2HasTags'                    : require(__dirname + '/plugins/aws/ec2/ec2HasTags.js'),
         'securityGroupHasTags'          : require(__dirname + '/plugins/aws/ec2/securityGroupsHasTags.js'),
         'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags'),
-        'ebsSnapShotHasTags'            : require(__dirname + '/plugins/aws/ec2/ebsSnapShotHasTags'),
+        'ebsSnapshotHasTags'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotHasTags.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
