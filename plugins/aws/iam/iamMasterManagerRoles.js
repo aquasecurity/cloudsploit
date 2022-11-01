@@ -124,7 +124,7 @@ module.exports = {
         },
         iam_role_policies_ignore_tag: {
             name: 'IAM Role Policies Ignore Tag',
-            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
+            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance',
             regex: 'enviornment:^.*$',
             default: ''
         }
