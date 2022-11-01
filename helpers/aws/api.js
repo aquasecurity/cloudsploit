@@ -2054,7 +2054,7 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true
             },
-            getWebACLForCognitoResource: {
+            getWebACLForCognitoUserPool: {
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true

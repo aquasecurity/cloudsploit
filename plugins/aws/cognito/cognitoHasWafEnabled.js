@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL.',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable WAF from properties ',
-    apis: ['CognitoIdentityServiceProvider:listUserPools', 'WAFV2:getWebACLForCognitoResource', 'STS:getCallerIdentity'],
+    apis: ['CognitoIdentityServiceProvider:listUserPools', 'WAFV2:getWebACLForCognitoUserPool', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -38,7 +38,7 @@ module.exports = {
                 if (!userPool.Id) continue;
 
                 var webACLResource = helpers.addSource(cache, source,
-                    ['wafv2', 'getWebACLForCognitoResource', region, userPool.Id]);
+                    ['wafv2', 'getWebACLForCognitoUserPool', region, userPool.Id]);
               
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
