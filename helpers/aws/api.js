@@ -191,7 +191,7 @@ var calls = {
             property: 'UserPools',
             paginate: 'NextToken',
             params: {
-                MaxResults: 100
+                MaxResults: 60
             }
         },
     },
