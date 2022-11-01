@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Dataset Labels Added',
-    category: 'BigQuery',
+    title: 'BigTable Instance Labels Added',
+    category: 'BigTable',
     domain: 'Databases',
-    description: 'Ensure that all BigQuery datasets have labels added.',
+    description: 'Ensure that all BigTable instances have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
-    link: 'https://cloud.google.com/bigquery/docs/adding-labels',
-    recommended_action: 'Ensure labels are added to all BigQuery datasets.',
-    apis: ['datasets:list'],
+    link: 'https://cloud.google.com/bigtable/docs/creating-managing-labels',
+    recommended_action: 'Ensure labels are added to all BigTable instances.',
+    apis: ['instances:bigtable:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -25,36 +25,31 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var project = projects.data[0].name;
+        async.each(regions.instances.bigtable, function(region, rcb){
+            let instances =  helpers.addSource(
+                cache, source, ['instances', 'bigtable', 'list', region]);
 
-        async.each(regions.datasets, function(region, rcb){
-            let datasets = helpers.addSource(cache, source,
-                ['datasets', 'list', region]);
+            if (!instances) return rcb();
 
-            if (!datasets) return rcb();
-
-            if (datasets.err || !datasets.data) {
-                helpers.addResult(results, 3, 'Unable to query BigQuery datasets', region, null, null, datasets.err);
+            if (instances.err || !instances.data) {
+                helpers.addResult(results, 3, 'Unable to query BigTable instances', region, null, null, instances.err);
                 return rcb();
             }
 
-            if (!datasets.data.length) {
-                helpers.addResult(results, 0, 'No BigQuery datasets found', region);
+            if (!instances.data.length) {
+                helpers.addResult(results, 0, 'No BigTable instances found', region);
                 return rcb();
             }
 
-            datasets.data.forEach(dataset => {
-                if (!dataset.id) return;
+            instances.data.forEach(instance => {
 
-                let resource = helpers.createResourceName('datasets', dataset.id.split(':')[1] || dataset.id, project);
-
-                if (dataset.labels &&
-                    Object.keys(dataset.labels).length) {
+                if (instance.labels &&
+                    Object.keys(instance.labels).length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(dataset.labels).length} labels found for BigQuery dataset`, region, resource);
+                        `${Object.keys(instance.labels).length} labels found for BigTable instance`, region, instance.name);
                 } else {
                     helpers.addResult(results, 2,
-                        'BigQuery dataset does not have any labels', region, resource);
+                        'BigTable instance does not have any labels', region, instance.name);
                 }
             });
 
