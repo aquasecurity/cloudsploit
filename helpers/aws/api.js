@@ -186,6 +186,15 @@ var calls = {
             paginate: 'nextToken'
         }
     },
+    CognitoIdentityServiceProvider: {
+        listUserPools: {
+            property: 'UserPools',
+            paginate: 'NextToken',
+            params: {
+                MaxResults: 60
+            }
+        },
+    },
     CodePipeline: {
         listPipelines: {
             property: 'pipelines',
@@ -1512,6 +1521,14 @@ var postcalls = [
             },
             sendIntegration: {
                 enabled: true
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
             }
         },
         EC2: {

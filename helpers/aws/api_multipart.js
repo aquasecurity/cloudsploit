@@ -1111,7 +1111,16 @@ var calls = [
                 property: 'infrastructureConfigurationSummaryList',
                 paginate: 'nextToken'
             }
-        }
+        },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100
+                }
+            },
+        },
     }
 ];
 
@@ -2237,6 +2246,14 @@ var postcalls = [
                 reliesOnCall: 'listImageRecipes',
                 filterKey: 'imageRecipeArn',
                 filterValue: 'arn'
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
             }
         },
     },
