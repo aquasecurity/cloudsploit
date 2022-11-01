@@ -2067,7 +2067,6 @@ var postcalls = [
                 reliesOnCall: 'listUserPools',
                 override: true
             }
-
         },
         GuardDuty: {
             getDetector: {
