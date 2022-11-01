@@ -67,7 +67,7 @@ module.exports = {
 
             for (var sshkey of listSSHPublicKeys.data.SSHPublicKeys) {
 
-                if (sshkey.Status && sshkey.Status ==='Active') {
+                if (sshkey.Status && sshkey.Status === 'Active') {
                     var keyDate = new Date(sshkey.UploadDate);
                     var daysOld = helpers.daysAgo(keyDate);
                     var returnMsg = `SSH key with ID: ${sshkey.SSHPublicKeyId} is ${daysOld} days old`;
