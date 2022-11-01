@@ -25,10 +25,12 @@ module.exports = {
                 helpers.addResult(results, 3,  'Unable to query Cognito user pools: ' + helpers.addError(userPools), region);
                 return rcb();
             }
+
             if (!userPools.data.length){
                 helpers.addResult(results, 0, 'No Cognito user pools found', region);
                 return rcb();
             }
+
             for (let userPool of userPools.data) {
                 if (!userPool.Id) continue;
 
