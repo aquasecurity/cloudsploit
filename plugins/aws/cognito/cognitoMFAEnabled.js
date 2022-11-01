@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Cognito User Pool MFA enabled',
     category: 'Cognito',
-    domain: 'Identity Service Provider',
+    domain: 'Identity and Access Management',
     description: 'Ensure that Cognito user pool has MFA enabled.',
     more_info: 'Enabling Multi-factor authentication (MFA) increases security for your app. You can choose SMS text messages or time-based one-time passwords (TOTP) as second factors to sign in your users.',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa.html',
