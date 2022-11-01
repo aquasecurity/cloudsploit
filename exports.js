@@ -597,6 +597,7 @@ module.exports = {
 
         'ecsContainerInsightsEnabled'   : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
+        'ecsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ecs/ecsEncryptionEnabled.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
