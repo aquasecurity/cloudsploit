@@ -198,16 +198,13 @@ var calls = {
     CodePipeline: {
         listPipelines: {
             property: 'pipelines',
-            paginate: 'nextToken',
+            paginate: 'nextToken'
         }
     },
     ComputeOptimizer: {
         getRecommendationSummaries : {
             property: 'recommendationSummaries',
-            paginate: 'nextToken',
-            params: {
-                MaxResults: 50
-            }
+            paginate: 'nextToken'
         }
     },
     Comprehend: {
