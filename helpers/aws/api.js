@@ -1523,6 +1523,14 @@ var postcalls = [
                 enabled: true
             }
         },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
+            }
+        },
         EC2: {
             describeSubnets: {
                 reliesOnService: 'ec2',

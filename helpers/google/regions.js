@@ -81,7 +81,8 @@ module.exports = {
     instances: {
         compute: regions,
         sql: ['global'],
-        spanner: ['global']
+        spanner: ['global'],
+        bigtable:['global']
     },
     instanceGroupManagers: regions,
     functions: [
@@ -98,7 +99,10 @@ module.exports = {
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
-    clusters: ['global'],
+    clusters: {
+        dataproc: regions,
+        kubernetes: ['global']
+    },
     managedZones: ['global'],
     metrics: ['global'],
     alertPolicies: ['global'],

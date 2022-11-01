@@ -43,9 +43,9 @@ module.exports = {
             }
             
             if (!getRole.data.Role.Tags || !getRole.data.Role.Tags.length) {
-                helpers.addResult(results, 2, 'IAM Role does not have tags', role.Arn);
+                helpers.addResult(results, 2, 'IAM Role does not have tags', 'global', role.Arn);
             } else {
-                helpers.addResult(results, 0, 'IAM Role has tags', role.Arn);
+                helpers.addResult(results, 0, 'IAM Role has tags', 'global', role.Arn);
             } 
 
         }

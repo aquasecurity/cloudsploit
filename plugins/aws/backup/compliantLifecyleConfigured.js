@@ -54,7 +54,7 @@ module.exports = {
                     continue;
                 }
                 
-                let found = getBackupPlan.data.BackupPlan.Rules.find(rule => rule.Lifecycle.DeleteAfterDays && rule.Lifecycle.MoveToColdStorageAfterDays);
+                let found = getBackupPlan.data.BackupPlan.Rules.find(rule => rule.Lifecycle && rule.Lifecycle.DeleteAfterDays && rule.Lifecycle.MoveToColdStorageAfterDays);
                 if (found) {
                     helpers.addResult(results, 0,
                         'Backup plan has lifecycle configuration enabled', region, resource);

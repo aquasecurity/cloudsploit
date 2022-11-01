@@ -70,7 +70,7 @@ module.exports = {
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
 
-            if (bucketLocation !== region && !regions.includes(bucketLocation)) return;
+            if (bucketLocation !== region && !regions.all.includes(bucketLocation)) return;
 
             var getBucketInfo = helpers.addSource(cache, source,
                 ['oss', 'getBucketInfo', region, bucket.name]);

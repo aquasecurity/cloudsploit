@@ -95,6 +95,14 @@ var calls = {
                 paginationKey: 'pageSize'
             }
         },
+        bigtable: {
+            list: {
+                url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
+                location: null,
+                pagination: true,
+                paginationKey: 'pageToken'
+            }  
+        },
         manyApi: true,
     },
     instanceTemplates: {
@@ -196,11 +204,21 @@ var calls = {
         }
     },
     clusters: {
-        list: {
-            url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
-            location: null,
-            pagination: false
-        }
+        kubernetes: {
+            list: {
+                url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
+                location: null,
+                pagination: false
+            }
+        },
+        dataproc: {
+            list: {
+                url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
+                location: 'region',
+                pagination: true
+            }
+        },
+        manyApi: true
     },
     managedZones: {
         list: {

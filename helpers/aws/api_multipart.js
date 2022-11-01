@@ -2253,6 +2253,14 @@ var postcalls = [
                 filterValue: 'arn'
             }
         },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
+            }
+        },
     },
 ];
 
