@@ -47,7 +47,7 @@ describe('cognitoHasWafEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query api');
+                expect(results[0].message).to.include('Unable to query Cognito user pools:');
                 done()
             };
 
@@ -60,7 +60,7 @@ describe('cognitoHasWafEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No User pool found');
+                expect(results[0].message).to.include('No Cognito user pools found');
                 done();
             };
             const cache = createCache([], null);
@@ -72,7 +72,7 @@ describe('cognitoHasWafEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for wafv2 api');
+                expect(results[0].message).to.include('Unable to get WebACL resource for cognito user pool');
                 done();
             };
 
@@ -85,7 +85,7 @@ describe('cognitoHasWafEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('User pool has WAFV2 enabled');
+                expect(results[0].message).to.include('Cognito User pool has WAFV2 enabled');
                 done();
             };
 
@@ -98,7 +98,7 @@ describe('cognitoHasWafEnabled', function () {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
                     expect(results[0].region).to.equal('us-east-1');
-                    expect(results[0].message).to.include('User pool does not have WAFV2 enabled');
+                    expect(results[0].message).to.include('Cognito User pool does not have WAFV2 enabled');
                     done();
                 };
 
