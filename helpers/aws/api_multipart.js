@@ -1117,7 +1117,7 @@ var calls = [
                 property: 'UserPools',
                 paginate: 'NextToken',
                 params: {
-                    MaxResults: 100
+                    MaxResults: 60
                 }
             },
         },
@@ -1713,6 +1713,11 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getWebACLForCognitoUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
             }
         },
         ECS: {
