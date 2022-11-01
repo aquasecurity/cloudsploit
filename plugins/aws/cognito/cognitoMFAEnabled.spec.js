@@ -58,7 +58,7 @@ describe('cognitoMFAEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query api:');
+                expect(results[0].message).to.include('Unable to query Cognito user pools:');
                 done()
             };
 
@@ -71,7 +71,7 @@ describe('cognitoMFAEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No User pool found');
+                expect(results[0].message).to.include('No Cognito user pool found');
                 done();
             };
             const cache = createCache([], null);
@@ -83,7 +83,7 @@ describe('cognitoMFAEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for Cognito');
+                expect(results[0].message).to.include('Unable to describe Cognito user pool');
                 done();
             };
 
@@ -96,7 +96,7 @@ describe('cognitoMFAEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Cognito has MFA enabled');
+                expect(results[0].message).to.include('User pool has MFA enabled');
                 done();
             };
 
@@ -109,7 +109,7 @@ describe('cognitoMFAEnabled', function () {
                     expect(results.length).to.equal(1);
                     expect(results[0].status).to.equal(2);
                     expect(results[0].region).to.equal('us-east-1');
-                    expect(results[0].message).to.include('Cognito does not have MFA enabled');
+                    expect(results[0].message).to.include('User pool does not have MFA enabled');
                     done();
                 };
 

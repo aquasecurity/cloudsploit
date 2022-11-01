@@ -44,9 +44,9 @@ module.exports = {
                 }
 
                 if (describeUserPool.data.UserPool.MfaConfiguration && describeUserPool.data.UserPool.MfaConfiguration.toUpperCase() == 'ON'){
-                    helpers.addResult(results, 0, 'Cognito has MFA enabled', region, describeUserPool.data.Arn);
+                    helpers.addResult(results, 0, 'User pool has MFA enabled', region, describeUserPool.data.Arn);
                 } else {
-                    helpers.addResult(results, 2, 'Cognito does not have MFA enabled', region, describeUserPool.data.Arn);
+                    helpers.addResult(results, 2, 'User pool does not have MFA enabled', region, describeUserPool.data.Arn);
                 }
             }
 
