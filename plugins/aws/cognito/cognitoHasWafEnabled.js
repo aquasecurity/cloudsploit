@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'COgnito UserPool Has WAF Enabled',
+    title: 'Cognito User Pool Has WAF Enabled',
     category: 'CognitoIdentityServiceProvider',
     domain: 'Identity Service Provider',
-    description: 'Ensure that Cognito UserPool has WAF enabled.',
+    description: 'Ensure that Cognito User Pool has WAF enabled.',
     more_info: 'Enabling WAF allows control over requests to the load balancer, allowing or denying traffic based off rules in the Web ACL.',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable WAF from properties ',
@@ -35,7 +35,6 @@ module.exports = {
                 return rcb();
             }
             for (let userPool of userPools.data) {
-                
                 if (!userPool.Id) continue;
 
                 var webACLResource = helpers.addSource(cache, source,
@@ -44,7 +43,6 @@ module.exports = {
                 if (!webACLResource || webACLResource.err || !webACLResource.data){
                     helpers.addResult(results, 3,
                         'Unable to query for wafv2 api: ' + helpers.addError(webACLResource), region);
-
                     continue;
                 }
                 var arn = 'arn:' + awsOrGov + ':cognito-idp:' + region + ':' + accountId + ':userpool/' + userPool.Id;
