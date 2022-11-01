@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Dataproc clusters have encryption enabled using desired protection level.',
     more_info: 'By default, all dataproc clusters are encrypted using Google-managed keys. To have better control over how your dataproc clusters are encrypted, you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/customer-managed-encryption',
-    recommended_action: 'Ensure that all dataproc clusters have desired encryption level.',
+    recommended_action: 'Ensure that all Dataproc clusters have desired encryption level.',
     apis: ['clusters:dataproc:list', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         dataproc_cluster_encryption_level: {
@@ -61,12 +61,12 @@ module.exports = {
                     if (!clusters) return rcb();
 
                     if (clusters.err || !clusters.data) {
-                        helpers.addResult(results, 3, 'Unable to query dataproc clusters: ' + helpers.addError(clusters), region, null, null, clusters.err);
+                        helpers.addResult(results, 3, 'Unable to query Dataproc clusters: ' + helpers.addError(clusters), region, null, null, clusters.err);
                         return rcb();
                     }
 
                     if (!clusters.data.length) {
-                        helpers.addResult(results, 0, 'No dataproc clusters found', region);
+                        helpers.addResult(results, 0, 'No Dataproc clusters found', region);
                         return rcb();
                     }
                     

@@ -95,7 +95,7 @@ describe('dataprocClusterEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query dataproc clusters');
+                expect(results[0].message).to.include('Unable to query Dataproc clusters');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
@@ -109,7 +109,7 @@ describe('dataprocClusterEncryption', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No dataproc clusters found');
+                expect(results[0].message).to.include('No Dataproc clusters found');
                 expect(results[0].region).to.equal('us-central1');
                 done()
             };
