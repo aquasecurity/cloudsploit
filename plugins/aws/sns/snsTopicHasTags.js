@@ -38,14 +38,13 @@ module.exports = {
                 var listTagsForResource = helpers.addSource(cache, source,
                     ['sns', 'listTagsForResource', region, topic.TopicArn]);
 
-                console.log(listTagsForResource)
                 if (!listTagsForResource || listTagsForResource.err || !listTagsForResource.data) {
                     helpers.addResult(results, 3,
                         'Unable to query SNS topic attributes: ' + helpers.addError(listTagsForResource),
                         region, topic.TopicArn);
                     continue;
                 }
-                if(!listTagsForResource.data.Tags || !listTagsForResource.data.Tags.length){
+                if (!listTagsForResource.data.Tags || !listTagsForResource.data.Tags.length){
                     helpers.addResult(results, 2, 'SNS Topic does not have tags', region, topic.TopicArn);
                 } else {
                     helpers.addResult(results, 0, 'SNS Topic has tags', region, topic.TopicArn);
