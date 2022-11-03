@@ -201,22 +201,19 @@ var calls = {
             pagination: false
         }
     },
-    clusters: {
-        kubernetes: {
-            list: {
-                url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
-                location: null,
-                pagination: false
-            }
-        },
-        dataproc: {
-            list: {
-                url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
-                location: 'region',
-                pagination: true
-            }
-        },
-        manyApi: true
+    kubernetes: {
+        list: {
+            url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
+            location: null,
+            pagination: false
+        }
+    },
+    dataproc: {
+        list: {
+            url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
+            location: 'region',
+            pagination: true
+        }
     },
     managedZones: {
         list: {

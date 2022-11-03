@@ -97,10 +97,8 @@ module.exports = {
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
-    clusters: {
-        dataproc: regions,
-        kubernetes: ['global']
-    },
+    dataproc: regions,
+    kubernetes: ['global'],
     managedZones: ['global'],
     metrics: ['global'],
     alertPolicies: ['global'],
