@@ -19,7 +19,7 @@ module.exports = {
         async.each(regions.ecr, function(region, rcb) {
             var describeRepositories = helpers.addSource(cache, source,
                 ['ecr', 'describeRepositories', region]);
-             console.log(describeRepositories.data)
+
             if (!describeRepositories) return rcb();
 
             if (describeRepositories.err || !describeRepositories.data) {
@@ -29,15 +29,16 @@ module.exports = {
                 return rcb();
             }
 
-            if (describeRepositories.data.length === 0) {
+            if (!describeRepositories.data.length) {
                 helpers.addResult(results, 0, 'No ECR repositories present', region);
                 return rcb();
             }
+
             for (let repo of describeRepositories.data) {
-                if(!repo.repositoryArn) continue;
+                if (!repo.repositoryArn) continue;
 
                 var listTagsForResource = helpers.addSource(cache, source,
-                ['ecr', 'listTagsForResource', region, repo.repositoryArn]);
+                    ['ecr', 'listTagsForResource', region, repo.repositoryArn]);
 
                 if (!listTagsForResource || listTagsForResource.err || !listTagsForResource.data) {
                     
@@ -45,7 +46,12 @@ module.exports = {
                         'Unable to list tags for resources: ' + helpers.addError(listTagsForResource), region, repo.repositoryArn);
                     continue;
                 }
-                
+
+                if (!listTagsForResource.data.Tags || !listTagsForResource.data.Tags.length){
+                    helpers.addResult(results, 2, 'ECR repositories does not have tags', region, repo.repositoryArn);
+                } else {
+                    helpers.addResult(results, 0, 'ECR repositories has tags', region, repo.repositoryArn);
+                }
             }
 
             rcb();
