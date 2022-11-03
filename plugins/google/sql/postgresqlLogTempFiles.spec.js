@@ -4,7 +4,6 @@ var plugin = require('./postgresqlLogTempFiles');
 
 const createCache = (err, data) => {
     return {
-        instances: {
             sql: {
                 list: {
                     'global': {
@@ -12,7 +11,6 @@ const createCache = (err, data) => {
                         data: data
                     }
                 }
-            }
         },
         projects: {
             get: {

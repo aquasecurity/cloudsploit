@@ -67,35 +67,33 @@ var calls = {
             pagination: true
         }
     },
-    instances: {
-        compute: { 
-            list: {
-                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
-                location: 'zone',
-                pagination: true
-            },
-            aggregatedList: {
-                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
-                location: null,
-                pagination: true
-            }
+    compute: { 
+        list: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
+            location: 'zone',
+            manyApi: false,
+            pagination: true
         },
-        sql: {
-            list: {
-                url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
-                location: null,
-                pagination: true
-            }
-        },
-        spanner: {
-            list: {
-                url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
-                location: null,
-                pagination: true,
-                paginationKey: 'pageSize'
-            }
-        },
-        manyApi: true,
+        aggregatedList: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
+            location: null,
+            pagination: true
+        }
+    },
+    sql: {
+        list:{
+            url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
+            location: null,
+            pagination: true
+        }
+    },   
+    spanner: {
+        list:{
+            url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
+            location: null,
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
     },
     instanceTemplates: {
         list: {
@@ -354,8 +352,7 @@ var postcalls = {
         list: {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances/{name}/users',
             location: null,
-            reliesOnService: ['instances'],
-            reliesOnSubService: ['sql'],
+            reliesOnService: ['sql'],
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true //needs to be verified with multiple users
@@ -365,8 +362,7 @@ var postcalls = {
         list: {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances/{name}/backupRuns',
             location: null,
-            reliesOnService: ['instances'],
-            reliesOnSubService: ['sql'],
+            reliesOnService: ['sql'],
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true
