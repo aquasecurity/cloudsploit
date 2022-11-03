@@ -19,7 +19,6 @@ module.exports = {
         async.each(regions.sns, function(region, rcb){
             var listTopics = helpers.addSource(cache, source,
                 ['sns', 'listTopics', region]);
-            console.log(listTopics);
             if (!listTopics) return rcb();
 
             if (listTopics.err || !listTopics.data) {
@@ -35,7 +34,6 @@ module.exports = {
 
             for (let topic of listTopics.data){
                 if (!topic.TopicArn) continue;
-            console.log(topic.TopicArn)
 
                 var listTagsForResource = helpers.addSource(cache, source,
                     ['sns', 'listTagsForResource', region, topic.TopicArn]);
