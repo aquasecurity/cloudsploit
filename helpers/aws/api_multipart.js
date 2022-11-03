@@ -2019,6 +2019,12 @@ var postcalls = [
                 reliesOnCall: 'listTopics',
                 filterKey: 'TopicArn',
                 filterValue: 'TopicArn'
+            },
+            listTagsForResource: {
+                reliesOnService: 'sns',
+                reliesOnCall: 'listTopics',
+                filterKey: 'ResourceArn',
+                filterValue: 'TopicArn'
             }
         },
         SQS: {
