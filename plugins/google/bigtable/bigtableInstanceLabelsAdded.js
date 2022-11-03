@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/bigtable/docs/creating-managing-labels',
     recommended_action: 'Ensure labels are added to all BigTable instances.',
-    apis: ['instances:bigtable:list'],
+    apis: ['bigtable:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -25,9 +25,9 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        async.each(regions.instances.bigtable, function(region, rcb){
+        async.each(regions.bigtable, function(region, rcb){
             let instances =  helpers.addSource(
-                cache, source, ['instances', 'bigtable', 'list', region]);
+                cache, source, ['bigtable', 'list', region]);
 
             if (!instances) return rcb();
 
