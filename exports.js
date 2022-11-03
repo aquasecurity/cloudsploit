@@ -8,6 +8,7 @@ module.exports = {
         'acmValidation'                 : require(__dirname + '/plugins/aws/acm/acmValidation.js'),
         'acmCertificateExpiry'          : require(__dirname + '/plugins/aws/acm/acmCertificateExpiry.js'),
         'acmSingleDomainNameCertificate': require(__dirname + '/plugins/aws/acm/acmSingleDomainNameCertificate.js'),
+        'acmCertificateHasTags'         : require(__dirname + '/plugins/aws/acm/acmCertificateHasTags.js'),
       
         'appmeshVGAccessLogging'        : require(__dirname + '/plugins/aws/appmesh/appmeshVGAccessLogging.js'),
       
@@ -84,6 +85,7 @@ module.exports = {
         'cloudtrailS3Bucket'            : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailS3Bucket.js'),
         'globalLoggingDuplicated'       : require(__dirname + '/plugins/aws/cloudtrail/globalLoggingDuplicated.js'),
         'cloudtrailNotificationsEnabled': require(__dirname + '/plugins/aws/cloudtrail/cloudtrailNotificationsEnabled.js'),
+        'cloudtrailHasTags'             : require(__dirname + '/plugins/aws/cloudtrail/cloudtrailHasTags.js'),       
 
         'ec2InstancesOptimized'         : require(__dirname + '/plugins/aws/computeoptimizer/ec2InstancesOptimized.js'),
         'lambdaFunctionsOptimized'      : require(__dirname + '/plugins/aws/computeoptimizer/lambdaFunctionsOptimized.js'),
@@ -108,6 +110,7 @@ module.exports = {
         'daxClusterEncryption'          : require(__dirname + '/plugins/aws/dynamodb/daxClusterEncryption.js'),
         'dynamoContinuousBackups'       : require(__dirname + '/plugins/aws/dynamodb/dynamoContinuousBackups.js'),
         'dynamoTableBackupExists'       : require(__dirname + '/plugins/aws/dynamodb/dynamoTableBackupExists.js'),
+        'dynamoTableHasTags'            : require(__dirname + '/plugins/aws/dynamodb/dynamoTableHasTags.js'),
 
         'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
 
@@ -158,6 +161,7 @@ module.exports = {
         'overlappingSecurityGroups'     : require(__dirname + '/plugins/aws/ec2/overlappingSecurityGroups.js'),
         'publicAmi'                     : require(__dirname + '/plugins/aws/ec2/publicAmi.js'),
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
+        'amiHasTags'                    : require(__dirname + '/plugins/aws/ec2/amiHasTags.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsBackupEnabled'              : require(__dirname + '/plugins/aws/ec2/ebsBackupEnabled.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
@@ -204,6 +208,9 @@ module.exports = {
         'ec2HasTags'                    : require(__dirname + '/plugins/aws/ec2/ec2HasTags.js'),
         'securityGroupHasTags'          : require(__dirname + '/plugins/aws/ec2/securityGroupsHasTags.js'),
         'vpcHasTags'                    : require(__dirname + '/plugins/aws/ec2/vpcHasTags'),
+        'ebsSnapshotHasTags'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotHasTags.js'),
+        'networkAclHasTags'             : require(__dirname + '/plugins/aws/ec2/networkAclHasTags.js'),
+        'ebsVolumeHasTags'              : require(__dirname + '/plugins/aws/ec2/ebsVolumeHasTags.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
@@ -240,6 +247,7 @@ module.exports = {
         'classicELBInUse'               : require(__dirname + '/plugins/aws/elb/classicELBInUse.js'),
         'connectionDrainingEnabled'     : require(__dirname + '/plugins/aws/elb/connectionDrainingEnabled.js'),
         'appTierElbSecurity'            : require(__dirname + '/plugins/aws/elb/appTierElbSecurity.js'),
+        'elbHasTags'                    : require(__dirname + '/plugins/aws/elb/elbHasTags.js'),
 
         'elbv2DeletionProtection'       : require(__dirname + '/plugins/aws/elbv2/elbv2DeletionProtection.js'),
         'elbv2LoggingEnabled'           : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
@@ -250,6 +258,7 @@ module.exports = {
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
+        'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
@@ -588,6 +597,9 @@ module.exports = {
 
         'ecsContainerInsightsEnabled'   : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
+
+        'cognitoHasWafEnabled'          : require(__dirname + '/plugins/aws/cognito/cognitoHasWafEnabled.js'),
+        'cognitoMFAEnabled'             : require(__dirname + '/plugins/aws/cognito/cognitoMFAEnabled.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -1183,7 +1195,13 @@ module.exports = {
         'trustedImageProjects'          : require(__dirname + '/plugins/google/cloudresourcemanager/trustedImageProjects.js'),
         'skipDefaultNetworkCreation'    : require(__dirname + '/plugins/google/cloudresourcemanager/skipDefaultNetworkCreation.js'),
         'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js'),
-        'disableServiceAccountCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js')
+        'disableServiceAccountCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js'),
+
+        'dataprocClusterLabelsAdded'    : require(__dirname + '/plugins/google/dataproc/dataprocClusterLabelsAdded.js'),
+        'hadoopSecureModeEnabled'       : require(__dirname + '/plugins/google/dataproc/hadoopSecureModeEnabled.js'),
+        'dataprocClusterEncryption'     : require(__dirname + '/plugins/google/dataproc/dataprocClusterEncryption.js'),
+        
+        'bigtableInstanceLabelsAdded'   : require(__dirname + '/plugins/google/bigtable/bigtableInstanceLabelsAdded.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

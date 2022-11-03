@@ -1111,7 +1111,16 @@ var calls = [
                 property: 'infrastructureConfigurationSummaryList',
                 paginate: 'nextToken'
             }
-        }
+        },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 60
+                }
+            },
+        },
     }
 ];
 
@@ -1704,6 +1713,11 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getWebACLForCognitoUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
             }
         },
         ECS: {
@@ -2237,6 +2251,14 @@ var postcalls = [
                 reliesOnCall: 'listImageRecipes',
                 filterKey: 'imageRecipeArn',
                 filterValue: 'arn'
+            }
+        },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
             }
         },
     },
