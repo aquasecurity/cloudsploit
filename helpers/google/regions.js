@@ -32,6 +32,12 @@ var regions = [
     'australia-southeast2',         // Melbourne
 ];
 
+var artifactRegions = [
+    'us',
+    'europe',
+    'asia'
+];
+
 
 var zones = {
     'us-east1'                      : ['us-east1-b', 'us-east1-c', 'us-east1-d'],
@@ -71,6 +77,7 @@ module.exports = {
     zones: zones,
     disks: ['global', ...regions],
     images: ['global'],
+    repositories: [...regions, ...artifactRegions],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
