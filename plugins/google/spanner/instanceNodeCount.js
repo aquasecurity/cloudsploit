@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The number of provisioned Cloud Spanner instance nodes must be under desired limit to avoid reaching the limit and exceeding the set budget.',
     link: 'https://cloud.google.com/spanner/docs/instances',
     recommended_action: 'Modify Spanner instances to decrease number of nodes',
-    apis: ['instances:spanner:list'],
+    apis: ['spanner:list'],
     settings: {
         spanner_allowed_instance_node_count: {
             name: 'Spanner Allowed Instance Node Count',
@@ -28,9 +28,9 @@ module.exports = {
             spanner_allowed_instance_node_count: parseInt(settings.spanner_allowed_instance_node_count || this.settings.spanner_allowed_instance_node_count.default)
         };
 
-        async.each(regions.instances.spanner, function(region, rcb){
+        async.each(regions.spanner, function(region, rcb){
             let instances = helpers.addSource(cache, source,
-                ['instances', 'spanner', 'list', region]);
+                ['spanner', 'list', region]);
 
             if (!instances) return rcb();
 

@@ -78,12 +78,10 @@ module.exports = {
     snapshots: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
-    instances: {
-        compute: regions,
-        sql: ['global'],
-        spanner: ['global'],
-        bigtable:['global']
-    },
+    compute: regions,
+    sql: ['global'],
+    spanner: ['global'],
+    bigtable:['global'],
     instanceGroupManagers: regions,
     functions: [
         'us-east1', 'us-east4', 'us-west2', 'us-west3', 'us-west4', 'us-central1', 'northamerica-northeast1', 'southamerica-east1',
@@ -99,10 +97,8 @@ module.exports = {
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
-    clusters: {
-        dataproc: regions,
-        kubernetes: ['global']
-    },
+    dataproc: regions,
+    kubernetes: ['global'],
     managedZones: ['global'],
     metrics: ['global'],
     alertPolicies: ['global'],

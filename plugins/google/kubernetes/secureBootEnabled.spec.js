@@ -4,13 +4,11 @@ var plugin = require('./secureBootEnabled');
 
 const createCache = (err, data) => {
     return {
-        clusters: {
-            kubernetes: {
+        kubernetes: {
                 list: {
                     'global': {
                         err: err,
                         data: data
-                    }
                 }
             }
         },
