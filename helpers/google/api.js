@@ -11,16 +11,6 @@ var calls = {
             pagination: true
         }
     },
-    repositories: {
-        list: {
-            url: 'https://artifactregistry.googleapis.com/v1/projects/{projectId}/locations/{locationId}/repositories',
-            location: 'region',
-            pagination: true
-        },
-        sendIntegration: {
-            enabled: true
-        }
-    },
     images: {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
@@ -56,43 +46,41 @@ var calls = {
             pagination: true
         }
     },
-    instances: {
-        compute: {
-            list: {
-                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
-                location: 'zone',
-                pagination: true
-            },
-            aggregatedList: {
-                url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
-                location: null,
-                pagination: true
-            }
+    compute: { 
+        list: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
+            location: 'zone',
+            manyApi: false,
+            pagination: true
         },
-        sql: {
-            list: {
-                url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
-                location: null,
-                pagination: true
-            }
-        },
-        spanner: {
-            list: {
-                url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
-                location: null,
-                pagination: true,
-                paginationKey: 'pageSize'
-            }
-        },
-        bigtable: {
-            list: {
-                url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
-                location: null,
-                pagination: true,
-                paginationKey: 'pageToken'
-            }
-        },
-        manyApi: true,
+        aggregatedList: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
+            location: null,
+            pagination: true
+        }
+    },
+    sql: {
+        list: {
+            url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
+            location: null,
+            pagination: true
+        }
+    },
+    spanner: {
+        list: {
+            url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
+            location: null,
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
+    },
+    bigtable: {
+        list: {
+            url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
+            location: null,
+            pagination: true,
+            paginationKey: 'pageToken'
+        }
     },
     instanceTemplates: {
         list: {
@@ -121,9 +109,6 @@ var calls = {
             location: 'region',
             paginationKey: 'pageSize',
             pagination: true
-        },
-        sendIntegration: {
-            enabled: true
         }
     },
     keyRings: {
@@ -195,22 +180,19 @@ var calls = {
             pagination: false
         }
     },
-    clusters: {
-        kubernetes: {
-            list: {
-                url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
-                location: null,
-                pagination: false
-            }
-        },
-        dataproc: {
-            list: {
-                url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
-                location: 'region',
-                pagination: true
-            }
-        },
-        manyApi: true
+    kubernetes: {
+        list: {
+            url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
+            location: null,
+            pagination: false
+        }
+    },
+    dataproc: {
+        list: {
+            url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
+            location: 'region',
+            pagination: true
+        }
     },
     managedZones: {
         list: {
@@ -241,7 +223,7 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-
+            
         }
     },
     sinks: {
@@ -269,16 +251,16 @@ var calls = {
     topics: {
         list: {
             url: 'https://pubsub.googleapis.com/v1/projects/{projectId}/topics',
-            location: null,
+            location: null, 
             pagination: true,
             paginationKey: 'pageSize'
-
+            
         }
     },
     subscriptions: {
         list: {
             url: 'https://pubsub.googleapis.com/v1/projects/{projectId}/subscriptions',
-            location: null,
+            location: null, 
             pagination: true,
             paginationKey: 'pageSize'
         }
@@ -286,7 +268,7 @@ var calls = {
     jobs: {
         list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             url: 'https://dataflow.googleapis.com/v1b3/projects/{projectId}/locations/{locationId}/jobs',
-            location: 'region',
+            location: 'region', 
             pagination: true,
             paginationKey: 'pageSize'
         }
@@ -294,8 +276,8 @@ var calls = {
     deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
         list: {
             url: 'https://www.googleapis.com/deploymentmanager/v2/projects/{projectId}/global/deployments',
-            location: null,
-            pagination: true,
+            location: null, 
+            pagination: true,            
         }
     },
     organizations:{ // https://cloudresourcemanager.googleapis.com/v1beta1/organizations
@@ -357,15 +339,14 @@ var postcalls = {
             reliesOnService: ['serviceAccounts'],
             reliesOnCall: ['list'],
             properties: ['name'],
-            pagination: false
+            pagination: false        
         }
     },
     users: {
         list: {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances/{name}/users',
             location: null,
-            reliesOnService: ['instances'],
-            reliesOnSubService: ['sql'],
+            reliesOnService: ['sql'],
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true //needs to be verified with multiple users
@@ -375,8 +356,7 @@ var postcalls = {
         list: {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances/{name}/backupRuns',
             location: null,
-            reliesOnService: ['instances'],
-            reliesOnSubService: ['sql'],
+            reliesOnService: ['sql'],
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true
@@ -409,7 +389,7 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId'],
-            method: 'POST',
+            method: 'POST', 
             pagination: false
         },
         listOrgPolicies: {
@@ -417,7 +397,7 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId'],
-            method: 'POST',
+            method: 'POST', 
             pagination: true,
             paginationKey: 'pageSize'
         },
@@ -446,7 +426,6 @@ var postcalls = {
         }
     }
 };
-
 var tertiarycalls = {
     cryptoKeys: {
         getIamPolicy: {
@@ -455,8 +434,8 @@ var tertiarycalls = {
             reliesOnService: ['cryptoKeys'],
             reliesOnCall: ['list'],
             properties: ['name'],
-        }
-    }
+        }    
+    },
 };
 
 module.exports = {
