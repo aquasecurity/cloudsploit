@@ -10,7 +10,7 @@ module.exports = {
         'If this no value is set for max_connections flag, instance assumes default value which is calculated per instance memory size.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
-    apis: ['instances:sql:list'],
+    apis: ['sql:list'],
     settings: {
         min_postgres_max_connections: {
             name: 'Minimum PostgreSQL Max Connections',
@@ -53,9 +53,9 @@ module.exports = {
         config.maxConnections = parseInt(config.maxConnections);
         config.allow_default = (config.allow_default == 'true');
 
-        async.each(regions.instances.sql, function(region, rcb){
+        async.each(regions.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['instances', 'sql', 'list', region]);
+                cache, source, ['sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

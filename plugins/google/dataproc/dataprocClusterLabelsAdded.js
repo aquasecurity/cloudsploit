@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/dataproc/docs/guides/creating-managing-labels',
     recommended_action: 'Ensure labels are added to all Dataproc clusters.',
-    apis: ['clusters:dataproc:list'],
+    apis: ['dataproc:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters.dataproc, function(region, rcb){
+        async.each(regions.dataproc, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'dataproc', 'list', region]);
+                ['dataproc' ,'list', region]);
 
             if (!clusters) return rcb();
 
