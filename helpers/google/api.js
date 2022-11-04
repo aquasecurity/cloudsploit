@@ -11,6 +11,16 @@ var calls = {
             pagination: true
         }
     },
+    repositories: {
+        list: {
+            url: 'https://artifactregistry.googleapis.com/v1/projects/{projectId}/locations/{locationId}/repositories',
+            location: 'region',
+            pagination: true
+        },
+        sendIntegration: {
+            enabled: true
+        }
+    },
     images: {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
@@ -109,6 +119,9 @@ var calls = {
             location: 'region',
             paginationKey: 'pageSize',
             pagination: true
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     keyRings: {
@@ -223,7 +236,6 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-            
         }
     },
     sinks: {
@@ -251,16 +263,15 @@ var calls = {
     topics: {
         list: {
             url: 'https://pubsub.googleapis.com/v1/projects/{projectId}/topics',
-            location: null, 
+            location: null,
             pagination: true,
             paginationKey: 'pageSize'
-            
         }
     },
     subscriptions: {
         list: {
             url: 'https://pubsub.googleapis.com/v1/projects/{projectId}/subscriptions',
-            location: null, 
+            location: null,
             pagination: true,
             paginationKey: 'pageSize'
         }
@@ -268,7 +279,7 @@ var calls = {
     jobs: {
         list: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs:list
             url: 'https://dataflow.googleapis.com/v1b3/projects/{projectId}/locations/{locationId}/jobs',
-            location: 'region', 
+            location: 'region',
             pagination: true,
             paginationKey: 'pageSize'
         }
@@ -276,8 +287,8 @@ var calls = {
     deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
         list: {
             url: 'https://www.googleapis.com/deploymentmanager/v2/projects/{projectId}/global/deployments',
-            location: null, 
-            pagination: true,            
+            location: null,
+            pagination: true,
         }
     },
     organizations:{ // https://cloudresourcemanager.googleapis.com/v1beta1/organizations
@@ -339,7 +350,7 @@ var postcalls = {
             reliesOnService: ['serviceAccounts'],
             reliesOnCall: ['list'],
             properties: ['name'],
-            pagination: false        
+            pagination: false
         }
     },
     users: {
@@ -389,7 +400,7 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId'],
-            method: 'POST', 
+            method: 'POST',
             pagination: false
         },
         listOrgPolicies: {
@@ -397,7 +408,7 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId'],
-            method: 'POST', 
+            method: 'POST',
             pagination: true,
             paginationKey: 'pageSize'
         },
@@ -434,8 +445,8 @@ var tertiarycalls = {
             reliesOnService: ['cryptoKeys'],
             reliesOnCall: ['list'],
             properties: ['name'],
-        }    
-    },
+        }
+    }
 };
 
 module.exports = {
