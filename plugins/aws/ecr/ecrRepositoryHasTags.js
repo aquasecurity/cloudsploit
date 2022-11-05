@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ECR Has Tags',
+    title: 'ECR Repository Has Tags',
     category: 'ECR',
     domain: 'Containers',
     description: 'Ensure that ECR repositories have tags.',
