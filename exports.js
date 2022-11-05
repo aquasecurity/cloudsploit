@@ -571,6 +571,7 @@ module.exports = {
         'backupNotificationEnabled'     : require(__dirname + '/plugins/aws/backup/backupNotificationEnabled.js'),
         'backupDeletionProtection'      : require(__dirname + '/plugins/aws/backup/backupDeletionProtection.js'),
         'compliantLifecyleConfigured'   : require(__dirname + '/plugins/aws/backup/compliantLifecyleConfigured.js'),
+        'backupVaultHasTags'            : require(__dirname + '/plugins/aws/backup/backupVaultHasTags.js'),
 
         'equipmentdatasetEncrypted'     : require(__dirname + '/plugins/aws/lookout/equipmentdatasetEncrypted.js'),
 
