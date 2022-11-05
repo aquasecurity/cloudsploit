@@ -23,8 +23,7 @@ module.exports = {
             if (!describeRepositories) return rcb();
 
             if (describeRepositories.err || !describeRepositories.data) {
-                helpers.addResult(
-                    results, 3,
+                helpers.addResult(results, 3,
                     'Unable to query for ECR repositories: ' + helpers.addError(describeRepositories), region);
                 return rcb();
             }
@@ -46,8 +45,7 @@ module.exports = {
                         'Unable to list tags for resources: ' + helpers.addError(listTagsForResource), region, repo.repositoryArn);
                     continue;
                 }
-
-                if (!listTagsForResource.data.Tags || !listTagsForResource.data.Tags.length){
+                if (!listTagsForResource.data.tags || !listTagsForResource.data.tags.length){
                     helpers.addResult(results, 2, 'ECR repositories does not have tags', region, repo.repositoryArn);
                 } else {
                     helpers.addResult(results, 0, 'ECR repositories has tags', region, repo.repositoryArn);

@@ -38,6 +38,7 @@ const describeRepositories = [
 ]
 
 const createCache = (ecrRepository, tagsResource) => {
+     var repoARN = (ecrRepository && ecrRepository.length) ? ecrRepository[0].repositoryArn : null;
     return {
         ecr: {
             describeRepositories: {
@@ -46,9 +47,11 @@ const createCache = (ecrRepository, tagsResource) => {
                 }
             },
             listTagsForResource: {
-                "us-east-1": {
-                    data: tagsResource
-                }
+                'us-east-1': {
+                    [repoARN]: {
+                        data: tagsResource
+                    },
+                },
             }
         }
     }
@@ -73,30 +76,48 @@ describe('ecrRepositoryHasTags', () => {
             ecrRepositoryHasTags.run(cache,{}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No ECR repositories present')
             });
         });
 
-        it('should FAIL if repository is mutable', () => {
-            const cache = createCache([describeRepositories[0]]);
+        it('should FAIL if repository does not have tags', () => {
+            const cache = createCache([describeRepositories[0]], listTagsForResource[0]);
             ecrRepositoryHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('ECR repositories does not have tags')
             })
         });
 
-        it('should PASS if repository is immutable', () => {
-            const cache = createCache([describeRepositories[1]]);
+        it('should PASS if repository has tags', () => {
+            const cache = createCache([describeRepositories[0]], listTagsForResource[1]);
             ecrRepositoryHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('ECR repositories has tags')
             })
         });
 
-        it('should UNKNOWN if unable to get repository policy', () => {
+        it('should UNKNOWN if unable to describe repository', () => {
             const cache = repositoryErrorCache();
             ecrRepositoryHasTags.run(cache,{}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for ECR repositories')
+                
+            });
+        });
+         it('should UNKNOWN if unable to list tags for given resource', () => {
+            const cache = createCache([describeRepositories[0]],null);
+            ecrRepositoryHasTags.run(cache,{}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list tags for resources')
             });
         });
     })
