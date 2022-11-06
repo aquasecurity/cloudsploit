@@ -36,7 +36,7 @@ module.exports = {
             for (let topic of listTopics.data){
                 if (!topic.TopicArn) continue;
 
-                topicARN.push(topic.TopicArn)
+                topicARN.push(topic.TopicArn);
             }
             helpers.checkTags(cache, 'SNS topic',topicARN, region, results);
 
