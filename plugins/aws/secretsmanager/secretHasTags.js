@@ -31,7 +31,9 @@ module.exports = {
                 return rcb();
             } 
             for (let secret of listSecrets.data){
-                if(!secret.Tags || !secret.Tags.length){
+                if (!secret.ARN) continue;
+                
+                if (!secret.Tags || !secret.Tags.length){
                     helpers.addResult(results, 2, 'Secrets Manager does not have tags', region, secret.ARN);
                 } else {
                     helpers.addResult(results, 0, 'Secrets Manager has tags', region, secret.ARN);
