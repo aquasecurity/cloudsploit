@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Backup Vault Encrypted',
+    title: 'Backup Vault Has Tags',
     category: 'Backup',
     domain: 'Storage',
-    description: 'Ensure that your Amazon Backup vaults are using AWS KMS Customer Master Keys instead of AWS managed-keys (i.e. default encryption keys).',
-    more_info: 'When you encrypt AWS Backup using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your backups.',
-    recommended_action: 'Encrypt Backup Vault with desired encryption level',
+    description: 'Ensure that Backup Vault have tags.',
+    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    recommended_action: 'Modify Backup Vault and tags', 
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
     apis: ['Backup:listBackupVaults', 'ResourceGroupsTaggingAPI:getResources'],
    
@@ -36,7 +36,7 @@ module.exports = {
 
             const vaultARN = [];
             for (let vault of listBackupVaults.data){
-               if (!vault.BackupVaultArn) continue;
+                if (!vault.BackupVaultArn) continue;
 
                 vaultARN.push(vault.BackupVaultArn);
             }
