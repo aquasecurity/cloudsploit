@@ -509,6 +509,7 @@ module.exports = {
         'secretRotationEnabled'         : require(__dirname + '/plugins/aws/secretsmanager/secretRotationEnabled.js'),
         'secretsManagerEncrypted'       : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerEncrypted.js'),
         'secretsManagerInUse'           : require(__dirname + '/plugins/aws/secretsmanager/secretsManagerInUse.js'),
+        'secretHasTags'                 : require(__dirname + '/plugins/aws/secretsmanager/secretHasTags.js'),
 
         'finspaceEnvironmentEncrypted'  : require(__dirname + '/plugins/aws/finspace/finspaceEnvironmentEncrypted.js'),
 
