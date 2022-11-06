@@ -12,7 +12,7 @@ const listBackupVaults = [
     },
     {
         "BackupVaultName": "sadeed1",
-        "BackupVaultArn": "arn:aws:backup:us-east-1:000011112222:backup-vault:sadeed1",
+        "BackupVaultArn": "arn:aws:backup:us-east-1:000011112222:backup-vault:Default",
         "CreationDate": "2022-01-21T23:05:24.095000+05:00",
         "EncryptionKeyArn": "arn:aws:kms:us-east-1:000011112222:key/ad013a33-b01d-4d88-ac97-127399c18b3e",
         "CreatorRequestId": "967e0cd4-59c5-471c-8d4d-582a9ee27433",
@@ -21,17 +21,18 @@ const listBackupVaults = [
 ];
 
 
-const getBackupVaultAccessPolicy =[
+const resourcegroupstaggingapi =[
     {
-        Tags: []
+        "ResourceARN": "arn:aws:backup:us-east-1:000011112222:backup-vault:Default",
+        "Tags": [{key:"key1", value:"value"}],
     },
     {
-        Tags: [{key: 'value'}]
+        "ResourceARN": "arn:aws:backup:us-east-1:000011112222:backup-vault:Default",
+        "Tags": [],
     }
 ];
 
-const createCache = (listBackupVaults, listTags) => {
-    let arn = (listBackupVaults && listBackupVaults.length) ? listBackupVaults[0].BackupVaultArn : null;
+const createCache = (listBackupVaults, rgData) => {
     return {
         backup: {
             listBackupVaults: {
@@ -39,11 +40,12 @@ const createCache = (listBackupVaults, listTags) => {
                     data: listBackupVaults,
                 }
             },
-            listTags: {
-                'us-east-1': {
-                    [arn]: {
-                        data: listTags,
-                    }
+        },
+        resourcegroupstaggingapi: {
+            getResources: {
+                'us-east-1':{
+                    err: null,
+                    data: rgData
                 }
             }
         }
@@ -54,30 +56,30 @@ const createCache = (listBackupVaults, listTags) => {
 describe('backupVaultHasTags', function () {
     describe('run', function () {
         it('should PASS if Backup vault have tags', function (done) {
-            const cache = createCache([listBackupVaults[0]], getBackupVaultAccessPolicy[1]);
+            const cache = createCache([listBackupVaults[0]],  [resourcegroupstaggingapi[0]]);
             backupVaultHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Backup vault has tags')
+                expect(results[0].message).to.include('Backup Vault has tags')
                 done();
             });
         });
 
         it('should FAIL if Backup vault does not have tags', function (done) {
-            const cache = createCache([listBackupVaults[0]], getBackupVaultAccessPolicy[0] );
+            const cache = createCache([listBackupVaults[0]], [resourcegroupstaggingapi[1]] );
             backupVaultHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Backup vault does not have tags')
+                expect(results[0].message).to.include('Backup Vault does not have any tags')
                 done();
             });
         });
 
 
         it('should PASS if no Backup vault list found', function (done) {
-            const cache = createCache([]);
+            const cache = createCache([], null);
             backupVaultHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -98,13 +100,13 @@ describe('backupVaultHasTags', function () {
             });
         });
 
-        it('should UNKNOWN if Unable to list tags', function (done) {
+        it('should give unknown result if unable to query resource group tagging api', function (done) {
             const cache = createCache([listBackupVaults[0]], null);
             backupVaultHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to list Tags for Backup vault')
+                expect(results[0].message).to.include('Unable to query all resources from group tagging api')
                 done();
             });
         });

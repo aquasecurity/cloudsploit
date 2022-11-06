@@ -1235,12 +1235,6 @@ var postcalls = [
                 reliesOnCall: 'listBackupPlans',
                 filterKey: 'BackupPlanId',
                 filterValue: 'BackupPlanId',
-            },
-            listTags: {
-                reliesOnService: 'backup',
-                reliesOnCall: 'listBackupVaults',
-                filterKey: 'ResourceArn',
-                filterValue: 'BackupVaultArn',
             }
         },
         CloudFormation: {
