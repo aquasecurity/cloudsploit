@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr-using-tags.html',
     recommended_action: 'Modify ECR repository and add tags.',
-    apis: ['ECR:describeRepositories', 'ECR:listTagsForResource'],
+    apis: ['ECR:describeRepositories', 'ResourceGroupsTaggingAPI:getResources'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,25 +32,13 @@ module.exports = {
                 helpers.addResult(results, 0, 'No ECR repositories present', region);
                 return rcb();
             }
-
+            const ecrARN = [];
             for (let repo of describeRepositories.data) {
                 if (!repo.repositoryArn) continue;
-
-                var listTagsForResource = helpers.addSource(cache, source,
-                    ['ecr', 'listTagsForResource', region, repo.repositoryArn]);
-
-                if (!listTagsForResource || listTagsForResource.err || !listTagsForResource.data) {
-                    
-                    helpers.addResult(results, 3,
-                        'Unable to list tags for resources: ' + helpers.addError(listTagsForResource), region, repo.repositoryArn);
-                    continue;
-                }
-                if (!listTagsForResource.data.tags || !listTagsForResource.data.tags.length){
-                    helpers.addResult(results, 2, 'ECR repositories does not have tags', region, repo.repositoryArn);
-                } else {
-                    helpers.addResult(results, 0, 'ECR repositories has tags', region, repo.repositoryArn);
-                }
+                
+                ecrARN.push(repo.repositoryArn);
             }
+            helpers.checkTags(cache, 'ECR repository', ecrARN, region, results);
 
             rcb();
         }, function() {

@@ -1,9 +1,15 @@
 var expect = require('chai').expect;
 const ecrRepositoryHasTags = require('./ecrRepositoryHasTags');
 
-const listTagsForResource = [
-    { tags: []},
-    { tags: [{key: 'value'}]},
+const resourcegroupstaggingapi = [
+    {
+        "ResourceARN": "arn:aws:ecr:us-east-1:111111111111:repository/test",
+        "Tags": [{key:"key1", value:"value"}],
+    },
+    {
+        "ResourceARN": "arn:aws:ecr:us-east-1:111111111111:repository/test",
+        "Tags": [],
+    },
 ]
 
 const describeRepositories = [
@@ -37,8 +43,7 @@ const describeRepositories = [
     },
 ]
 
-const createCache = (ecrRepository, tagsResource) => {
-     var repoARN = (ecrRepository && ecrRepository.length) ? ecrRepository[0].repositoryArn : null;
+const createCache = (ecrRepository, rgData) => {
     return {
         ecr: {
             describeRepositories: {
@@ -46,14 +51,15 @@ const createCache = (ecrRepository, tagsResource) => {
                     data: ecrRepository
                 }
             },
-            listTagsForResource: {
-                'us-east-1': {
-                    [repoARN]: {
-                        data: tagsResource
-                    },
-                },
+        },
+        resourcegroupstaggingapi: {
+            getResources: {
+                'us-east-1':{
+                    err: null,
+                    data: rgData
+                }
             }
-        }
+        },
     }
 
 }
@@ -82,26 +88,26 @@ describe('ecrRepositoryHasTags', () => {
         });
 
         it('should FAIL if repository does not have tags', () => {
-            const cache = createCache([describeRepositories[0]], listTagsForResource[0]);
+            const cache = createCache([describeRepositories[0]], [resourcegroupstaggingapi[1]]);
             ecrRepositoryHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('ECR repositories does not have tags')
+                expect(results[0].message).to.include('ECR repository does not have any tags')
             })
         });
 
         it('should PASS if repository has tags', () => {
-            const cache = createCache([describeRepositories[0]], listTagsForResource[1]);
+            const cache = createCache([describeRepositories[0]], [resourcegroupstaggingapi[0]]);
             ecrRepositoryHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('ECR repositories has tags')
+                expect(results[0].message).to.include('ECR repository has tags')
             })
         });
 
-        it('should UNKNOWN if unable to describe repository', () => {
+        it('should UNKNOWN if unable to describe ecr resource', () => {
             const cache = repositoryErrorCache();
             ecrRepositoryHasTags.run(cache,{}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -111,13 +117,13 @@ describe('ecrRepositoryHasTags', () => {
                 
             });
         });
-         it('should UNKNOWN if unable to list tags for given resource', () => {
+         it('should give unknown result if unable to query resource group tagging api', () => {
             const cache = createCache([describeRepositories[0]],null);
             ecrRepositoryHasTags.run(cache,{}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to list tags for resources')
+                expect(results[0].message).to.include('Unable to query all resources')
             });
         });
     })
