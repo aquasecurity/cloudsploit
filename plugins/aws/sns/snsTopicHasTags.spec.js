@@ -4,23 +4,21 @@ const snsTopicHasTags = require('./snsTopicHasTags');
 
 const listTopics = [
     { TopicArn: 'arn:aws:sns:us-east-1:111122223333:test-topic-137' },
-    { TopicArn: 'arn:aws:sns:us-east-1:111122223333:test-topic-137-2' }
 ];
 
-const listTagsForResource = [
+const resourcegroupstaggingapi = [
     {
-    ResponseMetadata: { RequestId: '88bc2d3a-ecdf-533e-8dc3-76e62a2cABCD' },
-    Tags: []
+        "ResourceARN": "arn:aws:sns:us-east-1:111122223333:test-topic-137",
+        "Tags": [{key:"key1", value:"value"}],
     },
     {
-    ResponseMetadata: { RequestId: '88bc2d3a-ecdf-533e-8dc3-76e62a2cABCD' },
-    Tags: [{key: 'value'}]
-    },
+        "ResourceARN": "arn:aws:sns:us-east-1:111122223333:test-topic-137",
+        "Tags": [],
+    }
     
 ];
 
-const createCache = (listTopics, listTagsForResource) => {
-    var topicArn = (listTopics && listTopics.length) ? listTopics[0].TopicArn : null;
+const createCache = (listTopics, rgData) => {
     return {
         sns: {
             listTopics: {
@@ -28,12 +26,13 @@ const createCache = (listTopics, listTagsForResource) => {
                     data: listTopics
                 },
             },
-            listTagsForResource: {
-                'us-east-1': {
-                    [topicArn]: {
-                        data: listTagsForResource
-                    },
-                },
+        },
+        resourcegroupstaggingapi: {
+            getResources: {
+                'us-east-1':{
+                    err: null,
+                    data: rgData
+                }
             }
         },
     };
@@ -49,13 +48,6 @@ const createErrorCache = () => {
                     },
                 },
             },
-            listTagsForResource: {
-                'us-east-1': {
-                    err: {
-                        message: 'error while getting topic attributes'
-                    },
-                }
-            }
         },
     };
 };
@@ -68,28 +60,6 @@ const createTopicAttributesErrorCache = (listTopics) => {
                     data: listTopics
                 },
             },
-            listTagsForResource: {
-                'us-east-1': {
-                    [listTopics[0].TopicArn]: {
-                        err: {
-                            message: 'error while getting topic attributes'
-                        },
-                    }
-                }
-            }
-        },
-    };
-};
-
-const createNullCache = () => {
-    return {
-        sns: {
-            listTopics: {
-                'us-east-1': null,
-            },
-            listTagsForResource: {
-                'us-east-1': null,
-            },
         },
     };
 };
@@ -98,20 +68,24 @@ const createNullCache = () => {
 describe('snsTopicHasTags', function () {
     describe('run', function () {
         it('should PASS if SNS topic has tags', function (done) {
-            const cache = createCache([listTopics[0]], listTagsForResource[1]);
+            const cache = createCache([listTopics[0]], [resourcegroupstaggingapi[0]]);
             snsTopicHasTags.run(cache, {}, (err, results) => {
                 console.log(results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('SNS topic has tags');
                 done();
             });
         });
 
         it('should FAIL if SNS topic does not have tags', function (done) {
-            const cache = createCache([listTopics[1]], listTagsForResource[0]);
+            const cache = createCache([listTopics[0]], [resourcegroupstaggingapi[1]]);
             snsTopicHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('SNS topic does not have any tags')
                 done();
             });
         });
@@ -121,34 +95,33 @@ describe('snsTopicHasTags', function () {
             snsTopicHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No SNS topics found')
                 done();
             });
         });
 
         it('should UNKNOWN if error while listing SNS topics', function (done) {
-            const cache = createErrorCache();
+            const cache = createCache(null, null);
             snsTopicHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for SNS topics')
                 done();
             });
         });
 
-        it('should UNKNOWN if error while getting tags for SNS topic', function (done) {
-            const cache = createTopicAttributesErrorCache([listTopics[0]]);
+        it('should give unknown result if unable to query resource group tagging api', function (done) {
+            const cache = createCache([listTopics[0]], null);
             snsTopicHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query all resources')
                 done();
             });
         });
 
-        it('should not return any result if unable to list SNS topics', function (done) {
-            const cache = createNullCache();
-            snsTopicHasTags.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
     });
 });
