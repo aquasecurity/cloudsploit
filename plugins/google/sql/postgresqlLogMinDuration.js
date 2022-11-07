@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL databases provides log_min_duration_statement flag. It is used to log the duration of every completed statement. This should always be disabled as there can be sensitive information as well that should not be recorded in the logs.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_min_duration_statement flag is disabled for all PostgreSQL instances.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.sql, function(region, rcb) {
+        async.each(regions.instances.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

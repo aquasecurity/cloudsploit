@@ -4,6 +4,7 @@ var plugin = require('./instancesMultiAz');
 
 const createCache = (instanceData, instanceGroupData, error, iGErr) => {
     return {
+        instances: {
             compute: {
                 list: {
                     'us-central1-a': {
@@ -11,6 +12,7 @@ const createCache = (instanceData, instanceGroupData, error, iGErr) => {
                         err: error
                     }
                 }
+            }
         },
         instanceGroups: {
             aggregatedList: {

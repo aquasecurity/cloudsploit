@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Default service account has the editor role permissions. Due to security reasons it should not be used for any instance.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Make sure that compute instances are not using default service account',
-    apis: ['compute:list', 'projects:get'],
+    apis: ['instances:compute:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,12 +37,12 @@ module.exports = {
 
         if (!defaultServiceAccount) return callback(null, results, source);
 
-        async.each(regions.compute, (region, rcb) => {
+        async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
             async.each(zones[region], (zone, zcb) => {
                 var instances = helpers.addSource(cache, source,
-                    ['compute','list', zone]);
+                    ['instances', 'compute','list', zone]);
 
                 if (!instances) return zcb();
 

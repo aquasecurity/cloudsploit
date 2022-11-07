@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/sql/docs/mysql/label-instance',
     recommended_action: 'Ensure labels are added for all SQL databases.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.sql, function(region, rcb) {
+        async.each(regions.instances.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

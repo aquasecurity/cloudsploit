@@ -4,11 +4,13 @@ var plugin = require('./defaultServiceAccount');
 
 const createCache = (err, data) => {
     return {
-        kubernetes: {
+        clusters: {
+            kubernetes: {
                 list: {
                     'global': {
                         err: err,
                         data: data
+                    }
                 }
             }
         },

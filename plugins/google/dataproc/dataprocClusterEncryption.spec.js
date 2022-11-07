@@ -61,11 +61,13 @@ const clusters = [
 
 const createCache = (err, data, keysList, keysErr) => {
     return {
-        dataproc: {
-            list: {
-                 'us-central1': {
+        clusters: {
+            dataproc: {
+                list: {
+                    'us-central1': {
                         err: err,
                         data: data
+                    }
                 }
             }
         },

@@ -23,6 +23,7 @@ const createCache = (instanceData, error, disksData, disksErr) => {
                 }
             }
         },
+        instances: {
             compute: {
                 list: {
                     'us-central1-a': {
@@ -30,6 +31,7 @@ const createCache = (instanceData, error, disksData, disksErr) => {
                         err: error
                     }
                 }
+            }
         },
         projects: {
             get: {

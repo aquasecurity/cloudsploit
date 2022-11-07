@@ -15,6 +15,7 @@ const createCache = (err, data) => {
                 }
             }
         },
+        instances: {
             compute:{
                 list: {
                     'us-central1-a':{
@@ -22,6 +23,7 @@ const createCache = (err, data) => {
                         data: instances
                     }
                 }
+            }
         },
         projects: {
             get: {

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'SQL instance for PostgreSQL databases provides log_disconnections flag. It is used to log every attempt to connect to the DB server. It is not enabled by default. Enabling it will make sure to log anyone who disconnects from the instance.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log disconnections flag is enabled for all PostgreSQL instances.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.sql, function(region, rcb){
+        async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

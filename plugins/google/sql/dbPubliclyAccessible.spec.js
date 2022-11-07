@@ -3,6 +3,7 @@ var plugin = require('./dbPubliclyAccessible');
 
 const createCache = (err, data) => {
     return {
+        instances: {
             sql: {
                 list: {
                     'global': {
@@ -10,7 +11,8 @@ const createCache = (err, data) => {
                         data: data
                     }
                 }
-            },
+            }
+        },
         projects: {
             get: {
                 'global': {

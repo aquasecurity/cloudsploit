@@ -3,10 +3,12 @@ var plugin = require('./clusterLeastPrivilege');
 
 const createCache = (clusterData) => {
     return {
-        kubernetes: {
-            list: {
-                'global': {
-                    data: clusterData
+        clusters: {
+            kubernetes: {
+                list: {
+                    'global': {
+                        data: clusterData
+                    }
                 }
             }
         },

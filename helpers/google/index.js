@@ -19,6 +19,72 @@ var authenticate = async function(GoogleConfig) {
     return client;
 };
 
+var execute = async function(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, client, options, myEngine, isPostCall = false, parentRecord = {}) {
+    var executorCb = function(err, data, url, postCall, parent) {
+        if (err) {
+            let errMessage = handleErrors(err);
+            myEngine ? collection[service][myEngine][callKey][region].err = errMessage : collection[service][callKey][region].err = errMessage;
+        }
+        if (!data) return regionCb();
+        if ((myEngine && callObj.property && !data[callObj.property]) || (callObj.property && data.data && !data.data[callObj.property])) return regionCb();
+        let collectionItems = [];
+        let resultItems = [];
+        collectionItems = myEngine ? collection[service][myEngine][callKey][region] : collection[service][callKey][region];
+        let set = true;
+        if (data.data.items) {
+            resultItems = setData(collectionItems, data.data.items, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (data.data.repositories) {
+            resultItems = setData(collectionItems, data.data.repositories, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (data.data[service]) {
+            resultItems = setData(collectionItems, data.data[service], postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (!myEngine && data.data.accounts) {
+            resultItems = setData(collectionItems, data.data.accounts, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (!myEngine && data.data.keys) {
+            resultItems = setData(collectionItems, data.data.keys, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (!myEngine && data.data) {
+            set = false;
+            if (data.data.constructor.name === 'Array') {
+                collection[service][callKey][region].data.concat(data.data);
+            } else if (Object.keys(data.data).length) {
+                collection[service][callKey][region].data.push(data.data);
+            } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
+                collection[service][callKey][region].data = [];
+            }
+            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
+        } else {
+            set = false;
+            myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
+        }
+        if (set) {
+            if (myEngine) collection[service][myEngine][callKey][region] = resultItems;
+            else collection[service][callKey][region] = resultItems;
+        }
+        if (data.data && data.data.nextPageToken) {
+            makeApiCall(client, url, executorCb, data.data.nextPageToken, { pagination: callObj.pagination, paginationKey: callObj.paginationKey });
+        } else {
+            if (callObj.rateLimit) {
+                setTimeout(function() {
+                    regionCb();
+                }, callObj.rateLimit);
+            } else {
+                regionCb();
+            }
+        }
+    };
+
+    if (callObj.url || callObj.urlToCall) {
+        let url = callObj.urlToCall ? callObj.urlToCall : callObj.url;
+        url = url.replace('{projectId}', LocalGoogleConfig.project);
+        if (callObj.location && callObj.location == 'zone') {
+            url = url.replace('{locationId}', callObj.params.zone);
+        } else if (callObj.location && callObj.location == 'region') {
+            url = url.replace('{locationId}', callObj.params.region);
+        }
+
+        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey});
+    }
+};
+
 var processCall = function(GoogleConfig, collection, settings, regions, call, service, client, serviceCb) {
     // Loop through each of the service's functions
     if (call.manyApi) {
@@ -251,73 +317,6 @@ var handleErrors = function(err) {
     } else {
         console.log(`[ERROR] Unhandled error from Google API: Error: ${JSON.stringify(err)}`);
         return 'Unspecified Google error, please contact support';
-    }
-};
-
-var execute = async function(LocalGoogleConfig, collection, service, callObj, callKey, region, regionCb, client, options, myEngine, isPostCall = false, parentRecord = {}) {
-    var executorCb = function(err, data, url, postCall, parent) {
-        if (err) {
-            let errMessage = handleErrors(err);
-            myEngine ? collection[service][myEngine][callKey][region].err = errMessage : collection[service][callKey][region].err = errMessage;
-        }
-        if (!data) return regionCb();
-        if ((myEngine && callObj.property && !data[callObj.property]) || (callObj.property && data.data && !data.data[callObj.property])) return regionCb();
-        let collectionItems = [];
-        let resultItems = [];
-        collectionItems = myEngine ? collection[service][myEngine][callKey][region] : collection[service][callKey][region];
-        let set = true;
-        if (data.data.items) {
-            resultItems = setData(collectionItems, data.data.items, postCall, parent, {'service': service, 'callKey': callKey});
-        } else if (data.data[service]) {
-            resultItems = setData(collectionItems, data.data[service], postCall, parent, {'service': service, 'callKey': callKey});
-        } else if (!myEngine && data.data.accounts) {
-            resultItems = setData(collectionItems, data.data.accounts, postCall, parent, {'service': service, 'callKey': callKey});
-        } else if (!myEngine && data.data.keys) {
-            resultItems = setData(collectionItems, data.data.keys, postCall, parent, {'service': service, 'callKey': callKey});
-        } else if (!callObj.manyApi) {
-            set = false;
-            myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
-        } else if (!myEngine && data.data) {
-            set = false;
-            if (data.data.constructor.name === 'Array') {
-                collection[service][callKey][region].data.concat(data.data);
-            } else if (Object.keys(data.data).length) {
-                collection[service][callKey][region].data.push(data.data);
-            } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
-                collection[service][callKey][region].data = [];
-            }
-            resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
-        } else {
-            set = false;
-            myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
-        }
-        if (set) {
-            if (myEngine) collection[service][myEngine][callKey][region] = resultItems;
-            else collection[service][callKey][region] = resultItems;
-        }
-        if (data.data && data.data.nextPageToken) {
-            makeApiCall(client, url, executorCb, data.data.nextPageToken, { pagination: callObj.pagination, paginationKey: callObj.paginationKey });
-        } else {
-            if (callObj.rateLimit) {
-                setTimeout(function() {
-                    regionCb();
-                }, callObj.rateLimit);
-            } else {
-                regionCb();
-            }
-        }
-    };
-  
-    if (callObj.url || callObj.urlToCall) {
-        let url = callObj.urlToCall ? callObj.urlToCall : callObj.url;
-        url = url.replace('{projectId}', LocalGoogleConfig.project);
-        if (callObj.location && callObj.location == 'zone') {
-            url = url.replace('{locationId}', callObj.params.zone);
-        } else if (callObj.location && callObj.location == 'region') {
-            url = url.replace('{locationId}', callObj.params.region);
-        }
-
-        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey});
     }
 };
 

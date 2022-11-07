@@ -10,7 +10,7 @@ module.exports = {
         'in order to minimize the instance\'s exposure to the internet.',
     link: 'https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address',
     recommended_action: 'Modify compute instances and set External IP to None for network interface',
-    apis: ['compute:list'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -28,12 +28,12 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.compute, (region, rcb) => {
+        async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['compute','list', zone]);
+                    ['instances', 'compute','list', zone]);
 
                 if (!instances) return zcb();
 

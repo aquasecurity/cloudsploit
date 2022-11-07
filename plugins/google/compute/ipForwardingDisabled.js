@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Disabling IP forwarding ensures that the instance only sends and receives packets with matching destination or source IPs.',
     link: 'https://cloud.google.com/vpc/docs/using-routes',
     recommended_action: 'IP forwarding settings can only be chosen when creating a new instance. Delete the affected instances and redeploy with IP forwarding disabled.',
-    apis: ['compute:list'],
+    apis: ['instances:compute:list'],
     
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,12 +27,12 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.compute, (region, rcb) => {
+        async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['compute','list', zone ]);
+                    ['instances', 'compute','list', zone ]);
 
                 if (!instances) return zcb();
 

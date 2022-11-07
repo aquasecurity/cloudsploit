@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'MySQL instance flag that helps find inefficient or time-consuming SQL queries for MySQL databases.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that slow query log flag is enabled for all MySQL instances.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.sql, function(region, rcb){
+        async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

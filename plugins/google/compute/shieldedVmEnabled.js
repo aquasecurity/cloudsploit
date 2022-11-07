@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Shielded VM option should be configured to defend against the security attacks on the instances.',
     link: 'https://cloud.google.com/security/shielded-cloud/shielded-vm',
     recommended_action: 'Enable the shielded VM for all the instances for security reasons.',
-    apis: ['compute:list'],
+    apis: ['instances:compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,12 +27,12 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.compute, (region, rcb) => {
+        async.each(regions.instances.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['compute','list', zone]);
+                    ['instances', 'compute','list', zone]);
 
                 if (!instances) return zcb();
 

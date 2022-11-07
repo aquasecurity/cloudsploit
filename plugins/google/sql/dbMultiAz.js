@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Creating SQL instances in with a single AZ creates a single point of failure for all systems relying on that database. All SQL instances should be created in multiple AZs to ensure proper failover.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances have a DB replica enabled in a secondary AZ.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.sql, function(region, rcb){
+        async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

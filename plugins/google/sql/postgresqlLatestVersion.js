@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To make use of the latest database features and benefit from enhanced performance and security, make sure that your PostgreSQL database instances are using the latest major version of PostgreSQL.',
     link: 'https://cloud.google.com/sql/docs/postgres/db-versions',
     recommended_action: 'Ensure that all your PostgreSQL database instances are using the latest PostgreSQL database version.',
-    apis: ['sql:list'],
+    apis: ['instances:sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -29,9 +29,9 @@ module.exports = {
 
         const latestPostgreSQLVersion = 14;
 
-        async.each(regions.sql, function(region, rcb){
+        async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['sql', 'list', region]);
+                cache, source, ['instances', 'sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

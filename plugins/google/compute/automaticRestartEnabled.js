@@ -9,10 +9,10 @@ module.exports = {
     more_info: 'Automatic Restart sets the virtual machine restart behavior when an instance is crashed or stopped by the system. If it is enabled, Google Cloud Compute Engine restarts the instance if it crashes or is stopped.',
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options#autorestart',
     recommended_action: 'Ensure automatic restart is enabled for all virtual machine instances.',
-    apis: ['compute:list'],
+    apis: ['instances:compute:list'],
     remediation_min_version: '202202080432',
     remediation_description: 'Automatic Restart will be enabled for all virtual machine instances.',
-    apis_remediate: ['compute:list', 'projects:get'],
+    apis_remediate: ['instances:compute:list', 'projects:get'],
     actions: {remediate:['compute.instances.setScheduling'], rollback:['compute.instances.setScheduling']},
     permissions: {remediate: ['compute.instances.setScheduling'], rollback: ['compute.instances.setScheduling']},
     realtime_triggers: ['compute.instances.setScheduling', 'compute.instances.insert'],
@@ -32,12 +32,12 @@ module.exports = {
         }
 
         var project = projects.data[0].name;
-        async.each(regions.compute, (region, rcb) => {
+        async.each(regions.instances.compute, (region, rcb) => {
             var noInstances = [];
             var zones = regions.zones;
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['compute','list', zone ]);
+                    ['instances', 'compute','list', zone ]);
 
                 if (!instances) return zcb();
 
