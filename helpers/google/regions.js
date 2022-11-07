@@ -94,6 +94,7 @@ module.exports = {
     healthChecks: ['global'],
     targetHttpProxies: ['global'],
     instanceGroups: ['global'],
+    instanceGroupManagers: regions,
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
@@ -114,4 +115,5 @@ module.exports = {
     organizations: ['global'],
     deployments: ['global'],
     urlMaps: ['global'],
+    apiKeys: ['global']
 };

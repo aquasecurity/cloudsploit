@@ -890,6 +890,16 @@ module.exports = {
         'dnsLoggingEnabled'             : require(__dirname + '/plugins/google/vpcnetwork/dnsLoggingEnabled.js'),
         'openCustomPorts'               : require(__dirname + '/plugins/google/vpcnetwork/openCustomPorts.js'),
         'firewallLoggingMetadata'       : require(__dirname + '/plugins/google/vpcnetwork/firewallLoggingMetadata.js'),
+        'openCassandraClient'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraClient.js'),
+        'openCassandraInternode'        : require(__dirname + '/plugins/google/vpcnetwork/openCassandraInternode.js'),
+        'openCassandraMonitoring'       : require(__dirname + '/plugins/google/vpcnetwork/openCassandraMonitoring.js'),
+        'openCassandraThrift'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraThrift.js'),
+        'openElasticsearch'             : require(__dirname + '/plugins/google/vpcnetwork/openElasticsearch.js'),
+        'openInternalWeb'               : require(__dirname + '/plugins/google/vpcnetwork/openInternalWeb.js'),
+        'openLDAPS'                     : require(__dirname + '/plugins/google/vpcnetwork/openLDAPS.js'),
+        'openLDAP'                      : require(__dirname + '/plugins/google/vpcnetwork/openLDAP.js'),
+        'openMemcached'                 : require(__dirname + '/plugins/google/vpcnetwork/openMemcached.js'),
+        'openSNMP'                      : require(__dirname + '/plugins/google/vpcnetwork/openSNMP.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -921,9 +931,12 @@ module.exports = {
         'applicationConsistentSnapshots': require(__dirname + '/plugins/google/compute/applicationConsistentSnapshots.js'),
         'deprecatedImages'              : require(__dirname + '/plugins/google/compute/deprecatedImages.js'),
         'enableUsageExport'             : require(__dirname + '/plugins/google/compute/enableUsageExport.js'),
+        'instanceGroupAutoHealing'      : require(__dirname + '/plugins/google/compute/instanceGroupAutoHealing.js'),
+        'publicDiskImages'              : require(__dirname + '/plugins/google/compute/publicDiskImages.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
+        'kmsPublicAccesss'              : require(__dirname + '/plugins/google/cryptographickeys/kmsPublicAccess.js'),
 
         'dbRestorable'                  : require(__dirname + '/plugins/google/sql/dbRestorable.js'),
         'dbAutomatedBackups'            : require(__dirname + '/plugins/google/sql/dbAutomatedBackups.js'),
@@ -947,6 +960,8 @@ module.exports = {
         'storageAutoIncreaseEnabled'    : require(__dirname + '/plugins/google/sql/storageAutoIncreaseEnabled.js'),
         'serverCertificateRotation'     : require(__dirname + '/plugins/google/sql/serverCertificateRotation.js'),
         'sqlCMKEncryption'              : require(__dirname + '/plugins/google/sql/sqlCMKEncryption.js'),
+        'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
+        'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -1026,6 +1041,9 @@ module.exports = {
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
+
+        'apiKeyApplicationRestriction'  : require(__dirname + '/plugins/google/api/apiKeyApplicationRestriction.js'),
+        'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
