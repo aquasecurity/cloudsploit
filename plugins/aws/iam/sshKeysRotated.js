@@ -50,24 +50,24 @@ module.exports = {
             helpers.addResult(results, 0, 'No iam users found', 'global');
         } 
 
-        var found = false;
         for (var user of listUsers.data) {
             if (!user.UserName) continue;
-
+            
+            var found = false;
             var listSSHPublicKeys = helpers.addSource(cache, source,
                 ['iam', 'listSSHPublicKeys', region, user.UserName]);
 
-            if (!listSSHPublicKeys) return callback(null, results, source);
-
-            if (listSSHPublicKeys.err || !listSSHPublicKeys.data || !listSSHPublicKeys.data.SSHPublicKeys) {
+            if (!listSSHPublicKeys || listSSHPublicKeys.err || !listSSHPublicKeys.data || !listSSHPublicKeys.data.SSHPublicKeys) {
                 helpers.addResult(results, 3,
-                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys));
-                return callback(null, results, source);
+                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), user.Arn);
+                continue;
             }
 
             for (var sshkey of listSSHPublicKeys.data.SSHPublicKeys) {
 
                 if (sshkey.Status && sshkey.Status ==='Active') {
+                    if(!sshkey.UploadDate) continue;
+                    
                     var keyDate = new Date(sshkey.UploadDate);
                     var daysOld = helpers.daysAgo(keyDate);
                     var returnMsg = `SSH key with ID: ${sshkey.SSHPublicKeyId} is ${daysOld} days old`;
@@ -81,14 +81,12 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 0, returnMsg, 'global', user.Arn);
                     }
-                    
                     found = true;
-                }
-            }          
-        }
-        
-        if (!found) {
-            helpers.addResult(results, 0, 'No SSH keys found', 'global');
+                }      
+            }    
+            if (!found) {
+                helpers.addResult(results, 0, 'No SSH keys found', 'global', user.Arn);
+            }        
         }
         callback(null, results, source);
     }
