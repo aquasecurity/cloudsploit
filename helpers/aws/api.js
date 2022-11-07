@@ -320,7 +320,17 @@ var calls = {
     DocDB: {
         describeDBClusters: {
             property: 'DBClusters',
-            paginate: 'Marker'
+            paginate: 'Marker',
+            params: {
+                Filters: [
+                    {
+                        Name: 'engine',
+                        Values: [
+                            'docdb'
+                        ]
+                    }
+                ]
+            }
         }
     },
     DynamoDB: {
