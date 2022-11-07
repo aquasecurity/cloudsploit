@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'It is recommended to not use Alpha clusters as they expire after thirty days and do not receive security updates.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/alpha-clusters',
     recommended_action: '1. Create a new cluster with the alpha feature disabled. 2. Migrate all required cluster data from the cluster with alpha to this newly created cluster. 3.Delete the engine cluster with alpha enabled.',
-    apis: ['clusters:kubernetes:list'],
+    apis: ['kubernetes:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters.kubernetes, function(region, rcb){
+        async.each(regions.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'kubernetes', 'list', region]);
+                ['kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

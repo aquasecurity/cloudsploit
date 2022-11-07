@@ -4,13 +4,11 @@ var plugin = require('./masterAuthorizedNetwork');
 
 const createCache = (err, data) => {
     return {
-        clusters: {
-            kubernetes: {
+        kubernetes: {
                 list: {
                     'global': {
                         err: err,
                         data: data
-                    }
                 }
             }
         },

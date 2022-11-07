@@ -22,7 +22,6 @@ const instances = [
 
 const createCache = (err, data) => {
     return {
-        instances: {
             bigtable: {
                 list: {
                     'global': {
@@ -30,7 +29,6 @@ const createCache = (err, data) => {
                         data: data
                     }
                 }
-            }
         },
         projects: {
             get: {

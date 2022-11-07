@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Cloud SQL databases should always use private IP addresses which provide improved network security and lower latency.',
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
     recommended_action: 'Make sure that SQL databases IP addresses setting does not have IP address of PRIMARY type',
-    apis: ['instances:sql:list'],
+    apis: ['sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
         
-        async.each(regions.instances.sql, function(region, rcb) {
+        async.each(regions.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
-                cache, source, ['instances', 'sql', 'list', region]);
+                cache, source, ['sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

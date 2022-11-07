@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling SSL ensures that the sensitive data being transferred from the database is encrypted.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that SSL is enabled on all SQL databases.',
-    apis: ['instances:sql:list'],
+    apis: ['sql:list'],
     compliance: {
         pci: 'PCI requires strong cryptographic and security protocols ' +
              'when transmitting user data, this includes using SSL.',
@@ -34,9 +34,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.instances.sql, function(region, rcb){
+        async.each(regions.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(cache, source,
-                ['instances', 'sql', 'list', region]);
+                ['sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

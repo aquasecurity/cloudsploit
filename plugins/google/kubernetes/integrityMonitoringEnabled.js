@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Integrity Monitoring feature automatically monitors the integrity of your cluster nodes.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#integrity_monitoring',
     recommended_action: 'Enable Integrity Monitoring feature for your cluster nodes',
-    apis: ['clusters:kubernetes:list'],
+    apis: ['kubernetes:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters.kubernetes, function(region, rcb){
+        async.each(regions.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'kubernetes', 'list', region]);
+                ['kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

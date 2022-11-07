@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling autoscale increases efficiency and improves cost management for resources.',
     link: 'https://cloud.google.com/compute/docs/autoscaler/',
     recommended_action: 'Ensure autoscaling is enabled for all instance groups.',
-    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','clusters:kubernetes:list'],
+    apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','kubernetes:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -56,7 +56,7 @@ module.exports = {
             return rcb();
         }, function() {
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'kubernetes', 'list', ['global']]);
+                ['kubernetes', 'list', ['global']]);
 
             if (clusters.err || !clusters.data) {
                 helpers.addResult(results, 3, 'Unable to query clusters', 'global', null, null, clusters.err);
