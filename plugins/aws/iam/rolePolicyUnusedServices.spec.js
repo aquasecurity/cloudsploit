@@ -239,7 +239,45 @@ const discoveredResources = [
     { resourceType: 'AWS::ECR::Repository', count: 1 }
 ];
 
-const createCache = (configStatus, discoveredResources, listRoles, listAttachedRolePolicies, listRolePolicies, getRolePolicy, getPolicy, getPolicyVersion, configStatusErr, discoveredResourcesErr, listRolesErr, listRolePoliciesErr, listAttachedRolePoliciesErr) => {
+const getRole = [
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "test-role-1",
+            "RoleId": "AROAYE32SRU5VIMXXL3BH",
+            "Arn": "arn:aws:iam::000011112222:role/test-role-1",
+            "Tags": [
+                {
+                    "Key": "app_name",
+                    "Value": "Aqua CSPM"
+                }
+            ],
+        }  
+    },
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "test-role-1",
+            "RoleId": "AROAYE32SRU5VIMXXL3BH",
+            "Arn": "arn:aws:iam::000011112222:role/test-role-1",
+            "Tags": [
+            ],
+        }  
+    },
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "test-role-2",
+            "RoleId": "AROAYE32SRU5VIMXXL3BH",
+            "Arn": "arn:aws:iam::000011112222:role/test-role-2",
+            "Tags": [
+            ],
+        }  
+    }
+
+];
+
+const createCache = (configStatus, discoveredResources, listRoles, getRole, listAttachedRolePolicies, listRolePolicies, getRolePolicy, getPolicy, getPolicyVersion, configStatusErr, discoveredResourcesErr, listRolesErr, listRolePoliciesErr, listAttachedRolePoliciesErr) => {
     var roleName = (listRoles && listRoles.length) ? listRoles[0].RoleName : null;
     var policyArn = (listAttachedRolePolicies && listAttachedRolePolicies.AttachedPolicies) ? listAttachedRolePolicies.AttachedPolicies[0].PolicyArn : null;
     var policyName = (listRolePolicies && listRolePolicies.PolicyNames) ? listRolePolicies.PolicyNames[0] : null;
@@ -303,6 +341,13 @@ const createCache = (configStatus, discoveredResources, listRoles, listAttachedR
                         data: getPolicyVersion
                     }
                 }
+            },
+            getRole: {
+                'us-east-1': {
+                    [roleName]: {
+                        data: getRole
+                    }
+                }
             }
         }
     };
@@ -311,25 +356,27 @@ const createCache = (configStatus, discoveredResources, listRoles, listAttachedR
 describe('rolePolicyUnusedServices', function () {
     describe('run', function () {
         it('should PASS if role does not have overly-permissive policy', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], listAttachedRolePolicies[2], listRolePolicies[0], getRolePolicy[2]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], listAttachedRolePolicies[2], listRolePolicies[0], getRolePolicy[2]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('Role does not have overly-permissive policy');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
         it('should FAIL if role policy allows wildcard actions', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('policy allows wildcard actions');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should PASS if role policy allows wildcard actions but ignore managed iam policies is set to true', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
             rolePolicyUnusedServices.run(cache, { ignore_customer_managed_iam_policies : 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -338,25 +385,27 @@ describe('rolePolicyUnusedServices', function () {
         });
 
         it('should FAIL if role policy allows all actions on selected resources', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], {}, listRolePolicies[1], getRolePolicy[4]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], {}, listRolePolicies[1], getRolePolicy[4]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('policy allows all actions on selected resources');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if role policy allows all actions on all resources', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], {}, listRolePolicies[1], getRolePolicy[3]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], getRole[1], {}, listRolePolicies[1], getRolePolicy[3]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('policy allows all actions on all resources');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should PASS if role policy allows wildcard actions but ignore service specific roles setting is enabled', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
             rolePolicyUnusedServices.run(cache, { ignore_service_specific_wildcards: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -364,101 +413,119 @@ describe('rolePolicyUnusedServices', function () {
             });
         });
 
-        it('should PASS if on IAM roles found', function (done) {
+        it('should PASS if np IAM roles found', function (done) {
             const cache = createCache([configStatus[0]], discoveredResources, []);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('No IAM roles found');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list IAM roles', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, null, null, null, null, null, null, null, null, { message: 'Unable to list IAM roles'});
+            const cache = createCache([configStatus[0]], discoveredResources, null, null, null, null, null, null, null,null,null, { message: 'Unable to list IAM roles'});
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('Unable to query for IAM roles');
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list attached role policies', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], {}, null, null, null, null, null, null, null, null, { message: 'Unable to list attached role policies'});
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], getRole[1], {}, null, null, null, null, null, null, null, null, { message: 'Unable to list attached role policies'});
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('Unable to query for IAM attached policy for role:');
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list role policies', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], listAttachedRolePolicies[0], {}, null, null, null, null, null, null, { message: 'Unable to query role policies'});
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[1]], getRole[1], listAttachedRolePolicies[0], {}, null, null, null, null, null, null, { message: 'Unable to query role policies'});
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('Unable to query for IAM role policy for role');
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should UNKNOWN if no unable to query for Config Service', function (done) {
-            const cache = createCache(null, discoveredResources, [listRoles[1]], listAttachedRolePolicies[0], null, null, null, null, { message: 'Unable to query Config Service'});
+            const cache = createCache(null, discoveredResources, [listRoles[1]], getRole[1], listAttachedRolePolicies[0], null, null, null, null, { message: 'Unable to query Config Service'});
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
+                expect(results[0].message).to.include('Unable to query config service');
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should FAIL if Config Service is not enabled', function (done) {
-            const cache = createCache([], discoveredResources, [listRoles[1]], listAttachedRolePolicies[0]);
+            const cache = createCache([], discoveredResources, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
+                expect(results[0].message).to.include('Config service is not enabled');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if Config Service is not recording', function (done) {
-            const cache = createCache([configStatus[1]], discoveredResources, [listRoles[1]], listAttachedRolePolicies[0]);
+            const cache = createCache([configStatus[1]], discoveredResources, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
+                expect(results[0].message).to.include('Config service is not recording');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if Config Service is recording but not delivering properly', function (done) {
-            const cache = createCache([configStatus[2]], discoveredResources, [listRoles[1]], listAttachedRolePolicies[0]);
+            const cache = createCache([configStatus[2]], discoveredResources, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
+                expect(results[0].message).to.include('Config Service is configured, and recording, but not delivering properly');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should UKNOWN if unable to query for Discovered Resources', function (done) {
-            const cache = createCache([configStatus[0]], null, [listRoles[1]], listAttachedRolePolicies[0]);
+            const cache = createCache([configStatus[0]], null, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
+                expect(results[0].message).to.include('Unable to query for Discovered Resources');
                 expect(results[0].status).to.equal(3);
                 done();
             });
         });
 
         it('should PASS if no Discovered Resources found', function (done) {
-            const cache = createCache([configStatus[0]], [], [listRoles[1]], listAttachedRolePolicies[0]);
+            const cache = createCache([configStatus[0]], [], [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('No Discovered Resources found');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
         it('should FAIL if Role policies contain actions for resource types which are not in use', function (done) {
-            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], {}, listRolePolicies[1], getRolePolicy[4]);
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[1], {}, listRolePolicies[1], getRolePolicy[4]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if role with specific regex is ignored', function (done) {
+            const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], {}, listRolePolicies[1], getRolePolicy[4]);
+            rolePolicyUnusedServices.run(cache, {iam_role_policies_ignore_tag:'app_name:Aqua CSPM'}, (err, results) => {
+                expect(results.length).to.equal(0);
                 done();
             });
         });

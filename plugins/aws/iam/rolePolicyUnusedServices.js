@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and resource types.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies', 'IAM:listPolicies',
-        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'ConfigService:describeConfigurationRecorderStatus', 'ConfigService:getDiscoveredResourceCounts'],
+        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'ConfigService:describeConfigurationRecorderStatus', 'ConfigService:getDiscoveredResourceCounts','IAM:getRole'],
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
@@ -63,6 +63,12 @@ module.exports = {
             description: 'If set to true, skip customer-managed policies attached to the role',
             regex: '^(true|false)$',
             default: 'false'
+        },
+        iam_role_policies_ignore_tag: {
+            name: 'IAM Role Policies Ignore Tag',
+            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
+            regex: '^.*$',
+            default: ''
         }
     },
 
@@ -72,7 +78,8 @@ module.exports = {
             ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
             ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
-            ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default
+            ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
+            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -236,6 +243,28 @@ module.exports = {
                     return cb();
                 }
 
+                // Get role details
+                var getRole = helpers.addSource(cache, source,
+                    ['iam', 'getRole', iamRegion, role.RoleName]);
+
+                if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
+                    return cb();
+                }
+                
+                //Skip roles with user defined tags
+                if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
+                    if (config.iam_role_policies_ignore_tag.split(':').length == 2){
+                        var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
+                        var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
+                        if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
+                            if (getRole.data.Role.Tags.find(tag =>
+                                tag.Key == key && value.test(tag.Value))) return cb();
+                        }
+                    }
+                }
+
                 if (config.ignore_identity_federation_roles &&
                     helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
                     helpers.addResult(results, 0,
@@ -254,7 +283,7 @@ module.exports = {
 
                 var getRolePolicy = helpers.addSource(cache, source,
                     ['iam', 'getRolePolicy', iamRegion, role.RoleName]);
-
+    
                 if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
                     helpers.addResult(results, 3,
                         'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);

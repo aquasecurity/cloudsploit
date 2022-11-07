@@ -34,6 +34,12 @@ module.exports = {
             description: 'If set to true, plugin will Ignore AWS service roles',
             regex: '^(true|false)$',
             default: 'true'
+        },
+        iam_role_policies_ignore_tag: {
+            name: 'IAM Role Policies Ignore Tag',
+            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
+            regex: '^.*$',
+            default: ''
         }
     },
     asl: {
@@ -54,7 +60,8 @@ module.exports = {
             iam_role_last_used_fail: settings.iam_role_last_used_fail || this.settings.iam_role_last_used_fail.default,
             iam_role_last_used_warn: settings.iam_role_last_used_warn || this.settings.iam_role_last_used_warn.default,
             iam_role_ignore_path: settings.iam_role_ignore_path || this.settings.iam_role_ignore_path.default,
-            skip_aws_service_roles: settings.skip_aws_service_roles || this.settings.skip_aws_service_roles.default
+            skip_aws_service_roles: settings.skip_aws_service_roles || this.settings.skip_aws_service_roles.default,
+            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default
         };
 
         config.skip_aws_service_roles = (config.skip_aws_service_roles == 'true');
@@ -96,13 +103,25 @@ module.exports = {
             var getRole = helpers.addSource(cache, source,
                 ['iam', 'getRole', region, role.RoleName]);
 
-            if (!getRole || getRole.err || !getRole.data) {
+            if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
                 return cb();
             }
 
-            if (!getRole.data.Role || !getRole.data.Role.RoleLastUsed ||
+            //Skip roles with user defined tags
+            if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
+                if (config.iam_role_policies_ignore_tag.split(':').length == 2){
+                    var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
+                    var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
+                    if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
+                        if (getRole.data.Role.Tags.find(tag =>
+                            tag.Key == key && value.test(tag.Value))) return cb();
+                    }
+                }
+            }
+
+            if (!getRole.data.Role.RoleLastUsed ||
                 !getRole.data.Role.RoleLastUsed.LastUsedDate) {
                 helpers.addResult(results, 2,
                     'IAM role: ' + role.RoleName + ' has not been used', 'global', role.Arn);
