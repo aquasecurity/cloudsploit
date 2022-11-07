@@ -60,7 +60,7 @@ var calls = {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
             location: 'zone',
-            manyApi: false,
+            ignoreMiscData: true,
             pagination: true
         },
         aggregatedList: {
