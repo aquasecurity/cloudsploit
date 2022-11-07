@@ -53,6 +53,18 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_us_east5: {
+            name: 'Instance Count Region Threshold: us-east5',
+            description: 'Checks for the number of running instances in the us-east5 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_us_south1: {
+            name: 'Instance Count Region Threshold: us-south1',
+            description: 'Checks for the number of running instances in the us-south1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_us_central1: {
             name: 'Instance Count Region Threshold: us-central1',
             description: 'Checks for the number of running instances in the us-central1 region and triggers a failing result if it exceeds the specified count',
@@ -131,6 +143,24 @@ module.exports = {
             regex: '^[0-9]{1,4}$',
             default: 100
         },
+        instance_count_region_threshold_europe_west8: {
+            name: 'Instance Count Region Threshold: europe-west8',
+            description: 'Checks for the number of running instances in the europe-west8 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_europe_southwest1: {
+            name: 'Instance Count Region Threshold: europe-southwest1',
+            description: 'Checks for the number of running instances in the europe-southwest1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
+        instance_count_region_threshold_europe_west9: {
+            name: 'Instance Count Region Threshold: europe-west9',
+            description: 'Checks for the number of running instances in the europe-west9 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
+        },
         instance_count_region_threshold_asia_south1: {
             name: 'Instance Count Region Threshold: asia-south1',
             description: 'Checks for the number of running instances in the asia-south1 region and triggers a failing result if it exceeds the specified count',
@@ -196,6 +226,12 @@ module.exports = {
             description: 'Checks for the number of running instances in the australia-southeast2 region and triggers a failing result if it exceeds the specified count',
             regex: '^[0-9]{1,4}$',
             default: 100
+        },
+        instance_count_region_threshold_me_west1: {
+            name: 'Instance Count Region Threshold: me-west1',
+            description: 'Checks for the number of running instances in the me-west1 region and triggers a failing result if it exceeds the specified count',
+            regex: '^[0-9]{1,4}$',
+            default: 100
         }
     },
 
@@ -246,6 +282,18 @@ module.exports = {
             instance_count_region_threshold_asia_northeast2: settings.instance_count_region_threshold_asia_northeast2 || this.settings.instance_count_region_threshold_asia_northeast2.default,
 
             instance_count_region_threshold_australia_southeast1: settings.instance_count_region_threshold_australia_southeast1 || this.settings.instance_count_region_threshold_australia_southeast1.default,
+
+            instance_count_region_threshold_us_east5: settings.instance_count_region_threshold_us_east5 || this.settings.instance_count_region_threshold_us_east5.default,
+
+            instance_count_region_threshold_us_south1: settings.instance_count_region_threshold_us_south1 || this.settings.instance_count_region_threshold_us_south1.default,
+
+            instance_count_region_threshold_europe_west8: settings.instance_count_region_threshold_europe_west8 || this.settings.instance_count_region_threshold_europe_west8.default,
+
+            instance_count_region_threshold_europe_southwest1: settings.instance_count_region_threshold_europe_southwest1 || this.settings.instance_count_region_threshold_europe_southwest1.default,
+
+            instance_count_region_threshold_europe_west9: settings.instance_count_region_threshold_europe_west9 || this.settings.instance_count_region_threshold_europe_west9.default,
+
+            instance_count_region_threshold_me_west1: settings.instance_count_region_threshold_me_west1 || this.settings.instance_count_region_threshold_me_west1.default,
 
 
         };
