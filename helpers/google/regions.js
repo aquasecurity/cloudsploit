@@ -38,6 +38,12 @@ var regions = [
     'me-west1',                     // Tel Aviv
 ];
 
+var artifactRegions = [
+    'us',
+    'europe',
+    'asia'
+];
+
 
 var zones = {
     'us-east1'                      : ['us-east1-b', 'us-east1-c', 'us-east1-d'],
@@ -83,6 +89,7 @@ module.exports = {
     zones: zones,
     disks: ['global', ...regions],
     images: ['global'],
+    repositories: [...regions, ...artifactRegions],
     keyRings: ['global', ...regions],
     cryptoKeys: ['global', ...regions],
     securityPolicies: ['global'],
@@ -90,11 +97,10 @@ module.exports = {
     snapshots: ['global'],
     firewalls: ['global'],
     buckets: ['global'],
-    instances: {
-        compute: regions,
-        sql: ['global'],
-        spanner: ['global']
-    },
+    compute: regions,
+    sql: ['global'],
+    spanner: ['global'],
+    bigtable:['global'],
     instanceGroupManagers: regions,
     functions: [
         'us-east1', 'us-east4', 'us-west2', 'us-west3', 'us-west4', 'us-central1', 'northamerica-northeast1', 'southamerica-east1',
@@ -110,7 +116,8 @@ module.exports = {
     autoscalers: ['global'],
     subnetworks: regions,
     projects: ['global'],
-    clusters: ['global'],
+    dataproc: regions,
+    kubernetes: ['global'],
     managedZones: ['global'],
     metrics: ['global'],
     alertPolicies: ['global'],

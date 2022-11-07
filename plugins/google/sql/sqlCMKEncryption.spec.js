@@ -25,7 +25,6 @@ const cryptoKeys = [
 ];
 const createCache = (err, data, keysList, keysErr) => {
     return {
-        instances: {
             sql: {
                 list: {
                     'global': {
@@ -33,7 +32,6 @@ const createCache = (err, data, keysList, keysErr) => {
                         data: data
                     }
                 }
-            }
         },
         cryptoKeys: {
             list: {

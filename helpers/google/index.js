@@ -274,6 +274,9 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             resultItems = setData(collectionItems, data.data.accounts, postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data.keys) {
             resultItems = setData(collectionItems, data.data.keys, postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (callObj.ignoreMiscData) {
+            set = false;
+            myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
         } else if (!myEngine && data.data) {
             set = false;
             if (data.data.constructor.name === 'Array') {

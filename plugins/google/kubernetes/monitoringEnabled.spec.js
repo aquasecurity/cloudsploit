@@ -4,11 +4,11 @@ var plugin = require('./monitoringEnabled');
 
 const createCache = (err, data) => {
     return {
-        clusters: {
-            list: {
-                'global': {
-                    err: err,
-                    data: data
+        kubernetes: {
+                list: {
+                    'global': {
+                        err: err,
+                        data: data
                 }
             }
         },

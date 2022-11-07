@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Deprecated Compute Disk Images should not be used to create VM instances.',
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',
     recommended_action: 'Ensure that no compute instances are created from deprecated images.',
-    apis: ['instances:compute:list', 'disks:list', 'images:list'],
+    apis: ['compute:list', 'disks:list', 'images:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -36,12 +36,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        async.each(regions.instances.compute, (region, rcb) => {
+        async.each(regions.compute, (region, rcb) => {
             var noInstances = [];
             var zones = regions.zones;
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', zone ]);
+                    ['compute','list', zone ]);
 
                 var disks = helpers.addSource(cache, source,
                     ['disks', 'list', zone]);

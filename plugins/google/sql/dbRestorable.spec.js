@@ -3,7 +3,6 @@ var plugin = require('./dbRestorable');
 
 const createCache = (err, sqlInstances, backupRuns) => {
     return {
-        instances: {
             sql: {
                 list: {
                     'global': {
@@ -11,7 +10,6 @@ const createCache = (err, sqlInstances, backupRuns) => {
                         data: sqlInstances
                     }
                 }
-            }
         },
         backupRuns: {            
             list: {

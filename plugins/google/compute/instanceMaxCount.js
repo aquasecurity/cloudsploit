@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Google accounts see large numbers of VM instances launched.',
     link: 'https://cloud.google.com/compute/docs/instances/',
     recommended_action: 'Ensure that the number of running VM instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',
-    apis: ['instances:compute:list'],
+    apis: ['compute:list'],
     settings: {
         instance_count_global_threshold: {
             name: 'Instance Count Global Threshold',
@@ -262,7 +262,7 @@ module.exports = {
         var regions = helpers.regions();
         var instanceCountGlobal = 0;
 
-        async.each(regions.instances.compute, function(region, rcb){
+        async.each(regions.compute, function(region, rcb){
             var zones = regions.zones;
             var instanceCount = 0;
             var myError = {};
@@ -270,7 +270,7 @@ module.exports = {
 
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', zone]);
+                    ['compute','list', zone]);
 
                 if (!instances) return zcb();
 

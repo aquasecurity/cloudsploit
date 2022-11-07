@@ -43,9 +43,9 @@ module.exports = {
             }
             
             if (!getUser.data.User.Tags || !getUser.data.User.Tags.length) {
-                helpers.addResult(results, 2, 'IAM User does not have tags', user.Arn);
+                helpers.addResult(results, 2, 'IAM User does not have tags', 'global', user.Arn);
             } else {
-                helpers.addResult(results, 0, 'IAM User has tags', user.Arn);
+                helpers.addResult(results, 0, 'IAM User has tags', 'global', user.Arn);
             }
             
         }

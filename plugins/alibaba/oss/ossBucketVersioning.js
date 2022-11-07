@@ -44,7 +44,7 @@ module.exports = {
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
 
-            if (bucketLocation !== region && !regions.includes(bucketLocation)) return;
+            if (bucketLocation !== region && !regions.all.includes(bucketLocation)) return cb();
 
             var resource = helpers.createArn('oss', accountId, 'bucket', bucket.name, bucketLocation);
 

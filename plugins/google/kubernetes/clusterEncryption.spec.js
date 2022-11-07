@@ -65,7 +65,7 @@ const clusters = [
 
 const createCache = (clustersList, clusterError, keysList, keysErr) => {
     return {
-        clusters: {
+        kubernetes: {
             list: {
                 'global': {
                     err: clusterError,
