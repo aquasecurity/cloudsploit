@@ -25,8 +25,6 @@ module.exports = {
             '1.23': 2,
             '1.22': 6,
             '1.21': 11,
-            '1.20': 9,
-            '1.19': 11
         };
 
         var deprecatedVersions = {
