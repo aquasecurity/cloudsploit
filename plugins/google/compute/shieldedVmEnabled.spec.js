@@ -3,7 +3,6 @@ var plugin = require('./shieldedVmEnabled');
 
 const createCache = (instanceData, error) => {
     return {
-        instances: {
             compute: {
                 list: {
                     'us-central1-a': {
@@ -11,7 +10,6 @@ const createCache = (instanceData, error) => {
                         err: error
                     }
                 }
-            }
         },
         projects: {
             get: {

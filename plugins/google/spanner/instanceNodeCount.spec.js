@@ -3,7 +3,6 @@ var plugin = require('./instanceNodeCount');
 
 const createCache = (err, data) => {
     return {
-        instances: {
             spanner: {
                 list: {
                     'global': {
@@ -11,7 +10,6 @@ const createCache = (err, data) => {
                         data: data
                     }
                 }
-            }
         }
     }
 };
