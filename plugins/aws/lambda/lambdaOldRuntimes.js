@@ -29,7 +29,7 @@ module.exports = {
             { 'id':'python2.7', 'name': 'Python 2.7', 'endOfLifeDate': '2022-02-14' },
             { 'id':'python3.5', 'name': 'Python 3.5', 'endOfLifeDate': '2020-09-13' },
             { 'id':'ruby2.5', 'name': 'Ruby 2.5', 'endOfLifeDate': '2022-03-31' },
-            { 'id':'nodejs16.x', 'name': 'Node.js 16', 'endOfLifeDate': '2023-03-31'}
+            { 'id':'nodejs12.x', 'name': 'Node.js 12', 'endOfLifeDate': '2023-03-31'}
         ];
 
         async.each(regions.lambda, function(region, rcb){
