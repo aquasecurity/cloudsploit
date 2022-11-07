@@ -10,7 +10,7 @@ module.exports = {
         'a login at the Database Engine level along with other security threats.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that Contained Database Authentication flag is disabled for all SQL Server instances.',
-    apis: ['instances:sql:list'],
+    apis: ['sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -28,9 +28,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.instances.sql, function(region, rcb) {
+        async.each(regions.sql, function(region, rcb) {
             let sqlInstances = helpers.addSource(
-                cache, source, ['instances', 'sql', 'list', region]);
+                cache, source, ['sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

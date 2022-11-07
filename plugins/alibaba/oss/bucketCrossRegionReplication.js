@@ -38,10 +38,11 @@ module.exports = {
 
             var getBucketInfo = helpers.addSource(cache, source,
                 ['oss', 'getBucketInfo', region, bucket.name]);
+
             var bucketLocation = bucket.region || region;
             bucketLocation = bucketLocation.replace('oss-', '');
 
-            if (bucketLocation !== region && !regions.all.includes(bucketLocation)) return;
+            if (bucketLocation !== region && !regions.all.includes(bucketLocation)) return cb();
 
             var resource = helpers.createArn('oss', accountId, 'bucket', bucket.name, bucketLocation);
 

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'SSH keys should be rotated frequently to avoid having them accidentally exposed.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html',
     recommended_action: 'To rotate an SSH key, first create a new public-private key pair, then upload the public key to AWS and delete the old key.',
-    apis: ['IAM:generateCredentialReport'],
+    apis: ['IAM:listUsers', 'IAM:listSSHPublicKeys'],
     settings: {
         ssh_keys_rotated_fail: {
             name: 'SSH Keys Rotated Fail',
@@ -30,73 +30,64 @@ module.exports = {
             ssh_keys_rotated_warn: settings.ssh_keys_rotated_warn || this.settings.ssh_keys_rotated_warn.default
         };
 
-        var custom = helpers.isCustom(settings, this.settings);
-
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
 
-        var generateCredentialReport = helpers.addSource(cache, source,
-            ['iam', 'generateCredentialReport', region]);
+        var listUsers = helpers.addSource(cache, source,
+            ['iam', 'listUsers', region]);
 
-        if (!generateCredentialReport) return callback(null, results, source);
+        if (!listUsers) return callback(null, results, source);
 
-        if (generateCredentialReport.err || !generateCredentialReport.data) {
+        if (listUsers.err || !listUsers.data) {
             helpers.addResult(results, 3,
-                'Unable to query for users: ' + helpers.addError(generateCredentialReport));
+                'Unable to query for Users: ' + helpers.addError(listUsers));
             return callback(null, results, source);
         }
 
-        if (generateCredentialReport.data.length === 1) {
-            // Only have the root user
-            helpers.addResult(results, 0, 'No user accounts with SSH keys found');
-            return callback(null, results, source);
-        }
+        if (!listUsers.data.length) {
+            helpers.addResult(results, 0, 'No iam users found', 'global');
+        } 
 
-        var found = false;
+        for (var user of listUsers.data) {
+            if (!user.UserName) continue;
+            
+            var found = false;
+            var listSSHPublicKeys = helpers.addSource(cache, source,
+                ['iam', 'listSSHPublicKeys', region, user.UserName]);
 
-        function addSSHKeyResults(lastRotated, keyNum, arn, userName, userCreationTime) {
-            var keyDate = new Date(lastRotated);
-            var daysOld = helpers.daysAgo(keyDate);
-
-            var returnMsg = 'SSH key: ' + keyNum + ' for user: ' + userName +
-                            ' is ' + daysOld + ' days old';
-
-            if (helpers.daysAgo(userCreationTime) > 180 &&
-                (!lastRotated || lastRotated === 'N/A' || helpers.daysAgo(lastRotated) > config.ssh_keys_rotated_fail)) {
-                helpers.addResult(results, 2, returnMsg, 'global', arn, custom);
-            } else if (helpers.daysAgo(userCreationTime) > 90 &&
-                (!lastRotated || lastRotated === 'N/A' || helpers.daysAgo(lastRotated) > config.ssh_keys_rotated_warn)) {
-                helpers.addResult(results, 1, returnMsg, 'global', arn, custom);
-            } else {
-                helpers.addResult(results, 0,
-                    'User SSH key '  + keyNum + ' ' +
-                    ((lastRotated === 'N/A' || !lastRotated) ? 'has never been rotated but user is only ' + helpers.daysAgo(userCreationTime) + ' days old' : 'was last rotated ' + helpers.daysAgo(lastRotated) + ' days ago'), 'global', arn);
+            if (!listSSHPublicKeys || listSSHPublicKeys.err || !listSSHPublicKeys.data || !listSSHPublicKeys.data.SSHPublicKeys) {
+                helpers.addResult(results, 3,
+                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), user.Arn);
+                continue;
             }
 
-            found = true;
+            for (var sshkey of listSSHPublicKeys.data.SSHPublicKeys) {
+
+                if (sshkey.Status && sshkey.Status ==='Active') {
+                    if (!sshkey.UploadDate) continue;
+                    
+                    var keyDate = new Date(sshkey.UploadDate);
+                    var daysOld = helpers.daysAgo(keyDate);
+                    var returnMsg = `SSH key with ID: ${sshkey.SSHPublicKeyId} is ${daysOld} days old`;
+
+                    if (daysOld > config.ssh_keys_rotated_fail) {
+                        helpers.addResult(results, 2, returnMsg, 'global', user.Arn);
+
+                    } else if (daysOld > config.ssh_keys_rotated_warn) {
+                        helpers.addResult(results, 1, returnMsg, 'global', user.Arn);
+
+                    } else {
+                        helpers.addResult(results, 0, returnMsg, 'global', user.Arn);
+                    }
+                    found = true;
+                }      
+            }    
+            if (!found) {
+                helpers.addResult(results, 0, 'No SSH keys found', 'global', user.Arn);
+            }        
         }
-
-        for (var r in generateCredentialReport.data) {
-            var obj = generateCredentialReport.data[r];
-
-            // TODO: test the root account?
-            // if (obj.user === '<root_account>') continue;
-
-            if (obj.cert_1_active) {
-                addSSHKeyResults(obj.cert_1_last_rotated, '1', obj.arn, obj.user, obj.user_creation_time);
-            }
-
-            if (obj.cert_2_active) {
-                addSSHKeyResults(obj.cert_2_last_rotated, '2', obj.arn, obj.user, obj.user_creation_time);
-            }
-        }
-
-        if (!found) {
-            helpers.addResult(results, 0, 'No SSH keys found', 'global');
-        }
-
         callback(null, results, source);
     }
 };

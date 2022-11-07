@@ -193,7 +193,7 @@ var calls = {
             params: {
                 MaxResults: 60
             }
-        },
+        }
     },
     CodePipeline: {
         listPipelines: {
@@ -320,7 +320,17 @@ var calls = {
     DocDB: {
         describeDBClusters: {
             property: 'DBClusters',
-            paginate: 'Marker'
+            paginate: 'Marker',
+            params: {
+                Filters: [
+                    {
+                        Name: 'engine',
+                        Values: [
+                            'docdb'
+                        ]
+                    }
+                ]
+            }
         }
     },
     DynamoDB: {
@@ -2060,6 +2070,11 @@ var postcalls = [
             listResourcesForWebACL: {
                 reliesOnService: 'wafv2',
                 reliesOnCall: 'listWebACLs',
+                override: true
+            },
+            getWebACLForCognitoUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
                 override: true
             }
         },

@@ -304,7 +304,17 @@ var calls = [
         DocDB: {
             describeDBClusters: {
                 property: 'DBClusters',
-                paginate: 'Marker'
+                paginate: 'Marker',
+                params: {
+                    Filters: [
+                        {
+                            Name: 'engine',
+                            Values: [
+                                'docdb'
+                            ]
+                        }
+                    ]
+                }
             }
         },
         DynamoDB: {
@@ -1117,7 +1127,7 @@ var calls = [
                 property: 'UserPools',
                 paginate: 'NextToken',
                 params: {
-                    MaxResults: 100
+                    MaxResults: 60
                 }
             },
         },
@@ -1713,6 +1723,11 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getWebACLForCognitoUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
             }
         },
         ECS: {
