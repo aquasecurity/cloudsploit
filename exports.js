@@ -22,6 +22,8 @@ module.exports = {
         'apigatewayClientCertificate'   : require(__dirname + '/plugins/aws/apigateway/apigatewayClientCertificate.js'),
         'apigatewayResponseCaching'     : require(__dirname + '/plugins/aws/apigateway/apigatewayResponseCaching.js'),
         'apiStageLevelCacheEncryption'  : require(__dirname + '/plugins/aws/apigateway/apiStageLevelCacheEncryption.js'),
+        'customDomainTlsVersion'        : require(__dirname + '/plugins/aws/apigateway/customDomainTlsVersion.js'),
+        'apigatewayDefaultEndpointDisabled'  : require(__dirname + '/plugins/aws/apigateway/apigatewayDefaultEndpointDisabled.js'),
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
         'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
