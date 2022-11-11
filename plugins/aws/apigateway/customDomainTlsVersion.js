@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'API Gateway TLS Custom Domain Deprecated Protocols',
+    title: 'Custom Domain TLS Version',
     category: 'API Gateway',
     domain: 'Availability',
     description: 'Ensure API Gateway Custom Domains are using current minimum TLS version.',
@@ -14,6 +14,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.apigateway, function(region, rcb){
             var getDomainNames = helpers.addSource(cache, source,
@@ -31,14 +32,17 @@ module.exports = {
                 helpers.addResult(results, 0, 'No API Gateway Custom Domains found', region);
                 return rcb();
             }
-            for (let api of getDomainNames.data){
-                if (api.securityPolicy &&  
-                       (api.securityPolicy === 'TLS_1_2' || api.securityPolicy === 'TLS_1_0')) {
+            for (let domain of getDomainNames.data){
+                if (!domain.domainName) continue;
+
+                var domainArn = `arn:${awsOrGov}:apigateway:${region}::/domainnames/${domain.domainName}`;
+
+                if (domain.securityPolicy && domain.securityPolicy === 'TLS_1_2'){
                     helpers.addResult(results, 0,
-                        `API Gateway Custom Domain is using current minimum TLS version ${api.securityPolicy}`, region,  api.regionalCertificateArn);
+                        `API Gateway Custom Domain is using current minimum TLS version ${domain.securityPolicy}`, region, domainArn);
                 } else {
                     helpers.addResult(results, 2,
-                        `API Gateway Custom Domain is using deprecated minimum TLS version ${api.securityPolicy}`, region,  api.regionalCertificateArn);
+                        `API Gateway Custom Domain is using deprecated TLS version ${domain.securityPolicy}`, region, domainArn);
                 }
                         
             }
