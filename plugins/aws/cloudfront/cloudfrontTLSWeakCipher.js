@@ -16,7 +16,7 @@ module.exports = {
         const deprecatedTLSVersions = [
             'TLSv1.2_2018',
             'TLSv1.2_2019',
-        ]
+        ];
         var region = helpers.defaultRegion(settings);
 
         var listDistributions = helpers.addSource(cache, source,
@@ -36,9 +36,9 @@ module.exports = {
         }
  
         for (let distribution of listDistributions.data){
-            if(!distribution.ARN) continue;
+            if (!distribution.ARN) continue;
             
-            if(deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+            if (deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
                 helpers.addResult(results, 2, 'CloudFront distribution TLS version is weak cipher suite', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0, 'CloudFront distribution TLS version is not weak cipher suite', 'global', distribution.ARN);
