@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'API Gateway TLS Rest Api Default Endpoint',
+    title: 'API Gateway Default Endpoint Disabled',
     category: 'API Gateway',
     domain: 'Availability',
     description: 'Ensure default execute-api endpoint is disabled for your API Gateway.',
