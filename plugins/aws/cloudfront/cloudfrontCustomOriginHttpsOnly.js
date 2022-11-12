@@ -1,13 +1,13 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront TLS Weak Cipher',
+    title: 'CloudFront Custom Orgin HTTPS Only',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensures CloudFront Distribution TLS Version is not weak cipher suite.',
-    more_info: 'The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS where possible.',
-    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',
-    recommended_action: 'Modify cloudFront distribution and update the TLS version.',
+    description: 'Ensures CloudFront Distribution Custom Origin is HTTPS Only.',
+    more_info: 'When you create a distribution, you specify the origin where CloudFront sends requests for the files. You can use several different kinds of origins with CloudFront.',
+    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html',
+    recommended_action: 'Modify cloudFront distribution and select Https only for custom origin.',
     apis: ['CloudFront:listDistributions'],
 
     run: function(cache, settings, callback) {
