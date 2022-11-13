@@ -64,13 +64,13 @@ const createCache = (data, err) => {
 
 describe('cloudfrontOriginTLSVersion', function () {
     describe('run', function () {
-        it('should PASS if CloudFront distributions is using https only', function (done) {
+        it('should PASS if CloudFront distributions custom origin TLS version is not deprecated', function (done) {
             const cache = createCache([listDistributions[1]]);
             cloudfrontOriginTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('CloudFront distribution custom origin TLS version is not decrypted')
+                expect(results[0].message).to.include('CloudFront distribution custom origin TLS version is not deprecated')
                 done();
             });
         });
@@ -85,13 +85,13 @@ describe('cloudfrontOriginTLSVersion', function () {
                 done();
             });
         });
-        it('should FAIL if Cloudfront Distribution is not https only', function (done) {
+        it('should FAIL if Cloudfront Distribution custom origin TLS version is deprecated', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontOriginTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('CloudFront distribution custom origin TLS version is decrypted')
+                expect(results[0].message).to.include('CloudFront distribution custom origin TLS version is deprecated')
                 done();
             });
         });

@@ -48,17 +48,17 @@ module.exports = {
                     !origin.CustomOriginConfig.OriginSslProtocols.Items) continue;
 
                     let sslItems = origin.CustomOriginConfig.OriginSslProtocols.Items;
-                    let isDecrypted = false;
+                    let isDeprecated = false;
                     for (let item of sslItems){
                         if (deprecatedVersion.includes(item)){
-                            isDecrypted = true;
+                            isDeprecated = true;
                             break;
                         } 
                     }
-                    if (isDecrypted){
-                        helpers.addResult(results, 2, 'CloudFront distribution custom origin TLS version is decrypted', 'global', distribution.ARN);
+                    if (isDeprecated){
+                        helpers.addResult(results, 2, 'CloudFront distribution custom origin TLS version is deprecated', 'global', distribution.ARN);
                     } else {
-                        helpers.addResult(results, 0, 'CloudFront distribution custom origin TLS version is not decrypted', 'global', distribution.ARN);    
+                        helpers.addResult(results, 0, 'CloudFront distribution custom origin TLS version is not deprecated', 'global', distribution.ARN);    
                     }   
 
 
