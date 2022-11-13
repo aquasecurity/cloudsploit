@@ -1,10 +1,10 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront TLS Weak Cipher',
+    title: 'CloudFront Distribution TLS Origin Deprecated',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensures CloudFront Distribution TLS Version is not weak cipher suite.',
+    description: 'Ensures CloudFront Distribution custom origin TLS version is not deprecated.',
     more_info: 'The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS where possible.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
