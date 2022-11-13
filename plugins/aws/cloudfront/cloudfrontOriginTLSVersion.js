@@ -50,10 +50,10 @@ module.exports = {
                     let sslItems = origin.CustomOriginConfig.OriginSslProtocols.Items;
                     let isDecrypted = false;
                     for (let item of sslItems){
-                    if (deprecatedVersion.includes(item)){
-                        isDecrypted = true;
-                        break;
-                    } 
+                        if (deprecatedVersion.includes(item)){
+                            isDecrypted = true;
+                            break;
+                        } 
                     }
                     if (isDecrypted){
                         helpers.addResult(results, 2, 'CloudFront distribution custom origin TLS version is decrypted', 'global', distribution.ARN);
