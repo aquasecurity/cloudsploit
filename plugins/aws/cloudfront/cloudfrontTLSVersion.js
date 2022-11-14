@@ -18,7 +18,7 @@ module.exports = {
             'TLSv1',
             'TLSv1_2016',
             'TLSv1.1_2016',
-        ]
+        ];
         var region = helpers.defaultRegion(settings);
 
         var listDistributions = helpers.addSource(cache, source,
@@ -38,9 +38,9 @@ module.exports = {
         }
  
         for (let distribution of listDistributions.data){
-            if(!distribution.ARN) continue;
+            if (!distribution.ARN) continue;
             
-            if(deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+            if (deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
                 helpers.addResult(results, 2, 'CloudFront distribution\'s TLS version is deprecated', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 0, 'CloudFront distribution\'s TLS version is not deprecated', 'global', distribution.ARN);
