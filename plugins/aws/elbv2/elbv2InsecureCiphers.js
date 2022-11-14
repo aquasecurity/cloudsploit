@@ -5,7 +5,7 @@ module.exports = {
     title: 'ELBv2 Insecure Ciphers',
     category: 'ELBv2',
     domain: 'Content Delivery',
-    description: "Ensure that Elbv2 listeners are configured to use the latest predefined security policies.",
+    description: 'Ensure that Elbv2 listeners are configured to use the latest predefined security policies.',
     more_info: 'Insecure or deprecated security policies can expose the client and the load balancer to various vulnerabilities.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html',
     recommended_action: 'Modify ELBv2 listeners with the latest predefined AWS security policies.',
