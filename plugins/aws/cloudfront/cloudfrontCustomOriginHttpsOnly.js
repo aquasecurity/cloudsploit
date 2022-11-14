@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront Custom Orgin HTTPS Only',
+    title: 'CloudFront Custom Origin HTTPS Only',
     category: 'CloudFront',
     domain: 'Content Delivery',
     description: 'Ensures CloudFront Distribution Custom Origin is HTTPS Only.',
@@ -34,7 +34,7 @@ module.exports = {
  
         for (let distribution of listDistributions.data){
             if (!distribution.ARN) continue;
-            console.log(distribution.Origins.Items)
+
             if (!distribution.Origins || !distribution.Origins.Items || !distribution.Origins.Items.length){
                 helpers.addResult(results, 0, 'CloudFront distribution has no origins', 'global', distribution.ARN);
             } else {
