@@ -21,10 +21,12 @@ const createCache = (instanceData, autoscalers, instanceGroupsError, autoScalers
             }
         },
         clusters: {
-            list: {
-                'global': {
-                    data: clusters,
-                    err: null
+            kubernetes: {
+                list: {
+                    'global': {
+                        data: clusters,
+                        err: null
+                    }
                 }
             }
         },

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your BigQuery dataset tables you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/bigquery/docs/customer-managed-encryption',
     recommended_action: 'Ensure that each BigQuery dataset table has desired encryption level.',
-    apis: ['datasets:list', 'datasets:get', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['datasets:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         bigquery_tables_encryption_protection_level: {
             name: 'BigQuery Dataset Encryption Protection Level',
@@ -55,7 +55,7 @@ module.exports = {
             function(cb) {
                 async.each(regions.datasets, function(region, rcb) {
                     let datasetsGet = helpers.addSource(cache, source,
-                        ['datasets', 'get', region]);
+                        ['datasets', 'list', region]);
 
                     if (!datasetsGet) return rcb();
 

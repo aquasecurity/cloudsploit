@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Application-layer secrets encryption adds additional security layer to sensitive data such as Kubernetes secrets stored in etcd.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets',
     recommended_action: 'Ensure that all GKE clusters have the desired application-layer secrets encryption level.',
-    apis: ['clusters:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['clusters:kubernetes:list', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         kubernetes_cluster_encryption_level: {
             name: 'Kubernetes Cluster Encryption Protection Level',
@@ -54,9 +54,9 @@ module.exports = {
                 });
             },
             function(cb) {
-                async.each(regions.clusters, function(region, rcb) {
+                async.each(regions.clusters.kubernetes, function(region, rcb) {
                     let clusters = helpers.addSource(cache, source,
-                        ['clusters', 'list', region]);
+                        ['clusters', 'kubernetes', 'list', region]);
 
                     if (!clusters) return rcb();
 

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes network policy creates isolation between cluster pods, this creates a more secure environment with only specified connections allowed.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy',
     recommended_action: 'Enable network policy on all Kubernetes clusters.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:kubernetes:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters, function(region, rcb){
+        async.each(regions.clusters.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'list', region]);
+                ['clusters', 'kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

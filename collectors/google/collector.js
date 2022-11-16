@@ -95,6 +95,14 @@ var calls = {
                 paginationKey: 'pageSize'
             }
         },
+        bigtable: {
+            list: {
+                url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
+                location: null,
+                pagination: true,
+                paginationKey: 'pageToken'
+           }
+        },
         manyApi: true,
     },
     instanceTemplates: {
@@ -196,11 +204,21 @@ var calls = {
         }
     },
     clusters: {
-        list: {
-            url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
-            location: null,
-            pagination: false
-        }
+        kubernetes: {
+            list: {
+                url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
+                location: null,
+                pagination: false
+            }
+        },
+        dataproc: {
+            list: { //https://dataproc.googleapis.com/v1/projects/{projectId}/clusters:list
+                url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
+                location: 'region',
+                pagination: true
+            }
+        },
+        manyApi: true,
     },
     managedZones: {
         list: {
@@ -369,17 +387,6 @@ var postcalls = {
             reliesOnSubService: ['sql'],
             reliesOnCall: ['list'],
             properties: ['name'],
-            pagination: true
-        }
-    },
-    datasets: {
-        get: {
-            url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets/{datasetId}',
-            location: null,
-            reliesOnService: ['datasets'],
-            reliesOnCall: ['list'],
-            properties: ['datasetId'],
-            subObj: ['datasetReference'],
             pagination: true
         }
     },

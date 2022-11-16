@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Enabling automatic upgrades on nodes ensures that each node stays current with the latest version of the master branch, also ensuring that the latest security patches are installed to provide the most secure environment.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades',
     recommended_action: 'Ensure that automatic node upgrades are enabled on all node pools in Kubernetes clusters',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:kubernetes:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters, function(region, rcb){
+        async.each(regions.clusters.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'list', region]);
+                ['clusters', 'kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

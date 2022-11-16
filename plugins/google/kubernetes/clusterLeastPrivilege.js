@@ -10,7 +10,7 @@ module.exports = {
         'Kubernetes default service account should be limited to minimal access scopes necessary to operate the clusters.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Ensure that all Kubernetes clusters are created with minimal access scope.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:kubernetes:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -28,10 +28,10 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters, (region, rcb) => {
+        async.each(regions.clusters.kubernetes, (region, rcb) => {
 
             var clusters = helpers.addSource(cache, source,
-                ['clusters', 'list', region]);
+                ['clusters', 'kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'It is recommended to disable the web dashboard because it is backed by a highly privileged service account.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards',
     recommended_action: 'Ensure that no Kubernetes clusters have the web dashboard enabled',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:kubernetes:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters, function(region, rcb){
+        async.each(regions.clusters.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
-                ['clusters', 'list', region]);
+                ['clusters', 'kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

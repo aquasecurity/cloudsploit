@@ -29,7 +29,7 @@ module.exports = {
 
         const latestMySQLVersion = 8.0;
 
-        async.each(regions.sql, function(region, rcb){
+        async.each(regions.instances.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
                 cache, source, ['instances', 'sql', 'list', region]);
 

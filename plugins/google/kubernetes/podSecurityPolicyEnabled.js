@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Kubernetes pod security policy is a resource that controls security sensitive aspects of the pod configuration.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies',
     recommended_action: 'Ensure that all Kubernetes clusters have pod security policy enabled.',
-    apis: ['clusters:list', 'projects:get'],
+    apis: ['clusters:kubernetes:list', 'projects:get'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.clusters, (region, rcb) => {
+        async.each(regions.clusters.kubernetes, (region, rcb) => {
             var clusters = helpers.addSource(cache, source,
-                ['clusters', 'list', region]);
+                ['clusters', 'kubernetes', 'list', region]);
 
             if (!clusters) return rcb();
 

@@ -52,7 +52,7 @@ const datasetGet = [
 const createCache = (err, data, keysErr, keysList) => {
     return {
         datasets: {
-            get: {
+            list: {
                 'global': {
                     err: err,
                     data: data
