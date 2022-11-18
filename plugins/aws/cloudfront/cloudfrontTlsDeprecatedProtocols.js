@@ -40,11 +40,11 @@ module.exports = {
         for (let distribution of listDistributions.data){
             if (!distribution.ARN) continue;
             
-            if (!listDistributions?.ViewerCertificate?.MinimumProtocolVersion && !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+            if (distribution.ViewerCertificate?.MinimumProtocolVersion && !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
                 helpers.addResult(results, 0, 'CloudFront distribution is not using deprecated TLS versions', 'global', distribution.ARN);
                 
             } else {
-                helpers.addResult(results, 2, 'CloudFront distribution is using deprecated TLS versions', 'global', distribution.ARN);
+                helpers.addResult(results, 2, 'CloudFront distribution is using deprecated TLS version', 'global', distribution.ARN);
             }
         }
         callback(null, results, source);
