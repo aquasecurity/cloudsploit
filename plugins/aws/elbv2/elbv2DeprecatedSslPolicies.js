@@ -67,7 +67,7 @@ module.exports = {
                 }
 
                 if (!describeListeners.data.Listeners.length) {
-                    helpers.addResult(results, 0, 'No Listeners found', region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 0, 'No Listeners found for load balancer', region, alb.LoadBalancerArn);
                     continue;
                 }
 
