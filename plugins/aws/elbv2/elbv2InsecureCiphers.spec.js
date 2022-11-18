@@ -128,7 +128,7 @@ describe('elbv2InsecureCiphers', function () {
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No load balancers found');
+                expect(results[0].message).to.include('No Application or Network load balancers found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -148,7 +148,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('Unable to query for Listeners');
+                expect(results[0].message).to.include('Unable to query for ELBv2 Listeners');
                 expect(results[0].status).to.equal(3);
                 done();
             });
@@ -158,7 +158,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[2]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('No Listeners found');
+                expect(results[0].message).to.include('No Listeners found for load balancer');
                 expect(results[0].status).to.equal(0);
                 done();
             });
@@ -168,7 +168,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[1]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('No SSL policies found');
+                expect(results[0].message).to.include('No SSL policies found for load balancer');
                 expect(results[0].status).to.equal(0);
                 done();
             });
@@ -178,7 +178,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[0]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('are using following policies which contains insecure ciphers');
+                expect(results[0].message).to.include('Load balancer listeners policies contain secure ciphers');
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -188,7 +188,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[3]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('are using policies which contains secure ciphers');
+                expect(results[0].message).to.include('Load balancer listeners have these policies with insecure ciphers');
                 expect(results[0].status).to.equal(0);
                 done();
             });

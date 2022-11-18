@@ -60,12 +60,12 @@ module.exports = {
                     ['elbv2', 'describeListeners', region, alb.DNSName]);
 
                 if (describeListeners.err || !describeListeners.data || !describeListeners.data.Listeners) {
-                    helpers.addResult(results, 3, `Unable to query for Listeners: ${helpers.addError(describeListeners)}`, region);
+                    helpers.addResult(results, 3, `Unable to query for ELBv2 Listeners: ${helpers.addError(describeListeners)}`, region, alb.LoadBalancerArn);
                     continue;
                 }
 
                 if (!describeListeners.data.Listeners.length) {
-                    helpers.addResult(results, 0, 'No Listeners found', region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 0, 'No Listeners found for load balancer', region, alb.LoadBalancerArn);
                     continue;
                 }
 
@@ -78,11 +78,11 @@ module.exports = {
                     }
                 });
                 if (!SslPolicy){
-                    helpers.addResult(results, 0,'No SSL policies found', region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 0,'No SSL policies found for load balancer', region, alb.LoadBalancerArn);
                 } else if (depPolicies && depPolicies.length){
-                    helpers.addResult(results, 2, `The listeners on "${alb.LoadBalancerName}" are using following policies which contains insecure ciphers ` + depPolicies.join(', '), region, alb.LoadBalancerArn);
-                } else if (depPolicies && !depPolicies.length){
-                    helpers.addResult(results, 0, `All listeners on "${alb.LoadBalancerName}" are using policies which contains secure ciphers`, region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 2, `Load balancer listeners have these policies with insecure ciphers: ` + depPolicies.join(', '), region, alb.LoadBalancerArn);
+                } else {
+                    helpers.addResult(results, 0, 'Load balancer listeners policies contain secure ciphers', region, alb.LoadBalancerArn);
                 }
             }
             rcb();
