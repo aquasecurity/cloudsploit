@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront TLS Version',
+    title: 'CloudFront TLS Deprecated Protocols',
     category: 'CloudFront',
     domain: 'Content Delivery',
     description: 'Ensures AWS CloudFront distribution is not using deprecated TLS Version.',
