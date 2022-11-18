@@ -62,7 +62,7 @@ module.exports = {
                     ['elbv2', 'describeListeners', region, alb.DNSName]);
 
                 if (describeListeners.err || !describeListeners.data || !describeListeners.data.Listeners) {
-                    helpers.addResult(results, 3, `Unable to query for Listeners: ${helpers.addError(describeListeners)}`, region);
+                    helpers.addResult(results, 3, `Unable to query for Listeners: ${helpers.addError(describeListeners)}`, region, alb.LoadBalancerArn);
                     continue;
                 }
 
