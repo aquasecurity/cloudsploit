@@ -6,7 +6,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensures CloudFront Distribution Custom Origin is HTTPS Only.',
     more_info: 'When you create a distribution, you specify the origin where CloudFront sends requests for the files. You can use several different kinds of origins with CloudFront.',
-    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html',
+    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https.html',
     recommended_action: 'Modify cloudFront distribution and select Https only for custom origin.',
     apis: ['CloudFront:listDistributions'],
 
@@ -39,16 +39,21 @@ module.exports = {
                 helpers.addResult(results, 0, 'CloudFront distribution has no origins', 'global', distribution.ARN);
             } else {
                 let items = distribution.Origins.Items;
+                let isCorrectPolicy = true;
                 for (let origin of items){
-                    if (!origin.CustomOriginConfig) continue;
+                    if (!origin.CustomOriginConfig || !origin.CustomOriginConfig.OriginProtocolPolicy) continue;
 
                     let originProtocolPolicy = origin.CustomOriginConfig.OriginProtocolPolicy.toLowerCase();
-
+                    
                     if (originProtocolPolicy == 'http-only' || originProtocolPolicy == 'match-viewer'){
-                        helpers.addResult(results, 2, 'CloudFront distribution custom origin is not configured to use HTTPS only', 'global', distribution.ARN);
-                    } else {
-                        helpers.addResult(results, 0, 'CloudFront distribution custom origin is configured to use HTTPS only', 'global', distribution.ARN);
+                        isCorrectPolicy = false;
+                        break;
                     }
+                }
+                if (!isCorrectPolicy){
+                    helpers.addResult(results, 2, 'CloudFront distribution custom origin is not configured to use HTTPS only', 'global', distribution.ARN);
+                } else {
+                    helpers.addResult(results, 0, 'CloudFront distribution custom origin is configured to use HTTPS only', 'global', distribution.ARN);
                 }
             }
         }
