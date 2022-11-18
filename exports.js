@@ -61,7 +61,6 @@ module.exports = {
         'compressObjectsAutomatically'  : require(__dirname + '/plugins/aws/cloudfront/compressObjectsAutomatically.js'),
         'cloudfrontCustomOriginHttpsOnly' : require(__dirname + '/plugins/aws/cloudfront/cloudfrontCustomOriginHttpsOnly.js'),
 
-
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
