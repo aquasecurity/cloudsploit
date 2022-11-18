@@ -4,8 +4,8 @@ module.exports = {
     title: 'CloudFront TLS Version',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensures CloudFront Distribution TLS Version is not Deprecated.',
-    more_info: 'CloudFront now provides the CloudFront-Viewer-TLS header for use with origin request policies. CloudFront-Viewer-TLS is an HTTP header that includes the TLS version and cipher suite used to negotiate the viewer TLS connection.',
+    description: 'Ensures AWS CloudFront distribution is not using deprecated TLS Version.',
+    more_info: 'Use latest TLS policy for CloudFront distribution to meet compliance and regulatory requirements within your organisation and to adhere to AWS security best policies.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/cloudfront-tls-security-policy/',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
     apis: ['CloudFront:listDistributions'],
@@ -40,10 +40,11 @@ module.exports = {
         for (let distribution of listDistributions.data){
             if (!distribution.ARN) continue;
             
-            if (deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
-                helpers.addResult(results, 2, 'CloudFront distribution\'s TLS version is deprecated', 'global', distribution.ARN);
+            if (!listDistributions?.ViewerCertificate?.MinimumProtocolVersion && !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+                helpers.addResult(results, 0, 'CloudFront distribution is not using deprecated TLS versions', 'global', distribution.ARN);
+                
             } else {
-                helpers.addResult(results, 0, 'CloudFront distribution\'s TLS version is not deprecated', 'global', distribution.ARN);
+                helpers.addResult(results, 2, 'CloudFront distribution is using deprecated TLS versions', 'global', distribution.ARN);
             }
         }
         callback(null, results, source);
