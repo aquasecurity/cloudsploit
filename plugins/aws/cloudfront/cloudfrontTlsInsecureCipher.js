@@ -38,7 +38,7 @@ module.exports = {
         for (let distribution of listDistributions.data){
             if (!distribution.ARN) continue;
             
-            if ((distribution.ViewerCertificate || distribution.ViewerCertificate.MinimumProtocolVersion)&& !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+            if (distribution.ViewerCertificate && distribution.ViewerCertificate.MinimumProtocolVersion && !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
                 helpers.addResult(results, 0, 'CloudFront distribution TLS version is secure', 'global', distribution.ARN);
             } else {
                 helpers.addResult(results, 2, 'CloudFront distribution TLS version is insecure', 'global', distribution.ARN);
