@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront Distribution TLS Origin Deprecated',
+    title: 'CloudFront Distribution Origins TLS Version',
     category: 'CloudFront',
     domain: 'Content Delivery',
     description: 'Ensures CloudFront Distribution custom origin TLS version is not deprecated.',
@@ -45,7 +45,10 @@ module.exports = {
                 for (let origin of origins){
                     if (!origin.CustomOriginConfig ||
                     !origin.CustomOriginConfig.OriginSslProtocols ||
-                    !origin.CustomOriginConfig.OriginSslProtocols.Items) continue;
+                    !origin.CustomOriginConfig.OriginSslProtocols.Items) {
+                        helpers.addResult(results, 0, 'CloudFront distribution does not have custom origins or origins do not have SSL protocol items', 'global', distribution.ARN);
+                        continue;
+                    }
 
                     let sslItems = origin.CustomOriginConfig.OriginSslProtocols.Items;
                     let isDeprecated = false;
@@ -60,8 +63,6 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 0, 'CloudFront distribution custom origin TLS version is not deprecated', 'global', distribution.ARN);    
                     }   
-
-
                 }
             }
         }

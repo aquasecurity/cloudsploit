@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const cloudfrontOriginTLSVersion = require('./cloudfrontOriginTLSVersion');
+const cloudfrontOriginTLSVersion = require('./cloudfrontOriginTlsVersion');
 
 const listDistributions = [
     {
