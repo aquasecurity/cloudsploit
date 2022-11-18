@@ -67,7 +67,13 @@ var calls = {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instances',
             location: null,
             pagination: true
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['resourceRecordSets', 'firewalls']
+            }
+        },
     },
     sql: {
         list: {
@@ -308,6 +314,14 @@ var calls = {
         list: {
             url: 'https://apikeys.googleapis.com/v2/projects/{projectId}/locations/global/keys',
             location: null
+        }
+    },
+    resourceRecordSets: {
+        list: {
+            url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/managedZones/{id}/rrsets',
+            reliesOnService: ['managedZones'],
+            reliesOnCall: ['list'],
+            properties: ['id']
         }
     }
 };

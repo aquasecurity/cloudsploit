@@ -29,6 +29,10 @@ var calls = {
         getRestApis: {
             property: 'items',
             paginate: 'NextToken'
+        },
+        getDomainNames: {
+            property: 'items',
+            paginate: 'NextToken'
         }
     },
     AppConfig: {

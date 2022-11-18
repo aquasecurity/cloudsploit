@@ -19,7 +19,7 @@ module.exports = {
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
-
+            
             if (!describeTrails) return rcb();
 
             if (describeTrails.err || !describeTrails.data) {
@@ -34,12 +34,14 @@ module.exports = {
             }
 
             for (let trail of describeTrails.data){
-                if (!trail.TrailARN) continue;
+                if (!trail.TrailARN || (trail.HomeRegion && trail.HomeRegion.toLowerCase() !== region)) continue;
+                // Skip CloudSploit-managed events bucket
+                if (trail.TrailARN == helpers.CLOUDSPLOIT_EVENTS_BUCKET) continue;
                 
                 let listTags = helpers.addSource(cache, source,
                     ['cloudtrail', 'listTags', region, trail.TrailARN]);
 
-                if (listTags.err || !listTags.data || !listTags.data.ResourceTagList || !listTags.data.ResourceTagList.length) {
+                if (!listTags || listTags.err || !listTags.data || !listTags.data.ResourceTagList || !listTags.data.ResourceTagList.length) {
                     helpers.addResult(results, 3,
                         `Unable to list trail tags: ${helpers.addError(listTags)}`, region);
                     continue;
