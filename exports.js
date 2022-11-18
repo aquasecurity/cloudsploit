@@ -61,6 +61,7 @@ module.exports = {
         'enableOriginFailOver'          : require(__dirname + '/plugins/aws/cloudfront/enableOriginFailOver.js'),
         'cloudfrontGeoRestriction'      : require(__dirname + '/plugins/aws/cloudfront/cloudfrontGeoRestriction.js'),
         'compressObjectsAutomatically'  : require(__dirname + '/plugins/aws/cloudfront/compressObjectsAutomatically.js'),
+        'cloudfrontCustomOriginHttpsOnly' : require(__dirname + '/plugins/aws/cloudfront/cloudfrontCustomOriginHttpsOnly.js'),
         'cloudfrontTlsInsecureCipher'   : require(__dirname + '/plugins/aws/cloudfront/cloudfrontTlsInsecureCipher.js'),
         'cloudfrontTlsDeprecatedProtocols' : require(__dirname + '/plugins/aws/cloudfront/cloudfrontTlsDeprecatedProtocols.js'),
 
