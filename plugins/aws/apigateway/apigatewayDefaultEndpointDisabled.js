@@ -47,7 +47,6 @@ module.exports = {
                         `API Gateway "${api.name}" is accessible through default endpoint`,
                         region, apiArn);
                 }
-
             }
 
             rcb();
