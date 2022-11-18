@@ -234,6 +234,7 @@ module.exports = {
                                 helpers.addResult(results, 3,
                                     `Unable to get configuration profiles description: ${helpers.addError(listConfigurationProfiles)}`,
                                     region, resource); 
+                                return;
                             }
 
                             if (listConfigurationProfiles.data.Items.length) {
