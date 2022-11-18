@@ -51,7 +51,7 @@ describe('cloudfrontTLSVersion', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('CloudFront distribution is not using deprecated TLS versions')
+                expect(results[0].message).to.include('CloudFront distribution is not using deprecated TLS version')
                 done();
             });
         });
