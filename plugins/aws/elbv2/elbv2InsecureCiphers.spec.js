@@ -178,7 +178,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[0]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('Load balancer listeners policies contain secure ciphers');
+                expect(results[0].message).to.include('Load balancer listeners have these policies with insecure ciphers');
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -188,7 +188,7 @@ describe('elbv2InsecureCiphers', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[3]);
             elbv2InsecureCiphers.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('Load balancer listeners have these policies with insecure ciphers');
+                expect(results[0].message).to.include('Load balancer listeners policies contain secure ciphers');
                 expect(results[0].status).to.equal(0);
                 done();
             });
