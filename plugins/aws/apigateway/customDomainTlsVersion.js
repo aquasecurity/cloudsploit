@@ -44,8 +44,8 @@ module.exports = {
                     helpers.addResult(results, 2,
                         `API Gateway Custom Domain is using deprecated TLS version ${domain.securityPolicy}`, region, domainArn);
                 }
-                        
             }
+
             rcb();
         }, function(){
             callback(null, results, source);
