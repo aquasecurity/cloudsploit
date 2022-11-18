@@ -48,8 +48,9 @@ module.exports = {
                         region, apiArn);
                 }
 
-                rcb();
             }
+
+            rcb();
         }, function(){
             callback(null, results, source);
         });
