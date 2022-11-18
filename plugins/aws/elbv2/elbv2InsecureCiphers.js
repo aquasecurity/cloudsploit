@@ -80,7 +80,7 @@ module.exports = {
                 if (!SslPolicy){
                     helpers.addResult(results, 0,'No SSL policies found for load balancer', region, alb.LoadBalancerArn);
                 } else if (depPolicies && depPolicies.length){
-                    helpers.addResult(results, 2, `Load balancer listeners have these policies with insecure ciphers: ` + depPolicies.join(', '), region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 2, 'Load balancer listeners have these policies with insecure ciphers: ' + depPolicies.join(', '), region, alb.LoadBalancerArn);
                 } else {
                     helpers.addResult(results, 0, 'Load balancer listeners policies contain secure ciphers', region, alb.LoadBalancerArn);
                 }
