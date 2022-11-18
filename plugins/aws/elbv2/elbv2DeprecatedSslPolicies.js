@@ -83,8 +83,8 @@ module.exports = {
                     helpers.addResult(results, 0,'No SSL policies found', region, alb.LoadBalancerArn);
                 } else if (depPolicies && depPolicies.length){
                     helpers.addResult(results, 2, `Load balancer listeners are using these deprecated policies :` + depPolicies.join(', '), region, alb.LoadBalancerArn);
-                } else if (depPolicies && !depPolicies.length){
-                    helpers.addResult(results, 0, `All listeners on "${alb.LoadBalancerName}" are using current SSL policies`, region, alb.LoadBalancerArn);
+                } else {
+                    helpers.addResult(results, 0, 'Load balancer listeners are using current SSL policies', region, alb.LoadBalancerArn);
                 }
             }
             rcb();
