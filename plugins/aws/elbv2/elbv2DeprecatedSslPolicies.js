@@ -49,7 +49,7 @@ module.exports = {
             }
 
             if (!describeLoadBalancers.data.length) {
-                helpers.addResult(results, 0, 'No load balancers found', region);
+                helpers.addResult(results, 0, 'No Application or Network load balancers found', region);
                 return rcb();
             }
 
