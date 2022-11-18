@@ -129,7 +129,7 @@ describe('elbv2DeprecatedSslPolicies', function () {
             elbv2DeprecatedSslPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No load balancers found');
+                expect(results[0].message).to.include('No Application or Network load balancers found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -159,7 +159,7 @@ describe('elbv2DeprecatedSslPolicies', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[2]);
             elbv2DeprecatedSslPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('No Listeners found');
+                expect(results[0].message).to.include('No Listeners found for load balancer');
                 expect(results[0].status).to.equal(0);
                 done();
             });
@@ -169,7 +169,7 @@ describe('elbv2DeprecatedSslPolicies', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[1]);
             elbv2DeprecatedSslPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('No SSL policies found');
+                expect(results[0].message).to.include('No SSL policies found for load balancer');
                 expect(results[0].status).to.equal(0);
                 done();
             });
@@ -179,7 +179,7 @@ describe('elbv2DeprecatedSslPolicies', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[0]);
             elbv2DeprecatedSslPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('are using following deprecated policies');
+                expect(results[0].message).to.include('are using these deprecated policies');
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -189,7 +189,7 @@ describe('elbv2DeprecatedSslPolicies', function () {
             const cache = createCache([describeLoadBalancers[0]],describeListeners[3]);
             elbv2DeprecatedSslPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('are using current SSL policies');
+                expect(results[0].message).to.include('listeners are using current SSL policies');
                 expect(results[0].status).to.equal(0);
                 done();
             });
