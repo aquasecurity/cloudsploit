@@ -80,7 +80,7 @@ module.exports = {
                     }
                 });
                 if (!SslPolicy){
-                    helpers.addResult(results, 0,'No SSL policies found', region, alb.LoadBalancerArn);
+                    helpers.addResult(results, 0,'No SSL policies found load balancer', region, alb.LoadBalancerArn);
                 } else if (depPolicies && depPolicies.length){
                     helpers.addResult(results, 2, `Load balancer listeners are using these deprecated policies :` + depPolicies.join(', '), region, alb.LoadBalancerArn);
                 } else {
