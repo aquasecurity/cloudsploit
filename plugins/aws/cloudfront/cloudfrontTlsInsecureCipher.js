@@ -1,10 +1,10 @@
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFront TLS Weak Cipher',
+    title: 'CloudFront TLS Insecure Cipher',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensures CloudFront Distribution TLS Version is not weak cipher suite.',
+    description: 'Ensures CloudFront distribution TLS Version is not using insecure cipher.',
     more_info: 'The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS where possible.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
@@ -38,10 +38,10 @@ module.exports = {
         for (let distribution of listDistributions.data){
             if (!distribution.ARN) continue;
             
-            if (deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
-                helpers.addResult(results, 2, 'CloudFront distribution TLS version is weak cipher suite', 'global', distribution.ARN);
+            if ((distribution.ViewerCertificate || distribution.ViewerCertificate.MinimumProtocolVersion)&& !deprecatedTLSVersions.includes(distribution.ViewerCertificate.MinimumProtocolVersion)){
+                helpers.addResult(results, 0, 'CloudFront distribution TLS version is secure', 'global', distribution.ARN);
             } else {
-                helpers.addResult(results, 0, 'CloudFront distribution TLS version is not weak cipher suite', 'global', distribution.ARN);
+                helpers.addResult(results, 2, 'CloudFront distribution TLS version is insecure', 'global', distribution.ARN);
             }
         }
         callback(null, results, source);

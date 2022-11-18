@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const cloudfrontTLSWeakCipher = require('./cloudfrontTLSWeakCipher');
+const cloudfrontTLSWeakCipher = require('./cloudfrontTlsInsecureCipher');
 
 const listDistributions = [
     {
@@ -51,7 +51,7 @@ describe('cloudfrontTLSWeakCipher', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('CloudFront distribution TLS version is not weak cipher suite')
+                expect(results[0].message).to.include('CloudFront distribution TLS version is secure')
                 done();
             });
         });
@@ -62,7 +62,7 @@ describe('cloudfrontTLSWeakCipher', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('global');
-                expect(results[0].message).to.include('CloudFront distribution TLS version is weak cipher suite')
+                expect(results[0].message).to.include('CloudFront distribution TLS version is insecure')
                 done();
             });
         });
