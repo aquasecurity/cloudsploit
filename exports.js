@@ -763,7 +763,9 @@ module.exports = {
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
         'openUDP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openUDP.js'),
-        'openSNMP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openSNMP.js'),
+        'openSNMP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSNMP.js'),
+        'openRedis'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openRedis.js'),
+        'openMongoDB'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openMongoDB.js'),
 
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
