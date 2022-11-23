@@ -23,9 +23,10 @@ module.exports = {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
             // OPTION 2: If using hard-coded credentials, enter them below
-            // application_id: process.env.AZURE_APPLICATION_ID || '',
-            // key_value: process.env.AZURE_KEY_VALUE || '',
-            // directory_id: process.env.AZURE_DIRECTORY_ID || '',
+            application_id: process.env.AZURE_APPLICATION_ID || '8aa9db84-2dd8-4b07-a446-f15fc92133b5',
+            key_value: process.env.AZURE_KEY_VALUE || 'wJZ8Q~20VxWgZGN3DJ1NF0AzrBkyh84_C0jnQb1w',
+            directory_id: process.env.AZURE_DIRECTORY_ID || '2d4f0836-5935-47f5-954c-14e713119ac2',
+            subscription_id: 'dce7d0ad-ebf6-437f-a3b0-28fc0d22117e'
             // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
         },
         azure_remediate: {
