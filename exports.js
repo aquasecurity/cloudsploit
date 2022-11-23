@@ -766,6 +766,8 @@ module.exports = {
         'openSNMP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSNMP.js'),
         'openRedis'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openRedis.js'),
         'openMongoDB'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openMongoDB.js'),
+        'openMemcached'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openMemcached.js'),
+        'openLDAPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAPS.js'),
 
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
