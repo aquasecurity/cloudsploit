@@ -768,6 +768,8 @@ module.exports = {
         'openMongoDB'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openMongoDB.js'),
         'openMemcached'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openMemcached.js'),
         'openLDAPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAPS.js'),
+        'openLDAP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAP.js'),
+        'openInternalWeb'               : require(__dirname + '/plugins/azure/networksecuritygroups/openInternalWeb.js'),
 
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
