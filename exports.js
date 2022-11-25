@@ -773,6 +773,8 @@ module.exports = {
         'openElasticsearch'             : require(__dirname + '/plugins/azure/networksecuritygroups/openElasticsearch.js'),
         'openCassandraClient'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraClient.js'),
         'openCassandraInternode'        : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraInternode.js'),
+        'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
+        'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
 
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
