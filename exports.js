@@ -770,6 +770,8 @@ module.exports = {
         'openLDAPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAPS.js'),
         'openLDAP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAP.js'),
         'openInternalWeb'               : require(__dirname + '/plugins/azure/networksecuritygroups/openInternalWeb.js'),
+        'openElasticsearch'             : require(__dirname + '/plugins/azure/networksecuritygroups/openElasticsearch.js'),
+        'openCassandraClient'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraClient.js'),
 
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
