@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     description: 'Ensures that Azure Kubernetes Service data is encrypted with CMK',
     more_info: 'AKS Cluster allows you to encrypt your data using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Your keys encrypt the backup data must be stored in Azure Key Vault.This provides you with full control over the data and the keys.',
-    recommended_action: 'Create new cluster and enable encryption at rest using CMK',
+    recommended_action: ' When creating a new Kubernetes Cluster, ensure that encryption at rest using CMK is enabled under the Node pool tab during creation.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/azure-disk-customer-managed-keys',
     apis: ['managedClusters:list'],
 
