@@ -1203,7 +1203,8 @@ module.exports = {
         'trustedImageProjects'          : require(__dirname + '/plugins/google/cloudresourcemanager/trustedImageProjects.js'),
         'skipDefaultNetworkCreation'    : require(__dirname + '/plugins/google/cloudresourcemanager/skipDefaultNetworkCreation.js'),
         'locationBasedRestriction'      : require(__dirname + '/plugins/google/cloudresourcemanager/locationBasedRestriction.js'),
-        'disableServiceAccountCreation'  : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js'),
+        'disableServiceAccountCreation' : require(__dirname + '/plugins/google/cloudresourcemanager/disableServiceAccountCreation.js'),
+        'essentialContactsConfigured'   : require(__dirname + '/plugins/google/cloudresourcemanager/essentialContactsConfigured.js'),
 
         'dataprocClusterLabelsAdded'    : require(__dirname + '/plugins/google/dataproc/dataprocClusterLabelsAdded.js'),
         'hadoopSecureModeEnabled'       : require(__dirname + '/plugins/google/dataproc/hadoopSecureModeEnabled.js'),
