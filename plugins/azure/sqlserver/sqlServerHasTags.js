@@ -37,7 +37,7 @@ module.exports = {
             for (let server of servers.data) {
                 if (!server.id) continue;
                 
-                 if (server.tags && Object.entries(server.tags).length > 0){
+                if (server.tags && Object.entries(server.tags).length > 0){
                     helpers.addResult(results, 0, 'SQL Server has tags associated', location, server.id);
                 } else {
                     helpers.addResult(results, 2, 'SQL Server does not have tags associated', location, server.id);
