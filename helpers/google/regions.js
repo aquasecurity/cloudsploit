@@ -135,5 +135,6 @@ module.exports = {
     deployments: ['global'],
     urlMaps: ['global'],
     apiKeys: ['global'],
-    resourceRecordSets: ['global']
+    resourceRecordSets: ['global'],
+    services: ['global']
 };

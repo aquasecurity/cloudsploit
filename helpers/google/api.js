@@ -197,6 +197,9 @@ var calls = {
             location: null,
             method: 'POST',
             pagination: false
+        },
+        getWithNumber: {
+            url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}'
         }
     },
     kubernetes: {
@@ -448,6 +451,17 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: false
+        }
+    },
+    services: {
+        listEnabled: {
+            url: 'https://serviceusage.googleapis.com/v1/projects/{projectNumber}/services',
+            reliesOnService: ['projects'],
+            reliesOnCall: ['getWithNumber'],
+            properties: ['projectNumber'],
+            pagination: true,
+            paginationKey: 'pageSize',
+            reqParams: 'filter=state:ENABLED'
         }
     }
 };
