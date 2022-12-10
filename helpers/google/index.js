@@ -280,14 +280,6 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             set = false;
             myEngine ? collection[service][myEngine][callKey][region].data = [] : collection[service][callKey][region].data = [];
         } else if (!myEngine && data.data) {
-            set = false;
-            if (data.data.constructor.name === 'Array') {
-                collection[service][callKey][region].data.concat(data.data);
-            } else if (Object.keys(data.data).length) {
-                collection[service][callKey][region].data.push(data.data);
-            } else if (!myEngine && !(collection[service][callKey][region].data.length)) {
-                collection[service][callKey][region].data = [];
-            }
             resultItems = setData(collection[service][callKey][region], data.data, postCall, parent, {'service': service, 'callKey': callKey});
         } else {
             set = false;
@@ -396,14 +388,14 @@ function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
         if (Array.isArray(collection.data)) {
             collection.data = collection.data.concat(dataToAdd);
         } else {
-            collection.data = dataToAdd.push(collection.data);
+            collection.data = dataToAdd;
         }
-    } else {
-        let existingData = collection.data;
-        if (existingData && existingData.length) {
-            collection.data = existingData.concat(dataToAdd);
+    } else if (dataToAdd.constructor.name === 'Object' && Object.keys(dataToAdd).length) {
+        if (Array.isArray(collection.data)) {
+            collection.data.push(dataToAdd);
         } else {
             collection.data = dataToAdd;
+            collection.data = [dataToAdd];
         }
     }
     return collection;
