@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures that Azure MySQL Server Has Tags',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify MySQL server and tags',
+    recommended_action: 'Modify MySQL server and add tags',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['servers:listMysql'],
 
