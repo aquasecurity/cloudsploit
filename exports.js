@@ -812,6 +812,7 @@ module.exports = {
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
         'aksAgentVersion'               : require(__dirname + '/plugins/azure/kubernetesservice/aksAgentVersion.js'),
+        'aksHasTags'                    : require(__dirname + '/plugins/azure/kubernetesservice/aksHasTags.js'),
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
 
