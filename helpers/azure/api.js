@@ -37,6 +37,12 @@ var calls = {
             paginate: 'nextLink'
         }
     },
+    images: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/images?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    },
     snapshots: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
