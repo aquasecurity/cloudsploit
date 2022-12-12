@@ -33,6 +33,8 @@ module.exports = {
             }
 
             for (let cache of caches.data) {
+                if (!cache.id) continue;
+                
                 if (cache.tags && Object.entries(cache.tags).length > 0){
                     helpers.addResult(results, 0, 'Redis Cache has tags associated', location, cache.id);
                 } else {
