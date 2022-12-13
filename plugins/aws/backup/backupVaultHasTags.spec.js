@@ -56,7 +56,7 @@ const createCache = (listBackupVaults, rgData) => {
 describe('backupVaultHasTags', function () {
     describe('run', function () {
         it('should PASS if Backup vault have tags', function (done) {
-            const cache = createCache([listBackupVaults[0]],  [resourcegroupstaggingapi[0]]);
+            const cache = createCache([listBackupVaults[0]], [resourcegroupstaggingapi[0]]);
             backupVaultHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
