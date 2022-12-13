@@ -34,7 +34,7 @@ module.exports = {
             }
 
             for (let db of databaseAccounts.data) {
-                if(!db.id) continue;
+                if (!db.id) continue;
 
                 if (db.tags && Object.entries(db.tags).length > 0){
                     helpers.addResult(results, 0, 'Azure Cosmos db has tags associated', location, db.id);
