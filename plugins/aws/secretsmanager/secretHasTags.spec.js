@@ -75,7 +75,7 @@ describe('secretHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Secrets Manager has tags');
+                expect(results[0].message).to.include('Secrets Manager secret has tags');
                 done();
             });
         });
@@ -86,11 +86,10 @@ describe('secretHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Secrets Manager does not have tags');
+                expect(results[0].message).to.include('Secrets Manager secret does not have tags');
                 done();
             });
         });
-
 
         it('should PASS if no secrets found', function (done) {
             const cache = createCache([]);
