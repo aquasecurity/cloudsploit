@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             } 
             
-            for(let virtualNetwork of virtualNetworks.data) {
+            for (let virtualNetwork of virtualNetworks.data) {
                 if (!virtualNetwork.id) continue;
 
                 if (virtualNetwork.tags && Object.entries(virtualNetwork.tags).length > 0){
