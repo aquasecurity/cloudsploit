@@ -83,7 +83,7 @@ describe('sqlServerHasTags', function() {
             sqlServerHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL Server has tags associated');
+                expect(results[0].message).to.include('SQL Server has tags');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -94,7 +94,7 @@ describe('sqlServerHasTags', function() {
             sqlServerHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL Server does not have tags associated');
+                expect(results[0].message).to.include('SQL Server does not have tags');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

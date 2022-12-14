@@ -5,9 +5,9 @@ module.exports = {
     title: 'SQL Server Has Tags',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that Azure SQL Server have tags associated',
+    description: 'Ensures that Azure SQL Server have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify SQL Server and tags.',
+    recommended_action: 'Modify SQL Server and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['servers:listSql'],
 
@@ -17,7 +17,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.servers, function(location, rcb) {
-
             var servers = helpers.addSource(cache, source,
                 ['servers', 'listSql', location]);
 
@@ -38,9 +37,9 @@ module.exports = {
                 if (!server.id) continue;
                 
                 if (server.tags && Object.entries(server.tags).length > 0){
-                    helpers.addResult(results, 0, 'SQL Server has tags associated', location, server.id);
+                    helpers.addResult(results, 0, 'SQL Server has tag', location, server.id);
                 } else {
-                    helpers.addResult(results, 2, 'SQL Server does not have tags associated', location, server.id);
+                    helpers.addResult(results, 2, 'SQL Server does not have tags', location, server.id);
                 }
             }
           
