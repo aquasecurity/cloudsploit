@@ -19,6 +19,7 @@ module.exports = {
         async.each(regions.sns, function(region, rcb){
             var listTopics = helpers.addSource(cache, source,
                 ['sns', 'listTopics', region]);
+
             if (!listTopics) return rcb();
 
             if (listTopics.err || !listTopics.data) {
