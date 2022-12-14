@@ -638,6 +638,7 @@ module.exports = {
         'virtualNetworkPeering'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkPeering.js'),
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
+        'virtualNetworkHasTags'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkHasTags.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
