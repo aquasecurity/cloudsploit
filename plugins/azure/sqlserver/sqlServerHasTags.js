@@ -37,7 +37,7 @@ module.exports = {
                 if (!server.id) continue;
                 
                 if (server.tags && Object.entries(server.tags).length > 0){
-                    helpers.addResult(results, 0, 'SQL Server has tag', location, server.id);
+                    helpers.addResult(results, 0, 'SQL Server has tags', location, server.id);
                 } else {
                     helpers.addResult(results, 2, 'SQL Server does not have tags', location, server.id);
                 }
