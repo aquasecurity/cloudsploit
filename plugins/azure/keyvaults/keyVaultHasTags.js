@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'KeyVault Has Tags',
+    title: 'Key Vault Has Tags',
     category: 'Key Vaults',
     domain: 'Application Integration',
-    description: 'Ensure that Azure KeyVault Has Tags associated.',
+    description: 'Ensure that Azure Key Vaults have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify key vault and tags',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
