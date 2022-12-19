@@ -1095,6 +1095,7 @@ module.exports = {
         'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
         'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
         'sqlInstanceLabelsAdded'        : require(__dirname + '/plugins/google/sql/sqlInstanceLabelsAdded.js'),
+        'sqlServerContainedDBAuth'      : require(__dirname + '/plugins/google/sql/sqlServerContainedDBAuth.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
