@@ -41,6 +41,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'VM disk snapshot does not have tags associated', location, snapshot.id);
                 } 
             }
+
             rcb();
         }, function() {
             callback(null, results, source);
