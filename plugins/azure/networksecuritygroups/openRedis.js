@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Open SNMP',
+    title: 'Open Redis',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
     description: 'Determine if TCP port 6379 for Redis is open to the public',
