@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'KeyVault Has Tags',
+    title: 'Key Vault Has Tags',
     category: 'Key Vaults',
     domain: 'Application Integration',
     description: 'Ensure that Azure KeyVault Has Tags associated.',
