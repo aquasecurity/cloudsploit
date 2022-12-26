@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Kubernetes clusters', location);
                 return rcb();
             }
+
             for (let cluster of managedClusters.data) {
                 if (!cluster.id) continue;
                 
