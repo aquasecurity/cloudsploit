@@ -42,7 +42,7 @@ describe('snapshotHasTags', function() {
             snapshotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No snapshot found');
+                expect(results[0].message).to.include('No virtual machine disk snapshots found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -53,7 +53,7 @@ describe('snapshotHasTags', function() {
             snapshotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for snapshots');
+                expect(results[0].message).to.include('Unable to query for virtual machine disk snapshots');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -65,7 +65,7 @@ describe('snapshotHasTags', function() {
             snapshotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Snapshot has tags associated');
+                expect(results[0].message).to.include('VM disk snapshot has tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -77,7 +77,7 @@ describe('snapshotHasTags', function() {
             snapshotHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include(`Snapshot `);
+                expect(results[0].message).to.include('VM disk snapshot does not have tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
