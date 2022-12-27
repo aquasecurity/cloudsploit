@@ -108,7 +108,7 @@ describe('sqlServerRemoteAccessDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has "remote access" flag enabled.');
+                expect(results[0].message).to.include('SQL instance has "remote access" flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
