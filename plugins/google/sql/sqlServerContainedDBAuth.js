@@ -59,14 +59,14 @@ module.exports = {
                         flag.value && flag.value == 'on');
                     if (found) {
                         helpers.addResult(results, 2,
-                            'SQL instance has "contained database authentication" flag enabled.', region, resource);
+                            'SQL instance has "contained database authentication" flag enabled', region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'SQL instance does not have "contained database authentication" flag enabled.', region, resource);
+                            'SQL instance does not have "contained database authentication" flag enabled', region, resource);
                     }
                 } else {
                     helpers.addResult(results, 0,
-                        'SQL instance does not have "contained database authentication" flag enabled.', region, resource);
+                        'SQL instance does not have "contained database authentication" flag enabled', region, resource);
                 }
             });
 
