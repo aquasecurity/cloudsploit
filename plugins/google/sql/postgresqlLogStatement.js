@@ -14,7 +14,7 @@ module.exports = {
         log_statement: {
             name: 'Log Statement',
             description: 'Return a passing result if the flag value is used from the setting list.',
-            regex: '^(none|ddl|mod|all)$',
+            regex: '^(ddl|mod|all)$',
             default: 'ddl'
         }
     },
@@ -72,17 +72,17 @@ module.exports = {
                     if (found) {
                         if (found.value == log_statement) {
                             helpers.addResult(results, 0,
-                                `SQL instance has log_statement flag set to "${found.value}".`, region, resource);
+                                `SQL instance has log_statement flag set to "${found.value}"`, region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `SQL instance has log_statement flag set to "${found.value}" instead of "${log_statement}".`, region, resource);
+                                `SQL instance has log_statement flag set to "${found.value}" instead of "${log_statement}"`, region, resource);
                         }
                     }
                 }
 
                 if (!found) {
                     helpers.addResult(results, 2,
-                        `SQL instance does not have log_statement flag set to "${log_statement}".`, region, resource);
+                        `SQL instance does not have log_statement flag set to "${log_statement}"`, region, resource);
                 }
             });
 
