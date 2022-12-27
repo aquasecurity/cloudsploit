@@ -6,9 +6,9 @@ module.exports = {
     title: 'Azure Kubernetes Service Has Tags',
     category: 'Kubernetes Service',
     domain: 'Containers',
-    description: 'Ensures the Azure Kubernetes Service Has Tags.',
+    description: 'Ensures that Azure Kubernetes clusters have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify Kubernetes service and add tags.',
+    recommended_action: 'Modify AKS clusters and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/use-tags',
     apis: ['managedClusters:list'],
 
@@ -38,9 +38,9 @@ module.exports = {
                 if (!cluster.id) continue;
 
                 if (cluster.tags && Object.entries(cluster.tags).length > 0){
-                    helpers.addResult(results, 0, 'Azure Kubernetes Service has tags associated', location, cluster.id);
+                    helpers.addResult(results, 0, 'AKS cluster has tags', location, cluster.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure Kubernetes Service does not have tags associated', location, cluster.id);
+                    helpers.addResult(results, 2, 'AKS cluster does not have tags', location, cluster.id);
                 }
             }
 
