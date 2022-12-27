@@ -80,7 +80,7 @@ describe('sqlServerRemoteAccessDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have "remote access" flag enabled.');
+                expect(results[0].message).to.include('SQL instance does not have "remote access" flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -104,56 +104,6 @@ describe('sqlServerRemoteAccessDisabled', function () {
             plugin.run(cache, {}, callback);
         });
        
-        it('should give passing result if sql instance does not have remote access flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have "remote access" flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "SQLSERVER_2019_STANDARD",
-                    settings: {
-                      databaseFlags: [
-                        {
-                            name: "nested triggers",
-                            value: "on",
-                        },
-                      ]}
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
-        it('should give passing result if sql instance does not have remote access flag enabled', function (done) {
-            const callback = (err, results) => {
-                expect(results.length).to.be.above(0);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have "remote access" flag enabled');
-                expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [{
-                    instanceType: "CLOUD_SQL_INSTANCE",
-                    name: "testing-instance",
-                    databaseVersion: "SQLSERVER_2019_STANDARD",
-                    settings: {
-                      databaseFlags: []
-                    }
-                }],
-            );
-
-            plugin.run(cache, {}, callback);
-        });
         it('should give failing result if sql instance has remote access flag enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
