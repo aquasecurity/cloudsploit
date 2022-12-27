@@ -35,7 +35,7 @@ module.exports = {
                 if (!disk.id) continue;
 
                 if (disk.tags && Object.entries(disk.tags).length > 0){
-                    helpers.addResult(results, 0, 'VM disk has tags.', location, disk.id);
+                    helpers.addResult(results, 0, 'VM disk has tags', location, disk.id);
                 } else {
                     helpers.addResult(results, 2, 'VM disk does not have tags', location, disk.id);
                 }
