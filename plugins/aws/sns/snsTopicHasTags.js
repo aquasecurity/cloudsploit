@@ -5,9 +5,9 @@ module.exports = {
     title: 'SNS Topic Has Tags',
     category: 'SNS',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon SNS Topics have tags associated.',
+    description: 'Ensure that Amazon SNS topics have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify SNS topics and add tags.',
+    recommended_action: 'Modify SNS topic and add tags.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-tags.html',
     apis: ['SNS:listTopics', 'ResourceGroupsTaggingAPI:getResources'],
 
@@ -36,7 +36,6 @@ module.exports = {
             const topicARN = [];
             for (let topic of listTopics.data){
                 if (!topic.TopicArn) continue;
-
                 topicARN.push(topic.TopicArn);
             }
             helpers.checkTags(cache, 'SNS topic', topicARN, region, results);
