@@ -6,7 +6,7 @@ module.exports = {
     title: 'VM Disk Has Tags',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Azure virtual machine disks have tags associated.',
+    description: 'Ensure that Azure virtual machine disks have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify VM Disk and add tags.',
@@ -35,9 +35,9 @@ module.exports = {
                 if (!disk.id) continue;
 
                 if (disk.tags && Object.entries(disk.tags).length > 0){
-                    helpers.addResult(results, 0, 'Disk has tags associated', location, disk.id);
+                    helpers.addResult(results, 0, 'VM disk has tags.', location, disk.id);
                 } else {
-                    helpers.addResult(results, 2, 'Disk does not have tags associated', location, disk.id);
+                    helpers.addResult(results, 2, 'VM disk does not have tags', location, disk.id);
                 }
 
             }
