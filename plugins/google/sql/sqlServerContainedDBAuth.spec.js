@@ -158,7 +158,7 @@ describe('sqlServerContainedDBAuth', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has "contained database authentication" flag enabled.');
+                expect(results[0].message).to.include('SQL instance has "contained database authentication" flag enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
