@@ -37,7 +37,6 @@ module.exports = {
             const vaultARN = [];
             for (let vault of listBackupVaults.data){
                 if (!vault.BackupVaultArn) continue;
-
                 vaultARN.push(vault.BackupVaultArn);
             }
             helpers.checkTags(cache, 'Backup Vault', vaultARN, region, results);
