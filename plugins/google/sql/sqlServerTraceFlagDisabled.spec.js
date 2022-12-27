@@ -80,7 +80,7 @@ describe('sqlServerTraceFlagDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL instance does not have "3625 (trace flag)" enabled.');
+                expect(results[0].message).to.include('SQL instance does not have "3625 (trace flag)" enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -158,7 +158,7 @@ describe('sqlServerTraceFlagDisabled', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL instance has "3625 (trace flag)" enabled.');
+                expect(results[0].message).to.include('SQL instance has "3625 (trace flag)" enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
