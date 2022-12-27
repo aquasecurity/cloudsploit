@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure/');
 //var compareVersions = require('compare-versions');
 
 module.exports = {
-    title: 'Azure Kubernetes Servuce Has Tags',
+    title: 'Azure Kubernetes Service Has Tags',
     category: 'Kubernetes Service',
     domain: 'Containers',
     description: 'Ensures the Azure Kubernetes Service Has Tags.',
