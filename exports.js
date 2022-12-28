@@ -414,6 +414,7 @@ module.exports = {
         'bucketDnsCompliantName'        : require(__dirname + '/plugins/aws/s3/bucketDnsCompliantName.js'),
         'versionedBucketsLC'            : require(__dirname + '/plugins/aws/s3/versionedBucketsLC.js'),
         's3BucketHasTags'               : require(__dirname + '/plugins/aws/s3/s3BucketHasTags.js'),
+        'bucketPolicyCloudFrontOac'     : require(__dirname + '/plugins/aws/s3/bucketPolicyCloudFrontOac.js'),
         
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
@@ -1285,4 +1286,5 @@ module.exports = {
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
+
 };
