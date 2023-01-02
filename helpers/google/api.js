@@ -25,7 +25,8 @@ var calls = {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
             location: null,
-            pagination: true
+            pagination: true,
+            ignoreMiscData: true
         }
     },
     snapshots: {
@@ -80,6 +81,9 @@ var calls = {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
             location: null,
             pagination: true
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     spanner: {
@@ -164,6 +168,9 @@ var calls = {
             url: 'https://storage.googleapis.com/storage/v1/b?project={projectId}',
             location: null,
             pagination: true
+        },
+        sendIntegration: {
+            enabled: true,
         }
     },
     targetHttpProxies: {
@@ -204,6 +211,9 @@ var calls = {
             url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
             location: null,
             pagination: false
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     dataproc: {
@@ -356,7 +366,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: false
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['buckets']
+            }
+        },
     },
     keys: {
         list: {
@@ -375,7 +391,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true //needs to be verified with multiple users
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['sql']
+            }
+        },
     },
     backupRuns: {
         list: {
@@ -385,7 +407,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['sql']
+            }
+        },
     },
     datasets: {
         get: {
