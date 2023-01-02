@@ -1219,6 +1219,8 @@ module.exports = {
         'dataprocClusterEncryption'     : require(__dirname + '/plugins/google/dataproc/dataprocClusterEncryption.js'),
         
         'bigtableInstanceLabelsAdded'   : require(__dirname + '/plugins/google/bigtable/bigtableInstanceLabelsAdded.js'),
+
+        'assetInventoryEnabled'         : require(__dirname + '/plugins/google/serviceusage/assetInventoryEnabled.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
