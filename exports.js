@@ -769,6 +769,19 @@ module.exports = {
         'openSMBoTCP'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openSMBoTCP.js'),
         'openSQLServer'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openSQLServer.js'),
         'openUDP'                       : require(__dirname + '/plugins/azure/networksecuritygroups/openUDP.js'),
+        'openSNMP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openSNMP.js'),
+        'openRedis'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openRedis.js'),
+        'openMongoDB'                   : require(__dirname + '/plugins/azure/networksecuritygroups/openMongoDB.js'),
+        'openMemcached'                 : require(__dirname + '/plugins/azure/networksecuritygroups/openMemcached.js'),
+        'openLDAPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAPS.js'),
+        'openLDAP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openLDAP.js'),
+        'openInternalWeb'               : require(__dirname + '/plugins/azure/networksecuritygroups/openInternalWeb.js'),
+        'openElasticsearch'             : require(__dirname + '/plugins/azure/networksecuritygroups/openElasticsearch.js'),
+        'openCassandraClient'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraClient.js'),
+        'openCassandraInternode'        : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraInternode.js'),
+        'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
+        'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
+
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
