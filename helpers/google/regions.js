@@ -136,5 +136,6 @@ module.exports = {
     urlMaps: ['global'],
     apiKeys: ['global'],
     resourceRecordSets: ['global'],
-    services: ['global']
+    services: ['global'],
+    accessApproval: ['global']
 };
