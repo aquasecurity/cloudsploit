@@ -93,7 +93,7 @@ module.exports = {
     cloudwatch: [...regions, ...newRegions, ...meCentral1],
     ecs: [...regions, ...newRegions, ...meCentral1],
     resourcegroupstaggingapi: [...regions, ...newRegions],
-    sagemaker: [...regions, newRegions],
+    sagemaker: [...regions, ...newRegions],
     secretsmanager: [...regions, ...newRegions, ...meCentral1],
     ses: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1',
