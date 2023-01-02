@@ -8,7 +8,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensures that Azure virtual machines have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify affected virtual machine and add tags',
+    recommended_action: 'Modify affected virtual machine and add tags.',
     link: 'https://learn.microsoft.com/bs-latn-ba/azure/virtual-machines/tag-portal',
     apis: ['virtualMachines:listAll', 'virtualMachines:get'],
 
