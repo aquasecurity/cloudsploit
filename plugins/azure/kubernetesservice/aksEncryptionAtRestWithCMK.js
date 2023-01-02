@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'AKS Cluster Data Encryption at Rest with CMK',
+    title: 'AKS Encryption At Rest with BYOK',
     category: 'Kubernetes Service',
     domain: 'Containers',
     description: 'Ensure that Azure Kubernetes cluster data is encrypted with CMK.',
