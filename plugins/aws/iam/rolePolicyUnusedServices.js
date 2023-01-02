@@ -69,6 +69,12 @@ module.exports = {
             description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
             regex: '^.*$',
             default: ''
+        },
+        whitelist_unused_services: {
+            name: 'Whitelist Unused Services',
+            description: 'A comma-separated list indicating which services should be ignored',
+            regex: '.*$',
+            default: ''
         }
     },
 
@@ -79,13 +85,15 @@ module.exports = {
             ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
-            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default
+            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
+            whitelist_unused_services: settings.whitelist_unused_services || this.settings.whitelist_unused_services.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
         config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
+        config.whitelist_unused_services = config.whitelist_unused_services.replace(/\s/g, '');
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -146,8 +154,6 @@ module.exports = {
             elasticloadbalancingv2: ['loadbalancer']
         };
 
-
-
         async.each(regions.configservice, function(region, rcb) {
             var configRecorderStatus = helpers.addSource(cache, source,
                 ['configservice', 'describeConfigurationRecorderStatus', region]);
@@ -205,15 +211,12 @@ module.exports = {
                     let service = arr[2].toLowerCase();
                     let subService = arr[4].toLowerCase();
                     result[service] = result[service] || [];
-
                     if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
                         result[service].push(subService);
                     }
-
                     return result;
                 }
             }, {});
-
             if (!allResources) allResources = {};
 
             var listRoles = helpers.addSource(cache, source,
@@ -338,7 +341,7 @@ module.exports = {
                                             let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
                                             let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
 
-                                            if (allServices[service]) {
+                                            if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
                                                 for (let supportedResource of allServices[service]) {
                                                     if (resourceAction.includes(supportedResource)) {
                                                         if (!allResources[service] || !allResources[service].includes(supportedResource)) {
@@ -359,7 +362,6 @@ module.exports = {
 
                 if (listRolePolicies.data &&
                     listRolePolicies.data.PolicyNames) {
-
                     for (var p in listRolePolicies.data.PolicyNames) {
                         var policyName = listRolePolicies.data.PolicyNames[p];
 
@@ -386,7 +388,7 @@ module.exports = {
                                         for (let action of statement.Action) {
                                             let resourceAction = action.split(':')[1].toLowerCase();
 
-                                            if (allServices[service]) {
+                                            if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
                                                 for (let supportedResource of allServices[service]) {
                                                     if (resourceAction.includes(supportedResource)) {
                                                         if (!allResources[service] || !allResources[service].includes(supportedResource)) {

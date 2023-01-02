@@ -46,29 +46,32 @@ module.exports = {
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountUsers = [];
             var notSeparated = {};
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountUser') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
-                }
-            });
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountAdmin' &&
-                    roleBinding.members) {
-                    notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1);
-                    });
-
-                    if (notSeparated && notSeparated.length) {
-                        notSeparated.forEach(member => {
-                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                            let resource = helpers.createResourceName('serviceAccounts', accountName, project);
-                            helpers.addResult(results, 2,
-                                'The account has both the service account user and admin role', region, resource);
-                        });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountUser') {
+                        serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
                     }
-                }
-            });
+                });
+
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountAdmin' &&
+                        roleBinding.members) {
+                        notSeparated = roleBinding.members.filter(member => {
+                            return (serviceAccountUsers.indexOf(member) > -1);
+                        });
+
+                        if (notSeparated && notSeparated.length) {
+                            notSeparated.forEach(member => {
+                                let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                                let resource = helpers.createResourceName('serviceAccounts', accountName, project);
+                                helpers.addResult(results, 2,
+                                    'The account has both the service account user and admin role', region, resource);
+                            });
+                        }
+                    }
+                });
+            }
 
             if (!notSeparated.length) {
                 helpers.addResult(results, 0, 'No accounts have both the service account user and admin roles', region);
