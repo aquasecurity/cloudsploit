@@ -47,18 +47,20 @@ module.exports = {
 
             var serviceAccountExists = false;
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountTokenCreator') {
-                    serviceAccountExists = true;
-                    roleBinding.members.forEach(member => {
-                        let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                        let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
-                        let resource = helpers.createResourceName(memberType, accountName, project);
-                        helpers.addResult(results, 2,
-                            'The account has a service account token creator role', region, resource);
-                    });
-                }
-            });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountTokenCreator') {
+                        serviceAccountExists = true;
+                        roleBinding.members.forEach(member => {
+                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                            let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                            let resource = helpers.createResourceName(memberType, accountName, project);
+                            helpers.addResult(results, 2,
+                                'The account has a service account token creator role', region, resource);
+                        });
+                    }
+                });
+            }
 
             if (!serviceAccountExists) {
                 helpers.addResult(results, 0, 'No accounts have service account token creator roles', region);
