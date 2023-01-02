@@ -1095,6 +1095,7 @@ module.exports = {
         'mysqlLatestVersion'            : require(__dirname + '/plugins/google/sql/mysqlLatestVersion.js'),
         'postgresqlLatestVersion'       : require(__dirname + '/plugins/google/sql/postgresqlLatestVersion.js'),
         'sqlInstanceLabelsAdded'        : require(__dirname + '/plugins/google/sql/sqlInstanceLabelsAdded.js'),
+        'sqlServerTraceFlagDisabled'    : require(__dirname + '/plugins/google/sql/sqlServerTraceFlagDisabled.js'),
         'sqlServerContainedDBAuth'      : require(__dirname + '/plugins/google/sql/sqlServerContainedDBAuth.js'),
         'postgresqlLogMinMessages'      : require(__dirname + '/plugins/google/sql/postgresqlLogMinMessages.js'),
         'postgresqlLogStatement'         : require(__dirname + '/plugins/google/sql/postgresqlLogStatement.js'),
