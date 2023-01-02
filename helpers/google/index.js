@@ -298,7 +298,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             else collection[service][callKey][region] = resultItems;
         }
         if (data.data && data.data.nextPageToken) {
-            makeApiCall(client, url, executorCb, data.data.nextPageToken, { pagination: callObj.pagination, paginationKey: callObj.paginationKey });
+            makeApiCall(client, url, executorCb, data.data.nextPageToken, { pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams });
         } else {
             if (callObj.rateLimit) {
                 setTimeout(function() {
@@ -319,7 +319,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             url = url.replace('{locationId}', callObj.params.region);
         }
 
-        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey});
+        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams});
     }
 };
 
@@ -346,6 +346,9 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     let queryParams = '';
     if (config && config.pagination) {
         queryParams = `${nextToken ? `?pageToken=${nextToken}` : ''}`;
+    }
+    if (config && config.reqParams) {
+        queryParams = queryParams ? `${queryParams}&${config.reqParams}` : `?${config.reqParams}`;
     }
     url = `${originalUrl}${queryParams}`;
     async.retry({
