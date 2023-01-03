@@ -874,7 +874,6 @@ module.exports = {
         'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
         'restrictDefaultNetworkAccess'  : require(__dirname + '/plugins/azure/keyvaults/restrictDefaultNetworkAccess.js'),
         'trustedServicesEnabled'        : require(__dirname + '/plugins/azure/keyvaults/trustedServicesEnabled.js'),
-        'keyVaultHasTags'               : require(__dirname + '/plugins/azure/keyvaults/keyVaultHasTags.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
