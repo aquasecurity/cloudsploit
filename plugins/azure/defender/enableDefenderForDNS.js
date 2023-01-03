@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let dnsPricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'dns');
+            let dnsPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'dns');
             if (dnsPricing) {
                 if (dnsPricing.pricingTier.toLowerCase() === 'standard') {
                     helpers.addResult(results, 0, 'Azure Defender is enabled for DNS', location, dnsPricing.id);
