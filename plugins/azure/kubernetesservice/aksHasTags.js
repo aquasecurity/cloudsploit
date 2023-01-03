@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/azure/');
-//var compareVersions = require('compare-versions');
 
 module.exports = {
     title: 'Azure Kubernetes Service Has Tags',
