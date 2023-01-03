@@ -481,6 +481,14 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId']
+        },
+        essentialContacts: {
+            url: 'https://essentialcontacts.googleapis.com/v1/organizations/{organizationId}/contacts',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId'],
+            pagination: true,
+            paginationKey: 'pageSize'
         }
     },
     apiKeys: {
