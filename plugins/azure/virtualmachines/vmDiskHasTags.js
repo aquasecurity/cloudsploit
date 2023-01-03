@@ -1,6 +1,6 @@
 var async = require('async');
 
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'VM Disk Has Tags',

@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var diskHasTags = require('./diskHasTags');
+var diskHasTags = require('./vmDiskHasTags');
 
 const disks = [
     {

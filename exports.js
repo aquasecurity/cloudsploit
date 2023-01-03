@@ -672,7 +672,7 @@ module.exports = {
         'vmBootDiagnosticsEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/vmBootDiagnosticsEnabled.js'),
         'scaleSetHealthMonitoring'      : require(__dirname + '/plugins/azure/virtualmachines/scaleSetHealthMonitoring.js'),
         'diskByokEncryptionEnabled'     : require(__dirname + '/plugins/azure/virtualmachines/diskByokEncryptionEnabled.js'),
-        'diskHasTags'                   : require(__dirname + '/plugins/azure/virtualmachines/diskHasTags.js'),
+        'vmDiskHasTags'                 : require(__dirname + '/plugins/azure/virtualmachines/vmDiskHasTags.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/kvLogAnalyticsEnabled.js'),
