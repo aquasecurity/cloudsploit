@@ -127,6 +127,7 @@ module.exports = {
     users: ['global'],
     backupRuns: ['global'],
     datasets: ['global'],
+    bigqueryTables: ['global'],
     policies: ['global'],
     topics: ['global'],
     subscriptions: ['global'],
