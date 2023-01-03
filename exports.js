@@ -1253,6 +1253,8 @@ module.exports = {
         'bigtableInstanceLabelsAdded'   : require(__dirname + '/plugins/google/bigtable/bigtableInstanceLabelsAdded.js'),
 
         'assetInventoryEnabled'         : require(__dirname + '/plugins/google/serviceusage/assetInventoryEnabled.js'),
+
+        'accessApprovalEnabled'         : require(__dirname + '/plugins/google/security/accessApprovalEnabled.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

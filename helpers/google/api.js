@@ -336,6 +336,13 @@ var calls = {
             reliesOnCall: ['list'],
             properties: ['id']
         }
+    },
+    accessApproval: {
+        settings: {
+            url: 'https://accessapproval.googleapis.com/v1/projects/{projectId}/accessApprovalSettings',
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
     }
 };
 
