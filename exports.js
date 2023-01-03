@@ -1134,6 +1134,7 @@ module.exports = {
         'sqlServerContainedDBAuth'      : require(__dirname + '/plugins/google/sql/sqlServerContainedDBAuth.js'),
         'postgresqlLogMinMessages'      : require(__dirname + '/plugins/google/sql/postgresqlLogMinMessages.js'),
         'postgresqlLogStatement'        : require(__dirname + '/plugins/google/sql/postgresqlLogStatement.js'),
+        'sqlServerUserOptionsDisabled'  : require(__dirname + '/plugins/google/sql/sqlServerUserOptionsDisabled.js'),
         'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
         'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
 
