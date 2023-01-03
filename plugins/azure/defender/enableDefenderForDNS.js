@@ -35,7 +35,7 @@ module.exports = {
 
             let dnsPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'dns');
             if (dnsPricing) {
-                if (dnsPricing.pricingTier.toLowerCase() === 'standard') {
+                if (dnsPricing.pricingTier && dnsPricing.pricingTier.toLowerCase() === 'standard') {
                     helpers.addResult(results, 0, 'Azure Defender is enabled for DNS', location, dnsPricing.id);
                 } else {
                     helpers.addResult(results, 2, 'Azure Defender is not enabled for DNS', location, dnsPricing.id);
