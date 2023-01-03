@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'DDoS Standard Protection Enabled',
+    title: 'Virtual Network Has Tags',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
-    description: 'Ensures that DDoS Standard Protection is enabled for Microsoft Azure Virtual Networks',
-    more_info: 'DDoS Protection Standard offers enhanced Distributed Denial-of-Service (DDoS) mitigation capabilities via adaptive tuning, attack alert notifications, and telemetry to protect against the impacts of large DDoS attacks for all the protected resources available within your Azure Virtual Networks.',
-    recommended_action: 'Enable DDoS protection for virtual networks',
-    link: 'https://azure.microsoft.com/en-us/blog/azure-ddos-protection-for-virtual-networks-generally-available/',
+    description: 'Ensures that Microsoft Azure Virtual Network has tags associated',
+    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    recommended_action: 'Modify virtual network and add tags',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['virtualNetworks:listAll'],
 
     run: function(cache, settings, callback) {
