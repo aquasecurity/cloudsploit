@@ -127,6 +127,7 @@ module.exports = {
     users: ['global'],
     backupRuns: ['global'],
     datasets: ['global'],
+    bigqueryTables: ['global'],
     policies: ['global'],
     topics: ['global'],
     subscriptions: ['global'],
@@ -135,5 +136,7 @@ module.exports = {
     deployments: ['global'],
     urlMaps: ['global'],
     apiKeys: ['global'],
-    resourceRecordSets: ['global']
+    resourceRecordSets: ['global'],
+    services: ['global'],
+    accessApproval: ['global']
 };
