@@ -6,9 +6,9 @@ module.exports = {
     title: 'Virtual Machine Has Tags',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Azure virtual machine have tags associated.',
+    description: 'Ensures that Azure virtual machines have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify virtual machine and add tags',
+    recommended_action: 'Modify affected virtual machine and add tags.',
     link: 'https://learn.microsoft.com/bs-latn-ba/azure/virtual-machines/tag-portal',
     apis: ['virtualMachines:listAll', 'virtualMachines:get'],
 
@@ -19,7 +19,8 @@ module.exports = {
 
         async.each(locations.virtualMachines, function(location, rcb){
 
-            var virtualMachines = helpers.addSource(cache, source, ['virtualMachines', 'listAll', location]);
+            var virtualMachines = helpers.addSource(cache, source,
+                ['virtualMachines', 'listAll', location]);
 
             if (!virtualMachines) return rcb();
 
@@ -40,9 +41,9 @@ module.exports = {
                     continue;
                 } 
                 if (virtualMachineData.data.tags) {
-                    helpers.addResult(results, 0, 'Virtual Machine has tags associated', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Virtual Machine has tags', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Virtual Machine does not have tags associated', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Virtual Machine does not have tags', location, virtualMachine.id);
                 }
             }
             rcb();
