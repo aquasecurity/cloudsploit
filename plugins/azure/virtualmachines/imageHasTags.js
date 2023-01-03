@@ -15,10 +15,10 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.snapshots, function(location, rcb) {
+        async.each(locations.images, function(location, rcb) {
             const snapshots = helpers.addSource(cache, source,
                 ['images', 'list', location]);
-            console.log(cache['images'])
+
             if (!snapshots) return rcb();
 
             if (snapshots.err || !snapshots.data) {
@@ -30,7 +30,13 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing virtual machine disk snapshots', location);
                 return rcb();
             }
-            console.log(snapshots.data)
+            for (let image of snapshots.data){
+                if (!image.id) continue;
+
+                if (image.tags.le)
+            }
+
+
             rcb();
         }, function() {
             callback(null, results, source);
