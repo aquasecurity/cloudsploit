@@ -7,7 +7,7 @@ const createCache = (diskData, error) => {
         disks: {
             aggregatedList: {
                 'global': {
-                    data: diskData,
+                    data: [diskData],
                     err: error
                 }
             }
