@@ -1055,7 +1055,8 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/google/vpcnetwork/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraThrift.js'),
         'openCassandraInternode'        : require(__dirname + '/plugins/google/vpcnetwork/openCassandraInternode.js'),
-        'legacyNetworksExist'                : require(__dirname + '/plugins/google/vpcnetwork/legacyNetworksExist.js'),
+        'legacyNetworksExist'           : require(__dirname + '/plugins/google/vpcnetwork/legacyNetworksExist.js'),
+        'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
