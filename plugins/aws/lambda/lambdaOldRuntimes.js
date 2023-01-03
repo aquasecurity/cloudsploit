@@ -62,15 +62,10 @@ module.exports = {
                 });
 
                 var version = lambdaFunction.Runtime;
-                var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? deprecatedRuntime[0].endOfLifeDate : null;
+                var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? Date.parse(deprecatedRuntime[0].endOfLifeDate) : null;
                 let today = new Date();
-                let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
-                let currentMonth = (today.getMonth() < 10) ? '0' + today.getMonth() : today.getMonth();
-                today = `${today.getFullYear()}-${currentMonth+1}-${dateToday}`;
+                today = Date.parse(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`);
                 if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
-                    console.log(`runtime Data ${runtimeDeprecationDate}`);
-                    console.log(`today ${today}`);
-
                     helpers.addResult(results, 2,
                         'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
                         region, lambdaFunction.FunctionArn);
