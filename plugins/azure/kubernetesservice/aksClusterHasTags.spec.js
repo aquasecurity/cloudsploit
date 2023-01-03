@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var aksHasTags = require('./aksHasTags');
+var aksHasTags = require('./aksClusterHasTags');
 const listCluster = [
     {
         "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/ABSBAKS2/providers/Microsoft.ContainerService/managedClusters/absbaks2",
