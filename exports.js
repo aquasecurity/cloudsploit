@@ -834,7 +834,7 @@ module.exports = {
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
         'aksAgentVersion'               : require(__dirname + '/plugins/azure/kubernetesservice/aksAgentVersion.js'),
-        'aksClusterHasTags'                    : require(__dirname + '/plugins/azure/kubernetesservice/aksClusterHasTags.js'),
+        'aksClusterHasTags'              : require(__dirname + '/plugins/azure/kubernetesservice/aksClusterHasTags.js'),
         'aksEncryptionAtRestWithCMK'    : require(__dirname + '/plugins/azure/kubernetesservice/aksEncryptionAtRestWithCMK'),
         'aksPrivateCluster'             : require(__dirname + '/plugins/azure/kubernetesservice/aksPrivateCluster.js'),
 
