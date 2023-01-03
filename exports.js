@@ -1203,6 +1203,7 @@ module.exports = {
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
         'tablesCMKEncrypted'            : require(__dirname + '/plugins/google/bigquery/tablesCMKEncrypted.js'),
         'datasetLabelsAdded'            : require(__dirname + '/plugins/google/bigquery/datasetLabelsAdded.js'),
+        'datasetsCMKEncrypted'          : require(__dirname + '/plugins/google/bigquery/datasetsCMKEncrypted.js'),
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
         'deadLetteringEnabled'          : require(__dirname + '/plugins/google/pubsub/deadLetteringEnabled.js'),
