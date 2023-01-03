@@ -45,17 +45,20 @@ module.exports = {
 
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountExists = false;
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountUser') {
-                    serviceAccountExists = true;
-                    roleBinding.members.forEach(member => {
-                        let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                        let resource = helpers.createResourceName('serviceAccounts', accountName, project);
-                        helpers.addResult(results, 2,
-                            'The account has a service account user role', region, resource);
-                    });
-                }
-            });
+
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountUser') {
+                        serviceAccountExists = true;
+                        roleBinding.members.forEach(member => {
+                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                            let resource = helpers.createResourceName('serviceAccounts', accountName, project);
+                            helpers.addResult(results, 2,
+                                'The account has a service account user role', region, resource);
+                        });
+                    }
+                });
+            }
 
             if (!serviceAccountExists) {
                 helpers.addResult(results, 0, 'No accounts have service account user roles', region);
