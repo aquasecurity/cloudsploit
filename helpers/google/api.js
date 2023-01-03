@@ -336,6 +336,13 @@ var calls = {
             reliesOnCall: ['list'],
             properties: ['id']
         }
+    },
+    accessApproval: {
+        settings: {
+            url: 'https://accessapproval.googleapis.com/v1/projects/{projectId}/accessApprovalSettings',
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
     }
 };
 
@@ -429,6 +436,18 @@ var postcalls = {
             pagination: true
         }
     },
+    bigqueryTables: {
+        list: {
+            url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables',
+            location: null,
+            reliesOnService: ['datasets'],
+            reliesOnCall: ['list'],
+            properties: ['datasetId'],
+            subObj: ['datasetReference'],
+            pagination: true,
+            dataKey: 'tables'
+        }
+    },
     jobs: {
         get: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs/{jobId}
             url: 'https://dataflow.googleapis.com/v1b3/projects/{projectId}/locations/{locationId}/jobs/{id}',
@@ -503,7 +522,18 @@ var tertiarycalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
         }
-    }
+    },
+    bigqueryTables: {
+        get: {
+            url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables/{tableId}',
+            location: null,
+            reliesOnService: ['bigqueryTables'],
+            reliesOnCall: ['list'],
+            properties: ['datasetId', 'tableId'],
+            subObj: ['tableReference'],
+            pagination: true
+        }
+    },
 };
 
 module.exports = {

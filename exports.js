@@ -1055,6 +1055,8 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/google/vpcnetwork/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/google/vpcnetwork/openCassandraThrift.js'),
         'openCassandraInternode'        : require(__dirname + '/plugins/google/vpcnetwork/openCassandraInternode.js'),
+        'legacyNetworksExist'           : require(__dirname + '/plugins/google/vpcnetwork/legacyNetworksExist.js'),
+        'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -1092,6 +1094,7 @@ module.exports = {
         'diskLabelsAdded'               : require(__dirname + '/plugins/google/compute/diskLabelsAdded.js'),
         'imageLabelsAdded'              : require(__dirname + '/plugins/google/compute/imageLabelsAdded.js'),
         'instanceLabelsAdded'           : require(__dirname + '/plugins/google/compute/instanceLabelsAdded.js'),
+        'confidentialComputingEnabled'  : require(__dirname + '/plugins/google/compute/confidentialComputingEnabled.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
@@ -1130,8 +1133,11 @@ module.exports = {
         'sqlServerTraceFlagDisabled'    : require(__dirname + '/plugins/google/sql/sqlServerTraceFlagDisabled.js'),
         'sqlServerContainedDBAuth'      : require(__dirname + '/plugins/google/sql/sqlServerContainedDBAuth.js'),
         'postgresqlLogMinMessages'      : require(__dirname + '/plugins/google/sql/postgresqlLogMinMessages.js'),
-        'postgresqlLogStatement'         : require(__dirname + '/plugins/google/sql/postgresqlLogStatement.js'),
+        'postgresqlLogStatement'        : require(__dirname + '/plugins/google/sql/postgresqlLogStatement.js'),
         'sqlServerUserOptionsDisabled'  : require(__dirname + '/plugins/google/sql/sqlServerUserOptionsDisabled.js'),
+        'postgresqlLogStatement'        : require(__dirname + '/plugins/google/sql/postgresqlLogStatement.js'),
+        'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
+        'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),
@@ -1204,6 +1210,7 @@ module.exports = {
         'datasetAllUsersPolicy'         : require(__dirname + '/plugins/google/bigquery/datasetAllUsersPolicy.js'),
         'tablesCMKEncrypted'            : require(__dirname + '/plugins/google/bigquery/tablesCMKEncrypted.js'),
         'datasetLabelsAdded'            : require(__dirname + '/plugins/google/bigquery/datasetLabelsAdded.js'),
+        'datasetsCMKEncrypted'          : require(__dirname + '/plugins/google/bigquery/datasetsCMKEncrypted.js'),
       
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
         'deadLetteringEnabled'          : require(__dirname + '/plugins/google/pubsub/deadLetteringEnabled.js'),
@@ -1249,6 +1256,8 @@ module.exports = {
         'bigtableInstanceLabelsAdded'   : require(__dirname + '/plugins/google/bigtable/bigtableInstanceLabelsAdded.js'),
 
         'assetInventoryEnabled'         : require(__dirname + '/plugins/google/serviceusage/assetInventoryEnabled.js'),
+
+        'accessApprovalEnabled'         : require(__dirname + '/plugins/google/security/accessApprovalEnabled.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
