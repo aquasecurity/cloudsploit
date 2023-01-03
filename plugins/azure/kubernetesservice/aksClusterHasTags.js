@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'AKS cluster Has Tags',
+    title: 'AKS Cluster Has Tags',
     category: 'Kubernetes Service',
     domain: 'Containers',
     description: 'Ensures that Azure Kubernetes clusters have tags associated.',
