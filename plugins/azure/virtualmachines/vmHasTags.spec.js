@@ -71,7 +71,7 @@ describe('vmHasTags', function() {
         });
 
         it('should give unknown result if unable to query for virtual machine details', function(done) {
-            const cache = createCache([virtualMachines[0]], {});
+            const cache = createCache([virtualMachines[0]], null);
             vmHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

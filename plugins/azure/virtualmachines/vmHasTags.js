@@ -34,9 +34,11 @@ module.exports = {
             }
 
             for (let virtualMachine of virtualMachines.data) { 
+                if (!virtualMachine.id) continue;
+                
                 const virtualMachineData = helpers.addSource(cache, source, ['virtualMachines', 'get', location, virtualMachine.id]);
 
-                if (!virtualMachineData || !virtualMachineData.data || !virtualMachineData.data.name || virtualMachineData.err) {
+                if (!virtualMachineData || !virtualMachineData.data || virtualMachineData.err) {
                     helpers.addResult(results, 3, 'unable to query for virtual machine data', location, virtualMachine.id);
                     continue;
                 } 
