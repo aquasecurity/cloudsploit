@@ -18,6 +18,7 @@ module.exports = {
         hipaa: 'Rotating keys helps to ensure that those keys have not been ' +
             'compromised. HIPAA requires strict controls around authentication of ' +
             'users or systems accessing HIPAA-compliant environments.',
+        cis1: '1.10 Ensure KMS Encryption Keys Are Rotated Within a Period of 90 Days'
 
     },
 

@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_min_duration_statement flag is disabled for all PostgreSQL instances.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.2.8 Ensure That the Log_min_duration_statement Database Flag for Cloud SQL PostgreSQL Instance Is Set to -1 (Disabled)'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

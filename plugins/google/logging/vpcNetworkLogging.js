@@ -15,7 +15,8 @@ module.exports = {
             'in which cardholder data is present. VPC network logging ' +
             'helps audit all network changes.',
         hipaa: 'HIPAA requires the logging of all activity ' +
-            'including access and all actions taken.'
+            'including access and all actions taken.',
+        cis1: '2.9 Ensure That the Log Metric Filter and Alerts Exist for VPC Network Changes'
     },
 
     run: function(cache, settings, callback) {

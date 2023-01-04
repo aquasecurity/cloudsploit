@@ -18,6 +18,9 @@ module.exports = {
             default: 'ddl'
         }
     },
+    compliance: {
+        cis1: 'Ensure Log_statement Database Flag for Cloud SQL PostgreSQL Instance Is Set Appropriately'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

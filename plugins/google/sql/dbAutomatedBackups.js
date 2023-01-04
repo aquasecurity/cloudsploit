@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.7 Ensure That Cloud SQL Database Instances Are Configured With Automated Backups'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

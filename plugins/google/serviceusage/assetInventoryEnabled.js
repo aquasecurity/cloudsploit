@@ -9,6 +9,9 @@ module.exports = {
     link: 'https://cloud.google.com/asset-inventory/docs',
     recommended_action: 'Enable Asset Inventory service for the GCP project.',
     apis: ['projects:getWithNumber', 'services:listEnabled'],
+    compliance: {
+        cis1: '2.13 Ensure Cloud Asset Inventory Is Enabled',
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

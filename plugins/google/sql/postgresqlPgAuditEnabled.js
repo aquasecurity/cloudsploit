@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that cloudsql.enable_pgaudit flag is enabled for all PostgreSQL instances.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.2.9 Ensure That cloudsql.enable_pgaudit Database Flag for each Cloud Sql Postgresql Instance Is Set to on For Centralized Logging'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

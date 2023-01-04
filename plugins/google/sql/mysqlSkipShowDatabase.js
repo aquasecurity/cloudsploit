@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that skip show database flag is enabled for all MySQL instances.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.1.2 Ensure Skip_show_database Database Flag for Cloud SQL MySQL Instance Is Set to On'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

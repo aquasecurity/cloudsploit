@@ -13,7 +13,8 @@ module.exports = {
     compliance: {
         pci: 'PCI recommends implementing additional security features for ' +
             'any required service. This includes using secured technologies ' +
-            'such as SSH.'
+            'such as SSH.',
+        cis1: '4.4 Ensure Oslogin Is Enabled for a Project'
     },
 
     run: function(cache, settings, callback) {

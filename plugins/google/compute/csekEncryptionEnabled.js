@@ -14,7 +14,8 @@ module.exports = {
             'Enabling encryption of disk data helps to protect this data.',
         pci: 'PCI requires proper encryption of cardholder data at rest. ' +
             'Encryption should be enabled for all disks storing this ' +
-            'type of data.'
+            'type of data.',
+        cis2: 'Ensure VM Disks for Critical VMs Are Encrypted With CustomerSupplied Encryption Keys (CSEK)'
     },
 
     run: function(cache, settings, callback) {

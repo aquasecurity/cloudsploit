@@ -19,6 +19,9 @@ module.exports = {
             default: '0'
         }
     },
+    compliance: {
+        cis1: '6.3.3 Ensure User Connections Database Flag for Cloud Sql Server Instance Is Set to a Non-limiting Value'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

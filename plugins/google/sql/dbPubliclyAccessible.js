@@ -18,7 +18,8 @@ module.exports = {
             'controls around sensitive data.',
         pci: 'PCI requires backend services to be properly firewalled. ' +
             'Ensure SQL instances are not accessible from the Internet ' +
-            'and use proper jump box access mechanisms.'
+            'and use proper jump box access mechanisms.',
+        cis1: '6.5 Ensure That Cloud SQL Database Instances Do Not Implicitly Whitelist All Public IP Addresses',
     },
 
     run: function(cache, settings, callback) {

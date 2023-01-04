@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/create-manage-users',
     recommended_action: 'Ensure that root access for SQL instances are not allowed from any host.',
     apis: ['sql:list', 'users:list'],
+    compliance: {
+        cis1: '6.1.1 Ensure That a MySQL Database Instance Does Not Allow Anyone To Connect With Administrative Privileges'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

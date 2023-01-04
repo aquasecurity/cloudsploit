@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have both the Service Account User and Service Account Admin role attached.',
     apis: ['projects:getIamPolicy'],
+    compliance: {
+        cis2: '1.8 Ensure That Separation of Duties Is Enforced While Assigning Service Account Related Roles to Users'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

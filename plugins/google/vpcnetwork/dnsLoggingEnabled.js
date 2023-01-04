@@ -10,6 +10,9 @@ module.exports = {
     link: 'https://cloud.google.com/dns/docs/monitoring',
     recommended_action: 'Create Cloud DNS Server Policy with logging enabled for VPC Networks',
     apis: ['networks:list', 'policies:list'],
+    compliance: {
+        cis1: '2.12 Ensure That Cloud DNS Logging Is Enabled for All VPC Networks'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
