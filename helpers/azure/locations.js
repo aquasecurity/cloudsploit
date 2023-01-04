@@ -104,4 +104,5 @@ module.exports = {
     publicIPAddresses: locations,
     privateDnsZones: ['global'],
     privateEndpoints: locations,
+    routeTables: locations,
 };
