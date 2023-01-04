@@ -34,7 +34,7 @@ module.exports = {
             for (let image of snapshots.data){
                 if (!image.id) continue;
 
-                 if (image.tags && Object.entries(image.tags).length > 0){
+                if (image.tags && Object.entries(image.tags).length > 0){
                     helpers.addResult(results, 0, 'VM Image has tags associated', location, image.id);
                 } else {
                     helpers.addResult(results, 2, 'VM Image does not have tags associated', location, image.id);
