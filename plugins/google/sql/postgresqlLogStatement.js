@@ -19,7 +19,7 @@ module.exports = {
         }
     },
     compliance: {
-        cis1: 'Ensure Log_statement Database Flag for Cloud SQL PostgreSQL Instance Is Set Appropriately'
+        cis1: '6.2.4 Ensure Log_statement Database Flag for Cloud SQL PostgreSQL Instance Is Set Appropriately'
     },
 
     run: function(cache, settings, callback) {
