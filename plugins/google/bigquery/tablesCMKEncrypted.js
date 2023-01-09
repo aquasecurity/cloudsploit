@@ -6,14 +6,14 @@ module.exports = {
     category: 'BigQuery',
     domain: 'Databases',
     description: 'Ensure that BigQuery dataset tables are encrypted using desired encryption protection level.',
-    more_info: 'By default Google encrypts all dataset tables using Google-managed encryption keys. To have more control over the encryption process of your BigQuery dataset tables you can use Customer-Managed Keys (CMKs).',
+    more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your BigQuery dataset tables you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/bigquery/docs/customer-managed-encryption',
     recommended_action: 'Ensure that each BigQuery dataset table has desired encryption level.',
-    apis: ['datasets:list', 'bigqueryTables:list', 'bigqueryTables:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['datasets:list', 'datasets:get', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         bigquery_tables_encryption_protection_level: {
-            name: 'BigQuery Table Encryption Protection Level',
-            description: 'Desired protection level for BigQuery tables. default: google-managed, cloudcmek: customer managed encryption keys, ' +
+            name: 'BigQuery Dataset Encryption Protection Level',
+            description: 'Desired protection level for BigQuery datasets. default: google-managed, cloudcmek: customer managed encryption keys, ' +
                 'cloudhsm: customer managed HSM encryption key, external: imported or externally managed key',
             regex: '^(default|cloudcmek|cloudhsm|external)$',
             default: 'cloudcmek'
@@ -39,6 +39,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        var project = projects.data[0].name;
         async.series([
             function(cb) {
                 async.each(regions.cryptoKeys, function(region, rcb) {
@@ -52,45 +53,31 @@ module.exports = {
                 });
             },
             function(cb) {
-                async.each(regions.bigqueryTables, function(region, rcb) {
-                    let datasets = helpers.addSource(cache, source,
-                        ['datasets', 'list', region]);
-        
-                    if (!datasets) return rcb();
-        
-                    if (datasets.err || !datasets.data) {
-                        helpers.addResult(results, 3, 'Unable to query BigQuery datasets', region, null, null, datasets.err);
+                async.each(regions.datasets, function(region, rcb) {
+                    let datasetsGet = helpers.addSource(cache, source,
+                        ['datasets', 'get', region]);
+
+                    if (!datasetsGet) return rcb();
+
+                    if (datasetsGet.err || !datasetsGet.data) {
+                        helpers.addResult(results, 3, 'Unable to query BigQuery datasets: ' + helpers.addError(datasetsGet), region);
                         return rcb();
                     }
-        
-                    if (!datasets.data.length) {
+
+                    if (!datasetsGet.data.length) {
                         helpers.addResult(results, 0, 'No BigQuery datasets found', region);
                         return rcb();
                     }
-        
-                    let tables = helpers.addSource(cache, source,
-                        ['bigqueryTables', 'get', region]);
-        
-                    if (!tables) return rcb();
-        
-                    if (tables.err || !tables.data) {
-                        helpers.addResult(results, 3, 'Unable to query BigQuery tables', region, null, null, tables.err);
-                        return rcb();
-                    }
-        
-                    if (!tables.data.length) {
-                        helpers.addResult(results, 0, 'No BigQuery tables found', region);
-                        return rcb();
-                    }
-        
-                    tables.data.forEach(table => {
-                        if (!table.id) return;
+
+                    async.each(datasetsGet.data, (dataset, dcb) => {
+                        if (!dataset.id) return dcb();
+
+                        let resource = helpers.createResourceName('datasets', dataset.id.split(':')[1] || dataset.id, project);
 
                         let currentEncryptionLevel;
-                        let resource = table.selfLink.split('v2/')[1];
 
-                        if (table.encryptionConfiguration && table.encryptionConfiguration.kmsKeyName) {
-                            currentEncryptionLevel = helpers.getProtectionLevel(keysObj[table.encryptionConfiguration.kmsKeyName], helpers.PROTECTION_LEVELS);
+                        if (dataset.defaultEncryptionConfiguration && dataset.defaultEncryptionConfiguration.kmsKeyName) {
+                            currentEncryptionLevel = helpers.getProtectionLevel(keysObj[dataset.defaultEncryptionConfiguration.kmsKeyName], helpers.PROTECTION_LEVELS);
                         } else {
                             currentEncryptionLevel = 1; //default
                         }
@@ -99,13 +86,14 @@ module.exports = {
 
                         if (currentEncryptionLevel >= desiredEncryptionLevel) {
                             helpers.addResult(results, 0,
-                                `BigQuery table has encryption level ${currentEncryptionLevelStr} which is greater than or equal to ${desiredEncryptionLevelStr}`,
+                                `BigQuery dataset has encryption level ${currentEncryptionLevelStr} which is greater than or equal to ${desiredEncryptionLevelStr}`,
                                 region, resource);
                         } else {
                             helpers.addResult(results, 2,
-                                `BigQuery table has encryption level ${currentEncryptionLevelStr} which is less than ${desiredEncryptionLevelStr}`,
+                                `BigQuery dataset has encryption level ${currentEncryptionLevelStr} which is less than ${desiredEncryptionLevelStr}`,
                                 region, resource);
                         }
+
                     });
                     rcb();
                 }, function() {
