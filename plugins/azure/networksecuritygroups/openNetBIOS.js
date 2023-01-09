@@ -8,7 +8,7 @@ module.exports = {
     description: 'Determine if UDP port 137, 138 or 139 for NetBIOS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as NetBIOS should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
-    recommended_action: 'Restrict UDP ports 137, 138 or 139 to known IP addresses',
+    recommended_action: 'Restrict UDP ports 137, 138 and 139 to known IP addresses.',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],
     remediation_min_version: '202011201836',
