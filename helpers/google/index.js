@@ -402,7 +402,6 @@ function setData(collection, dataToAdd, postCall, parent, serviceInfo) {
         if (Array.isArray(collection.data)) {
             collection.data.push(dataToAdd);
         } else {
-            collection.data = dataToAdd;
             collection.data = [dataToAdd];
         }
     }

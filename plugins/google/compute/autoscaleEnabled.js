@@ -26,9 +26,15 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var instanceGroups = Object.values(instanceGroupsObj.data).filter(instanceGroup =>{
-            return !instanceGroup.warning;
-        });
+        let instanceGroups = [];
+
+        if (instanceGroupsObj.data.length) {
+            instanceGroupsObj.data.forEach(instanceGroup => {
+                instanceGroups = instanceGroups.concat(Object.values(instanceGroup).filter(instanceGroup =>{
+                    return !instanceGroup.warning;
+                }));
+            });
+        }
 
         if (!instanceGroups.length) {
             helpers.addResult(results, 0, 'No instance groups found', 'global');
@@ -85,13 +91,18 @@ module.exports = {
 
             let autoscalersObj = helpers.addSource(cache, source,
                 ['autoscalers', 'aggregatedList', ['global']]);
-
+            
             if (autoscalersObj.err || !autoscalersObj.data) {
                 helpers.addResult(results, 3, 'Unable to query autoscalers', 'global', null, null, autoscalersObj.err);
             } else {
-                var autoscalers = Object.values(autoscalersObj.data).filter(autoscaler =>{
-                    return !autoscaler.warning;
-                });
+                var autoscalers = [];
+                if (autoscalersObj.data.length) {
+                    autoscalersObj.data.forEach(autoscaler => {
+                        autoscalers = autoscalers.concat(Object.values(autoscaler).filter(autoscaler =>{
+                            return !autoscaler.warning;
+                        }));
+                    });
+                }
             }
 
             if (autoscalers.length) {
@@ -103,7 +114,7 @@ module.exports = {
                             }
                         }
                     });
-
+                    
                     lcb();
                 }, function() {
                     if (Object.keys(instanceGroupURLObj).length) {

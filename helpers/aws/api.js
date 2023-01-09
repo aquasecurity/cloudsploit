@@ -12,6 +12,62 @@ var integrationSendLast = [
     'EC2'
 ];
 
+/*
+ enabled: send integration is enable or not
+ isSingleSource: whether resource is single source or not
+
+----------Bridge Side Data----------
+ BridgeServiceName: it should be the api service name which we are storing in json file in s3 collection bucket.
+ BridgeCall: it should be the api call which we are storing in json file in s3 collection bucket.
+ BridgePluginCategoryName: it should be equivalent to Plugin Category Name.
+ BridgeProvider: it should be the cloud provider
+                 Eg. 'aws', 'Azure', 'Google'
+
+ BridgeArnIdentifier: it should be the key of the arn field data which we are storing in json file in s3 collection bucket.
+                      Eg. 'TrailARN'
+
+ BridgeArnTemplate: this should be the arn template.
+                    Eg. "arn:aws:cloudtrail:{region}:{cloudAccount}:trail/{name}"
+
+ Note: If there is an arn identifier then no need to pass the arn template otherwise we have to pass the template.
+
+ BridgeResourceType: this should be type of the resource, fetch it from the arn.
+                     Eg. 'trail'
+
+ BridgeResourceNameIdentifier: it should be the key of resource name/id data which we are storing in json file in  s3 collection bucket.
+                               Eg. 'Name' or 'Id'
+
+ Note: if there is no name then we have to pass the id.
+
+ BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
+ BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+
+----------Processor Side Data----------
+These fields should be according to the user and product manager, what they want to show in Inventory UI.
+ InvAsset: 'CloudTrail'
+ InvService: 'CloudTrail'
+ InvResourceCategory: 'cloud_resources'
+ InvResourceType: 'CloudTrail'
+
+ Note: For specific category add the category name otherwise it should be 'cloud_resource'
+
+ Take the reference from the below map
+*/
+
+// Note: In Below service map add only single source resources.
+// and service name should be plugin category.
+var serviceMap = {
+    'CloudTrail':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'CloudTrail', InvService: 'CloudTrail',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CloudTrail', BridgeServiceName: 'cloudtrail',
+            BridgePluginCategoryName: 'CloudTrail', BridgeProvider: 'aws', BridgeCall: 'describeTrails',
+            BridgeArnIdentifier: 'TrailARN', BridgeArnTemplate: '', BridgeResourceType: 'trail',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'CloudTrail',
+            BridgeCollectionService: 'cloudtrail',
+        }
+};
+
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
@@ -1291,7 +1347,8 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
-            }
+            },
+            sendIntegration: serviceMap['CloudTrail']
         },
         Imagebuilder: {
             getContainerRecipe: {
@@ -2248,6 +2305,7 @@ var postcalls = [
 
 module.exports = {
     globalServices: globalServices,
+    serviceMap: serviceMap,
     calls: calls,
     postcalls: postcalls,
     integrationSendLast: integrationSendLast
