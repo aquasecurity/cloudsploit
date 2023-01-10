@@ -36,9 +36,9 @@ module.exports = {
                 if (!registry.id) continue;
 
                 if (registry.tags && Object.entries(registry.tags).length > 0){
-                    helpers.addResult(results, 0, 'Conatiner Registery has tags associated', location, registry.id);
+                    helpers.addResult(results, 0, 'Conatiner Registry has tags associated', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Conatiner Registery does not have tags associated', location, registry.id);
+                    helpers.addResult(results, 2, 'Conatiner Registry does not have tags associated', location, registry.id);
                 } 
 
             }
