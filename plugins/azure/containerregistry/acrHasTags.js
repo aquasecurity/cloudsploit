@@ -32,13 +32,13 @@ module.exports = {
                 return rcb();
             } 
             
-            for (let registery of conatinerRegisteries.data) {
-                if (!registery.id) continue;
+            for (let registry of conatinerRegisteries.data) {
+                if (!registry.id) continue;
 
-                if (registery.tags && Object.entries(registery.tags).length > 0){
-                    helpers.addResult(results, 0, 'Conatiner Registery has tags associated', location, registery.id);
+                if (registry.tags && Object.entries(registry.tags).length > 0){
+                    helpers.addResult(results, 0, 'Conatiner Registery has tags associated', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Conatiner Registery does not have tags associated', location, registery.id);
+                    helpers.addResult(results, 2, 'Conatiner Registery does not have tags associated', location, registry.id);
                 } 
 
             }
