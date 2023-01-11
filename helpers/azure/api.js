@@ -176,6 +176,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/autoProvisioningSettings?api-version=2017-08-01-preview'
         }
     },
+    applicationGateway: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways?api-version=2022-07-01'
+        }
+    },
     securityContacts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2017-08-01-preview',
