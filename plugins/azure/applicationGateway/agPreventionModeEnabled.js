@@ -5,7 +5,7 @@ module.exports = {
     title: 'Application Gateway WAF Prevention Mode Enabled',
     category: 'Application Gateway',
     domain: 'Application Gateway',
-    description: 'Ensure WAF policy for Application gateway is set to Prevention mode',
+    description: 'Ensure that WAF policy for Microsoft Azure Application gateway is set to Prevention mode',
     more_info: 'Azure Web Application Firewall (WAF) on Azure Application Gateway provides centralized protection of your web applications from common exploits and vulnerabilities. Web applications are increasingly targeted by malicious attacks that exploit commonly known vulnerabilities.',
     recommended_action: 'Modify application gateway WAF policy and enable prevention mode.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview',
