@@ -42,7 +42,7 @@ module.exports = {
                 'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
                 'If ignore_service_specific_wildcards is false, a FAIL result will be generated.',
             regex: '^(true|false)$',
-            default: 'true'
+            default: 'false'
         },
         ignore_identity_federation_roles: {
             name: 'Ignore Identity Federation Roles',
@@ -111,7 +111,7 @@ module.exports = {
         config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
-        config.ignore_resource_specific_wildcards = (config.ignore_resource_specific_wildcards === 'true')
+        config.ignore_resource_specific_wildcards = (config.ignore_resource_specific_wildcards === 'true');
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -301,20 +301,19 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 }
                 if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
             } else if (!ignoreResourceSepcific && statement.Resource && statement.Resource.length) {
-                    // Check resources for least previlige
-                    let resources = [];
-                    let service;
-                    for (var resource of statement.Resource) {
-                        var expression = resource.split(/^([^:]+):([^:]+):([^:]+)[:]+/)[4];
-                        if(statement.Action)  service = resource.split(':')[2] ? resource.split(':')[2].toLowerCase() : '';
-                        if(service === "s3"){
-                            if(expression == '*' || !(/^[^\/*:]+\/[*]$/.test(expression))) resources.push (resource);
-                        }
-                        else {
-                            if(!((/^[\w-]+[\/:]+[\w-]+[\/:]+[\w-]+[\/:]+[\w-]+/.test(expression)))) resources.push (resource);
-                        }
+                // Check resources for least previlige
+                let resources = [];
+                let service;
+                for (var resource of statement.Resource) {
+                    var expression = resource.split(/^([^:]+):([^:]+):([^:]+)[:]+/)[4];
+                    if (statement.Action)  service = resource.split(':')[2] ? resource.split(':')[2].toLowerCase() : '';
+                    if (service === 's3'){
+                        if (expression == '*' || (/^[\w-]+\/\.?\*.?$/.test(expression))) resources.push (resource);
+                    } else {
+                        if (!(/^[\w-]+[/:]+[\w-]+[/:]+[\w-]+[/:]+[\w-]+/.test(expression))) resources.push (resource);
+                    }
                 
-                    if(resources.length) failMsg = `Role ${policyType} policy allows wild card resources ${resources.join(', ')}`
+                    if (resources.length) failMsg = `Role ${policyType} policy allows wild card resources ${resources.join(', ')}`;
                 
                 }
                 
