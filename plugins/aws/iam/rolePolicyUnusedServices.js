@@ -75,6 +75,12 @@ module.exports = {
             description: 'A comma-separated list indicating which services should be ignored',
             regex: '.*$',
             default: ''
+        },
+        whitelist_unused_actions_for_resources: {
+            name: 'Whitelist Unused Actions For Resources',
+            description: 'A comma-separated list indicating which actions for specific service should be ignored i.e. Ignore the following actions ec2:CancelReservedInstancesListing, ec2:AcceptVpcPeeringConnection for ec2 Service',
+            regex: '.*$',
+            default: ''
         }
     },
 
@@ -86,7 +92,8 @@ module.exports = {
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
-            whitelist_unused_services: settings.whitelist_unused_services || this.settings.whitelist_unused_services.default
+            whitelist_unused_services: settings.whitelist_unused_services || this.settings.whitelist_unused_services.default,
+            whitelist_unused_actions_for_resources: settings.whitelist_unused_actions_for_resources || this.settings.whitelist_unused_actions_for_resources.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -94,6 +101,8 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
         config.whitelist_unused_services = config.whitelist_unused_services.replace(/\s/g, '');
+        config.whitelist_unused_actions_for_resources = config.whitelist_unused_actions_for_resources.replace(/\s/g, '').toLowerCase();
+
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -338,6 +347,7 @@ module.exports = {
                                 for (let statement of statements) {
                                     if (statement.Action && statement.Action.length) {
                                         for (let action of statement.Action) {
+                                            if (config.whitelist_unused_actions_for_resources.includes(action.toLowerCase())) continue;
                                             let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
                                             let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
 
@@ -386,6 +396,7 @@ module.exports = {
                                         statement.Action[0].split(':')[1].toLowerCase();
                                     if (statement.Action.length > 1 || statement.Action[0] !== '*') {
                                         for (let action of statement.Action) {
+                                            if (config.whitelist_unused_actions_for_resources.includes(action)) continue;
                                             let resourceAction = action.split(':')[1].toLowerCase();
 
                                             if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
