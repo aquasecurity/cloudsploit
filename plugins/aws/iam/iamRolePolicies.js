@@ -309,6 +309,8 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                     if (statement.Action)  service = resource.split(':')[2] ? resource.split(':')[2].toLowerCase() : '';
                     if (service === 's3'){
                         if (expression == '*' || (/^[\w-]+\/\.?\*.?$/.test(expression))) resources.push (resource);
+                    } else if (service ==='iam'){
+                        if (/^[0-9]+:.?[a-zA-Z]+\/\*.?$/.test('12345:user/*')) resources.push(resource);
                     } else {
                         if (!(/^[\w-]+[/:]+[\w-]+[/:]+[\w-]+[/:]+[\w-]+/.test(expression))) resources.push (resource);
                     }
