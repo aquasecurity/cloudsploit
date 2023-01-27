@@ -10,11 +10,23 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html',
     recommended_action: 'Upgrade the Lambda function runtime to use a more current version.',
     apis: ['Lambda:listFunctions'],
+    settings: {
+        lambda_runtime_fail: {
+            name: 'Lambda Runtime Fail',
+            description: 'Return a failing result for lambda runtime before this number of days for their end of life date.',
+            regex: '^[1-9]{1}[0-9]{0,3}$',
+            default: 30
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var config = {
+            lambda_runtime_fail: settings.lambda_runtime_fail || this.settings.lambda_runtime_fail.default
+        };
 
         var deprecatedRuntimes = [
             { 'id':'nodejs', 'name': 'Node.js 0.10', 'endOfLifeDate': '2016-10-31' },
@@ -64,15 +76,22 @@ module.exports = {
                 var version = lambdaFunction.Runtime;
                 var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? Date.parse(deprecatedRuntime[0].endOfLifeDate) : null;
                 let today = new Date();
+                var difference = Math.round((new Date(runtimeDeprecationDate).getTime() - today.getTime())/(24*60*60*1000));
                 today = Date.parse(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`);
                 if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
                     helpers.addResult(results, 2,
                         'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
                         region, lambdaFunction.FunctionArn);
                 } else {
-                    helpers.addResult(results, 0,
-                        'Lambda is running the current version: ' + version,
-                        region, lambdaFunction.FunctionArn);
+                    if(config.lambda_runtime_fail >= difference) {
+                        helpers.addResult(results, 2,
+                            'Lambda is using runtime: ' + version + ' which is deprecating in ' + Math.abs(difference) + ' days',
+                            region, lambdaFunction.FunctionArn);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Lambda is running the current version: ' + version,
+                            region, lambdaFunction.FunctionArn);
+                    }
                 }   
             }
             rcb();
