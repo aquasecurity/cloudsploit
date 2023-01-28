@@ -1156,6 +1156,7 @@ module.exports = {
         'clbNoInstances'                : require(__dirname + '/plugins/google/clb/clbNoInstances.js'),
         'clbSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/clb/clbSecurityPolicyEnabled.js'),
         'clbCDNEnabled'                 : require(__dirname + '/plugins/google/clb/clbCDNEnabled.js'),
+        'clbLoggingEnabled'                 : require(__dirname + '/plugins/google/clb/clbLoggingEnabled.js'),
 
         'serviceLimits'                 : require(__dirname + '/plugins/google/iam/serviceLimits.js'),
         'serviceAccountAdmin'           : require(__dirname + '/plugins/google/iam/serviceAccountAdmin.js'),
