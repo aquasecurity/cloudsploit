@@ -729,6 +729,7 @@ module.exports = {
         'monitorIpForwarding'           : require(__dirname + '/plugins/azure/securitycenter/monitorIpForwarding.js'),
         'monitorNextGenerationFirewall' : require(__dirname + '/plugins/azure/securitycenter/monitorNextGenerationFirewall.js'),
         'monitorSubscriptionOwners'     : require(__dirname + '/plugins/azure/securitycenter/monitorSubscriptionOwners.js'),
+        'securityContactAdditionalEmail': require(__dirname + '/plugins/azure/securitycenter/securityContactAdditionalEmail.js'),
 
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
