@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure TLS version on MySQL flexible servers is set to the default value.',
     more_info: 'TLS connectivity helps to provide a new layer of security by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against "man in the middle" attacks by encrypting the data stream between the server and application.',
-    recommended_action: 'Modify MySQL flexible server tls_version paramter and set to desired minimum TLS version.',
+    recommended_action: 'Modify MySQL flexible server tls_version parameter and set to desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-connect-tls-ssl',
     apis: ['servers:listMysqlFlexibleServer', 'flexibleServersConfigurations:listByServer'],   
 
