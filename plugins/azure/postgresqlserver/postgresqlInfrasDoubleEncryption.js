@@ -35,7 +35,7 @@ module.exports = {
 
             for (let postgresqlDB of servers.data) {
               
-                if(postgresqlDB.infrastructureEncryption &&
+                if (postgresqlDB.infrastructureEncryption &&
                    postgresqlDB.infrastructureEncryption.toLowerCase() === 'enabled') {
                     helpers.addResult(results, 0,
                         'Infrastructure double encryption is enabled for PostgreSQL Server', location, postgresqlDB.id);
