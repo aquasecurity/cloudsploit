@@ -73,7 +73,7 @@ module.exports = {
         resource_specific_wildcards: {
             name: 'Service Specific Wildcards',
             description: 'Resource specific wildcards in attached policies (inline and managed) which matches this regex. '+
-            '/^[\w-]+:[\w-]+:[\w-]+:::[/*]$/ will produce fail result for the resources which matches this regex i.e. "arn:aws:s3:::*" .',
+            '/^[a-z]+:[a-z]+:[a-z0-9]+:::[/*]$/ will produce fail result for the resources which matches this regex i.e. "arn:aws:s3:::*" .',
             regex: '^.*$',
             default: '^.*$',
         },
@@ -98,7 +98,7 @@ module.exports = {
 
         var allowRegex = (config.resource_specific_wildcards &&
             config.resource_specific_wildcards.length) ? new RegExp(config.resource_specific_wildcards) : false;
-            var custom = helpers.isCustom(settings, this.settings);
+        var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
