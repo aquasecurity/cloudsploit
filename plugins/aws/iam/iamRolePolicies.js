@@ -72,26 +72,9 @@ module.exports = {
         },
         ignore_resource_specific_wildcards: {
             name: 'Ignore Service Specific Wildcards',
-            description: 'This allows you to allow attached policies (inline and managed) to use resource specific wildcards. ' +
-                'Example: Consider a role has following inline policy' +
-                `{
-                "Version": "2012-10-17",
-                "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "s3:putObject",
-                            ],
-                            "Resource": [
-                                "arn:aws:s3:::*"
-                            ]
-                        }
-                ]
-            }` +
-                'If ignore_resource_specific_wildcards is true, a PASS result will be generated. ' +
-                'If ignore_resource_specific_wildcards is false, a FAIL result will be generated.',
-            regex: '',
-            default: 'arn:aws:s3:::*'
+            description: 'Ignores resource specific wildcards in attached policies (inline and managed) which matches this regex.',
+            regex: '^.*$',
+            default: '^.*$',
         },
 
     },
@@ -276,7 +259,7 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
-    }
+    } 
 };
 
 function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource) {
@@ -291,6 +274,8 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
+            } else if (statement.Resource && statement.Resource.indexOf('*') > -1){
+                failMsg = `Role ${policyType} policy allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
