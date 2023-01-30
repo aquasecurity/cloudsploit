@@ -1,4 +1,4 @@
-// Export all available scans
+//Export all available scans
 
 module.exports = {
     aws : {
@@ -708,6 +708,7 @@ module.exports = {
         'sqlServerDatabaseRenameAlert'  : require(__dirname + '/plugins/azure/logalerts/sqlServerDatabaseRenameAlert.js'),
         'virtualMachinesPowerOffAlert'  : require(__dirname + '/plugins/azure/logalerts/virtualMachinesPowerOffAlert.js'),
         'virtualMachinesDeallocateAlert': require(__dirname + '/plugins/azure/logalerts/virtualMachinesDeallocateAlert.js'),
+        'publicIpAddressLoggingEnabled' : require(__dirname+ '/plugins/azure/logalerts/publicIpAddressLoggingEnabled.js'),
 
         'monitorEndpointProtection'     : require(__dirname + '/plugins/azure/securitycenter/monitorEndpointProtection.js'),
         'monitorBlobEncryption'         : require(__dirname + '/plugins/azure/securitycenter/monitorBlobEncryption.js'),
@@ -734,6 +735,7 @@ module.exports = {
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
 
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
+        'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
@@ -786,7 +788,7 @@ module.exports = {
         'openCassandraInternode'        : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraInternode.js'),
         'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
-
+        'openHTTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTP.js'),
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
