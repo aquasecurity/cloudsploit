@@ -33,7 +33,7 @@ module.exports = {
             } 
             
             for (let appGateway of appGateways.data) {
-                if (!appGateway.id || !appGateway.sku.tier === "WAF_v2") continue;
+                if (!appGateway.id || !appGateway.sku.tier === 'WAF_v2') continue;
 
                 if (appGateway.webApplicationFirewallConfiguration && appGateway.webApplicationFirewallConfiguration.enabled 
                     && appGateway.webApplicationFirewallConfiguration.enabled === true) {
