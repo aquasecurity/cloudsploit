@@ -37,7 +37,7 @@ describe('vmScaleSetHasTags', function() {
             vmScaleSetHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing virtual machine scale set found');
+                expect(results[0].message).to.include('No existing VM scale sets found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -48,7 +48,7 @@ describe('vmScaleSetHasTags', function() {
             vmScaleSetHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for virtual machine scale set:');
+                expect(results[0].message).to.include('Unable to query for VM scale sets');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
