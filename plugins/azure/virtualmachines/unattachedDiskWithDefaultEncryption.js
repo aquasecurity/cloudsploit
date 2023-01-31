@@ -1,13 +1,13 @@
 var async = require('async');
 
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Disk Volumes Unattached and Default Encryption',
+    title: 'Unattached Disk Volumes with Default Encryption',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that no default encrypted Azure virtual machine disks are in unattached state.',
-    more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments.When a virtual machine (VM) in Azure is deleted, by default, any disks that are attached to the VM aren\'t deleted.',
+    more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments.Having a unattached disk with default encryption type can lead to data leakage.',
     recommended_action: 'Modify disks change encryption type and change disk state',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
     apis: ['disks:list'],
