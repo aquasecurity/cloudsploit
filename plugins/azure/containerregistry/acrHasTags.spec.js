@@ -47,7 +47,7 @@ describe('acrHasTags', function() {
             acrHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing container registries found');
+                expect(results[0].message).to.include('No existing Container registries found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -69,7 +69,7 @@ describe('acrHasTags', function() {
             acrHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for container registries:');
+                expect(results[0].message).to.include('Unable to query for Container registries:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -5,9 +5,9 @@ module.exports = {
     title: 'ACR Has Tags',
     category: 'Container Registry',
     domain: 'Containers',
-    description: 'Ensures that Microsoft Azure Container Registries has tags associated.',
+    description: 'Ensure that Microsoft Azure Container registries have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify container registries and add tags.',
+    recommended_action: 'Modify Container registries and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['registries:list'],
 
@@ -23,12 +23,12 @@ module.exports = {
             if (!conatinerRegisteries) return rcb();
 
             if (conatinerRegisteries.err || !conatinerRegisteries.data) {
-                helpers.addResult(results, 3, 'Unable to query for container registries: ' + helpers.addError(conatinerRegisteries), location);
+                helpers.addResult(results, 3, 'Unable to query for Container registries: ' + helpers.addError(conatinerRegisteries), location);
                 return rcb();
             }
 
             if (!conatinerRegisteries.data.length) {
-                helpers.addResult(results, 0, 'No existing container registries found', location);
+                helpers.addResult(results, 0, 'No existing Container registries found', location);
                 return rcb();
             } 
             
@@ -40,7 +40,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Conatiner Registry does not have tags associated', location, registry.id);
                 } 
-
             }
 
             rcb();
