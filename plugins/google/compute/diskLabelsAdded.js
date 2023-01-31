@@ -36,51 +36,54 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        regions.all_regions.forEach(region => {
-            var noDisks = [];
-            var zones = regions.zones;
-            let disksInRegion = [];
-            let regionData = disks.data[`regions/${region}`];
-
-            if (regionData && regionData['disks'] && regionData['disks'].length) {
-                disksInRegion = disks.data[`regions/${region}`].disks.map(disk => { return {...disk, locationType: 'region', location: region};});
-            }
-        
-            zones[region].forEach(zone => {
-                let disksInZone = [];
-                let zoneData = disks.data[`zones/${zone}`];
-               
-                if (zoneData && zoneData['disks'] && zoneData['disks'].length) {
-                    disksInZone = disks.data[`zones/${zone}`].disks.map(disk => { return {...disk, locationType: 'zone', location: zone};});
+        disks.data.forEach(diskData => {
+            regions.all_regions.forEach(region => {
+                var noDisks = [];
+                var zones = regions.zones;
+                let disksInRegion = [];
+                let regionData = diskData[`regions/${region}`];
+    
+                if (regionData && regionData['disks'] && regionData['disks'].length) {
+                    disksInRegion = diskData[`regions/${region}`].disks.map(disk => { return {...disk, locationType: 'region', location: region};});
                 }
-
-                if (!disksInZone.length) {
-                    noDisks.push(zone);
+            
+                zones[region].forEach(zone => {
+                    let disksInZone = [];
+                    let zoneData = diskData[`zones/${zone}`];
+                   
+                    if (zoneData && zoneData['disks'] && zoneData['disks'].length) {
+                        disksInZone = diskData[`zones/${zone}`].disks.map(disk => { return {...disk, locationType: 'zone', location: zone};});
+                    }
+    
+                    if (!disksInZone.length) {
+                        noDisks.push(zone);
+                    }
+    
+                    disksInRegion = disksInRegion.concat(disksInZone);
+                });
+    
+                disksInRegion.forEach(disk => {
+                    if (!disk.id || !disk.creationTimestamp) return;
+    
+                    let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
+    
+                    if (disk.labels &&
+                        Object.keys(disk.labels).length) {
+                        helpers.addResult(results, 0,
+                            `${Object.keys(disk.labels).length} labels found for compute disk`, region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Compute disk does not have any labels', region, resource);
+                    }
+    
+                });
+    
+                if (noDisks.length) {
+                    helpers.addResult(results, 0, `No compute disks found in following zones: ${noDisks.join(', ')}`, region);
                 }
-
-                disksInRegion = disksInRegion.concat(disksInZone);
             });
-
-            disksInRegion.forEach(disk => {
-                if (!disk.id || !disk.creationTimestamp) return;
-
-                let resource = helpers.createResourceName('disks', disk.name, project, disk.locationType, disk.location);
-
-                if (disk.labels &&
-                    Object.keys(disk.labels).length) {
-                    helpers.addResult(results, 0,
-                        `${Object.keys(disk.labels).length} labels found for compute disk`, region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Compute disk does not have any labels', region, resource);
-                }
-
-            });
-
-            if (noDisks.length) {
-                helpers.addResult(results, 0, `No compute disks found in following zones: ${noDisks.join(', ')}`, region);
-            }
         });
+       
         callback(null, results, source);
     }
 };
