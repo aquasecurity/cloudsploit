@@ -2,11 +2,11 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Infrastructure Double Encryption',
+    title: 'PostgreSQL Infrastructure Double Encryption',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     description: 'Ensures Infrastructure double encryption is enabled for PostgreSQL Database Servers.',
-    more_info: 'If Double Encryption is enabled, another layer of encryption is implemented at the hardware level before the storage or network level. Information will be encrypted before it is even accessed, preventing both interception of data in motion if the network layer encryption is broken and data at rest in system resources such as memory or processor cache. Encryption will also be in place for any backups taken of the database, so the key will secure access the data in all forms. For the most secure implementation of key based encryption, it is recommended to use a Customer Managed asymmetric RSA 2048 Key in Azure Key Vault.',
+    more_info: 'Double Encryption adds layer of encryption is implemented at the hardware level before the storage or network level. Information will be encrypted before it is even accessed, preventing both interception of data in motion if the network layer encryption is broken and data at rest in system resources such as memory or processor cache.',
     recommended_action: 'Enable Infrastructure double encryotion for PostgreSQL database servers.',
     link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-double-encryption',
     apis: ['servers:listPostgres'],
