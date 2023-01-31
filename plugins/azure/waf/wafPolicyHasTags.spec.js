@@ -53,7 +53,7 @@ describe('wafPolicyHasTags', function() {
             wafPolicyHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing WAF policy found');
+                expect(results[0].message).to.include('No existing WAF policies found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -75,7 +75,7 @@ describe('wafPolicyHasTags', function() {
             wafPolicyHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for WAF policy:');
+                expect(results[0].message).to.include('Unable to query for WAF policies:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

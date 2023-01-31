@@ -5,9 +5,9 @@ module.exports = {
     title: 'WAF Policy Has Tags',
     category: 'Application Gateway',
     domain: 'Network Access Control',
-    description: 'Ensures that Microsoft Azure WAF Policy has tags associated.',
+    description: 'Ensure that each Microsoft Azure WAF Policy has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify WAF Policy and add tags.',
+    recommended_action: 'Modify WAF policies and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['wafPolicies:listAll'],
 
@@ -23,12 +23,12 @@ module.exports = {
             if (!virtualNetworks) return rcb();
 
             if (virtualNetworks.err || !virtualNetworks.data) {
-                helpers.addResult(results, 3, 'Unable to query for WAF policy: ' + helpers.addError(virtualNetworks), location);
+                helpers.addResult(results, 3, 'Unable to query for WAF policies: ' + helpers.addError(virtualNetworks), location);
                 return rcb();
             }
 
             if (!virtualNetworks.data.length) {
-                helpers.addResult(results, 0, 'No existing WAF policy found', location);
+                helpers.addResult(results, 0, 'No existing WAF policies found', location);
                 return rcb();
             } 
             
