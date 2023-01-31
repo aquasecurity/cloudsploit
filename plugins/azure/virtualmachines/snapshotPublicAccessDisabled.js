@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensures that Azure virtual machine disk snapshot are not publicly accessible.',
     more_info: 'Encrypting virtual machine disk snapshot helps protect and safeguard your data to meet organizational security and compliance commitments.',
-    recommended_action: 'Modify snapshots and disable public access',
+    recommended_action: 'Modify snapshots and disable public access.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption',
     apis: ['snapshots:list'],
 
