@@ -31,6 +31,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No virtual machine disk snapshots found', location);
                 return rcb();
             }
+
             for (let snapshot of snapshots.data) {
 
                 if (!snapshot.id) continue;
