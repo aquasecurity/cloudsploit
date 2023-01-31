@@ -5,9 +5,9 @@ module.exports = {
     title: 'Application Gateway Has Tags',
     category: 'Application Gateway',
     domain: 'Application Gateway',
-    description: 'Ensures that Microsoft Azure Application Gateway has tags associated.',
+    description: 'Ensure that Microsoft Azure application gateways have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify application gateway and add tags.',
+    recommended_action: 'Modify application gateways and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['applicationGateway:listAll'],
 
@@ -23,12 +23,12 @@ module.exports = {
             if (!appGateways) return rcb();
 
             if (appGateways.err || !appGateways.data) {
-                helpers.addResult(results, 3, 'Unable to query for Application Gateway: ' + helpers.addError(appGateways), location);
+                helpers.addResult(results, 3, 'Unable to query for application gateways: ' + helpers.addError(appGateways), location);
                 return rcb();
             }
 
             if (!appGateways.data.length) {
-                helpers.addResult(results, 0, 'No existing Application Gateway found', location);
+                helpers.addResult(results, 0, 'No existing application gateways found', location);
                 return rcb();
             } 
             
