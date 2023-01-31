@@ -78,7 +78,7 @@ var collect = function(AzureConfig, settings, callback) {
                     localData.value = localData.value.concat(data.value);
                 } else if (localData && localData.value && localData.value.length && (!data || !((obj.paginate && data[obj.paginate]) || data['nextLink']))) {
                     return cb(null, localData);
-                } 
+                }
 
                 if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink'])) {
                     obj.nextUrl = data['nextLink'] || data[obj.paginate];
