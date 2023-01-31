@@ -6,7 +6,7 @@ module.exports = {
     title: 'Disk Volumes Unattached and Default Encryption',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Azure virtual machine disks is in unattached state and encrypted with default encryption.',
+    description: 'Ensures that no default encrypted Azure virtual machine disks are in unattached state.',
     more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments.When a virtual machine (VM) in Azure is deleted, by default, any disks that are attached to the VM aren\'t deleted.',
     recommended_action: 'Modify disks change encryption type and change disk state',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
