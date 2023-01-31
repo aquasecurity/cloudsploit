@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'S3 Bucket Policy CloudFront OAI',
+    title: 'S3 Bucket Policy CloudFront OAC',
     category: 'S3',
     domain: 'Storage',
     description: 'Ensures S3 bucket is origin to only one distribution and allows only that distribution.',
@@ -53,33 +53,25 @@ module.exports = {
                     if (!origin.DomainName) continue;
                     let cfUser;
                     let bucketName = origin.DomainName.replace(/.s3.*.com/, '');
-                    if (bucketName){
-                        if (origin.OriginAccessControlId && origin.OriginAccessControlId.length) {
-                            cfUser = `arn:aws:cloudfront::${accountId}:distribution/${distribution.Id}`;
-                        } else if (origin.S3OriginConfig && 
-                                        origin.S3OriginConfig.OriginAccessIdentity &&
-                                        origin.S3OriginConfig.OriginAccessIdentity.length) {
-                            let oaiId = origin.S3OriginConfig.OriginAccessIdentity.substring(origin.S3OriginConfig.OriginAccessIdentity.lastIndexOf('/') + 1);
-                            cfUser = `arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${oaiId}`;
-                        }
-                        if (cfUser) {
-                            s3OriginFound = true;
-                            if (s3BucketAssociations[bucketName]) {
-                                if (s3BucketAssociations[bucketName][distribution.Id]) s3BucketAssociations[bucketName][distribution.Id].push(cfUser);
-                                else {
-                                    s3BucketAssociations[bucketName][distribution.Id] = [cfUser];
-                                }
-                            } else {
-                                s3BucketAssociations[bucketName] = {};
-                                s3BucketAssociations[bucketName][distribution.Id] = [cfUser];
-                            }
-                        } 
+                    
+                    if (origin.OriginAccessControlId && origin.OriginAccessControlId.length) {
+                        cfUser = `arn:aws:cloudfront::${accountId}:distribution/${distribution.Id}`;
+                        createAssociation(s3BucketAssociations, bucketName, distribution.Id, cfUser, s3OriginFound);
+                        s3BucketAssociations[bucketName][distribution.Id].OACfound = true;
+                        s3OriginFound = true;
+                    } else if (origin.S3OriginConfig && 
+                                    origin.S3OriginConfig.OriginAccessIdentity &&
+                                    origin.S3OriginConfig.OriginAccessIdentity.length) {
+                        let oaiId = origin.S3OriginConfig.OriginAccessIdentity.substring(origin.S3OriginConfig.OriginAccessIdentity.lastIndexOf('/') + 1);
+                        cfUser = `arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${oaiId}`;
+                        createAssociation(s3BucketAssociations,bucketName,distribution.Id,cfUser,s3OriginFound);
+                        s3OriginFound = true;
                     } else {
                         s3BucketAssociations[bucketName] = {};
                         s3BucketAssociations[bucketName][distribution.Id] = [];
-                        return;
+                        s3BucketAssociations[bucketName][distribution.Id].OACfound = false;
                     }
-                    
+
                 }
             }
         });
@@ -92,6 +84,7 @@ module.exports = {
         async.each(Object.entries(s3BucketAssociations), function([bucketName, cfDistributions], cb){
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucketName);
 
+
             if (Object.keys(cfDistributions).length > 1) {
                 helpers.addResult(results, 2,
                     `S3 bucket is origin to more than one distributions which are these: ${Object.keys(cfDistributions).join(', ')}`,
@@ -99,21 +92,8 @@ module.exports = {
                 return cb();
             }
 
-            var Oac = [];
-            var Oai = [];
             var distributionId = Object.keys(cfDistributions).toString();
-            if (s3BucketAssociations[bucketName][distributionId].length) {
-                var originArns = Object.values(s3BucketAssociations[bucketName][distributionId]);
-                originArns.forEach(origin => {
-                    if (!Oai.includes(origin) && origin.includes('CloudFront Origin Access Identity')) Oai.push(origin);
-                    else if (!Oac.includes(origin) && !origin.includes('CloudFront Origin Access Identity')) {
-                        Oac.push(origin);
-                    }
-                });
-
-            }
-            if (!Oac.length) {
-                distributionId = Object.keys(cfDistributions).toString();
+            if (!s3BucketAssociations[bucketName][distributionId].OACfound) {
                 helpers.addResult(results, 2,
                     `S3 bucket is origin to distribution "${distributionId}" without an Origin Access Control`,
                     bucketLocation, `arn:aws:s3:::${bucketName}`);
@@ -145,34 +125,47 @@ module.exports = {
             var restrictedOrigins = [];
             var allowedOrigins = [];
             for (var statement of statements) {
-                if (!statement.Condition || !statement.Condition.StringEquals) continue;
-                var conditions = helpers.extractStringEqualsConditions(statement);
-                for (var condition of conditions) {
-                    if (statement.Effect &&
-                                statement.Effect.toUpperCase() === 'ALLOW' &&
-                                !s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
-                                !unknownConditions.includes(condition)) {
-                        unknownConditions.push(condition);
-                    }
+                var principals = helpers.extractStatementPrincipals(statement);
+                
+                if (statement.Condition && statement.Condition.StringEquals) {
+                    var conditions = helpers.extractStringEqualsConditions(statement);
+                    for (var condition of conditions) {
+                        if (statement.Effect &&
+                                    statement.Effect.toUpperCase() === 'ALLOW' &&
+                                    !s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
+                                    !unknownConditions.includes(condition)) {
+                            unknownConditions.push(condition);
+                        }
 
-                    if (statement.Effect &&
-                                statement.Effect.toUpperCase() === 'DENY' &&
-                                s3BucketAssociations[bucketName][distributionId].includes(condition) &&  
-                                !restrictedOrigins.includes(condition)) {
-                        restrictedOrigins.push(condition);
-                    }
+                        if (statement.Effect &&
+                                    statement.Effect.toUpperCase() === 'DENY' &&
+                                    s3BucketAssociations[bucketName][distributionId].includes(condition) &&  
+                                    !restrictedOrigins.includes(condition)) {
+                            restrictedOrigins.push(condition);
+                        }
 
-                    if (statement.Effect &&
-                        statement.Effect.toUpperCase() === 'ALLOW' &&
-                        s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
-                        !allowedOrigins.includes(condition)) {
-                        allowedOrigins.push(condition);
+                        if (statement.Effect &&
+                            statement.Effect.toUpperCase() === 'ALLOW' &&
+                            s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
+                            !allowedOrigins.includes(condition)) {
+                            allowedOrigins.push(condition);
+                        }
                     }
-                } 
+                } else {
+                    for (var principal of principals) {
+                        if (statement.Effect &&
+                            statement.Effect.toUpperCase() === 'ALLOW' &&
+                            s3BucketAssociations[bucketName][distributionId].includes(principal) &&   
+                            !allowedOrigins.includes(principal)) {
+                            allowedOrigins.push(principal);
+                        }
+                    }
+                }
             }
 
+
             var missingOrigins = s3BucketAssociations[bucketName][distributionId].filter(function(item) {
-                return !allowedOrigins.includes(item) && !restrictedOrigins.includes(item) && !Oai.includes(item);
+                return !allowedOrigins.includes(item) && !restrictedOrigins.includes(item);
             });
 
             restrictedOrigins = restrictedOrigins.concat(missingOrigins);
@@ -199,3 +192,17 @@ module.exports = {
         });
     }
 };
+
+function createAssociation(s3BucketAssociations,bucketName,distributionId,cfUser){
+    if (s3BucketAssociations[bucketName]) {
+        if (s3BucketAssociations[bucketName][distributionId]) s3BucketAssociations[bucketName][distributionId].push(cfUser);
+        else {
+            s3BucketAssociations[bucketName][distributionId] = [cfUser];
+        }
+    } else {
+        s3BucketAssociations[bucketName] = {};
+        s3BucketAssociations[bucketName][distributionId] = [cfUser];
+        s3BucketAssociations[bucketName][distributionId].OACfound = false;
+    }
+
+}
