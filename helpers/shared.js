@@ -30,6 +30,18 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     if (!localSettings.identifier) localSettings.identifier = {};
     localSettings.identifier.service = serviceName.toLowerCase();
 
+    // Single Source Fields
+    if (calls[serviceName] && calls[serviceName].sendIntegration && calls[serviceName].sendIntegration.isSingleSource) {
+        localEvent.data = calls[serviceName].sendIntegration;
+    }
+
+    for (let postcall of postcalls) {
+        if (postcall[serviceName] && postcall[serviceName].sendIntegration && postcall[serviceName].sendIntegration.isSingleSource) {
+            localEvent.data = postcall[serviceName].sendIntegration;
+            break;
+        }
+    }
+
     processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
         localEvent.collection = collectionReturned;
 

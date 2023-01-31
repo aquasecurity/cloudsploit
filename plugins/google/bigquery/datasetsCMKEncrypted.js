@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your BigQuery datasets you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/bigquery/docs/customer-managed-encryption',
     recommended_action: 'Ensure that each BigQuery dataset has desired encryption level.',
-    apis: ['datasets:list', 'datasets:get', 'projects:get', 'keyRings:list', 'cryptoKeys:list'],
+    apis: ['datasets:list', 'datasets:get', 'keyRings:list', 'cryptoKeys:list'],
     settings: {
         bigquery_datasets_encryption_protection_level: {
             name: 'BigQuery Dataset Encryption Protection Level',

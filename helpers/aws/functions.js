@@ -325,7 +325,7 @@ function getDenyPermissionsMap(statements, excludeStatementId) {
         let principals = extractStatementPrincipals(statement);
         principals.forEach(principal => {
             let permissionsObj = JSON.parse(JSON.stringify(getDenyActionResourceMap([statement])));
-            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsMap[principal], ...permissionsObj};
+            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsObj,...permissionsMap[principal]};
             else permissionsMap[principal] = permissionsObj;
         });
     }
