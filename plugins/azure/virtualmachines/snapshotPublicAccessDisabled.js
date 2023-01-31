@@ -6,9 +6,9 @@ module.exports = {
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that Azure virtual machine disk snapshot are not publicly accessible.',
-    more_info: 'Encrypting virtual machine disk snapshot helps protect and safeguard your data to meet organizational security and compliance commitments.',
+    more_info: 'A snapshot is a full, read-only copy of a virtual hard disk (VHD). You can use a snapshot as a point-in-time backup. Stopping public access to Snapshot ensure that your backups are protected at all times.',
     recommended_action: 'Modify snapshots and disable public access',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption',
+    link: 'https://learn.microsoft.com/en-us/azure/backup/security-overview',
     apis: ['snapshots:list'],
 
     run: function(cache, settings, callback) {
