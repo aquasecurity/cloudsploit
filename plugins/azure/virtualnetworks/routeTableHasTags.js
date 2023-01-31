@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensures that Microsoft Azure Route Table has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify route table and add tags.',
+    recommended_action: 'Modify route tables and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['routeTables:listAll'],
 
@@ -40,7 +40,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Route table does not have tags associated', location, routeTable.id);
                 } 
-
             }
 
             rcb();
