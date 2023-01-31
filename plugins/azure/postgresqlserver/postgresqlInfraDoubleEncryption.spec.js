@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./postgresqlInfrasDoubleEncryption');
+var auth = require('./postgresqlInfraDoubleEncryption');
 
 const createCache = (err, data) => {
     return {
@@ -15,7 +15,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('postgresqlInfrasDoubleEncryption', function() {
+describe('postgresqlInfraDoubleEncryption', function() {
     describe('run', function() {
         it('should PASS if no servers', function(done) {
             const callback = (err, results) => {
