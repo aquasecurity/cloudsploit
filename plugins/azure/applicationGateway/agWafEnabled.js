@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Application Gateway WAF is Enabled',
+    title: 'Application Gateway WAF Enabled',
     category: 'Application Gateway',
     domain: 'Application Gateway',
     description: 'Ensure that Web Application (WAF) FireWall is enabled for Application Gateway',
