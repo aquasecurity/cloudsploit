@@ -25,7 +25,7 @@ module.exports = {
             if (!vmScaleSets) return rcb();
 
             if (vmScaleSets.err || !vmScaleSets.data) {
-                helpers.addResult(results, 3, 'Unable to query for VM scale set: ' + helpers.addError(vmScaleSets), location);
+                helpers.addResult(results, 3, 'Unable to query for VM scale sets: ' + helpers.addError(vmScaleSets), location);
                 return rcb();
             }
             if (!vmScaleSets.data.length) {
