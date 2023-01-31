@@ -33,7 +33,12 @@ module.exports = {
             } 
             
             for (let appGateway of appGateways.data) {
-                if (!appGateway.id || !appGateway.sku.tier === 'WAF_v2') continue;
+                if (!appGateway.id) continue;
+
+                if (appGateway.sku.tier != 'WAF_v2'){
+                    helpers.addResult(results, 2, 'Prevention mode is not supported for WAF Standard v2 tier', location, appGateway.id);
+                    continue;
+                }
 
                 if (appGateway.webApplicationFirewallConfiguration && appGateway.webApplicationFirewallConfiguration.enabled 
                     && appGateway.webApplicationFirewallConfiguration.enabled === true) {
