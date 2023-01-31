@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var diskUnattachedAndDefaultEncryption = require('./diskUnattachedAndDefaultEncryption');
+var diskUnattachedAndDefaultEncryption = require('./unattachedDiskWithDefaultEncryption');
 
 const disks = [
     {
