@@ -26,6 +26,19 @@ const appGateway = [
           "enabled": true,
           "firewallMode": "Detection",
         },
+    },
+    {   
+        "sku": {
+        "tier": "STANDARD_V2"
+        },
+       "name": 'test-gateway',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test",',
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "eastus",
+        "webApplicationFirewallConfiguration": {
+          "enabled": true,
+          "firewallMode": "Detection",
+        },
     }
 ];
 
@@ -96,6 +109,17 @@ describe('agPreventionModeEnabled', function() {
                 done();
             });
         });
+
+        it('should give failing result if tier for application gateway is not waf_v2', function(done) {
+            const cache = createCache([appGateway[2]]);
+            agPreventionModeEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Prevention mode is not supported for WAF Standard v2 tier');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+       });
     });
 }); 
 
