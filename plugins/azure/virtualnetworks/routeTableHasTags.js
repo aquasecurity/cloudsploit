@@ -5,7 +5,7 @@ module.exports = {
     title: 'Route Table Has Tags',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
-    description: 'Ensures that Microsoft Azure Route Table has tags associated.',
+    description: 'Ensures that Microsoft Azure Network route tables have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify route tables and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
