@@ -5,7 +5,7 @@ module.exports = {
     title: 'Application Gateway WAF Enabled',
     category: 'Application Gateway',
     domain: 'Application Gateway',
-    description: 'Ensure that Web Application (WAF) FireWall is enabled for Application Gateway',
+    description: 'Ensure that Web Application FireWall (WAF) is enabled for Application Gateways.',
     more_info: 'Azure Web Application Firewall (WAF) on Azure Application Gateway provides centralized protection of your web applications from common exploits and vulnerabilities. Web applications are increasingly targeted by malicious attacks that exploit commonly known vulnerabilities.',
     recommended_action: 'Modify application gateway and enable WAF.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview',
