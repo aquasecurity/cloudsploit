@@ -34,6 +34,8 @@ module.exports = {
             }
 
             for (let postgresqlDB of servers.data) {
+                if (!postgresqlDB.id) continue;
+
                 if (postgresqlDB.infrastructureEncryption &&
                    postgresqlDB.infrastructureEncryption.toLowerCase() === 'enabled') {
                     helpers.addResult(results, 0,
