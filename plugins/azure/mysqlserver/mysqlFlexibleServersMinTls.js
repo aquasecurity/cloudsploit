@@ -46,7 +46,7 @@ module.exports = {
                     return (config.name == 'tls_version');
                 });
 
-                var tls_versions =  configuration && configuration[0] && configuration[0].value ? configuration[0].value.toUpperCase().split(','): ''
+                var tls_versions =  configuration && configuration[0] && configuration[0].value ? configuration[0].value.toUpperCase().split(','): '';
 
                 if (tls_versions.includes('TLSV1') || tls_versions.includes('TLSV1.1')) {
                     helpers.addResult(results, 2, 'MySQL flexible server is not using latest TLS version', location, flexibleServer.id);
