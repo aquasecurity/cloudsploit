@@ -1188,7 +1188,8 @@ module.exports = {
         'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
         'apiKeyApplicationRestriction'  : require(__dirname + '/plugins/google/api/apiKeyApplicationRestriction.js'),
         'apiKeyActiveServices'          : require(__dirname + '/plugins/google/api/apiKeyActiveServices.js'),
-      
+        'projectAPIKeys'                : require(__dirname + '/plugins/google/api/projectAPIKeys.js'),
+
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
         'clusterLeastPrivilege'         : require(__dirname + '/plugins/google/kubernetes/clusterLeastPrivilege.js'),
