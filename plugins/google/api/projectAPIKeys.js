@@ -4,9 +4,9 @@ module.exports = {
     title: 'Project API Keys',
     category: 'API',
     domain: 'Identity and Access Management',
-    description: 'Ensure there are no API keys created for in your GCP project.',
+    description: 'Ensure there are no API keys created in your GCP project.',
     more_info: 'API Keys are insecure because they can be viewed publicly, such as from within a browser, or they can be accessed on a device where the key resides. To avoid the security risk in using API keys, it is recommended to use standard authentication flow instead.',
-    link: 'https://cloud.google.com/docs/authentication/api-keyss',
+    link: 'https://cloud.google.com/docs/authentication/api-keys',
     recommended_action: 'Ensure that there are no API Keys within the project.',
     apis: ['apiKeys:list'],
 
