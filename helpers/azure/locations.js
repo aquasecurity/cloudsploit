@@ -104,6 +104,7 @@ module.exports = {
     publicIPAddresses: locations,
     privateDnsZones: ['global'],
     privateEndpoints: locations,
+    securityContactv2: ['global'],
     images: locations,
     vmScaleSet: locations,
     applicationGateway: locations,
