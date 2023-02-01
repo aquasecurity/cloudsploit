@@ -352,6 +352,7 @@ module.exports = {
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
         'iamRoleHasTags'                : require(__dirname + '/plugins/aws/iam/iamRoleHasTags.js'),
+        'iamUserNotInUse'               : require(__dirname + '/plugins/aws/iam/iamUserNotInUse.js'),
 
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),
@@ -645,6 +646,7 @@ module.exports = {
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
         'virtualNetworkHasTags'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkHasTags.js'),
+        'routeTableHasTags'             : require(__dirname + '/plugins/azure/virtualnetworks/routeTableHasTags.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
@@ -683,6 +685,8 @@ module.exports = {
         'vmDiskHasTags'                 : require(__dirname + '/plugins/azure/virtualmachines/vmDiskHasTags.js'),
         'snapshotHasTags'               : require(__dirname + '/plugins/azure/virtualmachines/snapshotHasTags.js'),
         'snapshotPublicAccessDisabled'  : require(__dirname + '/plugins/azure/virtualmachines/snapshotPublicAccessDisabled.js'),
+        'vmScaleSetHasTags'             : require(__dirname + '/plugins/azure/virtualmachines/vmScaleSetHasTags.js'),
+        'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/kvLogAnalyticsEnabled.js'),
@@ -843,6 +847,7 @@ module.exports = {
         'aksPrivateCluster'             : require(__dirname + '/plugins/azure/kubernetesservice/aksPrivateCluster.js'),
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
+        'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
@@ -892,6 +897,10 @@ module.exports = {
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
         'enableDefenderForDNS'          : require(__dirname + '/plugins/azure/defender/enableDefenderForDNS.js'),
+
+        'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
+
+        'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

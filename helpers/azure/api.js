@@ -23,6 +23,7 @@
 
  BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
  BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+ DataIdentifier: it should be the parent key field of data which we want to collect in json file in s3 collection bucket.
 
 ----------Processor Side Data----------
 These fields should be according to the user and product manager, what they want to show in Inventory UI.
@@ -47,7 +48,7 @@ var serviceMap = {
             BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
             BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'Redis',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
-            BridgeCollectionService: 'rediscaches'
+            BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
         }
 };
 
@@ -90,6 +91,12 @@ var calls = {
             paginate: 'nextLink'
         }
     },
+    vmScaleSet: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    } ,
     snapshots: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
@@ -130,6 +137,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
         },
         sendIntegration: serviceMap['Redis Cache']
+    },
+    routeTables: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/routeTables?api-version=2022-07-01'
+        }
     },
     managedClusters: {
         list: {
@@ -174,6 +186,11 @@ var calls = {
     autoProvisioningSettings: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/autoProvisioningSettings?api-version=2017-08-01-preview'
+        }
+    },
+    applicationGateway: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways?api-version=2022-07-01'
         }
     },
     securityContacts: {
@@ -226,6 +243,11 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+        }
+    },
+    wafPolicies: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies?api-version=2022-07-01'
         }
     },
     autoscaleSettings: {
