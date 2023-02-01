@@ -34,17 +34,18 @@ module.exports = {
                 return rcb();
             }
             
-            let additionEmailExist = false;
+            let additionEmailsExist;
+
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
 
                 if (contact.email && contact.email.length > 0){
-                    additionEmailExist = true;
+                    additionEmailsExist = true;
                     break;
                 }
             }
 
-            if (additionEmailExist){
+            if (additionEmailsExist){
                 helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location);
             } else {
                 helpers.addResult(results, 2, 'Additional email address is not configured with security contact email', location);
