@@ -1190,6 +1190,7 @@ module.exports = {
         'apiKeyApplicationRestriction'  : require(__dirname + '/plugins/google/api/apiKeyApplicationRestriction.js'),
         'apiKeyActiveServices'          : require(__dirname + '/plugins/google/api/apiKeyActiveServices.js'),
         'projectAPIKeys'                : require(__dirname + '/plugins/google/api/projectAPIKeys.js'),
+        'apiKeyAPIRestriction'          : require(__dirname + '/plugins/google/api/apiKeyAPIRestriction.js'),
 
         'privateEndpoint'               : require(__dirname + '/plugins/google/kubernetes/privateEndpoint.js'),
         'monitoringEnabled'             : require(__dirname + '/plugins/google/kubernetes/monitoringEnabled.js'),
