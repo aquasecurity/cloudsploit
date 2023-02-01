@@ -23,12 +23,12 @@ module.exports = {
             if (!snapshots) return rcb();
 
             if (snapshots.err || !snapshots.data) {
-                helpers.addResult(results, 3, 'Unable to query for virtual machine disk snapshots: ' + helpers.addError(snapshots), location);
+                helpers.addResult(results, 3, 'Unable to query for VM disk snapshots: ' + helpers.addError(snapshots), location);
                 return rcb();
             }
 
             if (!snapshots.data.length) {
-                helpers.addResult(results, 0, 'No virtual machine disk snapshots found', location);
+                helpers.addResult(results, 0, 'No VM disk snapshots found', location);
                 return rcb();
             }
             for (let snapshot of snapshots.data) {
