@@ -24,11 +24,11 @@ module.exports = {
             if (!disks) return rcb();
 
             if (disks.err || !disks.data) {
-                helpers.addResult(results, 3, 'Unable to query for virtual machine disk volumes: ' + helpers.addError(disks), location);
+                helpers.addResult(results, 3, 'Unable to query for VM disk volumes: ' + helpers.addError(disks), location);
                 return rcb();
             }
             if (!disks.data.length) {
-                helpers.addResult(results, 0, 'No existing disk volumes found', location);
+                helpers.addResult(results, 0, 'No existing VM disk volumes found', location);
                 return rcb();
             }
 
