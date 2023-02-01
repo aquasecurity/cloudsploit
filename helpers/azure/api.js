@@ -280,6 +280,9 @@ var calls = {
         listMysql: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/servers?api-version=2017-12-01'
         },
+        listMysqlFlexibleServer: {
+            url : 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/flexibleServers?api-version=2021-05-01'
+        },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
         }
@@ -396,11 +399,11 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
         }
     },
-    configurations: {
+    flexibleServersConfigurations: {
         listByServer: {
-            reliesOnPath: 'servers.listPostgres',
+            reliesOnPath: 'servers.listMysqlFlexibleServer',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
+            url: 'https://management.azure.com/{id}/configurations?api-version=2021-05-01'
         }
     },
     serverAdministrators: {
@@ -702,6 +705,13 @@ var postcalls = {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com{id}/replications?api-version=2019-05-01'
+        }
+    },
+    configurations: {
+        listByServer: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     }
 };
