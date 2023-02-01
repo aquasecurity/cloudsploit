@@ -8,7 +8,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensures that no default encrypted Azure virtual machine disks are in unattached state.',
     more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments. Having unattached disks with default encryption type can lead to data leakage.',
-    recommended_action: 'Modify disks change encryption type and change disk state',
+    recommended_action: 'Delete remove unattached disks or enable BYOK encryption for them.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
     apis: ['disks:list'],
 
