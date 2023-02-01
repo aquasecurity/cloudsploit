@@ -684,6 +684,7 @@ module.exports = {
         'vmHasTags'                     : require(__dirname + '/plugins/azure/virtualmachines/vmHasTags.js'),
         'vmDiskHasTags'                 : require(__dirname + '/plugins/azure/virtualmachines/vmDiskHasTags.js'),
         'snapshotHasTags'               : require(__dirname + '/plugins/azure/virtualmachines/snapshotHasTags.js'),
+        'vmScaleSetHasTags'             : require(__dirname + '/plugins/azure/virtualmachines/vmScaleSetHasTags.js'),
         'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
 
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/monitor/lbLogAnalyticsEnabled.js'),

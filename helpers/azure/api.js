@@ -91,6 +91,12 @@ var calls = {
             paginate: 'nextLink'
         }
     },
+    vmScaleSet: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    } ,
     snapshots: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
