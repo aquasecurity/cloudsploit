@@ -126,11 +126,11 @@ module.exports = {
             var allowedOrigins = [];
             for (var statement of statements) {                
                 if (statement.Condition && statement.Condition.StringEquals) {
-                  var conditions = helpers.isValidCondition(statement, ['AWS:SourceArn'], helpers.IAM_CONDITION_OPERATORS, 'ture');
-                  var principals = helpers.extractStatementPrincipals(statement);
-                  if(principals.length) conditions.push(principals);
-                  //Returns the principle values of valid conditions for OAC
-                  for (var condition of conditions) {
+                    var conditions = helpers.isValidCondition(statement, ['AWS:SourceArn'], helpers.IAM_CONDITION_OPERATORS, 'ture');
+                    var principals = helpers.extractStatementPrincipals(statement);
+                    if (principals.length) conditions.push(principals);
+                    //Returns the principle values of valid conditions for OAC
+                    for (var condition of conditions) {
                         if (statement.Effect &&
                                     statement.Effect.toUpperCase() === 'ALLOW' &&
                                     !s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
