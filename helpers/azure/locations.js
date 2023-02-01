@@ -106,4 +106,5 @@ module.exports = {
     privateEndpoints: locations,
     applicationGateway: locations,
     wafPolicies: locations,
+    routeTables: locations,
 };

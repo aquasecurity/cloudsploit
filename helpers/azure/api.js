@@ -132,6 +132,11 @@ var calls = {
         },
         sendIntegration: serviceMap['Redis Cache']
     },
+    routeTables: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/routeTables?api-version=2022-07-01'
+        }
+    },
     managedClusters: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters?api-version=2020-03-01'
