@@ -72,19 +72,14 @@ module.exports = {
     }
 };
 
-function disAllowedPorRange(range){
-    if (!range) {
-        return true;
-    } else if (22>=range.From && 22<=range.To){ //SSH
-        return true;
-    } else if (3389>=range.From && 3389<=range.To){  //RDP
-        return true;
-    } else if (80>=range.From && 80<=range.To){ // HTTP
-        return true;
-    } else if (443>=range.From && 443<=range.To){ //HTTPS
-        return true;
-    } else if (53>=range.From && 53 <=range.To){ //DNS
-        return true;
+function disAllowedPorRange(range) {
+    const allowedPorts = [22, 3389, 80, 443, 53];
+
+    if (!range) return true;
+
+    for (const port of allowedPorts) {
+        if (port >= range.From && port <= range.To) return true;
     }
+
     return false;
 }
