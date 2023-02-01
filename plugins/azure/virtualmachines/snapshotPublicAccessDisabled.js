@@ -32,8 +32,8 @@ module.exports = {
                 return rcb();
             }
             for (let snapshot of snapshots.data) {
-
                 if (!snapshot.id) continue;
+
                 if (snapshot && snapshot.networkAccessPolicy &&
                  snapshot.networkAccessPolicy.toLowerCase() === 'allowprivate' || 
                  snapshot.networkAccessPolicy.toLowerCase() ===  'denyall') {
