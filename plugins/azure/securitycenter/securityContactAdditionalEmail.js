@@ -34,15 +34,22 @@ module.exports = {
                 return rcb();
             }
             
+            let additionEmailExist = false;
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
 
                 if (contact.email && contact.email.length > 0){
-                    helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location, contact.id);
-                } else {
-                    helpers.addResult(results, 2, 'Additional email address is not configured with security contact email', location, contact.id);
+                    additionEmailExist = true;
+                    break;
                 }
             }
+
+            if (additionEmailExist){
+                helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location);
+            } else {
+                helpers.addResult(results, 2, 'Additional email address is not configured with security contact email', location);
+            }
+
 
             rcb();
         }, function(){
