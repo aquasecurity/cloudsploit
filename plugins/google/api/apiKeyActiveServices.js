@@ -5,7 +5,7 @@ module.exports = {
     category: 'API',
     domain: 'Identity and Access Management',
     description: 'Ensure API Keys only exist for active services.',
-    more_info: 'API Keys should only be used for services in cases where other authentication methods are unavailable. Unused keys with their permissions in tact may still exist within a project. Keys are insecure because they can be viewed publicly, such as from within a browser, or they can be accessed on a device where the key resides. It is recommended to use standard authentication flow to avoid risks associated with API Keys.',
+    more_info: 'API Keys should only be used for services in cases where other authentication methods are unavailable. Keys are insecure because they can be viewed publicly, such as from within a browser, or they can be accessed on a device where the key resides. It is recommended to use standard authentication flow to avoid risks associated with API Keys.',
     link: 'https://cloud.google.com/docs/authentication/api-keys',
     recommended_action: 'Ensure that API Keys only exist for active services.',
     apis: ['projects:getWithNumber', 'apiKeys:list', 'services:listEnabled'],
