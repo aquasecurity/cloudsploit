@@ -21,7 +21,7 @@ describe('postgresqlInfraDoubleEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing PostgreSQL Servers found');
+                expect(results[0].message).to.include('No existing PostgreSQL servers found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -38,7 +38,7 @@ describe('postgresqlInfraDoubleEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Infrastructure double encryption is not enabled for PostgreSQL Server');
+                expect(results[0].message).to.include('Infrastructure double encryption is not enabled for PostgreSQL server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -72,7 +72,7 @@ describe('postgresqlInfraDoubleEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Infrastructure double encryption is enabled for PostgreSQL Server');
+                expect(results[0].message).to.include('Infrastructure double encryption is enabled for PostgreSQL server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

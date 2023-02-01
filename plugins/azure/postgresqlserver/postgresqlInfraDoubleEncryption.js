@@ -24,12 +24,12 @@ module.exports = {
 
             if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for PostgreSQL Servers: ' + helpers.addError(servers), location);
+                    'Unable to query for PostgreSQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
             if (!servers.data.length) {
-                helpers.addResult(results, 0, 'No existing PostgreSQL Servers found', location);
+                helpers.addResult(results, 0, 'No existing PostgreSQL servers found', location);
                 return rcb();
             }
 
@@ -39,10 +39,10 @@ module.exports = {
                 if (postgresqlDB.infrastructureEncryption &&
                    postgresqlDB.infrastructureEncryption.toLowerCase() === 'enabled') {
                     helpers.addResult(results, 0,
-                        'Infrastructure double encryption is enabled for PostgreSQL Server', location, postgresqlDB.id);
+                        'Infrastructure double encryption is enabled for PostgreSQL server', location, postgresqlDB.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Infrastructure double encryption is not enabled for PostgreSQL Server', location, postgresqlDB.id);
+                        'Infrastructure double encryption is not enabled for PostgreSQL server', location, postgresqlDB.id);
                 }
             }
            
