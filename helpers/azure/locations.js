@@ -105,4 +105,6 @@ module.exports = {
     privateDnsZones: ['global'],
     privateEndpoints: locations,
     images: locations,
+    applicationGateway: locations,
+    wafPolicies: locations,
 };
