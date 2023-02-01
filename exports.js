@@ -352,6 +352,7 @@ module.exports = {
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
         'iamRoleHasTags'                : require(__dirname + '/plugins/aws/iam/iamRoleHasTags.js'),
+        'iamUserNotInUse'               : require(__dirname + '/plugins/aws/iam/iamUserNotInUse.js'),
 
         'kinesisEncrypted'              : require(__dirname + '/plugins/aws/kinesis/kinesisEncrypted.js'),
         'kinesisDataStreamsEncrypted'   : require(__dirname + '/plugins/aws/kinesis/kinesisDataStreamsEncrypted.js'),
@@ -891,8 +892,10 @@ module.exports = {
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
         'enableDefenderForDNS'          : require(__dirname + '/plugins/azure/defender/enableDefenderForDNS.js'),
-        
-        'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js')
+
+        'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
+
+        'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
