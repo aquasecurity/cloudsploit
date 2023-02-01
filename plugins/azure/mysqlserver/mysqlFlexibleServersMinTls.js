@@ -12,7 +12,6 @@ module.exports = {
     apis: ['servers:listMysqlFlexibleServer', 'flexibleServersConfigurations:listByServer'],   
 
     run: function(cache, settings, callback) {
-        console.log(JSON.parse(JSON.stringify(cache.servers)));
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -47,13 +46,12 @@ module.exports = {
                     return (config.name == 'tls_version');
                 });
 
-                if (configuration &&
-                    configuration[0] &&
-                    configuration[0].value &&
-                    configuration[0].value.includes('TLSV1.2')) {
-                    helpers.addResult(results, 0, 'MySQL flexible server is using latest TLS version', location, flexibleServer.id);
-                } else {
+                var tls_versions =  configuration && configuration[0] && configuration[0].value ? configuration[0].value.toUpperCase().split(','): ''
+
+                if (tls_versions.includes('TLSV1') || tls_versions.includes('TLSV1.1')) {
                     helpers.addResult(results, 2, 'MySQL flexible server is not using latest TLS version', location, flexibleServer.id);
+                } else {
+                    helpers.addResult(results, 0, 'MySQL flexible server is using latest TLS version', location, flexibleServer.id);
                 }
             }
             rcb();
