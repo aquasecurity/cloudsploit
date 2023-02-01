@@ -38,9 +38,9 @@ module.exports = {
                 if (disk.encryption && disk.encryption.type &&
                     disk.encryption.type === 'EncryptionAtRestWithPlatformKey' &&
                     disk.diskState && disk.diskState.toLowerCase() === 'unattached') {
-                    helpers.addResult(results, 0, 'Disk volume is unattached and encrypted with default encryption key', location, disk.id);
+                    helpers.addResult(results, 2, 'Disk volume is unattached and encrypted with default encryption key', location, disk.id);
                 } else {
-                    helpers.addResult(results, 2, 'Disk volume is not unattached and encrypted with default encryption key', location, disk.id);
+                    helpers.addResult(results, 0, 'Disk volume is attached or encrypted with BYOK', location, disk.id);
                 }
             }
             rcb();

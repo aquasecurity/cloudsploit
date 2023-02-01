@@ -63,23 +63,23 @@ describe('diskUnattachedAndDefaultEncryption', function() {
             });
         });
 
-        it('should give passing result if Disk volume has default enabled only and is in unattached state', function(done) {
+        it('should give failing result if Disk volume is unattached and encrypted with default encryption key', function(done) {
             const cache = createCache([disks[1]]);
             diskUnattachedAndDefaultEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Disk volume is unattached and encrypted with default encryption key');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Disk volume has is attached or default encryption not enabled', function(done) {
+        it('should give passing result if Disk volume is attached or encrypted with BYO', function(done) {
             const cache = createCache([disks[0]]);
             diskUnattachedAndDefaultEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Disk volume is not unattached and encrypted with default encryption key');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Disk volume is attached or encrypted with BYOK');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
