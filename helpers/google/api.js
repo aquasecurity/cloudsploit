@@ -23,6 +23,7 @@
 
  BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
  BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+ DataIdentifier: it should be the parent key field of data which we want to collect in json file in s3 collection bucket.
 
 ----------Processor Side Data----------
 These fields should be according to the user and product manager, what they want to show in Inventory UI.
@@ -47,7 +48,7 @@ var serviceMap = {
             BridgePluginCategoryName: 'gcp-Pub/Sub', BridgeProvider: 'Google', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'topics',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Pub/Sub',
-            BridgeCollectionService: 'gcp-topics'
+            BridgeCollectionService: 'gcp-topics', DataIdentifier: 'data',
         }
 };
 var calls = {
