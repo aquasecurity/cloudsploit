@@ -95,7 +95,7 @@ describe('passwordRequiresLowercase', function () {
             });
         });
 
-        it('should FAIL if account does not have a password policy', function (done) {
+        it('should FAIL if Account has Default password policy', function (done) {
             const cache = createErrorCodeCache();
             passwordRequiresLowercase.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
