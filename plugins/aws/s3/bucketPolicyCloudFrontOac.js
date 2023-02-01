@@ -124,12 +124,13 @@ module.exports = {
             var unknownConditions = [];
             var restrictedOrigins = [];
             var allowedOrigins = [];
-            for (var statement of statements) {
-                var principals = helpers.extractStatementPrincipals(statement);
-                
+            for (var statement of statements) {                
                 if (statement.Condition && statement.Condition.StringEquals) {
-                    var conditions = helpers.extractStringEqualsConditions(statement);
-                    for (var condition of conditions) {
+                  var conditions = helpers.isValidCondition(statement, ['AWS:SourceArn'], helpers.IAM_CONDITION_OPERATORS, 'ture');
+                  var principals = helpers.extractStatementPrincipals(statement);
+                  if(principals.length) conditions.push(principals);
+                  //Returns the principle values of valid conditions for OAC
+                  for (var condition of conditions) {
                         if (statement.Effect &&
                                     statement.Effect.toUpperCase() === 'ALLOW' &&
                                     !s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
@@ -151,15 +152,6 @@ module.exports = {
                             allowedOrigins.push(condition);
                         }
                     }
-                } else {
-                    for (var principal of principals) {
-                        if (statement.Effect &&
-                            statement.Effect.toUpperCase() === 'ALLOW' &&
-                            s3BucketAssociations[bucketName][distributionId].includes(principal) &&   
-                            !allowedOrigins.includes(principal)) {
-                            allowedOrigins.push(principal);
-                        }
-                    }
                 }
             }
 
@@ -178,7 +170,7 @@ module.exports = {
                 }
                 if (restrictedOrigins.length) {
                     helpers.addResult(results, 2,
-                        `S3 bucket is origin to distribution "${distributionId}" and does not allow access to these CloudFront OACs: ${restrictedOrigins.join(', ')}`,
+                        `S3 bucket is origin to distribution "${distributionId}" and does not allow access to these CloudFront origins: ${restrictedOrigins.join(', ')}`,
                         bucketLocation, `arn:aws:s3:::${bucketName}`);
                 }
             } else {

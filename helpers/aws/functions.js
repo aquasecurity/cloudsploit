@@ -1058,21 +1058,6 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
     });
 };
 
-var extractStringEqualsConditions = function(statement) {
-    let response = [] ;
-    let condition = statement.Condition.StringEquals['AWS:SourceArn'] ? statement.Condition.StringEquals['AWS:SourceArn'] : null;
-        
-    if (!condition) return response;
-
-    if (!Array.isArray(condition)) {
-        condition = [condition];
-    }
-
-    response.push(...condition);
-
-    return response;
-};
-
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -1107,5 +1092,4 @@ module.exports = {
     logError: logError,
     collectRateError: collectRateError,
     checkTags: checkTags,
-    extractStringEqualsConditions: extractStringEqualsConditions
 };

@@ -26,7 +26,7 @@ const listBuckets = [
 
 const getBucketPolicy = [
     {
-        "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":\"arn:aws:cloudfront::null:distribution/E154BVARTUU9DK\"}}},{\"Sid\":\"3\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E13LDJYTPM4UR5\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\"}]}" 
+        "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":\"arn:aws:cloudfront::null:distribution/E154BVARTUU9DK\"}}}]}" 
     },
     {
         "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":[\"arn:aws:cloudfront::193063503752:distribution/E154BVARTUU9DK\",\"arn:aws:cloudfront::193063503752:distribution/E2234BVARTUU9DK\"]}}},{\"Sid\":\"3\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E13LDJYTPM4UR5\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\"}]}"    },
@@ -70,23 +70,6 @@ const listDistributions = [
                         "Enabled": false
                     },
                     "OriginAccessControlId": "E30EBFZ8ZXHG1P"
-                },
-                {
-                    "Id": "oaitestBucket.s3.us-east-1.amazonaws.com",
-                    "DomainName": "testBucket.s3.us-east-1.amazonaws.com",
-                    "OriginPath": "/acha.com",
-                    "CustomHeaders": {
-                        "Quantity": 0
-                    },
-                    "S3OriginConfig": {
-                        "OriginAccessIdentity": "origin-access-identity/cloudfront/E13LDJYTPM4UR5"
-                    },
-                    "ConnectionAttempts": 3,
-                    "ConnectionTimeout": 10,
-                    "OriginShield": {
-                        "Enabled": false
-                    },
-                    "OriginAccessControlId": ""
                 }
             ]
         },
@@ -401,13 +384,13 @@ describe('bucketPolicyCloudFrontOac', function () {
             });
         });
 
-        it('should FAIL if S3 bucket is origin to dstribution and does not allow access to these CloudFront OAC', function (done) {
+        it('should FAIL if S3 bucket is origin to dstribution and does not allow access to these CloudFront origins', function (done) {
             const cache = createCache([listDistributions[5]], [listBuckets[4]], getBucketPolicy[4]);
             bucketPolicyCloudFrontOac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('and does not allow access to these CloudFront OACs')
+                expect(results[0].message).to.include('and does not allow access to these CloudFront origins')
                 done();
             });
         });
