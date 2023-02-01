@@ -254,6 +254,7 @@ var calls = {
     applicationGateway: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways?api-version=2022-07-01'
+        }
     },
     wafPolicies: {
         listAll: {
