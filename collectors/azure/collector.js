@@ -71,6 +71,7 @@ var collect = function(AzureConfig, settings, callback) {
                 // If a new nextLink is provided, this will be updated.  There shouldn't
                 // be a need to hold on to the previous value
                 if (data && obj.hasListResponse && data.length) data.value = data;
+
                 obj.nextUrl = null;
                 if (data && data.value && Array.isArray(data.value) && data.value.length && localData && localData.value) {
                     localData.value = localData.value.concat(data.value);
