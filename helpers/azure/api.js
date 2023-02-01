@@ -91,6 +91,18 @@ var calls = {
             paginate: 'nextLink'
         }
     },
+    images: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/images?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    },
+    vmScaleSet: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    },
     snapshots: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/snapshots?api-version=2020-12-01'
@@ -131,6 +143,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
         },
         sendIntegration: serviceMap['Redis Cache']
+    },
+    routeTables: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/routeTables?api-version=2022-07-01'
+        }
     },
     managedClusters: {
         list: {
@@ -232,6 +249,11 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+        }
+    },
+    wafPolicies: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies?api-version=2022-07-01'
         }
     },
     autoscaleSettings: {
