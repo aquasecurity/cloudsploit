@@ -32,14 +32,19 @@ module.exports = {
                 helpers.addResult(results, 2, 'No existing security contacts', location);
                 return rcb();
             }
-            
+            let ownerExist =  false;
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
                 if (contact.notificationsByRole && contact.notificationsByRole.roles && contact.notificationsByRole.roles.includes('Owner')){
-                    helpers.addResult(results, 0, 'Security Contact email is configured for subscription owners', location, contact.id);
-                } else {
-                    helpers.addResult(results, 2, 'Security Contact email is not configured for subscription owners', location, contact.id);
+                    ownerExist = true;
+                    break;
                 }
+            }
+            
+            if (ownerExist){
+                helpers.addResult(results, 0, 'Security Contact email is configured for subscription owners', location);
+            } else {
+                helpers.addResult(results, 2, 'Security Contact email is not configured for subscription owners', location);
             }
 
             rcb();
