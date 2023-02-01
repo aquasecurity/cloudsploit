@@ -40,7 +40,7 @@ module.exports = {
                     continue;
                 }
 
-                if (appGateway.webApplicationFirewallConfiguration && appGateway.webApplicationFirewallConfiguration.firewallMode.toLowerCase() === 'prevention') {
+                if (appGateway.webApplicationFirewallConfiguration && appGateway.webApplicationFirewallConfiguration.firewallMode && appGateway.webApplicationFirewallConfiguration.firewallMode.toLowerCase() === 'prevention') {
                     helpers.addResult(results, 0, 'Prevention mode enabled for application gateway WAF policy', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Prevention mode not enabled for application gateway WAF policy', location, appGateway.id);
