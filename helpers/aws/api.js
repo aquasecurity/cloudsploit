@@ -12,6 +12,163 @@ var integrationSendLast = [
     'EC2'
 ];
 
+/*
+ enabled: send integration is enable or not
+ isSingleSource: whether resource is single source or not
+
+----------Bridge Side Data----------
+ BridgeServiceName: it should be the api service name which we are storing in json file in s3 collection bucket.
+ BridgeCall: it should be the api call which we are storing in json file in s3 collection bucket.
+ BridgePluginCategoryName: it should be equivalent to Plugin Category Name.
+ BridgeProvider: it should be the cloud provider
+                 Eg. 'aws', 'Azure', 'Google'
+
+ BridgeArnIdentifier: it should be the key of the arn field data which we are storing in json file in s3 collection bucket.
+                      Eg. 'TrailARN'
+
+ BridgeArnTemplate: this should be the arn template.
+                    Eg. "arn:aws:cloudtrail:{region}:{cloudAccount}:trail/{name}"
+
+ Note: If there is an arn identifier then no need to pass the arn template otherwise we have to pass the template.
+
+ BridgeResourceType: this should be type of the resource, fetch it from the arn.
+                     Eg. 'trail'
+
+ BridgeResourceNameIdentifier: it should be the key of resource name/id data which we are storing in json file in  s3 collection bucket.
+                               Eg. 'Name' or 'Id'
+
+ Note: if there is no name then we have to pass the id.
+
+ BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
+ BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+ DataIdentifier: it should be the parent key field of data which we want to collect in json file in s3 collection bucket.
+
+----------Processor Side Data----------
+These fields should be according to the user and product manager, what they want to show in Inventory UI.
+ InvAsset: 'CloudTrail'
+ InvService: 'CloudTrail'
+ InvResourceCategory: 'cloud_resources'
+ InvResourceType: 'CloudTrail'
+
+ Note: For specific category add the category name otherwise it should be 'cloud_resource'
+
+ Take the reference from the below map
+*/
+
+// Note: In Below service map add only single source resources.
+// and service name should be plugin category.
+
+var serviceMap = {
+    'CloudTrail':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'CloudTrail', InvService: 'CloudTrail',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CloudTrail', BridgeServiceName: 'cloudtrail',
+            BridgePluginCategoryName: 'CloudTrail', BridgeProvider: 'aws', BridgeCall: 'describeTrails',
+            BridgeArnIdentifier: 'TrailARN', BridgeArnTemplate: '', BridgeResourceType: 'trail',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'CloudTrail',
+            BridgeCollectionService: 'cloudtrail', DataIdentifier: 'data',
+        },
+    'Athena':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'athena',
+            InvResourceCategory: 'database', InvResourceType: 'athena_instance', BridgeServiceName: 'athena',
+            BridgePluginCategoryName: 'Athena', BridgeProvider: 'aws', BridgeCall: 'listWorkGroups',
+            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:athena:{region}:{cloudAccount}:workgroup/{name}', BridgeResourceType: 'workgroup',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Athena',
+            BridgeCollectionService: 'athena', DataIdentifier: 'data',
+        },
+    'Timestream':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'timestreamwrite',
+            InvResourceCategory: 'database', InvResourceType: 'timestreamwrite_instance', BridgeServiceName: 'timestreamwrite',
+            BridgePluginCategoryName: 'Timestream', BridgeProvider: 'aws', BridgeCall: 'listDatabases',
+            BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'database',
+            BridgeResourceNameIdentifier: 'DatabaseName', BridgeExecutionService: 'Timestream',
+            BridgeCollectionService: 'timestreamwrite', DataIdentifier: 'data',
+        },
+    'Redshift':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'redshift',
+            InvResourceCategory: 'database', InvResourceType: 'redshift_instance', BridgeServiceName: 'redshift',
+            BridgePluginCategoryName: 'Redshift', BridgeProvider: 'aws', BridgeCall: 'describeClusters',
+            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:redshift:{region}:{cloudAccount}:cluster:{name}',
+            BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'ClusterIdentifier',
+            BridgeExecutionService: 'Redshift', BridgeCollectionService: 'redshift', DataIdentifier: 'data',
+        },
+    'DocumentDB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'docdb',
+            InvResourceCategory: 'database', InvResourceType: 'documentdb_instance', BridgeServiceName: 'docdb',
+            BridgePluginCategoryName: 'DocumentDB', BridgeProvider: 'aws', BridgeCall: 'describeDBClusters',
+            BridgeArnIdentifier: 'DBClusterArn', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeResourceNameIdentifier: 'DBClusterIdentifier', BridgeExecutionService: 'DocumentDB',
+            BridgeCollectionService: 'docdb', DataIdentifier: 'data',
+        },
+    'Neptune':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'neptune',
+            InvResourceCategory: 'database', InvResourceType: 'neptune_instance', BridgeServiceName: 'neptune',
+            BridgePluginCategoryName: 'Neptune', BridgeProvider: 'aws', BridgeCall: 'describeDBClusters',
+            BridgeArnIdentifier: 'DBClusterArn', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeResourceNameIdentifier: 'DBClusterIdentifier', BridgeExecutionService: 'Neptune',
+            BridgeCollectionService: 'neptune', DataIdentifier: 'data',
+        },
+    'ElastiCache':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'elasticache',
+            InvResourceCategory: 'database', InvResourceType: 'elasticache_instance', BridgeServiceName: 'elasticache',
+            BridgePluginCategoryName: 'ElastiCache', BridgeProvider: 'aws', BridgeCall: 'describeCacheClusters',
+            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeResourceNameIdentifier: 'CacheClusterId', BridgeExecutionService: 'ElastiCache',
+            BridgeCollectionService: 'elasticache', DataIdentifier: 'data',
+        },
+    'MemoryDB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'memorydb',
+            InvResourceCategory: 'database', InvResourceType: 'memorydb_instance', BridgeServiceName: 'memorydb',
+            BridgePluginCategoryName: 'MemoryDB', BridgeProvider: 'aws', BridgeCall: 'describeClusters',
+            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'MemoryDB',
+            BridgeCollectionService: 'memorydb', DataIdentifier: 'data',
+        },
+    'Kendra':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'kendra',
+            InvResourceCategory: 'database', InvResourceType: 'kendra_instance', BridgeServiceName: 'kendra',
+            BridgePluginCategoryName: 'Kendra', BridgeProvider: 'aws', BridgeCall: 'listIndices',
+            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:kendra:{region}:{cloudAccount}:index/{name}',
+            BridgeResourceType: 'index', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Kendra',
+            BridgeCollectionService: 'kendra', DataIdentifier: 'data',
+        },
+    'ES':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'elasticsearch',
+            InvResourceCategory: 'database', InvResourceType: 'elasticsearch_instance', BridgeServiceName: 'es',
+            BridgePluginCategoryName: 'ES', BridgeProvider: 'aws', BridgeCall: 'describeElasticsearchDomain',
+            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'domain',
+            BridgeResourceNameIdentifier: 'DomainName', BridgeExecutionService: 'ES',
+            BridgeCollectionService: 'es', DataIdentifier: 'DomainStatus',
+        },
+    'QLDB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'qldb',
+            InvResourceCategory: 'database', InvResourceType: 'qldb_instance', BridgeServiceName: 'qldb',
+            BridgePluginCategoryName: 'QLDB', BridgeProvider: 'aws', BridgeCall: 'describeLedger',
+            BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'ledger',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'QLDB',
+            BridgeCollectionService: 'qldb', DataIdentifier: 'data',
+        },
+    'DynamoDB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'dynamodb',
+            InvResourceCategory: 'database', InvResourceType: 'dynamodb_instance', BridgeServiceName: 'dynamodb',
+            BridgePluginCategoryName: 'DynamoDB', BridgeProvider: 'aws', BridgeCall: 'describeTable',
+            BridgeArnIdentifier: 'TableArn', BridgeArnTemplate: '', BridgeResourceType: 'table',
+            BridgeResourceNameIdentifier: 'TableName', BridgeExecutionService: 'DynamoDB',
+            BridgeCollectionService: 'dynamodb', DataIdentifier: 'Table',
+        },
+};
+
 var calls = {
     AccessAnalyzer: {
         listAnalyzers: {
@@ -1144,6 +1301,18 @@ var calls = {
 
 var postcalls = [
     {
+        MemoryDB: {
+            sendIntegration: serviceMap['MemoryDB']
+        },
+        DocDB: {
+            sendIntegration: serviceMap['DocumentDB']
+        },
+        Neptune: {
+            sendIntegration:serviceMap['Neptune']
+        },
+        TimestreamWrite: {
+            sendIntegration: serviceMap['Timestream']
+        },
         ACM: {
             describeCertificate: {
                 reliesOnService: 'acm',
@@ -1217,7 +1386,8 @@ var postcalls = [
                 reliesOnCall: 'listWorkGroups',
                 filterKey: 'WorkGroup',
                 filterValue: 'Name'
-            }
+            },
+            sendIntegration: serviceMap['Athena']
         },
         AutoScaling: {
             describeNotificationConfigurations: {
@@ -1291,7 +1461,8 @@ var postcalls = [
                 reliesOnCall: 'describeTrails',
                 filterKey: 'TrailName',
                 filterValue: 'TrailARN'
-            }
+            },
+            sendIntegration: serviceMap['CloudTrail']
         },
         Imagebuilder: {
             getContainerRecipe: {
@@ -1412,7 +1583,8 @@ var postcalls = [
                 reliesOnService: 'dynamodb',
                 reliesOnCall: 'listTables',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['DynamoDB']
         },
         ElastiCache: {
             describeReplicationGroups: {
@@ -1420,7 +1592,8 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            sendIntegration: serviceMap['ElastiCache']
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1428,7 +1601,8 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
+            },
+            sendIntegration: serviceMap['ES']
         },
         S3: {
             getBucketLogging: {
@@ -1814,7 +1988,8 @@ var postcalls = [
                 reliesOnCall: 'listIndices',
                 filterKey: 'Id',
                 filterValue: 'Id'
-            }
+            },
+            sendIntegration: serviceMap['Kendra']
         },
         Kinesis: {
             describeStream: {
@@ -1928,7 +2103,8 @@ var postcalls = [
                 reliesOnCall: 'listLedgers',
                 filterKey: 'Name',
                 filterValue: 'Name'
-            }
+            },
+            sendIntegration: serviceMap['QLDB']
         },
         ManagedBlockchain: {
             listMembers: {
@@ -2014,7 +2190,8 @@ var postcalls = [
                 reliesOnCall: 'describeClusterParameterGroups',
                 filterKey: 'ParameterGroupName',
                 filterValue: 'ParameterGroupName'
-            }
+            },
+            sendIntegration: serviceMap['Redshift']
         },
         SageMaker: {
             describeNotebookInstance: {
@@ -2248,6 +2425,7 @@ var postcalls = [
 
 module.exports = {
     globalServices: globalServices,
+    serviceMap: serviceMap,
     calls: calls,
     postcalls: postcalls,
     integrationSendLast: integrationSendLast

@@ -1,3 +1,57 @@
+/*
+ enabled: send integration is enable or not
+ isSingleSource: whether resource is single source or not
+
+----------Bridge Side Data----------
+ BridgeServiceName: it should be the api service name which we are storing in json file in s3 collection bucket.
+ BridgeCall: it should be the api call which we are storing in json file in s3 collection bucket.
+ BridgePluginCategoryName: it should be equivalent to Plugin Category Name.
+ BridgeProvider: it should be the cloud provider
+                 Eg. 'aws', 'Azure', 'Google'
+
+ BridgeArnIdentifier: no need to pass.
+
+ BridgeArnTemplate: no need to pass.
+
+ BridgeResourceType: this should be type of the resource, fetch it from the id.
+                     Eg. 'servers'
+
+ BridgeResourceNameIdentifier: it should be the key of resource name/id data which we are storing in json file in  s3 collection bucket.
+                               Eg. 'Name/name' or 'Id/id'
+
+ Note: if there is no name then we have to pass the id.
+
+ BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
+ BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+ DataIdentifier: it should be the parent key field of data which we want to collect in json file in s3 collection bucket.
+
+----------Processor Side Data----------
+These fields should be according to the user and product manager, what they want to show in Inventory UI.
+ InvAsset: 'LogAlerts'
+ InvService: 'LogAlerts'
+ InvResourceCategory: 'cloud_resources'
+ InvResourceType: 'LogAlerts'
+
+Note: For specific category add the category name otherwise it should be 'cloud_resource'
+
+ Take the reference from the below map
+*/
+
+// Note: In Below service map add only single source resources.
+// and service name should be plugin category.
+
+var serviceMap = {
+    'Redis Cache':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'redisCaches', InvService: 'redisCaches',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Redis Cache', BridgeServiceName: 'rediscaches',
+            BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
+            BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'Redis',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
+            BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
+        }
+};
+
 // Standard calls that contain top-level operations
 var calls = {
     resourceGroups: {
@@ -34,6 +88,18 @@ var calls = {
     virtualMachines: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01',
+            paginate: 'nextLink'
+        }
+    },
+    images: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/images?api-version=2022-08-01',
+            paginate: 'nextLink'
+        }
+    },
+    vmScaleSet: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2022-08-01',
             paginate: 'nextLink'
         }
     },
@@ -75,6 +141,12 @@ var calls = {
     redisCaches: {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
+        },
+        sendIntegration: serviceMap['Redis Cache']
+    },
+    routeTables: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/routeTables?api-version=2022-07-01'
         }
     },
     managedClusters: {
@@ -122,10 +194,22 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/autoProvisioningSettings?api-version=2017-08-01-preview'
         }
     },
+    applicationGateway: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways?api-version=2022-07-01'
+        }
+    },
     securityContacts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2017-08-01-preview',
             ignoreLocation: true
+        }
+    },
+    securityContactv2: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2020-01-01-preview',
+            ignoreLocation: true,
+            hasListResponse: true
         }
     },
     subscriptions: {
@@ -174,6 +258,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
         }
     },
+    wafPolicies: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies?api-version=2022-07-01'
+        }
+    },
     autoscaleSettings: {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/autoscalesettings?api-version=2015-04-01'
@@ -190,6 +279,9 @@ var calls = {
         },
         listMysql: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/servers?api-version=2017-12-01'
+        },
+        listMysqlFlexibleServer: {
+            url : 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/flexibleServers?api-version=2021-05-01'
         },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
@@ -307,11 +399,11 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/virtualNetworkPeerings?api-version=2020-11-01'
         }
     },
-    configurations: {
+    flexibleServersConfigurations: {
         listByServer: {
-            reliesOnPath: 'servers.listPostgres',
+            reliesOnPath: 'servers.listMysqlFlexibleServer',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
+            url: 'https://management.azure.com/{id}/configurations?api-version=2021-05-01'
         }
     },
     serverAdministrators: {
@@ -614,6 +706,13 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com{id}/replications?api-version=2019-05-01'
         }
+    },
+    configurations: {
+        listByServer: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
+        }
     }
 };
 
@@ -695,5 +794,6 @@ module.exports = {
     calls: calls,
     postcalls: postcalls,
     tertiarycalls: tertiarycalls,
-    specialcalls: specialcalls
+    specialcalls: specialcalls,
+    serviceMap: serviceMap
 };

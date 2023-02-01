@@ -1,3 +1,56 @@
+/*
+ enabled: send integration is enable or not
+ isSingleSource: whether resource is single source or not
+
+----------Bridge Side Data----------
+ BridgeServiceName: it should be the api service name which we are storing in json file in s3 collection bucket.
+ BridgeCall: it should be the api call which we are storing in json file in s3 collection bucket.
+ BridgePluginCategoryName: it should be equivalent to Plugin Category Name.
+ BridgeProvider: it should be the cloud provider
+                 Eg. 'aws', 'Azure', 'Google'
+
+ BridgeArnIdentifier: no need to pass.
+
+ BridgeArnTemplate: no need to pass.
+
+ BridgeResourceType: this should be type of the resource, fetch it from the id.
+                     Eg. 'servers'
+
+ BridgeResourceNameIdentifier: it should be the key of resource name/id data which we are storing in json file in  s3 collection bucket.
+                               Eg. 'Name/name' or 'Id/id'
+
+ Note: if there is no name then we have to pass the id.
+
+ BridgeExecutionService: it should be equivalent to service name which we are sending from executor in payload data.
+ BridgeCollectionService: it should be equivalent to service name which we are sending from collector in payload data.
+ DataIdentifier: it should be the parent key field of data which we want to collect in json file in s3 collection bucket.
+
+----------Processor Side Data----------
+These fields should be according to the user and product manager, what they want to show in Inventory UI.
+ InvAsset: 'Pub/Sub'
+ InvService: 'Pub/Sub'
+ InvResourceCategory: 'cloud_resources'
+ InvResourceType: 'Pub/Sub'
+
+Note: For specific category add the category name otherwise it should be 'cloud_resource'
+
+ Take the reference from the below map
+*/
+
+// Note: In Below service map add only single source resources.
+// and service name should be plugin category.
+
+var serviceMap = {
+    'Pub/Sub':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Pub/Sub', InvService: 'Pub/Sub',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Pub/Sub', BridgeServiceName: 'topics',
+            BridgePluginCategoryName: 'gcp-Pub/Sub', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'topics',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Pub/Sub',
+            BridgeCollectionService: 'gcp-topics', DataIdentifier: 'data',
+        }
+};
 var calls = {
     disks: {
         list: {
@@ -25,7 +78,8 @@ var calls = {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
             location: null,
-            pagination: true
+            pagination: true,
+            ignoreMiscData: true
         }
     },
     snapshots: {
@@ -80,6 +134,9 @@ var calls = {
             url: 'https://sqladmin.googleapis.com/sql/v1beta4/projects/{projectId}/instances',
             location: null,
             pagination: true
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     spanner: {
@@ -164,6 +221,9 @@ var calls = {
             url: 'https://storage.googleapis.com/storage/v1/b?project={projectId}',
             location: null,
             pagination: true
+        },
+        sendIntegration: {
+            enabled: true,
         }
     },
     targetHttpProxies: {
@@ -197,6 +257,9 @@ var calls = {
             location: null,
             method: 'POST',
             pagination: false
+        },
+        getWithNumber: {
+            url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}'
         }
     },
     kubernetes: {
@@ -204,6 +267,9 @@ var calls = {
             url: 'https://container.googleapis.com/v1/projects/{projectId}/locations/-/clusters',
             location: null,
             pagination: false
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     dataproc: {
@@ -272,7 +338,8 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-        }
+        },
+        sendIntegration: serviceMap['Pub/Sub']
     },
     subscriptions: {
         list: {
@@ -323,6 +390,13 @@ var calls = {
             reliesOnCall: ['list'],
             properties: ['id']
         }
+    },
+    accessApproval: {
+        settings: {
+            url: 'https://accessapproval.googleapis.com/v1/projects/{projectId}/accessApprovalSettings',
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
     }
 };
 
@@ -356,7 +430,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: false
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['buckets']
+            }
+        },
     },
     keys: {
         list: {
@@ -375,7 +455,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true //needs to be verified with multiple users
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['sql']
+            }
+        },
     },
     backupRuns: {
         list: {
@@ -385,7 +471,13 @@ var postcalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
             pagination: true
-        }
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['sql']
+            }
+        },
     },
     datasets: {
         get: {
@@ -396,6 +488,18 @@ var postcalls = {
             properties: ['datasetId'],
             subObj: ['datasetReference'],
             pagination: true
+        }
+    },
+    bigqueryTables: {
+        list: {
+            url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables',
+            location: null,
+            reliesOnService: ['datasets'],
+            reliesOnCall: ['list'],
+            properties: ['datasetId'],
+            subObj: ['datasetReference'],
+            pagination: true,
+            dataKey: 'tables'
         }
     },
     jobs: {
@@ -431,6 +535,14 @@ var postcalls = {
             reliesOnService: ['organizations'],
             reliesOnCall: ['list'],
             properties: ['organizationId']
+        },
+        essentialContacts: {
+            url: 'https://essentialcontacts.googleapis.com/v1/organizations/{organizationId}/contacts',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId'],
+            pagination: true,
+            paginationKey: 'pageSize'
         }
     },
     apiKeys: {
@@ -449,6 +561,17 @@ var postcalls = {
             properties: ['name'],
             pagination: false
         }
+    },
+    services: {
+        listEnabled: {
+            url: 'https://serviceusage.googleapis.com/v1/projects/{projectNumber}/services',
+            reliesOnService: ['projects'],
+            reliesOnCall: ['getWithNumber'],
+            properties: ['projectNumber'],
+            pagination: true,
+            paginationKey: 'pageSize',
+            reqParams: 'filter=state:ENABLED'
+        }
     }
 };
 
@@ -461,11 +584,23 @@ var tertiarycalls = {
             reliesOnCall: ['list'],
             properties: ['name'],
         }
-    }
+    },
+    bigqueryTables: {
+        get: {
+            url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables/{tableId}',
+            location: null,
+            reliesOnService: ['bigqueryTables'],
+            reliesOnCall: ['list'],
+            properties: ['datasetId', 'tableId'],
+            subObj: ['tableReference'],
+            pagination: true
+        }
+    },
 };
 
 module.exports = {
     calls: calls,
     postcalls: postcalls,
-    tertiarycalls: tertiarycalls
+    tertiarycalls: tertiarycalls,
+    serviceMap: serviceMap
 };
