@@ -15,7 +15,7 @@ module.exports = {
             name: 'Lambda Runtime Fail',
             description: 'Return a failing result for lambda runtime before this number of days for their end of life date.',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 30
+            default: 0
         }
     },
 
@@ -72,27 +72,24 @@ module.exports = {
                 var deprecatedRuntime = deprecatedRuntimes.filter((d) => {
                     return d.id == lambdaFunction.Runtime;
                 });
-
                 var version = lambdaFunction.Runtime;
                 var runtimeDeprecationDate = (deprecatedRuntime && deprecatedRuntime.length && deprecatedRuntime[0].endOfLifeDate) ? Date.parse(deprecatedRuntime[0].endOfLifeDate) : null;
                 let today = new Date();
-                var difference = Math.round((new Date(runtimeDeprecationDate).getTime() - today.getTime())/(24*60*60*1000));
                 today = Date.parse(`${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`);
-                if (runtimeDeprecationDate && today > runtimeDeprecationDate) {
+                var difference = runtimeDeprecationDate? Math.round((runtimeDeprecationDate - today)/(1000 * 3600 * 24)): null;
+                if (runtimeDeprecationDate && today > runtimeDeprecationDate) { 
                     helpers.addResult(results, 2,
                         'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
                         region, lambdaFunction.FunctionArn);
-                } else {
-                    if (config.lambda_runtime_fail >= difference) {
+                } else if (difference && config.lambda_runtime_fail >= difference) {
                         helpers.addResult(results, 2,
                             'Lambda is using runtime: ' + version + ' which is deprecating in ' + Math.abs(difference) + ' days',
-                            region, lambdaFunction.FunctionArn);
-                    } else {
+                        region, lambdaFunction.FunctionArn);
+                } else {
                         helpers.addResult(results, 0,
                             'Lambda is running the current version: ' + version,
                             region, lambdaFunction.FunctionArn);
-                    }
-                }   
+                } 
             }
             rcb();
         }, function(){

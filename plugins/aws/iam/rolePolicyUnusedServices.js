@@ -341,11 +341,11 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document) {
                                 let statements = helpers.normalizePolicyDocument(
                                     getPolicyVersion.data.PolicyVersion.Document);
-
                                 if (!statements) break;
 
                                 for (let statement of statements) {
                                     if (statement.Action && statement.Action.length) {
+
                                         for (let action of statement.Action) {
                                             if (config.whitelist_unused_actions_for_resources.includes(action.toLowerCase())) continue;
                                             let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
@@ -448,6 +448,8 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
+            } else if (statement.Resource && statement.Resource.indexOf('*') > -1){
+                failMsg = `Role ${policyType} policy allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
