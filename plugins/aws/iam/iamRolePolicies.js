@@ -71,7 +71,7 @@ module.exports = {
             default: ''
         },
         iam_policy_resource_specific_wildcards: {
-            name: 'Resource Specific Wildcards',
+            name: 'IAM Policy Resource Specific Wildcards',
             description: 'This allows you to flag attached policies (inline and managed) against the certain regex for resource specific wildcards in Resource.'+
             'Example: Consider a role has following inline policy which allows wildcard resources for s3.' +
                 `{
