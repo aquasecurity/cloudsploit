@@ -62,7 +62,7 @@ module.exports = {
                     continue;
                 }
 
-                var resource = fileSystem.Arn;
+                var resource = fileSystem.ResourceARN;
 
                 if (fileSystem.KmsKeyId) {
                     let encryptionKey = fileSystem.KmsKeyId;
