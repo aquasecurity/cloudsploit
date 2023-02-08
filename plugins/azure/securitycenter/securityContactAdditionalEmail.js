@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact\'s email address to the Additional email addresses field ensures that your organization\'s Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.',
     recommended_action: 'Modify security contact information and add additional emails.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications',
-    apis: ['securityContacts:list'],
+    apis: ['securityContactv2:listAll'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -19,7 +19,7 @@ module.exports = {
         async.each(locations.securityContacts, (location, rcb) => {
             
             var securityContacts = helpers.addSource(cache, source, 
-                ['securityContacts', 'list', location]);
+                ['securityContactv2', 'listAll', location]);
 
             if (!securityContacts) return rcb();
 
@@ -33,24 +33,16 @@ module.exports = {
                 helpers.addResult(results, 2, 'No existing security contacts', location);
                 return rcb();
             }
-            
-            let additionEmailsExist;
 
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
 
-                if (contact.email && contact.email.length > 0){
-                    additionEmailsExist = true;
-                    break;
+                if (contact.emails && contact.emails.trim().length > 0){
+                    helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location, contact.id);
+                } else {
+                    helpers.addResult(results, 2, 'Additional email address is not configured with security contact email', location, contact.id);
                 }
             }
-
-            if (additionEmailsExist){
-                helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location);
-            } else {
-                helpers.addResult(results, 2, 'Additional email address is not configured with security contact email', location);
-            }
-
 
             rcb();
         }, function(){

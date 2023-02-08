@@ -6,20 +6,20 @@ const securityContacts = [
         'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
         'name': 'contact1',
         'alertsToAdmins': 'On',
-        'email': 'xyz@gmail.com'
+        'emails': 'xyz@gmail.com'
     },
     {
         'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
         'name': 'contact1',
         'alertsToAdmins': 'Off',
-        'email': ''
+        'emails': ''
     }
 ];
 
 const createCache = (securityContacts) => {
     return {
-        securityContacts: {
-            list: {
+        securityContactv2: {
+            listAll: {
                 global:{
                     data: securityContacts
                 }
@@ -30,8 +30,8 @@ const createCache = (securityContacts) => {
 
 const createErrorCache = () => {
     return {
-        securityContacts: {
-            list: {
+        securityContactv2: {
+            listAll: {
                 global: {}
             }
         }
