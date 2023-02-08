@@ -51,11 +51,11 @@ module.exports = {
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-        // Handle special case errors
+        // Handle default password policy
         if (getAccountPasswordPolicy.err &&
             getAccountPasswordPolicy.err.code &&
             getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
-            helpers.addResult(results, 2, 'Account does not have a password policy');
+            helpers.addResult(results, 2, 'Account has Default password policy');
             return callback(null, results, source);
         }
 

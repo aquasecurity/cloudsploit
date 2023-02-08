@@ -135,11 +135,11 @@ describe('minPasswordLength', function () {
             });
         });
 
-        it('should FAIL if account does not have a password policy', function (done) {
+        it('should PASS if Account has Default password policy', function (done) {
             const cache = createErrorCodeCache();
             minPasswordLength.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
