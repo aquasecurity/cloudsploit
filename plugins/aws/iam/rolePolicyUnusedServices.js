@@ -81,6 +81,30 @@ module.exports = {
             description: 'A comma-separated list indicating which actions for specific service should be ignored i.e. Ignore the following actions ec2:CancelReservedInstancesListing, ec2:AcceptVpcPeeringConnection for ec2 Service',
             regex: '.*$',
             default: ''
+        },
+        iam_policy_resource_specific_wildcards: {
+            name: 'Resource Specific Wildcards',
+            description: 'This allows you to flag attached policies (inline and managed) against the certain regex for resource specific wildcards in Resource.'+
+            'Example: Consider a role has following inline policy which allows wildcard resources for s3.' +
+                `{
+                "Version": "2012-10-17",
+                "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject",
+                                "s3:GetObject"
+                            ],
+                            "Resource": [
+                                "arn:aws:s3:::*"
+                            ]
+                        }
+                ]
+            }` +
+                'If iam_policy_resource_specific_wildcards is set to following regex to ignore resource wildcards /^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$/, FAIL result will be generated. ' +
+                'If iam_policy_resource_specific_wildcards is set to default value, PASS result will be generated.',
+            regex: '^.*$',
+            default: '^.*$',
         }
     },
 
@@ -93,7 +117,8 @@ module.exports = {
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
             whitelist_unused_services: settings.whitelist_unused_services || this.settings.whitelist_unused_services.default,
-            whitelist_unused_actions_for_resources: settings.whitelist_unused_actions_for_resources || this.settings.whitelist_unused_actions_for_resources.default
+            whitelist_unused_actions_for_resources: settings.whitelist_unused_actions_for_resources || this.settings.whitelist_unused_actions_for_resources.default,
+            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -102,7 +127,8 @@ module.exports = {
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
         config.whitelist_unused_services = config.whitelist_unused_services.replace(/\s/g, '');
         config.whitelist_unused_actions_for_resources = config.whitelist_unused_actions_for_resources.replace(/\s/g, '').toLowerCase();
-
+        var allowRegex = (config.iam_policy_resource_specific_wildcards &&
+            config.iam_policy_resource_specific_wildcards.length) ? new RegExp(config.iam_policy_resource_specific_wildcards) : false;
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -342,7 +368,6 @@ module.exports = {
                                 let statements = helpers.normalizePolicyDocument(
                                     getPolicyVersion.data.PolicyVersion.Document);
                                 if (!statements) break;
-
                                 for (let statement of statements) {
                                     if (statement.Action && statement.Action.length) {
 
@@ -364,7 +389,7 @@ module.exports = {
                                     }
                                 }
 
-                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
+                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowRegex);
                             }
                         }
                     }
@@ -413,7 +438,7 @@ module.exports = {
                                 }
                             }
 
-                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
+                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowRegex);
                         }
                     }
                 }
@@ -436,7 +461,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -459,6 +484,15 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                     }
                 }
                 if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
+            } else if (regResource && statement.Resource && statement.Resource.length) {
+                // Check each resource for wildcard
+                let wildcards = [];
+                for (var resource of statement.Resource) {
+                    if (!regResource.test(resource)) {
+                        wildcards.push(resource);
+                    }
+                }
+                if (wildcards.length) failMsg = `Role ${policyType} policy allows resource wildcards: ${wildcards.join(', ')}`;
             }
 
             if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);

@@ -70,10 +70,27 @@ module.exports = {
             regex: '^.*$',
             default: ''
         },
-        resource_specific_wildcards: {
-            name: 'Service Specific Wildcards',
-            description: 'Resource specific wildcards in attached policies (inline and managed) which matches this regex. '+
-            '/^[a-z]+:[a-z]+:[a-z0-9]+:::[/*]$/ will produce fail result for the resources which matches this regex i.e. "arn:aws:s3:::*" .',
+        iam_policy_resource_specific_wildcards: {
+            name: 'Resource Specific Wildcards',
+            description: 'This allows you to flag attached policies (inline and managed) against the certain regex for resource specific wildcards in Resource.'+
+            'Example: Consider a role has following inline policy which allows wildcard resources for s3.' +
+                `{
+                "Version": "2012-10-17",
+                "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject",
+                                "s3:GetObject"
+                            ],
+                            "Resource": [
+                                "arn:aws:s3:::*"
+                            ]
+                        }
+                ]
+            }` +
+                'If iam_policy_resource_specific_wildcards is set to following regex to ignore resource wildcards /^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$/, FAIL result will be generated. ' +
+                'If iam_policy_resource_specific_wildcards is set to default value, PASS result will be generated.',
             regex: '^.*$',
             default: '^.*$',
         },
@@ -88,7 +105,7 @@ module.exports = {
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
-            resource_specific_wildcards: settings.resource_specific_wildcards || this.settings.resource_specific_wildcards.default
+            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -96,8 +113,8 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
 
-        var allowRegex = (config.resource_specific_wildcards &&
-            config.resource_specific_wildcards.length) ? new RegExp(config.resource_specific_wildcards) : false;
+        var allowRegex = (config.iam_policy_resource_specific_wildcards &&
+            config.iam_policy_resource_specific_wildcards.length) ? new RegExp(config.iam_policy_resource_specific_wildcards) : false;
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -289,7 +306,7 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 // Check each resource for wildcard
                 let wildcards = [];
                 for (var resource of statement.Resource) {
-                    if (regResource.test(resource)) {
+                    if (!regResource.test(resource)) {
                         wildcards.push(resource);
                     }
                 }

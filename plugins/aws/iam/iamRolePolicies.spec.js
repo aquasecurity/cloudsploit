@@ -121,8 +121,8 @@ const listAttachedRolePolicies = [
     {
         "AttachedPolicies": [
             {
-                "PolicyName": "AWSLambdaBasicExecutionRole-99a786a4-7f31-415f-b8b8-cb3d6cc62f46",
-                "PolicyArn": "arn:aws:iam::123456789:policy/service-role/AWSLambdaBasicExecutionRole-99a786a4-7f31-415f-b8b8-cb3d6cc62f46"
+                "PolicyName": "testPolicy",
+                "PolicyArn": "arn:aws:iam::193063503752:policy/testPolicy"
             }
         ]
     }
@@ -171,9 +171,9 @@ const getPolicy = [
     },
     {
         "Policy": {
-            "PolicyName": "AWSLambdaBasicExecutionRole-99a786a4-7f31-415f-b8b8-cb3d6cc62f46",
+            "PolicyName": "testPolicy",
             "PolicyId": "ANPASZ433I6ELDTSCKKP3",
-            "Arn": "arn:aws:iam::123456789:policy/service-role/AWSLambdaBasicExecutionRole-99a786a4-7f31-415f-b8b8-cb3d6cc62f46",
+            "Arn": "arn:aws:iam::123456789:policy/testPolicy",
             "Path": "/service-role/",
             "DefaultVersionId": "v1",
             "AttachmentCount": 1,
@@ -196,7 +196,7 @@ const getPolicyVersion = [
     },
     {
         "PolicyVersion": {
-            "Document": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22logs%3ACreateLogGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3A%2A%22%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3ACreateLogStream%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3APutLogEvents%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3Alog-group%3A%2Faws%2Flambda%2Ftest_lambda_core%3A%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D',
+            "Document": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22s3%3AputObject%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22ec2%3ACreateFleet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3As3%3A%3A%3A%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22ec2%3ACreateFleet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Aec2%3Aus-east-1%3A193063503752%3Ainstance%2F%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D',
             "VersionId": "v1",
             "IsDefaultVersion": true,
             "CreateDate": "2022-11-08T10:04:57+00:00"
@@ -436,9 +436,9 @@ describe('iamRolePolicies', function () {
             });
         });
        
-        it('should FAIL if role policy allows wildcard resources and it matches regex', function (done) {
+        it('should FAIL if role policy allows resources which does not match regex in iam_policy_resource_specific_wildcards', function (done) {
             const cache = createCache([listRoles[2]],getRole[1], listAttachedRolePolicies[3], null, null, getPolicy[1], getPolicyVersion[1]);
-            iamRolePolicies.run(cache,{ ignore_service_specific_wildcards: 'true',resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z]+:[a-z0-9-]+:+[0-9]+:[/*]$'}, (err, results) => {
+            iamRolePolicies.run(cache,{ ignore_service_specific_wildcards: 'true',iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('policy allows resource wildcards:');
                 expect(results[0].status).to.equal(2);
