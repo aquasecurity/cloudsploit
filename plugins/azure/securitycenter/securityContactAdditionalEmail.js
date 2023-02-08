@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            let additionalEmails = securityContacts.data.find(contact => contact.email && contact.email.split(',').length > 1);
+            let additionalEmails = securityContacts.data.find(contact => contact.email && contact.email.split(';').length > 1);
 
             if (additionalEmails){
                 helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location, contact.id);
