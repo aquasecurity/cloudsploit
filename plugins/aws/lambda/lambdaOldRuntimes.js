@@ -25,7 +25,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var config = {
-            lambda_runtime_fail: settings.lambda_runtime_fail || this.settings.lambda_runtime_fail.default
+            lambda_runtime_fail: parseInt(settings.lambda_runtime_fail || this.settings.lambda_runtime_fail.default)
         };
 
         var deprecatedRuntimes = [
