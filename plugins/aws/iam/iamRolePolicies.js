@@ -283,7 +283,8 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                     }
                 }
                 if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
-            } else if (regResource && statement.Resource && statement.Resource.length) {
+            }
+            if (statement.Resource && statement.Resource.length) {
                 // Check each resource for wildcard
                 let wildcards = [];
                 for (var resource of statement.Resource) {
