@@ -6,7 +6,7 @@ const securityContacts = [
         'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
         'name': 'contact1',
         'alertsToAdmins': 'On',
-        'emails': 'xyz@gmail.com'
+        'emails': 'xyz@gmail.com,abc@email.com'
     },
     {
         'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
