@@ -72,25 +72,7 @@ module.exports = {
         },
         iam_policy_resource_specific_wildcards: {
             name: 'IAM Policy Resource Specific Wildcards',
-            description: 'This allows you to flag attached policies (inline and managed) against the certain regex for resource specific wildcards in Resource.'+
-            'Example: Consider a role has following inline policy which allows wildcard resources for s3.' +
-                `{
-                "Version": "2012-10-17",
-                "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "s3:PutObject",
-                                "s3:GetObject"
-                            ],
-                            "Resource": [
-                                "arn:aws:s3:::*"
-                            ]
-                        }
-                ]
-            }` +
-                'If iam_policy_resource_specific_wildcards is set to following regex to ignore resource wildcards /^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$/, FAIL result will be generated. ' +
-                'If iam_policy_resource_specific_wildcards is set to default value, PASS result will be generated.',
+            description: 'Allows policy resources to flag based on regular expression. All the resources in IAM policy, inline or managed, will be tested against this regex and if they don\'t pass the regex, they will be flagged by the plugin.',
             regex: '^.*$',
             default: '^.*$',
         },
@@ -113,8 +95,7 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
 
-        var allowRegex = (config.iam_policy_resource_specific_wildcards &&
-            config.iam_policy_resource_specific_wildcards.length) ? new RegExp(config.iam_policy_resource_specific_wildcards) : false;
+        var allowedRegex = RegExp(config.iam_policy_resource_specific_wildcards);
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -237,7 +218,7 @@ module.exports = {
 
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowRegex);
+                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex);
                         }
                     }
                 }
@@ -257,7 +238,7 @@ module.exports = {
                         var statements = helpers.normalizePolicyDocument(
                             getRolePolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowRegex);
+                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex);
                     }
                 }
             }
@@ -310,7 +291,7 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                         wildcards.push(resource);
                     }
                 }
-                if (wildcards.length) failMsg = `Role ${policyType} policy allows resource wildcards: ${wildcards.join(', ')}`;
+                if (wildcards.length) failMsg = `Role ${policyType} policy does not match provided regex: ${wildcards.join(', ')}`;
             }
 
             if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);
