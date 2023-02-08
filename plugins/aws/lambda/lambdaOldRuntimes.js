@@ -82,13 +82,13 @@ module.exports = {
                         'Lambda is using runtime: ' + deprecatedRuntime[0].name + ' which was deprecated on: ' + deprecatedRuntime[0].endOfLifeDate,
                         region, lambdaFunction.FunctionArn);
                 } else if (difference && config.lambda_runtime_fail >= difference) {
-                        helpers.addResult(results, 2,
-                            'Lambda is using runtime: ' + version + ' which is deprecating in ' + Math.abs(difference) + ' days',
+                    helpers.addResult(results, 2,
+                        'Lambda is using runtime: ' + version + ' which is deprecating in ' + Math.abs(difference) + ' days',
                         region, lambdaFunction.FunctionArn);
                 } else {
-                        helpers.addResult(results, 0,
-                            'Lambda is running the current version: ' + version,
-                            region, lambdaFunction.FunctionArn);
+                    helpers.addResult(results, 0,
+                        'Lambda is running the current version: ' + version,
+                        region, lambdaFunction.FunctionArn);
                 } 
             }
             rcb();
