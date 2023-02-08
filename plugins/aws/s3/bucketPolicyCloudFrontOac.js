@@ -56,7 +56,7 @@ module.exports = {
                     
                     if (origin.OriginAccessControlId && origin.OriginAccessControlId.length) {
                         cfUser = `arn:aws:cloudfront::${accountId}:distribution/${distribution.Id}`;
-                        createAssociation(s3BucketAssociations, bucketName, distribution.Id, cfUser, s3OriginFound);
+                        createAssociation(s3BucketAssociations, bucketName, distribution.Id, cfUser);
                         s3BucketAssociations[bucketName][distribution.Id].OACfound = true;
                         s3OriginFound = true;
                     } else if (origin.S3OriginConfig && 
@@ -64,7 +64,7 @@ module.exports = {
                                     origin.S3OriginConfig.OriginAccessIdentity.length) {
                         let oaiId = origin.S3OriginConfig.OriginAccessIdentity.substring(origin.S3OriginConfig.OriginAccessIdentity.lastIndexOf('/') + 1);
                         cfUser = `arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${oaiId}`;
-                        createAssociation(s3BucketAssociations,bucketName,distribution.Id,cfUser,s3OriginFound);
+                        createAssociation(s3BucketAssociations,bucketName,distribution.Id,cfUser);
                         s3OriginFound = true;
                     } else {
                         s3BucketAssociations[bucketName] = {};
@@ -83,7 +83,6 @@ module.exports = {
 
         async.each(Object.entries(s3BucketAssociations), function([bucketName, cfDistributions], cb){
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucketName);
-
 
             if (Object.keys(cfDistributions).length > 1) {
                 helpers.addResult(results, 2,
@@ -124,16 +123,17 @@ module.exports = {
             var unknownConditions = [];
             var restrictedOrigins = [];
             var allowedOrigins = [];
-            for (var statement of statements) {                
-                if (statement.Condition && statement.Condition.StringEquals) {
-                    var conditions = helpers.isValidCondition(statement, ['AWS:SourceArn'], helpers.IAM_CONDITION_OPERATORS, 'ture');
-                    var principals = helpers.extractStatementPrincipals(statement);
+            var allowedConditions = ['aws:PrincipalArn','aws:PrincipalAccount','aws:PrincipalOrgID','aws:SourceAccount','aws:SourceArn','aws:SourceOwner'];
+
+            for (var statement of statements) {     
+                    var conditions = (statement.Condition)? helpers.isValidCondition(statement, allowedConditions, helpers.IAM_CONDITION_OPERATORS, 'ture').flat() : [];
+                    var principals = helpers.extractStatementPrincipals(statement).toString;
                     if (principals.length) conditions.push(principals);
-                    //Returns the principle values of valid conditions for OAC
-                    for (var condition of conditions) {
+
+                    for(var condition of conditions) {
                         if (statement.Effect &&
                                     statement.Effect.toUpperCase() === 'ALLOW' &&
-                                    !s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
+                                    !(s3BucketAssociations[bucketName][distributionId].includes(condition)) &&   
                                     !unknownConditions.includes(condition)) {
                             unknownConditions.push(condition);
                         }
@@ -146,33 +146,25 @@ module.exports = {
                         }
 
                         if (statement.Effect &&
-                            statement.Effect.toUpperCase() === 'ALLOW' &&
-                            s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
-                            !allowedOrigins.includes(condition)) {
+                                statement.Effect.toUpperCase() === 'ALLOW' &&
+                                s3BucketAssociations[bucketName][distributionId].includes(condition) &&   
+                                !allowedOrigins.includes(condition)) {
                             allowedOrigins.push(condition);
                         }
-                    }
-                }
             }
-
-
+        }
+            var policyFailures = [];
             var missingOrigins = s3BucketAssociations[bucketName][distributionId].filter(function(item) {
                 return !allowedOrigins.includes(item) && !restrictedOrigins.includes(item);
             });
 
             restrictedOrigins = restrictedOrigins.concat(missingOrigins);
 
-            if (unknownConditions.length || restrictedOrigins.length) {
-                if (unknownConditions.length) {
-                    helpers.addResult(results, 2,
-                        `S3 bucket is origin to distribution "${distributionId}" and allows access to these unknown sources: ${unknownConditions.join(', ')}`,
-                        bucketLocation, `arn:aws:s3:::${bucketName}`);
-                }
-                if (restrictedOrigins.length) {
-                    helpers.addResult(results, 2,
-                        `S3 bucket is origin to distribution "${distributionId}" and does not allow access to these CloudFront origins: ${restrictedOrigins.join(', ')}`,
-                        bucketLocation, `arn:aws:s3:::${bucketName}`);
-                }
+            if(unknownConditions.length) policyFailures.push(`allows access to these unknown sources: ${unknownConditions.join(', ')}`);
+            if(restrictedOrigins.length) policyFailures.push(`does not allow access to these CloudFront origins: ${restrictedOrigins.join(', ')}`);
+
+            if (policyFailures.length) {
+                helpers.addResult(results, 2, `S3 bucket is origin to distribution "${distributionId}" and ${policyFailures}`, bucketLocation, `arn:aws:s3:::${bucketName}`)
             } else {
                 helpers.addResult(results, 0,
                     `S3 bucket is origin to only one CloudFront distribution which is: ${distributionId}`, bucketLocation, `arn:aws:s3:::${bucketName}`);
