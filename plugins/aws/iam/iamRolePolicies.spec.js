@@ -373,7 +373,7 @@ describe('iamRolePolicies', function () {
 
         it('should PASS if role policy allows wildcard actions but ignore service specific roles setting is enabled', function (done) {
             const cache = createCache([listRoles[0]],getRole[0], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
-            iamRolePolicies.run(cache, { ignore_service_specific_wildcards: 'true', resource_specific_wildcards: 'true' }, (err, results) => {
+            iamRolePolicies.run(cache, { ignore_service_specific_wildcards: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -438,9 +438,9 @@ describe('iamRolePolicies', function () {
        
         it('should FAIL if role policy allows resources which does not match regex in iam_policy_resource_specific_wildcards', function (done) {
             const cache = createCache([listRoles[2]],getRole[1], listAttachedRolePolicies[3], null, null, getPolicy[1], getPolicyVersion[1]);
-            iamRolePolicies.run(cache,{ ignore_service_specific_wildcards: 'true',iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
+            iamRolePolicies.run(cache, {iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('policy allows resource wildcards:');
+                expect(results[0].message).to.include('policy does not match provided regex');
                 expect(results[0].status).to.equal(2);
                 done();
             });
