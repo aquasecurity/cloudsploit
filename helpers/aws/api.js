@@ -167,6 +167,69 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'TableName', BridgeExecutionService: 'DynamoDB',
             BridgeCollectionService: 'dynamodb', DataIdentifier: 'Table',
         },
+    'Backup':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'backup',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'backup_instance', BridgeServiceName: 'backup',
+            BridgePluginCategoryName: 'Backup', BridgeProvider: 'aws', BridgeCall: 'listBackupVaults',
+            BridgeArnIdentifier: 'BackupVaultArn', BridgeArnTemplate: '', BridgeResourceType: 'backup-vault',
+            BridgeResourceNameIdentifier: 'BackupVaultName', BridgeExecutionService: 'Backup',
+            BridgeCollectionService: 'backup', DataIdentifier: 'data',
+        },
+    'EFS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'efs',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'efs_instance', BridgeServiceName: 'efs',
+            BridgePluginCategoryName: 'EFS', BridgeProvider: 'aws', BridgeCall: 'describeFileSystems',
+            BridgeArnIdentifier: 'FileSystemArn', BridgeArnTemplate: '', BridgeResourceType: 'file-system',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'EFS',
+            BridgeCollectionService: 'efs', DataIdentifier: 'data',
+        },
+    'Glacier':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'glacier',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'glacier_instance', BridgeServiceName: 'glacier',
+            BridgePluginCategoryName: 'Glacier', BridgeProvider: 'aws', BridgeCall: 'listVaults',
+            BridgeArnIdentifier: 'VaultARN', BridgeArnTemplate: '', BridgeResourceType: 'vaults',
+            BridgeResourceNameIdentifier: 'VaultName', BridgeExecutionService: 'Glacier',
+            BridgeCollectionService: 'glacier', DataIdentifier: 'data',
+        },
+    'KMS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'kms',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'kms_instance', BridgeServiceName: 'kms',
+            BridgePluginCategoryName: 'KMS', BridgeProvider: 'aws', BridgeCall: 'describeKey',
+            BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'key',
+            BridgeResourceNameIdentifier: 'KeyId', BridgeExecutionService: 'KMS',
+            BridgeCollectionService: 'kms', DataIdentifier: 'KeyMetadata',
+        },
+    'Secrets Manager':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'secretsmanager',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'secretsmanager_instance',
+            BridgeServiceName: 'secretsmanager', BridgePluginCategoryName: 'Secrets Manager', BridgeProvider: 'aws',
+            BridgeCall: 'listSecrets', BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'secret',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Secrets Manager',
+            BridgeCollectionService: 'secretsmanager', DataIdentifier: 'data',
+        },
+    'CloudWatchLogs':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'cloudwatchlogs',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'cloudwatchlogs_instance',
+            BridgeServiceName: 'cloudwatchlogs', BridgePluginCategoryName: 'CloudWatchLogs', BridgeProvider: 'aws',
+            BridgeCall: 'describeLogGroups', BridgeArnIdentifier: 'arn', BridgeArnTemplate: '', BridgeResourceType: 'log-group',
+            BridgeResourceNameIdentifier: 'logGroupName', BridgeExecutionService: 'CloudWatchLogs',
+            BridgeCollectionService: 'cloudwatchlogs', DataIdentifier: 'data',
+        },
+    'EventBridge':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'eventbridge',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'eventbridge_instance',
+            BridgeServiceName: 'eventbridge', BridgePluginCategoryName: 'EventBridge', BridgeProvider: 'aws',
+            BridgeCall: 'listRules', BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'event-bus',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'EventBridge',
+            BridgeCollectionService: 'eventbridge', DataIdentifier: 'data',
+        }
 };
 
 var calls = {
@@ -1313,6 +1376,15 @@ var postcalls = [
         TimestreamWrite: {
             sendIntegration: serviceMap['Timestream']
         },
+        EFS: {
+            sendIntegration: serviceMap['EFS']
+        },
+        EventBridge: {
+            sendIntegration: serviceMap['EventBridge']
+        },
+        CloudWatchLogs: {
+            sendIntegration: serviceMap['CloudWatchLogs']
+        },
         ACM: {
             describeCertificate: {
                 reliesOnService: 'acm',
@@ -1419,7 +1491,8 @@ var postcalls = [
                 reliesOnCall: 'listBackupPlans',
                 filterKey: 'BackupPlanId',
                 filterValue: 'BackupPlanId',
-            }
+            },
+            sendIntegration: serviceMap['Backup']
         },
         CloudFormation: {
             describeStackEvents: {
@@ -1909,7 +1982,8 @@ var postcalls = [
                 reliesOnCall: 'listVaults',
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
-            }
+            },
+            sendIntegration: serviceMap['Glacier']
         },
         IAM: {
             getGroup: {
@@ -2033,7 +2107,8 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['KMS']
         },
         Lambda: {
             getPolicy: {
@@ -2207,7 +2282,8 @@ var postcalls = [
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',
                 filterValue: 'ARN',
-            }
+            },
+            sendIntegration: serviceMap['Secrets Manager']
         },
         SES: {
             getIdentityDkimAttributes: {
