@@ -215,7 +215,6 @@ module.exports = {
                             getPolicyVersion.data.PolicyVersion.Document) {
                             let statements = helpers.normalizePolicyDocument(
                                 getPolicyVersion.data.PolicyVersion.Document);
-
                             if (!statements) break;
 
                             addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex);
