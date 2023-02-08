@@ -849,7 +849,7 @@ var calls = {
             property: 'componentVersionList',
             paginate: 'nextToken'
         },
-        paginatelistImagePipelines: {
+        listImagePipelines: {
             property: 'imagePipelineList',
             paginate: 'nextToken'
         },
