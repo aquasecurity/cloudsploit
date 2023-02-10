@@ -29,7 +29,7 @@ const getBucketPolicy = [
         "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":\"arn:aws:cloudfront::null:distribution/E154BVARTUU9DK\"}}}]}" 
     },
     {
-        "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":[\"arn:aws:cloudfront::193063503752:distribution/E154BVARTUU9DK\",\"arn:aws:cloudfront::193063503752:distribution/E2234BVARTUU9DK\"]}}},{\"Sid\":\"3\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E13LDJYTPM4UR5\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\"}]}"    },
+        "Policy": "{\"Version\":\"2008-10-17\",\"Id\":\"PolicyForCloudFrontPrivateContent\",\"Statement\":[{\"Sid\":\"AllowCloudFrontServicePrincipal\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudfront.amazonaws.com\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\",\"Condition\":{\"StringEquals\":{\"AWS:SourceArn\":[\"arn:aws:cloudfront::null:distribution/E154BVARTUU9DK\",\"arn:aws:cloudfront::null:distribution/E2234BVARTUU9DK\"]}}},{\"Sid\":\"3\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E13LDJYTPM4UR5\"},\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::testBucket/*\"}]}"    },
     {
         "Policy": null
     },
@@ -183,7 +183,7 @@ const listDistributions = [
     },
     {
         "Id": "E18PKR761IFLYC",
-                "ARN": "arn:aws:cloudfront::193063503752:distribution/E18PKR761IFLYC",
+                "ARN": "arn:aws:cloudfront::null:distribution/E18PKR761IFLYC",
                 "Status": "Deployed",
                 "LastModifiedTime": "2022-12-28T10:02:15.416000+00:00",
                 "DomainName": "d27mad1q3ms1tu.cloudfront.net",
@@ -373,24 +373,24 @@ describe('bucketPolicyCloudFrontOac', function () {
             });
         });
 
-        it('should FAIL if S3 bucket is origin to dstribution and allows access to unknown sources', function (done) {
+        it('should FAIL if S3 bucket is origin to distribution and allows access to unknown sources', function (done) {
             const cache = createCache([listDistributions[0]], [listBuckets[0]], getBucketPolicy[1]);
             bucketPolicyCloudFrontOac.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('and allows access to these unknown sources');
+                expect(results[0].message).to.include('allows access to these unknown sources');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if S3 bucket is origin to dstribution and does not allow access to these CloudFront origins', function (done) {
+       it('should FAIL if S3 bucket is origin to distribution and does not allow access to these CloudFront origins', function (done) {
             const cache = createCache([listDistributions[5]], [listBuckets[4]], getBucketPolicy[4]);
             bucketPolicyCloudFrontOac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('and does not allow access to these CloudFront origins')
+                expect(results[0].message).to.include('does not allow access to these CloudFront origins')
                 done();
             });
         });
