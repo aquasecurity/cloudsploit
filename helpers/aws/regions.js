@@ -36,7 +36,7 @@ var newRegionsUpdate =[
     'ap-southeast-4',   // Asia Pacific (Melbourne)
     'eu-south-2',      // Europe (Spain)
     'eu-central-2'     // Europe (Zurich)
-]
+];
 
 module.exports = {
     default: ['us-east-1'],
@@ -153,7 +153,7 @@ module.exports = {
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1'],
     kendra:  ['us-east-1', 'us-east-2', 'us-west-2', 'ap-southeast-1', 'ap-southeast-2', 'ca-central-1', 'eu-west-1'],
     proton: ['us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-1', 'eu-west-1', 'eu-west-2', 'eu-central-1',
-    'ca-central-1', 'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2'],
+        'ca-central-1', 'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2'],
     customerprofiles: ['us-east-1', 'us-west-2', 'eu-west-2', 'ca-central-1', 'eu-central-1',
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2'],
     qldb: ['us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-2',
