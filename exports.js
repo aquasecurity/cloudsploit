@@ -161,6 +161,7 @@ module.exports = {
         'openInternalWeb'               : require(__dirname + '/plugins/aws/ec2/openInternalWeb.js'),
         'openRedis'                     : require(__dirname + '/plugins/aws/ec2/openRedis.js'),
         'openHTTP'                      : require(__dirname + '/plugins/aws/ec2/openHTTP.js'),
+        'openHTTPS'                     : require(__dirname + '/plugins/aws/ec2/openHTTPS.js'),
         'vpcElasticIpLimit'             : require(__dirname + '/plugins/aws/ec2/vpcElasticIpLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/aws/ec2/classicInstances.js'),
         'flowLogsEnabled'               : require(__dirname + '/plugins/aws/ec2/flowLogsEnabled.js'),
@@ -803,6 +804,7 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
         'openHTTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTP.js'),
+        
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
