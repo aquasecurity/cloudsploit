@@ -219,7 +219,7 @@ module.exports = {
         'ebsSnapshotHasTags'            : require(__dirname + '/plugins/aws/ec2/ebsSnapshotHasTags.js'),
         'networkAclHasTags'             : require(__dirname + '/plugins/aws/ec2/networkAclHasTags.js'),
         'ebsVolumeHasTags'              : require(__dirname + '/plugins/aws/ec2/ebsVolumeHasTags.js'),
-        'openAllPortsEgress'            : require(__dirname + '/plugins/aws/ec2/openAllPortsEgress.js'),
+        'openAllPortsProtocolsEgress'   : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocolsEgress.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
