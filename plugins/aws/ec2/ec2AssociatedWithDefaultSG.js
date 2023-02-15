@@ -36,10 +36,9 @@ module.exports = {
 
                 for (var instance of instances.Instances) {
                     const { SecurityGroups, InstanceId } = instance;
-                    console.log(SecurityGroups)
                     const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
                     for (let sg of SecurityGroups) {
-                        if (sg.GroupName === "default") {
+                        if (sg.GroupName === 'default') {
                             helpers.addResult(results, 2, 'EC2 instance is associated with default security group', region, arn);
                         } else {
                             helpers.addResult(results, 0, 'EC2 instance is not associated with default security group', region, arn);
