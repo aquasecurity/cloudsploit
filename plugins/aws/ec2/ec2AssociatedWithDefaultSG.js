@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     description: 'Ensure that AWS EC2 Instances are not associated with default security group.',
-    more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, deafult security groups should not be associated with ec2 instances.',
+    more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, default security groups should not be associated with ec2 instances.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
     recommended_action: 'Modify EC2 instances and change security group.',
     apis: ['EC2:describeInstances'],
