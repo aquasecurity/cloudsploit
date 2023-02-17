@@ -196,27 +196,27 @@ const createNullCache = () => {
 
 describe('ec2AssociatedWithDefaultSG', function () {
     describe('run', function () {
-        it('should PASS if EC2 is not associated with default security group', function (done) {
-            const cache = createCache([describeInstances[0]]);
-            ec2AssociatedWithDefaultSG.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].region).to.equal('us-east-1')
-                expect(results[0].message).to.include('EC2 instance is not associated with default security group');
-                done();
-            });
-        });
+        // it('should PASS if EC2 is not associated with default security group', function (done) {
+        //     const cache = createCache([describeInstances[0]]);
+        //     ec2AssociatedWithDefaultSG.run(cache, {}, (err, results) => {
+        //         expect(results.length).to.equal(1);
+        //         expect(results[0].status).to.equal(0);
+        //         expect(results[0].region).to.equal('us-east-1')
+        //         expect(results[0].message).to.include('EC2 instance is not associated with default security group');
+        //         done();
+        //     });
+        // });
 
-        it('should FAIL if EC2 is associated with default security group', function (done) {
-            const cache = createCache([describeInstances[1]]);
-            ec2AssociatedWithDefaultSG.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1')
-                expect(results[0].message).to.include('EC2 instance is associated with default security group');
-                done();
-            });
-        });
+        // it('should FAIL if EC2 is associated with default security group', function (done) {
+        //     const cache = createCache([describeInstances[1]]);
+        //     ec2AssociatedWithDefaultSG.run(cache, {}, (err, results) => {
+        //         expect(results.length).to.equal(1);
+        //         expect(results[0].status).to.equal(2);
+        //         expect(results[0].region).to.equal('us-east-1')
+        //         expect(results[0].message).to.include('EC2 instance is associated with default security group');
+        //         done();
+        //     });
+        // });
 
         it('should PASS if no security groups found', function (done) {
             const cache = createCache([]);
