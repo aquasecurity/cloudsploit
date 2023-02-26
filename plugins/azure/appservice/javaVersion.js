@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         latestJavaVersion: {
             name: 'Latest Java Version',
-            default: 1.8,
+            default: 17,
             description: 'The latest Java version supported by Azure App Service.',
             regex: '[0-9.]{2,5}'
         }
@@ -23,8 +23,6 @@ module.exports = {
         const config = {
             latestJavaVersion: settings.latestJavaVersion || this.settings.latestJavaVersion.default
         };
-
-        var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
         var source = {};
@@ -49,29 +47,53 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
-
-            webApps.data.forEach(function(webApp) {
+            for (let webApp of webApps.data) {
                 const webConfigs = helpers.addSource(
-                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]
-                );
-
-                if (helpers.checkAppVersions(
-                    webConfigs,
-                    results,
-                    location,
-                    webApp.id,
-                    'javaVersion',
-                    config.latestJavaVersion,
-                    'Java',
-                    custom)
-                ) {
-                    found = true;
+                    cache, source, ['webApps', 'listConfigurations', location, webApp.id]);
+                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        location, webApp.id);
+                    continue;
                 }
-            });
 
-            if (!found) {
-                helpers.addResult(results, 0, 'No App Services with Java found', location);
+                if (!webConfigs.data.length){
+                    helpers.addResult(results, 0, 'No configurations found for web app',location, webApp.id);
+                    continue;
+                }
+                var appConfig = webConfigs.data[0];
+                let versionAvailable = false, currentVersion, found = false;
+                if (webApp.kind && webApp.kind === 'app'){
+                    // windows app
+                    if (appConfig.javaContainer && appConfig.javaContainer.toLowerCase() === 'java'){
+                        found  = true;
+                        currentVersion = appConfig.javaVersion;
+                        if (appConfig.javaVersion && appConfig.javaVersion >= config.latestJavaVersion){
+                            versionAvailable = true;
+                        }
+                    } 
+                } else {
+                    // linux app
+
+                    if (appConfig.linuxFxVersion &&
+                    (appConfig.linuxFxVersion.toLowerCase().indexOf('java') > -1)){
+                        found = true;
+                        let version = appConfig.linuxFxVersion;
+                        currentVersion = appConfig.linuxFxVersion.substring(version.indexOf('|')+1, version.lastIndexOf('-'));
+                        if (currentVersion && currentVersion != '' && currentVersion >= config.latestJavaVersion){
+                            versionAvailable = true;
+                        }
+                    }
+                }
+                if (!found){
+                    helpers.addResult(results, 0, 'No App Services with Java found', location);
+                    continue;
+                }
+                if (versionAvailable && versionAvailable === true) {
+                    helpers.addResult(results, 0, `The Java version (${currentVersion}) is the latest version`, location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, `The Java version (${currentVersion}) is not the latest version`, location, webApp.id);
+                }        
             }
 
             rcb();
