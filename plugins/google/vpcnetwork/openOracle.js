@@ -33,7 +33,7 @@ module.exports = {
             }
 
             let ports = {
-                'tcp': [1521]
+                'tcp': [1521, 2483]
             };
 
             let service = 'Oracle';

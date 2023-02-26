@@ -17,7 +17,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [1521]
+            'tcp': [1521, 2483]
         };
 
         var service = 'Oracle';

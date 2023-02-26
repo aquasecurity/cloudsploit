@@ -55,7 +55,7 @@ module.exports = {
             
             var ports = {
 
-                'TCP': [1521]
+                'TCP': [1521, 2483]
             };
 
             var service = 'Oracle';
@@ -76,7 +76,7 @@ module.exports = {
         var baseUrl = 'https://management.azure.com/{resource}?api-version=2020-05-01';
         var method = 'PUT';
         var protocols = ['TCP' ,'*'];
-        var ports = [1521];
+        var ports = [1521, 2483];
 
         var actions = [];
         var errors = [];
