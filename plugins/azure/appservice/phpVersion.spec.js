@@ -124,5 +124,15 @@ describe('phpVersion', function() {
                 done();
             });
         });
+         it('should give passing result if no PHP app found', function(done) {
+            const cache = createCache([webApps[0]], [configurations[0]]);
+            phpVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No App Services with PHP found');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
     });
 });
