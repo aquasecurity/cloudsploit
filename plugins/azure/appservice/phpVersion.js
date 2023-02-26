@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         latestPhpVersion: {
             name: 'Latest PHP Version',
-            default: '7.3',
+            default: '8.2',
             description: 'The latest PHP version supported by Azure App Service.',
             regex: '[0-9.]{2,5}'
         }
@@ -46,24 +46,31 @@ module.exports = {
                     results, 0, 'No existing App Services found', location);
                 return rcb();
             }
-
-            var found = false;
-
-            webApps.data.forEach(function(webApp) {
+            
+            for (let webApp of webApps.data){
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
 
-                if (helpers.checkAppVersions(webConfigs, results, location, webApp.id, 'phpVersion', config.latestPhpVersion, 'PHP', custom)
-                ) {
-                    found = true;
+                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        location, webApp.id);
+                    break;
                 }
-            });
-
-            if (!found) {
-                helpers.addResult(results, 0, 'No App Services with PHP found', location);
+                    
+                if (webConfigs.data[0] &&webConfigs.data[0].linuxFxVersion && (webConfigs.data[0].linuxFxVersion.toLowerCase().indexOf('php') > -1)){
+                    
+                    let currentVersion = webConfigs.data[0].linuxFxVersion.split('|')[1];
+                    if (currentVersion >= config.latestPhpVersion){
+                        helpers.addResult(results, 0,
+                            `The PHP version (${currentVersion}) is the latest version`, location, webApp.id, custom);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `The PHP version (${currentVersion}) is not the latest version`, location, webApp.id, custom);
+                    }
+                }   
             }
-
             rcb();
         }, function() {
             // Global checking goes here
