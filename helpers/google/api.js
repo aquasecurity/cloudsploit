@@ -502,6 +502,15 @@ var postcalls = {
             dataKey: 'tables'
         }
     },
+    functions: {
+        getIamPolicy : {
+            url: 'https://cloudfunctions.googleapis.com/v1/{name}:getIamPolicy',
+            location: null,
+            reliesOnService: ['functions'],
+            reliesOnCall: ['list'],
+            properties: ['name']        
+        }
+    },
     jobs: {
         get: { //https://dataflow.googleapis.com/v1b3/projects/{projectId}/jobs/{jobId}
             url: 'https://dataflow.googleapis.com/v1b3/projects/{projectId}/locations/{locationId}/jobs/{id}',
