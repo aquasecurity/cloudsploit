@@ -52,22 +52,18 @@ module.exports = {
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
                 );
 
-                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                if (!webConfigs || webConfigs.err || !webConfigs.data || !webConfigs.data.length) {
                     helpers.addResult(results, 3,
-                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        'Unable to query for Web App Configs: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                     continue;
                 }
-                
-                if (!webConfigs.data.length){
-                    helpers.addResult(results, 0, 'Configurations for App Service not found');
-                    continue;
-                }
+
                 let found = false;   
-                if (webConfigs.data[0] &&webConfigs.data[0].linuxFxVersion && (webConfigs.data[0].linuxFxVersion.toLowerCase().indexOf('php') > -1)){
+                if (webConfigs.data[0] && webConfigs.data[0].linuxFxVersion && (webConfigs.data[0].linuxFxVersion.toLowerCase().indexOf('php') > -1)){
                     found =  true;
                     let currentVersion = webConfigs.data[0].linuxFxVersion.split('|')[1];
-                    if (currentVersion >= config.latestPhpVersion){
+                    if (parseFloat(currentVersion) >= parseFloat(config.latestPhpVersion)){
                         helpers.addResult(results, 0,
                             `The PHP version (${currentVersion}) is the latest version`, location, webApp.id, custom);
                     } else {
