@@ -46,7 +46,7 @@ module.exports = {
                     results, 0, 'No existing App Services found', location);
                 return rcb();
             }
-            
+            let found = false;
             for (let webApp of webApps.data){
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]
@@ -59,7 +59,6 @@ module.exports = {
                     continue;
                 }
 
-                let found = false;   
                 if (webConfigs.data[0] && webConfigs.data[0].linuxFxVersion && (webConfigs.data[0].linuxFxVersion.toLowerCase().indexOf('php') > -1)){
                     found =  true;
                     let currentVersion = webConfigs.data[0].linuxFxVersion.split('|')[1];
@@ -72,10 +71,10 @@ module.exports = {
                     }
                 }
 
-                if (!found){
-                    helpers.addResult(results, 0, 'No App Services with PHP found', location);
-                }   
             }
+             if (!found){
+                    helpers.addResult(results, 0, 'No App Services with PHP found', location);
+              } 
             rcb();
         }, function() {
             // Global checking goes here
