@@ -43,7 +43,6 @@ module.exports = {
                         'Unable to describe ECS cluster: ' +helpers.addError(describeCluster), region, clusterARN);
                     continue;
                 }
-                console.log(describeCluster.data)
                 const cluster = describeCluster.data.clusters[0];
                 if (cluster.activeServicesCount && cluster.activeServicesCount > 0 && 
                 cluster.runningTasksCount && cluster.runningTasksCount > 0) {
