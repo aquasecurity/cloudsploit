@@ -58,7 +58,7 @@ module.exports = {
                     helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
                 }
 
-                });
+              });
                 rcb();
             });
         }, function() {
