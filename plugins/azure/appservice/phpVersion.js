@@ -72,9 +72,9 @@ module.exports = {
                 }
 
             }
-             if (!found){
-                    helpers.addResult(results, 0, 'No App Services with PHP found', location);
-              } 
+            if (!found) {
+                helpers.addResult(results, 0, 'No App Services with PHP found', location);
+            } 
             rcb();
         }, function() {
             // Global checking goes here
