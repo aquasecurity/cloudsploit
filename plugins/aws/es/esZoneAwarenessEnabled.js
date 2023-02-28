@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-           for (var domain of listDomainNames.domain) {
+            for (var domain of listDomainNames.domain) {
                 if (!domain.DomainName) continue;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
@@ -59,7 +59,7 @@ module.exports = {
                     helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
                 }
 
-              };
+            }
             rcb();
         }, function() {
             callback(null, results, source);
