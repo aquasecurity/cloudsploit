@@ -120,7 +120,6 @@ describe('javaVersion', function() {
             const cache = createErrorCache('configs');
             javaVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
-
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query App Service');
                 done();
