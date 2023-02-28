@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (var domain of listDomainNames.domain) {
+            for (var domain of listDomainNames.data) {
                 if (!domain.DomainName) continue;
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
