@@ -98,7 +98,7 @@ describe('phpVersion', function() {
             phpVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query App Service');
+                expect(results[0].message).to.include('Unable to query for Web App Configs:');
                 done();
             });
         });
