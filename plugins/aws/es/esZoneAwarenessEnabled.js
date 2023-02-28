@@ -59,7 +59,7 @@ module.exports = {
                 }
 
               });
-                rcb();
+            rcb();
         }, function() {
             callback(null, results, source);
         });
