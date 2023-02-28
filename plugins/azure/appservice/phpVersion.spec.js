@@ -96,7 +96,7 @@ describe('phpVersion', function() {
         it('should give unknown result if app has no configs', function(done) {
             const cache = createErrorCache('configs');
             phpVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query App Service');
                 done();
