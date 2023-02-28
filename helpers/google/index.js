@@ -275,6 +275,8 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             resultItems = setData(collectionItems, data.data[callObj.dataKey], postCall, parent, {'service': service, 'callKey': callKey});
         } else if (data.data.clusters && ['kubernetes', 'dataproc'].includes(service)) {
             resultItems = setData(collectionItems, data.data['clusters'], postCall, parent, {'service': service, 'callKey': callKey});
+        } else if (callObj.dataFilterKey && data.data[callObj.dataFilterKey]) {
+            resultItems = setData(collectionItems, data.data[callObj.dataFilterKey], postCall, parent, {'service': service, 'callKey': callKey});
         } else if (data.data[service]) {
             resultItems = setData(collectionItems, data.data[service], postCall, parent, {'service': service, 'callKey': callKey});
         } else if (!myEngine && data.data.accounts) {
