@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listDomainNames.data, function(domain, dcb){
+           listDomainNames.data.forEach(function(domain){
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
@@ -45,7 +45,7 @@ module.exports = {
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
                         `Unable to query for ES domain config: ${helpers.addError(describeElasticsearchDomain)}`, region);
-                    return dcb();
+                    continue;
                 }
 
                 let resource = describeElasticsearchDomain.data.DomainStatus.ARN;
@@ -58,8 +58,7 @@ module.exports = {
                     helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
                 }
 
-                dcb();
-            }, function(){
+                });
                 rcb();
             });
         }, function() {
