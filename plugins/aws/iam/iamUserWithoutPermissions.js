@@ -25,7 +25,7 @@ module.exports = {
 
         if (listUsers.err || !listUsers.data) {
             helpers.addResult(results, 3,
-                'Unable to query for user IAM policy status: ' + helpers.addError(listUsers));
+                'Unable to query list IAM users: ' + helpers.addError(listUsers));
             return callback(null, results, source);
         }
 
@@ -51,30 +51,24 @@ module.exports = {
             if (!listGroupsForUser) return cb();
 
 
-            if (listAttachedUserPolicies.err) {
+            if (listAttachedUserPolicies.err || !listAttachedUserPolicies.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM attached policy for user: ' + user.UserName + ': ' + helpers.addError(listAttachedUserPolicies), 'global', user.Arn);
                 return cb();
             }
 
-            if (listUserPolicies.err) {
+            if (listUserPolicies.err || !listUserPolicies.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for IAM user policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
+                    'Unable to query for IAM policy for user: ' + user.UserName + ': ' + helpers.addError(listUserPolicies), 'global', user.Arn);
                 return cb();
             }
 
-            if (listGroupsForUser.err) {
+            if (listGroupsForUser.err || !listGroupsForUser.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM groups attached to user: ' + user.UserName + ': ' + helpers.addError(listGroupsForUser), 'global', user.Arn);
                 return cb();
             }
 
-
-            if (!listAttachedUserPolicies.data || !listUserPolicies.data || !listGroupsForUser.data) {
-                helpers.addResult(results, 3, 'Unable to query policies for user: ' +
-                    user.UserName + ': no data returned', 'global', user.Arn);
-                return cb();
-            }
             var listGroupPolicies, listAttachedGroupPolicies;
             if (listGroupsForUser.data && listGroupsForUser.data.Groups){
                 for (let group of listGroupsForUser.data.Groups){
