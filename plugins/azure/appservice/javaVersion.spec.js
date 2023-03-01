@@ -116,6 +116,19 @@ describe('javaVersion', function() {
             });
         });
 
+<<<<<<< HEAD
+=======
+        it('should give unknown result if app has no configs', function(done) {
+            const cache = createErrorCache('configs');
+            javaVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query App Service');
+                done();
+            });
+        });
+
+>>>>>>> ecc27c8ad4a927ff980e41db9c3fe413209e7447
         it('should give passing result if app has latest java version', function(done) {
             const cache = createCache([webApps[0]], [configurations[1]]);
             javaVersion.run(cache, {}, (err, results) => {
