@@ -348,6 +348,13 @@ var calls = {
         },
         sendIntegration: serviceMap['Dataproc']
     },
+    cloudbuild: {
+        triggers: {
+            url: 'https://cloudbuild.clients6.google.com/v1/projects/{projectId}/locations/{locationId}/triggers',
+            location: 'region',
+            dataFilterKey: 'triggers'
+        }
+    },
     managedZones: {
         list: {
             url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/managedZones',
