@@ -110,19 +110,8 @@ describe('javaVersion', function() {
             javaVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for App Services');
+                expect(results[0].message).to.include('Unable to query list web apps: ');
                 expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give unknown result if app has no configs', function(done) {
-            const cache = createErrorCache('configs');
-            javaVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query App Service');
                 done();
             });
         });

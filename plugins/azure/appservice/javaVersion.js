@@ -37,7 +37,7 @@ module.exports = {
 
             if (webApps.err || !webApps.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for App Services: ' + helpers.addError(webApps), location);
+                    'Unable to query list web apps: ' + helpers.addError(webApps), location);
                 return rcb();
             }
 
@@ -46,54 +46,51 @@ module.exports = {
                     results, 0, 'No existing App Services found', location);
                 return rcb();
             }
-
+            let found = false;
             for (let webApp of webApps.data) {
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]);
-                if (!webConfigs || webConfigs.err || !webConfigs.data) {
+                if (!webConfigs || webConfigs.err || !webConfigs.data || !webConfigs.data.length) {
                     helpers.addResult(results, 3,
-                        'Unable to query App Service: ' + helpers.addError(webConfigs),
+                        'Unable to query list web app configurations: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                     continue;
                 }
 
-                if (!webConfigs.data.length){
-                    helpers.addResult(results, 0, 'No configurations found for web app',location, webApp.id);
-                    continue;
-                }
                 var appConfig = webConfigs.data[0];
-                let versionAvailable = false, currentVersion, found = false;
+                let versionAvailable = false, currentVersion;
                 if (webApp.kind && webApp.kind === 'app'){
                     // windows app
                     if (appConfig.javaContainer && appConfig.javaContainer.toLowerCase() === 'java'){
                         found  = true;
                         currentVersion = appConfig.javaVersion;
-                        if (appConfig.javaVersion && appConfig.javaVersion >= config.latestJavaVersion){
+                        if (appConfig.javaVersion && parseFloat(appConfig.javaVersion) >= parseFloat(config.latestJavaVersion)){
                             versionAvailable = true;
                         }
                     } 
                 } else {
                     // linux app
-
                     if (appConfig.linuxFxVersion &&
                     (appConfig.linuxFxVersion.toLowerCase().indexOf('java') > -1)){
                         found = true;
                         let version = appConfig.linuxFxVersion;
                         currentVersion = appConfig.linuxFxVersion.substring(version.indexOf('|')+1, version.lastIndexOf('-'));
-                        if (currentVersion && currentVersion != '' && currentVersion >= config.latestJavaVersion){
+                        if (currentVersion && currentVersion != '' && parseFloat(currentVersion) >= parseFloat(config.latestJavaVersion)){
                             versionAvailable = true;
                         }
                     }
                 }
-                if (!found){
-                    helpers.addResult(results, 0, 'No App Services with Java found', location);
-                    continue;
-                }
-                if (versionAvailable && versionAvailable === true) {
-                    helpers.addResult(results, 0, `The Java version (${currentVersion}) is the latest version`, location, webApp.id);
-                } else {
-                    helpers.addResult(results, 2, `The Java version (${currentVersion}) is not the latest version`, location, webApp.id);
-                }        
+                if(found === true){
+                    if (versionAvailable && versionAvailable === true) {
+                        helpers.addResult(results, 0, `The Java version (${currentVersion}) is the latest version`, location, webApp.id);
+                    } else {
+                        helpers.addResult(results, 2, `The Java version (${currentVersion}) is not the latest version`, location, webApp.id);
+                    } 
+                }       
+            }
+
+            if (!found){
+                helpers.addResult(results, 0, 'No App Services with Java found', location);
             }
 
             rcb();
