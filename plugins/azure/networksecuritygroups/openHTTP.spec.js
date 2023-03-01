@@ -138,7 +138,7 @@ describe('openHTTP', function() {
             });
         });
 
-        it('should give passing result if TCP port 80 for HTTP(S) is not open to public', function(done) {
+        it('should give passing result if TCP port 80 for HTTPS is not open to public', function(done) {
             const cache = createCache([networkSecurityGroups[0]]);
             openHTTP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -149,7 +149,7 @@ describe('openHTTP', function() {
             });
         });
 
-        it('should give failing result if TCP port 80 for HTTP(S) is open to public', function(done) {
+        it('should give failing result if TCP port 80 for HTTPS is open to public', function(done) {
             const cache = createCache([networkSecurityGroups[1]]);
             openHTTP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

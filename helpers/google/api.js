@@ -11,13 +11,17 @@
 
  BridgeArnIdentifier: no need to pass.
 
- BridgeArnTemplate: no need to pass.
+ BridgeIdTemplate: no need to pass.
+
+ BridgeIdTemplate: this should be the template for creating the resource id.
+                    Eg. 'projects/aqua-dev-project/regions/{region}/clusters/{name}'
+
 
  BridgeResourceType: this should be type of the resource, fetch it from the id.
                      Eg. 'servers'
 
  BridgeResourceNameIdentifier: it should be the key of resource name/id data which we are storing in json file in  s3 collection bucket.
-                               Eg. 'Name/name' or 'Id/id'
+                               Eg. 'Name/name' or 'Id/id'.
 
  Note: if there is no name then we have to pass the id.
 
@@ -46,9 +50,72 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'Pub/Sub', InvService: 'Pub/Sub',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Pub/Sub', BridgeServiceName: 'topics',
             BridgePluginCategoryName: 'gcp-Pub/Sub', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'topics',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'topics',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Pub/Sub',
             BridgeCollectionService: 'gcp-topics', DataIdentifier: 'data',
+        },
+    'DNS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Managed Zone', InvService: 'DNS',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'DNS', BridgeServiceName: 'managedzones',
+            BridgePluginCategoryName: 'gcp-DNS', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/zones/{name}', BridgeResourceType: 'zones',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-DNS',
+            BridgeCollectionService: 'gcp-managedZones', DataIdentifier: 'data',
+        },
+    'VPC Network':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'VPC Network', InvService: 'VPC Network',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'VPC Network', BridgeServiceName: 'networks',
+            BridgePluginCategoryName: 'gcp-VPC Network', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networks',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-VPC Network',
+            BridgeCollectionService: 'gcp-networks', DataIdentifier: 'data',
+        },
+    'Cryptographic Keys':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Cryptographic Key', InvService: 'Cryptographic Keys',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Cryptographic Key', BridgeServiceName: 'cryptokeys',
+            BridgePluginCategoryName: 'gcp-Cryptographic Keys', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'cryptoKeys',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Cryptographic Keys',
+            BridgeCollectionService: 'gcp-cryptoKeys', DataIdentifier: 'data',
+        },
+    'CLB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Url Map', InvService: 'CLB',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CLB', BridgeServiceName: 'urlmaps',
+            BridgePluginCategoryName: 'gcp-CLB', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'urlMaps',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CLB',
+            BridgeCollectionService: 'gcp-urlMaps', DataIdentifier: 'data',
+        },
+    'Deployment Manager':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Deployment', InvService: 'Deployment Manager',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Deployment Manager', BridgeServiceName: 'deployments',
+            BridgePluginCategoryName: 'gcp-Deployment Manager', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'deployments',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Deployment Manager',
+            BridgeCollectionService: 'gcp-deployments', DataIdentifier: 'data',
+        },
+    'Logging':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Metrics', InvService: 'Logging',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Logging', BridgeServiceName: 'metrics',
+            BridgePluginCategoryName: 'gcp-Logging', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/metrics/{name}', BridgeResourceType: 'logging metrics',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Logging',
+            BridgeCollectionService: 'gcp-metrics', DataIdentifier: 'data',
+        },
+    'Dataproc':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Cluster', InvService: 'Dataproc',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataproc', BridgeServiceName: 'dataproc',
+            BridgePluginCategoryName: 'gcp-Dataproc', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/regions/{region}/clusters/{name}',
+            BridgeResourceType: 'clusters', BridgeResourceNameIdentifier: 'clusterName', BridgeExecutionService: 'gcp-Dataproc',
+            BridgeCollectionService: 'gcp-dataproc', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -193,21 +260,22 @@ var calls = {
             location: 'region',
             paginationKey: 'pageSize',
             pagination: true
-        }
+        },
     },
     networks: {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/networks',
             location: null,
             pagination: true
-        }
+        },
+        sendIntegration: serviceMap['VPC Network']
     },
     backendServices: {
         list: {
             url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/global/backendServices',
             location: null,
             pagination: true
-        }
+        },
     },
     healthChecks: {
         list: {
@@ -277,14 +345,16 @@ var calls = {
             url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters',
             location: 'region',
             pagination: true
-        }
+        },
+        sendIntegration: serviceMap['Dataproc']
     },
     managedZones: {
         list: {
             url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/managedZones',
             location: null,
             pagination: true
-        }
+        },
+        sendIntegration: serviceMap['DNS']
     },
     metrics: {
         list: {
@@ -292,7 +362,8 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-        }
+        },
+        sendIntegration: serviceMap['Logging']
     },
     alertPolicies: {
         list: {
@@ -362,7 +433,8 @@ var calls = {
             url: 'https://www.googleapis.com/deploymentmanager/v2/projects/{projectId}/global/deployments',
             location: null,
             pagination: true,
-        }
+        },
+        sendIntegration: serviceMap['Deployment Manager']
     },
     organizations:{ // https://cloudresourcemanager.googleapis.com/v1beta1/organizations
         list: {
@@ -375,7 +447,8 @@ var calls = {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/urlMaps',
             location: null,
             pagination: true
-        }
+        },
+        sendIntegration: serviceMap['CLB']
     },
     apiKeys: {
         list: {
@@ -420,7 +493,8 @@ var postcalls = {
             properties: ['name'],
             pagination: true,
             paginationKey: 'pageSize'
-        }
+        },
+        sendIntegration: serviceMap['Cryptographic Keys']
     },
     buckets: {
         getIamPolicy: {
