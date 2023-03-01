@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const ec2AssociatedWithDefaultSG = require('./ec2AssociatedWithDefaultSG');
+const ec2AssociatedWithDefaultSG = require('./defaultSecurityGroupInUse');
 
 describeInstances = [
     {

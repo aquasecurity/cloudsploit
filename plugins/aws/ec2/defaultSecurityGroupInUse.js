@@ -2,11 +2,11 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'EC2 Associated With Default Security Group',
+    title: 'Default Security Group In Use',
     category: 'EC2',
     domain: 'Compute',
     description: 'Ensure that AWS EC2 Instances are not associated with default security group.',
-    more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, default security groups should not be associated with ec2 instances.',
+    more_info: 'The default security group allows all traffic inbound and outbound, which can make your resources vulnerable to attacks. Ensure that the Amazon EC2 instances are not associated with the default security groups.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
     recommended_action: 'Modify EC2 instances and change security group.',
     apis: ['EC2:describeInstances'],
@@ -37,12 +37,11 @@ module.exports = {
                 for (var instance of instances.Instances) {
                     const { SecurityGroups, InstanceId } = instance;
                     const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
-                    for (let sg of SecurityGroups) {
-                        if (sg.GroupName === 'default') {
-                            helpers.addResult(results, 2, 'EC2 instance is associated with default security group', region, arn);
-                        } else {
-                            helpers.addResult(results, 0, 'EC2 instance is not associated with default security group', region, arn);
-                        }
+                    const defaultSecurityGroup = SecurityGroups.find(sg => sg.GroupName === 'default');
+                    if (defaultSecurityGroup) {
+                        helpers.addResult(results, 2, 'EC2 instance is associated with default security group', region, arn);
+                    } else {
+                        helpers.addResult(results, 0, 'EC2 instance is not associated with default security group', region, arn);
                     }
                 }
             }
