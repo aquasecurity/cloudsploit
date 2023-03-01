@@ -17,9 +17,9 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.ecs, function(region, rcb){
-
             var listClusters = helpers.addSource(cache, source, 
                 ['ecs','listClusters',region]);
+                
             if (!listClusters) return rcb();
 
             if (listClusters.err || !listClusters.data) {
