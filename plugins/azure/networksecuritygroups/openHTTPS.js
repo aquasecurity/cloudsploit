@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Open HTTP',
+    title: 'Open HTTPS',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
-    description: 'Determine if TCP port 80 for HTTP is open to the public',
+    description: 'Determine if TCP port 443 for HTTPS is open to the public',
     more_info: 'Network security groups should be periodically evaluated for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity and restricted wherever they are not explicitly required and narrowly configured.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
-    recommended_action: 'Restrict TCP port 80 to known IP addresses. ',
+    recommended_action: 'Restrict TCP port 443 to known IP addresses. ',
     apis: ['networkSecurityGroups:listAll'],
     
     run: function(cache, settings, callback) {
@@ -34,10 +34,10 @@ module.exports = {
             }
 
             let ports = {
-                'TCP': [80]
+                'TCP': [443]
             };
 
-            let service = 'HTTP';
+            let service = 'HTTPS';
 
             helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
 
