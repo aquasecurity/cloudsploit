@@ -33,15 +33,21 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Lambda functions found', region);
                 return rcb();
             }
+            let roleMap = {};
+            for (let lambdaFunc of listFunctions.data) {
+                if (roleMap[lambdaFunc.Role]){
+                    roleMap[lambdaFunc.Role].push(lambdaFunc.FunctionArn);
+                } else {
+                    roleMap[lambdaFunc.Role] = [lambdaFunc.FunctionArn];
+                }
+            }
 
-            let executionRoleList = [];
-            for (var lambdaFunc of listFunctions.data) {
+            for (let lambdaFunc of listFunctions.data) {
                 if (!lambdaFunc.FunctionArn) continue;
                 
-                if (executionRoleList.includes(lambdaFunc.Role)){
+                if (roleMap[lambdaFunc.Role] && roleMap[lambdaFunc.Role].length > 1) {
                     helpers.addResult(results, 2, 'Lambda function does not have unique execution role', region, lambdaFunc.FunctionArn);
                 } else {
-                    executionRoleList.push(lambdaFunc.Role);
                     helpers.addResult(results, 0, 'Lambda function have unique execution role', region, lambdaFunc.FunctionArn);
                 }
             }
