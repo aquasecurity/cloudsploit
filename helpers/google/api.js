@@ -519,6 +519,16 @@ var postcalls = {
             }
         },
     },
+    topics: {
+        getIamPolicy: {
+            url: 'https://pubsub.googleapis.com/v1/{name}:getIamPolicy',
+            location: null,
+            reliesOnService: ['topics'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        },
+    },
     keys: {
         list: {
             url: 'https://iam.googleapis.com/v1/{name}/keys',
