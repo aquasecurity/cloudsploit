@@ -76,8 +76,6 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'Cloud Function does not have anonymous or public access', region, func.name);
                 }
-
-
             });
 
             rcb();
