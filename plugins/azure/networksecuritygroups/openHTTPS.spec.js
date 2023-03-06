@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var openHTTP = require('./openHTTP');
+var openHTTPS = require('./openHTTPS');
 
 const networkSecurityGroups = [
     {
@@ -77,7 +77,7 @@ const networkSecurityGroups = [
                 "priority": 301,
                 "direction": "Inbound",
                 "sourcePortRanges": [],
-                "destinationPortRanges": ["80"],
+                "destinationPortRanges": ["443"],
                 "sourceAddressPrefixes": [],
                 "destinationAddressPrefixes": []
             }
@@ -114,11 +114,11 @@ const createErrorCache = () => {
     };
 };
 
-describe('openHTTP', function() {
+describe('openHTTPS', function() {
     describe('run', function() {
         it('should give passing result if no Network Security Groups found', function(done) {
             const cache = createCache([]);
-            openHTTP.run(cache, {}, (err, results) => {
+            openHTTPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No security groups found');
@@ -129,7 +129,7 @@ describe('openHTTP', function() {
 
         it('should give unknown result if unable to query for Network Security Groups', function(done) {
             const cache = createErrorCache();
-            openHTTP.run(cache, {}, (err, results) => {
+            openHTTPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Network Security Groups:');
@@ -138,9 +138,9 @@ describe('openHTTP', function() {
             });
         });
 
-        it('should give passing result if TCP port 80 for HTTPS is not open to public', function(done) {
+        it('should give passing result if TCP port 443 for HTTPS is not open to public', function(done) {
             const cache = createCache([networkSecurityGroups[0]]);
-            openHTTP.run(cache, {}, (err, results) => {
+            openHTTPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('does not have');
@@ -149,9 +149,9 @@ describe('openHTTP', function() {
             });
         });
 
-        it('should give failing result if TCP port 80 for HTTPS is open to public', function(done) {
+        it('should give failing result if TCP port 443 for HTTPS is open to public', function(done) {
             const cache = createCache([networkSecurityGroups[1]]);
-            openHTTP.run(cache, {}, (err, results) => {
+            openHTTPS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('eastus');

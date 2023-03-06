@@ -803,6 +803,7 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
         'openHTTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTP.js'),
+        'openHTTPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTPS.js'),
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
@@ -1126,6 +1127,7 @@ module.exports = {
         'instanceLabelsAdded'           : require(__dirname + '/plugins/google/compute/instanceLabelsAdded.js'),
         'confidentialComputingEnabled'  : require(__dirname + '/plugins/google/compute/confidentialComputingEnabled.js'),
         'imagesCMKEncrypted'            : require(__dirname + '/plugins/google/compute/imagesCMKEncrypted.js'),
+        'snapshotEncryption'            : require(__dirname + '/plugins/google/compute/snapshotEncryption.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
@@ -1249,6 +1251,7 @@ module.exports = {
         'topicEncryption'               : require(__dirname + '/plugins/google/pubsub/topicEncryption.js'),
         'deadLetteringEnabled'          : require(__dirname + '/plugins/google/pubsub/deadLetteringEnabled.js'),
         'topicLabelsAdded'              : require(__dirname + '/plugins/google/pubsub/topicLabelsAdded.js'),
+        'topicAllUsersPolicy'           : require(__dirname + '/plugins/google/pubsub/topicAllUsersPolicy.js'),
 
         'dataflowHangedJobs'            : require(__dirname + '/plugins/google/dataflow/dataflowHangedJobs.js'),
         'dataflowJobsEncryption'        : require(__dirname + '/plugins/google/dataflow/dataflowJobsEncryption.js'),
@@ -1260,6 +1263,7 @@ module.exports = {
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
         'cloudFunctionLabelsAdded'      : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionLabelsAdded.js'),
+        'functionAllUsersPolicy'        : require(__dirname + '/plugins/google/cloudfunctions/functionAllUsersPolicy.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
@@ -1293,6 +1297,11 @@ module.exports = {
         'assetInventoryEnabled'         : require(__dirname + '/plugins/google/serviceusage/assetInventoryEnabled.js'),
 
         'accessApprovalEnabled'         : require(__dirname + '/plugins/google/security/accessApprovalEnabled.js'),
+
+        'commentControlEnabled'         : require(__dirname + '/plugins/google/cloudbuild/commentControlEnabled.js'),
+        'userApprovalEnabled'           : require(__dirname + '/plugins/google/cloudbuild/userApprovalEnabled.js'),
+        'specificSourceBranch'          : require(__dirname + '/plugins/google/cloudbuild/specificSourceBranch.js'),
+        'triggerHasTags'                : require(__dirname + '/plugins/google/cloudbuild/triggerHasTags.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

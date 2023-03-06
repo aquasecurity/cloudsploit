@@ -603,7 +603,7 @@ describe('rolePolicyUnusedServices', function () {
 
         it('should FAIL if role policy allows resources which does not match regex in iam_policy_resource_specific_wildcards', function (done) {
             const cache = createCache([configStatus[0]], discoveredResources, [listRoles[0]], getRole[0], {}, listRolePolicies[1], getRolePolicy[5]);
-            rolePolicyUnusedServices.run(cache, {iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
+            rolePolicyUnusedServices.run(cache, {ignore_service_specific_wildcards: 'true', iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('policy does not match provided regex');
                 expect(results[0].status).to.equal(2);
