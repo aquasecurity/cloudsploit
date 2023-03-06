@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that no IAM user exists without any permissions.',
     more_info: 'IAM users are created to perform any Console, CLI or API based operations on AWS cloud accounts. They are associated with policies that grant them permissions to perform required operations. An IAM user without any permission is a security risk, it is recommended to either add required permissions or delete them to adhere to compliance standards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html',
-    recommended_action: 'Modify IAM user and attach new permissions',
+    recommended_action: 'Modify IAM user and attach new permissions or delete the user.',
     apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getPolicyVersion' ,'IAM:listGroupsForUser',
         'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies'],
 
