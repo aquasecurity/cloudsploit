@@ -50,7 +50,7 @@ module.exports = {
 
                 if (cluster.activeServicesCount && cluster.activeServicesCount > 0) {
                     helpers.addResult(results, 0,
-                        'ECS cluster have active services', region, clusterARN);
+                        'ECS cluster has active services', region, clusterARN);
                 } else {
                     helpers.addResult(results, 2,
                         'ECS cluster does not have active services', region, clusterARN);
