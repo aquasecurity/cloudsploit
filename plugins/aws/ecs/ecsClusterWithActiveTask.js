@@ -44,6 +44,9 @@ module.exports = {
                     continue;
                 }
                 const cluster = describeCluster.data.clusters[0];
+                
+                if (!cluster) continue;
+
                 if (cluster.activeServicesCount && cluster.activeServicesCount > 0 && 
                 cluster.runningTasksCount && cluster.runningTasksCount > 0) {
                     helpers.addResult(results, 0,
