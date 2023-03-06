@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     description: 'Determine if security group has all outbound ports or protocols open to the public',
-    more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
+    more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols in order to implement the Principle of Least Privilege (POLP) and reduce the attack surface.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Modify the security group to specify a specific port and protocol to allow.',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
