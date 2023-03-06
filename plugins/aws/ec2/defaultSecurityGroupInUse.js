@@ -37,7 +37,7 @@ module.exports = {
                 for (var instance of instances.Instances) {
                     const { InstanceId } = instance;
                     const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
-                    const defaultSecurityGroup = (instance.SecurityGroups && instance.SecurityGroups.length) ? SecurityGroups.find(sg => sg.GroupName.toLowerCase() == 'default'): false;
+                    const defaultSecurityGroup = (instance.SecurityGroups && instance.SecurityGroups.length) ? isntance.SecurityGroups.find(sg => sg.GroupName.toLowerCase() == 'default'): false;
                     if (defaultSecurityGroup) {
                         helpers.addResult(results, 2, 'EC2 instance is associated with default security group', region, arn);
                     } else {
