@@ -35,6 +35,8 @@ module.exports = {
             }
             let roleMap = {};
             for (let lambdaFunc of listFunctions.data) {
+                if (!lambdaFunc.Role) continue;
+
                 if (roleMap[lambdaFunc.Role]){
                     roleMap[lambdaFunc.Role].push(lambdaFunc.FunctionArn);
                 } else {
