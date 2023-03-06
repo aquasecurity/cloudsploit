@@ -46,7 +46,9 @@ module.exports = {
 
                 const cluster = describeCluster.data.clusters[0];
 
-                if (cluster && cluster.activeServicesCount && cluster.activeServicesCount > 0) {
+                if (!cluster) continue;
+
+                if (cluster.activeServicesCount && cluster.activeServicesCount > 0) {
                     helpers.addResult(results, 0,
                         'ECS cluster have active services', region, clusterARN);
                 } else {
