@@ -50,7 +50,7 @@ module.exports = {
                 if (cluster.activeServicesCount && cluster.activeServicesCount > 0 && 
                 cluster.runningTasksCount && cluster.runningTasksCount > 0) {
                     helpers.addResult(results, 0,
-                        'ECS cluster have service with running tasks', region, clusterARN);
+                        'ECS cluster has service with running tasks', region, clusterARN);
                 } else {
                     helpers.addResult(results, 2,
                         'ECS cluster does not have service with running tasks', region, clusterARN);
