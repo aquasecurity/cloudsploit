@@ -87,11 +87,10 @@ module.exports = {
                         helpers.addResult(results, 2, `The Java version (${currentVersion}) is not the latest version`, location, webApp.id);
                     } 
                 }
-                 if(!found) {
+            }
+        if(!found) {
                       helpers.addResult(results, 0, 'No App Services with Java found', location);
                 }
-            }
-
 
             rcb();
         }, function() {
