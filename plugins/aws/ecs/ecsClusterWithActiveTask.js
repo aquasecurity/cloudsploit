@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ECS Cluster Service With Active Task',
+    title: 'ECS Cluster Service Active Tasks',
     category: 'ECS',
     domain: 'Containers',
     description: 'Ensure ECS clusters have services with running tasks.',
