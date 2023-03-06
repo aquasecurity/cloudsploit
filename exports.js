@@ -1295,6 +1295,7 @@ module.exports = {
         'accessApprovalEnabled'         : require(__dirname + '/plugins/google/security/accessApprovalEnabled.js'),
 
         'commentControlEnabled'         : require(__dirname + '/plugins/google/cloudbuild/commentControlEnabled.js'),
+        'specificSourceBranch'          : require(__dirname + '/plugins/google/cloudbuild/specificSourceBranch.js'),
         'triggerHasTags'                : require(__dirname + '/plugins/google/cloudbuild/triggerHasTags.js'),
     },
     alibaba: {
