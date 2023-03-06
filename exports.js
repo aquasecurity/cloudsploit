@@ -803,6 +803,7 @@ module.exports = {
         'openCassandraMonitoring'       : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraMonitoring.js'),
         'openCassandraThrift'           : require(__dirname + '/plugins/azure/networksecuritygroups/openCassandraThrift.js'),
         'openHTTP'                      : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTP.js'),
+        'openHTTPS'                     : require(__dirname + '/plugins/azure/networksecuritygroups/openHTTPS.js'),
 
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networkwatchers/nsgFlowLogsRetentionPeriod.js'),
 
@@ -1295,6 +1296,7 @@ module.exports = {
 
         'commentControlEnabled'         : require(__dirname + '/plugins/google/cloudbuild/commentControlEnabled.js'),
         'specificSourceBranch'          : require(__dirname + '/plugins/google/cloudbuild/specificSourceBranch.js'),
+        'triggerHasTags'                : require(__dirname + '/plugins/google/cloudbuild/triggerHasTags.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
