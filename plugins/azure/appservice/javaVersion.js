@@ -88,9 +88,9 @@ module.exports = {
                     } 
                 }
             }
-        if(!found) {
-                      helpers.addResult(results, 0, 'No App Services with Java found', location);
-                }
+            if (!found) {
+                helpers.addResult(results, 0, 'No App Services with Java found', location);
+          }
 
             rcb();
         }, function() {
