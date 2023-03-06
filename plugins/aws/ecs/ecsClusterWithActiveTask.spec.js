@@ -101,7 +101,7 @@ describe('ecsClusterWithActiveTask', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('ECS cluster have service with running tasks');
+                expect(results[0].message).to.include('ECS cluster has service with running tasks');
                 done();
             };
 
