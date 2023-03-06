@@ -616,6 +616,7 @@ module.exports = {
 
         'ecsContainerInsightsEnabled'   : require(__dirname + '/plugins/aws/ecs/ecsContainerInsightsEnabled.js'),
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
+        'ecsClusterActiveService'       : require(__dirname + '/plugins/aws/ecs/ecsClusterActiveService.js'),
 
         'cognitoHasWafEnabled'          : require(__dirname + '/plugins/aws/cognito/cognitoHasWafEnabled.js'),
         'cognitoMFAEnabled'             : require(__dirname + '/plugins/aws/cognito/cognitoMFAEnabled.js')
