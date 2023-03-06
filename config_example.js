@@ -32,6 +32,10 @@ module.exports = {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
             // OPTION 2: If using hard-coded credentials, enter them below
+            // application_id: process.env.AZURE_APPLICATION_ID || '',
+            // key_value: process.env.AZURE_KEY_VALUE || '',
+            // directory_id: process.env.AZURE_DIRECTORY_ID || '',
+            // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
         },
         google_remediate: {
             // OPTION 1: If using a credential JSON file, enter the path below
