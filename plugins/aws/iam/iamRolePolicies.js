@@ -101,7 +101,6 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
         config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
-        config.iam_role_policies_ignore_tag = config.iam_role_policies_ignore_tag.replace(/\s/g, '');
 
 
 
