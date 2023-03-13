@@ -80,8 +80,8 @@ module.exports = {
                         }
                     }
                 }
-                if (found === true){
-                    if (versionAvailable && versionAvailable === true) {
+                if (found){
+                    if (versionAvailable) {
                         helpers.addResult(results, 0, `The Java version (${currentVersion}) is the latest version`, location, webApp.id);
                     } else {
                         helpers.addResult(results, 2, `The Java version (${currentVersion}) is not the latest version`, location, webApp.id);
