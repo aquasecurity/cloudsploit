@@ -11,10 +11,9 @@
 
  BridgeArnIdentifier: no need to pass.
 
- BridgeIdTemplate: no need to pass.
-
  BridgeIdTemplate: this should be the template for creating the resource id.
-                    Eg. 'projects/aqua-dev-project/regions/{region}/clusters/{name}'
+                    supported values: name, region, cloudAccount, project, id
+                    Eg. 'projects/{cloudAccount}/regions/{region}/clusters/{name}'
 
 
  BridgeResourceType: this should be type of the resource, fetch it from the id.
@@ -59,8 +58,8 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'Managed Zone', InvService: 'DNS',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'DNS', BridgeServiceName: 'managedzones',
             BridgePluginCategoryName: 'gcp-DNS', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/zones/{name}', BridgeResourceType: 'zones',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-DNS',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/zones/{name}',
+            BridgeResourceType: 'zones', BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-DNS',
             BridgeCollectionService: 'gcp-managedZones', DataIdentifier: 'data',
         },
     'VPC Network':
@@ -101,21 +100,66 @@ var serviceMap = {
         },
     'Logging':
         {
-            enabled: true, isSingleSource: true, InvAsset: 'Metrics', InvService: 'Logging',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Logging', BridgeServiceName: 'metrics',
+            enabled: true, isSingleSource: true, InvAsset: 'Alert Policy', InvService: 'Logging',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Logging', BridgeServiceName: 'alertpolicies',
             BridgePluginCategoryName: 'gcp-Logging', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/metrics/{name}', BridgeResourceType: 'logging metrics',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'alertPolicies',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Logging',
-            BridgeCollectionService: 'gcp-metrics', DataIdentifier: 'data',
+            BridgeCollectionService: 'gcp-alertPolicies', DataIdentifier: 'data',
         },
     'Dataproc':
         {
             enabled: true, isSingleSource: true, InvAsset: 'Cluster', InvService: 'Dataproc',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataproc', BridgeServiceName: 'dataproc',
             BridgePluginCategoryName: 'gcp-Dataproc', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/aqua-dev-project/regions/{region}/clusters/{name}',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/regions/{region}/clusters/{name}',
             BridgeResourceType: 'clusters', BridgeResourceNameIdentifier: 'clusterName', BridgeExecutionService: 'gcp-Dataproc',
             BridgeCollectionService: 'gcp-dataproc', DataIdentifier: 'data',
+        },
+    'Dataflow':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'job', InvService: 'Dataflow',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataflow Job', BridgeServiceName: 'jobs',
+            BridgePluginCategoryName: 'gcp-Dataflow', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/jobs/{id}', BridgeResourceType: 'jobs',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Dataflow',
+            BridgeCollectionService: 'gcp-jobs', DataIdentifier: 'data',
+        },
+    'API':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'API', InvService: 'API',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'API', BridgeServiceName: 'apikeys',
+            BridgePluginCategoryName: 'gcp-API', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'keys',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-API',
+            BridgeCollectionService: 'gcp-apiKeys', DataIdentifier: 'data',
+        },
+    'BigQuery':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'dataset', InvService: 'BigQuery',
+            InvResourceCategory: 'database', InvResourceType: 'BigQuery', BridgeServiceName: 'datasets',
+            BridgePluginCategoryName: 'gcp-BigQuery', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/datasets/{name}', BridgeResourceType: 'datasets',
+            BridgeResourceNameIdentifier: 'datasetId', BridgeExecutionService: 'gcp-BigQuery',
+            BridgeCollectionService: 'gcp-datasets', DataIdentifier: 'data',
+        },
+    'BigTable':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'BigTable',
+            InvResourceCategory: 'database', InvResourceType: 'BigTable', BridgeServiceName: 'bigtable',
+            BridgePluginCategoryName: 'gcp-BigTable', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-BigTable',
+            BridgeCollectionService: 'gcp-bigtable', DataIdentifier: 'instances',
+        },
+    'Spanner':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'Spanner',
+            InvResourceCategory: 'database', InvResourceType: 'Spanner', BridgeServiceName: 'spanner',
+            BridgePluginCategoryName: 'gcp-Spanner', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'spanner',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
+            BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'instances',
         }
 };
 var calls = {
@@ -177,7 +221,7 @@ var calls = {
             pagination: true
         }
     },
-    compute: { 
+    compute: {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances',
             location: 'zone',
@@ -192,7 +236,7 @@ var calls = {
         sendIntegration: {
             enabled: true,
             integrationReliesOn: {
-                serviceName: ['resourceRecordSets', 'firewalls']
+                serviceName: ['resourceRecordSets', 'firewalls', 'projects']
             }
         },
     },
@@ -211,16 +255,20 @@ var calls = {
             url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
             location: null,
             pagination: true,
-            paginationKey: 'pageSize'
-        }
+            paginationKey: 'pageSize',
+            dataFilterKey: 'instances'
+        },
+        sendIntegration: serviceMap['Spanner']
     },
     bigtable: {
         list: {
             url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
             location: null,
             pagination: true,
-            paginationKey: 'pageToken'
-        }
+            paginationKey: 'pageToken',
+            dataFilterKey: 'instances'
+        },
+        sendIntegration: serviceMap['BigTable']
     },
     instanceTemplates: {
         list: {
@@ -316,6 +364,10 @@ var calls = {
         }
     },
     projects: {
+        list:{
+            url: 'https://cloudresourcemanager.googleapis.com/v1/projects',
+            pagination: true,
+        },
         get: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}',
             pagination: false
@@ -369,8 +421,7 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-        },
-        sendIntegration: serviceMap['Logging']
+        }
     },
     alertPolicies: {
         list: {
@@ -378,7 +429,8 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'pageSize'
-        }
+        },
+        sendIntegration: serviceMap['Logging']
     },
     serviceAccounts: {
         list: {
@@ -401,7 +453,8 @@ var calls = {
             url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets',
             location: null,
             pagination: true
-        }
+        },
+        sendIntegration: serviceMap['BigQuery']
     },
     policies: {
         list: {
@@ -433,7 +486,8 @@ var calls = {
             location: 'region',
             pagination: true,
             paginationKey: 'pageSize'
-        }
+        },
+        sendIntegration: serviceMap['Dataflow']
     },
     deployments: { // https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments
         list: {
@@ -461,7 +515,8 @@ var calls = {
         list: {
             url: 'https://apikeys.googleapis.com/v2/projects/{projectId}/locations/global/keys',
             location: null
-        }
+        },
+        sendIntegration: serviceMap['API']
     },
     resourceRecordSets: {
         list: {
@@ -599,7 +654,7 @@ var postcalls = {
             location: null,
             reliesOnService: ['functions'],
             reliesOnCall: ['list'],
-            properties: ['name']        
+            properties: ['name']
         }
     },
     jobs: {
