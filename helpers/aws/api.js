@@ -26,7 +26,8 @@ var integrationSendLast = [
  BridgeArnIdentifier: it should be the key of the arn field data which we are storing in json file in s3 collection bucket.
                       Eg. 'TrailARN'
 
- BridgeArnTemplate: this should be the arn template.
+ BridgeIdTemplate:  this should be the template for creating the resource id.
+                    supported values: name, region, cloudAccount, project, id
                     Eg. "arn:aws:cloudtrail:{region}:{cloudAccount}:trail/{name}"
 
  Note: If there is an arn identifier then no need to pass the arn template otherwise we have to pass the template.
@@ -64,7 +65,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'CloudTrail', InvService: 'CloudTrail',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'CloudTrail', BridgeServiceName: 'cloudtrail',
             BridgePluginCategoryName: 'CloudTrail', BridgeProvider: 'aws', BridgeCall: 'describeTrails',
-            BridgeArnIdentifier: 'TrailARN', BridgeArnTemplate: '', BridgeResourceType: 'trail',
+            BridgeArnIdentifier: 'TrailARN', BridgeIdTemplate: '', BridgeResourceType: 'trail',
             BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'CloudTrail',
             BridgeCollectionService: 'cloudtrail', DataIdentifier: 'data',
         },
@@ -73,7 +74,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'athena',
             InvResourceCategory: 'database', InvResourceType: 'athena_instance', BridgeServiceName: 'athena',
             BridgePluginCategoryName: 'Athena', BridgeProvider: 'aws', BridgeCall: 'listWorkGroups',
-            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:athena:{region}:{cloudAccount}:workgroup/{name}', BridgeResourceType: 'workgroup',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:athena:{region}:{cloudAccount}:workgroup/{name}', BridgeResourceType: 'workgroup',
             BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Athena',
             BridgeCollectionService: 'athena', DataIdentifier: 'data',
         },
@@ -82,7 +83,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'timestreamwrite',
             InvResourceCategory: 'database', InvResourceType: 'timestreamwrite_instance', BridgeServiceName: 'timestreamwrite',
             BridgePluginCategoryName: 'Timestream', BridgeProvider: 'aws', BridgeCall: 'listDatabases',
-            BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'database',
+            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'database',
             BridgeResourceNameIdentifier: 'DatabaseName', BridgeExecutionService: 'Timestream',
             BridgeCollectionService: 'timestreamwrite', DataIdentifier: 'data',
         },
@@ -91,7 +92,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'redshift',
             InvResourceCategory: 'database', InvResourceType: 'redshift_instance', BridgeServiceName: 'redshift',
             BridgePluginCategoryName: 'Redshift', BridgeProvider: 'aws', BridgeCall: 'describeClusters',
-            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:redshift:{region}:{cloudAccount}:cluster:{name}',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:redshift:{region}:{cloudAccount}:cluster:{name}',
             BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'ClusterIdentifier',
             BridgeExecutionService: 'Redshift', BridgeCollectionService: 'redshift', DataIdentifier: 'data',
         },
@@ -100,7 +101,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'docdb',
             InvResourceCategory: 'database', InvResourceType: 'documentdb_instance', BridgeServiceName: 'docdb',
             BridgePluginCategoryName: 'DocumentDB', BridgeProvider: 'aws', BridgeCall: 'describeDBClusters',
-            BridgeArnIdentifier: 'DBClusterArn', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeArnIdentifier: 'DBClusterArn', BridgeIdTemplate: '', BridgeResourceType: 'cluster',
             BridgeResourceNameIdentifier: 'DBClusterIdentifier', BridgeExecutionService: 'DocumentDB',
             BridgeCollectionService: 'docdb', DataIdentifier: 'data',
         },
@@ -109,7 +110,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'neptune',
             InvResourceCategory: 'database', InvResourceType: 'neptune_instance', BridgeServiceName: 'neptune',
             BridgePluginCategoryName: 'Neptune', BridgeProvider: 'aws', BridgeCall: 'describeDBClusters',
-            BridgeArnIdentifier: 'DBClusterArn', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeArnIdentifier: 'DBClusterArn', BridgeIdTemplate: '', BridgeResourceType: 'cluster',
             BridgeResourceNameIdentifier: 'DBClusterIdentifier', BridgeExecutionService: 'Neptune',
             BridgeCollectionService: 'neptune', DataIdentifier: 'data',
         },
@@ -118,7 +119,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'elasticache',
             InvResourceCategory: 'database', InvResourceType: 'elasticache_instance', BridgeServiceName: 'elasticache',
             BridgePluginCategoryName: 'ElastiCache', BridgeProvider: 'aws', BridgeCall: 'describeCacheClusters',
-            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'cluster',
             BridgeResourceNameIdentifier: 'CacheClusterId', BridgeExecutionService: 'ElastiCache',
             BridgeCollectionService: 'elasticache', DataIdentifier: 'data',
         },
@@ -127,7 +128,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'memorydb',
             InvResourceCategory: 'database', InvResourceType: 'memorydb_instance', BridgeServiceName: 'memorydb',
             BridgePluginCategoryName: 'MemoryDB', BridgeProvider: 'aws', BridgeCall: 'describeClusters',
-            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'cluster',
+            BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'cluster',
             BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'MemoryDB',
             BridgeCollectionService: 'memorydb', DataIdentifier: 'data',
         },
@@ -136,7 +137,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'kendra',
             InvResourceCategory: 'database', InvResourceType: 'kendra_instance', BridgeServiceName: 'kendra',
             BridgePluginCategoryName: 'Kendra', BridgeProvider: 'aws', BridgeCall: 'listIndices',
-            BridgeArnIdentifier: '', BridgeArnTemplate: 'arn:aws:kendra:{region}:{cloudAccount}:index/{name}',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:kendra:{region}:{cloudAccount}:index/{name}',
             BridgeResourceType: 'index', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Kendra',
             BridgeCollectionService: 'kendra', DataIdentifier: 'data',
         },
@@ -145,7 +146,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'elasticsearch',
             InvResourceCategory: 'database', InvResourceType: 'elasticsearch_instance', BridgeServiceName: 'es',
             BridgePluginCategoryName: 'ES', BridgeProvider: 'aws', BridgeCall: 'describeElasticsearchDomain',
-            BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'domain',
+            BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'domain',
             BridgeResourceNameIdentifier: 'DomainName', BridgeExecutionService: 'ES',
             BridgeCollectionService: 'es', DataIdentifier: 'DomainStatus',
         },
@@ -154,7 +155,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'qldb',
             InvResourceCategory: 'database', InvResourceType: 'qldb_instance', BridgeServiceName: 'qldb',
             BridgePluginCategoryName: 'QLDB', BridgeProvider: 'aws', BridgeCall: 'describeLedger',
-            BridgeArnIdentifier: 'Arn', BridgeArnTemplate: '', BridgeResourceType: 'ledger',
+            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'ledger',
             BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'QLDB',
             BridgeCollectionService: 'qldb', DataIdentifier: 'data',
         },
@@ -163,9 +164,144 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'dynamodb',
             InvResourceCategory: 'database', InvResourceType: 'dynamodb_instance', BridgeServiceName: 'dynamodb',
             BridgePluginCategoryName: 'DynamoDB', BridgeProvider: 'aws', BridgeCall: 'describeTable',
-            BridgeArnIdentifier: 'TableArn', BridgeArnTemplate: '', BridgeResourceType: 'table',
+            BridgeArnIdentifier: 'TableArn', BridgeIdTemplate: '', BridgeResourceType: 'table',
             BridgeResourceNameIdentifier: 'TableName', BridgeExecutionService: 'DynamoDB',
             BridgeCollectionService: 'dynamodb', DataIdentifier: 'Table',
+        },
+    'Backup':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'backup',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'backup_instance', BridgeServiceName: 'backup',
+            BridgePluginCategoryName: 'Backup', BridgeProvider: 'aws', BridgeCall: 'listBackupVaults',
+            BridgeArnIdentifier: 'BackupVaultArn', BridgeIdTemplate: '', BridgeResourceType: 'backup-vault',
+            BridgeResourceNameIdentifier: 'BackupVaultName', BridgeExecutionService: 'Backup',
+            BridgeCollectionService: 'backup', DataIdentifier: 'data',
+        },
+    'EFS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'efs',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'efs_instance', BridgeServiceName: 'efs',
+            BridgePluginCategoryName: 'EFS', BridgeProvider: 'aws', BridgeCall: 'describeFileSystems',
+            BridgeArnIdentifier: 'FileSystemArn', BridgeIdTemplate: '', BridgeResourceType: 'file-system',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'EFS',
+            BridgeCollectionService: 'efs', DataIdentifier: 'data',
+        },
+    'Glacier':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'glacier',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'glacier_instance', BridgeServiceName: 'glacier',
+            BridgePluginCategoryName: 'Glacier', BridgeProvider: 'aws', BridgeCall: 'listVaults',
+            BridgeArnIdentifier: 'VaultARN', BridgeIdTemplate: '', BridgeResourceType: 'vaults',
+            BridgeResourceNameIdentifier: 'VaultName', BridgeExecutionService: 'Glacier',
+            BridgeCollectionService: 'glacier', DataIdentifier: 'data',
+        },
+    'KMS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'kms',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'kms_instance', BridgeServiceName: 'kms',
+            BridgePluginCategoryName: 'KMS', BridgeProvider: 'aws', BridgeCall: 'describeKey',
+            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'key',
+            BridgeResourceNameIdentifier: 'KeyId', BridgeExecutionService: 'KMS',
+            BridgeCollectionService: 'kms', DataIdentifier: 'KeyMetadata',
+        },
+    'Secrets Manager':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'secretsmanager',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'secretsmanager_instance',
+            BridgeServiceName: 'secretsmanager', BridgePluginCategoryName: 'Secrets Manager', BridgeProvider: 'aws',
+            BridgeCall: 'listSecrets', BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'secret',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Secrets Manager',
+            BridgeCollectionService: 'secretsmanager', DataIdentifier: 'data',
+        },
+    'CloudWatchLogs':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'cloudwatchlogs',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'cloudwatchlogs_instance',
+            BridgeServiceName: 'cloudwatchlogs', BridgePluginCategoryName: 'CloudWatchLogs', BridgeProvider: 'aws',
+            BridgeCall: 'describeLogGroups', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'log-group',
+            BridgeResourceNameIdentifier: 'logGroupName', BridgeExecutionService: 'CloudWatchLogs',
+            BridgeCollectionService: 'cloudwatchlogs', DataIdentifier: 'data',
+        },
+    'EventBridge':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'eventbridge',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'eventbridge_instance',
+            BridgeServiceName: 'eventbridge', BridgePluginCategoryName: 'EventBridge', BridgeProvider: 'aws',
+            BridgeCall: 'listRules', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'event-bus',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'EventBridge',
+            BridgeCollectionService: 'eventbridge', DataIdentifier: 'data',
+        },
+    'App Mesh':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'appmesh',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'app_mesh',
+            BridgeServiceName: 'appmesh', BridgePluginCategoryName: 'App Mesh', BridgeProvider: 'aws',
+            BridgeCall: 'listMeshes', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'mesh',
+            BridgeResourceNameIdentifier: 'meshName', BridgeExecutionService: 'App Mesh',
+            BridgeCollectionService: 'appmesh', DataIdentifier: 'data',
+        },
+    'App Runner':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'apprunner',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'app_runner',
+            BridgeServiceName: 'apprunner', BridgePluginCategoryName: 'App Runner', BridgeProvider: 'aws',
+            BridgeCall: 'listServices', BridgeArnIdentifier: 'ServiceArn', BridgeIdTemplate: '', BridgeResourceType: 'service',
+            BridgeResourceNameIdentifier: 'ServiceName', BridgeExecutionService: 'App Runner',
+            BridgeCollectionService: 'apprunner', DataIdentifier: 'data',
+        },
+    'AutoScaling':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'autoscaling',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'auto_scaling',
+            BridgeServiceName: 'autoscaling', BridgePluginCategoryName: 'AutoScaling', BridgeProvider: 'aws',
+            BridgeCall: 'describeAutoScalingGroups', BridgeArnIdentifier: 'AutoScalingGroupARN', BridgeIdTemplate: '',
+            BridgeResourceType: 'autoScalingGroup', BridgeResourceNameIdentifier: 'AutoScalingGroupName',
+            BridgeExecutionService: 'AutoScaling', BridgeCollectionService: 'autoscaling', DataIdentifier: 'data',
+        },
+    'IAM':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'accessanalyzer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'access_analyzer',
+            BridgeServiceName: 'accessanalyzer', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
+            BridgeCall: 'listAnalyzers', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '',
+            BridgeResourceType: 'analyzer', BridgeResourceNameIdentifier: 'name',
+            BridgeExecutionService: 'IAM', BridgeCollectionService: 'accessanalyzer', DataIdentifier: 'data',
+        },
+    'EMR':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'emr',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'emr_instance',
+            BridgeServiceName: 'emr', BridgePluginCategoryName: 'EMR', BridgeProvider: 'aws',
+            BridgeCall: 'listClusters', BridgeArnIdentifier: 'ClusterArn', BridgeIdTemplate: '',
+            BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'Name',
+            BridgeExecutionService: 'EMR', BridgeCollectionService: 'emr', DataIdentifier: 'data',
+        },
+    'CodeArtifact':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'codeArtifact',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'codeArtifact',
+            BridgeServiceName: 'codeartifact', BridgePluginCategoryName: 'CodeArtifact', BridgeProvider: 'aws',
+            BridgeCall: 'listDomains', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'domain',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeArtifact',
+            BridgeCollectionService: 'codeartifact', DataIdentifier: 'data',
+        },
+    'CloudFormation':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cloudFormation', InvService: 'cloudformation',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'cloudformation',
+            BridgeServiceName: 'cloudformation', BridgePluginCategoryName: 'CloudFormation', BridgeProvider: 'aws',
+            BridgeCall: 'listStacks', BridgeArnIdentifier: 'StackId', BridgeIdTemplate: '', BridgeResourceType: 'stack',
+            BridgeResourceNameIdentifier: 'StackName', BridgeExecutionService: 'CloudFormation',
+            BridgeCollectionService: 'cloudformation', DataIdentifier: 'data',
+        },
+    'CodeBuild':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'codeBuild', InvService: 'codeBuild',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CodeBuild',
+            BridgeServiceName: 'codebuild', BridgePluginCategoryName: 'CodeBuild', BridgeProvider: 'aws',
+            BridgeCall: 'batchGetProjects', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'project',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeBuild',
+            BridgeCollectionService: 'codebuild', DataIdentifier: 'projects',
         },
 };
 
@@ -761,7 +897,7 @@ var calls = {
             paginate: 'Marker',
             params: {
                 ClusterStates: [
-                    'RUNNING'
+                    'RUNNING','WAITING'
                 ]
             }
         }
@@ -1313,6 +1449,18 @@ var postcalls = [
         TimestreamWrite: {
             sendIntegration: serviceMap['Timestream']
         },
+        EFS: {
+            sendIntegration: serviceMap['EFS']
+        },
+        EventBridge: {
+            sendIntegration: serviceMap['EventBridge']
+        },
+        CloudWatchLogs: {
+            sendIntegration: serviceMap['CloudWatchLogs']
+        },
+        CodeArtifact: {
+            sendIntegration: serviceMap['CodeArtifact']
+        },
         ACM: {
             describeCertificate: {
                 reliesOnService: 'acm',
@@ -1326,7 +1474,8 @@ var postcalls = [
                 reliesOnService: 'accessanalyzer',
                 reliesOnCall: 'listAnalyzers',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['IAM']
         },
         APIGateway: {
             getStages: {
@@ -1362,7 +1511,8 @@ var postcalls = [
                 reliesOnCall: 'listMeshes',
                 filterKey: 'meshName',
                 filterValue: 'meshName'
-            }
+            },
+            sendIntegration: serviceMap['App Mesh']
         },
         AppRunner: {
             describeService: {
@@ -1370,7 +1520,8 @@ var postcalls = [
                 reliesOnCall: 'listServices',
                 filterKey: 'ServiceArn',
                 filterValue: 'ServiceArn'
-            }
+            },
+            sendIntegration: serviceMap['App Runner']
         },
         Appflow: {
             describeFlow: {
@@ -1399,7 +1550,8 @@ var postcalls = [
                 reliesOnService: 'autoscaling',
                 reliesOnCall: 'describeAutoScalingGroups',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['AutoScaling']
         },
         Backup: {
             getBackupVaultNotifications: {
@@ -1419,7 +1571,8 @@ var postcalls = [
                 reliesOnCall: 'listBackupPlans',
                 filterKey: 'BackupPlanId',
                 filterValue: 'BackupPlanId',
-            }
+            },
+            sendIntegration: serviceMap['Backup']
         },
         CloudFormation: {
             describeStackEvents: {
@@ -1435,7 +1588,8 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName',
                 rateLimit: 100 // ms to rate limit between stacks
-            }
+            },
+            sendIntegration: serviceMap['CloudFormation']
         },
         CloudFront: {
             getDistribution: {
@@ -1531,7 +1685,8 @@ var postcalls = [
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['CodeBuild']
         },
         CodePipeline: {
             getPipeline: {
@@ -1885,7 +2040,8 @@ var postcalls = [
                 reliesOnCall: 'listClusters',
                 filterKey: 'ClusterId',
                 filterValue: 'Id'
-            }
+            },
+            sendIntegration: serviceMap['EMR']
         },
         DLM: {
             getLifecyclePolicy: {
@@ -1909,7 +2065,8 @@ var postcalls = [
                 reliesOnCall: 'listVaults',
                 filterKey: 'vaultName',
                 filterValue: 'VaultName'
-            }
+            },
+            sendIntegration: serviceMap['Glacier']
         },
         IAM: {
             getGroup: {
@@ -2033,7 +2190,8 @@ var postcalls = [
                 reliesOnService: 'kms',
                 reliesOnCall: 'listKeys',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['KMS']
         },
         Lambda: {
             getPolicy: {
@@ -2207,7 +2365,8 @@ var postcalls = [
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',
                 filterValue: 'ARN',
-            }
+            },
+            sendIntegration: serviceMap['Secrets Manager']
         },
         SES: {
             getIdentityDkimAttributes: {

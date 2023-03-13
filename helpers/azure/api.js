@@ -11,7 +11,8 @@
 
  BridgeArnIdentifier: no need to pass.
 
- BridgeArnTemplate: no need to pass.
+ BridgeIdTemplate:  this should be the template for creating the resource id.
+                    supported values: name, region, cloudAccount, project, id
 
  BridgeResourceType: this should be type of the resource, fetch it from the id.
                      Eg. 'servers'
@@ -46,9 +47,99 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'redisCaches', InvService: 'redisCaches',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Redis Cache', BridgeServiceName: 'rediscaches',
             BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
-            BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'Redis',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'Redis',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
             BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
+        },
+    'CDN Profiles':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cdnProfiles', InvService: 'cdnProfiles',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CDN_Profiles', BridgeServiceName: 'profiles',
+            BridgePluginCategoryName: 'CDN Profiles', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'profiles',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
+            BridgeCollectionService: 'profiles', DataIdentifier: 'data',
+        },
+    'Cosmos DB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cosmosdb', InvService: 'cosmosDB',
+            InvResourceCategory: 'database', InvResourceType: 'cosmos_DB', BridgeServiceName: 'databaseaccounts',
+            BridgePluginCategoryName: 'Cosmos DB', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databaseAccounts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Cosmos DB',
+            BridgeCollectionService: 'databaseaccounts', DataIdentifier: 'data',
+        },
+    'Key Vaults':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'vaults', InvService: 'keyVaults',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'key vaults', BridgeServiceName: 'vaults',
+            BridgePluginCategoryName: 'Key Vaults', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'vaults',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Key Vaults',
+            BridgeCollectionService: 'vaults', DataIdentifier: 'data',
+        },
+    'Load Balancer':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'loadBalancer', InvService: 'loadBalancer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'load_balancer', BridgeServiceName: 'loadbalancers',
+            BridgePluginCategoryName: 'Load Balancer', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'loadBalancers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Load Balancer',
+            BridgeCollectionService: 'loadbalancers', DataIdentifier: 'data',
+        },
+    'Log Alerts':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'logAlerts', InvService: 'logAlerts',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'log alerts', BridgeServiceName: 'activitylogalerts',
+            BridgePluginCategoryName: 'Log Alerts', BridgeProvider: 'Azure', BridgeCall: 'listBySubscriptionId',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'activityLogAlerts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Log Alerts',
+            BridgeCollectionService: 'activitylogalerts', DataIdentifier: 'data',
+        },
+    'Network Watcher':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'networkWatcher', InvService: 'networkWatcher',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'network_watcher', BridgeServiceName: 'networkwatchers',
+            BridgePluginCategoryName: 'Network Watcher', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networkWatchers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Network Watcher',
+            BridgeCollectionService: 'networkwatchers', DataIdentifier: 'data',
+        },
+    'Azure Policy':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'azurePolicy', InvService: 'azurePolicy',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'azure_policy', BridgeServiceName: 'policyassignments',
+            BridgePluginCategoryName: 'Azure Policy', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'policyAssignments',
+            BridgeResourceNameIdentifier: 'displayName', BridgeExecutionService: 'Azure Policy',
+            BridgeCollectionService: 'policyassignments', DataIdentifier: 'data',
+        },
+    'Virtual Networks':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'virtual_network', InvService: 'virtual_network',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Virtual Network', BridgeServiceName: 'virtualnetworks',
+            BridgePluginCategoryName: 'Virtual Networks', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualNetworks',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
+            BridgeCollectionService: 'virtualnetworks', DataIdentifier: 'data',
+        },
+    'Queue Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'queueService', InvService: 'queueService',
+            InvResourceCategory: 'storage', InvResourceType: 'queue_service', BridgeServiceName: 'queueservice',
+            BridgePluginCategoryName: 'Queue Service', BridgeProvider: 'Azure', BridgeCall: 'getQueueAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'queueService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Queue Service',
+            BridgeCollectionService: 'queueservice', DataIdentifier: 'data',
+        },
+    'Table Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'tableService', InvService: 'tableService',
+            InvResourceCategory: 'storage', InvResourceType: 'table_service', BridgeServiceName: 'tableservice',
+            BridgePluginCategoryName: 'Table Service', BridgeProvider: 'Azure', BridgeCall: 'getTableAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
+            BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
         }
 };
 
@@ -67,7 +158,8 @@ var calls = {
     activityLogAlerts: {
         listBySubscriptionId: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2020-10-01'
-        }
+        },
+        sendIntegration: serviceMap['Log Alerts']
     },
     storageAccounts: {
         list: {
@@ -78,7 +170,8 @@ var calls = {
     virtualNetworks: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
-        }
+        },
+        sendIntegration: serviceMap['Virtual Networks']
     },
     natGateways: {
         listBySubscription: {
@@ -126,7 +219,8 @@ var calls = {
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
-        }
+        },
+        sendIntegration: serviceMap['Key Vaults'],
     },
     recoveryServiceVaults: {
         listBySubscriptionId: {
@@ -157,12 +251,14 @@ var calls = {
     networkWatchers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2022-01-01'
-        }
+        },
+        sendIntegration: serviceMap['Network Watcher']
     },
     policyAssignments: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyAssignments?api-version=2019-09-01',
-        }
+        },
+        sendIntegration: serviceMap['Azure Policy']
     },
     policyDefinitions: {
         list: {
@@ -187,7 +283,8 @@ var calls = {
     profiles: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2019-04-15'
-        }
+        },
+        sendIntegration: serviceMap['CDN Profiles']
     },
     autoProvisioningSettings: {
         list: {
@@ -230,7 +327,8 @@ var calls = {
     loadBalancers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-03-01'
-        }
+        },
+        sendIntegration: serviceMap['Load Balancer']
     },
     users: {
         list: {
@@ -290,7 +388,8 @@ var calls = {
     databaseAccounts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2020-06-01-preview'
-        }
+        },
+        sendIntegration: serviceMap['Cosmos DB']
     },
     securityCenter: {
         list: {
@@ -768,7 +867,8 @@ var specialcalls = {
         listTablesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
-        }
+        },
+        sendIntegration: serviceMap['Table Service']
     },
     fileService: {
         listSharesSegmented: {
@@ -786,7 +886,8 @@ var specialcalls = {
         listQueuesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
-        }
+        },
+        sendIntegration: serviceMap['Queue Service']
     }
 };
 

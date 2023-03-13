@@ -48,6 +48,9 @@ module.exports = {
                 if (!spannerInstance.name) return;
 
                 let nodeCount = spannerInstance.nodeCount;
+                if (!nodeCount && spannerInstance.processingUnits) {
+                    nodeCount = Math.floor(spannerInstance.processingUnits/1000);
+                }
                 let resultStatus = (nodeCount <= config.spanner_allowed_instance_node_count) ? 0 : 2;
 
                 helpers.addResult(results, resultStatus,
