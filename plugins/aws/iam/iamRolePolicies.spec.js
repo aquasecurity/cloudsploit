@@ -214,7 +214,7 @@ const getRole = [
             "Tags": [
                 {
                     "Key": "app_name",
-                    "Value": "Aqua CSPM"
+                    "Value": "AquaCSPM"
                 }
             ],
         }  
@@ -428,9 +428,9 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should PASS if role with specific regex is ignored', function (done) {
+        it('should PASS if role with specific tag is ignored', function (done) {
             const cache = createCache([listRoles[0]],getRole[0], listAttachedRolePolicies[2], listRolePolicies[0], getRolePolicy[2]);
-            iamRolePolicies.run(cache, {iam_role_policies_ignore_tag:'app_name:Aqua CSPM'}, (err, results) => {
+            iamRolePolicies.run(cache, {iam_role_policies_ignore_tag:'app_name:AquaCSPM'}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
