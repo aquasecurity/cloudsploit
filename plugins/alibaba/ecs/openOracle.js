@@ -5,10 +5,10 @@ module.exports = {
     title: 'Open Oracle',
     category: 'ECS',
     domain: 'Compute',
-    description: 'Ensure that security groups does not have TCP port 1521 for Oracle open to the public.',
+    description: 'Ensure that security groups does not have TCP port 1521 and 2483 for Oracle open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Oracle should be restricted to known IP addresses.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',
-    recommended_action: 'Restrict TCP port 1521 for Oracle to known IP addresses',
+    recommended_action: 'Restrict TCP port 1521 and 2483 for Oracle to known IP addresses',
     apis: ['ECS:DescribeSecurityGroups', 'ECS:DescribeSecurityGroupAttribute', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
