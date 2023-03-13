@@ -26,7 +26,8 @@ var integrationSendLast = [
  BridgeArnIdentifier: it should be the key of the arn field data which we are storing in json file in s3 collection bucket.
                       Eg. 'TrailARN'
 
- BridgeIdTemplate: this should be the arn template.
+ BridgeIdTemplate:  this should be the template for creating the resource id.
+                    supported values: name, region, cloudAccount, project, id
                     Eg. "arn:aws:cloudtrail:{region}:{cloudAccount}:trail/{name}"
 
  Note: If there is an arn identifier then no need to pass the arn template otherwise we have to pass the template.
@@ -274,7 +275,34 @@ var serviceMap = {
             BridgeCall: 'listClusters', BridgeArnIdentifier: 'ClusterArn', BridgeIdTemplate: '',
             BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'Name',
             BridgeExecutionService: 'EMR', BridgeCollectionService: 'emr', DataIdentifier: 'data',
-        }
+        },
+    'CodeArtifact':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'codeArtifact',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'codeArtifact',
+            BridgeServiceName: 'codeartifact', BridgePluginCategoryName: 'CodeArtifact', BridgeProvider: 'aws',
+            BridgeCall: 'listDomains', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'domain',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeArtifact',
+            BridgeCollectionService: 'codeartifact', DataIdentifier: 'data',
+        },
+    'CloudFormation':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cloudFormation', InvService: 'cloudformation',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'cloudformation',
+            BridgeServiceName: 'cloudformation', BridgePluginCategoryName: 'CloudFormation', BridgeProvider: 'aws',
+            BridgeCall: 'listStacks', BridgeArnIdentifier: 'StackId', BridgeIdTemplate: '', BridgeResourceType: 'stack',
+            BridgeResourceNameIdentifier: 'StackName', BridgeExecutionService: 'CloudFormation',
+            BridgeCollectionService: 'cloudformation', DataIdentifier: 'data',
+        },
+    'CodeBuild':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'codeBuild', InvService: 'codeBuild',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CodeBuild',
+            BridgeServiceName: 'codebuild', BridgePluginCategoryName: 'CodeBuild', BridgeProvider: 'aws',
+            BridgeCall: 'batchGetProjects', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'project',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeBuild',
+            BridgeCollectionService: 'codebuild', DataIdentifier: 'projects',
+        },
 };
 
 var calls = {
@@ -1430,6 +1458,9 @@ var postcalls = [
         CloudWatchLogs: {
             sendIntegration: serviceMap['CloudWatchLogs']
         },
+        CodeArtifact: {
+            sendIntegration: serviceMap['CodeArtifact']
+        },
         ACM: {
             describeCertificate: {
                 reliesOnService: 'acm',
@@ -1557,7 +1588,8 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName',
                 rateLimit: 100 // ms to rate limit between stacks
-            }
+            },
+            sendIntegration: serviceMap['CloudFormation']
         },
         CloudFront: {
             getDistribution: {
@@ -1653,7 +1685,8 @@ var postcalls = [
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['CodeBuild']
         },
         CodePipeline: {
             getPipeline: {
