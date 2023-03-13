@@ -94,17 +94,29 @@ module.exports = {
         var putCall = this.actions.remediate;
         var pluginName = 'openOracle';
         var protocol = 'tcp';
-        var port = 1521;
+        var ports = [1521, 2483];
+        var actions = [];
+        var errors = [];
 
-        helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
-            if (error && (error.length || Object.keys(error).length)) {
-                remediation_file['post_remediate']['actions'][pluginName]['error'] = error;
+        async.each(ports,function(port, cb) {
+            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
                 settings.remediation_file = remediation_file;
-                return callback(error, null);
+                return callback(errors, null);
             } else {
-                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
                 settings.remediation_file = remediation_file;
-                return callback(null, action);
+                return callback(null, actions);
             }
         });
     }

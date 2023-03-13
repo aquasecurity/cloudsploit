@@ -5,10 +5,10 @@ module.exports = {
     title: 'Open Oracle',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
-    description: 'Determine if TCP port 1521 for Oracle is open to the public',
+    description: 'Determine if TCP port 1521, 2483 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Oracle should be restricted to known IP addresses.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
-    recommended_action: 'Restrict TCP ports 1521 to known IP addresses',
+    recommended_action: 'Restrict TCP ports 1521, 2483 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],
     remediation_min_version: '202011201836',
@@ -55,7 +55,7 @@ module.exports = {
             
             var ports = {
 
-                'TCP': [1521]
+                'TCP': [1521, 2483]
             };
 
             var service = 'Oracle';
@@ -76,7 +76,7 @@ module.exports = {
         var baseUrl = 'https://management.azure.com/{resource}?api-version=2020-05-01';
         var method = 'PUT';
         var protocols = ['TCP' ,'*'];
-        var ports = [1521];
+        var ports = [1521, 2483];
 
         var actions = [];
         var errors = [];

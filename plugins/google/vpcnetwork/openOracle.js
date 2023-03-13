@@ -5,10 +5,10 @@ module.exports = {
     title: 'Open Oracle',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    description: 'Determines if TCP port 1521 for Oracle is open to the public',
+    description: 'Determines if TCP port 1521, 2483 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Oracle should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
-    recommended_action: 'Restrict TCP ports 1521 to known IP addresses.',
+    recommended_action: 'Restrict TCP ports 1521, 2483 to known IP addresses.',
     apis: ['firewalls:list'],
 
     run: function(cache, settings, callback) {
@@ -33,7 +33,7 @@ module.exports = {
             }
 
             let ports = {
-                'tcp': [1521]
+                'tcp': [1521, 2483]
             };
 
             let service = 'Oracle';
