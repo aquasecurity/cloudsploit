@@ -5,11 +5,11 @@ module.exports = {
     title: 'Open Oracle',
     category: 'Networking',
     domain: 'Network Access Control',
-    description: 'Determine if TCP port 1521 for Oracle is open to the public',
+    description: 'Determine if TCP port 1521, 2483 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open ' +
         'to the public to function properly, more sensitive services such as Oracle ' +
         'should be restricted to known IP addresses.',
-    recommended_action: 'Restrict TCP ports 1521 to known IP addresses',
+    recommended_action: 'Restrict TCP ports 1521, 2483 to known IP addresses',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securitylists.htm',
     apis: ['vcn:list', 'securityList:list','networkSecurityGroup:list','securityRule:list'],
 
