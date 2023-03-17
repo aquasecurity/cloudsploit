@@ -1356,6 +1356,19 @@ var calls = {
             property: 'Account'
         }
     },
+    OpenSearchServerless: {
+        listSecurityPolicies : {
+            paginate: 'nextToken',
+            property: 'securityPolicySummaries',
+            params: {
+                type: 'network'
+            }
+        },
+        listCollections : {
+            paginate: 'NextToken',
+            property: 'collectionSummaries'
+        },
+    },
     Support: {
         describeTrustedAdvisorChecks: {
             property: 'checks',
@@ -2303,6 +2316,7 @@ var postcalls = [
                 filterValue: 'name'
             }
         },
+       
         RDS: {
             describeDBParameters: {
                 reliesOnService: 'rds',
@@ -2579,6 +2593,13 @@ var postcalls = [
                 enabled: true
             }
         },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listSecurityPolicies',
+                override: true,   
+            }
+        }
     }
 ];
 
