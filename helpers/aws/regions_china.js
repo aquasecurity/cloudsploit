@@ -120,6 +120,7 @@ module.exports = {
     frauddetector: regions,
     imagebuilder: regions,
     computeoptimizer: regions,
-    appconfig: regions
+    appconfig: regions,
+    opensearchserverless: []
 
 };
