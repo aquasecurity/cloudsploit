@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Collection Public Access',
+    title: 'OpenSearch Collection CMK Encryption',
     category: 'OpenSearch',
     domain: 'Serverless',
-    description: 'Ensures that OpenSearch Serverless collections are not publicly accessible',
+    description: 'Ensures that OpenSearch Serverless collections are encrypted with KMS Customer Master Keys (CMKs).',
     more_info: 'OpenSearch Serverless collections should be not be publicly accessible to prevent unauthorized actions.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',
     recommended_action: 'Update the network policy and remove the public access to collection.',
@@ -60,7 +60,7 @@ module.exports = {
                 {
                     securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
                 }
-                console.log('here',getSecurityPolicy.data.securityPolicyDetail.policy)
+
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
                         if (securityPolicy.AWSOwnedKey){
@@ -79,9 +79,9 @@ module.exports = {
             }
             for (let col of listCollections.data){
                 if (policyMap[col.arn]){
-                    helpers.addResult(results, 2, 'Collection is not cmk', region, col.arn);
+                    helpers.addResult(results, 2, 'OpenSearch Serverless collection is using default key for encryption', region, col.arn);
                 } else {
-                    helpers.addResult(results, 0, 'Collection is cmk', region, col.arn);
+                    helpers.addResult(results, 0, 'OpenSearch Serverless collection is using CMK for encryption', region, col.arn);
                 }
             }
             rcb();
