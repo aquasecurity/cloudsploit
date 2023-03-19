@@ -55,29 +55,33 @@ module.exports = {
                         'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region);
                     return rcb();
                 }
-                console.log(getSecurityPolicy)
-                // if (getSecurityPolicy.data.securityPolicyDetail.policy){
-                //     for (let collection of listCollections.data){
-                //         for (let p of getSecurityPolicy.data.securityPolicyDetail.policy){
-                //             if (p.AllowFromPublic){
-                                
-                //                 let found = p.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
-                //                     rule.ResourceType == 'collection');
+                let securityPolicy;
+                if (getSecurityPolicy.data.securityPolicyDetail.policy)
+                {
+                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
+                }
+                console.log('here',getSecurityPolicy.data.securityPolicyDetail.policy)
+                if (getSecurityPolicy.data.securityPolicyDetail.policy){
+                    for (let collection of listCollections.data){
+                        if (securityPolicy.AWSOwnedKey){
+                            
+                            let found = securityPolicy.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
+                                rule.ResourceType == 'collection');
 
-                //                 if (found && !policyMap[collection.arn]){
-                //                     policyMap[collection.arn] = policy.name;
-                //                     break;
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
+                            if (found && !policyMap[collection.arn]){
+                                policyMap[collection.arn] = policy.name;
+                                break;
+                            }
+                        }
+                        
+                    }
+                }
             }
             for (let col of listCollections.data){
                 if (policyMap[col.arn]){
-                    helpers.addResult(results, 2, 'Collection is publicly accessible', region, col.arn);
+                    helpers.addResult(results, 2, 'Collection is not cmk', region, col.arn);
                 } else {
-                    helpers.addResult(results, 0, 'Collection is not publicly accessible', region, col.arn);
+                    helpers.addResult(results, 0, 'Collection is cmk', region, col.arn);
                 }
             }
             rcb();
