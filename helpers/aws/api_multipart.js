@@ -2206,6 +2206,13 @@ var postcalls = [
                 filterValue: 'RoleName',
                 rateLimit: 500
             }
+        },
+        OpenSearchServerless: {
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listSecurityPolicies',
+                override: true,   
+            }
         }
     },
     {

@@ -622,7 +622,9 @@ module.exports = {
         'ecsClusterActiveService'       : require(__dirname + '/plugins/aws/ecs/ecsClusterActiveService.js'),
 
         'cognitoHasWafEnabled'          : require(__dirname + '/plugins/aws/cognito/cognitoHasWafEnabled.js'),
-        'cognitoMFAEnabled'             : require(__dirname + '/plugins/aws/cognito/cognitoMFAEnabled.js')
+        'cognitoMFAEnabled'             : require(__dirname + '/plugins/aws/cognito/cognitoMFAEnabled.js'),
+
+        'collectionCmkEncrypted'        : require(__dirname + '/plugins/aws/openSearchServerless/collectionCmkEncrypted.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
