@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AWS WAFV2 In Use',
+    title: 'AWS WAFV2 Cloudwatch Metrics Enabled',
     category: 'WAF',
     domain: 'Availability',
-    description: 'Ensure that AWS Web Application Firewall V2 (WAFV2) is in use to achieve availability and security for AWS-powered web applications.',
-    more_info: 'Using WAF for your web application running in AWS environment can help you against common web-based attacks, SQL injection attacks, DDOS attacks and more.',
-    link: 'https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html',
+    description: 'Ensure that AWS CloudWatch metrics is enabled for WAFV2 Web ACL Rules.',
+    more_info: 'As a security best practice, make sure to enable CloudWatch metrics for all the configured Web ACL rules. These metrics are useful in understanding the access patterns for your web application like allowed, blocked or passed requests based on the rules evaluation.',
+    link: 'https://docs.aws.amazon.com/waf/latest/developerguide/monitoring-cloudwatch.html',
     recommended_action: 'Create one or more WAF ACLs with proper actions and rules',
     apis: ['WAFV2:listWebACLs', 'WAFV2:getWebACL'],
 
