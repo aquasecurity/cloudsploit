@@ -1312,6 +1312,7 @@ module.exports = {
         'triggerHasTags'                : require(__dirname + '/plugins/google/cloudbuild/triggerHasTags.js'),
 
         'environmentLabelsAdded'        : require(__dirname + '/plugins/google/composer/environmentLabelsAdded.js'),
+        'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
