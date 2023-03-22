@@ -131,6 +131,15 @@ var calls = {
             pagination: true
         }
     },
+    composer: {
+        environments: {
+            url: 'https://composer.googleapis.com/v1/projects/{projectId}/locations/{locationId}/environments',
+            location: 'region',
+            pagination: true,
+            paginationKey: 'pageToken',
+            dataFilterKey: 'environments'
+        }
+    },
     repositories: {
         list: {
             url: 'https://artifactregistry.googleapis.com/v1/projects/{projectId}/locations/{locationId}/repositories',
@@ -211,7 +220,8 @@ var calls = {
             url: 'https://spanner.googleapis.com/v1/projects/{projectId}/instances',
             location: null,
             pagination: true,
-            paginationKey: 'pageSize'
+            paginationKey: 'pageSize',
+            dataFilterKey: 'instances'
         }
     },
     bigtable: {
@@ -219,7 +229,8 @@ var calls = {
             url: 'https://bigtableadmin.googleapis.com/v2/projects/{projectId}/instances',
             location: null,
             pagination: true,
-            paginationKey: 'pageToken'
+            paginationKey: 'pageToken',
+            dataFilterKey: 'instances'
         }
     },
     instanceTemplates: {
