@@ -25,8 +25,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var project = projects.data[0].name;
-
         async.each(regions.composer, function(region, rcb){
             let environments = helpers.addSource(cache, source,
                 ['composer', 'environments', region]);

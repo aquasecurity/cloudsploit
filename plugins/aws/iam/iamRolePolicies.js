@@ -66,7 +66,7 @@ module.exports = {
         },
         iam_role_policies_ignore_tag: {
             name: 'IAM Role Policies Ignore Tag',
-            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
+            description: 'A comma-separated list of tags to ignore roles that contain the provided tag. Give key-value pair i.e. env:Finance, env:Accounts ',
             regex: '^.*$',
             default: ''
         },
@@ -101,6 +101,7 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
         config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
+
 
 
         var allowedRegex = RegExp(config.iam_policy_resource_specific_wildcards);
@@ -150,14 +151,16 @@ module.exports = {
 
             //Skip roles with user defined tags
             if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
-                if (config.iam_role_policies_ignore_tag.split(':').length == 2){
-                    var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
-                    var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
+                var tagList = config.iam_role_policies_ignore_tag.split(',');
+                var ignoreRole = tagList.some(tag => {
+                    var key = tag.split(/:(?!.*:)/)[0].trim();
+                    var value = new RegExp(tag.split(/:(?!.*:)/)[1].trim());
                     if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
-                        if (getRole.data.Role.Tags.find(tag =>
-                            tag.Key == key && value.test(tag.Value))) return cb();
+                        return getRole.data.Role.Tags.find(tag =>
+                            tag.Key == key && value.test(tag.Value));
                     }
-                }
+                });
+                if (ignoreRole) return cb(); 
             }
 
             if (config.ignore_identity_federation_roles &&
