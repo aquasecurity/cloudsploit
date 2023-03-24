@@ -273,6 +273,7 @@ module.exports = {
         'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
+        'elbv2TLSVersionCipherEnabled'  : require(__dirname + '/plugins/aws/elbv2/elbv2TLSVersionCipherEnabled.js'),
 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
