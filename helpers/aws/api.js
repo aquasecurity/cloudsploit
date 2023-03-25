@@ -1,3 +1,4 @@
+
 var globalServices = [
     'S3',
     'IAM',
@@ -1357,13 +1358,6 @@ var calls = {
         }
     },
     OpenSearchServerless: {
-        listSecurityPolicies : {
-            paginate: 'nextToken',
-            property: 'securityPolicySummaries',
-            params: {
-                type: 'encryption'
-            }
-        },
         listCollections : {
             paginate: 'NextToken',
             property: 'collectionSummaries'
@@ -2597,6 +2591,9 @@ var postcalls = [
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listSecurityPolicies',
                 override: true,   
+            },
+            listEncryptionSecurityPolicies:{
+                override: true,
             }
         }
     }

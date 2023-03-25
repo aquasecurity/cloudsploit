@@ -2212,6 +2212,9 @@ var postcalls = [
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listSecurityPolicies',
                 override: true,   
+            },
+            listEncryptionSecurityPolicies:{
+                override: true,
             }
         }
     },
