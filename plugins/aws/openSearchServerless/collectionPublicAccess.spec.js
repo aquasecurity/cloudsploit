@@ -50,7 +50,7 @@ const createCache = (listCollections, listSecurityPolicies, getSecurityPolicy) =
                     data: listCollections
                 }
             },
-            listSecurityPolicies: {
+            listNetworkSecurityPolicies: {
                 'us-east-1': {
                     data: listSecurityPolicies               
                 }

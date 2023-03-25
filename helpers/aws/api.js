@@ -1357,13 +1357,6 @@ var calls = {
         }
     },
     OpenSearchServerless: {
-        listSecurityPolicies : {
-            paginate: 'nextToken',
-            property: 'securityPolicySummaries',
-            params: {
-                type: 'network'
-            }
-        },
         listCollections : {
             paginate: 'NextToken',
             property: 'collectionSummaries'
@@ -2598,7 +2591,10 @@ var postcalls = [
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listSecurityPolicies',
                 override: true,   
-            }
+            },
+            listNetworkSecurityPolicies: {
+                override: true, 
+            },
         }
     }
 ];
