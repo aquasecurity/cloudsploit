@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures OpenSearch domains are configured to log data to CloudWatch',
     more_info: 'OpenSearch domains should be configured with logging enabled with logs sent to CloudWatch for analysis and long-term storage.',
-    link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-slow-logs',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createdomain-configure-slow-logs.html',
     recommended_action: 'Ensure logging is enabled and a CloudWatch log group is specified for each OpenSearch domain.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
 
