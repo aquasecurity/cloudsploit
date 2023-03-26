@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures OpenSearch domains are configured to enforce HTTPS connections',
     more_info: 'OpenSearch domains should be configured to enforce HTTPS connections for all clients to ensure encryption of data in transit.',
-    link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html',
     recommended_action: 'Ensure HTTPS connections are enforced for all OpenSearch domains.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
     remediation_description: 'OpenSearch domain will be configured to enforce HTTPS.',
