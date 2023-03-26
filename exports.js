@@ -287,6 +287,7 @@ module.exports = {
         'osAccessFromIps'               : require(__dirname + '/plugins/aws/opensearch/osAccessFromIps.js'),
         'osCrossAccountAccess'          : require(__dirname + '/plugins/aws/opensearch/osCrossAccountAccess'),
         'osDedicatedMasterEnabled'      : require(__dirname + '/plugins/aws/opensearch/osDedicatedMasterEnabled.js'),
+        'osDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/opensearch/osDesiredInstanceTypes.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),

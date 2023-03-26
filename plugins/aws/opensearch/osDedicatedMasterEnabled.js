@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure that Amazon OpenSearch domains are using dedicated master nodes.',
     more_info: 'Using OpenSearch dedicated master nodes to separate management tasks from index and search requests will improve the clusters ability to manage easily different types of workload and make them more resilient in production.',
-    link: 'http://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-dedicatedmasternodes.html',
     recommended_action: 'Update the domain to use dedicated master nodes.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
     
@@ -18,7 +18,7 @@ module.exports = {
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['opensearch', 'listDomainNames', region]);
 
@@ -53,8 +53,8 @@ module.exports = {
                 } else {
                     var localDomain = describeDomain.data.DomainStatus;
 
-                    if (localDomain.ElasticsearchClusterConfig &&
-                        localDomain.ElasticsearchClusterConfig.DedicatedMasterEnabled) {
+                    if (localDomain.ClusterConfig &&
+                        localDomain.ClusterConfig.DedicatedMasterEnabled) {
                         helpers.addResult(results, 0,
                             'OpenSearch domain is configured to use dedicated master node', region, resource);
                     } else {

@@ -6,7 +6,7 @@ const domains =  [
         "DomainStatus": {
             "DomainName": 'mydomain',
             "ARN": 'arn:1234',
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "DedicatedMasterEnabled": true
             }
         }
@@ -15,7 +15,7 @@ const domains =  [
         "DomainStatus": {
             "DomainName": 'mydomain',
             "ARN": '"arn":1234',
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "DedicatedMasterEnabled": false
             }
         }
@@ -24,7 +24,7 @@ const domains =  [
         "DomainStatus": {
             "DomainName": 'mydomain',
             "ARN": 'arn:1234',
-            "ElasticsearchClusterConfig": {}
+            "ClusterConfig": {}
         }
     }
 ]

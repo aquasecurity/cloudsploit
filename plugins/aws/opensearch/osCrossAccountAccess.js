@@ -69,7 +69,7 @@ module.exports = {
             organizationAccounts = helpers.getOrganizationAccounts(listAccounts, accountId);
         }
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['opensearch', 'listDomainNames', region]);
 
