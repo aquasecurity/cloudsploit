@@ -210,5 +210,6 @@ module.exports = {
     frauddetector: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'ap-southeast-1', 'ap-southeast-2'],
     imagebuilder: [...regions, ...newRegions, ...meCentral1],
     computeoptimizer: ['us-east-1'],
-    appconfig: [...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate]
+    appconfig: [...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate],
+    opensearch:[...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate],
 };

@@ -907,6 +907,11 @@ var calls = {
             property: 'DomainNames',
         }
     },
+    OpenSearch: {
+        listDomainNames: {
+            property: 'DomainNames',
+        }
+    },
     EventBridge: {
         listEventBuses: {
             property: 'EventBuses',
@@ -1646,7 +1651,7 @@ var postcalls = [
         },
         CloudWatch: {
             getEsMetricStatistics: {
-                reliesOnService: 'es',
+                reliesOnService: 'opensearch',
                 reliesOnCall: 'listDomainNames',
                 override: true,
             },
@@ -1758,6 +1763,14 @@ var postcalls = [
                 filterValue: 'DomainName'
             },
             sendIntegration: serviceMap['ES']
+        },
+        OpenSearch: {
+            describeDomain: {
+                reliesOnService: 'opensearch',
+                reliesOnCall: 'listDomainNames',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
         },
         S3: {
             getBucketLogging: {

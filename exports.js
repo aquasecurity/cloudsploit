@@ -283,6 +283,11 @@ module.exports = {
         'emrDesiredInstanceType'        : require(__dirname + '/plugins/aws/emr/emrDesiredInstanceType.js'),
         'emrInstanceCount'              : require(__dirname + '/plugins/aws/emr/emrInstanceCount.js'),
 
+        'osClusterStatus'               : require(__dirname + '/plugins/aws/opensearch/osClusterStatus.js'),
+        'osAccessFromIps'               : require(__dirname + '/plugins/aws/opensearch/osAccessFromIps.js'),
+        'osCrossAccountAccess'          : require(__dirname + '/plugins/aws/opensearch/osCrossAccountAccess'),
+        'osDedicatedMasterEnabled'      : require(__dirname + '/plugins/aws/opensearch/osDedicatedMasterEnabled.js'),
+
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
         'esRequireIAMAuth'              : require(__dirname + '/plugins/aws/es/esRequireIAMAuth.js'),
