@@ -290,6 +290,7 @@ module.exports = {
         'osDesiredInstanceTypes'        : require(__dirname + '/plugins/aws/opensearch/osDesiredInstanceTypes.js'),
         'osDomainEncryptionEnabled'     : require(__dirname + '/plugins/aws/opensearch/osDomainEncryptionEnabled.js'),
         'osEncryptedDomain'             : require(__dirname + '/plugins/aws/opensearch/osEncryptedDomain.js'),
+        'osExposedDomain'               : require(__dirname + '/plugins/aws/opensearch/osExposedDomain.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
