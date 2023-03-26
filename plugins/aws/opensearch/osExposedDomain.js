@@ -21,7 +21,7 @@ module.exports = {
             ['sts', 'getCallerIdentity', acctRegion, 'data']);
         var awsOrGov = helpers.defaultPartition(settings);
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['opensearch', 'listDomainNames', region]);
 
