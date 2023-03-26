@@ -292,6 +292,7 @@ module.exports = {
         'osEncryptedDomain'             : require(__dirname + '/plugins/aws/opensearch/osEncryptedDomain.js'),
         'osExposedDomain'               : require(__dirname + '/plugins/aws/opensearch/osExposedDomain.js'),
         'osHttpsOnly'                   : require(__dirname + '/plugins/aws/opensearch/osHttpsOnly.js'),
+        'osLoggingEnabled'              : require(__dirname + '/plugins/aws/opensearch/osLoggingEnabled.js'),
 
         'esAccessFromIps'               : require(__dirname + '/plugins/aws/es/esAccessFromIps.js'),
         'esPublicEndpoint'              : require(__dirname + '/plugins/aws/es/esPublicEndpoint.js'),
