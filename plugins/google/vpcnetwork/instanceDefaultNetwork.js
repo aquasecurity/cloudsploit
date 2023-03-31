@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure no VM instances exist in default network.',
     more_info: 'Every GCP project comes with a default network with pre-populated firewall rules. A default network is suitable for getting started quickly, and for launching public instances for simple websites. But, if you need to host a complex multi-tier application or add more layers of security to your infrastructure it is a best practice to create non-default network with public, private subnets & demilitarized (DMZ) zones. This segregates the network based on their functionality, services, and security.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
-    recommended_action: 'Ensure the default network does not have any VM instances',
+    recommended_action: 'Ensure the default network does not have any VM instances.',
     apis: ['networks:list', 'compute:list'],
 
     run: function(cache, settings, callback) {
