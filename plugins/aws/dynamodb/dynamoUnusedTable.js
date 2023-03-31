@@ -36,8 +36,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No DynamoDB tables found', region);
                 return rcb();
             }
-
-            async.each(listTables.data, function(table, cb) {
+            for (let table of listTables.data){
                 var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
 
                 var describeTable = helpers.addSource(cache, source,
@@ -47,7 +46,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to describe DynamoDB table: ${helpers.addError(describeTable)}`,
                         region, resource);
-                    return cb();
+                    continue;
                 }
                 if (describeTable.data && describeTable.data.Table && !describeTable.data.Table.ItemCount) {
                     helpers.addResult(results, 2,
@@ -58,11 +57,9 @@ module.exports = {
                         `DynamoDB table "${table}" is being used`,
                         region, resource);
                 }
+            }
 
-                cb();
-            }, function(){
-                rcb();
-            });
+            rcb();
         }, function(){
             callback(null, results, source);
         });
