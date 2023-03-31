@@ -49,7 +49,7 @@ module.exports = {
                         region, resource);
                     return cb();
                 }
-                if (describeTable.data && describeTable.data.Table && describeTable.data.Table.ItemCount === 0) {
+                if (describeTable.data && describeTable.data.Table && !describeTable.data.Table.ItemCount) {
                     helpers.addResult(results, 2,
                         `DynamoDB table "${table}" is unused.`,
                         region, resource);
