@@ -55,7 +55,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        `DynamoDB table "${table}" is being used.`,
+                        `DynamoDB table "${table}" is being used`,
                         region, resource);
                 }
 
