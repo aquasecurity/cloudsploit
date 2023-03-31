@@ -37,7 +37,7 @@ module.exports = {
                 if (!func.name) return;
 
                 if (func.vpcConnector) {
-                    if (func.vpcConnectorEgressSettings && func.vpcConnectorEgressSettings === 'ALL_TRAFFIC') {
+                    if (func.vpcConnectorEgressSettings && func.vpcConnectorEgressSettings.toUpperCase() === 'ALL_TRAFFIC') {
                         helpers.addResult(results, 0, 'Cloud Function is using a VPC Connector to route all traffic', region, func.name);
                     } else {
                         helpers.addResult(results, 2, 'Cloud Function is using a VPC Connector for requests to private IPs only', region, func.name);
