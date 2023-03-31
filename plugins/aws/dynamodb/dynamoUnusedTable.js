@@ -5,7 +5,7 @@ module.exports = {
     title: 'DynamoDB Unused Table',
     category: 'DynamoDB',
     domain: 'Databases',
-    description: 'Ensures that Amazon DynamoDB unused tables are removed.',
+    description: 'Ensures that Amazon DynamoDB unused tables are removed to optimise costs.',
     more_info: 'A DynamoDB table is considered unused if its item count is zero. As a best practice, delete unused tables for operational efficiency and better resource management. This will also prevent resource wastage and unnecessary costs.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html',
     recommended_action: 'Identify unused tables and remove them',
