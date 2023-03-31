@@ -1225,7 +1225,6 @@ module.exports = {
         'autoNodeRepairEnabled'         : require(__dirname + '/plugins/google/kubernetes/autoNodeRepairEnabled.js'),
         'autoNodeUpgradesEnabled'       : require(__dirname + '/plugins/google/kubernetes/autoNodeUpgradesEnabled.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/google/kubernetes/networkPolicyEnabled.js'),
-        'podSecurityPolicyEnabled'      : require(__dirname + '/plugins/google/kubernetes/podSecurityPolicyEnabled.js'),
         'privateClusterEnabled'         : require(__dirname + '/plugins/google/kubernetes/privateClusterEnabled.js'),
         'basicAuthenticationDisabled'   : require(__dirname + '/plugins/google/kubernetes/basicAuthenticationDisabled.js'),
         'kubernetesAlphaDisabled'       : require(__dirname + '/plugins/google/kubernetes/kubernetesAlphaDisabled.js'),
