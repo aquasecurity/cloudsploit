@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Collection Public Access',
+    title: 'OpenSearch Collection Public Access',
     category: 'OpenSearch',
     domain: 'Serverless',
-    description: 'Ensures that OpenSearch Serverless collections are not publicly accessible',
+    description: 'Ensures that OpenSearch Serverless collections are not publicly accessible.',
     more_info: 'OpenSearch Serverless collections should be not be publicly accessible to prevent unauthorized actions.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',
     recommended_action: 'Update the network policy and remove the public access to collection.',
@@ -74,9 +74,9 @@ module.exports = {
             }
             for (let col of listCollections.data){
                 if (policyMap[col.arn]){
-                    helpers.addResult(results, 2, 'Collection is publicly accessible', region, col.arn);
+                    helpers.addResult(results, 2, 'OpenSearch collection is publicly accessible', region, col.arn);
                 } else {
-                    helpers.addResult(results, 0, 'Collection is not publicly accessible', region, col.arn);
+                    helpers.addResult(results, 0, 'OpenSearch collection is not publicly accessible', region, col.arn);
                 }
             }
             rcb();

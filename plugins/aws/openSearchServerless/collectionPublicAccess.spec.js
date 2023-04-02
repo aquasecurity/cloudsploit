@@ -122,7 +122,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Collection is publicly accessible');
+                expect(results[0].message).to.include('OpenSearch collection is publicly accessible');
                 done();
             });
         });
@@ -131,7 +131,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Collection is not publicly accessible');
+                expect(results[0].message).to.include('OpenSearch collection is not publicly accessible');
                 done();
             });
         });
