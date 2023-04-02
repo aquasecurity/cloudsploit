@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var cloudwatchMetricsEnabled = require('./cloudwatchMetricsEnabled');
+var cloudwatchMetricsEnabled = require('./wafV2CloudwatchMetricsEnabled');
 
 const webACLs = [
     {
@@ -71,7 +71,7 @@ describe('cloudwatchMetricsEnabled', function () {
             cloudwatchMetricsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Cloud watch metrics are enabled for web ACL rule');
+                expect(results[0].message).to.include('WAFV2 web ACL rule has CloudWatch metrics enabled');
                 done();
             });
         });
@@ -81,7 +81,7 @@ describe('cloudwatchMetricsEnabled', function () {
             cloudwatchMetricsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Cloud watch metrics are not enabled for web ACL rule');
+                expect(results[0].message).to.include('WAFV2 web ACL rule does not have CloudWatch metrics enabled');
                 done();
             });
         });
