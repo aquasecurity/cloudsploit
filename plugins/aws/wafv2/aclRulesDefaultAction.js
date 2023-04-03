@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that default Web ACL action is set to "Block" for ACL rules with allow action.',
     more_info: 'Web ACL default action determines whether the incoming request is allowed or blocked when none of the rules are matched. As a security best practice, make sure it is set to ‘Block’ when you have configured web ACL rules with allow actions. This will limit the number of users accessing your web app and will reduce the scope of malicious attacks.',
     link: 'https://docs.aws.amazon.com/waf/latest/APIReference/API_DefaultAction.html',
-    recommended_action: 'Modify Web ACL and set default action to block users.',
+    recommended_action: 'Modify Web ACL and set default action to block requests.',
     apis: ['WAFV2:listWebACLs', 'WAFV2:getWebACL'],
 
     run: function(cache, settings, callback) {
