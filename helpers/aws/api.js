@@ -1361,6 +1361,9 @@ var calls = {
             paginate: 'NextToken',
             property: 'collectionSummaries'
         },
+        listNetworkSecurityPolicies: {
+                override: true, 
+        },
     },
     Support: {
         describeTrustedAdvisorChecks: {
@@ -2591,10 +2594,7 @@ var postcalls = [
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listSecurityPolicies',
                 override: true,   
-            },
-            listNetworkSecurityPolicies: {
-                override: true, 
-            },
+            }
         }
     }
 ];
