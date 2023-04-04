@@ -336,6 +336,12 @@ var calls = {
             graph: true
         }
     },
+    applications: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/applications/',
+            graph: true,
+        }
+    },
     registries: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01'
