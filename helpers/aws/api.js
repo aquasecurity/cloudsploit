@@ -2592,7 +2592,7 @@ var postcalls = [
         OpenSearchServerless: {
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
-                reliesOnCall: 'listSecurityPolicies',
+                reliesOnCall: 'listNetworkSecurityPolicies',
                 override: true,   
             }
         }
