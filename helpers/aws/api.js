@@ -1362,7 +1362,7 @@ var calls = {
             property: 'collectionSummaries'
         },
         listNetworkSecurityPolicies: {
-                override: true, 
+            override: true, 
         },
     },
     Support: {
