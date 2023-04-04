@@ -5,10 +5,10 @@ module.exports = {
     title: 'ELBv2 Cross-Zone Load Balancing',
     category: 'ELBv2',
     domain: 'Content Delivery',
-    description: 'Ensures that AWS ELBv2 have cross-zone load balancing enabled.',
+    description: 'Ensures that AWS ELBv2 load balancers have cross-zone load balancing enabled.',
     more_info: 'AWS ELBv2 should have cross-zone load balancing enabled to distribute the traffic evenly across the registered instances in all enabled Availability Zones.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-disable-crosszone-lb.html',
-    recommended_action: 'Update AWS ELBv2 to enable cross zone load balancing',
+    recommended_action: 'Update AWS ELBv2 load balancers to enable cross zone load balancing.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeLoadBalancerAttributes'],
 
     run: function(cache, settings, callback) {
@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(describeLoadBalancers.data, function(elb, cb){
+            for (let elb of describeLoadBalancers.data) {
                 var resource = elb.LoadBalancerArn;
 
                 var elbv2Attributes = helpers.addSource(cache, source,
@@ -44,39 +44,25 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query for Application/Network load balancer attributes: ' +  helpers.addError(elbv2Attributes),
                         region, resource);
-                    return cb();
+                    continue;
                 }
 
                 if (!elbv2Attributes.data.Attributes || !elbv2Attributes.data.Attributes.length){
                     helpers.addResult(results, 2,
                         'Application/Network load balancer attributes not found',
                         region, resource);
-                    return cb();
+                    continue;
                 }
 
-                var found = false;
-                elbv2Attributes.data.Attributes.forEach(attribute => {
-                    if (attribute.Key && attribute.Key === 'load_balancing.cross_zone.enabled') {
-                        found = true;
-                        if (attribute.Value && attribute.Value === 'true') {
-                            helpers.addResult(results, 0,
-                                'Load balancer :' + elb.LoadBalancerName + ': has cross-zone load balancing enabled',
-                                region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'Load balancer :' + elb.LoadBalancerName + ': does not have cross-zone load balancing enabled',
-                                region, resource);
-                        }
-                    }
-                });
-
-                if (!found) {
-                    helpers.addResult(results, 2, 'Deletion protection not found', region, resource);
+                let found = elbv2Attributes.data.Attributes.find(attr => attr.Key === 'load_balancing.cross_zone.enabled' && attr.Value === 'true');
+                if (found) {
+                    helpers.addResult(results, 0,
+                        'Load balancer :' + elb.LoadBalancerName + ': has cross-zone load balancing enabled', region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Load balancer :' + elb.LoadBalancerName + ': does not have cross-zone load balancing enabled', region, resource);
                 }
-
-                cb();
-            });
-
+            }
             rcb();
         }, function(){
             callback(null, results, source);
