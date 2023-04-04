@@ -592,6 +592,7 @@ module.exports = {
         'backupDeletionProtection'      : require(__dirname + '/plugins/aws/backup/backupDeletionProtection.js'),
         'compliantLifecyleConfigured'   : require(__dirname + '/plugins/aws/backup/compliantLifecyleConfigured.js'),
         'backupVaultHasTags'            : require(__dirname + '/plugins/aws/backup/backupVaultHasTags.js'),
+        'backupVaultRoleAccess'         : require(__dirname + '/plugins/aws/backup/backupVaultRoleAccess.js'),
 
         'equipmentdatasetEncrypted'     : require(__dirname + '/plugins/aws/lookout/equipmentdatasetEncrypted.js'),
 
