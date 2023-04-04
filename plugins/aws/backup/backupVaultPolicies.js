@@ -42,19 +42,11 @@ module.exports = {
 
                 let getBackupVaultAccessPolicy = helpers.addSource(cache, source,
                     ['backup', 'getBackupVaultAccessPolicy', region, vault.BackupVaultName]);
-
-                if (getBackupVaultAccessPolicy && getBackupVaultAccessPolicy.err && getBackupVaultAccessPolicy.err.code &&
-                        getBackupVaultAccessPolicy.err.code == 'ResourceNotFoundException') {
-                    helpers.addResult(results, 2,
-                        'No access policy found for Backup vault', region, resource);
-                    continue;
-                }
     
-                if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data) {
+                if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data || !getBackupVaultAccessPolicy.data.Policy) {
                     helpers.addResult(results, 3, `Unable to get Backup vault access policy: ${helpers.addError(getBackupVaultAccessPolicy)}`, region, resource);
                     continue;
                 }
-    
     
                 var statements = helpers.normalizePolicyDocument(getBackupVaultAccessPolicy.data.Policy);
     
@@ -62,7 +54,7 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'The Backup Vault policy does not have trust relationship statements',
                         region, resource);
-                    return;
+                    continue;
                 }
     
                 var actions = [];
