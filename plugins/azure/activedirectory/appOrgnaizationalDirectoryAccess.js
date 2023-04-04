@@ -32,7 +32,7 @@ module.exports = {
             }
             console.log(applications)
             for (let app of applications.data) {
-                if (!app.appId) continue;
+                if (!app.id) continue;
 
                 if (app.signInAudience && app.signInAudience === 'AzureADMultipleOrgs' || app.signInAudience === 'AzureADandPersonalMicrosoftAccount'){
                     helpers.addResult(results, 2, 'Multi tenant access enabled for the application.', location, app.displayName);
