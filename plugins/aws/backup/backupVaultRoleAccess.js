@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Vault Role Access',
     category: 'Backup',
     domain: 'Storage',
-    description: 'Ensure that AWS Backup Vault are accessed through roles.',
+    description: 'Ensure that AWS Backup Vaults are accessed through roles.',
     more_info: 'As a security best practice and to adhere to compliance standards, ensure only role level access is allowed on a Backup vault.',
     recommended_action: 'Modify access policy and give only role level access to backup vault.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
@@ -40,15 +40,8 @@ module.exports = {
 
                 let getBackupVaultAccessPolicy = helpers.addSource(cache, source,
                     ['backup', 'getBackupVaultAccessPolicy', region, vault.BackupVaultName]);
-
-                if (getBackupVaultAccessPolicy && getBackupVaultAccessPolicy.err && getBackupVaultAccessPolicy.err.code &&
-                        getBackupVaultAccessPolicy.err.code == 'ResourceNotFoundException') {
-                    helpers.addResult(results, 2,
-                        'No access policy found for Backup vault', region, resource);
-                    continue;
-                }
     
-                if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data) {
+                if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data || !getBackupVaultAccessPolicy.data.Policy) {
                     helpers.addResult(results, 3, `Unable to get Backup vault access policy: ${helpers.addError(getBackupVaultAccessPolicy)}`, region, resource);
                     continue;
                 }
@@ -59,10 +52,9 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'The Backup Vault policy does not have trust relationship statements',
                         region, resource);
-                    return;
+                    continue;
                 }
     
-                var actions = [];
                 let roleAccess = true;
                 for (var statement of statements) {
                     var principalEval = helpers.globalPrincipal(statement.Principal);
@@ -75,12 +67,10 @@ module.exports = {
             
                 if (!roleAccess) {
                     helpers.addResult(results, 2,
-                        'Backup Vault does not have role level access only' + actions,
-                        region, resource);
+                        'Backup Vault does not have role level access only' , region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'Backup Vault have role level access only',
-                        region, resource);
+                        'Backup Vault have role level access only', region, resource);
                 }
             }
             rcb();

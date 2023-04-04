@@ -101,18 +101,6 @@ describe('backupVaultRoleAccess', function () {
             });
         });
 
-        it('should FAIL if no access policy found for Backup vault', function (done) {
-            const cache = createCache([listBackupVaults[0]], null , null, { message: 'An error occurred (ResourceNotFoundException) when calling the GetBackupVaultAccessPolicy operation', code : 'ResourceNotFoundException' } );
-            backupVaultRoleAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No access policy found for Backup vault')
-                done();
-            });
-        });
-
-
         it('should PASS if no Backup vault list found', function (done) {
             const cache = createCache([]);
             backupVaultRoleAccess.run(cache, {}, (err, results) => {
