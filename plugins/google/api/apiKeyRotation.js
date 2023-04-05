@@ -27,7 +27,6 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        console.log('**********');
         var apiKeyRotationFailInterval = parseInt(settings.api_keys_rotation_fail_interval || this.settings.api_keys_rotation_fail_interval.default);
         var apiKeyRotationWarnInterval = parseInt(settings.api_keys_rotation_warn_interval || this.settings.api_keys_rotation_warn_interval.default);
 
