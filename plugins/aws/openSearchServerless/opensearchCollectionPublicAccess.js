@@ -37,7 +37,7 @@ module.exports = {
 
             if (!listSecurityPolicies && listSecurityPolicies.err || !listSecurityPolicies.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query list security policy: ' + helpers.addError(listSecurityPolicies), region);
+                    'Unable to list OpenSearch security policies: ' + helpers.addError(listSecurityPolicies), region);
                 return rcb();
             }
 
@@ -49,7 +49,7 @@ module.exports = {
                 if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
                     helpers.addResult(results, 3,
                         'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region);
-                    return rcb();
+                    continue;
                 }
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
