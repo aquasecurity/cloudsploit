@@ -168,6 +168,7 @@ describe('elbv2crosszoneLoadBalancing', function () {
             elbv2crosszoneLoadBalancing.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('has cross-zone load balancing enabled');
                 done();
             });
         });
