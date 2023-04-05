@@ -39,6 +39,7 @@ module.exports = {
                         'Unable to get web acl details: ' + helpers.addError(listWebACLs), region, webAcl.ARN);
                     continue;
                 }
+
                 if (getWebACL.data.WebACL &&
                 getWebACL.data.WebACL.VisibilityConfig && getWebACL.data.WebACL.VisibilityConfig.CloudWatchMetricsEnabled){
                     helpers.addResult(results, 0, 'WAFV2 web ACL rule has CloudWatch metrics enabled', region, getWebACL.data.WebACL.ARN);
