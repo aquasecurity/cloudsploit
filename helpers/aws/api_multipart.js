@@ -1014,7 +1014,7 @@ var calls = [
                 property: 'collectionSummaries'
             },
             listEncryptionSecurityPolicies:{
-                    override: true,
+                override: true,
             }
         },
         Support: {
