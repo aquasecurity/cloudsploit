@@ -63,6 +63,7 @@ module.exports = {
                     }
                 }
             }
+
             for (let col of listCollections.data){
                 if (policyMap[col.arn]){
                     helpers.addResult(results, 2, 'OpenSearch collection is publicly accessible', region, col.arn);
