@@ -46,8 +46,8 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'WAFV2 web ACL rule does not have CloudWatch metrics enabled', region, webAcl.ARN);
                 }
+            }
 
-            } 
             rcb();
         }, function(){
             callback(null, results, source);
