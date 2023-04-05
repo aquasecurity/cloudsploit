@@ -40,10 +40,6 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listSecurityPolicies.data.length) {
-                helpers.addResult(results, 0, 'No Security Policy found', region);
-                return rcb();
-            }
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
 
