@@ -36,6 +36,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No DynamoDB tables found', region);
                 return rcb();
             }
+
             for (let table of listTables.data){
                 var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
 
