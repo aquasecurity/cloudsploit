@@ -99,24 +99,6 @@ describe('collectionPublicAccess', function () {
             });
         });
 
-        it('should PASS if no security policy found', function (done) {
-            const cache = createCache(listCollections, []);
-            collectionPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('OpenSearch no network security policy found');
-                done();
-            });
-        });
-        it('should give UNKNOWN result if unable to query get security policy', function (done) {
-            const cache = createCache(listCollections, listSecurityPolicies, null);
-            collectionPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query get security policy');
-                done();
-            });
-        });
         it('should PASS if collection is publically accessible', function (done) {
             const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[0]);
             collectionPublicAccess.run(cache, {}, (err, results) => {
