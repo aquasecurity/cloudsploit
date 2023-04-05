@@ -49,7 +49,7 @@ module.exports = {
                 let resource = helpers.createResourceName('instances', sqlInstance.name, project);
 
                 if (sqlInstance.databaseVersion && !sqlInstance.databaseVersion.toUpperCase().startsWith('POSTGRES')) {
-                    helpers.addResult(results, 0, 'SQL instance database version is not of PosgreSQL type', region, resource);
+                    helpers.addResult(results, 0, 'SQL instance database version is not of PostgreSQL type', region, resource);
                     return;
                 }
 

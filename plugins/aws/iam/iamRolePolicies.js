@@ -66,9 +66,21 @@ module.exports = {
         },
         iam_role_policies_ignore_tag: {
             name: 'IAM Role Policies Ignore Tag',
-            description: 'Ignores roles that contain the provided tag. Give key-value pair i.e. env:Finance ',
+            description: 'A comma-separated list of tags to ignore roles that contain the provided tag. Give key-value pair i.e. env:Finance, env:Accounts ',
             regex: '^.*$',
             default: ''
+        },
+        iam_policy_resource_specific_wildcards: {
+            name: 'IAM Policy Resource Specific Wildcards',
+            description: 'Allows policy resources to flag based on regular expression. All the resources in IAM policy, inline or managed, will be tested against this regex and if they don\'t pass the regex, they will be flagged by the plugin.',
+            regex: '^.*$',
+            default: '^.*$',
+        },
+        ignore_iam_policy_resource_wildcards: {
+            name: 'IAM Role Policies Ignore Resource Specific Wildcards',
+            description: 'Enable this setting to ignore resource wildcards i.e. \'"Resource": "*"\' in the IAM policy, which by default, are being flagged.',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -79,14 +91,20 @@ module.exports = {
             ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
-            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default
+            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
+            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default,
+            ignore_iam_policy_resource_wildcards: settings.ignore_iam_policy_resource_wildcards || this.settings.ignore_iam_policy_resource_wildcards.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
         config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
+        config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
 
+
+
+        var allowedRegex = RegExp(config.iam_policy_resource_specific_wildcards);
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -133,14 +151,16 @@ module.exports = {
 
             //Skip roles with user defined tags
             if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
-                if (config.iam_role_policies_ignore_tag.split(':').length == 2){
-                    var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
-                    var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
+                var tagList = config.iam_role_policies_ignore_tag.split(',');
+                var ignoreRole = tagList.some(tag => {
+                    var key = tag.split(/:(?!.*:)/)[0].trim();
+                    var value = new RegExp(tag.split(/:(?!.*:)/)[1].trim());
                     if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
-                        if (getRole.data.Role.Tags.find(tag =>
-                            tag.Key == key && value.test(tag.Value))) return cb();
+                        return getRole.data.Role.Tags.find(tag =>
+                            tag.Key == key && value.test(tag.Value));
                     }
-                }
+                });
+                if (ignoreRole) return cb(); 
             }
 
             if (config.ignore_identity_federation_roles &&
@@ -208,7 +228,7 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
+                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                         }
                     }
                 }
@@ -224,10 +244,11 @@ module.exports = {
                         getRolePolicy[policyName] &&
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
+
                         var statements = helpers.normalizePolicyDocument(
                             getRolePolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
+                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
                     }
                 }
             }
@@ -246,10 +267,10 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
-    }
+    } 
 };
 
-function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -261,6 +282,8 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
+            } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*' ){
+                failMsg = `Role ${policyType} policy allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
@@ -270,6 +293,15 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                     }
                 }
                 if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
+            } else if (statement.Resource && statement.Resource.length) {
+                // Check each resource for wildcard
+                let wildcards = [];
+                for (var resource of statement.Resource) {
+                    if (!regResource.test(resource)) {
+                        wildcards.push(resource);
+                    }
+                }
+                if (wildcards.length) failMsg = `Role ${policyType} policy does not match provided regex: ${wildcards.join(', ')}`;
             }
 
             if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);

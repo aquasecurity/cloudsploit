@@ -50,7 +50,8 @@ var locations = [
     'brazilsouth',          // (South America) Brazil South
     'brazilsoutheast',      // (South America) Brazil Southeast
     'canadacentral',        // (Canada) Canada Central
-    'canadaeast'            // (Canada) Canada East
+    'canadaeast',           // (Canada) Canada East
+    'qatarcentral',         // (Middle East) Qatar Central
 ];
 
 module.exports = {
@@ -104,4 +105,10 @@ module.exports = {
     publicIPAddresses: locations,
     privateDnsZones: ['global'],
     privateEndpoints: locations,
+    securityContactv2: ['global'],
+    images: locations,
+    vmScaleSet: locations,
+    applicationGateway: locations,
+    wafPolicies: locations,
+    routeTables: locations,
 };

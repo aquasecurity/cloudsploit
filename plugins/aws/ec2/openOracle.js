@@ -5,12 +5,12 @@ module.exports = {
     title: 'Open Oracle',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Determine if TCP port 1521 for Oracle is open to the public',
+    description: 'Determine if TCP ports 1521 , 2483 for Oracle is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open \
         to the public to function properly, more sensitive services such as Oracle \
         should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
-    recommended_action: 'Restrict TCP ports 1521 to known IP addresses',
+    recommended_action: 'Restrict TCP ports 1521, 2483 to known IP addresses',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
     settings: {
         ec2_skip_unused_groups: {
@@ -59,7 +59,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [1521]
+            'tcp': [1521, 2483]
         };
 
         var service = 'Oracle';
@@ -94,17 +94,29 @@ module.exports = {
         var putCall = this.actions.remediate;
         var pluginName = 'openOracle';
         var protocol = 'tcp';
-        var port = 1521;
+        var ports = [1521, 2483];
+        var actions = [];
+        var errors = [];
 
-        helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
-            if (error && (error.length || Object.keys(error).length)) {
-                remediation_file['post_remediate']['actions'][pluginName]['error'] = error;
+        async.each(ports,function(port, cb) {
+            helpers.remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, settings, resource, remediation_file, function(error, action) {
+                if (error && (error.length || Object.keys(error).length)) {
+                    errors.push(error);
+                } else if (action && (action.length || Object.keys(action).length)){
+                    actions.push(action);
+                }
+
+                cb();
+            });
+        }, function() {
+            if (errors && errors.length) {
+                remediation_file['post_remediate']['actions'][pluginName]['error'] = errors.join(', ');
                 settings.remediation_file = remediation_file;
-                return callback(error, null);
+                return callback(errors, null);
             } else {
-                remediation_file['post_remediate']['actions'][pluginName][resource] = action;
+                remediation_file['post_remediate']['actions'][pluginName][resource] = actions;
                 settings.remediation_file = remediation_file;
-                return callback(null, action);
+                return callback(null, actions);
             }
         });
     }

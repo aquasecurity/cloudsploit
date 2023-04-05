@@ -11,15 +11,15 @@ const webApps = [
 const configurations = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
-        'phpVersion': null
+        'linuxFxVersion': null
     },
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
-        'phpVersion': '7.3'
+        'linuxFxVersion': 'PHP|8.2'
     },
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
-        'phpVersion': '5.5'
+        'linuxFxVersion': 'PHP|5.2'
     }
 ];
 
@@ -82,17 +82,6 @@ describe('phpVersion', function() {
             });
         });
 
-        it('should give passing result if no PHP app found', function(done) {
-            const cache = createCache([webApps[0]], [configurations[0]]);
-            phpVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No App Services with PHP found');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
         it('should give unknown result if unable to query for app service', function(done) {
             const cache = createErrorCache('webApp');
             phpVersion.run(cache, {}, (err, results) => {
@@ -108,14 +97,8 @@ describe('phpVersion', function() {
             const cache = createErrorCache('configs');
             phpVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
-
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query App Service');
-
-                expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('No App Services with PHP found');
-
-                expect(results[0].region).to.equal('eastus');
+                expect(results[0].message).to.include('Unable to query for Web App Configs:');
                 done();
             });
         });
@@ -125,7 +108,7 @@ describe('phpVersion', function() {
             phpVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The PHP version (7.3) is the latest version');
+                expect(results[0].message).to.include('The PHP version (8.2) is the latest version');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -136,7 +119,17 @@ describe('phpVersion', function() {
             phpVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The PHP version (5.5) is not the latest version');
+                expect(results[0].message).to.include('The PHP version (5.2) is not the latest version');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+         it('should give passing result if no PHP app found', function(done) {
+            const cache = createCache([webApps[0]], [configurations[0]]);
+            phpVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No App Services with PHP found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

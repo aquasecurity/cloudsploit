@@ -32,30 +32,23 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(webApps.data, function(webApp, scb) {
+            webApps.data.forEach(webApp => {
                 if (webApp && webApp.kind && webApp.kind === 'functionapp') {
                     helpers.addResult(results, 0, 'WebApps backup can not be configured for the function App', location, webApp.id);
-                    return scb();
+                    return;
                 }
 
                 const configs = helpers.addSource(cache, source,
                     ['webApps', 'getBackupConfiguration', location, webApp.id]);
 
-                if (configs && configs.err) {
-                    helpers.addResult(results, 3, 'Unable to query for Web App backup configs: ' + helpers.addError(configs), location);
-                    return scb();
-                }
-
-                if (!configs || !configs.data) {
+                if (configs && configs.err && configs.err.includes('NotFound')) {
                     helpers.addResult(results, 2, 'Backups are not configured for WebApp', location, webApp.id);
-                } else {
-                    helpers.addResult(results, 0, 'Backups are configured for WebApp', location, webApp.id);
-                }
-
-                scb();
-            }, function() {
-                rcb();
+                } else if (!configs || configs.err || !configs.data) {
+                    helpers.addResult(results, 3, 'Unable to query for Web App backup configs: ' + helpers.addError(configs), location, webApp.id);
+                } else helpers.addResult(results, 0, 'Backups are configured for WebApp', location, webApp.id);
             });
+
+            rcb();
         }, function() {
             callback(null, results, source);
         });
