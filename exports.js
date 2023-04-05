@@ -117,6 +117,7 @@ module.exports = {
         'dynamoContinuousBackups'       : require(__dirname + '/plugins/aws/dynamodb/dynamoContinuousBackups.js'),
         'dynamoTableBackupExists'       : require(__dirname + '/plugins/aws/dynamodb/dynamoTableBackupExists.js'),
         'dynamoTableHasTags'            : require(__dirname + '/plugins/aws/dynamodb/dynamoTableHasTags.js'),
+        'dynamoUnusedTable'             : require(__dirname + '/plugins/aws/dynamodb/dynamoUnusedTable.js'),
 
         'enhancedMetadataEnabled'       : require(__dirname + '/plugins/aws/imagebuilder/enhancedMetadataEnabled.js'),
 
@@ -273,6 +274,7 @@ module.exports = {
         'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
+        'elbv2crosszoneLoadBalancing'   : require(__dirname + '/plugins/aws/elbv2/elbv2crosszoneLoadBalancing.js'),
 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
@@ -612,6 +614,7 @@ module.exports = {
         'fsxFileSystemEncrypted'        : require(__dirname + '/plugins/aws/fsx/fsxFileSystemEncrypted.js'),
 
         'wafv2InUse'                    : require(__dirname + '/plugins/aws/wafv2/wafv2InUse.js'),
+        'aclRulesDefaultAction'          : require(__dirname + '/plugins/aws/wafv2/aclRulesDefaultAction.js'),
 
         'wafInUse'                      : require(__dirname + '/plugins/aws/waf/wafInUse.js'),
 
@@ -658,7 +661,7 @@ module.exports = {
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
         'virtualNetworkHasTags'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkHasTags.js'),
         'routeTableHasTags'             : require(__dirname + '/plugins/azure/virtualnetworks/routeTableHasTags.js'),
-
+ 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
         'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
@@ -1096,6 +1099,7 @@ module.exports = {
         'legacyNetworksExist'           : require(__dirname + '/plugins/google/vpcnetwork/legacyNetworksExist.js'),
         'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
         'openHTTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openHTTP.js'),
+        'instanceDefaultNetwork'        : require(__dirname + '/plugins/google/vpcnetwork/instanceDefaultNetwork.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -1205,6 +1209,7 @@ module.exports = {
 
         'serviceAccountTokenCreator'    : require(__dirname + '/plugins/google/iam/serviceAccountTokenCreator.js'),
         'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
+        'serviceAccountRole'            : require(__dirname + '/plugins/google/iam/serviceAccountRole.js'),
 
         'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
         'apiKeyApplicationRestriction'  : require(__dirname + '/plugins/google/api/apiKeyApplicationRestriction.js'),
@@ -1273,6 +1278,7 @@ module.exports = {
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
         'cloudFunctionLabelsAdded'      : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionLabelsAdded.js'),
         'functionAllUsersPolicy'        : require(__dirname + '/plugins/google/cloudfunctions/functionAllUsersPolicy.js'),
+        'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
@@ -1311,6 +1317,11 @@ module.exports = {
         'userApprovalEnabled'           : require(__dirname + '/plugins/google/cloudbuild/userApprovalEnabled.js'),
         'specificSourceBranch'          : require(__dirname + '/plugins/google/cloudbuild/specificSourceBranch.js'),
         'triggerHasTags'                : require(__dirname + '/plugins/google/cloudbuild/triggerHasTags.js'),
+
+        'environmentLabelsAdded'        : require(__dirname + '/plugins/google/composer/environmentLabelsAdded.js'),
+        'environmentEncryption'         : require(__dirname + '/plugins/google/composer/environmentEncryption.js'),
+        'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
+        'webserverPublicAccess'         : require(__dirname + '/plugins/google/composer/webserverPublicAccess.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
