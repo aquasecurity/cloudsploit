@@ -42,9 +42,9 @@ module.exports = {
 
                 if (getWebACL.data.WebACL &&
                 getWebACL.data.WebACL.VisibilityConfig && getWebACL.data.WebACL.VisibilityConfig.CloudWatchMetricsEnabled){
-                    helpers.addResult(results, 0, 'WAFV2 web ACL rule has CloudWatch metrics enabled', region, getWebACL.data.WebACL.ARN);
+                    helpers.addResult(results, 0, 'WAFV2 web ACL rule has CloudWatch metrics enabled', region, webAcl.ARN);
                 } else {
-                    helpers.addResult(results, 2, 'WAFV2 web ACL rule does not have CloudWatch metrics enabled', region, getWebACL.data.WebACL.ARN);
+                    helpers.addResult(results, 2, 'WAFV2 web ACL rule does not have CloudWatch metrics enabled', region, webAcl.ARN);
                 }
 
             } 
