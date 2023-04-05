@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var osDedicatedMasterEnabled = require('./osDedicatedMasterEnabled');
+var osDedicatedMasterEnabled = require('./opensearchDedicatedMasterEnabled');
 
 const domains =  [
     {
@@ -97,6 +97,7 @@ describe('osDedicatedMasterEnabled', function () {
             osDedicatedMasterEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('OpenSearch domain is configured to use dedicated master node')
                 done();
             });
         });
@@ -106,6 +107,7 @@ describe('osDedicatedMasterEnabled', function () {
             osDedicatedMasterEnabled.run(cache, {}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No OpenSearch domains found')
                 done();
             });
         });
@@ -115,6 +117,7 @@ describe('osDedicatedMasterEnabled', function () {
             osDedicatedMasterEnabled.run(cache, {}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is not configured to use dedicated master node')
                 done();
             });
         });
@@ -124,6 +127,7 @@ describe('osDedicatedMasterEnabled', function () {
             osDedicatedMasterEnabled.run(cache, {}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is not configured to use dedicated master node')
                 done();
             });
         });
@@ -133,6 +137,7 @@ describe('osDedicatedMasterEnabled', function () {
             osDedicatedMasterEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains')
                 done();
             });
         });

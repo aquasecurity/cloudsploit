@@ -1,6 +1,5 @@
-var assert = require('assert');
 var expect = require('chai').expect;
-var es = require('./osUpgradeAvailable');
+var es = require('./opensearchEncryptedDomain');
 
 const createCache = (listData, descData) => {
     return {
@@ -23,7 +22,7 @@ const createCache = (listData, descData) => {
     }
 };
 
-describe('osUpgradeAvailable', function () {
+describe('osEncryptedDomain', function () {
     describe('run', function () {
         it('should give passing result if no opensearch domains present', function (done) {
             const callback = (err, results) => {
@@ -41,11 +40,11 @@ describe('osUpgradeAvailable', function () {
             es.run(cache, {}, callback);
         })
 
-        it('should give error result if OpenSearch domain upgrade is available', function (done) {
+        it('should give error result if opensearch encryption config is disabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('OpenSearch domain service software version: 1 is eligible for an upgrade to version: 2')
+                expect(results[0].message).to.include('OpenSearch domain is not configured to use encryption at rest')
                 done()
             };
 
@@ -59,11 +58,8 @@ describe('osUpgradeAvailable', function () {
                   DomainStatus: {
                     DomainName: 'mydomain',
                     ARN: 'arn:1234',
-                    ServiceSoftwareOptions: {
-                        CurrentVersion: '1',
-                        NewVersion: '2',
-                        UpdateAvailable: true,
-                        UpdateStatus: 'ELIGIBLE'
+                    EncryptionAtRestOptions: {
+                        Enabled: false
                     }
                   }
                 }
@@ -72,11 +68,11 @@ describe('osUpgradeAvailable', function () {
             es.run(cache, {}, callback);
         })
 
-        it('should give passing result if OpenSearch domain is not upgrade eligible', function (done) {
+        it('should give passing result if opensearch encryption config is enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('OpenSearch domain service software version: 1 is the latest eligible upgraded version')
+                expect(results[0].message).to.include('OpenSearch domain is configured to use encryption at rest')
                 done()
             };
 
@@ -90,11 +86,8 @@ describe('osUpgradeAvailable', function () {
                   DomainStatus: {
                     DomainName: 'mydomain',
                     ARN: 'arn:1234',
-                    ServiceSoftwareOptions: {
-                        CurrentVersion: '1',
-                        NewVersion: '1',
-                        UpdateAvailable: false,
-                        UpdateStatus: 'NOT_ELIGIBLE'
+                    EncryptionAtRestOptions: {
+                        Enabled: true
                     }
                   }
                 }

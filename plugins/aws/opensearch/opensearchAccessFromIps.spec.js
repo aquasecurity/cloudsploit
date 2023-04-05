@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const osAccessFromIps = require('./osAccessFromIps');
+const osAccessFromIps = require('./opensearchAccessFromIps');
 
 const domainNames = [
     {
@@ -91,11 +91,12 @@ const createNullCache = () => {
 
 describe('osAccessFromIps', function () {
     describe('run', function () {
-        it('should FAIL if domain is publicy exposed', function (done) {
+        it('should FAIL if domain is publicly exposed', function (done) {
             const cache = createCache([domainNames[1]], domains[1]);
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/13' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.includes('OpenSearch domain "test-domain-2" is publicly exposed');
                 done();
             });
         });
@@ -105,6 +106,7 @@ describe('osAccessFromIps', function () {
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/13,52.95.245.0/24' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch domain "test-domain3-1" is not accessible from any unknown IP address');
                 done();
             });
         });
@@ -114,6 +116,7 @@ describe('osAccessFromIps', function () {
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/16' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.includes('OpenSearch domain "test-domain3-1" is accessible from these unknown IP addresses: 18.208.0.0/13, 52.95.245.0/24');
                 done();
             });
         });
@@ -123,6 +126,7 @@ describe('osAccessFromIps', function () {
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/13' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('No access policy found');
                 done();
             });
         });
@@ -132,6 +136,7 @@ describe('osAccessFromIps', function () {
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/13' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('No OpenSearch domains found')
                 done();
             });
         });
@@ -141,6 +146,7 @@ describe('osAccessFromIps', function () {
             osAccessFromIps.run(cache, { whitelisted_ip_addresses: '18.208.0.0/13' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.includes('Unable to query for OpenSearch domains')
                 done();
             });
         });

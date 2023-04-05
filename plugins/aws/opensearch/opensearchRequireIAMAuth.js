@@ -47,7 +47,7 @@ module.exports = {
                 } else {
                     if (!describeDomain.data.DomainStatus) {
                         helpers.addResult(results, 0,
-                            'ElasticSearch domain has no access policies', region, localDomain.ARN);
+                            'OpenSearch domain has no access policies', region, localDomain.ARN);
                     } else {
                         var localDomain = describeDomain.data.DomainStatus;
 

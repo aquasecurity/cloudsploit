@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var osCrossAccountAccess = require('./osCrossAccountAccess');
+var osCrossAccountAccess = require('./opensearchCrossAccountAccess');
 
 const domainNames = [
   {
@@ -127,6 +127,7 @@ describe('osCrossAccountAccess', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain contains trusted account principals only')
                 done();
             });
         });
@@ -136,6 +137,7 @@ describe('osCrossAccountAccess', function () {
             osCrossAccountAccess.run(cache, { "os_whitelist_aws_organization_accounts": "true" }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch domain contains trusted account principals only')
                 done();
             });
         });
@@ -146,6 +148,7 @@ describe('osCrossAccountAccess', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain does not contain cross-account policy statement')
                 done();
             });
         });
@@ -156,6 +159,7 @@ describe('osCrossAccountAccess', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain does not have access policy defined')
                 done();
             });
         });
@@ -166,6 +170,7 @@ describe('osCrossAccountAccess', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('No OpenSearch domains found')
                 done();
             });
         });
@@ -176,6 +181,7 @@ describe('osCrossAccountAccess', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('Unable to query for OpenSearch domains')
                 done();
             });
         });

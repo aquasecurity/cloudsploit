@@ -1,5 +1,6 @@
+var assert = require('assert');
 var expect = require('chai').expect;
-var es = require('./osNodeToNodeEncryption');
+var es = require('./opensearchUpgradeAvailable');
 
 const createCache = (listData, descData) => {
     return {
@@ -22,9 +23,9 @@ const createCache = (listData, descData) => {
     }
 };
 
-describe('osNodeToNodeEncryption', function () {
+describe('osUpgradeAvailable', function () {
     describe('run', function () {
-        it('should give passing result if no OpenSearch domains present', function (done) {
+        it('should give passing result if no opensearch domains present', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
@@ -40,11 +41,11 @@ describe('osNodeToNodeEncryption', function () {
             es.run(cache, {}, callback);
         })
 
-        it('should give error result if OpenSearch encryption config is disabled', function (done) {
+        it('should give error result if OpenSearch domain upgrade is available', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('OpenSearch domain is not configured to use node-to-node encryption')
+                expect(results[0].message).to.include('OpenSearch domain service software version: 1 is eligible for an upgrade to version: 2')
                 done()
             };
 
@@ -58,8 +59,11 @@ describe('osNodeToNodeEncryption', function () {
                   DomainStatus: {
                     DomainName: 'mydomain',
                     ARN: 'arn:1234',
-                    NodeToNodeEncryptionOptions: {
-                        Enabled: false
+                    ServiceSoftwareOptions: {
+                        CurrentVersion: '1',
+                        NewVersion: '2',
+                        UpdateAvailable: true,
+                        UpdateStatus: 'ELIGIBLE'
                     }
                   }
                 }
@@ -68,11 +72,11 @@ describe('osNodeToNodeEncryption', function () {
             es.run(cache, {}, callback);
         })
 
-        it('should give passing result if OpenSearch encryption config is enabled', function (done) {
+        it('should give passing result if OpenSearch domain is not upgrade eligible', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('OpenSearch domain is configured to use node-to-node encryption')
+                expect(results[0].message).to.include('OpenSearch domain service software version: 1 is the latest eligible upgraded version')
                 done()
             };
 
@@ -86,8 +90,11 @@ describe('osNodeToNodeEncryption', function () {
                   DomainStatus: {
                     DomainName: 'mydomain',
                     ARN: 'arn:1234',
-                    NodeToNodeEncryptionOptions: {
-                        Enabled: true
+                    ServiceSoftwareOptions: {
+                        CurrentVersion: '1',
+                        NewVersion: '1',
+                        UpdateAvailable: false,
+                        UpdateStatus: 'NOT_ELIGIBLE'
                     }
                   }
                 }

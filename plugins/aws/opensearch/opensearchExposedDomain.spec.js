@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const osExposedDomain = require('./osExposedDomain');
+const osExposedDomain = require('./opensearchExposedDomain');
 
 const domainNames = [
     {

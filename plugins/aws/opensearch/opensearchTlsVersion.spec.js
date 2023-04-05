@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var osTlsVersion = require('./osTlsVersion');
+var osTlsVersion = require('./opensearchTlsVersion');
 
 const domainNames = [
     {

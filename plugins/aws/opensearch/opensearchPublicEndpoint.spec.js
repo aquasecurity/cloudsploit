@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var es = require('./osPublicEndpoint');
+var es = require('./opensearchPublicEndpoint');
 
 const createCache = (listData, descData) => {
     return {

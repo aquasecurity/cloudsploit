@@ -41,7 +41,7 @@ module.exports = {
             if (listDomainNames.err || !listDomainNames.data) {
                 helpers.addResult(
                     results, 3,
-                    'Unable to query for ES domains: ' + helpers.addError(listDomainNames), region);
+                    'Unable to query for OpenSearch domains: ' + helpers.addError(listDomainNames), region);
                 return rcb();
             }
 

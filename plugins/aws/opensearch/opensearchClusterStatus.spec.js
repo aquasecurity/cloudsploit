@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const osClusterStatus = require('./osClusterStatus');
+const osClusterStatus = require('./opensearchClusterStatus');
 
 const domainNames = [
     {
@@ -123,6 +123,7 @@ describe('osClusterStatus', function () {
             osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.includes('OpenSearch Domain is unhealthy');
                 done();
             });
         });
@@ -132,6 +133,7 @@ describe('osClusterStatus', function () {
             osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch Domain is healthy');
                 done();
             });
         });
@@ -141,6 +143,7 @@ describe('osClusterStatus', function () {
             osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch Domain is healthy');
                 done();
             });
         });
@@ -150,6 +153,7 @@ describe('osClusterStatus', function () {
             osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('No OpenSearch domains found');
                 done();
             });
         });
@@ -159,6 +163,7 @@ describe('osClusterStatus', function () {
             osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.includes('Unable to query for OpenSearch domains:');
                 done();
             });
         });

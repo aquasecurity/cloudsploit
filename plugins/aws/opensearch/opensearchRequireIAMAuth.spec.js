@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var es = require('./osRequireIAMAuth');
+var es = require('./opensearchRequireIAMAuth');
 
 const createCache = (listData, descData) => {
     return {

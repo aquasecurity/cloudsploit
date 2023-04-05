@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const osDesiredInstanceTypes = require('./osDesiredInstanceTypes');
+const osDesiredInstanceTypes = require('./opensearchDesiredInstanceTypes');
 
 const domainNames = [
     {
@@ -82,6 +82,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.medium.elasticsearch', os_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
@@ -91,6 +92,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
@@ -100,6 +102,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
@@ -109,6 +112,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('ES domain is using allowed master and node instance types')
                 done();
             });
         });
@@ -118,6 +122,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No OpenSearch domains found')
                 done();
             });
         });
@@ -127,6 +132,7 @@ describe('osDesiredInstanceTypes', function () {
             osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains')
                 done();
             });
         });

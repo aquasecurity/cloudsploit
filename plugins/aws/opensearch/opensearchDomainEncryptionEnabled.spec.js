@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var osDomainEncryptionEnabled = require('./osDomainEncryptionEnabled');
+var osDomainEncryptionEnabled = require('./opensearchDomainEncryptionEnabled');
 
 const domains =  [
     {

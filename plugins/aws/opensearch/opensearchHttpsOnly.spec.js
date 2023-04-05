@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var es = require('./osHttpsOnly');
+var es = require('./opensearchHttpsOnly');
 
 const createCache = (listData, descData) => {
     return {
