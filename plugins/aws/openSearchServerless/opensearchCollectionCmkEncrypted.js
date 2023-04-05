@@ -77,7 +77,7 @@ module.exports = {
 
                 if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
                     helpers.addResult(results, 3,
-                        'Unable to query get OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region);
+                        'Unable to query get OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
                     return rcb();
                 }
                 let securityPolicy;
