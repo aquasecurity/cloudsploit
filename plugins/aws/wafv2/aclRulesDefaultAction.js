@@ -41,9 +41,9 @@ module.exports = {
                 }
 
                 if (getWebACL.data.WebACL.DefaultAction  && getWebACL.data.WebACL.DefaultAction.Block ){
-                    helpers.addResult(results, 0, 'Default action for web ACL rule is set to Block', region, getWebACL.data.WebACL.ARN);
+                    helpers.addResult(results, 0, 'Default action for web ACL rule is set to Block', region, webAcl.ARN);
                 } else {
-                    helpers.addResult(results, 2, 'Default action for web ACL rule is not set to Block', region, getWebACL.data.WebACL.ARN);
+                    helpers.addResult(results, 2, 'Default action for web ACL rule is not set to Block', region, webAcl.ARN);
                 }
             }
 
