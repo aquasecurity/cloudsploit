@@ -48,7 +48,7 @@ module.exports = {
                     ['opensearchserverless', 'getNetworkSecurityPolicy', region, policy.name]);
 
 
-                if (getSecurityPolicy.data.securityPolicyDetail.policy){
+                if (getSecurityPolicy && getSecurityPolicy.data && getSecurityPolicy.data.securityPolicyDetail &&  getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
                         for (let p of getSecurityPolicy.data.securityPolicyDetail.policy){
                             if (p.AllowFromPublic){
