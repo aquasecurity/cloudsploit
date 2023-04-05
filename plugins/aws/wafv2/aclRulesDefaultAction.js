@@ -36,7 +36,7 @@ module.exports = {
                 if (!getWebACL || !getWebACL.data || getWebACL.err || !getWebACL.data.WebACL){
                     helpers.addResult(results, 3,
                         'Unable to get web acl details: ' + helpers.addError(listWebACLs), region, webAcl.ARN);
-                    return rcb();
+                    continue;
                 }
                 if (getWebACL.data.WebACL.DefaultAction  && getWebACL.data.WebACL.DefaultAction.Block ){
                     helpers.addResult(results, 0, 'Default action for web ACL rule is set to Block', region, getWebACL.data.WebACL.ARN);
