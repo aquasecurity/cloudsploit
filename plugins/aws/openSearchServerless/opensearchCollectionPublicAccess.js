@@ -27,6 +27,7 @@ module.exports = {
                     'Unable to query list OpenSearch collections: ' + helpers.addError(listCollections), region);
                 return rcb();
             }
+
             if (!listCollections.data.length){
                 helpers.addResult(results, 0, 'No OpenSearch collections found', region);
                 return rcb();
