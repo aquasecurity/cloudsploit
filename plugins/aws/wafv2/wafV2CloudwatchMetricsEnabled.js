@@ -29,7 +29,6 @@ module.exports = {
             }
 
             for (let webAcl of listWebACLs.data){
-                
                 if (!webAcl.ARN) continue;
 
                 let getWebACL = helpers.addSource(cache, source,
