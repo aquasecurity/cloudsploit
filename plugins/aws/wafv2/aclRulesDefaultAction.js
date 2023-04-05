@@ -44,7 +44,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Default action for web ACL rule is not set to Block', region, getWebACL.data.WebACL.ARN);
                 }
-
             }
 
             rcb();
