@@ -47,7 +47,6 @@ module.exports = {
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getNetworkSecurityPolicy', region, policy.name]);
 
-
                 if (getSecurityPolicy && getSecurityPolicy.data && getSecurityPolicy.data.securityPolicyDetail &&  getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
                         for (let p of getSecurityPolicy.data.securityPolicyDetail.policy){
