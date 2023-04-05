@@ -148,5 +148,6 @@ module.exports = {
     apiKeys: ['global'],
     resourceRecordSets: ['global'],
     services: ['global'],
-    accessApproval: ['global']
+    accessApproval: ['global'],
+    networkRoutes: ['global']
 };

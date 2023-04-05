@@ -77,7 +77,7 @@ var serviceMap = {
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Cryptographic Key', BridgeServiceName: 'cryptokeys',
             BridgePluginCategoryName: 'gcp-Cryptographic Keys', BridgeProvider: 'Google', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'cryptoKeys',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Cryptographic Keys',
+            BridgeResourceNameIdentifier: '', BridgeExecutionService: 'gcp-Cryptographic Keys',
             BridgeCollectionService: 'gcp-cryptoKeys', DataIdentifier: 'data',
         },
     'CLB':
@@ -150,16 +150,16 @@ var serviceMap = {
             BridgePluginCategoryName: 'gcp-BigTable', BridgeProvider: 'Google', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-BigTable',
-            BridgeCollectionService: 'gcp-bigtable', DataIdentifier: 'instances',
+            BridgeCollectionService: 'gcp-bigtable', DataIdentifier: 'data',
         },
     'Spanner':
         {
             enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'Spanner',
             InvResourceCategory: 'database', InvResourceType: 'Spanner', BridgeServiceName: 'spanner',
             BridgePluginCategoryName: 'gcp-Spanner', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'spanner',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
-            BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'instances',
+            BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -541,6 +541,13 @@ var calls = {
             pagination: true,
             paginationKey: 'pageSize'
         }
+    },
+    networkRoutes:{
+        list: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/routes',
+            location: null,
+            pagination: true
+        },
     }
 };
 
