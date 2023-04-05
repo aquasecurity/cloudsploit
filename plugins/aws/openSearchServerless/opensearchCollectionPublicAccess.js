@@ -51,7 +51,6 @@ module.exports = {
                     for (let collection of listCollections.data){
                         for (let p of getSecurityPolicy.data.securityPolicyDetail.policy){
                             if (p.AllowFromPublic){
-                                
                                 let found = p.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
                                     rule.ResourceType == 'collection');
 
