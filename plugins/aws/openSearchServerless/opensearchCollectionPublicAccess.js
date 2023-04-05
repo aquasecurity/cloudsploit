@@ -47,11 +47,6 @@ module.exports = {
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getNetworkSecurityPolicy', region, policy.name]);
 
-                if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
-                    helpers.addResult(results, 3,
-                        'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
-                    continue;
-                }
 
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
