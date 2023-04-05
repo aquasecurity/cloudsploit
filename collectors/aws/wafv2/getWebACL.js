@@ -14,7 +14,8 @@ module.exports = function(AWSConfig, collection, retries, callback) {
 
         helpers.makeCustomCollectorCall(wafv2, 'getWebACL', params, retries, null, null, null, function(err, data) {
             collection.wafv2.getWebACL[AWSConfig.region][acl.ARN] = {};
-            if (err || !data) {
+
+            if (err) {
                 collection.wafv2.getWebACL[AWSConfig.region][acl.ARN].err = err;
             } else {
                 collection.wafv2.getWebACL[AWSConfig.region][acl.ARN].data = data;
