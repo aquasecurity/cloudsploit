@@ -1732,6 +1732,11 @@ var postcalls = [
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true
+            },
+            getWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true
             }
         },
         ECS: {
