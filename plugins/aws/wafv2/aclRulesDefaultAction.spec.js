@@ -100,7 +100,7 @@ describe('aclRulesDefaultAction', function () {
             aclRulesDefaultAction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to get web acl details:')
+                expect(results[0].message).to.include('Unable to get web ACL details:')
                 done();
             });
         });
