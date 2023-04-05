@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var cloudwatchMetricsEnabled = require('./wafV2CloudwatchMetricsEnabled');
+var cloudwatchMetricsEnabled = require('./wafv2CloudwatchMetricsEnabled');
 
 const webACLs = [
     {
