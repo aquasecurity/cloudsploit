@@ -48,6 +48,7 @@ module.exports = {
                         region, resource);
                     continue;
                 }
+
                 if (describeTable.data && describeTable.data.Table && !describeTable.data.Table.ItemCount) {
                     helpers.addResult(results, 2,
                         `DynamoDB table "${table}" is unused`,
