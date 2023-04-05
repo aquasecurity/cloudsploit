@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that OpenSearch Serverless collections are not publicly accessible.',
     more_info: 'OpenSearch Serverless collections should be not be publicly accessible to prevent unauthorized actions.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',
-    recommended_action: 'Update the network policy and remove the public access to collection.',
+    recommended_action: 'Update the network policy and remove the public access to the collection.',
     apis: ['OpenSearchServerless:listNetworkSecurityPolicies', 'OpenSearchServerless:getNetworkSecurityPolicy', 'OpenSearchServerless:listCollections'],
 
     run: function(cache, settings, callback) {
@@ -40,10 +40,6 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listSecurityPolicies.data.length) {
-                helpers.addResult(results, 0, 'No Security Policy found', region);
-                return rcb();
-            }
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
 
