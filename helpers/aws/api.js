@@ -55,6 +55,7 @@ These fields should be according to the user and product manager, what they want
 
  Take the reference from the below map
 */
+
 // Note: In Below service map add only single source resources.
 // and service name should be plugin category.
 
@@ -1401,6 +1402,15 @@ var calls = {
             property: 'Account'
         }
     },
+    OpenSearchServerless: {
+        listCollections : {
+            paginate: 'NextToken',
+            property: 'collectionSummaries'
+        },
+        listNetworkSecurityPolicies: {
+            override: true, 
+        },
+    },
     Support: {
         describeTrustedAdvisorChecks: {
             property: 'checks',
@@ -2474,6 +2484,11 @@ var postcalls = [
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true
+            },
+            getWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true
             }
         },
         GuardDuty: {
@@ -2637,6 +2652,13 @@ var postcalls = [
                 enabled: true
             }
         },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            }
+        }
     }
 ];
 
