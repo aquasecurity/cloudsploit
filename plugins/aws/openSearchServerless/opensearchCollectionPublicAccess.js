@@ -50,7 +50,7 @@ module.exports = {
                 if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
                     helpers.addResult(results, 3,
                         'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
-                    return rcb();
+                    continue;
                 }
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){
