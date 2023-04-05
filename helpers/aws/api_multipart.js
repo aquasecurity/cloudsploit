@@ -42,6 +42,15 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        OpenSearchServerless: {
+            listCollections : {
+                paginate: 'NextToken',
+                property: 'collectionSummaries'
+            },
+            listNetworkSecurityPolicies: {
+                override: true, 
+            },
+        },
         AppMesh: {
             listMeshes: {
                 property: 'meshes',
@@ -2280,6 +2289,13 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            }
+        }
     },
 ];
 
