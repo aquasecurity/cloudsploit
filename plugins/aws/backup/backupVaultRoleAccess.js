@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Vault Role Access',
     category: 'Backup',
     domain: 'Storage',
-    description: 'Ensure that AWS Backup Vaults are accessed through roles.',
+    description: 'Ensure that AWS Backup vaults are accessed through roles.',
     more_info: 'As a security best practice and to adhere to compliance standards, ensure only role level access is allowed on a Backup vault.',
     recommended_action: 'Modify access policy and give only role level access to backup vault.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
