@@ -42,6 +42,15 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        OpenSearchServerless: {
+            listCollections : {
+                paginate: 'NextToken',
+                property: 'collectionSummaries'
+            },
+            listNetworkSecurityPolicies: {
+                override: true, 
+            },
+        },
         AppMesh: {
             listMeshes: {
                 property: 'meshes',
@@ -1732,6 +1741,11 @@ var postcalls = [
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true
+            },
+            getWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true
             }
         },
         ECS: {
@@ -2275,6 +2289,13 @@ var postcalls = [
                 filterValue: 'Id'
             }
         },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            }
+        }
     },
 ];
 

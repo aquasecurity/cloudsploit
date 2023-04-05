@@ -1356,6 +1356,15 @@ var calls = {
             property: 'Account'
         }
     },
+    OpenSearchServerless: {
+        listCollections : {
+            paginate: 'NextToken',
+            property: 'collectionSummaries'
+        },
+        listNetworkSecurityPolicies: {
+            override: true, 
+        },
+    },
     Support: {
         describeTrustedAdvisorChecks: {
             property: 'checks',
@@ -2584,6 +2593,13 @@ var postcalls = [
                 enabled: true
             }
         },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            }
+        }
     }
 ];
 
