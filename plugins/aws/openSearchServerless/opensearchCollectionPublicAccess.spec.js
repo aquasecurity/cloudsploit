@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var collectionPublicAccess = require('./collectionPublicAccess');
+var collectionPublicAccess = require('./opensearchCollectionPublicAccess');
 
 const listCollections = [
     {

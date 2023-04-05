@@ -46,7 +46,10 @@ var calls = [
             listCollections : {
                 paginate: 'NextToken',
                 property: 'collectionSummaries'
-            }
+            },
+            listNetworkSecurityPolicies: {
+                override: true, 
+            },
         },
         AppMesh: {
             listMeshes: {
@@ -2284,12 +2287,9 @@ var postcalls = [
         OpenSearchServerless: {
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
-                reliesOnCall: 'listSecurityPolicies',
+                reliesOnCall: 'listNetworkSecurityPolicies',
                 override: true,   
-            },
-            listNetworkSecurityPolicies: {
-                override: true, 
-            },
+            }
         }
     },
 ];
