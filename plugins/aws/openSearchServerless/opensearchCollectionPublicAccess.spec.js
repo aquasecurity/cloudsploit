@@ -108,7 +108,8 @@ describe('collectionPublicAccess', function () {
                 done();
             });
         });
-        it('should FAIL if collection is not publically accessible', function (done) {
+
+        it('should FAIL if collection is not publicly accessible', function (done) {
             const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[1]);
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
