@@ -41,6 +41,11 @@ module.exports = {
                 return rcb();
             }
 
+            if (!listSecurityPolicies.data.length){
+                helpers.addResult(results, 0, 'OpenSearch no network security policy found', region);
+                return rcb();
+            }
+
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
                 var getSecurityPolicy = helpers.addSource(cache, source,
@@ -48,8 +53,8 @@ module.exports = {
 
                 if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
                     helpers.addResult(results, 3,
-                        'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region);
-                    continue;
+                        'Unable to query get security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
+                    return rcb();
                 }
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     for (let collection of listCollections.data){

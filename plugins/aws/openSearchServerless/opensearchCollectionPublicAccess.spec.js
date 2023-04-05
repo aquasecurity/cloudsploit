@@ -74,7 +74,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query list collections');
+                expect(results[0].message).to.include('Unable to query list OpenSearch collections:');
                 done();
             });
         });
@@ -84,7 +84,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Collection found');
+                expect(results[0].message).to.include('No OpenSearch collections found');
                 done();
             });
         });
@@ -94,7 +94,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query list security policy');
+                expect(results[0].message).to.include('Unable to list OpenSearch security policies:');
                 done();
             });
         });
@@ -104,7 +104,7 @@ describe('collectionPublicAccess', function () {
             collectionPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Security Policy found');
+                expect(results[0].message).to.include('OpenSearch no network security policy found');
                 done();
             });
         });
