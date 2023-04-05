@@ -54,7 +54,7 @@ module.exports = {
                     continue;
                 }
 
-                let found = elbv2Attributes.data.Attributes.find(attr => attr.Key === 'load_balancing.cross_zone.enabled' && attr.Value === 'true');
+                let found = elbv2Attributes.data.Attributes.find(attr => attr.Key && attr.Key === 'load_balancing.cross_zone.enabled' && attr.Value && attr.Value === 'true');
                 if (found) {
                     helpers.addResult(results, 0,
                         'Load balancer :' + elb.LoadBalancerName + ': has cross-zone load balancing enabled', region, resource);
