@@ -175,6 +175,15 @@ var calls = {
             pagination: true
         }
     },
+    composer: {
+        environments: {
+            url: 'https://composer.googleapis.com/v1/projects/{projectId}/locations/{locationId}/environments',
+            location: 'region',
+            pagination: true,
+            paginationKey: 'pageToken',
+            dataFilterKey: 'environments'
+        }
+    },
     repositories: {
         list: {
             url: 'https://artifactregistry.googleapis.com/v1/projects/{projectId}/locations/{locationId}/repositories',
