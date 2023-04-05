@@ -120,6 +120,6 @@ module.exports = {
     imagebuilder: regions,
     computeoptimizer: regions,
     appconfig: regions,
-    opensearchserverless:[]
+    opensearchserverless: regions
 
 };

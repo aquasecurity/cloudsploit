@@ -5,7 +5,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 module.exports = function(AWSConfig, collection, retries, callback) {
     var ecs = new AWS.OpenSearchServerless(AWSConfig);
 
-    async.eachLimit(collection.opensearchserverless.listSecurityPolicies[AWSConfig.region].data, 10, function(policy, cb){
+    async.eachLimit(collection.opensearchserverless.listEncryptionSecurityPolicies[AWSConfig.region].data, 10, function(policy, cb){
         collection.opensearchserverless.getEncryptionSecurityPolicy[AWSConfig.region][policy.name] = {};
         var params = {
             name: policy.name,
