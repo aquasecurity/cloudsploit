@@ -41,10 +41,6 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listSecurityPolicies.data.length){
-                helpers.addResult(results, 0, 'OpenSearch no network security policy found', region);
-                return rcb();
-            }
 
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
