@@ -52,7 +52,7 @@ module.exports = {
     
                 if (!statements || !statements.length) {
                     helpers.addResult(results, 0,
-                        'The Backup Vault policy does not have trust relationship statements',
+                        'Backup Vault policy does not have trust relationship statements',
                         region, resource);
                     continue;
                 }
