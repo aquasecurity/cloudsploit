@@ -1095,6 +1095,7 @@ module.exports = {
         'legacyNetworksExist'           : require(__dirname + '/plugins/google/vpcnetwork/legacyNetworksExist.js'),
         'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
         'openHTTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openHTTP.js'),
+        'instanceDefaultNetwork'        : require(__dirname + '/plugins/google/vpcnetwork/instanceDefaultNetwork.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
