@@ -90,8 +90,6 @@ module.exports = {
                         if (securityPolicy.AWSOwnedKey){
                             currentEncryptionLevel = 2; //awskms  
                         } else {
-
-
                             if (securityPolicy.KmsARN) {
                                 var kmsKeyId = securityPolicy.KmsARN.split('/')[1] ? securityPolicy.KmsARN.split('/')[1] : securityPolicy.KmsARN;
 
