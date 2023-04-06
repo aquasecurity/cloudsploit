@@ -43,10 +43,12 @@ module.exports = {
                     'Unable to list OpenSearch collections: ' + helpers.addError(listCollections), region);
                 return rcb();
             }
+
             if (!listCollections.data.length){
                 helpers.addResult(results, 0, 'No OpenSearch collections found', region);
                 return rcb();
             }
+
             var listSecurityPolicies = helpers.addSource(cache, source,
                 ['opensearchserverless', 'listEncryptionSecurityPolicies', region]);
 
