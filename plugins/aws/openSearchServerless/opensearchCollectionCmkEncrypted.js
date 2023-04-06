@@ -84,9 +84,11 @@ module.exports = {
                     return rcb();
                 }
                 let securityPolicy;
+
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
                     securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
                 }
+
                 if (securityPolicy){
                     for (let collection of listCollections.data){
                         let found = securityPolicy.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
