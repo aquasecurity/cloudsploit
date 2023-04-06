@@ -101,7 +101,7 @@ module.exports = {
                                     helpers.addResult(results, 3,
                                         `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                                         region, securityPolicy.KmsARN);
-                                    return rcb();
+                                    continue;
                                 }
 
                                 currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
