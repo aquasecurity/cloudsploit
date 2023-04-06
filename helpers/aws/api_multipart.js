@@ -1017,6 +1017,15 @@ var calls = [
                 property: 'Account'
             }
         },
+        OpenSearchServerless: {
+            listCollections : {
+                paginate: 'NextToken',
+                property: 'collectionSummaries'
+            },
+            listEncryptionSecurityPolicies:{
+                override: true,
+            }
+        },
         Support: {
             describeTrustedAdvisorChecks: {
                 property: 'checks',
@@ -2219,6 +2228,13 @@ var postcalls = [
                 filterKey: 'RoleName',
                 filterValue: 'RoleName',
                 rateLimit: 500
+            }
+        },
+        OpenSearchServerless: {
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listEncryptionSecurityPolicies',
+                override: true,   
             }
         }
     },

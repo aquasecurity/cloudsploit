@@ -1,3 +1,4 @@
+
 var globalServices = [
     'S3',
     'IAM',
@@ -1407,9 +1408,12 @@ var calls = {
             paginate: 'NextToken',
             property: 'collectionSummaries'
         },
+        listEncryptionSecurityPolicies:{
+            override: true,
+        },
         listNetworkSecurityPolicies: {
             override: true, 
-        },
+        }
     },
     Support: {
         describeTrustedAdvisorChecks: {
@@ -2653,10 +2657,15 @@ var postcalls = [
             }
         },
         OpenSearchServerless: {
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listEncryptionSecurityPolicies',
+                override: true
+            },
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
-                override: true,   
+                override: true
             }
         }
     }
