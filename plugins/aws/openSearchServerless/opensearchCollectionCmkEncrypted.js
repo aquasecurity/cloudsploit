@@ -6,9 +6,9 @@ module.exports = {
     category: 'OpenSearch',
     domain: 'Serverless',
     description: 'Ensures that OpenSearch Serverless collections are encrypted with KMS Customer Master Keys (CMKs).',
-    more_info: 'OpenSearch Serverless collections should be not be publicly accessible to prevent unauthorized actions.',
-    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',
-    recommended_action: 'Update the network policy and remove the public access to collection.',
+    more_info: 'OpenSearch Serverless should use KMS Customer Master Keys (CMKs) instead of AWS managed keys for encryption in order to have full control over data encryption and decryption.',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-encryption.html',
+    recommended_action: 'Update the encryption policy and customer managed key for encryption.',
     apis: ['OpenSearchServerless:listEncryptionSecurityPolicies',  'OpenSearchServerless:listCollections',
         'OpenSearchServerless:getEncryptionSecurityPolicy','KMS:describeKey', 'KMS:listKeys'],
     settings: {
