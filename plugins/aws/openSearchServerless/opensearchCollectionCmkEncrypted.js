@@ -76,12 +76,6 @@ module.exports = {
             for (let policy of listSecurityPolicies.data){
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getEncryptionSecurityPolicy', region, policy.name]);
-
-                if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
-                    helpers.addResult(results, 3,
-                        'Unable to query OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
-                    return rcb();
-                }
                 let securityPolicy;
 
                 if (getSecurityPolicy.data.securityPolicyDetail.policy){
