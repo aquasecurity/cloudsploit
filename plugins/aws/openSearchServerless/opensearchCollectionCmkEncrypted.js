@@ -74,7 +74,6 @@ module.exports = {
 
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
-
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getEncryptionSecurityPolicy', region, policy.name]);
 
