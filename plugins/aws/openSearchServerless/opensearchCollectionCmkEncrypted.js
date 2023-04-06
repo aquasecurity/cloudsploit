@@ -71,6 +71,7 @@ module.exports = {
                     `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
                 return rcb();
             }
+
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
 
