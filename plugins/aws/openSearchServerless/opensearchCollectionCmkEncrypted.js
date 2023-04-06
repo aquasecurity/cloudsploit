@@ -76,12 +76,8 @@ module.exports = {
             for (let policy of listSecurityPolicies.data){
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getEncryptionSecurityPolicy', region, policy.name]);
+
                 let securityPolicy;
-
-                if (getSecurityPolicy.data.securityPolicyDetail.policy){
-                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
-                }
-
                 if (securityPolicy){
                     for (let collection of listCollections.data){
                         let found = securityPolicy.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
