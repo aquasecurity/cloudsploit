@@ -135,7 +135,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query list OpenSearch collections');
+                expect(results[0].message).to.include('Unable to list OpenSearch collections');
                 done();
             });
         });
@@ -145,7 +145,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No OpenSearch Collection found');
+                expect(results[0].message).to.include('No OpenSearch collections found');
                 done();
             });
         });
@@ -155,7 +155,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query list OpenSearch security policy:');
+                expect(results[0].message).to.include('Unable to query list OpenSearch security policies:');
                 done();
             });
         });
@@ -165,7 +165,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No OpenSearch Security Policy found');
+                expect(results[0].message).to.include('No OpenSearch security policies found');
                 done();
             });
         });
@@ -174,7 +174,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query get OpenSearch security policy:');
+                expect(results[0].message).to.include('Unable to query OpenSearch security policy:');
                 done();
             });
         });
@@ -183,7 +183,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('OpenSearch Collection is encrypted with awscmk');
+                expect(results[0].message).to.include('OpenSearch collection is encrypted with awscmk');
                 done();
             });
         });
@@ -192,7 +192,7 @@ describe('collectionCmkEncrypted', function () {
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('OpenSearch Collection is encrypted with awskms');
+                expect(results[0].message).to.include('OpenSearch collection is encrypted with awskms');
                 done();
             });
         });

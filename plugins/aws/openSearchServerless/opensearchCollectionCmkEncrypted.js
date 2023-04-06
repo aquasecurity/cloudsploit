@@ -40,11 +40,11 @@ module.exports = {
 
             if ( !listCollections.data || listCollections.err) {
                 helpers.addResult(results, 3,
-                    'Unable to query list OpenSearch collections: ' + helpers.addError(listCollections), region);
+                    'Unable to list OpenSearch collections: ' + helpers.addError(listCollections), region);
                 return rcb();
             }
             if (!listCollections.data.length){
-                helpers.addResult(results, 0, 'No OpenSearch Collection found', region);
+                helpers.addResult(results, 0, 'No OpenSearch collections found', region);
                 return rcb();
             }
             var listSecurityPolicies = helpers.addSource(cache, source,
@@ -52,12 +52,12 @@ module.exports = {
 
             if (!listSecurityPolicies && listSecurityPolicies.err || !listSecurityPolicies.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query list OpenSearch security policy: ' + helpers.addError(listSecurityPolicies), region);
+                    'Unable to query list OpenSearch security policies: ' + helpers.addError(listSecurityPolicies), region);
                 return rcb();
             }
 
             if (!listSecurityPolicies.data.length) {
-                helpers.addResult(results, 2, 'No OpenSearch Security Policy found', region);
+                helpers.addResult(results, 2, 'No OpenSearch security policies found', region);
                 return rcb();
             }
 
@@ -77,7 +77,7 @@ module.exports = {
 
                 if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
                     helpers.addResult(results, 3,
-                        'Unable to query get OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
+                        'Unable to query OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
                     return rcb();
                 }
                 let securityPolicy;
@@ -121,10 +121,10 @@ module.exports = {
             }
             for (let col of listCollections.data){
                 if (policyMap[col.arn] >= desiredEncryptionLevel){
-                    helpers.addResult(results, 0,  `OpenSearch Collection is encrypted with ${helpers.ENCRYPTION_LEVELS[policyMap[col.arn]]} \
+                    helpers.addResult(results, 0,  `OpenSearch collection is encrypted with ${helpers.ENCRYPTION_LEVELS[policyMap[col.arn]]} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`, region, col.arn);
                 } else {
-                    helpers.addResult(results, 2, `OpenSearch Collection is encrypted with ${helpers.ENCRYPTION_LEVELS[2]} \
+                    helpers.addResult(results, 2, `OpenSearch collection is encrypted with ${helpers.ENCRYPTION_LEVELS[2]} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`, region, col.arn);
                 }    
             }
