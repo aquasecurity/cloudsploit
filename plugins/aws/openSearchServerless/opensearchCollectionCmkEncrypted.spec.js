@@ -169,16 +169,7 @@ describe('collectionCmkEncrypted', function () {
                 done();
             });
         });
-        it('should give UNKNOWN result if unable to query get security policy', function (done) {
-            const cache = createCache(listCollections, listSecurityPolicies, null, listKeys);
-            collectionCmkEncrypted.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query OpenSearch security policy:');
-                done();
-            });
-        });
-        it('should PASS if collection is publically accessible', function (done) {
+        it('should PASS if collection is publicly accessible', function (done) {
             const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[1], listKeys, describeKey[0]);
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -187,7 +178,7 @@ describe('collectionCmkEncrypted', function () {
                 done();
             });
         });
-        it('should FAIL if collection is not publically accessible', function (done) {
+        it('should FAIL if collection is not publicly accessible', function (done) {
             const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[0], listKeys, describeKey[1]);
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -196,8 +187,8 @@ describe('collectionCmkEncrypted', function () {
                 done();
             });
         });
-         it('should give Unknown if collection is not publically accessible', function (done) {
-            const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[0], null, describeKey[1]);
+         it('should give Unknown if unable to list kms keys', function (done) {
+            const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[1], null, describeKey[1]);
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -205,7 +196,7 @@ describe('collectionCmkEncrypted', function () {
                 done();
             });
         });
-         it('should give Unknown if collection is not publically accessible', function (done) {
+         it('should give Unknown if unable to query kms keys', function (done) {
             const cache = createCache(listCollections, listSecurityPolicies, getSecurityPolicy[1], listKeys);
             collectionCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

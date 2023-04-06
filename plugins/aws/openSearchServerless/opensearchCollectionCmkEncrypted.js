@@ -78,8 +78,8 @@ module.exports = {
                     ['opensearchserverless', 'getEncryptionSecurityPolicy', region, policy.name]);
 
                 let securityPolicy;
-                if (getSecurityPolicy && getSecurityPolicy.data && getSecurityPolicy.data.securityPolicyDetail && getSecurityPolicy.data.securityPolicyDetail.policysecurityPolicy){
-                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policysecurityPolicy;
+                if (getSecurityPolicy && getSecurityPolicy.data && getSecurityPolicy.data.securityPolicyDetail && getSecurityPolicy.data.securityPolicyDetail.policy){
+                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
 
                     for (let collection of listCollections.data){
                         let found = securityPolicy.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
@@ -99,7 +99,7 @@ module.exports = {
                                     helpers.addResult(results, 3,
                                         `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                                         region, securityPolicy.KmsARN);
-                                    continue;
+                                    return rcb();
                                 }
 
                                 currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
