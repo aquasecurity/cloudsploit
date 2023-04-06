@@ -23,7 +23,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        let project = projects.data[0];
+        let project = projects.data[0].name;
 
         let apiKeys = helpers.addSource(cache, source,
             ['apiKeys', 'list', 'global']);

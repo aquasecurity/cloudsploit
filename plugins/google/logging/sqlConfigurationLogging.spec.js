@@ -1,8 +1,7 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./sqlConfigurationLogging');
 
-const createCache = (err, data, adata) => {
+const createCache = (err, data, adata, sdata) => {
     return {
         metrics: {
             list: {
@@ -19,7 +18,15 @@ const createCache = (err, data, adata) => {
                     data: adata
                 }
             }
-        }
+        },
+        sql: {
+            list: {
+                'global': {
+                    err: err,
+                    data: sdata
+                }
+            }
+        },
 
     }
 };
@@ -39,7 +46,16 @@ describe('sqlConfigurationLogging', function () {
             const cache = createCache(
                 null,
                 [],
-                []
+                [],
+                [
+                    {
+                        name: 'testing-instance1',
+                        instanceType: 'CLOUD_SQL_INSTANCE',
+                        failoverReplica:{
+                            available: true,
+                        }
+                    }
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -57,7 +73,16 @@ describe('sqlConfigurationLogging', function () {
             const cache = createCache(
                 null,
                 ['data'],
-                []
+                [],
+                [
+                    {
+                        name: 'testing-instance1',
+                        instanceType: 'CLOUD_SQL_INSTANCE',
+                        failoverReplica:{
+                            available: true,
+                        }
+                    }
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -147,11 +172,21 @@ describe('sqlConfigurationLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        name: 'testing-instance1',
+                        instanceType: 'CLOUD_SQL_INSTANCE',
+                        failoverReplica:{
+                            available: true,
+                        }
+                    }
                 ]
             );
 
             plugin.run(cache, {}, callback);
         });
+
         it('should give failing result if log metric for SQL configuration changes is disbled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
@@ -237,11 +272,21 @@ describe('sqlConfigurationLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        name: 'testing-instance1',
+                        instanceType: 'CLOUD_SQL_INSTANCE',
+                        failoverReplica:{
+                            available: true,
+                        }
+                    }
                 ]
             );
 
             plugin.run(cache, {}, callback);
         });
+
         it('should give failing result if log alert for sql configuration changes are not enabled', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0);
@@ -326,10 +371,35 @@ describe('sqlConfigurationLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        name: 'testing-instance1',
+                        instanceType: 'CLOUD_SQL_INSTANCE',
+                        failoverReplica:{
+                            available: true,
+                        }
+                    }
                 ]
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
+        it('should give passing result if no sql instances found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No SQL instances found');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+               null,[],[],[]
+            );
+
+            plugin.run(cache, {}, callback);
+        });
     })
 });

@@ -40,24 +40,26 @@ module.exports = {
 
             if ( !listCollections.data || listCollections.err) {
                 helpers.addResult(results, 3,
-                    'Unable to query list OpenSearch collections: ' + helpers.addError(listCollections), region);
+                    'Unable to list OpenSearch collections: ' + helpers.addError(listCollections), region);
                 return rcb();
             }
+
             if (!listCollections.data.length){
-                helpers.addResult(results, 0, 'No OpenSearch Collection found', region);
+                helpers.addResult(results, 0, 'No OpenSearch collections found', region);
                 return rcb();
             }
+
             var listSecurityPolicies = helpers.addSource(cache, source,
                 ['opensearchserverless', 'listEncryptionSecurityPolicies', region]);
 
             if (!listSecurityPolicies && listSecurityPolicies.err || !listSecurityPolicies.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query list OpenSearch security policy: ' + helpers.addError(listSecurityPolicies), region);
+                    'Unable to query list OpenSearch security policies: ' + helpers.addError(listSecurityPolicies), region);
                 return rcb();
             }
 
             if (!listSecurityPolicies.data.length) {
-                helpers.addResult(results, 2, 'No OpenSearch Security Policy found', region);
+                helpers.addResult(results, 2, 'No OpenSearch security policies found', region);
                 return rcb();
             }
 
@@ -69,22 +71,16 @@ module.exports = {
                     `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
                 return rcb();
             }
+
             let policyMap = {};
             for (let policy of listSecurityPolicies.data){
-
                 var getSecurityPolicy = helpers.addSource(cache, source,
                     ['opensearchserverless', 'getEncryptionSecurityPolicy', region, policy.name]);
 
-                if (!getSecurityPolicy || !getSecurityPolicy.data || getSecurityPolicy.err){
-                    helpers.addResult(results, 3,
-                        'Unable to query get OpenSearch security policy: ' + helpers.addError(getSecurityPolicy), region, policy.name);
-                    return rcb();
-                }
                 let securityPolicy;
-                if (getSecurityPolicy.data.securityPolicyDetail.policy){
-                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policy;
-                }
-                if (securityPolicy){
+                if (getSecurityPolicy && getSecurityPolicy.data && getSecurityPolicy.data.securityPolicyDetail && getSecurityPolicy.data.securityPolicyDetail.policysecurityPolicy){
+                    securityPolicy = getSecurityPolicy.data.securityPolicyDetail.policysecurityPolicy;
+
                     for (let collection of listCollections.data){
                         let found = securityPolicy.Rules.find(rule => rule.Resource.indexOf(`collection/${collection.name}`) > -1 &&
                                 rule.ResourceType == 'collection');
@@ -94,8 +90,6 @@ module.exports = {
                         if (securityPolicy.AWSOwnedKey){
                             currentEncryptionLevel = 2; //awskms  
                         } else {
-
-
                             if (securityPolicy.KmsARN) {
                                 var kmsKeyId = securityPolicy.KmsARN.split('/')[1] ? securityPolicy.KmsARN.split('/')[1] : securityPolicy.KmsARN;
 
@@ -105,7 +99,7 @@ module.exports = {
                                     helpers.addResult(results, 3,
                                         `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                                         region, securityPolicy.KmsARN);
-                                    return rcb();
+                                    continue;
                                 }
 
                                 currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
@@ -119,12 +113,13 @@ module.exports = {
                     }
                 }
             }
+
             for (let col of listCollections.data){
                 if (policyMap[col.arn] >= desiredEncryptionLevel){
-                    helpers.addResult(results, 0,  `OpenSearch Collection is encrypted with ${helpers.ENCRYPTION_LEVELS[policyMap[col.arn]]} \
+                    helpers.addResult(results, 0,  `OpenSearch collection is encrypted with ${helpers.ENCRYPTION_LEVELS[policyMap[col.arn]]} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`, region, col.arn);
                 } else {
-                    helpers.addResult(results, 2, `OpenSearch Collection is encrypted with ${helpers.ENCRYPTION_LEVELS[2]} \
+                    helpers.addResult(results, 2, `OpenSearch collection is encrypted with ${helpers.ENCRYPTION_LEVELS[2]} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`, region, col.arn);
                 }    
             }
