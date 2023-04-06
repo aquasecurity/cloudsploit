@@ -124,6 +124,7 @@ module.exports = {
                     }
                 }
             }
+
             for (let col of listCollections.data){
                 if (policyMap[col.arn] >= desiredEncryptionLevel){
                     helpers.addResult(results, 0,  `OpenSearch collection is encrypted with ${helpers.ENCRYPTION_LEVELS[policyMap[col.arn]]} \
