@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./vpcNetworkLogging');
 
-const createCache = (err, data, adata) => {
+const createCache = (err, data, adata, ndata) => {
     return {
         metrics: {
             list: {
@@ -17,6 +17,14 @@ const createCache = (err, data, adata) => {
                 'global': {
                     err: err,
                     data: adata
+                }
+            }
+        },
+        networks: {
+            list: {
+                'global': {
+                    err: err,
+                    data: ndata
                 }
             }
         }
@@ -39,7 +47,24 @@ describe('vpcNetworkLogging', function () {
             const cache = createCache(
                 null,
                 [],
-                []
+                [],
+                [
+                    {
+                        id: "123456",
+                        creationTimestamp: "2021-02-16T22:03:12.817-08:00",
+                        name: "app-vpc",
+                        description: "App VPC",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
+                        subnetworks: [
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                        ],
+                        routingConfig: {
+                          routingMode: "GLOBAL",
+                        },
+                        mtu: 1460,
+                        kind: "compute#network",
+                    }
+                ],
             );
 
             plugin.run(cache, {}, callback);
@@ -57,7 +82,24 @@ describe('vpcNetworkLogging', function () {
             const cache = createCache(
                 null,
                 ['data'],
-                []
+                [],
+                [
+                    {
+                        id: "123456",
+                        creationTimestamp: "2021-02-16T22:03:12.817-08:00",
+                        name: "app-vpc",
+                        description: "App VPC",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
+                        subnetworks: [
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                        ],
+                        routingConfig: {
+                          routingMode: "GLOBAL",
+                        },
+                        mtu: 1460,
+                        kind: "compute#network",
+                    }
+                ],
             );
 
             plugin.run(cache, {}, callback);
@@ -147,7 +189,24 @@ describe('vpcNetworkLogging', function () {
                         ],
                         "enabled": true
                     }
-                ]
+                ],
+                [
+                    {
+                        id: "123456",
+                        creationTimestamp: "2021-02-16T22:03:12.817-08:00",
+                        name: "app-vpc",
+                        description: "App VPC",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
+                        subnetworks: [
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                        ],
+                        routingConfig: {
+                          routingMode: "GLOBAL",
+                        },
+                        mtu: 1460,
+                        kind: "compute#network",
+                    }
+                ],
             );
 
             plugin.run(cache, {}, callback);
@@ -237,7 +296,24 @@ describe('vpcNetworkLogging', function () {
                         ],
                         "enabled": true
                     }
-                ]
+                ],
+                [
+                    {
+                        id: "123456",
+                        creationTimestamp: "2021-02-16T22:03:12.817-08:00",
+                        name: "app-vpc",
+                        description: "App VPC",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
+                        subnetworks: [
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                        ],
+                        routingConfig: {
+                          routingMode: "GLOBAL",
+                        },
+                        mtu: 1460,
+                        kind: "compute#network",
+                    }
+                ],
             );
 
             plugin.run(cache, {}, callback);
@@ -326,10 +402,44 @@ describe('vpcNetworkLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        id: "123456",
+                        creationTimestamp: "2021-02-16T22:03:12.817-08:00",
+                        name: "app-vpc",
+                        description: "App VPC",
+                        selfLink: "https://www.googleapis.com/compute/v1/projects/test-project/global/networks/app-vpc",
+                        subnetworks: [
+                          "https://www.googleapis.com/compute/v1/projects/test-project/regions/us-east1/subnetworks/oregon-subnet",
+                        ],
+                        routingConfig: {
+                          routingMode: "GLOBAL",
+                        },
+                        mtu: 1460,
+                        kind: "compute#network",
+                    }
                 ]
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
+        it('should give passing result if no network records are found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No VPC networks found');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+            const cache = createCache(
+                null,
+                [],
+                [],
+                []
+            );
+            plugin.run(cache, {}, callback);
+        });
     })
 });
