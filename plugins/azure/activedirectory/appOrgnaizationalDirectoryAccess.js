@@ -16,7 +16,6 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
         async.each(locations.applications, function(location, rcb) {
-
             const applications = helpers.addSource(cache, source,
                 ['applications', 'list', location]);
 
