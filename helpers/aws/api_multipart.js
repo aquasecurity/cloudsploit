@@ -50,6 +50,9 @@ var calls = [
             listNetworkSecurityPolicies: {
                 override: true, 
             },
+            listEncryptionSecurityPolicies:{
+                override: true,
+            }
         },
         AppMesh: {
             listMeshes: {
@@ -1015,15 +1018,6 @@ var calls = [
         STS: {
             getCallerIdentity: {
                 property: 'Account'
-            }
-        },
-        OpenSearchServerless: {
-            listCollections : {
-                paginate: 'NextToken',
-                property: 'collectionSummaries'
-            },
-            listEncryptionSecurityPolicies:{
-                override: true,
             }
         },
         Support: {
@@ -2229,13 +2223,6 @@ var postcalls = [
                 filterValue: 'RoleName',
                 rateLimit: 500
             }
-        },
-        OpenSearchServerless: {
-            getEncryptionSecurityPolicy: {
-                reliesOnService: 'opensearchserverless',
-                reliesOnCall: 'listEncryptionSecurityPolicies',
-                override: true,   
-            }
         }
     },
     {
@@ -2309,6 +2296,11 @@ var postcalls = [
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            },
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listEncryptionSecurityPolicies',
                 override: true,   
             }
         }

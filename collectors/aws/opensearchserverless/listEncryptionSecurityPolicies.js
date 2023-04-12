@@ -10,9 +10,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     helpers.makeCustomCollectorCall(opensearch, 'listSecurityPolicies', params, retries, null, null, null, function(err, data) {
         if (err) {
             collection.opensearchserverless.listEncryptionSecurityPolicies[AWSConfig.region].err = err;
+        } else {
+            collection.opensearchserverless.listEncryptionSecurityPolicies[AWSConfig.region].data = data.securityPolicySummaries;
         }
-
-        collection.opensearchserverless.listEncryptionSecurityPolicies[AWSConfig.region].data = data.securityPolicySummaries;
         callback();
     });
 };

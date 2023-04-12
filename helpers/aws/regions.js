@@ -78,7 +78,7 @@ module.exports = {
     dms: [...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate],
     ec2: [...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate],
     ecr: [...regions, ...newRegions, ...meCentral1, ...newRegionsUpdate],
-    eks: [...regions, ...newRegions, 'eu-south-2','eu-central-2', 'ep-south-2', 'ap-southeast-3'],
+    eks: [...regions, ...newRegions, 'eu-south-2','eu-central-2','ap-southeast-3'],
     elasticbeanstalk: [...regions, ...newRegions, ...meCentral1],
     elastictranscoder: ['us-east-1', 'us-west-2', 'us-west-1', 'eu-west-1',
         'ap-southeast-1', 'ap-northeast-1', 'ap-southeast-2', 'ap-south-1'],
