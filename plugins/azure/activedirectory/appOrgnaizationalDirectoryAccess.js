@@ -26,7 +26,7 @@ module.exports = {
                 return rcb();
             }
             if (!applications.data.length) {
-                helpers.addResult(results, 0, 'No existing AAD application found', location);
+                helpers.addResult(results, 0, 'No existing AAD applications found', location);
                 return rcb();
             }
             for (let app of applications.data) {
