@@ -33,9 +33,9 @@ module.exports = {
                 if (!app.id) continue;
 
                 if (app.signInAudience && app.signInAudience === 'AzureADMultipleOrgs' || app.signInAudience === 'AzureADandPersonalMicrosoftAccount'){
-                    helpers.addResult(results, 2, 'Multi tenant access enabled for the application.', location, app.appId);
+                    helpers.addResult(results, 2, 'AAD application has multi-tenant access enabled', location, app.appId);
                 } else {
-                    helpers.addResult(results, 0, 'Single tenant access enabled for the application.', location, app.appId);
+                    helpers.addResult(results, 0, 'AAD application has single-tenant access enabled', location, app.appId);
                 }
             }
             rcb();

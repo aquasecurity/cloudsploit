@@ -48,7 +48,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing AAD application found');
+                expect(results[0].message).to.include('No existing AAD applications found');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -81,7 +81,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Multi tenant access enabled for the application');
+                expect(results[0].message).to.include('AAD application has multi-tenant access enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -95,7 +95,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Single tenant access enabled for the application');
+                expect(results[0].message).to.include('AAD application has single-tenant access enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
