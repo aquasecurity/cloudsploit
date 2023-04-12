@@ -137,6 +137,13 @@ module.exports = {
                             body.message = (body.code + ': ' + body.message);
                         }
                         return callback(body.message);
+                    } else if (body &&
+                        body.Message &&
+                        typeof body.Message == 'string') {
+                        if (body.Code && typeof body.Code == 'string') {
+                            body.Message = (body.Code + ': ' + body.Message);
+                        }
+                        return callback(body.Message);
                     }
 
                     console.log(`[ERROR] Unhandled error from Azure API: Body: ${JSON.stringify(body)}`);
