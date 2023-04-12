@@ -86,7 +86,7 @@ module.exports = {
     },
     remediate: function(config, cache, settings, resource, callback) {
         var putCall = this.actions.remediate;
-        var pluginName = 'osHttpsOnly';
+        var pluginName = 'opensearchHttpsOnly';
         var domainNameArr = resource.split(':');
         var domain = domainNameArr[domainNameArr.length - 1].split('/')[1];
 

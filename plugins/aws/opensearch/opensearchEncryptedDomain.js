@@ -85,7 +85,7 @@ module.exports = {
     },
     remediate: function(config, cache, settings, resource, callback) {
         var putCall = this.actions.remediate;
-        var pluginName = 'osEncryptedDomain';
+        var pluginName = 'opensearchEncryptedDomain';
         let defaultKeyDesc = 'Default master key that protects my OpenSearch data when no other key is defined';
         var domainNameArr = resource.split(':');
         var domain = domainNameArr[domainNameArr.length - 1].split('/')[1];
