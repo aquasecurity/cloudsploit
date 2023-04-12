@@ -43,7 +43,6 @@ module.exports = {
                 return rcb();
             }
 
-
             triggers.data.forEach(trigger => {
                 let resource = helpers.createResourceName('triggers', trigger.name, project, 'location', region);
 
