@@ -30,7 +30,7 @@ module.exports = {
                 return rcb();
             }
             for (let app of applications.data) {
-                if (!app.id) continue;
+                if (!app.appId) continue;
 
                 if (app.signInAudience && app.signInAudience === 'AzureADMultipleOrgs' || app.signInAudience === 'AzureADandPersonalMicrosoftAccount'){
                     helpers.addResult(results, 2, 'AAD application has multi-tenant access enabled', location, app.appId);
