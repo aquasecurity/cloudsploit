@@ -121,4 +121,5 @@ module.exports = {
     computeoptimizer: regions,
     appconfig: regions,
     opensearch:regions,
+    opensearchserverless: regions
 };

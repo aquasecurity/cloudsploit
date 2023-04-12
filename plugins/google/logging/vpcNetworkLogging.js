@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in VPC network should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
     recommended_action: 'Ensure that log metric and alert exist for VPC network changes.',
-    apis: ['metrics:list', 'alertPolicies:list'],
+    apis: ['metrics:list', 'alertPolicies:list', 'networks:list'],
     compliance: {
         pci: 'PCI requires tracking and monitoring of all access to environments ' +
             'in which cardholder data is present. VPC network logging ' +
@@ -24,6 +24,20 @@ module.exports = {
         var regions = helpers.regions();
 
         async.each(regions.alertPolicies, function(region, rcb){
+            let networks = helpers.addSource(
+                cache, source, ['networks', 'list', region]);
+
+            if (!networks) return rcb();
+
+            if (networks.err || !networks.data) {
+                helpers.addResult(results, 3, 'Unable to query VPC networks: ' + helpers.addError(networks), region, null, null, networks.err);
+                return rcb();
+            }
+
+            if (!networks.data.length) {
+                helpers.addResult(results, 0, 'No VPC networks found', region);
+                return rcb();
+            }
             var metrics = helpers.addSource(cache, source,
                 ['metrics', 'list', region]);
 
@@ -127,7 +141,3 @@ module.exports = {
         });
     }
 };
-
-
-
-
