@@ -63,6 +63,31 @@ const createCache = (webApps, configs) => {
     };
 };
 
+const createErrorCache = (webApps, configs) => {
+    let app = {};
+    let config = {};
+
+    if (webApps) {
+        app['data'] = webApps;
+        if (webApps && webApps.length) {
+            config[webApps[0].id] = {
+                'err': 'NotFound'
+            };
+        }
+    }
+
+    return {
+        webApps: {
+            list: {
+                'eastus': app
+            },
+            getBackupConfiguration: {
+                'eastus': config
+            }
+        }
+    };
+};
+
 describe('automatedBackupsEnabled', function() {
     describe('run', function() {
         it('should give passing result if no web apps', function(done) {
@@ -99,7 +124,7 @@ describe('automatedBackupsEnabled', function() {
         });
 
         it('should give failing result if no web app backup config found', function(done) {
-            const cache = createCache([webApps[0]], null);
+            const cache = createErrorCache([webApps[0]],{err:'Empty'} );
             automatedBackupsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

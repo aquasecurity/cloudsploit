@@ -63,6 +63,31 @@ const createCache = (webApps, configs) => {
     };
 };
 
+const createErrorCache = (webApps, configs) => {
+    let app = {};
+    let config = {};
+
+    if (webApps) {
+        app['data'] = webApps;
+        if (webApps && webApps.length) {
+            config[webApps[0].id] = {
+                'err': 'NotFound'
+            };
+        }
+    }
+
+    return {
+        webApps: {
+            list: {
+                'eastus': app
+            },
+            getBackupConfiguration: {
+                'eastus': config
+            }
+        }
+    };
+};
+
 describe('backupRetentionPeriod', function() {
     describe('run', function() {
         it('should give passing result if no web apps', function(done) {
@@ -100,11 +125,11 @@ describe('backupRetentionPeriod', function() {
 
 
         it('should give failing result if no web app backup config found', function(done) {
-            const cache = createCache([webApps[0]], []);
+            const cache = createErrorCache([webApps[0]],{err:'Empty'} );
             backupRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No backup configurations found for this WebApp');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Backups are not configured for WebApp');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -115,7 +140,7 @@ describe('backupRetentionPeriod', function() {
             backupRetentionPeriod.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Web App Backup Configs');
+                expect(results[0].message).to.include('Unable to query for Web App backup configs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

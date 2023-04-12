@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./vpcNetworkRouteLogging');
 
-const createCache = (err, data, adata) => {
+const createCache = (err, data, adata, rdata) => {
     return {
         metrics: {
             list: {
@@ -17,6 +17,14 @@ const createCache = (err, data, adata) => {
                 'global': {
                     err: err,
                     data: adata
+                }
+            }
+        },
+        networkRoutes: {
+            list: {
+                'global': {
+                    err: err,
+                    data: rdata
                 }
             }
         }
@@ -39,7 +47,21 @@ describe('vpcNetworkRouteLogging', function () {
             const cache = createCache(
                 null,
                 [],
-                []
+                [],
+                [
+                    {
+                        kind: 'compute#route',
+                        id: '4674268836178834750',
+                        creationTimestamp: '2023-01-02T17:58:41.659-08:00',
+                        name: 'default-route-7e3066edbf13bdba',
+                        description: 'Default local route to the subnetwork 10.182.0.0/20.',
+                        network: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        destRange: '10.182.0.0/20',
+                        priority: 0,
+                        nextHopNetwork: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        selfLink: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/routes/default-route-7e3066edbf13bdba'
+                      }
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -57,7 +79,21 @@ describe('vpcNetworkRouteLogging', function () {
             const cache = createCache(
                 null,
                 ['data'],
-                []
+                [],
+                [
+                    {
+                        kind: 'compute#route',
+                        id: '4674268836178834750',
+                        creationTimestamp: '2023-01-02T17:58:41.659-08:00',
+                        name: 'default-route-7e3066edbf13bdba',
+                        description: 'Default local route to the subnetwork 10.182.0.0/20.',
+                        network: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        destRange: '10.182.0.0/20',
+                        priority: 0,
+                        nextHopNetwork: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        selfLink: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/routes/default-route-7e3066edbf13bdba'
+                      }
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -147,6 +183,20 @@ describe('vpcNetworkRouteLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        kind: 'compute#route',
+                        id: '4674268836178834750',
+                        creationTimestamp: '2023-01-02T17:58:41.659-08:00',
+                        name: 'default-route-7e3066edbf13bdba',
+                        description: 'Default local route to the subnetwork 10.182.0.0/20.',
+                        network: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        destRange: '10.182.0.0/20',
+                        priority: 0,
+                        nextHopNetwork: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        selfLink: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/routes/default-route-7e3066edbf13bdba'
+                      }
                 ]
             );
 
@@ -237,6 +287,20 @@ describe('vpcNetworkRouteLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        kind: 'compute#route',
+                        id: '4674268836178834750',
+                        creationTimestamp: '2023-01-02T17:58:41.659-08:00',
+                        name: 'default-route-7e3066edbf13bdba',
+                        description: 'Default local route to the subnetwork 10.182.0.0/20.',
+                        network: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        destRange: '10.182.0.0/20',
+                        priority: 0,
+                        nextHopNetwork: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        selfLink: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/routes/default-route-7e3066edbf13bdba'
+                      }
                 ]
             );
 
@@ -326,10 +390,41 @@ describe('vpcNetworkRouteLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        kind: 'compute#route',
+                        id: '4674268836178834750',
+                        creationTimestamp: '2023-01-02T17:58:41.659-08:00',
+                        name: 'default-route-7e3066edbf13bdba',
+                        description: 'Default local route to the subnetwork 10.182.0.0/20.',
+                        network: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        destRange: '10.182.0.0/20',
+                        priority: 0,
+                        nextHopNetwork: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/networks/my-net',
+                        selfLink: 'https://www.googleapis.com/compute/v1/projects/akhtar-dev-aqua/global/routes/default-route-7e3066edbf13bdba'
+                      }
                 ]
             );
 
             plugin.run(cache, {}, callback);
-        })
+        });
+
+        it('should give passing result if no network routes are found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No VPC network routes found');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+            const cache = createCache(
+                null,
+                [],
+                [],
+                []
+            );
+            plugin.run(cache, {}, callback);
+        });
     })
 });

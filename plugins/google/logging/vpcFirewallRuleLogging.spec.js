@@ -2,7 +2,7 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var plugin = require('./vpcFirewallRuleLogging');
 
-const createCache = (err, data, adata) => {
+const createCache = (err, data, adata, firewalldata) => {
     return {
         metrics: {
             list: {
@@ -17,6 +17,14 @@ const createCache = (err, data, adata) => {
                 'global': {
                     err: err,
                     data: adata
+                }
+            }
+        },
+        firewalls: {
+            list: {
+                'global': {
+                    err: err,
+                    data: firewalldata
                 }
             }
         }
@@ -39,7 +47,22 @@ describe('vpcFirewallRuleLogging', function () {
             const cache = createCache(
                 null,
                 [],
-                []
+                [],
+                [
+                    {
+                        id: '7656774017226387060',
+                        creationTimestamp: '2021-05-07T12:10:19.939-07:00',
+                        name: 'default-allow-ssh',
+                        description: 'Allow SSH from anywhere',
+                        network: 'https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc',
+                        priority: 65534,
+                        sourceRanges: [ '0.0.0.0/0' ],
+                        direction: 'INGRESS',
+                        logConfig: { enable: true},
+                        disabled: false,
+                        kind: 'compute#firewall'
+                      }
+                ]
             );
 
             plugin.run(cache, {}, callback);
@@ -57,7 +80,20 @@ describe('vpcFirewallRuleLogging', function () {
             const cache = createCache(
                 null,
                 ['data'],
-                []
+                [],
+                [ {
+                    id: '7656774017226387060',
+                    creationTimestamp: '2021-05-07T12:10:19.939-07:00',
+                    name: 'default-allow-ssh',
+                    description: 'Allow SSH from anywhere',
+                    network: 'https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc',
+                    priority: 65534,
+                    sourceRanges: [ '0.0.0.0/0' ],
+                    direction: 'INGRESS',
+                    logConfig: { enable: true},
+                    disabled: false,
+                    kind: 'compute#firewall'
+                  }]
             );
 
             plugin.run(cache, {}, callback);
@@ -147,6 +183,21 @@ describe('vpcFirewallRuleLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        id: '7656774017226387060',
+                        creationTimestamp: '2021-05-07T12:10:19.939-07:00',
+                        name: 'default-allow-ssh',
+                        description: 'Allow SSH from anywhere',
+                        network: 'https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc',
+                        priority: 65534,
+                        sourceRanges: [ '0.0.0.0/0' ],
+                        direction: 'INGRESS',
+                        logConfig: { enable: true},
+                        disabled: false,
+                        kind: 'compute#firewall'
+                      }
                 ]
             );
 
@@ -237,6 +288,21 @@ describe('vpcFirewallRuleLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        id: '7656774017226387060',
+                        creationTimestamp: '2021-05-07T12:10:19.939-07:00',
+                        name: 'default-allow-ssh',
+                        description: 'Allow SSH from anywhere',
+                        network: 'https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc',
+                        priority: 65534,
+                        sourceRanges: [ '0.0.0.0/0' ],
+                        direction: 'INGRESS',
+                        logConfig: { enable: true},
+                        disabled: false,
+                        kind: 'compute#firewall'
+                      }
                 ]
             );
 
@@ -326,7 +392,37 @@ describe('vpcFirewallRuleLogging', function () {
                         ],
                         "enabled": true
                     }
+                ],
+                [
+                    {
+                        id: '7656774017226387060',
+                        creationTimestamp: '2021-05-07T12:10:19.939-07:00',
+                        name: 'default-allow-ssh',
+                        description: 'Allow SSH from anywhere',
+                        network: 'https://www.googleapis.com/compute/v1/projects/test-project/global/networks/test-vpc',
+                        priority: 65534,
+                        sourceRanges: [ '0.0.0.0/0' ],
+                        direction: 'INGRESS',
+                        logConfig: { enable: true},
+                        disabled: false,
+                        kind: 'compute#firewall'
+                      }
                 ]
+            );
+
+            plugin.run(cache, {}, callback);
+        });
+        it('should give passing result if no firewall rules found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No firewall rules found');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null, [], [], []
             );
 
             plugin.run(cache, {}, callback);
