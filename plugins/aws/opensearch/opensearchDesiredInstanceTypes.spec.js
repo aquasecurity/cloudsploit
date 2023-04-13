@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const esDesiredInstanceTypes = require('./esDesiredInstanceTypes');
+const osDesiredInstanceTypes = require('./opensearchDesiredInstanceTypes');
 
 const domainNames = [
     {
@@ -13,7 +13,7 @@ const domains = [
             "DomainId": "1123456654321/test-domain",
             "DomainName": "test-domain",
             "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain",
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "InstanceType": "t2.small.elasticsearch",
                 "DedicatedMasterType": "t2.small.elasticsearch",
             }           
@@ -24,7 +24,7 @@ const domains = [
             "DomainId": "1123456654321/test-domain",
             "DomainName": "test-domain",
             "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain",
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "InstanceType": "t2.small.elasticsearch",
             }           
         }
@@ -34,13 +34,13 @@ const domains = [
 const createCache = (domainNames, domains) => {
     if (domainNames && domainNames.length) var name = domainNames[0].DomainName;
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
                 },
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     [name]: {
                         data: domains
@@ -53,7 +53,7 @@ const createCache = (domainNames, domains) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -67,7 +67,7 @@ const createErrorCache = () => {
 
 const createNullCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': null,
             },
@@ -75,65 +75,71 @@ const createNullCache = () => {
     };
 };
 
-describe('esDesiredInstanceTypes', function () {
+describe('osDesiredInstanceTypes', function () {
     describe('run', function () {
         it('should FAIL if dedicated master and data node are not of desired instance type', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.medium.elasticsearch', es_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.medium.elasticsearch', os_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
 
         it('should FAIL if dedicated master instance is not of desired type', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esDesiredInstanceTypes.run(cache, {es_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_master_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
 
         it('should FAIL if data node instance is not of desired type', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.medium.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('OpenSearch domain is using t2.small.elasticsearch master instance(s) and t2.small.elasticsearch data instance(s)')
                 done();
             });
         });
         
         it('should PASS if master and data instances re of desired instance types', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.small.elasticsearch', es_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('ES domain is using allowed master and node instance types')
                 done();
             });
         });
 
         it('should PASS if no domain names found', function (done) {
             const cache = createCache([], []);
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.small.elasticsearch', es_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No OpenSearch domains found')
                 done();
             });
         });
 
         it('should UNKNOWN if there was an error listing domain names', function (done) {
             const cache = createErrorCache();
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.small.elasticsearch', es_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains')
                 done();
             });
         });
 
         it('should not return any results if unable to query for domain names', function (done) {
             const cache = createNullCache();
-            esDesiredInstanceTypes.run(cache, {es_desired_data_instance_type: 't2.small.elasticsearch', es_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {os_desired_data_instance_type: 't2.small.elasticsearch', os_desired_master_instance_type: 't2.small.elasticsearch'}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
@@ -141,7 +147,7 @@ describe('esDesiredInstanceTypes', function () {
 
         it('should not return any results if settings are not provided', function (done) {
             const cache = createNullCache();
-            esDesiredInstanceTypes.run(cache, {}, (err, results) => {
+            osDesiredInstanceTypes.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

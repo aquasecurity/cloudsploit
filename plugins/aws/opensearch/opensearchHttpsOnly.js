@@ -2,19 +2,19 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ElasticSearch HTTPS Only',
-    category: 'ES',
+    title: 'OpenSearch HTTPS Only',
+    category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensures ElasticSearch domains are configured to enforce HTTPS connections',
-    more_info: 'ElasticSearch domains should be configured to enforce HTTPS connections for all clients to ensure encryption of data in transit.',
-    link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html',
-    recommended_action: 'Ensure HTTPS connections are enforced for all ElasticSearch domains.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
-    remediation_description: 'ES domain will be configured to enforce HTTPS.',
+    description: 'Ensures OpenSearch domains are configured to enforce HTTPS connections',
+    more_info: 'OpenSearch domains should be configured to enforce HTTPS connections for all clients to ensure encryption of data in transit.',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html',
+    recommended_action: 'Ensure HTTPS connections are enforced for all OpenSearch domains.',
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    remediation_description: 'OpenSearch domain will be configured to enforce HTTPS.',
     remediation_min_version: '202011271930',
-    apis_remediate: ['ES:listDomainNames'],
+    apis_remediate: ['OpenSearch:listDomainNames'],
     remediation_inputs: {
-        tlsSecurityPolicyforEs: {
+        tlsSecurityPolicyforOpenSearch: {
             name: '(Optional) TLS Security Policy',
             description: 'The TLS Security Policy that needs to be applied to the HTTPS endpoint',
             regex: '^.*$',
@@ -22,59 +22,59 @@ module.exports = {
         }
     },
     actions: {
-        remediate: ['ES:updateElasticsearchDomainConfig'],
-        rollback: ['ES:updateElasticsearchDomainConfig']
+        remediate: ['OpenSearch:updateDomainConfig'],
+        rollback: ['OpenSearch:updateDomainConfig']
     },
     permissions: {
-        remediate: ['es:UpdateElasticsearchDomainConfig'],
-        rollback: ['es:UpdateElasticsearchDomainConfig']
+        remediate: ['opensearch:UpdateDomainConfig'],
+        rollback: ['opensearch:UpdateDomainConfig']
     },
-    realtime_triggers: ['es:CreateElasticsearchDomain', 'es:UpdateElasticsearchDomainConfig'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
-                ['es', 'listDomainNames', region]);
+                ['opensearch', 'listDomainNames', region]);
 
             if (!listDomainNames) return rcb();
 
             if (listDomainNames.err || !listDomainNames.data) {
                 helpers.addResult(
                     results, 3,
-                    'Unable to query for ES domains: ' + helpers.addError(listDomainNames), region);
+                    'Unable to query for OpenSearch domains: ' + helpers.addError(listDomainNames), region);
                 return rcb();
             }
 
             if (!listDomainNames.data.length){
-                helpers.addResult(results, 0, 'No ES domains found', region);
+                helpers.addResult(results, 0, 'No OpenSearch domains found', region);
                 return rcb();
             }
 
             listDomainNames.data.forEach(function(domain){
-                var describeElasticsearchDomain = helpers.addSource(cache, source,
-                    ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+                var describeDomain = helpers.addSource(cache, source,
+                    ['opensearch', 'describeDomain', region, domain.DomainName]);
 
-                if (!describeElasticsearchDomain ||
-                    describeElasticsearchDomain.err ||
-                    !describeElasticsearchDomain.data ||
-                    !describeElasticsearchDomain.data.DomainStatus) {
+                if (!describeDomain ||
+                    describeDomain.err ||
+                    !describeDomain.data ||
+                    !describeDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for OpenSearch domain config: ' + helpers.addError(describeDomain), region);
                 } else {
-                    var localDomain = describeElasticsearchDomain.data.DomainStatus;
+                    var localDomain = describeDomain.data.DomainStatus;
 
                     if (localDomain.DomainEndpointOptions &&
                         localDomain.DomainEndpointOptions.EnforceHTTPS) {
                         helpers.addResult(results, 0,
-                            'ES domain is configured to enforce HTTPS', region, localDomain.ARN);
+                            'OpenSearch domain is configured to enforce HTTPS', region, localDomain.ARN);
                     } else {
                         helpers.addResult(results, 2,
-                            'ES domain is not configured to enforce HTTPS', region, localDomain.ARN);
+                            'OpenSearch domain is not configured to enforce HTTPS', region, localDomain.ARN);
                     }
                 }
             });
@@ -86,7 +86,7 @@ module.exports = {
     },
     remediate: function(config, cache, settings, resource, callback) {
         var putCall = this.actions.remediate;
-        var pluginName = 'esHttpsOnly';
+        var pluginName = 'opensearchHttpsOnly';
         var domainNameArr = resource.split(':');
         var domain = domainNameArr[domainNameArr.length - 1].split('/')[1];
 
@@ -120,7 +120,7 @@ module.exports = {
         var remediation_file = settings.remediation_file;
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
             'Enforce HTTPS': 'Disabled',
-            'ES': resource
+            'OpenSearch': resource
         };
         // passes the config, put call, and params to the remediate helper function
         helpers.remediatePlugin(config, putCall[0], params, function(err) {
@@ -135,7 +135,7 @@ module.exports = {
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
                 'Action': 'Enforce HTTPS',
-                'ES': domain
+                'OpenSearch': domain
             };
 
             settings.remediation_file = remediation_file;

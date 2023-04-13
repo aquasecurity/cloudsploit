@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var esTlsVersion = require('./esTlsVersion');
+var osTlsVersion = require('./opensearchTlsVersion');
 
 const domainNames = [
     {
@@ -50,14 +50,14 @@ const domains = [
 
 const createCache = (domainNames, domains) => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: null,
                     data: domainNames
                 }
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     'test-domain': {
                         err: null,
@@ -71,7 +71,7 @@ const createCache = (domainNames, domains) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -93,29 +93,29 @@ const createNullCache = () => {
     };
 };
 
-describe('esTlsVersion', function () {
+describe('osTlsVersion', function () {
     describe('run', function () {
-        it('should PASS if ES domains have TLS version 1.2', function (done) {
+        it('should PASS if OpenSearch domains have TLS version 1.2', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if ES domains do not have TLS version 1.2', function (done) {
+        it('should FAIL if OpenSearch domains do not have TLS version 1.2', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should FAIL if ES domain does not have TLSSecurityPolicy property', function (done) {
+        it('should FAIL if OpenSearch domain does not have TLSSecurityPolicy property', function (done) {
             const cache = createCache([domainNames[0]], domains[2]);
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -124,7 +124,7 @@ describe('esTlsVersion', function () {
 
         it('should PASS if no domain names found', function (done) {
             const cache = createCache([], {});
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -133,7 +133,7 @@ describe('esTlsVersion', function () {
 
         it('should UNKNOWN if there was an error listing domain names', function (done) {
             const cache = createErrorCache();
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -142,7 +142,7 @@ describe('esTlsVersion', function () {
 
         it('should not return any results if unable to query for domain names', function (done) {
             const cache = createNullCache();
-            esTlsVersion.run(cache, {}, (err, results) => {
+            osTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

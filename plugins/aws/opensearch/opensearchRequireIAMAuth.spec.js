@@ -1,17 +1,17 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var es = require('./esRequireIAMAuth');
+var es = require('./opensearchRequireIAMAuth');
 
 const createCache = (listData, descData) => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: null,
                     data: listData
                 }
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     'mydomain': {
                         err: null,
@@ -23,13 +23,13 @@ const createCache = (listData, descData) => {
     }
 };
 
-describe('esPublicEndpoint', function() {
+describe('osPublicEndpoint', function() {
     describe('run', function() {
-        it('should give passing result if no ES domains present', function(done) {
+        it('should give passing result if no OpenSearch domains present', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('No ElasticSearch domains found')
+                expect(results[0].message).to.include('No OpenSearch domains found')
                 done()
             };
 
@@ -45,7 +45,7 @@ describe('esPublicEndpoint', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('ElasticSearch domain has no access policies')
+                expect(results[0].message).to.include('OpenSearch domain has no access policies')
                 done()
             };
 
@@ -69,7 +69,7 @@ describe('esPublicEndpoint', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('ElasticSearch domain has policy that does not require IAM authentication')
+                expect(results[0].message).to.include('OpenSearch domain has policy that does not require IAM authentication')
                 done()
             };
 
@@ -115,7 +115,7 @@ describe('esPublicEndpoint', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('ElasticSearch domain has policy that does not require IAM authentication')
+                expect(results[0].message).to.include('OpenSearch domain has policy that does not require IAM authentication')
                 done()
             };
 
@@ -158,7 +158,7 @@ describe('esPublicEndpoint', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('ElasticSearch domain access policies require IAM authentication')
+                expect(results[0].message).to.include('OpenSearch domain access policies require IAM authentication')
                 done()
             };
 

@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var esDomainEncryptionEnabled = require('./esDomainEncryptionEnabled');
+var osDomainEncryptionEnabled = require('./opensearchDomainEncryptionEnabled');
 
 const domains =  [
     {
@@ -94,14 +94,14 @@ const createCache = (listData, descData, describeKey) => {
         descData.DomainStatus.EncryptionAtRestOptions.KmsKeyId) ? descData.DomainStatus.EncryptionAtRestOptions.KmsKeyId.split('/')[1] : null;
     
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: null,
                     data: listData
                 }
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     'mydomain': {
                         err: null,
@@ -124,7 +124,7 @@ const createCache = (listData, descData, describeKey) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -132,7 +132,7 @@ const createErrorCache = () => {
                     },
                 },
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     err: {
                         message: 'error describing domain names'
@@ -154,11 +154,11 @@ const createErrorCache = () => {
 
 const createNullCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': null,
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': null
             }
         },
@@ -170,39 +170,39 @@ const createNullCache = () => {
     };
 }
 
-describe('esDomainEncryptionEnabled', function () {
+describe('osDomainEncryptionEnabled', function () {
     describe('run', function () {
         
-        it('should PASS if ES domain has encryption at rest at an encryption level greater than or equal to target encryption level', function (done) {
+        it('should PASS if OpenSearch domain has encryption at rest at an encryption level greater than or equal to target encryption level', function (done) {
             const cache = createCache([domainNames[0]], domains[1], describeKey[0]);
-            esDomainEncryptionEnabled.run(cache, {}, (err, results) => {
+            osDomainEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should PASS if no ES domains present', function (done) {
+        it('should PASS if no OpenSearch domains present', function (done) {
             const cache = createCache([], {});
-            esDomainEncryptionEnabled.run(cache, {}, (err, results) => {;
+            osDomainEncryptionEnabled.run(cache, {}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should FAIL if ES encryption config is disabled', function (done) {
+        it('should FAIL if OpenSearch encryption config is disabled', function (done) {
             const cache = createCache([domainNames[0]], domains[2], describeKey[0]);
-            esDomainEncryptionEnabled.run(cache, {}, (err, results) => {;
+            osDomainEncryptionEnabled.run(cache, {}, (err, results) => {;
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
-        it('should FAIL if ES domain has encryption at rest at an encryption level greater than target encryption level', function (done) {
+        it('should FAIL if OpenSearch domain has encryption at rest at an encryption level greater than target encryption level', function (done) {
             const cache = createCache([domainNames[0]], domains[0], describeKey[1]);
-            esDomainEncryptionEnabled.run(cache, {es_encryption_level: 'awscmk'}, (err, results) => {
+            osDomainEncryptionEnabled.run(cache, {es_encryption_level: 'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -211,7 +211,7 @@ describe('esDomainEncryptionEnabled', function () {
 
         it('should UNKNOWN if unable to list domain names', function (done) {
             const cache = createErrorCache();
-            esDomainEncryptionEnabled.run(cache, {}, (err, results) => {
+            osDomainEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -220,7 +220,7 @@ describe('esDomainEncryptionEnabled', function () {
 
         it('should not return any results if list domain names response not found', function (done) {
             const cache = createNullCache();
-            esDomainEncryptionEnabled.run(cache, { }, (err, results) => {
+            osDomainEncryptionEnabled.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

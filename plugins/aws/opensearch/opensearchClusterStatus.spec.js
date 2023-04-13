@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const esClusterStatus = require('./esClusterStatus');
+const osClusterStatus = require('./opensearchClusterStatus');
 
 const domainNames = [
     {
@@ -59,7 +59,7 @@ const esMetricStatistics = [
 const createCache = (domainNames, metrics) => {
     if (domainNames && domainNames.length) var name = domainNames[0].DomainName;
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
@@ -80,7 +80,7 @@ const createCache = (domainNames, metrics) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -103,7 +103,7 @@ const createErrorCache = () => {
 
 const createNullCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': null,
             },
@@ -116,56 +116,61 @@ const createNullCache = () => {
     };
 };
 
-describe('esClusterStatus', function () {
+describe('osClusterStatus', function () {
     describe('run', function () {
         it('should FAIL if metric count is greater than 1', function (done) {
             const cache = createCache([domainNames[0]], esMetricStatistics[0]);
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.includes('OpenSearch Domain is unhealthy');
                 done();
             });
         });
 
         it('should PASS if metric count is lesser than 1', function (done) {
             const cache = createCache([domainNames[0]], esMetricStatistics[1]);
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch Domain is healthy');
                 done();
             });
         });
     
         it('should PASS if metric count is not part of the response', function (done) {
             const cache = createCache([domainNames[0]], esMetricStatistics[2]);
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch Domain is healthy');
                 done();
             });
         });
     
         it('should PASS if no domain names found', function (done) {
             const cache = createCache([]);
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('No OpenSearch domains found');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list domain names', function (done) {
             const cache = createErrorCache();
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.includes('Unable to query for OpenSearch domains:');
                 done();
             });
         });
 
         it('should not return any results if list domain names response not found', function (done) {
             const cache = createNullCache();
-            esClusterStatus.run(cache, {}, (err, results) => {
+            osClusterStatus.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

@@ -2,71 +2,71 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ElasticSearch Node To Node Encryption',
-    category: 'ES',
+    title: 'OpenSearch Node To Node Encryption',
+    category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensures ElasticSearch domain traffic is encrypted in transit between nodes',
-    more_info: 'ElasticSearch domains should use node-to-node encryption to ensure data in transit remains encrypted using TLS 1.2.',
-    link: 'https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/ntn.html',
-    recommended_action: 'Ensure node-to-node encryption is enabled for all ElasticSearch domains.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
-    remediation_description: 'ES domain will be configured to use node-to-node encryption.',
+    description: 'Ensures OpenSearch domain traffic is encrypted in transit between nodes',
+    more_info: 'OpenSearch domains should use node-to-node encryption to ensure data in transit remains encrypted using TLS 1.2.',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ntn.html',
+    recommended_action: 'Ensure node-to-node encryption is enabled for all OpenSearch domains.',
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    remediation_description: 'OpenSearch domain will be configured to use node-to-node encryption.',
     remediation_min_version: '202102152200',
-    apis_remediate: ['ES:listDomainNames'],
+    apis_remediate: ['OpenSearch:listDomainNames'],
     actions: {
-        remediate: ['ES:updateElasticsearchDomainConfig'],
-        rollback: ['ES:updateElasticsearchDomainConfig']
+        remediate: ['OpenSearch:updateDomainConfig'],
+        rollback: ['OpenSearch:updateDomainConfig']
     },
     permissions: {
-        remediate: ['es:UpdateElasticsearchDomainConfig'],
-        rollback: ['es:UpdateElasticsearchDomainConfig']
+        remediate: ['opensearch:UpdateDomainConfig'],
+        rollback: ['opensearch:UpdateDomainConfig']
     },
-    realtime_triggers: ['es:CreateElasticsearchDomain', 'es:UpdateElasticsearchDomainConfig'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
-                ['es', 'listDomainNames', region]);
+                ['opensearch', 'listDomainNames', region]);
 
             if (!listDomainNames) return rcb();
 
             if (listDomainNames.err || !listDomainNames.data) {
                 helpers.addResult(
                     results, 3,
-                    'Unable to query for ES domains: ' + helpers.addError(listDomainNames), region);
+                    'Unable to query for OpenSearch domains: ' + helpers.addError(listDomainNames), region);
                 return rcb();
             }
 
             if (!listDomainNames.data.length){
-                helpers.addResult(results, 0, 'No ES domains found', region);
+                helpers.addResult(results, 0, 'No OpenSearch domains found', region);
                 return rcb();
             }
 
             listDomainNames.data.forEach(function(domain){
-                var describeElasticsearchDomain = helpers.addSource(cache, source,
-                    ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+                var describeDomain = helpers.addSource(cache, source,
+                    ['opensearch', 'describeDomain', region, domain.DomainName]);
 
-                if (!describeElasticsearchDomain ||
-                    describeElasticsearchDomain.err ||
-                    !describeElasticsearchDomain.data ||
-                    !describeElasticsearchDomain.data.DomainStatus) {
+                if (!describeDomain ||
+                    describeDomain.err ||
+                    !describeDomain.data ||
+                    !describeDomain.data.DomainStatus) {
                     helpers.addResult(
                         results, 3,
-                        'Unable to query for ES domain config: ' + helpers.addError(describeElasticsearchDomain), region);
+                        'Unable to query for OpenSearch domain config: ' + helpers.addError(describeDomain), region);
                 } else {
-                    var localDomain = describeElasticsearchDomain.data.DomainStatus;
+                    var localDomain = describeDomain.data.DomainStatus;
 
                     if (localDomain.NodeToNodeEncryptionOptions &&
                         localDomain.NodeToNodeEncryptionOptions.Enabled) {
                         helpers.addResult(results, 0,
-                            'ES domain is configured to use node-to-node encryption', region, localDomain.ARN);
+                            'OpenSearch domain is configured to use node-to-node encryption', region, localDomain.ARN);
                     } else {
                         helpers.addResult(results, 2,
-                            'ES domain is not configured to use node-to-node encryption', region, localDomain.ARN);
+                            'OpenSearch domain is not configured to use node-to-node encryption', region, localDomain.ARN);
                     }
                 }
             });
@@ -78,7 +78,7 @@ module.exports = {
     },
     remediate: function(config, cache, settings, resource, callback) {
         var putCall = this.actions.remediate;
-        var pluginName = 'esNodeToNodeEncryption';
+        var pluginName = 'opensearchNodeToNodeEncryption';
         var domainNameArr = resource.split(':');
         var domain = domainNameArr[domainNameArr.length - 1].split('/')[1];
 
@@ -99,7 +99,7 @@ module.exports = {
         var remediation_file = settings.remediation_file;
         remediation_file['pre_remediate']['actions'][pluginName][resource] = {
             'NodeToNodeEncryption': 'Disabled',
-            'ES': resource
+            'OpenSearch': resource
         };
 
         // passes the config, put call, and params to the remediate helper function
@@ -114,7 +114,7 @@ module.exports = {
             remediation_file['post_remediate']['actions'][pluginName][resource] = action;
             remediation_file['remediate']['actions'][pluginName][resource] = {
                 'Action': 'NodeToNodeENCRYPTED',
-                'ES': domain
+                'OpenSearch': domain
             };
 
             settings.remediation_file = remediation_file;

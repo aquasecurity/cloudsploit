@@ -2,18 +2,18 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ElasticSearch Access From IP Addresses',
-    category: 'ES',
+    title: 'OpenSearch Access From IP Addresses',
+    category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensure only whitelisted IP addresses can access Amazon Elasticsearch domains.',
-    more_info: 'ElasticSearch domains should only be accessible only from whitelisted IP addresses to avoid unauthorized access.',
-    link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
-    recommended_action: 'Modify Elasticseach domain access policy to allow only known/whitelisted IP addresses.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
+    description: 'Ensure only whitelisted IP addresses can access Amazon OpenSearch domains.',
+    more_info: 'OpenSearch domains should only be accessible only from whitelisted IP addresses to avoid unauthorized access.',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html#ac-types-ip',
+    recommended_action: 'Modify OpenSearch domain access policy to allow only known/whitelisted IP addresses.',
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
     settings: {
         whitelisted_ip_addresses: {
             name: 'Whitelisted IP Addresses',
-            description: 'A comma-separated list of trusted IP addresses allowed to access ES domains',
+            description: 'A comma-separated list of trusted IP addresses allowed to access OpenSearch domains',
             regex: '/^(?=.*[^.]$)((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).?){4}/([1-9]|1[0-9]){1}$/',
             default: ''
         }
@@ -29,47 +29,46 @@ module.exports = {
         if (!whitelisted_ip_addresses.length) return callback(null, results, source);
 
         whitelisted_ip_addresses = whitelisted_ip_addresses.split(',');
-
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
-                ['es', 'listDomainNames', region]);
-
+                ['opensearch', 'listDomainNames', region]);
             if (!listDomainNames) return rcb();
+            
 
             if (listDomainNames.err || !listDomainNames.data) {
                 helpers.addResult(
                     results, 3,
-                    `Unable to query for ES domains: ${helpers.addError(listDomainNames)}`, region);
+                    `Unable to query for OpenSearch domains: ${helpers.addError(listDomainNames)}`, region);
                 return rcb();
             }
 
             if (!listDomainNames.data.length){
-                helpers.addResult(results, 0, 'No ES domains found', region);
+                helpers.addResult(results, 0, 'No OpenSearch domains found', region);
                 return rcb();
             }
 
             async.each(listDomainNames.data, function(domain, dcb){
-                var describeElasticsearchDomain = helpers.addSource(cache, source,
-                    ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+                var describeDomain = helpers.addSource(cache, source,
+                    ['opensearch', 'describeDomain', region, domain.DomainName]);
 
-                if (!describeElasticsearchDomain ||
-                    describeElasticsearchDomain.err ||
-                    !describeElasticsearchDomain.data ||
-                    !describeElasticsearchDomain.data.DomainStatus) {
+                if (!describeDomain ||
+                    describeDomain.err ||
+                    !describeDomain.data ||
+                    !describeDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain config: ${helpers.addError(describeElasticsearchDomain)}`, region);
+                        `Unable to query for OpenSearch domain config: ${helpers.addError(describeDomain)}`, region);
                     return dcb();
                 }
 
-                var resource = describeElasticsearchDomain.data.DomainStatus.ARN;
+                var resource = describeDomain.data.DomainStatus.ARN;
                 
-                if (!describeElasticsearchDomain.data.DomainStatus.AccessPolicies) {
+                if (!describeDomain.data.DomainStatus.AccessPolicies) {
                     helpers.addResult(results, 0,
                         'No access policy found', region, resource);
                     return dcb();
                 }
 
-                var statements = helpers.normalizePolicyDocument(describeElasticsearchDomain.data.DomainStatus.AccessPolicies);
+                var statements = helpers.normalizePolicyDocument(describeDomain.data.DomainStatus.AccessPolicies);
                 var globalAccess = false;
                 var intruderIps = [];
 
@@ -90,16 +89,16 @@ module.exports = {
 
                 if (globalAccess) {
                     helpers.addResult(results, 2,
-                        `ES domain "${domain.DomainName}" is publicly exposed`, region, resource);
+                        `OpenSearch domain "${domain.DomainName}" is publicly exposed`, region, resource);
                     return dcb();
                 }
 
                 if (!intruderIps.length) {
                     helpers.addResult(results, 0,
-                        `ES domain "${domain.DomainName}" is not accessible from any unknown IP address`, region, resource);
+                        `OpenSearch domain "${domain.DomainName}" is not accessible from any unknown IP address`, region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `ES domain "${domain.DomainName}" is accessible from these unknown IP addresses: ${intruderIps.join(', ')}`,
+                        `OpenSearch domain "${domain.DomainName}" is accessible from these unknown IP addresses: ${intruderIps.join(', ')}`,
                         region, resource);
                 }
 

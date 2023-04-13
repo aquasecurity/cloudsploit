@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-var esCrossAccountAccess = require('./esCrossAccountAccess');
+var osCrossAccountAccess = require('./opensearchCrossAccountAccess');
 
 const domainNames = [
   {
@@ -72,14 +72,14 @@ const organizationAccounts = [
 
 const createCache = (domainNames, domains, accounts, domainNamesErr,domainsErr) => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
                     err: domainNamesErr
                 }
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     'test-domain-1': {
                         data: domains,
@@ -107,83 +107,88 @@ const createCache = (domainNames, domains, accounts, domainNamesErr,domainsErr) 
 
 const createNullCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': null
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': null
             }
         }
     };
 };
 
-describe('esCrossAccountAccess', function () {
+describe('osCrossAccountAccess', function () {
     describe('run', function () {
 
-        it('should PASS if ES domain has cross-account access policy attached', function (done) {
+        it('should PASS if opensearch domain has cross-account access policy attached', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esCrossAccountAccess.run(cache, {"es_whitelisted_aws_account_principals":['arn:aws:iam::211111111111:user/y']}, (err, results) => {
+            osCrossAccountAccess.run(cache, {"os_whitelisted_aws_account_principals":['arn:aws:iam::211111111111:user/y']}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain contains trusted account principals only')
                 done();
             });
         });
 
         it('should PASS if cross-account role contains organization account ID and setting to allow organization account is true', function (done) {
             const cache = createCache([domainNames[0]], domains[0], [organizationAccounts[0]]);
-            esCrossAccountAccess.run(cache, { "es_whitelist_aws_organization_accounts": "true" }, (err, results) => {
+            osCrossAccountAccess.run(cache, { "os_whitelist_aws_organization_accounts": "true" }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.includes('OpenSearch domain contains trusted account principals only')
                 done();
             });
         });
 
-        it('should PASS if ES domain does not have cross-account access policy attached', function (done) {
+        it('should PASS if opensearch domain does not have cross-account access policy attached', function (done) {
             const cache = createCache([domainNames[0]], domains[1]);
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
+            osCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain does not contain cross-account policy statement')
                 done();
             });
         });
         
-        it('should PASS if no ES Domain policy found', function (done) {
+        it('should PASS if no opensearch Domain policy found', function (done) {
             const cache = createCache([domainNames[0]], domains[3]);
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
+            osCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('OpenSearch domain does not have access policy defined')
                 done();
             });
         });
 
-        it('should FAIL if no ES domain found', function (done) {
+        it('should FAIL if no opensearch domain found', function (done) {
             const cache = createCache([]);
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
+            osCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('No OpenSearch domains found')
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to describe ES domain', function (done) {
+        it('should UNKNOWN if unable to describe opensearch domain', function (done) {
             const cache = createCache([], [], [], { message: 'Unable to query ES domains' });
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
+            osCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.includes('Unable to query for OpenSearch domains')
                 done();
             });
         });
 
-
-        it('should not return anything if query ES domains response not found', function (done) {
+        it('should not return anything if query opensearch domains response not found', function (done) {
             const cache = createNullCache();
-            esCrossAccountAccess.run(cache, {}, (err, results) => {
+            osCrossAccountAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

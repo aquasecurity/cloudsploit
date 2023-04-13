@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const esExposedDomain = require('./esExposedDomain');
+const osExposedDomain = require('./opensearchExposedDomain');
 
 const domainNames = [
     {
@@ -217,13 +217,13 @@ const domains = [
 const createCache = (domainNames, domains) => {
     if (domainNames && domainNames.length) var name = domainNames[0].DomainName;
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
                 },
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     [name]: {
                         data: domains
@@ -236,7 +236,7 @@ const createCache = (domainNames, domains) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -250,7 +250,7 @@ const createErrorCache = () => {
 
 const createNullCache = () => {
     return {
-        es: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': null,
             },
@@ -258,11 +258,11 @@ const createNullCache = () => {
     };
 };
 
-describe('esExposedDomain', function () {
+describe('osExposedDomain', function () {
     describe('run', function () {
         it('should FAIL if domain is exposed to all AWS accounts', function (done) {
             const cache = createCache([domainNames[1]], domains[1]);
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -271,7 +271,7 @@ describe('esExposedDomain', function () {
 
         it('should PASS if domain is not exposed to all AWS accounts', function (done) {
             const cache = createCache([domainNames[1]], domains[2]);
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -280,7 +280,7 @@ describe('esExposedDomain', function () {
 
         it('should FAIL if no access policy found', function (done) {
             const cache = createCache([domainNames[2]], domains[2]);
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -289,7 +289,7 @@ describe('esExposedDomain', function () {
 
         it('should PASS if no domain names found', function (done) {
             const cache = createCache([]);
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -298,7 +298,7 @@ describe('esExposedDomain', function () {
 
         it('should UNKNOWN if there was an error listing domain names', function (done) {
             const cache = createErrorCache();
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -307,7 +307,7 @@ describe('esExposedDomain', function () {
 
         it('should not return any results if unable to query for domain names', function (done) {
             const cache = createNullCache();
-            esExposedDomain.run(cache, {}, (err, results) => {
+            osExposedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
