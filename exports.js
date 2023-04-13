@@ -887,6 +887,7 @@ module.exports = {
         'minPasswordLength'             : require(__dirname + '/plugins/azure/activedirectory/minPasswordLength.js'),
         'ensureNoGuestUser'             : require(__dirname + '/plugins/azure/activedirectory/ensureNoGuestUser.js'),
         'noCustomOwnerRoles'            : require(__dirname + '/plugins/azure/activedirectory/noCustomOwnerRoles.js'),
+        'appOrgnaizationalDirectoryAccess'         : require(__dirname + '/plugins/azure/activedirectory/appOrgnaizationalDirectoryAccess.js'),
 
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
