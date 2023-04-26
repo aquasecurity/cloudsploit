@@ -68,7 +68,7 @@ describe('infrastructureEncryptionEnabled', function() {
             });
         });
 
-        it('should give passing result if trusted MS access is enabled', function(done) {
+        it('should give passing result if infrastructure encryption enabled', function(done) {
             const cache = createCache([storageAccounts[0]]);
             infrastructureEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -79,7 +79,7 @@ describe('infrastructureEncryptionEnabled', function() {
             });
         });
 
-        it('should give failing result if trusted MS access is not enabled', function(done) {
+        it('should give failing result if infrastructure encryption not enabled', function(done) {
             const cache = createCache([storageAccounts[1]]);
             infrastructureEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
