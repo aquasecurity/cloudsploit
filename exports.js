@@ -1217,6 +1217,7 @@ module.exports = {
         'memberAdmin'                   : require(__dirname + '/plugins/google/iam/memberAdmin.js'),
         'serviceAccountRole'            : require(__dirname + '/plugins/google/iam/serviceAccountRole.js'),
         'bigtableAdmin'                 : require(__dirname + '/plugins/google/iam/bigtableAdmin.js'),
+        'pubsubAdmin'                   : require(__dirname + '/plugins/google/iam/pubsubAdmin.js'),
 
 
         'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
