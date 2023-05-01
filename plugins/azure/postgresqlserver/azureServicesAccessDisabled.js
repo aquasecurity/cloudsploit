@@ -28,7 +28,7 @@ module.exports = {
                     'Unable to query for PostgreSQL Servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
-
+            console.log(servers)
             if (!servers.data.length) {
                 helpers.addResult(results, 0, 'No existing PostgreSQL Servers found', location);
                 return rcb();
@@ -39,10 +39,10 @@ module.exports = {
                     postgresServer.properties.publicNetworkAccess &&
                     postgresServer.properties.publicNetworkAccess.toUpperCase() === 'DISABLED') {
                     helpers.addResult(results, 0,
-                        'The PostgreSQL Server has public network access disabled', location, postgresServer.id);
+                        'Access to other Azure services is disabled for PostgreSQL server', location, postgresServer.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'The PostgreSQL Server does not have public network access disabled', location, postgresServer.id);
+                        'Access to other Azure services is not disabled for PostgreSQL server', location, postgresServer.id);
                 }
             }
 
