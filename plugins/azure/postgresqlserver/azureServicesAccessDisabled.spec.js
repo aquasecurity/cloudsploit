@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var postgresqlPublicAccessDisabled = require('./postgresqlPublicAccessDisabled');
+var azureServicesAccessDisabled = require('./azureServicesAccessDisabled');
 
 const listPostgres = [
     {
@@ -42,7 +42,7 @@ const createCache = (err, list) => {
     }
 };
 
-describe('postgresqlPublicAccessDisabled', function() {
+describe('azureServicesAccessDisabled', function() {
     describe('run', function() {
         it('should give passing result if no servers', function(done) {
             const callback = (err, results) => {
@@ -58,7 +58,7 @@ describe('postgresqlPublicAccessDisabled', function() {
                 []
             );
 
-            postgresqlPublicAccessDisabled.run(cache, {}, callback);
+            azureServicesAccessDisabled.run(cache, {}, callback);
         })
 
         it('should give failing result if postgresql server does not have public network access disabled', function(done) {
@@ -75,7 +75,7 @@ describe('postgresqlPublicAccessDisabled', function() {
                 [listPostgres[0]]
             );
 
-            postgresqlPublicAccessDisabled.run(cache, {}, callback);
+            azureServicesAccessDisabled.run(cache, {}, callback);
         });
 
         it('should give passing result if postgresql server public network access disabled', function(done) {
@@ -92,7 +92,7 @@ describe('postgresqlPublicAccessDisabled', function() {
                 [listPostgres[1]]
             );
 
-            postgresqlPublicAccessDisabled.run(cache, {}, callback);
+            azureServicesAccessDisabled.run(cache, {}, callback);
         });
 
         it('should give unknown result if unable to query for PostgreSQL Servers', function(done) {
@@ -108,7 +108,7 @@ describe('postgresqlPublicAccessDisabled', function() {
                 { message: "Unable to list servers" },
             );
 
-            postgresqlPublicAccessDisabled.run(cache, {}, callback);
+            azureServicesAccessDisabled.run(cache, {}, callback);
         });
     })
 })

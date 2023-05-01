@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Server Public Network Access Disabled',
+    title: 'PostgreSQL Server Access to Azure Services Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     description: 'Ensure that Microsoft Azure PostgreSQL database servers have public network access disabled.',
