@@ -231,10 +231,6 @@ var calls = {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2021-04-01'
         },
-        listByGraph: {
-            url: 'https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=2020-04-01-preview',
-            graph: true
-        }
     },
     redisCaches: {
         listBySubscription: {
