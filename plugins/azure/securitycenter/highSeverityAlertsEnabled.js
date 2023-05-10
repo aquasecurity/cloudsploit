@@ -46,11 +46,10 @@ module.exports = {
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
 
-                if( contact.alertNotifications && contact.alertNotifications.state &&
+                if ( contact.alertNotifications && contact.alertNotifications.state &&
                 contact.alertNotifications.state.toLowerCase() === 'off') {
-                    helpers.addResult(results, 2, `Security contacts email alert notification are not enabled`, location, contact.id);
-                }
-                else if (contact.alertNotifications.minimalSeverity &&
+                    helpers.addResult(results, 2, 'Security contacts email alert notification are not enabled', location, contact.id);
+                } else if (contact.alertNotifications.minimalSeverity &&
                 helpers.SEVERITY_LEVELS.indexOf(contact.alertNotifications.minimalSeverity.toLowerCase()) >= desiredSeverityLevel){
                     helpers.addResult(results, 0, `Security contacts email alert notifications enabled with minimum severity level
                     ${contact.alertNotifications.minimalSeverity} which is greater or equal to 
