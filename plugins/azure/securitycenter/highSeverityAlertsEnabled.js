@@ -15,7 +15,7 @@ module.exports = {
             name: 'Email alert notification minimal severity level',
             default: 'High',
             description: 'Desired severity level.',
-            regex: '^(High | Medium | Low)$',
+            regex: '^(high|medium|low)$',
         }
     },
 
