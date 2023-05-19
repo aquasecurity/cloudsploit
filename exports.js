@@ -632,7 +632,7 @@ module.exports = {
         'cognitoMFAEnabled'             : require(__dirname + '/plugins/aws/cognito/cognitoMFAEnabled.js'),
 
         'opensearchCollectionCmkEncrypted': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionCmkEncrypted.js'),
-        'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js')
+        'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
         
     },
     azure : {
@@ -1402,7 +1402,7 @@ module.exports = {
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
-        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
            
     }
 };
