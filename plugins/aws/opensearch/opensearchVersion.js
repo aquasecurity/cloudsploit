@@ -5,14 +5,13 @@ module.exports = {
     title: 'OpenSearch Version',
     category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Checks if OpenSearch domains are running the latest  Engine version',
+    description: 'Ensures OpenSearch domains are using the latest engine version',
     more_info: 'OpenSearch domains should be upgraded to the latest version for optimal performance and security.',
-    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/features-by-version.html',
-    recommended_action: 'Ensure each OpenSearch domain is running the latest service software and update out-of-date domains.',
+    link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html',
+    recommended_action: 'Update OpenSearch domain to set to latest engine version.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
 
     run:function(cache, settings, callback) {
-
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -34,9 +33,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No OpenSearch domains found', region);
                 return rcb();
             }
-
-
- 
             listDomainNames.data.forEach(function(domain){
                 var describeDomain = helpers.addSource(cache, source,
                     ['opensearch', 'describeDomain', region, domain.DomainName]);
@@ -50,12 +46,22 @@ module.exports = {
                         'Unable to query for OpenSearch domain config: ' + helpers.addError(describeDomain), region);
                 } else {
                     var localDomain = describeDomain.data.DomainStatus;
-                    var currentVersion = localDomain && localDomain.EngineVersion? localDomain.EngineVersion: ''
-                 
-                    if (currentVersion.includes('7.10')) {
-                        helpers.addResult(results, 0, 'OpenSearch domain is running the latest version ', region, localDomain.ARN);
+                    var currentVersion = localDomain && localDomain.EngineVersion? localDomain.EngineVersion: '';
+
+                    if (currentVersion.includes('Elasticsearch')) {
+                        if (currentVersion.includes('7.10')) {
+                            helpers.addResult(results, 0, 'OpenSearch domain is running the latest version', region, localDomain.ARN);
+                        } else {
+                            helpers.addResult(results, 2, 'OpenSearch domain should be upgraded to latest version', region, localDomain.ARN);
+                        }
+                    } else if (currentVersion.includes('OpenSearch')) {
+                        if (currentVersion.includes('2.5')) {
+                            helpers.addResult(results, 0, 'OpenSearch domain is running the latest version', region, localDomain.ARN);
+                        } else {
+                            helpers.addResult(results, 2, 'OpenSearch domain should be upgraded to latest version', region, localDomain.ARN);
+                        }
                     } else {
-                        helpers.addResult(results, 2, 'OpenSearch domain should be upgraded to Latest version ', region, localDomain.ARN);
+                        helpers.addResult(results, 2, 'Unknown engine version', region, localDomain.ARN);
                     }
                 }
             });
@@ -66,3 +72,4 @@ module.exports = {
         });
     }
 };
+
