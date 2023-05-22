@@ -299,7 +299,7 @@ module.exports = {
         'opensearchPublicEndpoint'      : require(__dirname + '/plugins/aws/opensearch/opensearchPublicEndpoint.js'),
         'opensearchRequireIAMAuth'      : require(__dirname + '/plugins/aws/opensearch/opensearchRequireIAMAuth.js'),
         'opensearchTlsVersion'          : require(__dirname + '/plugins/aws/opensearch/opensearchTlsVersion.js'),
-        'opensearchUpgradeAvailable'    : require(__dirname + '/plugins/aws/opensearch/opensearchUpgradeAvailable.js'),
+        'opensearchUpgradeAvailable'    : require(__dirname + '/plugins/aws/opensearch/opensearchUpgradeAvailable.js'),  
         'opensearchVersion'             : require(__dirname + '/plugins/aws/opensearch/opensearchVersion.js'),
 
 
