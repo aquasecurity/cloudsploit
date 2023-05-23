@@ -59,6 +59,7 @@ module.exports = {
                     level ${contact.alertNotifications.minimalSeverity} which is less than the desired severity level ${helpers.SEVERITY_LEVELS[desiredSeverityLevel]}`, location);
                 }
             }
+            
             rcb();
         }, function(){
             callback(null, results, source);
