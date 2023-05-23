@@ -5,7 +5,7 @@ module.exports = {
     title: 'OpenSearch Version',
     category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensures OpenSearch domains are using the latest engine version',
+    description: 'Ensures OpenSearch domains are using the latest engine version.',
     more_info: 'OpenSearch domains should be upgraded to the latest version for optimal performance and security.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html',
     recommended_action: 'Update OpenSearch domain to set to latest engine version.',
