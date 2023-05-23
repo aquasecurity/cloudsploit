@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Defender For Key Vault',
+    title: 'Enable Defender For Key Vaults',
     category: 'Defender',
     domain: 'Management and Governance',
-    description: 'Ensures that Microsoft Defender for Key Vault is enabled.',
-    more_info: 'Turning on Microsoft Defender for Key Vault enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
-    recommended_action: 'Enable Microsoft Defender for Key Vault in Defender plans for the subscription.',
+    description: 'Ensures that Microsoft Defender for Key Vaults is enabled.',
+    more_info: 'Turning on Microsoft Defender for Key Vaults enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
+    recommended_action: 'Enable Microsoft Defender for Key Vaults in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/enable-enhanced-security',
     apis: ['pricings:list'],
 

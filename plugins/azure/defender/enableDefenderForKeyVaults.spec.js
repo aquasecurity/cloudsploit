@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var enableDefenderForKeyVaults = require('./enableDefenderForKeyVaultss');
+var enableDefenderForKeyVaults = require('./enableDefenderForKeyVaults');
 
 const createCache = (err, data) => {
     return {
@@ -38,7 +38,7 @@ describe('enableDefenderForKeyVaults', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Defender is not enabled for Key Vault');
+                expect(results[0].message).to.include('Azure Defender is not enabled for Key Vaults');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -63,7 +63,7 @@ describe('enableDefenderForKeyVaults', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Defender is enabled for Key Vault');
+                expect(results[0].message).to.include('Azure Defender is enabled for Key Vaults');
                 expect(results[0].region).to.equal('global');
                 done()
             };
