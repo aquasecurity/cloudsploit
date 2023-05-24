@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that virtual machines have system assigned managed identities enabled.',
     more_info: 'Managed identities for Azure resources provides Azure services with a managed identity in Azure AD which can be used to authenticate to any service that supports Azure AD authentication, without having to include any credentials in code.',
     recommended_action: 'Modify virtual machine and enable system assigned managed identity.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed',
+    link: 'https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm',
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {
