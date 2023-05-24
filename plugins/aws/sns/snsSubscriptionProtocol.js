@@ -5,7 +5,7 @@ module.exports = {
     title: 'SNS Subscription Protocol',
     category: 'SNS',
     domain: 'Application Integration',
-    description: 'Ensure that Amazon SNS subscriptions are using HTTPS protocol not HTTPS',
+    description: 'Ensure that Amazon SNS subscriptions are using HTTPS protocol not HTTP',
     more_info: 'Amazon Simple Notification Service (Amazon SNS) is a managed service that provides message delivery from publishers to subscribers. It is important to verify that SNS subscriptions are configured to use the HTTPS protocol. ',
     recommended_action: 'Review and update SNS subscriptions to use the appropriate protocol (HTTPS)',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-http-https-endpoint-as-subscriber.html',
