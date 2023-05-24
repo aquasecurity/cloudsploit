@@ -441,6 +441,7 @@ module.exports = {
         'snsCrossAccount'               : require(__dirname + '/plugins/aws/sns/snsCrossAccount.js'),
         'snsValidSubscribers'           : require(__dirname + '/plugins/aws/sns/snsValidSubscribers.js'),
         'snsTopicHasTags'               : require(__dirname + '/plugins/aws/sns/snsTopicHasTags.js'),
+        'snsSubcriptionProtocol'        : require(__dirname + '/plugins/aws/sns/snsSubscriptionHTTPprotocol.js'),
 
         'sqsCrossAccount'               : require(__dirname + '/plugins/aws/sqs/sqsCrossAccount.js'),
         'sqsDeadLetterQueue'            : require(__dirname + '/plugins/aws/sqs/sqsDeadLetterQueue.js'),
