@@ -16,7 +16,6 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-
         async.each(locations.virtualMachines, function(location, rcb) {
             var virtualMachines = helpers.addSource(cache, source,
                 ['virtualMachines', 'listAll', location]);
