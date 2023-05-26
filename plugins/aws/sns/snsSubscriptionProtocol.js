@@ -37,12 +37,12 @@ module.exports = {
             for (var subscription of listSubscriptions.data) {
                 if (!subscription.SubscriptionArn || !subscription.Protocol) continue;
 
-                if(subscription.Protocol.toLowerCase() != 'https'){
+                if (subscription.Protocol.toLowerCase() != 'https'){
                     helpers.addResult(results, 2, 'SNS subscription is not using HTTPS protocol',
-                    region, subscription.SubscriptionArn);
+                        region, subscription.SubscriptionArn);
                 } else {
                     helpers.addResult(results, 0, 'SNS subscription is using HTTPS protocol',
-                    region, subscription.SubscriptionArn);
+                        region, subscription.SubscriptionArn);
                 }
             }
 
