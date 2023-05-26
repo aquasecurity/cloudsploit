@@ -66,51 +66,8 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0, `AWS ELB "${lb.LoadBalancerName}" does not have unhealthy instances`, region, elbArn);
                 }
-                // var instanceStates = describeInstanceHealth.data.InstanceStates;
-                // if (!Array.isArray(instanceStates)) {
-                //     helpers.addResult(results, 3,
-                //         'Invalid instance states data for ELB: ' + lb.LoadBalancerName, region, elbArn);
-                //     return cb();
-                // }
-            
-                // var unhealthyInstances = instanceStates.filter(function(instance) {
-                //     return instance.State === "OutOfService";
-                // });
-            
-                // if (unhealthyInstances.length > 0) {
-                //     helpers.addResult(results, 2, `AWS ELB "${lb.LoadBalancerName}" has unhealthy instances`, region, elbArn);
-                // } else {
-                //     helpers.addResult(results, 0, `AWS ELB "${lb.LoadBalancerName}" does not have unhealthy instances`, region, elbArn);
-                // }
-
-                // var unhealthyInstances = [];
-                // describeInstanceHealth.data.InstanceStates.forEach(function(instance) {
-                // if (instance.State === "OutOfService") {
-                //      unhealthyInstances.push(instance);
-                //        }
-                //    });
-
-                // if (unhealthyInstances.length > 0) {
-                //  helpers.addResult(results, 2, `AWS ELB "${lb.LoadBalancerName}" has unhealthy instances`, region, elbArn);
-                //  } else {
-                //      helpers.addResult(results, 0, `AWS ELB "${lb.LoadBalancerName}" does not have unhealthy instances`, region, elbArn);
-                // }
-
-                // var unhealthyInstances=describeInstanceHealth.data.InstanceStates.filter(function(instance){
-                //     return instance.State === "OutOfService";
-                // });
-            
-                // if (unhealthyInstances.length) {
-                //        helpers.addResult(results, 2,
-                //         `AWS ELB "${lb.LoadBalancerName}" has unhealthy instances`,
-                //         region, elbArn);
-                //        }else{
-                //         helpers.addResult(results, 0,
-                //             `AWS ELB "${lb.LoadBalancerName}" does not have unhealthy instances`,
-                //             region, elbArn);
-                //        }   
-                     
-                  cb();
+                
+                cb();
             },function(){
               rcb();
          });
