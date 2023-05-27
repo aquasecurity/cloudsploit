@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Domain Public Access Enabled',
+    title: 'Domain Public Access',
     category: 'Event Grid',
     domain: 'Messaging services',
     description: 'Ensure that Azure Event Grid domains do not have public access enabled.',

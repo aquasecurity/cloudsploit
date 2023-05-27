@@ -1,5 +1,5 @@
 var expect = require("chai").expect;
-var domainPublicAccessEnabled = require("./domainPublicAccessEnabled");
+var domainPublicAccess = require("./domainPublicAccess");
 
 const domains = [
     {
@@ -35,11 +35,11 @@ const createCache = (data) => {
   };
 };
 
-describe("domainPublicAccessEnabled", function () {
+describe("domainPublicAccess", function () {
   describe("run", function () {
     it("should give Passing result if no domain found", function (done) {
         const cache = createCache([]);
-        domainPublicAccessEnabled.run(cache, {}, (err, results) => {
+        domainPublicAccess.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
             expect(results[0].message).to.include("No Event Grid domains found");
@@ -50,7 +50,7 @@ describe("domainPublicAccessEnabled", function () {
 
     it("should give unknown result if unable to query for domains", function (done) {
         const cache = createCache(null);
-        domainPublicAccessEnabled.run(cache, {}, (err, results) => {
+        domainPublicAccess.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(3);
             expect(results[0].message).to.include("Unable to query for Event Grid domains:");
@@ -61,7 +61,7 @@ describe("domainPublicAccessEnabled", function () {
 
     it("should give failing result if public access enabled for domains", function (done) {
         const cache = createCache([domains[0]]);
-        domainPublicAccessEnabled.run(cache, {}, (err, results) => {
+        domainPublicAccess.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
             expect(results[0].message).to.include("Event Grid domain has public network access enabled");
@@ -72,7 +72,7 @@ describe("domainPublicAccessEnabled", function () {
 
     it("should give passing result if public access not enabled for domains", function (done) {
         const cache = createCache([domains[1]]);
-        domainPublicAccessEnabled.run(cache, {}, (err, results) => {
+        domainPublicAccess.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
             expect(results[0].message).to.include("Event Grid domain does not have public network access enabled");
