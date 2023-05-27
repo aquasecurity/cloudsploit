@@ -416,6 +416,11 @@ var calls = {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/privateEndpoints?api-version=2022-01-01'
         }
+    },
+    eventGrid: {
+        listDomains: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
+        }
     }
 };
 
