@@ -420,6 +420,13 @@ var calls = {
 };
 
 var postcalls = {
+    recoveryServiceVaults: {
+        getRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-04-01'
+        }
+    },
     availabilitySets:{
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
