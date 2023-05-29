@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(getRestApis.data, function(api, cb) {
+            getRestApis.data.forEach(api => {
                 if (!api.id) return cb();
 
                 var apiArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
@@ -51,23 +51,15 @@ module.exports = {
 
                 if (getAuthorizers.data.items.length === 0) {
                     helpers.addResult(results, 2,
-                      'No authorizers found for API Gateway Rest API ' + api.name,region );
+                        'No authorizers found for API Gateway Rest API ',
+                         region, apiArn );
                   } else {
-                    // Authorizers found
-                    for (var i = 0; i < getAuthorizers.data.items.length; i++) {
-                      var authorizer = getAuthorizers.data.items[i];
-                      helpers.addResult(results,0,
-                        'Authorizer found for API Gateway Rest API ' + api.name + ': ' + authorizer.name,
-                        region
-                      );
+                    helpers.addResult(results, 0,
+                        'Authorizers found for API Gateway Rest API ',
+                         region, apiArn);
                     }
-                  }
-          
-                   cb();
-
-                }, function(){
-                    rcb();
-                });
+                  });
+                  rcb();
             },function() {
                 callback(null, results, source);
          });

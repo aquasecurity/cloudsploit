@@ -139,11 +139,10 @@ describe('apigatewayAuthorization', function () {
             ];
             const cache = createCache(getRestApisData, getAuthorizersData);
             apigatewayAuthorization.run(cache,{}, (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('uthorizer found for API Gateway Rest API ')
+                expect(results[0].message).to.include('Authorizers found for API Gateway Rest API ')
                 done();
             });
         });
