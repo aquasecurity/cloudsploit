@@ -20,7 +20,6 @@ module.exports = {
             const domains = helpers.addSource(cache, source, 
                 ['eventGrid', 'listDomains', location]);
 
-            
             if (!domains) return rcb();
 
             if (domains.err || !domains.data) {
