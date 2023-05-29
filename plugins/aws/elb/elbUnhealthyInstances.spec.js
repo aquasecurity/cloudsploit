@@ -85,7 +85,7 @@ const describeInstanceHealthData = [
             InstanceId: 'instance-id',
             State: 'InService',
             "ReasonCode": "Instance",
-            "Description": "Instance has failed at least the UnhealthyThreshold number of health checks consecutively."
+            "Description": "N/A"
         }
     ]
 },
