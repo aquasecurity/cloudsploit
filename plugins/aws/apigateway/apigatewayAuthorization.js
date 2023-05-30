@@ -5,9 +5,9 @@ module.exports = {
     title: 'API Gateway Authorization',
     category: 'API Gateway',
     domain: 'Availability',
-    description: 'Ensures that Amazon API Gateway APIs are using authorizer.',
+    description: 'Ensures that Amazon API Gateway APIs are using authorizer',
     more_info: 'API Gateway API should be using authorizer to enforce security measures and control access to API resources.',
-    recommended_action: 'Please review the API Gateway configuration and ensure that appropriate authorizers are set up for each API. Authorizers can be used to authenticate and authorize API requests.',
+    recommended_action: 'Modify API Gateway configuration and ensure that appropriate authorizers are set up for each API.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html',
     apis: ['APIGateway:getRestApis','APIGateway:getAuthorizers'],
     
