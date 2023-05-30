@@ -35,7 +35,7 @@ module.exports = {
             }
 
             getRestApis.data.forEach(api => {
-                if (!api.id) return cb();
+                if (!api.id) return;
 
                 var apiArn = `arn:${awsOrGov}:apigateway:${region}::/restapis/${api.id}`;
 
