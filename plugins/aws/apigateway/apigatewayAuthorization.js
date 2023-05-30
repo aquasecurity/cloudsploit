@@ -42,7 +42,7 @@ module.exports = {
                 var getAuthorizers = helpers.addSource(cache, source,
                     ['apigateway', 'getAuthorizers', region, api.id]);
           
-                    if (!getAuthorizers || getAuthorizers.err || !getAuthorizers.data || !getAuthorizers.data.items) {
+                if (!getAuthorizers || getAuthorizers.err || !getAuthorizers.data || !getAuthorizers.data.items) {
                         helpers.addResult(results, 3,
                             `Unable to query for API Gateway Authorizers: ${helpers.addError(getAuthorizers)}`,
                             region, apiArn);
@@ -53,16 +53,17 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'No authorizers found for API Gateway Rest API ',
                          region, apiArn );
-                  } else {
+                } else {
                     helpers.addResult(results, 0,
                         'Authorizers found for API Gateway Rest API ',
                          region, apiArn);
-                    }
-                  });
-                  rcb();
-            },function() {
-                callback(null, results, source);
-         });
+                }
+            });
+
+            rcb();
+        }, function() {
+            callback(null, results, source);
+       });
     }
 };
 
