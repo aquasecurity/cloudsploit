@@ -16,6 +16,17 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
+        var olderGenerations = [
+            'db.t1.micro',
+            'db.m1.small',
+            'db.m1.medium',
+            'db.m1.large',
+            'db.m1.xlarge',
+            'db.m2.xlarge',
+            'db.m2.2xlarge',
+            'db.m2.4xlarge'
+        ];
+
         async.each(regions.rds, function(region, rcb) {
             var describeDBInstances = helpers.addSource(cache, source,
                 ['rds', 'describeDBInstances', region]);
@@ -32,7 +43,6 @@ module.exports = {
                 helpers.addResult(results, 0, 'No RDS instances found', region);
                 return rcb();
             }
-            var olderGenerations = ['db.t1.micro' , 'db.m1.small' , 'db.m1.medium' , 'db.m1.large' , 'db.m1.xlarge' , 'db.m2.xlarge' , 'db.m2.2xlarge' , 'db.m2.4xlarge' ];
             
             describeDBInstances.data.forEach(function(Rds){
                 var dbInstanceClass = Rds.DBInstanceClass;
