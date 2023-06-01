@@ -75,7 +75,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        `Application/Network load balancer does not have any unhealthy instance(s) associated`,
+                        `Application/Network load balancer does not have any unhealthy instance associated`,
                         region, resource);
                 }
             });

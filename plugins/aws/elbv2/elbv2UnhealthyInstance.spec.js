@@ -237,6 +237,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Application/Network load balancer does not have any unhealthy instance associated');
                 done();
             });
         });
@@ -246,6 +248,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Application/Network load balancer has an unhealthy instance associated');
                 done();
             });
         });
@@ -255,6 +259,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No Application/Network load balancers present');
                 done();
             });
         });
@@ -264,6 +270,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No Application/Network load balancer target groups found');
                 done();
             });
         });
@@ -273,6 +281,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for Application/Network load balancers');
                 done();
             });
         });
@@ -282,6 +292,8 @@ describe('elbv2UnhealthyInstance', function () {
             elbv2UnhealthyInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for Application/Network load balancer target groups: ');
                 done();
             });
         });
