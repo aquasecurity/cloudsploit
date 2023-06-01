@@ -5,7 +5,7 @@ module.exports = {
     title: 'ACR Public Access',
     category: 'Container Registry',
     domain: 'Containers',
-    description: 'Ensures that the container registries are not publicly accessible.',
+    description: 'Ensures that Azure Container Registries are not Publicly Accessible.',
     more_info: 'Azure Container Registries should be not be publicly accessible to prevent unauthorized actions.',
     recommended_action: 'Ensure that the public network access is disabled for each container registry.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-access-selected-networks',
