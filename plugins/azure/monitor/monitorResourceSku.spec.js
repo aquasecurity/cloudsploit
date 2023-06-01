@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var resourceAppropriateSKU = require('./resourceAppropriateSKU');
+var resourceAppropriateSKU = require('./monitorResourceSku');
 
 const resources = [
    {
