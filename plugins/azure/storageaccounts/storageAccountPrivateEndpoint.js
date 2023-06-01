@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Storage Account Private Endpoints Configured',
+    title: 'Storage Account Private Endpoints',
     category: 'Storage Accounts',
     domain: 'Storage',
-    description: 'Ensure that Azure Storage accounts are accessible only through private endpoint.',
+    description: 'Ensure that Azure Storage Accounts are Accessible only through Private Endpoints.',
     more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service such as Azure Storage Accounts into your VNet.',
-    recommended_action: 'Modify storage account and configure private endpoints.',
+    recommended_action: 'Modify storage accounts and configure private endpoints.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints',
     apis: ['storageAccounts:list'],
 
@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!storageAccount.data.length) {
-                helpers.addResult(results, 0, 'No storage accounts found', location);
+                helpers.addResult(results, 0, 'No Storage Accounts found', location);
                 return rcb();
             }
             for (let account of storageAccount.data) {
