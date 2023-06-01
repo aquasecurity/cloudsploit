@@ -275,7 +275,8 @@ module.exports = {
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
         'elbv2crosszoneLoadBalancing'   : require(__dirname + '/plugins/aws/elbv2/elbv2crosszoneLoadBalancing.js'),
-
+        'elbv2UnhealthyInstance'        : require(__dirname + '/plugins/aws/elbv2/elbv2UnhealthyInstance.js'),
+ 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
