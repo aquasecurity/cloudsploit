@@ -2,10 +2,10 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Monitor Azure Resource SKU',
+    title: 'Monitor Resource SKU',
     category: 'Monitor',
     domain: 'Management and Governance',
-    description: 'Ensure that Basic or Consumption SKUs are not used on artifacts that need to be monitored.',
+    description: 'Ensure that Basic or Consumption SKUs are not used on Artifacts that need to be Monitored.',
     more_info: 'Azure Monitor provides monitoring capabilities for resources and applications in Azure. Basic and Consumption SKUs provide limited monitoring capabilities compared to higher SKUs.',
     link: 'https://learn.microsoft.com/en-us/azure/search/search-sku-tier',
     recommended_action: 'Use a higher SKU for the resource to enable full monitoring capabilities.',
