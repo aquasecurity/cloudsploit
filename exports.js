@@ -268,6 +268,7 @@ module.exports = {
         'elbv2NoInstances'              : require(__dirname + '/plugins/aws/elbv2/elbv2NoInstances.js'),
         'elbv2WafEnabled'               : require(__dirname + '/plugins/aws/elbv2/elbv2WafEnabled.js'),
         'elbv2MinimumTargetInstances'   : require(__dirname + '/plugins/aws/elbv2/elbv2MinimumTargetInstances.js'),
+        'elbv2UnhealthyInstance'        : require(__dirname + '/plugins/aws/elbv2/elbv2UnhealthyInstance.js'),
         'elbv2NlbListenerSecurity'      : require(__dirname + '/plugins/aws/elbv2/elbv2NlbListenerSecurity.js'),
         'elbv2DeregistrationDelay'      : require(__dirname + '/plugins/aws/elbv2/elbv2DeregistrationDelay.js'),
         'elbv2SslTermination'           : require(__dirname + '/plugins/aws/elbv2/elbv2SslTermination.js'),
@@ -275,8 +276,7 @@ module.exports = {
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
         'elbv2crosszoneLoadBalancing'   : require(__dirname + '/plugins/aws/elbv2/elbv2crosszoneLoadBalancing.js'),
-        'elbv2UnhealthyInstance'        : require(__dirname + '/plugins/aws/elbv2/elbv2UnhealthyInstance.js'),
- 
+
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
