@@ -5,7 +5,7 @@ module.exports = {
     title: 'Domain Public Access',
     category: 'Event Grid',
     domain: 'Messaging services',
-    description: 'Ensure that Azure Event Grid domains do not have public access enabled.',
+    description: 'Ensures that Azure Event Grid domains do not have public access enabled.',
     more_info: 'Enabling public access for Event Grid domains can expose sensitive information and increase the risk of unauthorized access.',
     recommended_action: 'Modify the affected domain and disable public network access.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/configure-firewall',
