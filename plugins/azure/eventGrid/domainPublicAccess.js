@@ -4,7 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Event Grid Domain Public Access',
     category: 'Event Grid',
-    domain: 'Messaging services',
+    domain: 'Management and Governance',
     description: 'Ensures that Azure Event Grid domains do not have public access enabled.',
     more_info: 'By default, domains are accessible from internet as long as the request comes with valid authentication and authorization exposing sensitive information. By disabling public access, Event Grid domains can be configured to use private endpoint.',
     recommended_action: 'Modify the affected domain and disable public network access.',
