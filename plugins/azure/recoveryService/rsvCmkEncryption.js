@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Backup',
     description: 'Ensure that Microsoft Azure Recovery Service Vault have CMK Encryption Enabled.',
     more_info: 'A customer-managed key gives you the ownership to bring your own key in Azure Key Vault. When you enable a customer-managed key, you can manage its rotations, control the access and permissions to use it, and audit its use.',
-    recommended_action: 'Modify Recovery Service vault\'s encryption settings and enable CMK encryption.',
+    recommended_action: 'Modify Recovery Service vault and enable CMK encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/backup/encryption-at-rest-with-cmk',
     apis: ['recoveryServiceVaults:getRecoveryServiceVault', 'recoveryServiceVaults:listBySubscriptionId'],
 
