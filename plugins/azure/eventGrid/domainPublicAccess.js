@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Domain Public Access',
+    title: 'Event Grid Domain Public Access',
     category: 'Event Grid',
-    domain: 'Messaging service',
-    description: 'Ensure that Azure Event Grid domains do not have public access enabled.',
-    more_info: 'Enabling public access for Event Grid domains can expose sensitive information and increase the risk of unauthorized access.',
-    recommended_action: 'Modify the affected domain and disable public network access.',
+    domain: 'Management and Governance',
+    description: 'Ensures that Azure Event Grid domains are not publicly accessible.',
+    more_info: 'By default, domains are accessible from internet as long as the request comes with valid authentication and authorization exposing sensitive information. By disabling public access, Event Grid domains can be configured to use private endpoint.',
+    recommended_action: 'Modify the affected domains and disable public network access.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/configure-firewall',
     apis: ['eventGrid:listDomains'],
 
