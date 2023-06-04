@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var rsvCmkEncryption = require('./rsvCmkEncryption');
+var recoveryVaultByokEncrypted = require('./recoveryVaultByokEncrypted');
 
 const listServiceVaults = [
     {
@@ -52,11 +52,11 @@ const createCache = (listServiceVault, getServiceVault) => {
     };
 };
 
-describe('rsvCmkEncryption', function() {
+describe('recoveryVaultByokEncrypted', function() {
     describe('run', function() {
         it('should give passing result if no Recovery Service vault found', function(done) {
             const cache = createCache([], null);
-            rsvCmkEncryption.run(cache, {}, (err, results) => {
+            recoveryVaultByokEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No Recovery Service Vaults found');
@@ -67,7 +67,7 @@ describe('rsvCmkEncryption', function() {
 
         it('should give unknown result if unable to query for list Recovery Service vault', function(done) {
             const cache = createCache(null, null);
-            rsvCmkEncryption.run(cache, {}, (err, results) => {
+            recoveryVaultByokEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for list Recovery Service vaults:');
@@ -78,7 +78,7 @@ describe('rsvCmkEncryption', function() {
 
         it('should give unknown result if unable to query for get Recovery Service vault', function(done) {
             const cache = createCache([listServiceVaults[0]], null);
-            rsvCmkEncryption.run(cache, {}, (err, results) => {
+            recoveryVaultByokEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for get Recovery Service Vault:');
@@ -89,10 +89,10 @@ describe('rsvCmkEncryption', function() {
 
         it('should give passing result if cmk encryption enabled', function(done) {
             const cache = createCache([listServiceVaults[0]], getServiceVault[1]);
-            rsvCmkEncryption.run(cache, {}, (err, results) => {
+            recoveryVaultByokEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Recovery Service Vault has CMK encryption enabled');
+                expect(results[0].message).to.include('Recovery Service Vault has BYOK encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -100,10 +100,10 @@ describe('rsvCmkEncryption', function() {
 
         it('should give failing result if cmk encryption not enabled', function(done) {
             const cache = createCache([listServiceVaults[0]], getServiceVault[0]);
-            rsvCmkEncryption.run(cache, {}, (err, results) => {
+            recoveryVaultByokEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Recovery Service Vault does not have CMK encryption enabled');
+                expect(results[0].message).to.include('Recovery Service Vault does not have BYOK encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
