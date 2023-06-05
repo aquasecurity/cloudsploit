@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Clieent Certificate Disabled',
+    title: 'Client Certificate Disabled',
     category: 'Kubernetes',
     domain: 'Containers',
     description: 'Ensure client certificate authentication to Kubernetes clusters is disabled.',
