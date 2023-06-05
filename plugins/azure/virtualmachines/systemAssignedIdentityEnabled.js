@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'VM System Assigned Identity Enabled',
+    title: 'VM System-Assigned Identity Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Virtual Machines have System Assigned Managed Identities Enabled.',
-    more_info: 'Managed identities for Azure resources provides Azure services with a managed identity in Azure AD which can be used to authenticate to any service that supports Azure AD authentication, without having to include any credentials in code.',
-    recommended_action: 'Modify virtual machines and enable system assigned managed identity.',
+    description: 'Ensures that virtual machines have system-assigned managed identities enabled.',
+    more_info: 'System-assigned managed identities for Azure VMs allow authentication to other services without the need to manage and store credentials in code.',
+    recommended_action: 'Modify virtual machine and enable system-assigned managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm',
     apis: ['virtualMachines:listAll'],
 
