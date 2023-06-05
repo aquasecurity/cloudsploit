@@ -63,6 +63,7 @@ module.exports = {
                     helpers.addResult(results, 0, `ELB does not have unhealthy instance`, region, elbArn);
                 }
             });
+            
             rcb();
         }, function(){
             callback(null, results, source);
