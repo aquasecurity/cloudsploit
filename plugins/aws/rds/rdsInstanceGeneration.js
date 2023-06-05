@@ -47,9 +47,9 @@ module.exports = {
             describeDBInstances.data.forEach(function(Rds){
                 var dbInstanceClass = Rds.DBInstanceClass;
 
-                if(olderGenerations.includes(dbInstanceClass)){
+                if (olderGenerations.includes(dbInstanceClass)){
                     helpers.addResult(results, 2, 'RDS instance is using an older generation of EC2: ' + dbInstanceClass, region, Rds.DBInstanceArn);
-                }else{
+                } else { 
                     helpers.addResult(results, 0, 'RDS instance is using current generation of EC2: ' + dbInstanceClass, region, Rds.DBInstanceArn);
                 }
             });
