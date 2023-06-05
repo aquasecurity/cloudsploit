@@ -44,14 +44,14 @@ module.exports = {
 
                 if (difference > 7){
                     helpers.addResult(results, 2, 
-                        `EBS volume does not have a recent snapshot`, region,resource);
-                }else {
+                        'EBS volume does not have a recent snapshot', region,resource);
+                } else {
                     helpers.addResult(results, 0, 
-                        `EBS volume has a recent snapshot`, region,resource);
+                        'EBS volume has a recent snapshot', region,resource);
                 }
             });
 
-           rcb();
+            rcb();
         }, function(){
             callback(null, results, source);
         });
