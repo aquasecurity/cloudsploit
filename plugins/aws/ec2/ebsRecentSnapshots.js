@@ -47,7 +47,7 @@ module.exports = {
                         `EBS volume does not have a recent snapshot`, region,resource);
                 }else {
                     helpers.addResult(results, 0, 
-                        `EBS volume have a recent snapshot`, region,resource);
+                        `EBS volume has a recent snapshot`, region,resource);
                 }
             });
 
