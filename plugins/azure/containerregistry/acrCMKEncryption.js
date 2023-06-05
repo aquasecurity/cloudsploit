@@ -2,10 +2,10 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'ACR CMK Encryption Enabled',
+    title: 'ACR CMK Encryption',
     category: 'Container Registry',
     domain: 'Containers',
-    description: 'Ensure that Microsoft Azure Container registries have CMK Encryption Enabled.',
+    description: 'Ensure that Microsoft Azure Container registries have CMK encryption enabled.',
     more_info: 'A customer-managed key gives you the ownership to bring your own key in Azure Key Vault. When you enable a customer-managed key, you can manage its rotations, control the access and permissions to use it, and audit its use.',
     recommended_action: 'Create new container registry with Premium SKU and enable CMK encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/tutorial-customer-managed-keys',
@@ -36,9 +36,9 @@ module.exports = {
                 if (!registry.id) continue;
 
                 if (registry.encryption && registry.encryption.status && registry.encryption.status.toLowerCase() === 'enabled') {
-                    helpers.addResult(results, 0, 'Container Registry have cmk encryption enabled', location, registry.id);
+                    helpers.addResult(results, 0, 'Container Registry has CMK encryption enabled', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Container Registry does not have cmk encryption enabled', location, registry.id);
+                    helpers.addResult(results, 2, 'Container Registry does not have CMK encryption enabled', location, registry.id);
                 } 
             }
 
