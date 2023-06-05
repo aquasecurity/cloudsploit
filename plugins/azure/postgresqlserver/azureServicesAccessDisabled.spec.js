@@ -48,7 +48,7 @@ describe('azureServicesAccessDisabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing PostgreSQL Servers found');
+                expect(results[0].message).to.include('No existing PostgreSQL servers found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -99,7 +99,7 @@ describe('azureServicesAccessDisabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for PostgreSQL Servers');
+                expect(results[0].message).to.include('Unable to query for PostgreSQL servers');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
