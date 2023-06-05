@@ -58,9 +58,9 @@ module.exports = {
                 });
             
                 if (unhealthyInstances.length > 0) {
-                    helpers.addResult(results, 2, `ELB has unhealthy instances`, region, elbArn);
+                    helpers.addResult(results, 2, `ELB has ${unhealthyInstances} unhealthy instance(s)`, region, elbArn);
                 } else {
-                    helpers.addResult(results, 0, `ELB does not have unhealthy instances`, region, elbArn);
+                    helpers.addResult(results, 0, `ELB does not have unhealthy instance`, region, elbArn);
                 }
             });
             rcb();

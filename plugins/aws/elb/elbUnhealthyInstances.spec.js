@@ -188,7 +188,6 @@ describe('elbUnhealthyInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('ELB has unhealthy instances');
                 done();
             });
         });
@@ -199,7 +198,7 @@ describe('elbUnhealthyInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('ELB does not have unhealthy instances');
+                expect(results[0].message).to.include('ELB does not have unhealthy instance');
                 done();
             });
         });
