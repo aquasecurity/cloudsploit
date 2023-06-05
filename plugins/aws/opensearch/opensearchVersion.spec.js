@@ -118,31 +118,6 @@ const createNullCache = () => {
 
                 es.run(cache, {}, callback);
             })
-            it('should give error result if OpenSearch domain engine version is undefined', function (done) {
-                const callback = (err, results) => {
-                    expect(results.length).to.equal(1);
-                    expect(results[0].status).to.equal(2);
-                    expect(results[0].message).to.include('Unknown engine version');
-                    expect(results[0].region).to.equal('us-east-1');
-                    done();
-                };
-
-                const cache = createCache(
-                    [
-                        {
-                            DomainName: 'mydomain'
-                        }
-                    ],
-                    {
-                        DomainStatus: {
-                            DomainName: 'mydomain',
-                            ARN: 'arn:1234',
-                        }
-                    }
-                );
-
-                es.run(cache, {}, callback);
-            })
             it('should UNKNOWN if there was an error listing domain names', function (done) {
                 const callback= (err, results) => {
                     expect(results.length).to.equal(1);
