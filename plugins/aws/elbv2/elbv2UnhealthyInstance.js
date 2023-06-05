@@ -47,7 +47,7 @@ module.exports = {
                     return;
                 }
                 
-               if (!describeTargetGroups.data.TargetGroups || !describeTargetGroups.data.TargetGroups.length) {
+                if (!describeTargetGroups.data.TargetGroups || !describeTargetGroups.data.TargetGroups.length) {
                     helpers.addResult(results, 2, 'No Application/Network load balancer target groups found', region, resource);
                     return;
                 }
@@ -56,7 +56,7 @@ module.exports = {
                     var describeTargetHealth = helpers.addSource(cache, source,
                         ['elbv2', 'describeTargetHealth', region, tg.TargetGroupArn]);
             
-                        if (!describeTargetHealth || describeTargetHealth.err || !describeTargetHealth.data
+                    if (!describeTargetHealth || describeTargetHealth.err || !describeTargetHealth.data
                             || !describeTargetHealth.data.TargetHealthDescriptions || !describeTargetHealth.data.TargetHealthDescriptions.length) {
                         return;
                     }
@@ -75,7 +75,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        `Application/Network load balancer does not have any unhealthy instance associated`,
+                        'Application/Network load balancer does not have any unhealthy instance associated',
                         region, resource);
                 }
             });
