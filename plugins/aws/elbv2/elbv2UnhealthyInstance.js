@@ -71,7 +71,7 @@ module.exports = {
 
                 if (unhealthyInstances > 0) {
                     helpers.addResult(results, 2,
-                        `Application/Network load balancer has an unhealthy instance associated`,
+                        `Application/Network load balancer has ${unhealthyInstances} unhealthy instance(s) associated`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
