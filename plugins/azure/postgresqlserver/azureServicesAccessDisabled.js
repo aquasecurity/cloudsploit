@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Server Access to Azure Services Disabled',
+    title: 'PostgreSQL Server Services Access Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
-    description: 'Ensure that Allow access to Azure services for PostgreSQL Database Server is disabled.',
-    more_info: 'If access from Azure services is enabled, the server\'s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, set up firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.',
-    recommended_action: 'Disable network access to the public for PostgreSQL database servers.',
+    description: 'Ensure that PostgreSQL server does not allow access to other Azure services.',
+    more_info: 'To secure your PostgreSQL server, it is recommended to disable public network access. Instead, configure firewall rules to allow connections from specific network ranges or utilize VNET rules for access from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
+    recommended_action: 'Disable public network access for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
     apis: ['servers:listPostgres'],
 
@@ -25,16 +25,18 @@ module.exports = {
 
             if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for PostgreSQL Servers: ' + helpers.addError(servers), location);
+                    'Unable to query for PostgreSQL servers: ' + helpers.addError(servers), location);
                 return rcb();
             }
 
             if (!servers.data.length) {
-                helpers.addResult(results, 0, 'No existing PostgreSQL Servers found', location);
+                helpers.addResult(results, 0, 'No existing PostgreSQL servers found', location);
                 return rcb();
             }
 
             for (let postgresServer of servers.data) {
+                if (!postgresServer.id) continue;
+
                 if (postgresServer.properties &&
                     postgresServer.properties.publicNetworkAccess &&
                     postgresServer.properties.publicNetworkAccess.toUpperCase() === 'DISABLED') {
