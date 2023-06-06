@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const albAssociatedWithSecurityGroup = require('./albAssociatedWithSecurityGroup');
+const albSecurityGroup = require('./albSecurityGroup');
 
 const loadBalancers = [
     {
@@ -73,11 +73,11 @@ const createNullCache = () => {
     };
 };
 
-describe('albAssociatedWithSecurityGroup', function () {
+describe('albSecurityGroup', function () {
     describe('run', function () {
         it('should PASS if load balancer has security groups associated', function (done) {
             const cache = createCache([loadBalancers[0]]);
-            albAssociatedWithSecurityGroup.run(cache, {}, (err, results) => {
+            albSecurityGroup.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -88,7 +88,7 @@ describe('albAssociatedWithSecurityGroup', function () {
         
         it('should FAIL if load balancer does not have security groups associated', function (done) {
             const cache = createCache([loadBalancers[1]]);
-            albAssociatedWithSecurityGroup.run(cache, {}, (err, results) => {
+            albSecurityGroup.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -99,7 +99,7 @@ describe('albAssociatedWithSecurityGroup', function () {
 
         it('should UNKNOWN if error while describing load balancers', function (done) {
             const cache = createErrorCache();
-            albAssociatedWithSecurityGroup.run(cache, {}, (err, results) => {
+            albSecurityGroup.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -110,7 +110,7 @@ describe('albAssociatedWithSecurityGroup', function () {
         
         it('should PASS if no load balancer found', function (done) {
             const cache = createCache([]);
-            albAssociatedWithSecurityGroup.run(cache, {}, (err, results) => {
+            albSecurityGroup.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');

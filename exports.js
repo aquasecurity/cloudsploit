@@ -270,7 +270,7 @@ module.exports = {
         'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
-        'albAssociatedWithSecurityGroup': require(__dirname + '/plugins/aws/elbv2/albAssociatedWithSecurityGroup'),
+        'albSecurityGroup'              : require(__dirname + '/plugins/aws/elbv2/albSecurityGroup'),
 
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
