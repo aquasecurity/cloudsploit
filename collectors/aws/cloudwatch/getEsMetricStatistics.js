@@ -5,7 +5,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 module.exports = function(AWSConfig, collection, retries, callback) {
     var cloudwatch = new AWS.CloudWatch(AWSConfig);
    
-    async.eachLimit(collection.es.listDomainNames[AWSConfig.region].data, 10, function(domain, cb){        
+    async.eachLimit(collection.opensearch.listDomainNames[AWSConfig.region].data, 10, function(domain, cb){        
         collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName] = {};
         var endTime = new Date();
         var startTime = new Date();

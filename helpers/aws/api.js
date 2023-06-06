@@ -1,3 +1,4 @@
+
 var globalServices = [
     'S3',
     'IAM',
@@ -285,6 +286,43 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeArtifact',
             BridgeCollectionService: 'codeartifact', DataIdentifier: 'data',
         },
+    'CodePipeline':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'codePipeline',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'codePipeline',
+            BridgeServiceName: 'codepipeline', BridgePluginCategoryName: 'CodePipeline', BridgeProvider: 'aws',
+            BridgeCall: 'getPipeline', BridgeArnIdentifier: '', BridgeResourceType: '',
+            BridgeIdTemplate: 'arn:aws:codepipeline:{region}:{cloudAccount}:{name}',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodePipeline',
+            BridgeCollectionService: 'codepipeline', DataIdentifier: 'pipeline',
+        },
+    'CodeStar':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'codeStar',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'codeStar',
+            BridgeServiceName: 'codestar', BridgePluginCategoryName: 'CodeStar', BridgeProvider: 'aws',
+            BridgeCall: 'describeProject', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'project',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeStar',
+            BridgeCollectionService: 'codestar', DataIdentifier: 'data',
+        },
+    'Connect':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'connect',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'connect',
+            BridgeServiceName: 'connect', BridgePluginCategoryName: 'Connect', BridgeProvider: 'aws',
+            BridgeCall: 'listInstances', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'instance',
+            BridgeResourceNameIdentifier: 'InstanceAlias', BridgeExecutionService: 'Connect',
+            BridgeCollectionService: 'connect', DataIdentifier: 'data',
+        },
+    'DMS':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'dms',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'dms',
+            BridgeServiceName: 'dms', BridgePluginCategoryName: 'DMS', BridgeProvider: 'aws',
+            BridgeCall: 'describeReplicationInstances', BridgeArnIdentifier: 'ReplicationInstanceArn',
+            BridgeIdTemplate: '', BridgeResourceType: 'rep', BridgeResourceNameIdentifier: 'ReplicationInstanceIdentifier',
+            BridgeExecutionService: 'DMS', BridgeCollectionService: 'dms', DataIdentifier: 'data',
+        },
     'CloudFormation':
         {
             enabled: true, isSingleSource: true, InvAsset: 'cloudFormation', InvService: 'cloudformation',
@@ -303,6 +341,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CodeBuild',
             BridgeCollectionService: 'codebuild', DataIdentifier: 'projects',
         },
+    'CloudFront':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'distribution', InvService: 'cloudFront',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CloudFront',
+            BridgeServiceName: 'cloudfront', BridgePluginCategoryName: 'CloudFront', BridgeProvider: 'aws',
+            BridgeCall: 'listDistributions', BridgeArnIdentifier: 'ARN', BridgeArnTemplate: '', BridgeResourceType: 'distribution',
+            BridgeResourceNameIdentifier: 'DomainName', BridgeExecutionService: 'CloudFront',
+            BridgeCollectionService: 'cloudfront', DataIdentifier: 'data',
+        }
 };
 
 var calls = {
@@ -907,6 +954,11 @@ var calls = {
             property: 'DomainNames',
         }
     },
+    OpenSearch: {
+        listDomainNames: {
+            property: 'DomainNames',
+        }
+    },
     EventBridge: {
         listEventBuses: {
             property: 'EventBuses',
@@ -1356,6 +1408,18 @@ var calls = {
             property: 'Account'
         }
     },
+    OpenSearchServerless: {
+        listCollections : {
+            paginate: 'NextToken',
+            property: 'collectionSummaries'
+        },
+        listEncryptionSecurityPolicies:{
+            override: true,
+        },
+        listNetworkSecurityPolicies: {
+            override: true, 
+        }
+    },
     Support: {
         describeTrustedAdvisorChecks: {
             property: 'checks',
@@ -1460,6 +1524,15 @@ var postcalls = [
         },
         CodeArtifact: {
             sendIntegration: serviceMap['CodeArtifact']
+        },
+        ComputeOptimizer: {
+            sendIntegration: serviceMap['Compute Optimizer']
+        },
+        DevOpsGuru: {
+            sendIntegration: serviceMap['DevOpsGuru']
+        },
+        DMS: {
+            sendIntegration: serviceMap['DMS']
         },
         ACM: {
             describeCertificate: {
@@ -1596,7 +1669,8 @@ var postcalls = [
                 reliesOnService: 'cloudfront',
                 reliesOnCall: 'listDistributions',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['CloudFront']
         },
         CloudTrail: {
             getTrailStatus: {
@@ -1646,7 +1720,7 @@ var postcalls = [
         },
         CloudWatch: {
             getEsMetricStatistics: {
-                reliesOnService: 'es',
+                reliesOnService: 'opensearch',
                 reliesOnCall: 'listDomainNames',
                 override: true,
             },
@@ -1670,7 +1744,8 @@ var postcalls = [
                 reliesOnCall: 'listProjects',
                 filterKey: 'id',
                 filterValue: 'projectId'
-            }
+            },
+            sendIntegration: serviceMap['CodeStar']
         },
         CustomerProfiles: {
             getDomain: {
@@ -1694,7 +1769,8 @@ var postcalls = [
                 reliesOnCall: 'listPipelines',
                 filterKey: 'name',
                 filterValue: 'name'
-            }
+            },
+            sendIntegration: serviceMap['CodePipeline']
         },
         Connect: {
             listInstanceCallRecordingStorageConfigs: {
@@ -1721,7 +1797,8 @@ var postcalls = [
                 reliesOnService: 'connect',
                 reliesOnCall: 'listInstances',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['Connect']
         },
         DynamoDB: {
             describeTable: {
@@ -1758,6 +1835,14 @@ var postcalls = [
                 filterValue: 'DomainName'
             },
             sendIntegration: serviceMap['ES']
+        },
+        OpenSearch: {
+            describeDomain: {
+                reliesOnService: 'opensearch',
+                reliesOnCall: 'listDomainNames',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
         },
         S3: {
             getBucketLogging: {
@@ -2416,6 +2501,11 @@ var postcalls = [
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
                 override: true
+            },
+            getWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true
             }
         },
         GuardDuty: {
@@ -2579,6 +2669,18 @@ var postcalls = [
                 enabled: true
             }
         },
+        OpenSearchServerless: {
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listEncryptionSecurityPolicies',
+                override: true
+            },
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true
+            }
+        }
     }
 ];
 

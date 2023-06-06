@@ -1,53 +1,38 @@
 var expect = require('chai').expect;
-var agPreventionModeEnabled = require('./agPreventionModeEnabled');
+var agPreventionModeEnabled = require('./agPreventionModeEnabled.js');
 
-const appGateway = [
-    {   "sku": {
-        "tier": "WAF_v2"
-        },
-        "name": 'test-gateway',
-        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test-gateway",',
-        "type": "Microsoft.Network/applicationGateways",
-        "location": "eastus",
-        "webApplicationFirewallConfiguration": {
-          "enabled": true,
-          "firewallMode": "Prevention",
-        },
+const wafPolicy = [
+    {
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies',
+        "type": 'Microsoft.Network/waf',
+        "tags": { "key": "value" },
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": true,
+        "policySettings":{
+            "mode": "prevention"
+        }
     },
-    {   
-        "sku": {
-        "tier": "WAF_v2"
-        },
-       "name": 'test-gateway',
-        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test",',
-        "type": "Microsoft.Network/applicationGateways",
-        "location": "eastus",
-        "webApplicationFirewallConfiguration": {
-          "enabled": true,
-          "firewallMode": "Detection",
-        },
-    },
-    {   
-        "sku": {
-        "tier": "STANDARD_V2"
-        },
-       "name": 'test-gateway',
-        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test",',
-        "type": "Microsoft.Network/applicationGateways",
-        "location": "eastus",
-        "webApplicationFirewallConfiguration": {
-          "enabled": true,
-          "firewallMode": "Detection",
-        },
+    {
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies',
+        "type": 'Microsoft.Network/waf',
+        "tags": {},
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false
     }
 ];
 
-const createCache = (gt) => {
+const createCache = (waf) => {
     return {
-        applicationGateway: {
+        wafPolicies: {
             listAll: {
                 'eastus': {
-                    data: gt
+                    data: waf
                 }
             }
         }
@@ -56,7 +41,7 @@ const createCache = (gt) => {
 
 const createErrorCache = () => {
     return {
-        applicationGateway: {
+        wafPolicies: {
             listAll: {
                 'eastus': {}
             }
@@ -66,19 +51,19 @@ const createErrorCache = () => {
 
 describe('agPreventionModeEnabled', function() {
     describe('run', function() {
-        it('should give passing result if no Application Gateway found', function(done) {
+        it('should give passing result if no WAF policy found', function(done) {
             const cache = createCache([]);
             agPreventionModeEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Application Gateway found');
+                expect(results[0].message).to.include('No existing WAF policies found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Application Gateway waf prevention mode not enabled', function(done) {
-            const cache = createCache([appGateway[1]]);
+        it('should give failing result if application gateway WAF Policy prevention mode not enabled', function(done) {
+            const cache = createCache([wafPolicy[1]]);
             agPreventionModeEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -88,19 +73,20 @@ describe('agPreventionModeEnabled', function() {
             });
         });
 
-        it('should give unknown result if Unable to query for Application Gateway', function(done) {
+
+        it('should give unknown result if Unable to query for WAF policy', function(done) {
             const cache = createErrorCache();
             agPreventionModeEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Application Gateway:');
+                expect(results[0].message).to.include('Unable to query for Application Gateway WAF policies');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give passing result if Application Gateway has tags associated', function(done) {
-            const cache = createCache([appGateway[0]]);
+        it('should give passing result if Application Gateway WAF policy prevention mode enabled', function(done) {
+            const cache = createCache([wafPolicy[0]]);
             agPreventionModeEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -110,16 +96,5 @@ describe('agPreventionModeEnabled', function() {
             });
         });
 
-        it('should give failing result if tier for application gateway is not waf_v2', function(done) {
-            const cache = createCache([appGateway[2]]);
-            agPreventionModeEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Prevention mode is not supported for WAF Standard v2 tier');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-       });
     });
 }); 
-

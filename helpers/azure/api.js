@@ -332,8 +332,14 @@ var calls = {
     },
     users: {
         list: {
-            url: 'https://graph.windows.net/myorganization/users?api-version=1.6',
+            url: 'https://graph.microsoft.com/v1.0/users',
             graph: true
+        }
+    },
+    applications: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/applications/',
+            graph: true,
         }
     },
     registries: {
