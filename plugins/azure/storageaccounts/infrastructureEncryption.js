@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Storage Account Infrastructure Encryption Enabled',
+    title: 'Infrastructure Encryption Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
     description: 'Ensure that Azure Storage Accounts have infrastructure encryption enabled',
