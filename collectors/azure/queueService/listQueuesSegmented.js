@@ -3,7 +3,7 @@ var async = require('async');
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require('azure-storage');
+    var azureStorage = require("@azure/storage-queue");
 
     if (!collection['queueService']['listQueuesSegmented']) collection['queueService']['listQueuesSegmented'] = {};
     if (!collection['queueService']['getQueueAcl']) collection['queueService']['getQueueAcl'] = {};
@@ -13,39 +13,39 @@ module.exports = function(collection, reliesOn, callback) {
         collection['queueService']['listQueuesSegmented'][region] = {};
         collection['queueService']['getQueueAcl'][region] = {};
 
-        async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 5, async function(subObj, resourceId, sCb) {
             collection['queueService']['listQueuesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
                 // Extract storage account name from resourceId
                 var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
-                var storageService = new azureStorage['QueueService'](storageAccountName, subObj.data.keys[0].value);
-
-                storageService.listQueuesSegmented(null, function(serviceErr, serviceResults) {
-                    if (serviceErr || !serviceResults) {
-                        collection['queueService']['listQueuesSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
-                        sCb();
-                    } else {
-                        collection['queueService']['listQueuesSegmented'][region][resourceId].data = serviceResults.entries;
-
-                        // Add ACLs
-                        async.eachLimit(serviceResults.entries, 10, function(entryObj, entryCb) {
-                            var entryId = `${resourceId}/queueService/${entryObj.name}`;
-                            collection['queueService']['getQueueAcl'][region][entryId] = {};
-
-                            storageService.getQueueAcl(entryObj.name, function(getErr, getData) {
-                                if (getErr || !getData) {
-                                    collection['queueService']['getQueueAcl'][region][entryId].err = (getErr || 'No data returned');
-                                } else {
-                                    collection['queueService']['getQueueAcl'][region][entryId].data = getData;
-                                }
-                                entryCb();
-                            });
-                        }, function() {
-                            sCb();
+                var connectionString = `DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${subObj.data.keys[0].value};EndpointSuffix=core.windows.net`;
+                var storageService = azureStorage.QueueServiceClient.fromConnectionString(connectionString);
+                let queueItemList = [];     
+                let iterator = storageService.listQueues();
+                let item = await iterator.next()
+                while (!item.done) {
+                queueItemList.push({ name: item.value.name})
+                let queueName = item.value.name;
+                var entryId = `${resourceId}/queueService/${queueName}`;
+                collection['queueService']['getQueueAcl'][region][entryId] = {}
+                const queueClient = storageService.getQueueClient(queueName);
+                const getAcl = queueClient.getAccessPolicy();
+                getAcl.then(result => {
+                            collection['queueService']['getQueueAcl'][region][entryId].data = result;
+                        }).catch(err => {
+                            collection['queueService']['getQueueAcl'][region][entryId].err = err;
                         });
-                    }
-                });
+                item = await iterator.next()
+
+            }
+
+                if (queueItemList.length) {
+                    collection['queueService']['listQueuesSegmented'][region][resourceId].data = queueItemList;
+                } else {
+                     collection['queueService']['listQueuesSegmented'][region][resourceId].data = [];
+                }
+
             } else {
                 sCb();
             }
