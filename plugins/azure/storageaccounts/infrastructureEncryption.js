@@ -5,7 +5,7 @@ module.exports = {
     title: 'Storage Account Infrastructure Encryption Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
-    description: 'Ensure that Azure Storage accounts have infrastructure encryption enabled.',
+    description: 'Ensure that Azure Storage Accounts have infrastructure encryption enabled',
     more_info: 'Azure Storage automatically encrypts all data in a storage account at the service level using 256-bit AES encryption. But customers who require higher levels of assurance that their data is secure can also enable 256-bit AES encryption at the Azure Storage infrastructure level for double encryption. Double encryption of Azure Storage data protects against a scenario where one of the encryption algorithms or keys may be compromised. In this scenario, the additional layer of encryption continues to protect your data.',
     recommended_action: 'Delete storage account and create new storage account with infrastructure encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/infrastructure-encryption-enable',
@@ -37,9 +37,9 @@ module.exports = {
                 if (!account.id) continue;
 
                 if (account.encryption && account.encryption.requireInfrastructureEncryption){
-                    helpers.addResult(results, 0, 'Storage Account have infrastructure encryption enabled', location, account.id);
+                    helpers.addResult(results, 0, 'Storage Account has infrastructure encryption enabled', location, account.id);
                 } else {
-                    helpers.addResult(results, 2, 'Storage Account does have infrastructure encryption enabled', location, account.id);
+                    helpers.addResult(results, 2, 'Storage Account does not have infrastructure encryption enabled', location, account.id);
                 }
             }
             

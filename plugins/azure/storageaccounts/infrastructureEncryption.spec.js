@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var infrastructureEncryptionEnabled = require('./infrastructureEncryptionEnabled');
+var infrastructureEncryptionEnabled = require('./infrastructureEncryption');
 
 const storageAccounts = [
     {
@@ -73,7 +73,7 @@ describe('infrastructureEncryptionEnabled', function() {
             infrastructureEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Storage Account have infrastructure encryption enabled');
+                expect(results[0].message).to.include('Storage Account has infrastructure encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -84,7 +84,7 @@ describe('infrastructureEncryptionEnabled', function() {
             infrastructureEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Storage Account does have infrastructure encryption enabled');
+                expect(results[0].message).to.include('Storage Account does not have infrastructure encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
