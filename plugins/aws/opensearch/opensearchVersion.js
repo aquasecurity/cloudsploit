@@ -49,14 +49,12 @@ module.exports = {
                     var currentVersion = localDomain && localDomain.EngineVersion? localDomain.EngineVersion: '';
 
                     if ((currentVersion.includes('Elasticsearch') && currentVersion.includes('7.10')) || (currentVersion.includes('OpenSearch') && currentVersion.includes('2.5'))) {
-                            helpers.addResult(results, 0, 
-                                'OpenSearch domain is running the latest version', 
-                                 region, localDomain.ARN);
-                        } else {
-                            helpers.addResult(results, 2, 
-                                'OpenSearch domain should be upgraded to latest version', 
-                                 region, localDomain.ARN);
-                        }
+                        helpers.addResult(results, 0, 
+                            'OpenSearch domain is running the latest version', region, localDomain.ARN);
+                    } else {
+                        helpers.addResult(results, 2, 
+                            'OpenSearch domain should be upgraded to latest version', region, localDomain.ARN);
+                    }
                 } 
                        
             });
