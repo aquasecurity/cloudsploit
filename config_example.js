@@ -20,10 +20,6 @@ module.exports = {
             // session_token: process.env.AWS_SESSION_TOKEN || '',
         },
         azure: {
-            application_id: process.env.AZURE_APPLICATION_ID || '17e14067-428b-4746-9483-ea033812e642',
-            key_value: process.env.AZURE_KEY_VALUE || 'VMn8Q~7qds5YBfo7xWh4HRuDybKNIkmOkFMqadtq',
-            directory_id: process.env.AZURE_DIRECTORY_ID || 'd207c7bd-fcb1-4dd3-855a-cfd2f9b651e8',
-            subscription_id: process.env.AZURE_SUBSCRIPTION_ID || '26a1a07e-06dd-4892-92c9-e4996b0fc546'
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
             // OPTION 2: If using hard-coded credentials, enter them below
