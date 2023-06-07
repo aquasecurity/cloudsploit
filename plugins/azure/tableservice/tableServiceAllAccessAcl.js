@@ -59,12 +59,12 @@ module.exports = {
                             'No existing Table Service tables found', location, storageAccount.id);
                     } else {
                         listTablesSegmented.data.forEach(function(table) {
-                            var tableId = `${storageAccount.id}/tableService/${table}`;
+                            var tableId = `${storageAccount.id}/tableService/${table.name}`;
 
                             // Add ACL
                             var getTableAcl = helpers.addSource(cache, source,
                                 ['tableService', 'getTableAcl', location, tableId]);
-
+                            console.log(getTableAcl)
                             if (!getTableAcl || getTableAcl.err || !getTableAcl.data) {
                                 helpers.addResult(results, 3,
                                     'Unable to query Table Service table ACL: ' + helpers.addError(getTableAcl), location, tableId);

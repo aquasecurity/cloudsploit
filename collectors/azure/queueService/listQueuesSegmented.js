@@ -3,7 +3,7 @@ var async = require('async');
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require("@azure/storage-queue");
+    var azureStorage = require('@azure/storage-queue');
 
     if (!collection['queueService']['listQueuesSegmented']) collection['queueService']['listQueuesSegmented'] = {};
     if (!collection['queueService']['getQueueAcl']) collection['queueService']['getQueueAcl'] = {};
@@ -23,27 +23,27 @@ module.exports = function(collection, reliesOn, callback) {
                 var storageService = azureStorage.QueueServiceClient.fromConnectionString(connectionString);
                 let queueItemList = [];     
                 let iterator = storageService.listQueues();
-                let item = await iterator.next()
+                let item = await iterator.next();
                 while (!item.done) {
-                queueItemList.push({ name: item.value.name})
-                let queueName = item.value.name;
-                var entryId = `${resourceId}/queueService/${queueName}`;
-                collection['queueService']['getQueueAcl'][region][entryId] = {}
-                const queueClient = storageService.getQueueClient(queueName);
-                const getAcl = queueClient.getAccessPolicy();
-                getAcl.then(result => {
+                    let queueName = item.value.name;
+                    queueItemList.push({ name: queueName});
+                    var entryId = `${resourceId}/queueService/${queueName}`;
+                    collection['queueService']['getQueueAcl'][region][entryId] = {};
+                    const queueClient = storageService.getQueueClient(queueName);
+                    queueClient.getAccessPolicy()
+                        .then(result => {
                             collection['queueService']['getQueueAcl'][region][entryId].data = result;
-                        }).catch(err => {
+                        })
+                        .catch(err => {
                             collection['queueService']['getQueueAcl'][region][entryId].err = err;
                         });
-                item = await iterator.next()
-
-            }
+                    item = await iterator.next();
+                }
 
                 if (queueItemList.length) {
                     collection['queueService']['listQueuesSegmented'][region][resourceId].data = queueItemList;
                 } else {
-                     collection['queueService']['listQueuesSegmented'][region][resourceId].data = [];
+                    collection['queueService']['listQueuesSegmented'][region][resourceId].data = [];
                 }
 
             } else {

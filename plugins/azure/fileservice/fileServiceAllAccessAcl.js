@@ -64,7 +64,6 @@ module.exports = {
                             // Add share ACL
                             var getShareAcl = helpers.addSource(cache, source,
                                 ['fileService', 'getShareAcl', location, fileShare.id]);
-
                             if (!getShareAcl || getShareAcl.err || !getShareAcl.data) {
                                 helpers.addResult(results, 3,
                                     'Unable to query File Service share ACL: ' + helpers.addError(getShareAcl), location, fileShare.id);
@@ -74,7 +73,7 @@ module.exports = {
 
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
-                                        var permissions = acl.signedIdentifiers[ident].Permissions;
+                                        var permissions = acl.signedIdentifiers[ident].accessPolicy.permissions;
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":
