@@ -234,6 +234,7 @@ module.exports = {
         'ecrRepositoryEncrypted'        : require(__dirname + '/plugins/aws/ecr/ecrRepositoryEncrypted.js'),
         'ecrRepositoryTagImmutability'  : require(__dirname + '/plugins/aws/ecr/ecrRepositoryTagImmutability.js'),
         'ecrRepositoryHasTags'          : require(__dirname + '/plugins/aws/ecr/ecrRepositoryHasTags.js'),
+        'ecrImageVulnerability'         : require(__dirname + '/plugins/aws/ecr/ecrImageVulnerability.js'),
 
         'managedPlatformUpdates'        : require(__dirname + '/plugins/aws/elasticbeanstalk/managedPlatformUpdates.js'),
         'enhancedHealthReporting'       : require(__dirname + '/plugins/aws/elasticbeanstalk/enhancedHealthReporting.js'),
