@@ -47,7 +47,7 @@ const listTablesSegmented = [
 const getTableAcl = [
     {
         name: 'testtablecs',
-        signedIdentifiers: { testid: { Permissions: 'raup' } }
+        signedIdentifiers: [{ accessPolicy: { permission: 'raup' } }]
     },
     {
         name: 'testtablecs ',
@@ -55,7 +55,7 @@ const getTableAcl = [
     },
     {
         name: 'testtablecs ',
-        signedIdentifiers: { testid: { Permissions: 'cwdl' } }
+        signedIdentifiers: [{ accessPolicy: { permission: 'cwdl' } }]
     },
 ];
 

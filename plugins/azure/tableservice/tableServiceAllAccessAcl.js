@@ -64,7 +64,6 @@ module.exports = {
                             // Add ACL
                             var getTableAcl = helpers.addSource(cache, source,
                                 ['tableService', 'getTableAcl', location, tableId]);
-                            console.log(getTableAcl)
                             if (!getTableAcl || getTableAcl.err || !getTableAcl.data) {
                                 helpers.addResult(results, 3,
                                     'Unable to query Table Service table ACL: ' + helpers.addError(getTableAcl), location, tableId);
@@ -74,7 +73,7 @@ module.exports = {
 
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
-                                        var permissions = acl.signedIdentifiers[ident].Permissions;
+                                        var permissions = acl.signedIdentifiers[ident].accessPolicy.permission;
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":
