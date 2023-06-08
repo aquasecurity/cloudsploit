@@ -41,8 +41,7 @@ module.exports = function(collection, reliesOn, callback) {
                             });
                         item = await iterator.next();
                     }
-                } 
-                catch(exception) {
+                } catch (exception) {
                     collection['fileService']['listSharesSegmented'][region][resourceId].err = exception.message;
                 }
                 if (shareItemList.length) {

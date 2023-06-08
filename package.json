@@ -10,8 +10,7 @@
     "test-cov-watch": "nodemon --exec npm run test-cov",
     "test-cov-html": "nyc --reporter html --reporter cobertura --reporter lcov --all -- npm run test",
     "test-cov-html-watch": "nodemon --exec npm run test-cov-html",
-    "lint": "npx eslint .",
-    "plugin": "node index.js --plugin tableServiceAllAccessAcl --config ./config_example.js"
+    "lint": "npx eslint ."
   },
   "bin": {
     "cloudsploit-scan": "./index.js"

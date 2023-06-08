@@ -40,8 +40,7 @@ module.exports = function(collection, reliesOn, callback) {
                             });
                         item = await iterator.next();
                     }
-                }
-                catch(exception) {
+                } catch (exception) {
                     collection['queueService']['listQueuesSegmented'][region][resourceId].err = exception.message;
                 }
                 if (queueItemList.length) {

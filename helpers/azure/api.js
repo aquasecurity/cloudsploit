@@ -874,10 +874,18 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        listTablesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
         listSharesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listSharesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }
@@ -890,6 +898,10 @@ var specialcalls = {
     },
     queueService: {
         listQueuesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listQueuesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },

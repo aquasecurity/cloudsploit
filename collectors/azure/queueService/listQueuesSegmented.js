@@ -5,39 +5,39 @@ module.exports = function(collection, reliesOn, callback) {
 
     var azureStorage = require('azure-storage');
 
-    if (!collection['fileService']['listSharesSegmented']) collection['fileService']['listSharesSegmented'] = {};
-    if (!collection['fileService']['getShareAcl']) collection['fileService']['getShareAcl'] = {};
+    if (!collection['queueService']['listQueuesSegmented']) collection['queueService']['listQueuesSegmented'] = {};
+    if (!collection['queueService']['getQueueAcl']) collection['queueService']['getQueueAcl'] = {};
 
     // Loop through regions and properties in reliesOn
     async.eachOf(reliesOn['storageAccounts.listKeys'], function(regionObj, region, cb) {
-        collection['fileService']['listSharesSegmented'][region] = {};
-        collection['fileService']['getShareAcl'][region] = {};
+        collection['queueService']['listQueuesSegmented'][region] = {};
+        collection['queueService']['getQueueAcl'][region] = {};
 
         async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
-            collection['fileService']['listSharesSegmented'][region][resourceId] = {};
+            collection['queueService']['listQueuesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
                 // Extract storage account name from resourceId
                 var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
-                var storageService = new azureStorage['FileService'](storageAccountName, subObj.data.keys[0].value);
+                var storageService = new azureStorage['QueueService'](storageAccountName, subObj.data.keys[0].value);
 
-                storageService.listSharesSegmented(null, function(serviceErr, serviceResults) {
+                storageService.listQueuesSegmented(null, function(serviceErr, serviceResults) {
                     if (serviceErr || !serviceResults) {
-                        collection['fileService']['listSharesSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
+                        collection['queueService']['listQueuesSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
                         sCb();
                     } else {
-                        collection['fileService']['listSharesSegmented'][region][resourceId].data = serviceResults.entries;
+                        collection['queueService']['listQueuesSegmented'][region][resourceId].data = serviceResults.entries;
 
                         // Add ACLs
                         async.eachLimit(serviceResults.entries, 10, function(entryObj, entryCb) {
-                            var entryId = `${resourceId}/fileService/${entryObj.name}`;
-                            collection['fileService']['getShareAcl'][region][entryId] = {};
+                            var entryId = `${resourceId}/queueService/${entryObj.name}`;
+                            collection['queueService']['getQueueAcl'][region][entryId] = {};
 
-                            storageService.getShareAcl(entryObj.name, function(getErr, getData) {
+                            storageService.getQueueAcl(entryObj.name, function(getErr, getData) {
                                 if (getErr || !getData) {
-                                    collection['fileService']['getShareAcl'][region][entryId].err = (getErr || 'No data returned');
+                                    collection['queueService']['getQueueAcl'][region][entryId].err = (getErr || 'No data returned');
                                 } else {
-                                    collection['fileService']['getShareAcl'][region][entryId].data = getData;
+                                    collection['queueService']['getQueueAcl'][region][entryId].data = getData;
                                 }
                                 entryCb();
                             });

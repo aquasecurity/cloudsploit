@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Table Service tables can be configured to allow to read, write or delete on objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all tables and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:listTablesSegmented', 'tableService:getTableAcl'],
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:listTablesSegmentedNew', 'tableService:getTableAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. Table Service ACLs enable granular permissions for data access.',
@@ -64,16 +64,17 @@ module.exports = {
                             // Add ACL
                             var getTableAcl = helpers.addSource(cache, source,
                                 ['tableService', 'getTableAcl', location, tableId]);
+
                             if (!getTableAcl || getTableAcl.err || !getTableAcl.data) {
                                 helpers.addResult(results, 3,
                                     'Unable to query Table Service table ACL: ' + helpers.addError(getTableAcl), location, tableId);
                             } else {
                                 var acl = getTableAcl.data;
                                 var fullPermissions = [];
-
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
                                         var permissions = acl.signedIdentifiers[ident].accessPolicy.permission;
+
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":

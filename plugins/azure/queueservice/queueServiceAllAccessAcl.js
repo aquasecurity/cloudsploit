@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Queues can be configured to allow object read, write or delete. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, delete policies on all queues and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmented', 'queueService:getQueueAcl'],
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmentedNew', 'queueService:getQueueAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. Queue Service ACLs enable granular permissions for data access.',
