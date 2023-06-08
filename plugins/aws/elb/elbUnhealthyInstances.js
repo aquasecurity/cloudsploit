@@ -37,6 +37,8 @@ module.exports = {
             }
 
             describeLoadBalancers.data.forEach(function(lb) {
+                
+                if (!lb.LoadBalancerName) return;
 
                 var elbArn = `arn:aws:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
             
