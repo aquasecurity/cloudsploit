@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'API Gateway API should be using authorizer to enforce security measures and control access to API resources.',
     recommended_action: 'Modify API Gateway configuration and ensure that appropriate authorizers are set up for each API.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html',
-    apis: ['APIGateway:getRestApis','APIGateway:getAuthorizers'],
+    apis: ['APIGateway:getRestApis', 'APIGateway:getAuthorizers'],
     
     run: function(cache, settings, callback) {
         var results = [];
@@ -49,7 +49,7 @@ module.exports = {
                         return cb();
                     }
 
-                if (getAuthorizers.data.items.length === 0) {
+                if (!getAuthorizers.data.items.length) {
                     helpers.addResult(results, 2,
                         'No authorizers found for API Gateway Rest API ',
                          region, apiArn );
