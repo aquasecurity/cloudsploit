@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensures EC2 instance is not deployed on public subnet',
     more_info: 'EC2 instances should not be deployed in public subnets to prevent direct exposure to the Internet and reduce the risk of unauthorized access.',
-    link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html',
+    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance-wizard.html#liw-network-settings',
     recommended_action: 'Re-lanuch the EC2 instance within the right subnet.',
     apis: ['EC2:describeInstances', 'EC2:describeRouteTables'],
 
