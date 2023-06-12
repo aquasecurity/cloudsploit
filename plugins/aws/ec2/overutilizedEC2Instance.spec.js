@@ -197,7 +197,7 @@ describe('overutilizesEC2Instance', function () {
 
         it('should UNKNOWN if unable to describe EC2 Instance', function (done) {
             const cache = createErrorCache();
-            overutilizedEC2Instance.run(cache, { elasticache_idle_node_percentage:'5.00' }, (err, results) => {
+            overutilizedEC2Instance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
