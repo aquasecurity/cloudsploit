@@ -1729,7 +1729,7 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
-            getEcMetricStatistics: {
+            getredshiftMetricStatistics: {
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,

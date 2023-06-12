@@ -20,16 +20,14 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-
-        var idleCpuThreshold = 5; 
-        var idleDurationThreshold = 99; 
+        var cpuThreshold = 5; 
 
         async.each(regions.redshift, function(region, rcb) {
             var describeClusters = helpers.addSource(cache, source,
                 ['redshift', 'describeClusters', region]);
 
             if (!describeClusters) return rcb();
-
+            
             if (describeClusters.err || !describeClusters.data) {
                 helpers.addResult(
                     results, 3,
@@ -45,34 +43,42 @@ module.exports = {
             describeClusters.data.forEach(cluster => {
                 if (!cluster.ClusterIdentifier) return;
 
-                //var clusterIdentifier = cluster.ClusterIdentifier;
-                var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${clusterIdentifier}`;
+                var resource = `arn:${awsOrGov}:redshift:${region}:${accountId}:cluster:${cluster.clusterIdentifier}`;
 
-                    var getMetricStatistics = helpers.addSource(cache, source,
-                        ['cloudwatch', 'getredshift2MetricStatistics', region, cluster.clusterIdentifier]);
+                var getMetricStatistics = helpers.addSource(cache, source,
+                    ['cloudwatch', 'getredshiftMetricStatistics', region, cluster.ClusterIdentifier]);
 
-                    if (!getMetricStatistics || getMetricStatistics.err ||
+                if (!getMetricStatistics || getMetricStatistics.err ||
                         !getMetricStatistics.data || !getMetricStatistics.data.Datapoints) {
-                        helpers.addResult(results, 3,
-                            `Unable to query for CPU metric statistics: ${helpers.addError(getMetricStatistics)}`, region, resource);
-                        return;
-                    }
+                    helpers.addResult(results, 3,
+                        `Unable to query for CPU metric statistics: ${helpers.addError(getMetricStatistics)}`, region, resource);
+                    return;
+                }
 
-                    if (!getMetricStatistics.data.Datapoints.length) {
-                        helpers.addResult(results, 0,
-                            'CPU metric statistics are not available', region, resource);
-                    } else {
-                        // var cpuDatapoints = getMetricStatistics.data.Datapoints;
-                        // var cpuUtilization = cpuDatapoints[cpuDatapoints.length - 1].Average;
-                        // if (cpuUtilization > cpuThreshold) {
-                        //     helpers.addResult(results, 2,
-                        //         `CPU threshold exceeded - Current CPU utilization: ${cpuUtilization}%`, region, resource);
-                        // } else {
-                        //     helpers.addResult(results, 0,
-                        //         `CPU threshold not exceeded - Current CPU utilization: ${cpuUtilization}%`, region, resource);
-                        // }
+                if (!getMetricStatistics.data.Datapoints.length) {
+                    helpers.addResult(results, 0,
+                        'CPU metric statistics are not available', region, resource);
+                } else {
+                    var cpuDatapoints = getMetricStatistics.data.Datapoints;
+                    var utilizationCount = 0;
+
+                    for (var i = cpuDatapoints.length - 1; i >= 0; i--) {
+                        if (cpuDatapoints[i].Average < cpuThreshold) {
+                            utilizationCount++;
+                        }
                     }
-                });
+    
+                    var utilizationPercentage = (utilizationCount / cpuDatapoints.length) * 100;
+    
+                    if (utilizationPercentage >= 99) {
+                        helpers.addResult(results, 2,
+                            'Redshift cluster has had less than 5% cluster-wide average CPU utilization for 99% of the last 7 days', region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Redshift cluster is not underutilized', region, resource);
+                    }
+                }
+            });
             
 
             rcb();

@@ -9,7 +9,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         collection.cloudwatch.getredshiftMetricStatistics[AWSConfig.region][cluster.ClusterIdentifier] = {};
         var endTime = new Date();
         var startTime = new Date();
-        startTime.setDate(startTime.getDate() - 1);
+        startTime.setDate(startTime.getDate() - 7);
         var params = {
             'MetricName': 'CPUUtilization',
             'Namespace':'AWS/Redshift',
