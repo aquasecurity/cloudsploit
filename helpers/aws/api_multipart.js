@@ -1284,6 +1284,11 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getredshiftMetricStatistics: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                override: true,
+            }
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {

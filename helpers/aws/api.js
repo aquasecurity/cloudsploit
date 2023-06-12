@@ -1729,6 +1729,11 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getEcMetricStatistics: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                override: true,
+            }
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {
