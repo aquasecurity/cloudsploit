@@ -5,7 +5,7 @@ module.exports = {
     title: 'Azure Bastion Host Exists',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensure that Azure Bastion Host exists.',
+    description: 'Ensure that there is at least one Bastion host in Azure subscription.',
     more_info: 'Bastion provides secure RDP and SSH connectivity to all of the VMs in the virtual network in which it is provisioned. Using Azure Bastion protects your virtual machines from exposing RDP/SSH ports to the outside world, while still providing secure access using RDP/SSH.',
     recommended_action: 'Create an Azure Bastion Host in azure account.',
     link: 'https://docs.microsoft.com/en-us/azure/bastion/bastion-overview',
