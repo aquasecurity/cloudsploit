@@ -16,7 +16,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.eventGrid, (location, rcb) => {
+        async.each(locations.eventGrids, (location, rcb) => {
             const domains = helpers.addSource(cache, source, 
                 ['eventGrid', 'listDomains', location]);
 
