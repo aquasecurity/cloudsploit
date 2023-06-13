@@ -1218,6 +1218,7 @@ module.exports = {
         'serviceAccountRole'            : require(__dirname + '/plugins/google/iam/serviceAccountRole.js'),
         'bigtableAdmin'                 : require(__dirname + '/plugins/google/iam/bigtableAdmin.js'),
         'bigqueryAdmin'                 : require(__dirname + '/plugins/google/iam/bigqueryAdmin.js'),
+        'pubsubAdmin'                   : require(__dirname + '/plugins/google/iam/pubsubAdmin.js'),
 
 
         'apiKeyRotation'                : require(__dirname + '/plugins/google/api/apiKeyRotation.js'),
