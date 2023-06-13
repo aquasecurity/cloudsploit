@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var snsTopicnoHttpPolicy = require('./snsTopicnoHttpPolicy');
+var snsTopicnoHttpPolicy = require('./snsTopicNoHttpPolicy');
 
 
 const listTopics = [
