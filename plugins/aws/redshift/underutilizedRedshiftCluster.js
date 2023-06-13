@@ -5,7 +5,7 @@ module.exports = {
     title: 'Underutilized Redshift Cluster Check',
     category: 'Redshift',
     domain: 'Databases',
-    description: 'Identify Redshift clusters that appear to be underutilized',
+    description: 'Ensure Redshift clusters are not underutilized',
     more_info: 'Underutilized clusters are good canidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/managing-cluster-usage-limits.html',
     recommended_action: 'Downsizing underused AWS Redshift clusters to meet the capacity needs at the lowest cost represents an efficient strategy to reduce your monthly AWS costs.',
