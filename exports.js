@@ -1249,6 +1249,7 @@ module.exports = {
         'nodeEncryption'                : require(__dirname + '/plugins/google/kubernetes/nodeEncryption.js'),
         'clusterEncryption'             : require(__dirname + '/plugins/google/kubernetes/clusterEncryption.js'),
         'binaryAuthorizationEnabled'    : require(__dirname + '/plugins/google/kubernetes/binaryAuthorizationEnabled.js'),
+        'clientCertificateDisabled'     : require(__dirname + '/plugins/google/kubernetes/clientCertificateDisabled.js'),
 
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
