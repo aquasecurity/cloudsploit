@@ -932,6 +932,8 @@ module.exports = {
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
 
         'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
+
+        'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
