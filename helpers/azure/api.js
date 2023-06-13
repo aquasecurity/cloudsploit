@@ -314,7 +314,8 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
         },
         getSubscription: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2023-03-01-preview',
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2020-01-01',
+            getCompleteResponse: true,
         }
     },
     roleDefinitions: {

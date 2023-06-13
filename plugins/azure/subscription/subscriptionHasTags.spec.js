@@ -18,7 +18,7 @@ const subscription = [
 const createCache = (subscription) => {
     return {
         subscriptions: {
-            listAll: {
+            getSubscription: {
                 'global': {
                     data: subscription
                 } 
@@ -30,16 +30,6 @@ const createCache = (subscription) => {
 
 describe('subscriptionHasTags', function() {
     describe('run', function() {
-        it('should give passing result if no subscription', function(done) {
-            const cache = createCache([]);
-            subscriptionHasTags.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing subscriptions found');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
 
         it('should give unknown result if unable to query for subscription', function(done) {
             const cache = createCache(null);

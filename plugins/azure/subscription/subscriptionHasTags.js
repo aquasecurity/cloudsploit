@@ -19,23 +19,16 @@ module.exports = {
 
         async.each(locations.subscriptions, function(location, rcb){
 
-            var subscriptions = helpers.addSource(cache, source,
+            let subscriptions = helpers.addSource(cache, source,
                 ['subscriptions', 'getSubscription', location]);
-            console.log(cache.subscriptions)
+
             if (!subscriptions) return rcb();
 
-            if (subscriptions.err || !subscriptions.data) {
+            if (subscriptions.err || !subscriptions.data || !subscriptions.data.length) {
                 helpers.addResult(results, 3, 'Unable to query for subscriptions: ' + helpers.addError(subscriptions), location);
                 return rcb();
             }
-            if (!subscriptions.data.length) {
-                helpers.addResult(results, 0, 'No existing subscriptions found', location);
-                return rcb();
-            }
-            console.log(subscriptions.data)
-            for (let sub of subscriptions.data) { 
-                if (!sub.id) continue;
-                
+            for ( let sub of subscriptions.data){
                 if (sub.tags && Object.keys(sub.tags).length > 0) {
                     helpers.addResult(results, 0, 'Subscription has tags', location, sub.id);
                 } else {
