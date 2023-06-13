@@ -40,7 +40,6 @@ module.exports = {
             var publicSubnetIds = [];
             var vpc=[];
 
-
             describeRouteTables.data.forEach(function(routeTable) {
                 routeTable.Routes.forEach(function(route) {
                     if (route.DestinationCidrBlock === '0.0.0.0/0' && route.GatewayId !== 'local') {
