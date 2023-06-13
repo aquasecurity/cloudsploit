@@ -373,7 +373,7 @@ describe('ec2PublicSubnet', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('EC2 instance is deployed on public subnet: ');
+                expect(results[0].message).to.include('EC2 instance is deployed on public subnet');
                 done();
             });
         });
