@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'GuardDuty is Enabled For S3',
+    title: 'S3 GuardDuty Enabled,
     category: 'GuardDuty',
     domain: 'Management and Governance',
     description: 'Ensures GuardDuty is enabled for S3 buckets' ,
