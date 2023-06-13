@@ -5,7 +5,7 @@ module.exports = {
     title: 'EC2 CPU Alarm Threshold Exceeded',
     category: 'EC2',
     domain: 'Compute',
-    description: 'Identify EC2 instances that have exceeded the alarm threshold for CPU utilization.',
+    description: 'Ensure EC2 instances do not exceed the alarm threshold for CPU utilization.',
     more_info: 'Excessive CPU utilization can indicate performance issues or the need for capacity optimization.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch.html',
     recommended_action: 'Investigate the cause of high CPU utilization and consider optimizing or scaling resources.',
@@ -59,10 +59,10 @@ module.exports = {
                         var cpuUtilization = cpuDatapoints[cpuDatapoints.length - 1].Average;
                         if (cpuUtilization > cpuThreshold) {
                             helpers.addResult(results, 2,
-                                `CPU threshold exceeded - Current CPU utilization: ${cpuUtilization}%`, region, resource);
+                                `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceeds the CPU threshold`, region, resource);
                         } else {
                             helpers.addResult(results, 0,
-                                `CPU threshold not exceeded - Current CPU utilization: ${cpuUtilization}%`, region, resource);
+                                `EC2 instance has current CPU utilization of ${cpuUtilization}% which does not exceed the CPU threshold`, region, resource);
                         }
                     }
                 });
