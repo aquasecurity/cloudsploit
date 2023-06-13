@@ -51,7 +51,7 @@ module.exports = {
                 var recource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
 
                 if ( detector.DataSources  &&  detector.DataSources.S3Logs && detector.DataSources.S3Logs.Status === 'DISABLED'){
-                    helpers.addResult(results, 2, 'GuardDuty S3 protection is disabled', region, recource);
+                    helpers.addResult(results, 2, 'GuardDuty S3 protection is disabled', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'GuardDuty S3 protection is enabled', region, recource);
                 }     
