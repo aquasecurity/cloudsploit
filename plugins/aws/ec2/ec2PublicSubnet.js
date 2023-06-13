@@ -64,7 +64,7 @@ module.exports = {
                     const resource = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
             
                     if (publicSubnetIds.includes(SubnetId) || vpc.includes(VpcId)) {
-                        helpers.addResult(results, 2, 'EC2 instance is deployed on public subnet: ' + resource, region);
+                        helpers.addResult(results, 2, 'EC2 instance is deployed on public subnet', region, resource);
                     } else {
                         helpers.addResult(results, 0, 'EC2 instance is not deployed on public subnet', region, resource);
                     }          
