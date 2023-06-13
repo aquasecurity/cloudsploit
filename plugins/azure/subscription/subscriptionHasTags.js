@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify affected subscription and add tags.',
     link: 'https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.management.resourcemanager.models.subscription.tags',
-    apis: ['subscriptions:listAll'],
+    apis: ['subscriptions:getSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -20,8 +20,8 @@ module.exports = {
         async.each(locations.subscriptions, function(location, rcb){
 
             var subscriptions = helpers.addSource(cache, source,
-                ['subscriptions', 'listAll', location]);
-
+                ['subscriptions', 'getSubscription', location]);
+            console.log(cache.subscriptions)
             if (!subscriptions) return rcb();
 
             if (subscriptions.err || !subscriptions.data) {
@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing subscriptions found', location);
                 return rcb();
             }
+            console.log(subscriptions.data)
             for (let sub of subscriptions.data) { 
                 if (!sub.id) continue;
                 
