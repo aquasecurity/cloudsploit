@@ -53,7 +53,7 @@ module.exports = {
                 if ( detector.DataSources  &&  detector.DataSources.S3Logs && detector.DataSources.S3Logs.Status === 'DISABLED'){
                     helpers.addResult(results, 2, 'GuardDuty S3 protection is disabled', region, resource);
                 } else {
-                    helpers.addResult(results, 0, 'GuardDuty S3 protection is enabled', region, recource);
+                    helpers.addResult(results, 0, 'GuardDuty S3 protection is enabled', region, resource);
                 }     
             });
            
