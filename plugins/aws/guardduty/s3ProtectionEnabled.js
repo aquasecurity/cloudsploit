@@ -48,12 +48,12 @@ module.exports = {
                 }
 
                 var detector = getDetector.data;
-                var resourse = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
+                var recource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
 
                 if ( detector.DataSources  &&  detector.DataSources.S3Logs && detector.DataSources.S3Logs.Status === 'DISABLED'){
-                    helpers.addResult(results, 2, 'GuardDuty S3 protection is disabled', region, resourse);
+                    helpers.addResult(results, 2, 'GuardDuty S3 protection is disabled', region, recource);
                 } else {
-                    helpers.addResult(results, 0, 'GuardDuty S3 protection is enabled', region, resourse);
+                    helpers.addResult(results, 0, 'GuardDuty S3 protection is enabled', region, recource);
                 }     
             });
            
