@@ -1,5 +1,5 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Azure Bastion Host Exists',
@@ -9,17 +9,17 @@ module.exports = {
     more_info: 'Bastion provides secure RDP and SSH connectivity to all of the VMs in the virtual network in which it is provisioned. Using Azure Bastion protects your virtual machines from exposing RDP/SSH ports to the outside world, while still providing secure access using RDP/SSH.',
     recommended_action: 'Create an Azure Bastion Host in azure account.',
     link: 'https://docs.microsoft.com/en-us/azure/bastion/bastion-overview',
-    apis: ['bastionHost:listAll'],
+    apis: ['bastionHosts:listAll'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.bastionHost, function(location, rcb){
+        async.each(locations.bastionHosts, function(location, rcb){
 
-            var bastionHost = helpers.addSource(cache, source, 
-                    ['bastionHost', 'listAll', location]);
+            let bastionHost = helpers.addSource(cache, source, 
+                    ['bastionHosts', 'listAll', location]);
 
                 if (!bastionHost) return rcb();
 
@@ -29,7 +29,7 @@ module.exports = {
                 }
 
                 if (bastionHost.data.length) {
-                    helpers.addResult(results, 0, 'Azure bastion host exists', location, bastionHost.data[0].id);
+                    helpers.addResult(results, 0, 'Azure bastion host exists', location);
                 } else {
                     helpers.addResult(results, 2, 'Azure bastion host does not exist', location);
                 }

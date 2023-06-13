@@ -111,5 +111,5 @@ module.exports = {
     applicationGateway: locations,
     wafPolicies: locations,
     routeTables: locations,
-    bastionHost: locations,
+    bastionHosts: locations,
 };
