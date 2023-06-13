@@ -285,6 +285,7 @@ module.exports = {
         'emrEncryptionAtRest'           : require(__dirname + '/plugins/aws/emr/emrEncryptionAtRest.js'),
         'emrDesiredInstanceType'        : require(__dirname + '/plugins/aws/emr/emrDesiredInstanceType.js'),
         'emrInstanceCount'              : require(__dirname + '/plugins/aws/emr/emrInstanceCount.js'),
+        'emrClusterHasTags'             : require(__dirname + '/plugins/aws/emr/emrClusterHasTags.js'),
 
         'opensearchClusterStatus'       : require(__dirname + '/plugins/aws/opensearch/opensearchClusterStatus.js'),
         'opensearchAccessFromIps'       : require(__dirname + '/plugins/aws/opensearch/opensearchAccessFromIps.js'),
