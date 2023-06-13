@@ -255,9 +255,10 @@ const describeRouteTables = [
     {
         "Associations": [
           {
-            "Main": true,
+            "Main": false,
             "RouteTableAssociationId": "rtbassoc-79c7a000",
             "RouteTableId": "rtb-f6522690",
+            "SubnetId":"subnet-6a8b636a",
             "AssociationState": {
               "State": "associated"
             }
