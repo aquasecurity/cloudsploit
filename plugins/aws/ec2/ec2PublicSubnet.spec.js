@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 const ec2PublicSubnet = require('./ec2PublicSubnet');
 
-describeInstances = [
+const describeInstances = [
     {
         "Groups": [],
         "Instances": [
