@@ -24,7 +24,7 @@ module.exports = {
 
             if (serviceVaults.err || !serviceVaults.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for list Recovery Service vaults: ' + helpers.addError(serviceVaults), location);
+                    'Unable to list Recovery Service Vaults: ' + helpers.addError(serviceVaults), location);
                 return rcb();
             }
 
