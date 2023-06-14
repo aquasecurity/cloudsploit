@@ -10,13 +10,25 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch.html',
     recommended_action: 'Investigate the cause of high CPU utilization and consider optimizing or scaling resources.',
     apis: ['EC2:describeInstances', 'CloudWatch:getEc2MetricStatistics'],
+    settings: {
+        cpu_threshold: {
+            name: 'EC2 CPU Threshold',
+            description: 'The CPU utilization threshold in percentage above which an alarm is triggered.',
+            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$',
+            default: '90'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
 
-        var cpuThreshold = 90;
+        var cpu_threshold = settings.cpu_threshold || this.settings.cpu_threshold.default; 
+
+        if (!cpu_threshold.length) return callback(null, results, source);
+
+        cpu_threshold = parseFloat(cpu_threshold);
 
         async.each(regions.ec2, function(region, rcb) {
             var describeInstances = helpers.addSource(cache, source,
@@ -57,7 +69,7 @@ module.exports = {
                     } else {
                         var cpuDatapoints = getMetricStatistics.data.Datapoints;
                         var cpuUtilization = cpuDatapoints[cpuDatapoints.length - 1].Average;
-                        if (cpuUtilization > cpuThreshold) {
+                        if (cpuUtilization > cpu_threshold) {
                             helpers.addResult(results, 2,
                                 `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceeds the CPU threshold`, region, resource);
                         } else {

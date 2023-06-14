@@ -164,7 +164,7 @@ describe('overutilizesEC2Instance', function () {
     describe('run', function () {
         it('should PASS if the EC2 Instance cpu utilization is less than 90 percent', function (done) {
             const cache = createCache([describeInstances[0]], ec2MetricStatistics[0]);
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {elasticache_idle_node_percentage:'5.00'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
