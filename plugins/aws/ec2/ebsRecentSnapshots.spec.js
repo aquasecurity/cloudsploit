@@ -1,6 +1,12 @@
 let expect = require('chai').expect;
 let ebsRecentSnapshots = require('./ebsRecentSnapshots');
 
+var snapshotPass = new Date();
+snapshotPass.setDate(snapshotPass.getDate() - 1);
+
+var snapshotFail = new Date();
+snapshotFail.setDate(snapshotFail.getDate() - 10);
+
 const describeSnapshots = [
         {
            "Description": "",
@@ -8,7 +14,7 @@ const describeSnapshots = [
            "OwnerId": "193063503752",
            "Progress": "100%",
            "SnapshotId": "snap-06c4f7f6004cecfe5",
-           "StartTime": "2023-05-30T12:13:50.583000+00:00",
+           "StartTime": snapshotPass,
            "State": "completed",
            "VolumeId": "vol-02c402f5a6a02c6e7",
            "VolumeSize": 8,
@@ -23,7 +29,7 @@ const describeSnapshots = [
         "OwnerId": "112233445566",
         "Progress": "100%",
         "SnapshotId": "snap-023f96b23f5b82f59",
-        "StartTime": new Date('2023-05-20T12:13:50.583000+00:00'),
+        "StartTime": snapshotFail,
         "State": "completed",
         "VolumeId": "vol-0025f6823d19c56d9",
         "VolumeSize": 1,
