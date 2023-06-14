@@ -396,7 +396,7 @@ module.exports = {
         'sqlServerTLSVersion'           : require(__dirname + '/plugins/aws/rds/sqlServerTLSVersion'),
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
-        'rdsDefaultusername'            : require(__dirname + '/plugins/aws/rds/rdsDefaultUsername.js'),
+        'rdsDefaultUsername'            : require(__dirname + '/plugins/aws/rds/rdsDefaultUsername.js'),
         'rdsSnapshotPubliclyAccessible' : require(__dirname + '/plugins/aws/rds/rdsSnapshotPubliclyAccessible.js'),
         'rdsInstanceHasTags'            : require(__dirname + '/plugins/aws/rds/rdsInstanceHasTags.js'),
         'rdsInstanceGeneration'         : require(__dirname + '/plugins/aws/rds/rdsInstanceGeneration.js'),
