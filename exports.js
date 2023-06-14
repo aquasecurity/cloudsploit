@@ -263,6 +263,7 @@ module.exports = {
         'connectionDrainingEnabled'     : require(__dirname + '/plugins/aws/elb/connectionDrainingEnabled.js'),
         'appTierElbSecurity'            : require(__dirname + '/plugins/aws/elb/appTierElbSecurity.js'),
         'elbHasTags'                    : require(__dirname + '/plugins/aws/elb/elbHasTags.js'),
+        'elbUnhealthyInstances'         : require(__dirname + '/plugins/aws/elb/elbUnhealthyInstances.js'),
 
         'elbv2DeletionProtection'       : require(__dirname + '/plugins/aws/elbv2/elbv2DeletionProtection.js'),
         'elbv2LoggingEnabled'           : require(__dirname + '/plugins/aws/elbv2/elbv2LoggingEnabled.js'),
