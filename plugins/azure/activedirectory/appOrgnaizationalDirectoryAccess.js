@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure AD App Organisational Directory Access',
+    title: 'Azure AD App Organizational Directory Access',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
     description: 'Ensures that Azure Active Directory applications are accessible to accounts in organisational directory only.',
