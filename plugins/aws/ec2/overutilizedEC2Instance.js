@@ -11,12 +11,18 @@ module.exports = {
     recommended_action: 'Investigate the cause of high CPU utilization and consider optimizing or scaling resources.',
     apis: ['EC2:describeInstances', 'CloudWatch:getEc2MetricStatistics'],
     settings: {
-        cpu_threshold: {
-            name: 'EC2 CPU Threshold',
-            description: 'The CPU utilization threshold in percentage above which an alarm is triggered.',
+        ec2_cpu_threshold_fail: {
+            name: 'EC2 CPU Threshold Fail',
+            description: 'Return a failing result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
             regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$',
-            default: '90'
-        }
+            default: '90.00'
+        },
+        ec2_cpu_threshold_warn: {
+            name: 'EC2 CPU Threshold Warn',
+            description: 'Return a warning result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
+            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$',
+            default: '75.00'
+        },
     },
 
     run: function(cache, settings, callback) {
@@ -24,11 +30,14 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var cpu_threshold = settings.cpu_threshold || this.settings.cpu_threshold.default; 
+        var config = {
+            ec2_cpu_threshold_fail: settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default,
+            ec2_cpu_threshold_warn: settings.ec2_cpu_threshold_warn || this.settings.ec2_cpu_threshold_warn.default
+        };
 
-        if (!cpu_threshold.length) return callback(null, results, source);
+        var custom = helpers.isCustom(settings, this.settings);
 
-        cpu_threshold = parseFloat(cpu_threshold);
+       // cpu_threshold = parseFloat(cpu_threshold);
 
         async.each(regions.ec2, function(region, rcb) {
             var describeInstances = helpers.addSource(cache, source,
@@ -69,9 +78,12 @@ module.exports = {
                     } else {
                         var cpuDatapoints = getMetricStatistics.data.Datapoints;
                         var cpuUtilization = cpuDatapoints[cpuDatapoints.length - 1].Average;
-                        if (cpuUtilization > cpu_threshold) {
+                        if (cpuUtilization >= config.ec2_cpu_threshold_fail) {
                             helpers.addResult(results, 2,
                                 `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceeds the CPU threshold`, region, resource);
+                        } else if (cpuUtilization >= config.ec2_cpu_threshold_warn){
+                            helpers.addResult(results, 1,
+                                `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceed the warning CPU threshold`, region, resource);
                         } else {
                             helpers.addResult(results, 0,
                                 `EC2 instance has current CPU utilization of ${cpuUtilization}% which does not exceed the CPU threshold`, region, resource);
