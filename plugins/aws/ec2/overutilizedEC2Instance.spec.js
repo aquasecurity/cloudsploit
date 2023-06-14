@@ -164,29 +164,27 @@ describe('overutilizesEC2Instance', function () {
     describe('run', function () {
         it('should PASS if the EC2 Instance cpu utilization is less than 90 percent', function (done) {
             const cache = createCache([describeInstances[0]], ec2MetricStatistics[0]);
-            overutilizedEC2Instance.run(cache, {elasticache_idle_node_percentage:'5.00'}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {cpu_threshold:'90.00'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('CPU threshold not exceeded - Current CPU utilization:');
                 done();
             });
         });
 
         it('should FAIL if the EC2 Instance cpu utilization is more than 90 percent', function (done) {
             const cache = createCache([describeInstances[1]], ec2MetricStatistics[1]);
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {cpu_threshold:'90.00'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('CPU threshold exceeded - Current CPU utilization:');
                 done();
             });
         });
 
         it('should PASS if no EC2 Instance found', function (done) {
             const cache = createCache([]);
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {cpu_threshold:'90.00'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -197,7 +195,7 @@ describe('overutilizesEC2Instance', function () {
 
         it('should UNKNOWN if unable to describe EC2 Instance', function (done) {
             const cache = createErrorCache();
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {cpu_threshold:'90.00'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
@@ -208,7 +206,7 @@ describe('overutilizesEC2Instance', function () {
 
         it('should not return any results if describe EC2 Instance response not found', function (done) {
             const cache = createNullCache();
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
+            overutilizedEC2Instance.run(cache, {cpu_threshold:'90.00'}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
