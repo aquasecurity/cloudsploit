@@ -6,10 +6,18 @@ module.exports = {
     category: 'Redshift',
     domain: 'Databases',
     description: 'Ensure Redshift clusters are not underutilized',
-    more_info: 'Underutilized clusters are good canidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
+    more_info: 'Underutilized clusters are good candidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/managing-cluster-usage-limits.html',
     recommended_action: 'Downsizing underused AWS Redshift clusters to meet the capacity needs at the lowest cost represents an efficient strategy to reduce your monthly AWS costs.',
     apis: ['Redshift:describeClusters', 'CloudWatch:getredshiftMetricStatistics', 'STS:getCallerIdentity'],
+    settings: {
+        redshift_cluster_cpu_threshold: {
+            name: 'Redshift CPU Threshold',
+            description: 'The CPU utilization threshold in percentage below which a cluster is considered underutilized.',
+            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$', // eslint-disable-line
+            default: '5'
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -20,7 +28,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        var cpuThreshold = 5; 
+        var cpuThreshold = parseFloat(settings.redshift_cluster_cpu_threshold || this.settings.redshift_cluster_cpu_threshold.default);
 
         async.each(regions.redshift, function(region, rcb) {
             var describeClusters = helpers.addSource(cache, source,
