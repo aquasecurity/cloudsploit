@@ -52,7 +52,7 @@ var elbUnhealthyInstances = require('./elbUnhealthyInstances');
                 "LifecycleState": "InService",
                 "HealthStatus": "Healthy",
                 "LaunchTemplate": {
-                    "LaunchTemplateId": "lt-0f1f6b356026abc86",
+                    "LaunchTemplateId": "lt-0f1f6b356027abc86",
                     "LaunchTemplateName": "auto-scaling-template",
                     "Version": "1"
                 },
