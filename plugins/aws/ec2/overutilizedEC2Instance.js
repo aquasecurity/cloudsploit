@@ -14,13 +14,13 @@ module.exports = {
         ec2_cpu_threshold_fail: {
             name: 'EC2 CPU Threshold Fail',
             description: 'Return a failing result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
-            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$',
+            regex: '^(100|[1-9][0-9]?)$',
             default: '90.00'
         },
         ec2_cpu_threshold_warn: {
             name: 'EC2 CPU Threshold Warn',
             description: 'Return a warning result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
-            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$',
+            regex: '^(100|[1-9][0-9]?)$',
             default: '75.00'
         },
     },
@@ -34,10 +34,6 @@ module.exports = {
             ec2_cpu_threshold_fail: settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default,
             ec2_cpu_threshold_warn: settings.ec2_cpu_threshold_warn || this.settings.ec2_cpu_threshold_warn.default
         };
-
-        var custom = helpers.isCustom(settings, this.settings);
-
-       // cpu_threshold = parseFloat(cpu_threshold);
 
         async.each(regions.ec2, function(region, rcb) {
             var describeInstances = helpers.addSource(cache, source,
