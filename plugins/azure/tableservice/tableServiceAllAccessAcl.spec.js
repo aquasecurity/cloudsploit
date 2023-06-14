@@ -47,7 +47,7 @@ const listTablesSegmented = [
 const getTableAcl = [
     {
         name: 'testtablecs',
-        signedIdentifiers: { testid: { Permissions: 'raup' } }
+        signedIdentifiers: [{ accessPolicy: { permission: 'raup' } }]
     },
     {
         name: 'testtablecs ',
@@ -55,13 +55,13 @@ const getTableAcl = [
     },
     {
         name: 'testtablecs ',
-        signedIdentifiers: { testid: { Permissions: 'cwdl' } }
+        signedIdentifiers: [{ accessPolicy: { permission: 'cwdl' } }]
     },
 ];
 
 const createCache = (list, listKeys, segments, acl, keysErr) => {
     var id = (list && list.length) ? list[0].id : null;
-    var segmentName = (segments && segments.length) ? segments[0] : null;
+    var segmentName = (segments && segments.length) ? segments[0].name : null;
     return {
         storageAccounts: {
             list: {
