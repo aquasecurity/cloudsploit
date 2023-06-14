@@ -88,7 +88,6 @@ module.exports = {
                 }
             });
             
-
             rcb();
         }, function() {
             callback(null, results, source);
