@@ -32,8 +32,8 @@ module.exports = {
                 helpers.addResult(results, 0, 'No storage accounts found', location);
                 return rcb();
             }
-            for (let account of storageAccount.data) {
 
+            for (let account of storageAccount.data) {
                 if (!account.id) continue;
 
                 if (account.encryption && account.encryption.requireInfrastructureEncryption){
