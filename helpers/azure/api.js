@@ -312,6 +312,10 @@ var calls = {
     subscriptions: {
         listLocations: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
+        },
+        get: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2020-01-01',
+            getCompleteResponse: true,
         }
     },
     roleDefinitions: {
