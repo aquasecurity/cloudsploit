@@ -18,7 +18,6 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.subscriptions, function(location, rcb){
-
             let subscriptions = helpers.addSource(cache, source,
                 ['subscriptions', 'get', location]);
 
@@ -28,7 +27,8 @@ module.exports = {
                 helpers.addResult(results, 3, 'Unable to query for subscriptions: ' + helpers.addError(subscriptions), location);
                 return rcb();
             }
-            for ( let sub of subscriptions.data){
+
+            for (let sub of subscriptions.data){
                 if (sub.tags && Object.keys(sub.tags).length > 0) {
                     helpers.addResult(results, 0, 'Subscription has tags', location, sub.id);
                 } else {

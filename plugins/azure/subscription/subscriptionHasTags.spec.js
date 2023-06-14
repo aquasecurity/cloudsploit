@@ -18,7 +18,7 @@ const subscription = [
 const createCache = (subscription) => {
     return {
         subscriptions: {
-            getSubscription: {
+            get: {
                 'global': {
                     data: subscription
                 } 
