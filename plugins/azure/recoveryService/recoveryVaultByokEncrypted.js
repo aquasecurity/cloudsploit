@@ -51,8 +51,8 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Recovery Service Vault does not have BYOK encryption enabled', location, getVault.id);
                 }
-
             }
+
             rcb();
         }, function(){
             // Global checking goes here
