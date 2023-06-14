@@ -46,7 +46,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to query for API Gateway Authorizers: ${helpers.addError(getAuthorizers)}`,
                         region, apiArn);
-                    return ;
+                    return;
                 }
 
                 if (!getAuthorizers.data.items.length) {
