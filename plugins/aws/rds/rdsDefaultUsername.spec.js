@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var rdsDefaultUserName = require('./rdsDefaultUserName');
+var rdsDefaultUserName = require('./rdsDefaultUsername');
 
 const describeDBInstances=[
     {
