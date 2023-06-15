@@ -6,16 +6,18 @@ module.exports = {
     category: 'ES',
     domain: 'Databases',
     description: 'Ensure that Elasticsearch domains enable zone awareness',
-    more_info: 'To improve the fault-tolerance for your ES domain, ensure you enable zone awareness. It distributes the Elasticsearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
+    more_info: 'Enabling zone awareness improves the fault-tolerance for your ES domains by distributing the Elasticsearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
     recommended_action: 'Modify Elasticseach domain configuration and enable domain zone awareness.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
-
+    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain', 'STS:getCallerIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
+        var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', accRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -45,11 +47,9 @@ module.exports = {
                     !describeElasticsearchDomain.data ||
                     !describeElasticsearchDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain config: ${helpers.addError(describeElasticsearchDomain)}`, region);
+                        `Unable to query for ES domain config: ${helpers.addError(describeElasticsearchDomain)}`, region, resource);
                     continue;
                 }
-
-                let resource = describeElasticsearchDomain.data.DomainStatus.ARN;
 
                 if (describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig && 
                 describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled &&
