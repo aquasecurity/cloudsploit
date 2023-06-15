@@ -14,7 +14,7 @@ module.exports = {
         redshift_cluster_cpu_threshold: {
             name: 'Redshift CPU Threshold',
             description: 'The CPU utilization threshold in percentage below which a cluster is considered underutilized.',
-            regex: '^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)$', // eslint-disable-line
+            regex: '^(100|[1-9][0-9]?)$',
             default: '5'
         }
     },
