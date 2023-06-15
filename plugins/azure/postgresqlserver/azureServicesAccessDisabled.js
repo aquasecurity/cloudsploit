@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To secure your PostgreSQL server, it is recommended to disable public network access. Instead, configure firewall rules to allow connections from specific network ranges or utilize VNET rules for access from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
     recommended_action: 'Disable public network access for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
-    apis: ['servers:listPostgres'],
+    apis: ['servers:listPostgres', 'firewallRules:listByServerPostgres'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -37,9 +37,22 @@ module.exports = {
             for (let postgresServer of servers.data) {
                 if (!postgresServer.id) continue;
 
-                if (postgresServer.properties &&
-                    postgresServer.properties.publicNetworkAccess &&
-                    postgresServer.properties.publicNetworkAccess.toUpperCase() === 'DISABLED') {
+                const firewallRules = helpers.addSource(cache, source,
+                    ['firewallRules', 'listByServerPostgres', location, postgresServer.id]);
+
+                if (!firewallRules || firewallRules.err || !firewallRules.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, postgresServer.id);
+                }
+                let accessToServices =  true;
+                for (let rule of firewallRules.data) {
+                    if (rule.name && rule.name.toLowerCase() === 'allowallwindowsazureips') {
+                        accessToServices = false;
+                        break;
+                    }   
+                }
+
+                if (accessToServices) {
                     helpers.addResult(results, 0,
                         'Access to other Azure services is disabled for PostgreSQL server', location, postgresServer.id);
                 } else {
