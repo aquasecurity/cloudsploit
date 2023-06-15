@@ -311,6 +311,27 @@ function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEna
 
 }
 
+function checkIAMRole(iamPolicy, roles, region, results, project, notFoundMessage) {
+    let roleExists = false;
+    if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+        iamPolicy.bindings.forEach(roleBinding => {
+            if (roleBinding.role && roles.includes(roleBinding.role)) {
+                roleExists = true;
+                roleBinding.members.forEach(member => {
+                    let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                    let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                    let resource = createResourceName(memberType, accountName, project);
+                    shared.addResult(results, 2,
+                        `The account has the pre-defined role: ${roleBinding.role}`, region, resource);
+                });
+            }
+        });
+    }
+    if (!roleExists) {
+        shared.addResult(results, 0, notFoundMessage, region);
+    }
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -320,5 +341,6 @@ module.exports = {
     getProtectionLevel: getProtectionLevel,
     listToObj: listToObj,
     createResourceName: createResourceName,
-    checkOrgPolicy: checkOrgPolicy
+    checkOrgPolicy: checkOrgPolicy,
+    checkIAMRole: checkIAMRole
 };

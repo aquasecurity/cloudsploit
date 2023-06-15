@@ -1562,6 +1562,12 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getAuthorizers:{
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
             }
         },
         AppConfig: {
@@ -2079,6 +2085,12 @@ var postcalls = [
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeInstanceHealth:{
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+
             }
         },
         ELBv2: {
