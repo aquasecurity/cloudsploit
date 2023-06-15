@@ -1288,6 +1288,11 @@ var postcalls = [
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,
+            },
+            getEc2MetricStatistics: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
             }
         },
         ConfigService: {

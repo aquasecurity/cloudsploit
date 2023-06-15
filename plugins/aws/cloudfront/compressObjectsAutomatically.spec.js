@@ -44,7 +44,7 @@ const createNullCache = () => {
 
 describe('compressObjectsAutomatically', function () {
     describe('run', function () {
-        it('should PASS if Cloudfront web distribution is currently configured to compress files (objects) automatically', function (done) {
+        it('should PASS if CloudFront web distribution is currently configured to compress files (objects) automatically', function (done) {
             const cache = createCache([listDistributions[0]]);
             compressObjectsAutomatically.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -54,7 +54,7 @@ describe('compressObjectsAutomatically', function () {
             });
         });
 
-        it('should FAIL if Cloudfront web distribution is currently configured to compress files (objects) automatically.', function (done) {
+        it('should FAIL if CloudFront web distribution is currently configured to compress files (objects) automatically.', function (done) {
             const cache = createCache([listDistributions[1]]);
             compressObjectsAutomatically.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

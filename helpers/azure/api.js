@@ -312,6 +312,10 @@ var calls = {
     subscriptions: {
         listLocations: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
+        },
+        get: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2020-01-01',
+            getCompleteResponse: true,
         }
     },
     roleDefinitions: {
@@ -344,7 +348,7 @@ var calls = {
     },
     registries: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2023-01-01-preview'
         }
     },
     pricings: {
@@ -416,10 +420,22 @@ var calls = {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/privateEndpoints?api-version=2022-01-01'
         }
+    },
+    eventGrid: {
+        listDomains: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
+        }
     }
 };
 
 var postcalls = {
+    recoveryServiceVaults: {
+        getRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-04-01'
+        }
+    },
     availabilitySets:{
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
@@ -874,10 +890,18 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        listTablesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
         listSharesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listSharesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }
@@ -890,6 +914,10 @@ var specialcalls = {
     },
     queueService: {
         listQueuesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listQueuesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
