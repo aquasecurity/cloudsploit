@@ -29,16 +29,16 @@ module.exports = {
             }
 
             if (!registries.data.length) {
-                helpers.addResult(results, 0, 'No existing container registries found', location);
+                helpers.addResult(results, 0, 'No existing Container registries found', location);
                 return rcb();
             }
             for (let registry of registries.data){
                 if (!registry.id) continue;
 
                 if (registry.publicNetworkAccess && registry.publicNetworkAccess.toLowerCase() === 'enabled'){
-                    helpers.addResult(results, 2, 'Container Registry is publicly accessible', location, registry.id);
+                    helpers.addResult(results, 2, 'Container registry is publicly accessible', location, registry.id);
                 } else {
-                    helpers.addResult(results, 0, 'Container Registry is not publicly accessible', location, registry.id);
+                    helpers.addResult(results, 0, 'Container registry is not publicly accessible', location, registry.id);
                 }
             }
 
