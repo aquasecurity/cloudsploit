@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Pricing information found', location);
                 return rcb();
             }
+
             let keyVaultPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'keyvaults');
             if (keyVaultPricing) {
                 if (keyVaultPricing.pricingTier && keyVaultPricing.pricingTier.toLowerCase() === 'standard') {
