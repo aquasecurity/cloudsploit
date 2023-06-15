@@ -15,14 +15,8 @@ module.exports = {
             name: 'EC2 CPU Threshold Fail',
             description: 'Return a failing result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
             regex: '^(100|[1-9][0-9]?)$',
-            default: '90.00'
-        },
-        ec2_cpu_threshold_warn: {
-            name: 'EC2 CPU Threshold Warn',
-            description: 'Return a warning result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
-            regex: '^(100|[1-9][0-9]?)$',
-            default: '75.00'
-        },
+            default: '90'
+        }
     },
 
     run: function(cache, settings, callback) {
@@ -30,10 +24,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var config = {
-            ec2_cpu_threshold_fail: settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default,
-            ec2_cpu_threshold_warn: settings.ec2_cpu_threshold_warn || this.settings.ec2_cpu_threshold_warn.default
-        };
+        var ec2_cpu_threshold_fail= settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default,
 
         async.each(regions.ec2, function(region, rcb) {
             var describeInstances = helpers.addSource(cache, source,
@@ -74,12 +65,9 @@ module.exports = {
                     } else {
                         var cpuDatapoints = getMetricStatistics.data.Datapoints;
                         var cpuUtilization = cpuDatapoints[cpuDatapoints.length - 1].Average;
-                        if (cpuUtilization >= config.ec2_cpu_threshold_fail) {
+                        if (cpuUtilization >= ec2_cpu_threshold_fail) {
                             helpers.addResult(results, 2,
                                 `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceeds the CPU threshold`, region, resource);
-                        } else if (cpuUtilization >= config.ec2_cpu_threshold_warn){
-                            helpers.addResult(results, 1,
-                                `EC2 instance has current CPU utilization of ${cpuUtilization}% which exceed the warning CPU threshold`, region, resource);
                         } else {
                             helpers.addResult(results, 0,
                                 `EC2 instance has current CPU utilization of ${cpuUtilization}% which does not exceed the CPU threshold`, region, resource);
