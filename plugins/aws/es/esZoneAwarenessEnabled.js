@@ -5,7 +5,7 @@ module.exports = {
     title: 'ElasticSearch Zone Awareness Enabled',
     category: 'ES',
     domain: 'Databases',
-    description: 'Ensure that Elasticsearch domains enable zone awareness',
+    description: 'Ensure that Elasticsearch domains have domain zone awareness feature enabled.',
     more_info: 'Enabling zone awareness improves the fault-tolerance for your ES domains by distributing the Elasticsearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
     recommended_action: 'Modify Elasticseach domain configuration and enable domain zone awareness.',
