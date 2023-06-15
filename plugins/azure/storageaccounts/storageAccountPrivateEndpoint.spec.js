@@ -76,7 +76,7 @@ describe('storageAccountPrivateEndpoint', function() {
             storageAccountPrivateEndpoint.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Private Endpoints are configured for the storage account');
+                expect(results[0].message).to.include('Private endpoints are configured for the storage account');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -87,7 +87,7 @@ describe('storageAccountPrivateEndpoint', function() {
             storageAccountPrivateEndpoint.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Private Endpoints are not configured for the storage account');
+                expect(results[0].message).to.include('Private endpoints are not configured for the storage account');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -32,14 +32,14 @@ module.exports = {
                 helpers.addResult(results, 0, 'No storage accounts found', location);
                 return rcb();
             }
-            for (let account of storageAccount.data) {
 
+            for (let account of storageAccount.data) {
                 if (!account.id) continue;
 
                 if (account.privateEndpointConnections && account.privateEndpointConnections.length){
-                    helpers.addResult(results, 0, 'Private Endpoints are configured for the storage account', location, account.id);
+                    helpers.addResult(results, 0, 'Private endpoints are configured for the storage account', location, account.id);
                 } else {
-                    helpers.addResult(results, 2, 'Private Endpoints are not configured for the storage account', location, account.id);
+                    helpers.addResult(results, 2, 'Private endpoints are not configured for the storage account', location, account.id);
                 }
             }
             
