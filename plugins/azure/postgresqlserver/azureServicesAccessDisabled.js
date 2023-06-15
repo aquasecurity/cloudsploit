@@ -17,7 +17,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.servers, (location, rcb) => {
-
             const servers = helpers.addSource(cache, source,
                 ['servers', 'listPostgres', location]);
 
