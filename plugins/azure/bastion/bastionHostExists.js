@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Azure Bastion Host Exists',
-    category: 'Virtual Machines',
+    category: 'Bastion',
     domain: 'Compute',
     description: 'Ensure that there is at least one Bastion host in Azure subscription.',
     more_info: 'Bastion provides secure RDP and SSH connectivity to all of the VMs in the virtual network in which it is provisioned. Using Azure Bastion protects your virtual machines from exposing RDP/SSH ports to the outside world, while still providing secure access using RDP/SSH.',
@@ -29,9 +29,9 @@ module.exports = {
                 }
 
                 if (bastionHost.data.length) {
-                    helpers.addResult(results, 0, 'Azure bastion host exists', location);
+                    helpers.addResult(results, 0, `There are ${bastionHost.data.length} Bastion hosts`, location);
                 } else {
-                    helpers.addResult(results, 2, 'Azure bastion host does not exist', location);
+                    helpers.addResult(results, 2, 'No Bastion hosts found', location);
                 }
            
             rcb();
