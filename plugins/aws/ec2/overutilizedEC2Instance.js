@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensure EC2 instances do not exceed the alarm threshold for CPU utilization.',
     more_info: 'Excessive CPU utilization can indicate performance issues or the need for capacity optimization.',
-    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch.html',
+    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html#ec2-cloudwatch-metrics',
     recommended_action: 'Investigate the cause of high CPU utilization and consider optimizing or scaling resources.',
     apis: ['EC2:describeInstances', 'CloudWatch:getEc2MetricStatistics'],
     settings: {
