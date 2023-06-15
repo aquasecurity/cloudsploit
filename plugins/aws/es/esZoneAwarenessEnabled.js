@@ -54,8 +54,8 @@ module.exports = {
                     continue;
                 }
 
-                if (describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig && 
-      describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled) {
+                if (describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig &&
+                describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled) {
                     helpers.addResult(results, 0,'Zone Awareness is enabled for ES domain', region, resource);
                 } else {
                     helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
