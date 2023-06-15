@@ -17,7 +17,6 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.registries, function(location, rcb) {
-
             var registries = helpers.addSource(cache, source,
                 ['registries', 'list', location]);
 
