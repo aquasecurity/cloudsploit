@@ -32,6 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Container registries found', location);
                 return rcb();
             }
+
             for (let registry of registries.data){
                 if (!registry.id) continue;
 
