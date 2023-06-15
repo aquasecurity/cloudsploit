@@ -229,8 +229,8 @@ var calls = {
     },
     resources: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
-        }
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2021-04-01'
+        },
     },
     redisCaches: {
         listBySubscription: {
