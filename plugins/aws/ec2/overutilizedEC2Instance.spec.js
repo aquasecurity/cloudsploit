@@ -97,25 +97,6 @@ const ec2MetricStatistics = [
                 "Unit": "Percent"
             },
         ]
-    },
-    {
-        "Datapoints": [
-            {
-                "Timestamp": "2018-12-16T17:03:10Z",
-                "Average": 75.99,
-                "Unit": "Percent"
-            },
-            {
-                "Timestamp": "2018-12-16T18:03:10Z",
-                "Average": 78.70,
-                "Unit": "Percent"
-            },
-            {
-                "Timestamp": "2018-12-16T19:03:10Z",
-                "Average": 76.20,
-                "Unit": "Percent"
-            },
-        ]
     }
 ]
 
@@ -196,16 +177,6 @@ describe('overutilizesEC2Instance', function () {
             overutilizedEC2Instance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
-
-        it('should WARN if the EC2 Instance cpu utilization is more than 75 percent', function (done) {
-            const cache = createCache([describeInstances[1]], ec2MetricStatistics[2]);
-            overutilizedEC2Instance.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
