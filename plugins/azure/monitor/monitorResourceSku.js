@@ -3,8 +3,8 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Monitor Resource SKU',
-    category: 'Monitor',
-    domain: 'Management and Governance',
+    category: 'Resources',
+    domain: 'Application Integration',
     description: 'Ensure that basic or consumption SKUs are not used on artifacts that need to be monitored.',
     more_info: 'Azure Monitor provides monitoring capabilities for resources and applications in Azure. Basic and Consumption SKUs provide limited monitoring capabilities compared to higher SKUs.',
     link: 'https://learn.microsoft.com/en-us/azure/search/search-sku-tier',
@@ -17,7 +17,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.resources, function(location, rcb) {
-
             const resources = helpers.addSource(cache, source, 
                 ['resources', 'list', location]);
 
@@ -25,7 +24,7 @@ module.exports = {
 
             if (resources.err || !resources.data) {
                 helpers.addResult(results, 3, 
-                    'Unable to query for resources: ' + helpers.addError(resources), location);
+                    'Unable to query for Resources: ' + helpers.addError(resources), location);
                 return rcb();
             }
 
