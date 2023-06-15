@@ -36,9 +36,9 @@ module.exports = {
                 if (!resource.id || !resource.sku) continue;
                 
                 if (resource.sku && (resource.sku.name.toLowerCase() === 'basic' ||resource.sku.name.toLowerCase() === 'consumption')){
-                    helpers.addResult(results, 2, `Azure Resource is using ${resource.sku.name} SKU`, location, resource.id);
+                    helpers.addResult(results, 2, `Resource is using ${resource.sku.name} SKU`, location, resource.id);
                 } else {
-                    helpers.addResult(results, 0, `Azure Resource is using ${resource.sku.name} SKU`, location, resource.id);
+                    helpers.addResult(results, 0, `Resource is using ${resource.sku.name} SKU`, location, resource.id);
                 }
             }
 

@@ -38,7 +38,7 @@ describe('resourceAppropriateSKU', function() {
             resourceAppropriateSKU.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing resource found');
+                expect(results[0].message).to.include('No existing Resources found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -60,7 +60,7 @@ describe('resourceAppropriateSKU', function() {
             resourceAppropriateSKU.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Resource is using Standard_LRS');
+                expect(results[0].message).to.include('Resource is using Standard_LRS');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -71,7 +71,7 @@ describe('resourceAppropriateSKU', function() {
             resourceAppropriateSKU.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Resource is using BASIC');
+                expect(results[0].message).to.include('Resource is using BASIC');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
