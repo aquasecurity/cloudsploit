@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!resources.data.length){
-                helpers.addResult(results, 0, 'No existing resource found', location);
+                helpers.addResult(results, 0, 'No existing Resources found', location);
             }
 
             for (let resource of resources.data) {
