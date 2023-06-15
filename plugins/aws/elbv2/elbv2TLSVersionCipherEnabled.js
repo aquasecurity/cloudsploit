@@ -5,7 +5,7 @@ module.exports = {
     title: 'ELBv2 TLS Version and Cipher Header Enabled',
     category: 'ELBv2',
     domain: 'Content Delivery',
-    description: 'Ensures thet AWS ELBv2 load balancers have TLS version and cipher headers enabled.',
+    description: 'Ensures that AWS ELBv2 load balancers have TLS version and cipher headers enabled.',
     more_info: 'ELBv2 load balancers should be configured with TLS version and cipher headers for security compliance and best practices.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html',
     recommended_action: 'Update ELBv2 load balancer traffic configuration to enable TLS version and cipher headers',
