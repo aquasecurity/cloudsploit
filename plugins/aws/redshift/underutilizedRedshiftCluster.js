@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure Redshift clusters are not underutilized',
     more_info: 'Underutilized clusters are good candidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
-    link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/managing-cluster-usage-limits.html',
+    link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/metrics-listing.html#redshift-metrics',
     recommended_action: 'Downsizing underused AWS Redshift clusters to meet the capacity needs at the lowest cost represents an efficient strategy to reduce your monthly AWS costs.',
     apis: ['Redshift:describeClusters', 'CloudWatch:getredshiftMetricStatistics', 'STS:getCallerIdentity'],
     settings: {
@@ -28,7 +28,7 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
-        var cpuThreshold = parseFloat(settings.redshift_cluster_cpu_threshold || this.settings.redshift_cluster_cpu_threshold.default);
+        var cpuThreshold = settings.redshift_cluster_cpu_threshold || this.settings.redshift_cluster_cpu_threshold.default;
 
         async.each(regions.redshift, function(region, rcb) {
             var describeClusters = helpers.addSource(cache, source,
@@ -78,12 +78,12 @@ module.exports = {
     
                     var utilizationPercentage = (utilizationCount / cpuDatapoints.length) * 100;
     
-                    if (utilizationPercentage >= 99) {
+                    if (utilizationPercentage >= cpuThreshold) {
                         helpers.addResult(results, 2,
-                            'Redshift cluster has had less than 5% cluster-wide average CPU utilization for 99% of the last 7 days', region, resource);
+                            `Redshift cluster has had less than ${cpuThreshold} cluster-wide average CPU utilization for 99% of the last 7 days`, region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            'Redshift cluster is not underutilized', region, resource);
+                            `Redshift cluster is not underutilized`, region, resource);
                     }
                 }
             });

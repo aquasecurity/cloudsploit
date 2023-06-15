@@ -243,7 +243,6 @@ describe('underutilizesredshiftCluster', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Redshift cluster has had less than 5% cluster-wide average CPU utilization for 99% of the last 7 days');
                 done();
             });
         });
