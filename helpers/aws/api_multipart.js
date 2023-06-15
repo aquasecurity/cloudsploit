@@ -1284,6 +1284,11 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getEc2MetricStatistics: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+            },
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {
