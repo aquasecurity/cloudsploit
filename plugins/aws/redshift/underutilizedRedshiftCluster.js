@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure Redshift clusters are not underutilized',
     more_info: 'Underutilized clusters are good candidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/metrics-listing.html#redshift-metrics',
-    recommended_action: 'Downsizing underused AWS Redshift clusters to meet the capacity needs at the lowest cost represents an efficient strategy to reduce your monthly AWS costs.',
+    recommended_action: 'Resize the underused Redshift cluster to optimize costs and resource utilization.',
     apis: ['Redshift:describeClusters', 'CloudWatch:getredshiftMetricStatistics', 'STS:getCallerIdentity'],
     settings: {
         redshift_cluster_cpu_threshold: {
@@ -78,7 +78,7 @@ module.exports = {
     
                     var utilizationPercentage = (utilizationCount / cpuDatapoints.length) * 100;
     
-                    if (utilizationPercentage >= cpuThreshold) {
+                    if (utilizationPercentage >= 99) {
                         helpers.addResult(results, 2,
                             `Redshift cluster has had less than ${cpuThreshold} cluster-wide average CPU utilization for 99% of the last 7 days`, region, resource);
                     } else {
