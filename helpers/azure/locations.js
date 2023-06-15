@@ -111,4 +111,6 @@ module.exports = {
     applicationGateway: locations,
     wafPolicies: locations,
     routeTables: locations,
+    applications: ['global'],
+    eventGrid: locations,
 };
