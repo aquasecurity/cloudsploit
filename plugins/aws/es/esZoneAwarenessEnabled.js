@@ -39,6 +39,9 @@ module.exports = {
 
             for (var domain of listDomainNames.data) {
                 if (!domain.DomainName) continue;
+
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
+
                 var describeElasticsearchDomain = helpers.addSource(cache, source,
                     ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
 
