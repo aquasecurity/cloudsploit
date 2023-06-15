@@ -24,7 +24,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var ec2_cpu_threshold_fail = settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default,
+        var ec2_cpu_threshold_fail = settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default;
 
         async.each(regions.ec2, function(region, rcb) {
             var describeInstances = helpers.addSource(cache, source,
