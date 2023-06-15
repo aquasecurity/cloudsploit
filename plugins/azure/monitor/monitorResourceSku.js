@@ -30,6 +30,7 @@ module.exports = {
 
             if (!resources.data.length){
                 helpers.addResult(results, 0, 'No existing Resources found', location);
+                return rcb();
             }
 
             for (let resource of resources.data) {
