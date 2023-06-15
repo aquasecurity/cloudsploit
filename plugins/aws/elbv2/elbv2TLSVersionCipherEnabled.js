@@ -55,7 +55,7 @@ module.exports = {
                 }
 
                 let found = false;
-                let cipherEnabled = false
+                let cipherEnabled = false;
                 for (let attribute of elbv2Attributes.data.Attributes) {
                     if (attribute.Key && attribute.Key === 'routing.http.x_amzn_tls_version_and_cipher_suite.enabled') {
                         found = true;
@@ -64,16 +64,16 @@ module.exports = {
                             break;
                         }
                     }
-                };
+                }
 
                 if (!found) {
                     helpers.addResult(results, 2, 'Deletion protection not found', region, resource);
                 } else if (cipherEnabled) {
                     helpers.addResult(results, 0,
-                        'Load balancer :' + elb.LoadBalancerName + ': has TLS Version and Cipher Suite enabled', region, resource);
+                        'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Load balancer :' + elb.LoadBalancerName + ': does not have TLS Version and Cipher Suite enabled', region, resource);
+                        'Load balancer :' + elb.LoadBalancerName + ': does not have TLS version and cipher suite enabled', region, resource);
                 }
 
                 cb();
