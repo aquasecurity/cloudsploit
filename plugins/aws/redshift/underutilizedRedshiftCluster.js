@@ -83,7 +83,7 @@ module.exports = {
                             `Redshift cluster has had less than ${cpuThreshold} cluster-wide average CPU utilization for 99% of the last 7 days`, region, resource);
                     } else {
                         helpers.addResult(results, 0,
-                            `Redshift cluster is not underutilized`, region, resource);
+                            'Redshift cluster is not underutilized', region, resource);
                     }
                 }
             });
