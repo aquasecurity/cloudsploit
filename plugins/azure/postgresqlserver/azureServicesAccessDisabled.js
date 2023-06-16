@@ -5,7 +5,7 @@ module.exports = {
     title: 'PostgreSQL Server Services Access Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
-    description: 'Ensure that PostgreSQL server does not allow access to other Azure services.',
+    description: 'Ensure that PostgreSQL servers do not allow access to other Azure services.',
     more_info: 'To secure your PostgreSQL server, it is recommended to disable public network access. Instead, configure firewall rules to allow connections from specific network ranges or utilize VNET rules for access from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
     recommended_action: 'Disable public network access for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
@@ -43,6 +43,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, postgresServer.id);
                 }
+
                 let accessToServices =  true;
                 for (let rule of firewallRules.data) {
                     if (rule.name && rule.name.toLowerCase() === 'allowallwindowsazureips') {
