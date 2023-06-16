@@ -21,17 +21,17 @@ module.exports = {
             let bastionHost = helpers.addSource(cache, source, 
                     ['bastionHosts', 'listAll', location]);
 
-                if (!bastionHost) return rcb();
+            if (!bastionHost) return rcb();
 
-                if (bastionHost.err || !bastionHost.data) {
-                    helpers.addResult(results, 3, 'Unable to query for bastion host: ' + helpers.addError(bastionHost), location);
-                    return rcb();
-                }
+            if (bastionHost.err || !bastionHost.data) {
+                helpers.addResult(results, 3, 'Unable to query for bastion host: ' + helpers.addError(bastionHost), location);
+                return rcb();
+            }
 
-                if (bastionHost.data.length) {
-                    helpers.addResult(results, 0, `There are ${bastionHost.data.length} Bastion hosts`, location);
-                } else {
-                    helpers.addResult(results, 2, 'No Bastion hosts found', location);
+            if (bastionHost.data.length) {
+                helpers.addResult(results, 0, `There are ${bastionHost.data.length} Bastion hosts`, location);
+            } else {
+                helpers.addResult(results, 2, 'No Bastion hosts found', location);
                 }
            
             rcb();
