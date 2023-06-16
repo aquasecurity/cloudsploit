@@ -954,6 +954,11 @@ var calls = {
             property: 'DomainNames',
         }
     },
+    OpenSearch: {
+        listDomainNames: {
+            property: 'DomainNames',
+        }
+    },
     EventBridge: {
         listEventBuses: {
             property: 'EventBuses',
@@ -1557,6 +1562,12 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getAuthorizers:{
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
             }
         },
         AppConfig: {
@@ -1715,7 +1726,7 @@ var postcalls = [
         },
         CloudWatch: {
             getEsMetricStatistics: {
-                reliesOnService: 'es',
+                reliesOnService: 'opensearch',
                 reliesOnCall: 'listDomainNames',
                 override: true,
             },
@@ -1724,6 +1735,16 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getredshiftMetricStatistics: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                override: true,
+            },
+            getEc2MetricStatistics: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+            }
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {
@@ -1830,6 +1851,14 @@ var postcalls = [
                 filterValue: 'DomainName'
             },
             sendIntegration: serviceMap['ES']
+        },
+        OpenSearch: {
+            describeDomain: {
+                reliesOnService: 'opensearch',
+                reliesOnCall: 'listDomainNames',
+                filterKey: 'DomainName',
+                filterValue: 'DomainName'
+            }
         },
         S3: {
             getBucketLogging: {
@@ -2061,6 +2090,12 @@ var postcalls = [
                 reliesOnService: 'elb',
                 reliesOnCall: 'describeLoadBalancers',
                 override: true
+            },
+            describeInstanceHealth:{
+                reliesOnService: 'elb',
+                reliesOnCall: 'describeLoadBalancers',
+                override: true
+
             }
         },
         ELBv2: {
