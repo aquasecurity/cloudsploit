@@ -32,7 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, `There are ${bastionHost.data.length} Bastion hosts`, location);
             } else {
                 helpers.addResult(results, 2, 'No Bastion hosts found', location);
-                }
+            }
            
             rcb();
         }, function(){
