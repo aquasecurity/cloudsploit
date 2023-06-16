@@ -18,7 +18,7 @@ module.exports = {
 
         async.each(locations.bastionHosts, function(location, rcb){
             let bastionHost = helpers.addSource(cache, source, 
-                    ['bastionHosts', 'listAll', location]);
+                ['bastionHosts', 'listAll', location]);
 
             if (!bastionHost) return rcb();
 
