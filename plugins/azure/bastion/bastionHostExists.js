@@ -17,7 +17,6 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.bastionHosts, function(location, rcb){
-
             let bastionHost = helpers.addSource(cache, source, 
                     ['bastionHosts', 'listAll', location]);
 
