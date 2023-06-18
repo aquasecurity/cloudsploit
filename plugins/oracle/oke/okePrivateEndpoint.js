@@ -40,9 +40,9 @@ module.exports = {
                     if (cluster.lifecycleState && cluster.lifecycleState === 'DELETED') return;
         
                     if (cluster.endpointConfig && cluster.endpointConfig.isPublicIpEnabled) {
-                        helpers.addResult(results, 2, 'OKE cluster does not have private endpoint enabled', region, cluster.name);
+                        helpers.addResult(results, 2, 'OKE cluster does not have private endpoint enabled', region, cluster.id);
                     } else {
-                        helpers.addResult(results, 0, 'OKE cluster has private endpoint enabled', region, cluster.name);
+                        helpers.addResult(results, 0, 'OKE cluster has private endpoint enabled', region, cluster.id);
                     }
                 });
             }

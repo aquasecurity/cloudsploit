@@ -36,7 +36,7 @@ module.exports = {
             if (!jobs) return rcb();
 
             if (jobs.err || !jobs.data) {
-                helpers.addResult(results, 3, 'Unable to query Dataflow jobs: ' + helpers.addError(jobs), region);
+                helpers.addResult(results, 3, 'Unable to query Dataflow jobs: ' + helpers.addError(jobs), region, null, null, jobs.err);
                 return rcb();
             }
 

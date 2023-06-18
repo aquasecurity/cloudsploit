@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Geofence Collection Data Encrypted',
+    title: 'Geoference Collection Data Encrypted',
     category: 'Location',
     domain: 'Application Integration',
     description: 'Ensure that Amazon Location geoference collection data is encrypted using desired KMS encryption level.',
@@ -13,7 +13,7 @@ module.exports = {
     apis: ['Location:listGeofenceCollections','Location:describeGeofenceCollection', 'KMS:describeKey', 'KMS:listKeys', 'STS:getCallerIdentity'],
     settings: {
         geoference_collectiondata_desired_encryption_level: {
-            name: 'Location Geofence Collection Data Target Encryption Level',
+            name: 'Location Geoference Collection Data Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
@@ -98,12 +98,12 @@ module.exports = {
 
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
-                        `Geofence collection data is encrypted with ${currentEncryptionLevelString} \
+                        `Geoference collection data is encrypted with ${currentEncryptionLevelString} \
                         which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Geofence collection data is encrypted with ${currentEncryptionLevelString} \
+                        `Geoference collection data is encrypted with ${currentEncryptionLevelString} \
                         which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
                 }

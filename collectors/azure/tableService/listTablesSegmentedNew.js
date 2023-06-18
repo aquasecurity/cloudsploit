@@ -1,9 +1,8 @@
 var async = require('async');
+var azureStorage = require('@azure/data-tables');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
-
-    var azureStorage = require('@azure/data-tables');
 
     if (!collection['tableService']['listTablesSegmented']) collection['tableService']['listTablesSegmented'] = {};
     if (!collection['tableService']['getTableAcl']) collection['tableService']['getTableAcl'] = {};
