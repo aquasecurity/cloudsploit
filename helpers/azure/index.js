@@ -9,8 +9,7 @@ var locations = function(govcloud) {
 };
 
 var helpers = {
-    locations: locations,
-    SEVERITY_LEVELS: ['low', 'medium', 'high']
+    locations: locations
 };
 
 for (var s in shared) helpers[s] = shared[s];
