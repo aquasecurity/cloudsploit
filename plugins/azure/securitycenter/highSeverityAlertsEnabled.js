@@ -1,6 +1,8 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure');
 
+const SEVERITY_LEVELS = ['low', 'medium', 'high']
+
 module.exports = {
     title: 'High Severity Alerts Enabled',
     category: 'Security Center',
@@ -11,11 +13,11 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications',
     apis: ['securityContactv2:listAll'],
     settings: {
-        minimal_desired_severity_level: {
-            name: 'Email alert notification minimal severity level',
-            default: 'High',
-            description: 'Desired severity level.',
+        alert_notifications_min_severity_level: {
+            name: 'Alert Notifications Minimum Severity Level',
+            description: 'Security issues severity level for which notifications should be sent. Use "low" option to receive notification for all security issues.',
             regex: '^(high|medium|low)$',
+            default: 'medium'
         }
     },
 
@@ -23,12 +25,14 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
         const config = {
-            min_desired_severity_level: settings.minimal_desired_severity_level || this.settings.minimal_desired_severity_level.default
+            alert_notifications_min_severity_level: settings.alert_notifications_min_severity_level || this.settings.alert_notifications_min_severity_level.default
         };
-        let desiredSeverityLevel = helpers.SEVERITY_LEVELS.indexOf(config.min_desired_severity_level.toLowerCase());
+
+        let desiredSeverityLevel = SEVERITY_LEVELS.indexOf(config.alert_notifications_min_severity_level.toLowerCase());
+
         async.each(locations.securityContactv2, (location, rcb) => {
-            
             var securityContacts = helpers.addSource(cache, source, 
                 ['securityContactv2', 'listAll', location]);
             if (!securityContacts) return rcb();
@@ -47,16 +51,19 @@ module.exports = {
                 if (!contact.id) continue;
 
                 if ( contact.alertNotifications && contact.alertNotifications.state &&
-                contact.alertNotifications.state.toLowerCase() === 'off') {
+                    contact.alertNotifications.state.toLowerCase() === 'off') {
                     helpers.addResult(results, 2, 'Security contacts email alert notification are not enabled', location, contact.id);
-                } else if (contact.alertNotifications.minimalSeverity &&
-                helpers.SEVERITY_LEVELS.indexOf(contact.alertNotifications.minimalSeverity.toLowerCase()) >= desiredSeverityLevel){
-                    helpers.addResult(results, 0, `Security contacts email alert notifications enabled with minimum severity level
-                    ${contact.alertNotifications.minimalSeverity} which is greater or equal to 
-                    the desired severity level ${helpers.SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
                 } else {
-                    helpers.addResult(results, 2, `Security contacts email alert notifications enabled with minimum severity 
-                    level ${contact.alertNotifications.minimalSeverity} which is less than the desired severity level ${helpers.SEVERITY_LEVELS[desiredSeverityLevel]}`, location);
+                    let currentSeverityLevel = contact.alertNotifications.minimalSeverity.toLowerCase();
+                    if (contact.alertNotifications.minimalSeverity &&
+                        SEVERITY_LEVELS.indexOf(currentSeverityLevel) >= desiredSeverityLevel) {
+                        helpers.addResult(results, 0, `Security contacts email alert notifications enabled with minimum severity level
+                            ${currentSeverityLevel} which is greater or equal to 
+                            the desired severity level ${helpers.SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
+                    } else {
+                        helpers.addResult(results, 2, `Security contacts email alert notifications enabled with minimum severity 
+                            level ${currentSeverityLevel} which is less than the desired severity level ${SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
+                    }
                 }
             }
             
