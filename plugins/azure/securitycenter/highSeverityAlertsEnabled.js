@@ -60,7 +60,7 @@ module.exports = {
                         SEVERITY_LEVELS.indexOf(currentSeverityLevel) >= desiredSeverityLevel) {
                         helpers.addResult(results, 0, `Security contacts email alert notifications enabled with minimum severity level
                             ${currentSeverityLevel} which is greater or equal to 
-                            the desired severity level ${helpers.SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
+                            the desired severity level ${SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
                     } else {
                         helpers.addResult(results, 2, `Security contacts email alert notifications enabled with minimum severity 
                             level ${currentSeverityLevel} which is less than the desired severity level ${SEVERITY_LEVELS[desiredSeverityLevel]}`, location, contact.id);
