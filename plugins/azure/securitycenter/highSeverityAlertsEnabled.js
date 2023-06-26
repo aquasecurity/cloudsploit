@@ -1,7 +1,7 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure');
 
-const SEVERITY_LEVELS = ['low', 'medium', 'high']
+const SEVERITY_LEVELS = ['low', 'medium', 'high'];
 
 module.exports = {
     title: 'High Severity Alerts Enabled',
