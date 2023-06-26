@@ -47,6 +47,7 @@ module.exports = {
                 helpers.addResult(results, 2, 'No existing security contacts found', location);
                 return rcb();
             }
+
             for (let contact of securityContacts.data){
                 if (!contact.id) continue;
 
