@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Minimum Password Length',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures password policy requires a password of at least a minimum number of characters',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -70,7 +70,7 @@ module.exports = {
 
         var results = [];
         var source = {};
-
+        var defaultPasswordPolicyMinLength = 8;
         var region = helpers.defaultRegion(settings);
 
         var getAccountPasswordPolicy = helpers.addSource(cache, source,
@@ -78,11 +78,17 @@ module.exports = {
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-        // Handle special case errors
+        // Handle default policy case
         if (getAccountPasswordPolicy.err &&
             getAccountPasswordPolicy.err.code &&
             getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
-            helpers.addResult(results, 2, 'Account does not have a password policy');
+            if (config.min_password_length_fail < 8) { 
+                helpers.addResult(results, 2, `Minimum password length of: ${config.min_password_length_fail} is less than ${defaultPasswordPolicyMinLength} characters`, 'global', null, custom);
+            } else if (config.min_password_length_warn < 8) {
+                helpers.addResult(results, 1, `Minimum password length of: ${config.min_password_length_warn} is less than ${defaultPasswordPolicyMinLength} characters`, 'global', null, custom);
+            } else {
+                helpers.addResult(results, 0, `Account has Default password policy which enforces minimum length of ${config.min_password_length_warn} characters`, 'global', null, custom);
+            }
             return callback(null, results, source);
         }
 

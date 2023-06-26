@@ -1,3 +1,5 @@
+var async      = require('async');
+
 var ONE_DAY = 24*60*60*1000;
 var ONE_HOUR = 60*60*1000;
 
@@ -21,6 +23,8 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     localEvent.collection = {};
     localEvent.previousCollection = {};
 
+    localEvent.lastScanId = settings.lastScanId;
+
     localEvent.collection[serviceName.toLowerCase()] = {};
     localEvent.previousCollection[serviceName.toLowerCase()] = {};
 
@@ -30,18 +34,56 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     if (!localSettings.identifier) localSettings.identifier = {};
     localSettings.identifier.service = serviceName.toLowerCase();
 
-    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
-        localEvent.collection = collectionReturned;
+    // Single Source Fields
+    if (calls[serviceName] && calls[serviceName].sendIntegration && calls[serviceName].sendIntegration.isSingleSource) {
+        localEvent.data = calls[serviceName].sendIntegration;
+    }
+    let singleSourceArr = [];
 
-        processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
-            localEvent.previousCollection = previousCollectionReturned;
-            localSettings.integration(localEvent, function() {
-                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+    for (let postcall of postcalls) {
+        if (postcall[serviceName] && postcall[serviceName].sendIntegration && Array.isArray(postcall[serviceName].sendIntegration)) {
+            singleSourceArr = postcall[serviceName].sendIntegration;
+            break;
+        } else if (postcall[serviceName] && postcall[serviceName].sendIntegration && postcall[serviceName].sendIntegration.isSingleSource) {
+            localEvent.data = postcall[serviceName].sendIntegration;
+            break;
+        }
+    }
 
-                return iCb();
+    if (singleSourceArr && singleSourceArr.length) {
+        async.eachLimit(singleSourceArr, 1, function(singleSourceObj, sCb) {
+            localEvent.data = singleSourceObj;
+
+            processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+                localEvent.collection = collectionReturned;
+
+                processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+                    localEvent.previousCollection = previousCollectionReturned;
+                    localSettings.integration(localEvent, function() {
+                        if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                        return sCb();
+                    });
+                });
+            });
+        }, function() {
+            return iCb();
+        });
+    } else {
+        processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+            localEvent.collection = collectionReturned;
+
+            processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+                localEvent.previousCollection = previousCollectionReturned;
+                localSettings.integration(localEvent, function() {
+                    if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                    return iCb();
+                });
             });
         });
-    });
+
+    }
 };
 
 var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){

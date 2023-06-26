@@ -4,7 +4,13 @@ var javaVersion = require('./javaVersion');
 const webApps = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1',
-        'name': 'app1'
+        'name': 'app1',
+        'kind': 'app'
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1',
+        'name': 'app1',
+        'kind': 'app,linux'
     }
 ];
 
@@ -15,11 +21,17 @@ const configurations = [
     },
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
-        'javaVersion': '1.8'
+        'javaVersion': '17',
+        'javaContainer': 'JAVA'
     },
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
-        'javaVersion': '1.0'
+        'javaVersion': '1.0',
+        'javaContainer': 'JAVA'
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'linuxFxVersion': 'JAVA|17-java17'
     }
 ];
 
@@ -98,23 +110,7 @@ describe('javaVersion', function() {
             javaVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for App Services');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give unknown result if app has no configs', function(done) {
-            const cache = createErrorCache('configs');
-            javaVersion.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query App Service');
-
-                expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('No App Services with Java found');
-
+                expect(results[0].message).to.include('Unable to query list web apps: ');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -125,7 +121,7 @@ describe('javaVersion', function() {
             javaVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The Java version (1.8) is the latest version');
+                expect(results[0].message).to.include('The Java version (17) is the latest version');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -137,6 +133,16 @@ describe('javaVersion', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('The Java version (1.0) is not the latest version');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+        it('should give Passing result if Linux app service have latest java version', function(done) {
+            const cache = createCache([webApps[1]], [configurations[3]]);
+            javaVersion.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('The Java version (17) is the latest version');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
