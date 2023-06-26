@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Agent Auto Update Enabled',
     category: 'EC2',
-    domain: 'Identity Access and Management',
+    domain: 'Identity and Access Management',
     description: 'Ensures the SSM agent is configured to automatically update to new versions',
     more_info: 'To ensure the latest version of the SSM agent is installed, it should be configured to consume automatic updates.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',

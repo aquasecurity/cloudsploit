@@ -123,8 +123,7 @@ module.exports = {
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        let statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges

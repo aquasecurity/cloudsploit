@@ -193,7 +193,6 @@ module.exports = {
         'ebsDefaultEncryptionEnabled'   : require(__dirname + '/plugins/aws/ec2/ebsDefaultEncryptionEnabled.js'),
         'ec2MetadataOptions'            : require(__dirname + '/plugins/aws/ec2/ec2MetadataOptions.js'),
         'overutilizedEC2Instance'       : require(__dirname + '/plugins/aws/ec2/overutilizedEC2Instance.js'),
-        'ec2PublicSubnet'               : require(__dirname + '/plugins/aws/ec2/ec2PublicSubnet.js'),
 
         'unusedEni'                     : require(__dirname + '/plugins/aws/ec2/unusedEni.js'),
         'unusedAmi'                     : require(__dirname + '/plugins/aws/ec2/unusedAmi.js'),

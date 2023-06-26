@@ -149,5 +149,6 @@ module.exports = {
     resourceRecordSets: ['global'],
     services: ['global'],
     accessApproval: ['global'],
-    networkRoutes: ['global']
+    networkRoutes: ['global'],
+    roles: ['global']
 };

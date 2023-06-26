@@ -19,529 +19,20 @@
 var async = require('async');
 
 var helpers = require(__dirname + '/../../helpers/oracle');
+var collectData = require(__dirname + '/../../helpers/shared');
+var apiCalls    = require(__dirname + '/../../helpers/oracle/api.js');
+
+var calls = apiCalls.calls;
+
+var postcalls = apiCalls.postcalls;
+
+var finalcalls = apiCalls.finalcalls;
 
 var regionSubscriptionService;
 
 var globalServices = [
     'core'
 ];
-
-var calls = {
-    // Do not use regionSubscription in Plugins
-    // It will be loaded automatically by the
-    // Oracle Collector
-    regionSubscription: {
-        list: {
-            api: 'iam',
-            filterKey: ['tenancyId'],
-            filterValue: ['tenancyId'],
-        }
-    },
-    vcn: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    logGroup: {
-        list: {
-            api: 'logging',
-            restVersion: '/20200531',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId']
-        }
-    },
-    publicIp: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId', 'scope'],
-            filterValue: ['compartmentId', 'REGION'],
-            filterLiteral: [false, true],
-        }
-    },
-    instance: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    loadBalancer: {
-        list: {
-            api: 'loadBalance',
-            restVersion: '/20170115',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId']
-        }
-    },
-    cluster: {
-        list: {
-            api: 'oke',
-            restVersion: '/20180222',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId']
-        }
-    }, 
-    user: {
-        list: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    authenticationPolicy: {
-        get: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['tenancyId'],
-            filterConfig: [true]
-        }
-    },
-    namespace: {
-        get: {
-            api: 'objectStore',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '',
-            filterConfig: [true]
-        }
-    },
-    cloudguardConfiguration: {
-        get: {
-            api: 'cloudguard',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20200131',
-        }
-    },
-    group: {
-        list: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    exportSummary: {
-        list: {
-            api: 'fileStorage',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20171215',
-        }
-    },
-    fileSystem: {
-        list: {
-            api: 'fileStorage',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20171215',
-        }
-    },
-    mountTarget: {
-        list: {
-            api: 'fileStorage',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20171215',
-        }
-    },
-    // Do not use compartment:get in Plugins
-    // It will be loaded automatically by the
-    // Oracle Collector
-    compartment: {
-        get: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    defaultTags: {
-        list: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20160918'
-        }
-    },
-    waasPolicy: {
-        list: {
-            api: 'waas',
-            restVersion: '/20181116',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    rules: {
-        list: {
-            api: 'events',
-            restVersion: '/20181201',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    topics: {
-        list: {
-            api: 'notification',
-            restVersion: '/20181201',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    subscriptions: {
-        list: {
-            api: 'notification',
-            restVersion: '/20181201',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    policy: {
-        list: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    dbHome: {
-        list: {
-            api: 'database',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    instancePool: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    autoscaleConfiguration: {
-        list: {
-            api: 'autoscale',
-            restVersion: '/20181001',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    bootVolume: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    volume: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    availabilityDomain: {
-        list: {
-            api: 'iam',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    bootVolumeBackup: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    volumeBackup: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    bootVolumeAttachment: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        },
-    },
-    volumeBackupPolicy: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    volumeGroup: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    volumeGroupBackup: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    configuration: {
-        get: {
-            api: 'audit',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            filterConfig: [true]
-        }
-    },
-    networkSecurityGroup: {
-        list: {
-            api: 'core',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    dbSystem: {
-        list: {
-            api: 'database',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-        }
-    },
-    vault: {
-        list: {
-            api: 'kms',
-            filterKey: ['compartmentId'],
-            filterValue: ['compartmentId'],
-            restVersion: '/20180608',
-        }
-    },
-};
-
-// Important Note: All relies must be passed in an array format []
-var postcalls = {
-    vcn: {
-        get: {
-            api: 'core',
-            reliesOnService: ['vcn'],
-            reliesOnCall: ['list'],
-            filterKey: ['vcnId'],
-            filterValue: ['id'],
-        }
-    },
-    subnet: {
-        list: {
-            api: 'core',
-            reliesOnService: ['vcn'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'vcnId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    securityList: {
-        list: {
-            api: 'core',
-            reliesOnService: ['vcn'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'vcnId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    userGroupMembership: {
-        list: {
-            api: 'iam',
-            reliesOnService: ['group'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'groupId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    apiKey: {
-        list: {
-            api: 'iam',
-            reliesOnService: ['user'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'userId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    authToken: {
-        list: {
-            api: 'iam',
-            reliesOnService: ['user'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'userId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    customerSecretKey: {
-        list: {
-            api: 'iam',
-            reliesOnService: ['user'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'userId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    bucket: {
-        list: {
-            api: 'objectStore',
-            reliesOnService: ['namespace'],
-            reliesOnCall: ['get'],
-            filterKey: ['compartmentId','namespaceName'],
-            filterValue: ['compartmentId','namespaceName'],
-            filterConfig: [true, false],
-            restVersion: '',
-            limit: 900
-        }
-    },
-
-    waasPolicy: {
-        get: {
-            api: 'waas',
-            restVersion: '/20181116',
-            reliesOnService: ['waasPolicy'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'waasPolicyId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    database: {
-        list: {
-            api: 'database',
-            restVersion: '/20160918',
-            reliesOnService: ['dbHome'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'dbHomeId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    securityRule: {
-        list: {
-            api: 'core',
-            reliesOnService: ['networkSecurityGroup'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'networkSecurityGroupId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    volumeBackupPolicyAssignment: {
-        volume: {
-            api: 'core',
-            reliesOnService: ['volume'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'assetId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        },
-        bootVolume: {
-            api: 'core',
-            reliesOnService: ['bootVolume'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'assetId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-        }
-    },
-    keys: {
-        list: {
-            api: 'kms',
-            reliesOnService: ['vault'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'managementEndpoint'],
-            filterValue: ['compartmentId', 'managementEndpoint'],
-            restVersion: '/20180608'
-        }
-    },
-    log: {
-        list: {
-            api: 'logging',
-            reliesOnService: ['logGroup'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'id'],
-            filterValue: ['compartmentId', 'id'],
-            restVersion: '/20200531'
-        }
-    },
-    cluster: {
-        get: {
-            api: 'oke',
-            reliesOnService: ['cluster'],
-            reliesOnCall: ['list'],
-            restVersion: '/20180222',
-            filterKey: ['id'],
-            filterValue: ['id'],
-            filterConfig: [false]
-        },
-    }
-};
-
-// Important Note: All relies must be passed in an array format []
-var finalcalls = {
-    bucket: {
-        get: {
-            api: 'objectStore',
-            reliesOnService: ['bucket','namespace'],
-            reliesOnCall: ['list', 'get'],
-            filterKey: ['bucketName', 'namespaceName'],
-            filterValue: ['name','namespace'],
-            restVersion: '',
-        }
-    },
-    keys: {
-        get: {
-            api: 'kms',
-            reliesOnService: ['keys'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'id'],
-            filterValue: ['compartmentId', 'id'],
-            restVersion: '/20180608'
-        }
-    },
-    keyVersions: {
-        list: {
-            api: 'kms',
-            reliesOnService: ['keys'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'id'],
-            filterValue: ['compartmentId', 'id'],
-            restVersion: '/20180608'
-        }
-    },
-    exprt: {
-        get: {
-            api: 'fileStorage',
-            reliesOnService: ['exportSummary'],
-            reliesOnCall: ['list'],
-            filterKey: ['compartmentId', 'exportId'],
-            filterValue: ['compartmentId', 'id'],
-            filterConfig: [true, false],
-            restVersion: '/20171215',
-        }
-    },
-    preAuthenticatedRequest: {
-        list: {
-            api: 'objectStore',
-            reliesOnService: ['bucket','namespace'],
-            reliesOnCall: ['list', 'get'],
-            filterKey: ['bucketName', 'namespaceName'],
-            filterValue: ['name','namespace'],
-            restVersion: ''
-        }
-    },
-};
-
 
 var processCall = function(OracleConfig, collection, settings, regions, call, service, serviceCb) {
     // Loop through each of the service's functions
@@ -613,6 +104,37 @@ var processCall = function(OracleConfig, collection, settings, regions, call, se
     });
 };
 
+let integrationCall = function(collection, settings, service, calls, postcalls, cback) {
+    let collect = JSON.parse(JSON.stringify(collection));
+    collect = Object.keys(collect).reduce((accumulator, key) => {
+        accumulator[key.toLowerCase()] = collect[key];
+        return accumulator;
+    }, {});
+
+    settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+        accumulator[key.toLowerCase()] = settings.previousCollection[key];
+        return accumulator;
+    }, {});
+
+    if (collect[service.toLowerCase()] &&
+        Object.keys(collect[service.toLowerCase()]) &&
+        Object.keys(collect[service.toLowerCase()]).length &&
+        collectData.callsCollected(service, collect, calls, postcalls)
+    ) {
+        try {
+            collectData.processIntegration(service, settings, collect, calls, postcalls, false,function() {
+                cback();
+            });
+        } catch (e) {
+            console.log(`Error in storing ${service} service data: ${JSON.stringify(e)}`);
+            cback();
+        }
+    } else {
+        cback();
+    }
+};
+
+
 var getRegionSubscription = function(OracleConfig, collection, settings, calls, service, callKey, region, serviceCb) {
 
     var LocalOracleConfig = JSON.parse(JSON.stringify(OracleConfig));
@@ -644,32 +166,103 @@ var collect = function(OracleConfig, settings, callback) {
     OracleConfig.retryDelayOptions = {base: 300};
     regionSubscriptionService = {name: 'regionSubscription', call: 'list', region: OracleConfig.region};
 
+    if (settings.gather) {
+        return callback(null, calls, postcalls, finalcalls);
+    }
+
     var regions = helpers.regions(settings.govcloud);
+    let services = [];
 
     getRegionSubscription(OracleConfig, collection, settings, calls, regionSubscriptionService.name, regionSubscriptionService.call, regionSubscriptionService.region, function() {
         async.eachOfLimit(calls, 10, function(call, service, serviceCb) {
             if (!collection[service]) collection[service] = {};
 
             processCall(OracleConfig, collection, settings, regions, call, service, function() {
-                serviceCb();
+                if (settings.identifier && calls[service].sendIntegration && calls[service].sendIntegration.enabled) {
+                    if (!calls[service].sendIntegration.integrationReliesOn) {
+                        integrationCall(collection, settings, service, calls, [], function() {
+                            serviceCb();
+                        });
+                    } else {
+                        services.push(service);
+                        serviceCb();
+                    }
+                } else {
+                    serviceCb();
+                }
+                // serviceCb();
             });
         }, function() {
+            if (settings.identifier) {
+                async.each(services, function(serv, callB) {
+                    integrationCall(collection, settings, serv, calls, [], callB);
+                }, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    services = [];
+                });
+            }
             // Now loop through the follow up calls
             async.eachOfLimit(postcalls, 10, function(postCall, service, serviceCb) {
                 if (!collection[service]) collection[service] = {};
 
                 processCall(OracleConfig, collection, settings, regions, postCall, service, function() {
-                    serviceCb();
+                    if (settings.identifier && postcalls[service].sendIntegration && postcalls[service].sendIntegration.enabled) {
+                        if (!postcalls[service].sendIntegration.integrationReliesOn) {
+                            integrationCall(collection, settings, service, [], [postcalls], function() {
+                                serviceCb();
+                            });
+                        } else {
+                            services.push(service);
+                            serviceCb();
+                        }
+                    } else {
+                        serviceCb();
+                    }
+                    // serviceCb();
                 });
             }, function() {
+                if (settings.identifier) {
+                    async.each(services, function(serv, callB) {
+                        integrationCall(collection, settings, serv, [], [postcalls], callB);
+                    }, function(err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        services = [];
+                    });
+                }
                 // Now loop through the follow up calls
                 async.eachOfLimit(finalcalls, 10, function(finalCall, service, serviceCb) {
                     if (!collection[service]) collection[service] = {};
 
                     processCall(OracleConfig, collection, settings, regions, finalCall, service, function() {
-                        serviceCb();
+                        if (settings.identifier && finalcalls[service].sendIntegration && finalcalls[service].sendIntegration.enabled) {
+                            if (!finalcalls[service].sendIntegration.integrationReliesOn) {
+                                integrationCall(collection, settings, service, [], [finalcalls], function() {
+                                    serviceCb();
+                                });
+                            } else {
+                                services.push(service);
+                                serviceCb();
+                            }
+                        } else {
+                            serviceCb();
+                        }
+                        // serviceCb();
                     });
                 }, function() {
+                    if (settings.identifier) {
+                        async.each(services, function(serv, callB) {
+                            integrationCall(collection, settings, serv, [], [finalcalls], callB);
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            services = [];
+                        });
+                    }
                     //console.log(JSON.stringify(collection, null, 2));
                     callback(null, collection);
                 });

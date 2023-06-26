@@ -21,7 +21,20 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             return cb();
         }
 
+        if (role.RoleName && collection.iam &&
+            collection.iam.listAttachedRolePolicies &&
+            collection.iam.listAttachedRolePolicies[AWSConfig.region] &&
+            collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName] &&
+            collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data &&
+            collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data.AttachedPolicies &&
+            collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data.AttachedPolicies.length) {
+            role.attachedPolicies = collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data.AttachedPolicies;
+        } else {
+            role.attachedPolicies = [];
+        }
+
         collection.iam.getRolePolicy[AWSConfig.region][role.RoleName] = {};
+        role.inlinePolicies = [];
 
         async.eachLimit(collection.iam.listRolePolicies[AWSConfig.region][role.RoleName].data.PolicyNames, 5, function(policyName, pCb){
             collection.iam.getRolePolicy[AWSConfig.region][role.RoleName][policyName] = {};
@@ -31,7 +44,16 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.iam.getRolePolicy[AWSConfig.region][role.RoleName][policyName].err = err;
                 }
 
+                if (data['PolicyDocument']) {
+                    data['PolicyDocument'] = helpers.normalizePolicyDocument(data['PolicyDocument']);
+                }
+
                 collection.iam.getRolePolicy[AWSConfig.region][role.RoleName][policyName].data = data;
+
+                delete data['ResponseMetadata'];
+
+                role.inlinePolicies.push(data);
+
                 pCb();
             });
         }, function(){
