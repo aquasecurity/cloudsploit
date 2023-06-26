@@ -126,8 +126,8 @@ module.exports = {
             var allowedConditions = ['aws:PrincipalArn','aws:PrincipalAccount','aws:PrincipalOrgID','aws:SourceAccount','aws:SourceArn','aws:SourceOwner'];
 
             for (var statement of statements) {     
-                var conditions = (statement.Condition)? helpers.isValidCondition(statement, allowedConditions, helpers.IAM_CONDITION_OPERATORS, 'ture').flat() : [];
-                var principals = helpers.extractStatementPrincipals(statement).toString;
+                var conditions = typeof helpers.isValidCondition(statement, allowedConditions, helpers.IAM_CONDITION_OPERATORS, true) ==='boolean'? [] : helpers.isValidCondition(statement, allowedConditions, helpers.IAM_CONDITION_OPERATORS, true).flat();
+                var principals = helpers.extractStatementPrincipals(statement).toString();
                 if (principals.length) conditions.push(principals);
 
                 for (var condition of conditions) {

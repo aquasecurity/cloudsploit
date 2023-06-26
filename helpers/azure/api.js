@@ -31,9 +31,11 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'LogAlerts'
  InvService: 'LogAlerts'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'LogAlerts'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'LogAlerts'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
 
  Take the reference from the below map
 */
@@ -140,7 +142,16 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
             BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
-        }
+        },
+    'SQL Databases':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
+            BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
+            BridgeCollectionService: 'databases', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations
@@ -229,8 +240,8 @@ var calls = {
     },
     resources: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
-        }
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2021-04-01'
+        },
     },
     redisCaches: {
         listBySubscription: {
@@ -312,6 +323,10 @@ var calls = {
     subscriptions: {
         listLocations: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
+        },
+        get: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2020-01-01',
+            getCompleteResponse: true,
         }
     },
     roleDefinitions: {
@@ -332,13 +347,19 @@ var calls = {
     },
     users: {
         list: {
-            url: 'https://graph.windows.net/myorganization/users?api-version=1.6',
+            url: 'https://graph.microsoft.com/v1.0/users',
             graph: true
+        }
+    },
+    applications: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/applications/',
+            graph: true,
         }
     },
     registries: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2023-01-01-preview'
         }
     },
     pricings: {
@@ -354,6 +375,11 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+        }
+    },
+    bastionHosts: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/bastionHosts?api-version=2022-09-01'
         }
     },
     wafPolicies: {
@@ -410,10 +436,22 @@ var calls = {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/privateEndpoints?api-version=2022-01-01'
         }
+    },
+    eventGrid: {
+        listDomains: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
+        }
     }
 };
 
 var postcalls = {
+    recoveryServiceVaults: {
+        getRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-04-01'
+        }
+    },
     availabilitySets:{
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
@@ -670,6 +708,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
         },
+        sendIntegration: serviceMap['SQL Databases']
     },
     serverAzureADAdministrators: {
         listByServer: {
@@ -868,10 +907,18 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        listTablesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
         listSharesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listSharesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }
@@ -884,6 +931,10 @@ var specialcalls = {
     },
     queueService: {
         listQueuesSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        listQueuesSegmentedNew: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },

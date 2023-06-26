@@ -112,4 +112,7 @@ module.exports = {
     applicationGateway: locations,
     wafPolicies: locations,
     routeTables: locations,
+    bastionHosts: locations,
+    applications: ['global'],
+    eventGrid: locations,
 };

@@ -50,7 +50,7 @@ describe('cloudfrontWafEnabled', function () {
             });
         });
 
-        it('should FAIL if Cloudfront Distribution does not have WAF enabled', function (done) {
+        it('should FAIL if CloudFront Distribution does not have WAF enabled', function (done) {
             const cache = createCache([listDistributions[1]]);
             cloudfrontWafEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

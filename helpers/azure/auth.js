@@ -61,7 +61,7 @@ module.exports = {
         // First, login without audience
         performLogin(null, function(err, credentials) {
             if (err) return callback(err);
-            performLogin({ tokenAudience: 'graph' }, function(graphErr, graphCredentials) {
+            performLogin({ tokenAudience: 'https://graph.microsoft.com' }, function(graphErr, graphCredentials) {
                 if (graphErr) return callback(graphErr);
                 performLogin({ tokenAudience: 'https://vault.azure.net' }, function(vaultErr, vaultCredentials) {
                     if (vaultErr) return callback(vaultErr);
