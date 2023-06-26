@@ -1,93 +1,128 @@
-var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./highSeverityAlertsEnabled');
+var highSeverityAlertsEnabled = require('./highSeverityAlertsEnabled');
 
-const createCache = (err, data) => {
+const securityContacts = [
+    {
+        'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
+        'name': 'contact1',
+        'alertsToAdmins': 'On',
+        'email': 'xyz@gmail.com',
+
+        "notificationsByRole": {
+          "state": "On",
+          "roles": [
+            "Owner",
+          ]
+        },
+        alertNotifications : { state: "On", minimalSeverity: 'High' },
+    },
+    {
+        'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
+        'name': 'contact1',
+        'alertsToAdmins': 'Off',
+        'email': '',
+
+        "notificationsByRole": {
+          "state": "On",
+          "roles": [
+            "Admin"
+          ]
+        },
+        alertNotifications : { state: "On", minimalSeverity: 'Low' },
+    },
+    {
+        'id': '/subscriptions/123/providers/Microsoft.Security/securityContacts/contact1',
+        'name': 'contact1',
+        'alertsToAdmins': 'Off',
+        'email': '',
+
+        "notificationsByRole": {
+          "state": "On",
+          "roles": [
+            "Admin"
+          ]
+        },
+        alertNotifications : { state: "Off", minimalSeverity: 'Low' },
+    }
+];
+
+const createCache = (securityContacts) => {
     return {
-        securityContacts: {
-            list: {
-                'global': {
-                    err: err,
-                    data: data
+        securityContactv2: {
+            listAll: {
+                global:{
+                    data: securityContacts
                 }
             }
         }
-    }
+    };
+};
+
+const createErrorCache = () => {
+    return {
+        securityContactv2: {
+            listAll: {
+                global: {}
+            }
+        }
+    };
 };
 
 describe('highSeverityAlertsEnabled', function() {
     describe('run', function() {
         it('should give failing result if no security contacts', function(done) {
-            const callback = (err, results) => {
+            const cache = createCache([]);
+            highSeverityAlertsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No existing security contacts');
+                expect(results[0].message).to.include('No existing security contacts found');
                 expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                []
-            );
-
-            auth.run(cache, {}, callback);
+                done();
+            });
         });
 
-        it('should give failing result if disable App Service', function(done) {
-            const callback = (err, results) => {
+        it('should give unknown result if unable to query for security contacts', function(done) {
+            const cache = createErrorCache();
+            highSeverityAlertsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('High severity alerts for the subscription are not configured');
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for security contacts');
                 expect(results[0].region).to.equal('global');
-                done()
-            };
-
-            const cache = createCache(
-                null,
-                [
-                    {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/securityContacts/default1",
-                        "name": "default1",
-                        "type": "Microsoft.Security/securityContacts",
-                        "email": "rod_giovanni@yahoo.com",
-                        "phone": "3053232490",
-                        "alertNotifications": "Off",
-                        "alertsToAdmins": "Off",
-                        "location": "global"
-                    }
-                ]
-            );
-
-            auth.run(cache, {}, callback);
+                done();
+            });
         });
 
-        it('should give passing result if enabled App Service', function(done) {
-            const callback = (err, results) => {
+        it('should give passing result if Security Contact email alert severity is greater or equal then desired', function(done) {
+            const cache = createCache([securityContacts[0]]);
+            highSeverityAlertsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('High severity alerts for the subscription are configured');
+                expect(results[0].message).to.include('Security contacts email alert notifications enabled with minimum severity level');
                 expect(results[0].region).to.equal('global');
-                done()
-            };
+                done();
+            });
+        });
 
-            const cache = createCache(
-                null,
-                [
-                    {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/securityContacts/default1",
-                        "name": "default1",
-                        "type": "Microsoft.Security/securityContacts",
-                        "email": "rod_giovanni@yahoo.com",
-                        "phone": "3053232490",
-                        "alertNotifications": "On",
-                        "alertsToAdmins": "Off",
-                        "location": "global"
-                    }
-                ]
-            );
+        it('should give failing result if Security Contact email alert severity is less then desired', function(done) {
+            const cache = createCache([securityContacts[1]]);
+            highSeverityAlertsEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Security contacts email alert notifications enabled with minimum severity');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
 
-            auth.run(cache, {}, callback);
-        })
-    })
-})
+        it('should give failing result if Security Contact email alert notification not enabled', function(done) {
+            const cache = createCache([securityContacts[2]]);
+            highSeverityAlertsEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Security contacts email alert notification are not enabled');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+    });
+});
