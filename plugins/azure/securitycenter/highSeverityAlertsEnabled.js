@@ -48,7 +48,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (let contact of securityContacts.data){
+            for (let contact of securityContacts.data) {
                 if (!contact.id) continue;
 
                 if ( contact.alertNotifications && contact.alertNotifications.state &&
