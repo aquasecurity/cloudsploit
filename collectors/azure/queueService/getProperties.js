@@ -3,8 +3,6 @@ var async = require('async');
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require('@azure/storage-queue');
-
     if (!collection['queueService']['getProperties']) collection['queueService']['getProperties'] = {};
 
     // Loop through regions and properties in reliesOn
