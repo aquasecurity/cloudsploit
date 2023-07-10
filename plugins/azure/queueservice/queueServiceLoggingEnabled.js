@@ -44,6 +44,7 @@ module.exports = {
                         'Unable to query for storage account queue service properties: ' + helpers.addError(queueServiceProperties), location, storageAccount.id);
                     continue;
                 } 
+
                 if (queueServiceProperties.data.queueAnalyticsLogging && queueServiceProperties.data.queueAnalyticsLogging.deleteProperty &&
                 queueServiceProperties.data.queueAnalyticsLogging.read && queueServiceProperties.data.queueAnalyticsLogging.write) {
                     helpers.addResult(results, 0, 'Queue Service has logging enabled for read, write and delete requests', location, storageAccount.id);
