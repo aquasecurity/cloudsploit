@@ -41,7 +41,7 @@ module.exports = {
 
                 if (!queueServiceProperties || queueServiceProperties.err || !queueServiceProperties.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Queue Service: ' + helpers.addError(queueServiceProperties), location, storageAccount.id);
+                        'Unable to query for storage account queue service properties: ' + helpers.addError(queueServiceProperties), location, storageAccount.id);
                     continue;
                 } 
                 if (queueServiceProperties.data.queueAnalyticsLogging && queueServiceProperties.data.queueAnalyticsLogging.deleteProperty &&
