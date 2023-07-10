@@ -87,7 +87,7 @@ describe('queueServiceLoggingEnabled', function () {
             queueServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Queue Service has logging enabled for read, write and delete requests');
+                expect(results[0].message).to.equal('Storage Account has logging enabled for queue service read, write or delete requests');
                 done();
             });
         });
