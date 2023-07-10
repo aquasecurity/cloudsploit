@@ -1,4 +1,5 @@
 var async = require('async');
+var azureStorage = require('@azure/storage-queue');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
