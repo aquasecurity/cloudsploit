@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Queue Service Logging Enabled',
-    category: 'Queue Service',
+    category: 'Storage Accounts',
     domain: 'Storage',
     description: 'Ensures that Microsoft Azure Storage Queue service logging is enabled for "Read", "Write", and "Delete" requests.',
     more_info: 'Azure Storage Queue logs contain detailed information about successful and failed requests made to your storage queues for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Queue service within your Microsoft Azure account.',
