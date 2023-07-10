@@ -47,10 +47,10 @@ module.exports = {
 
                 if (queueServiceProperties.data.queueAnalyticsLogging && queueServiceProperties.data.queueAnalyticsLogging.deleteProperty &&
                 queueServiceProperties.data.queueAnalyticsLogging.read && queueServiceProperties.data.queueAnalyticsLogging.write) {
-                    helpers.addResult(results, 0, 'Queue Service has logging enabled for read, write and delete requests', location, storageAccount.id);
+                    helpers.addResult(results, 0, 'Storage Account has logging enabled for queue service read, write and delete requests', location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2, 
-                        'Queue Service does not have logging enabled for read, write and delete requests', location, storageAccount.id);
+                        'Storage Account does not have logging enabled for queue service read, write or delete requests', location, storageAccount.id);
                 }
             }
 
