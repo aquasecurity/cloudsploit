@@ -131,7 +131,7 @@ describe('queueServiceLoggingEnabled', function () {
             queueServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Queue Service:');
+                expect(results[0].message).to.include('Unable to query for storage account queue service properties:');
                 done();
             });
         });
