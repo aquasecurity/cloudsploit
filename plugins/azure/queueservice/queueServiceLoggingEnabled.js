@@ -3,7 +3,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Queue Service Logging Enabled',
+    title: 'Storage Account Queue Service Logging Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
     description: 'Ensures that Microsoft Azure Storage Queue service logging is enabled for "Read", "Write", and "Delete" requests.',
