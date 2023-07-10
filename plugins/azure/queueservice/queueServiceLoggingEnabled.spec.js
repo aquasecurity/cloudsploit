@@ -80,43 +80,6 @@ const createCache = (list, listKeys, segments, acl, keysErr) => {
     };
 };
 
-// const createErrorCache = () => {
-//     return {
-//         storageAccounts: {
-//             list: {
-//                 'eastus': {
-//                     err: {
-//                         message: 'error while listing storageAccounts'
-//                     },
-//                 },
-//             },
-//             listKeys: {
-//                 'eastus': {
-//                     err: {
-//                         message: 'error while listing storageAccount keys'
-//                     },
-//                 },
-//             },
-//         },
-//         queueService: {
-//             listQueuesSegmented: {
-//                 'eastus': {
-//                     err: {
-//                         message: 'Unable to list queue Segments'
-//                     }
-//                 }
-//             },
-//             getQueueAcl: {
-//                 'eastus': {
-//                     err: {
-//                         message: 'Unable to get Queue Acl'
-//                     }
-//                 }
-//             }
-//         }
-//     };
-// };
-
 describe('queueServiceLoggingEnabled', function () {
     describe('run', function () {
         it('should PASS if Queue Service has logging enabled', function (done) { 
