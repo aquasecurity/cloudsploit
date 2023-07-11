@@ -1,9 +1,8 @@
 var async = require('async');
+var azureStorage = require('@azure/storage-blob');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
-
-    var azureStorage = require('@azure/storage-blob');
 
     if (!collection['blobService']['getProperties']) collection['blobService']['getProperties'] = {};
 

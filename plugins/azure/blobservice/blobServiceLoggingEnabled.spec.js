@@ -88,7 +88,7 @@ describe('blobServiceLoggingEnabled', function () {
             blobServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Blob Service has logging enabled for read, write and delete requests');
+                expect(results[0].message).to.equal('Storage Account has logging enabled for blob service read, write or delete requests');
                 done();
             });
         });
@@ -99,7 +99,7 @@ describe('blobServiceLoggingEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('eastus');
-                expect(results[0].message).to.equal('Blob Service does not have logging enabled for read, write and delete requests');
+                expect(results[0].message).to.equal('Storage Account does not have logging enabled for blob service read, write or delete requests');
                 done();
             });
         });
@@ -132,7 +132,7 @@ describe('blobServiceLoggingEnabled', function () {
             blobServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Blob Service:');
+                expect(results[0].message).to.include('Unable to query for storage account blob service properties:');
                 done();
             });
         });
