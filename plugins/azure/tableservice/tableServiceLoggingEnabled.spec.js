@@ -80,8 +80,6 @@ const createCache = (list, listKeys, segments, keysErr) => {
     };
 };
 
-
-
 describe('tableServiceLoggingEnabled', function () {
     describe('run', function () {
         it('should PASS if Table Service has logging enabled', function (done) { 
