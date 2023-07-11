@@ -89,7 +89,7 @@ describe('tableServiceLoggingEnabled', function () {
             tableServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Table Service has logging enabled for read, write and delete requests');
+                expect(results[0].message).to.equal('Storage Account has logging enabled for table service read, write or delete requests');
                 done();
             });
         });
@@ -100,7 +100,7 @@ describe('tableServiceLoggingEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('eastus');
-                expect(results[0].message).to.equal('Table Service does not have logging enabled for read, write and delete requests');
+                expect(results[0].message).to.equal('Storage Account does not have logging enabled for table service read, write or delete requests');
                 done();
             });
         });
@@ -133,7 +133,7 @@ describe('tableServiceLoggingEnabled', function () {
             tableServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Table Service:');
+                expect(results[0].message).to.include('Unable to query for storage account table service properties:');
                 done();
             });
         });

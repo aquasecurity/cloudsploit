@@ -3,9 +3,9 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Table Service Logging Enabled',
-    category: 'Table Service',
-    domain: 'Application Integration',
+    title: 'Storage Account Table Service Logging Enabled',
+    category: 'Storage Accounts',
+    domain: 'Storage',
     description: 'Ensures that Microsoft Azure Storage Table service logging is enabled for "Read", "Write", and "Delete" requests.',
     more_info: 'Azure Storage Table Service logs contain detailed information about successful and failed requests made to your storage tables for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Table service within your Microsoft Azure account.',
     recommended_action: 'Modify Table Service and enable storage logging for "Read", "Write", and "Delete" requests.',
@@ -40,15 +40,15 @@ module.exports = {
 
                 if (!tableServiceProperties || tableServiceProperties.err || !tableServiceProperties.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Table Service: ' + helpers.addError(tableServiceProperties), location, storageAccount.id);
+                        'Unable to query for storage account table service properties: ' + helpers.addError(tableServiceProperties), location, storageAccount.id);
                     continue;
                 } 
                 if (tableServiceProperties.data.logging && tableServiceProperties.data.logging.delete &&
                 tableServiceProperties.data.logging.read && tableServiceProperties.data.logging.write) {
-                    helpers.addResult(results, 0, 'Table Service has logging enabled for read, write and delete requests', location, storageAccount.id);
+                    helpers.addResult(results, 0, 'Storage Account has logging enabled for table service read, write or delete requests', location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2, 
-                        'Table Service does not have logging enabled for read, write and delete requests', location, storageAccount.id);
+                        'Storage Account does not have logging enabled for table service read, write or delete requests', location, storageAccount.id);
                 }
             }
 
