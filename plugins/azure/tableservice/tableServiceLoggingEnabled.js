@@ -12,7 +12,6 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/storage/tables/monitor-table-storage?tabs=azure-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:getProperties'],
  
-
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

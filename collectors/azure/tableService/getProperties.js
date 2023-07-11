@@ -1,12 +1,10 @@
 var async = require('async');
+var azureStorage = require('@azure/data-tables');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require('@azure/data-tables');
-
     if (!collection['tableService']['getProperties']) collection['tableService']['getProperties'] = {};
-
     // Loop through regions and properties in reliesOn
     async.eachOf(reliesOn['storageAccounts.listKeys'], function(regionObj, region, cb) {
         collection['tableService']['getProperties'][region] = {};
