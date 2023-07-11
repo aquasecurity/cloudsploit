@@ -666,10 +666,10 @@ module.exports = {
         'storageAccountHasTags'         : require(__dirname + '/plugins/azure/storageaccounts/storageAccountHasTags.js'),
         'storageAccountPrivateEndpoint' : require(__dirname + '/plugins/azure/storageaccounts/storageAccountPrivateEndpoint.js'),
         'infrastructureEncryption'      : require(__dirname + '/plugins/azure/storageaccounts/infrastructureEncryption.js'),
+        'blobServiceLoggingEnabled'     : require(__dirname + '/plugins/azure/storageaccounts/blobServiceLoggingEnabled.js'),
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
-        'blobServiceLoggingEnabled'     : require(__dirname + '/plugins/azure/blobservice/blobServiceLoggingEnabled.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
