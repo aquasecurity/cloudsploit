@@ -49,7 +49,6 @@ const getProperties = [
     }
 ];
 
-
 const createCache = (list, listKeys, segments, acl, keysErr) => {
     var id = (list && list.length) ? list[0].id : null;
     return {
@@ -79,7 +78,6 @@ const createCache = (list, listKeys, segments, acl, keysErr) => {
         }
     };
 };
-
 
 describe('blobServiceLoggingEnabled', function () {
     describe('run', function () {
@@ -125,7 +123,6 @@ describe('blobServiceLoggingEnabled', function () {
                 done();
             });
         });
-
 
         it('should UNKNOWN if Unable to query for for Blob Service', function (done) {
             const cache = createCache([storageAccounts[0]], [listKeys[0]], null);
