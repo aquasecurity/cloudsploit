@@ -666,14 +666,14 @@ module.exports = {
         'storageAccountHasTags'         : require(__dirname + '/plugins/azure/storageaccounts/storageAccountHasTags.js'),
         'storageAccountPrivateEndpoint' : require(__dirname + '/plugins/azure/storageaccounts/storageAccountPrivateEndpoint.js'),
         'infrastructureEncryption'      : require(__dirname + '/plugins/azure/storageaccounts/infrastructureEncryption.js'),
+        'queueServiceLoggingEnabled'    : require(__dirname + '/plugins/azure/storageaccounts/queueServiceLoggingEnabled.js'), 
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
-        'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),
-        'queueServiceLoggingEnabled'    : require(__dirname + '/plugins/azure/queueservice/queueServiceLoggingEnabled.js'),    
+        'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),   
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
