@@ -86,7 +86,7 @@ describe('blobServiceLoggingEnabled', function () {
             blobServiceLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.equal('Storage Account has logging enabled for blob service read, write or delete requests');
+                expect(results[0].message).to.equal('Storage Account has logging enabled for blob service read, write and delete requests');
                 done();
             });
         });

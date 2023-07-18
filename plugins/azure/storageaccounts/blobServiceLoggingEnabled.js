@@ -45,7 +45,7 @@ module.exports = {
                 } 
                 if (blobServiceProperties.data.blobAnalyticsLogging && blobServiceProperties.data.blobAnalyticsLogging.deleteProperty &&
                 blobServiceProperties.data.blobAnalyticsLogging.read && blobServiceProperties.data.blobAnalyticsLogging.write) {
-                    helpers.addResult(results, 0, 'Storage Account has logging enabled for blob service read, write or delete requests', location, storageAccount.id);
+                    helpers.addResult(results, 0, 'Storage Account has logging enabled for blob service read, write and delete requests', location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2, 
                         'Storage Account does not have logging enabled for blob service read, write or delete requests', location, storageAccount.id);
