@@ -1385,8 +1385,7 @@ var postcalls = [
             describeCacheSubnetGroups: {
                 reliesOnService: 'elasticache',
                 reliesOnCall: 'describeCacheClusters',
-                filterKey: 'CacheSubnetGroupName',
-                filterValue: 'CacheSubnetGroupName'
+                override: true
             },
         },
         ES: {
