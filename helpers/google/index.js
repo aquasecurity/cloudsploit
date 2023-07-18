@@ -327,7 +327,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             url = url.replace('{locationId}', callObj.params.region);
         }
 
-        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams, dataKey: callObj.dataKey});
+        makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams, dataKey: callObj.dataKey, body: callObj.body});
     }
 };
 
@@ -376,10 +376,15 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
             return isRateError(err);
         }
     }, function(cb) {
-        client.request({
+
+        let request = {
             url,
             method: config.method ? config.method : 'GET'
-        }, function(err, res) {
+        };
+
+        if (config.body) request.body = JSON.stringify(config.body);
+
+        client.request(request, function(err, res) {
             if (err) {
                 cb(err, null);
             } else if (res) {
