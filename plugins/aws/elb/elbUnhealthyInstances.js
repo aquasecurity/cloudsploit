@@ -58,9 +58,10 @@ module.exports = {
                 var unhealthyInstances = instanceStates.filter(function(instance) {
                     return instance.State === 'OutOfService';
                 });
-            
+
                 if (unhealthyInstances.length > 0) {
-                    helpers.addResult(results, 2, `ELB has ${unhealthyInstances} unhealthy instance(s)`, region, elbArn);
+                    var length = unhealthyInstances.length;
+                    helpers.addResult(results, 2, `ELB has ${length} unhealthy instance(s)`, region, elbArn);
                 } else {
                     helpers.addResult(results, 0, 'ELB does not have unhealthy instance', region, elbArn);
                 }

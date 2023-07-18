@@ -47,7 +47,7 @@ module.exports = {
         s3_encryption_kms_alias: {
             name: 'S3 Encryption KMS Alias',
             description: 'If set, S3 encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix. Comma-delimited.',
-            regex: '^alias/[a-zA-Z0-9_/-,]{0,256}$',
+            regex: '^alias/[a-zA-Z0-9_\\/,\\-]{0,256}$',
             default: ''
         },
         s3_encryption_allow_cloudfront: {

@@ -33,9 +33,12 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'Pub/Sub'
  InvService: 'Pub/Sub'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'Pub/Sub'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'Pub/Sub'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
+
 
  Take the reference from the below map
 */
@@ -160,6 +163,33 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
             BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
+        },
+    'IAM':
+        {
+            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'Instance', InvService: 'iam',
+            InvResourceCategory: 'identity', InvResourceType: 'iam_user', BridgeServiceName: 'iam',
+            BridgePluginCategoryName: 'gcp-IAM', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'user',
+            BridgeResourceNameIdentifier: 'email', BridgeExecutionService: 'gcp-IAM',
+            BridgeCollectionService: 'gcp-iam', DataIdentifier: 'data',
+        },
+    'SQL':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'sql', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql', BridgeServiceName: 'sql',
+            BridgePluginCategoryName: 'gcp-SQL', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-SQL',
+            BridgeCollectionService: 'gcp-sql', DataIdentifier: 'data',
+        },
+    'Storage':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'storage', InvService: 'storage',
+            InvResourceCategory: 'storage', InvResourceType: 'bucket', BridgeServiceName: 'buckets',
+            BridgePluginCategoryName: 'gcp-Storage', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'b',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Storage',
+            BridgeCollectionService: 'gcp-buckets', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -255,9 +285,7 @@ var calls = {
             location: null,
             pagination: true
         },
-        sendIntegration: {
-            enabled: true
-        }
+        sendIntegration: serviceMap['SQL']
     },
     spanner: {
         list: {
@@ -347,9 +375,7 @@ var calls = {
             location: null,
             pagination: true
         },
-        sendIntegration: {
-            enabled: true,
-        }
+        sendIntegration: serviceMap['Storage']
     },
     targetHttpProxies: {
         list: {
@@ -382,10 +408,11 @@ var calls = {
             pagination: false
         },
         getIamPolicy: {
-            url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}:getIamPolicy',
+            url: 'https://cloudresourcemanager.googleapis.com/v3/projects/{projectId}:getIamPolicy',
             location: null,
             method: 'POST',
-            pagination: false
+            pagination: false,
+            body: {options:{requestedPolicyVersion: 3}}
         },
         getWithNumber: {
             url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}'
@@ -461,7 +488,8 @@ var calls = {
         list: {
             url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets',
             location: null,
-            pagination: true
+            pagination: true,
+            reqParams: 'maxResults=1000'
         },
         sendIntegration: serviceMap['BigQuery']
     },
@@ -516,7 +544,8 @@ var calls = {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/urlMaps',
             location: null,
-            pagination: true
+            pagination: true,
+            nameRequired: true
         },
         sendIntegration: serviceMap['CLB']
     },
@@ -547,11 +576,32 @@ var calls = {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/routes',
             location: null,
             pagination: true
-        },
+        }
+    },
+    roles: {
+        list: {
+            url: 'https://iam.googleapis.com/v1/projects/{projectId}/roles',
+            location: null,
+            pagination: true,
+            paginationKey: 'nextPageToken'
+        }
     }
 };
 
 var postcalls = {
+    roles: {
+        get: {
+            url: 'https://iam.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['roles'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false,
+            sendIntegration: {
+                enabled: true
+            }
+        }
+    },
     instances: {
         getIamPolicy: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances/{id}/getIamPolicy',
@@ -584,7 +634,6 @@ var postcalls = {
             pagination: false
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['buckets']
             }
@@ -619,7 +668,6 @@ var postcalls = {
             pagination: true //needs to be verified with multiple users
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['sql']
             }
@@ -635,7 +683,6 @@ var postcalls = {
             pagination: true
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['sql']
             }
@@ -661,7 +708,9 @@ var postcalls = {
             properties: ['datasetId'],
             subObj: ['datasetReference'],
             pagination: true,
-            dataKey: 'tables'
+            dataKey: 'tables',
+            reqParams: 'maxResults=1000',
+            maxLimit: 50000
         }
     },
     functions: {
@@ -764,14 +813,27 @@ var tertiarycalls = {
             reliesOnCall: ['list'],
             properties: ['datasetId', 'tableId'],
             subObj: ['tableReference'],
-            pagination: true
+            pagination: true,
+            maxLimit: 50000
         }
-    },
+    }
+};
+
+var specialcalls = {
+    iam: {
+        list: {
+            pagination: true,
+            reliesOnService: ['projects'],
+            reliesOnCall: ['getIamPolicy']
+        },
+        sendIntegration: serviceMap['IAM']
+    }
 };
 
 module.exports = {
     calls: calls,
     postcalls: postcalls,
     tertiarycalls: tertiarycalls,
+    specialcalls: specialcalls,
     serviceMap: serviceMap
 };
