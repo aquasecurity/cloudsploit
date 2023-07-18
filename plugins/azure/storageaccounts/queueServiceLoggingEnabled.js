@@ -11,7 +11,6 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:getProperties'],
  
-
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
