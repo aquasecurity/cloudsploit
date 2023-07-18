@@ -1,5 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
+const { addSource } = require('../../../helpers/shared');
 
 module.exports = {
     title: 'Open Memcached',
@@ -9,13 +10,19 @@ module.exports = {
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Memcached should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP and UDP port 11211 to known IP addresses',
-    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
+    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions', 'EC2:describeSubnets', 'ElastiCache:describeCacheClusters','ElastiCache:describeCacheSubnetGroups' ],
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
             description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
             regex: '^(true|false)$',
             default: 'false',
+        },
+        only_cachecluster_attached_groups :{
+            name: 'Memcached Cluster Attached Groups',
+            description: 'When set to true, checks ports of only the security groups attached to the clusters',
+            regex: '^(true|false)$',
+            default: 'true',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -48,9 +55,11 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config = {
             ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
+            only_cachecluster_attached_groups: settings.only_cachecluster_attached_groupsn || this.settings.only_cachecluster_attached_groups.default,
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
+        config.only_cachecluster_attached_groups= (config.only_cachecluster_attached_groups == 'true');
 
         var results = [];
         var source = {};
@@ -64,24 +73,139 @@ module.exports = {
         var service = 'Memcached';
 
         async.each(regions.ec2, function(region, rcb){
+
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
+ 
+             if (!describeSecurityGroups) return rcb();
+ 
+             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
+                 helpers.addResult(results, 3,
+                     'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
+                 return rcb();
+             }
+ 
+             if (!describeSecurityGroups.data.length) {
+                 helpers.addResult(results, 0, 'No security groups present', region);
+                 return rcb();
+             }
 
-            if (!describeSecurityGroups) return rcb();
 
-            if (describeSecurityGroups.err || !describeSecurityGroups.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
-                return rcb();
+            if(!config.only_cachecluster_attached_groups)
+            {
+                helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
+
             }
+            else{
+                var subnetgroup;
+                var privatesubnets =[];
+                var securityGroup = [];
+                var describeCluster = helpers.addSource(cache, source,
+                    ['elasticache', 'describeCacheClusters', region]);
+       
+                if(!describeCluster) return rcb();
+       
+                if(describeCluster.err || ! describeCluster.data ) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for Memchached Cluster ' + helpers.addError(describeCluster), region);
+                    return rcb();
+                }
 
-            if (!describeSecurityGroups.data.length) {
-                helpers.addResult(results, 0, 'No security groups present', region);
-                return rcb();
+                if(!describeCluster.data.length){
+                    helpers.addResult(results, 0,
+                        'No memcached cluster found: ' ,region);
+                    return rcb();
+                }
+
+                var describeSubnets = helpers.addSource(cache, source,
+                    ['ec2', 'describeSubnets', region]);
+       
+                if (!describeSubnets) return rcb();
+       
+                if(describeSubnets.err || !describeSubnets.data){
+                    helpers.addResult(results, 3,
+                        'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+                    return rcb();
+                }
+       
+                if (!describeSubnets.data.length) {
+                    helpers.addResult(results, 0, 'No subnets present', region);
+                    return rcb();
+                   }
+       
+                for (var subnet of describeSubnets.data) {
+                    if (!subnet.MapPublicIpOnLaunch) {
+                         privatesubnets.push(subnet.SubnetId);
+                    }
+                }
+
+                for( var cluster of describeCluster.data){
+                       
+                    subnetgroup= cluster.CacheSubnetGroupName;
+         
+                    var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
+         
+                    if(!describeSubnetGroup) continue;
+         
+                    if(describeSubnetGroup.err || ! describeSubnetGroup.data ) {
+                         helpers.addResult(results, 3,
+                             'Unable to query for subnet groups: ' + helpers.addError(describeSubnetGroup), region);
+                         continue;
+                    }
+       
+                    if(!describeSubnetGroup.data.length) {
+                        helpers.addResult(results, 0, 'No  cache subnets group present', region);
+                        continue;
+                    }
+         
+                    var clusterSubnets = describeSubnetGroup.data[0].Subnets;
+                    var allPrivate = clusterSubnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
+       
+                    if (allPrivate) {
+                        helpers.addResult(results, 0, 'Cluster is within private subnet', region);
+                       continue;
+                    } else {
+                        securityGroup = cluster.SecurityGroups.map(group => group.SecurityGroupId);
+
+                        if(!securityGroup.length) {
+                            helpers.addResult(results, 0, 'No security group is attached to the cluster', region);
+                          continue;
+                        } else {
+                            var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
+                                return securityGroup.includes(group.GroupId);
+                                
+                            });
+                            for (var securityGroup of filteredSecurityGroups) {
+                               var isOpen = false;
+                             
+                               for (var permission of securityGroup.IpPermissions) {
+                                 if (permission.IpProtocol === 'tcp' || permission.IpProtocol === 'udp') {
+                                   for (var range of permission.IpRanges) {
+                                     if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol].includes(permission.FromPort)) {
+                                       isOpen = true;
+                                       break;
+                                     }
+                                   }
+                                 }
+                             
+                                 if (isOpen) {
+                                   break;
+                                 }
+                               }
+                               if (isOpen) {
+                                 helpers.addResult(results, 2, 'Memcached has a security group attached with open port', region);
+                                 return;
+                               }
+                             }
+                             helpers.addResult(results, 0, 'No open ports found for Memcached security groups', region);
+                             
+                        }   
+                    }  
+                 
+                }
             }
-            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
-
-            rcb();
+        
+           rcb();
         }, function(){
             callback(null, results, source);
         });

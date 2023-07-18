@@ -1831,8 +1831,14 @@ var postcalls = [
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
             },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+           },
             sendIntegration: serviceMap['ElastiCache']
         },
+       
         ES: {
             describeElasticsearchDomain: {
                 reliesOnService: 'es',
