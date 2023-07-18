@@ -408,10 +408,11 @@ var calls = {
             pagination: false
         },
         getIamPolicy: {
-            url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}:getIamPolicy',
+            url: 'https://cloudresourcemanager.googleapis.com/v3/projects/{projectId}:getIamPolicy',
             location: null,
             method: 'POST',
-            pagination: false
+            pagination: false,
+            body: {options:{requestedPolicyVersion: 3}}
         },
         getWithNumber: {
             url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}'
