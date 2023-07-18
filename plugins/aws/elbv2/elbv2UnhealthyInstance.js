@@ -5,7 +5,7 @@ module.exports = {
     title: 'ELBv2 Unhealthy Instances',
     category: 'ELBv2',
     domain: 'Content Delivery',
-    description: 'Detects ELBs that have unhealthy instances attached',
+    description: 'Ensures that ELBv2 have healthy instances attached',
     more_info: 'ELBs should have healthy instances to ensure proper load balancing and availability. ' +
         'Unhealthy instances can result in degraded performance or service disruptions.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html',

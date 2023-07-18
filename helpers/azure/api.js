@@ -31,9 +31,11 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'LogAlerts'
  InvService: 'LogAlerts'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'LogAlerts'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'LogAlerts'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
 
  Take the reference from the below map
 */
@@ -140,7 +142,16 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
             BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
-        }
+        },
+    'SQL Databases':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
+            BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
+            BridgeCollectionService: 'databases', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations
@@ -697,6 +708,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
         },
+        sendIntegration: serviceMap['SQL Databases']
     },
     serverAzureADAdministrators: {
         listByServer: {
@@ -917,6 +929,10 @@ var specialcalls = {
     },
     blobService: {
         listContainersSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }

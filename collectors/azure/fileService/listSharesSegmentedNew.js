@@ -1,9 +1,8 @@
 var async = require('async');
+var azureStorage = require('@azure/storage-file-share');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
-
-    var azureStorage = require('@azure/storage-file-share');
 
     if (!collection['fileService']['listSharesSegmented']) collection['fileService']['listSharesSegmented'] = {};
     if (!collection['fileService']['getShareAcl']) collection['fileService']['getShareAcl'] = {};

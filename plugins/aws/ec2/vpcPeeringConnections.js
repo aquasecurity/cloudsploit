@@ -20,6 +20,26 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
+        var listAccounts = helpers.addSource(cache, source,
+            ['organizations', 'listAccounts', acctRegion]);
+
+        if (!listAccounts) return callback(null, results, source);
+
+        if (listAccounts.err || !listAccounts.data) {
+            helpers.addResult(results, 3,
+                `Unable to query for Organization Accounts: ${helpers.addError(listAccounts)}`, acctRegion);
+            return callback(null, results, source);
+        }
+
+        var organizationAccounts = [];
+        if (listAccounts.data.length) {
+            listAccounts.data.forEach(account => {
+                if (account.Arn && account.Id) {
+                    organizationAccounts.push(account.Id);
+                }
+            });
+        }
+
         async.each(regions.ec2, function(region, rcb){
             var describeVpcPeeringConnections = helpers.addSource(cache, source,
                 ['ec2', 'describeVpcPeeringConnections', region]);
@@ -36,24 +56,6 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'No VPC peering connections found', region);
                 return rcb();
-            }
-
-            var listAccounts = helpers.addSource(cache, source,
-                ['organizations', 'listAccounts', region]);
-
-            if (!listAccounts || listAccounts.err || !listAccounts.data) {
-                helpers.addResult(results, 3,
-                    `Unable to query for Organization Accounts: ${helpers.addError(listAccounts)}`, region);
-                return rcb();
-            }
-
-            var organizationAccounts = [];
-            if (listAccounts.data.length) {
-                listAccounts.data.forEach(account => {
-                    if (account.Arn && account.Id) {
-                        organizationAccounts.push(account.Id);
-                    }
-                });
             }
 
             describeVpcPeeringConnections.data.forEach(connection => {

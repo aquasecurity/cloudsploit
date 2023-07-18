@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2'
+    'EC2', 'IAM'
 ];
 
 var calls = [
@@ -677,7 +677,7 @@ var calls = [
             },
             listRoles: {
                 property: 'Roles',
-                paginate: 'Marker'
+                override: true
             },
             listPolicies: {
                 property: 'Policies',
@@ -991,10 +991,7 @@ var calls = [
             },
             describeParameters: {
                 property: 'Parameters',
-                params: {
-                    MaxResults: 50
-                },
-                paginate: 'NextToken'
+                override: true
             },
             listAssociations: {
                 property: 'Associations',

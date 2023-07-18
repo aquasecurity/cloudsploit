@@ -6,7 +6,7 @@ var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 module.exports = {
     title: 'IAM Role Policy Unused Services',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
     more_info: 'IAM role policies should only contain actions for resource types which are being used in your account i.e. dynamodb:ListTables permission should only be given when there are DynamoDB tables to adhere to security best practices and to follow principal of least-privilege.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -394,8 +394,7 @@ module.exports = {
                             getRolePolicy[policyName] &&
                             getRolePolicy[policyName].data &&
                             getRolePolicy[policyName].data.PolicyDocument) {
-                            var statements = helpers.normalizePolicyDocument(
-                                getRolePolicy[policyName].data.PolicyDocument);
+                            var statements = getRolePolicy[policyName].data.PolicyDocument;
 
                             if (!statements) break;
 

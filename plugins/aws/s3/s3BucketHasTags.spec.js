@@ -1,12 +1,12 @@
 var expect = require('chai').expect;
 var s3BucketHasTags = require('./s3BucketHasTags');
 
-const createCache = (bucketData, rgData) => {
+const createCache = (bucketData, bucketDataErr, rgData, rgDataErr) => {
     return {
         s3: {
             listBuckets: {
                 'us-east-1': {
-                    err: null,
+                    err: bucketDataErr,
                     data: bucketData
                 }
             }
@@ -14,13 +14,14 @@ const createCache = (bucketData, rgData) => {
         resourcegroupstaggingapi: {
             getResources: {
                 'us-east-1':{
-                    err: null,
+                    err: rgDataErr,
                     data: rgData
                 }
             }
         }
     }
 };
+
 
 describe('s3BucketHasTags', function () {
     describe('run', function () {
@@ -32,7 +33,7 @@ describe('s3BucketHasTags', function () {
                 done();
             };
 
-            const cache = createCache(null, []);
+            const cache = createCache( null,{message: 'unable to query for s3 buckets'});
             s3BucketHasTags.run(cache, {}, callback);
         });
 
@@ -49,20 +50,17 @@ describe('s3BucketHasTags', function () {
 
         it('should give unknown result if unable to query resource group tagging api', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query all resources from group');
+                expect(results[0].message).to.include('Unable to query for Resource Group Tagging');
                 done();
             };
-
-            const cache = createCache(
-                [{
-                    "Name": "test-bucket",
-                    "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-                }],
-                null
-            );
-
+            const cache = createCache([{
+                "Name": "test-bucket",
+                "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
+            }], null, [],{
+                message: "Unable to query for Resource group tags"
+            });
             s3BucketHasTags.run(cache, {}, callback);
         });
 
@@ -78,32 +76,32 @@ describe('s3BucketHasTags', function () {
                 [{
                     "Name": "test-bucket",
                     "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-                }],
+                }],null,
                 [{
                     "ResourceARN": "arn:aws:s3:::test-bucket",
                     "Tags": [{key:"key1", value:"value"}],
-                }]
+                }],null
             );
             s3BucketHasTags.run(cache, {}, callback);
         });
 
         it('should give failing result if s3 does not have tags', function (done) {
-                const callback = (err, results) => {
-                    expect(results.length).to.equal(1);
-                    expect(results[0].status).to.equal(2);
-                    expect(results[0].message).to.include('S3 bucket does not have any tags');
-                    done();
-                };
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('S3 bucket does not have any tags');
+                done();
+            };
 
-               const cache = createCache(
-                 [{
+            const cache = createCache(
+                [{
                     "Name": "test-bucket",
                     "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-                }],
+                }],null,
                 [{
                     "ResourceARN": "arn:aws:s3:::test-bucket",
                     "Tags": [],
-                }]
+                }],null
             );
 
             s3BucketHasTags.run(cache, {}, callback);

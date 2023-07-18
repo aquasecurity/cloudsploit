@@ -6,7 +6,7 @@ var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 module.exports = {
     title: 'IAM Role Policies',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures IAM role policies are properly scoped with specific permissions',
     more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -138,7 +138,6 @@ module.exports = {
                 role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
                 return cb();
             }
-            
             // Get role details
             var getRole = helpers.addSource(cache, source,
                 ['iam', 'getRole', region, role.RoleName]);
@@ -160,7 +159,7 @@ module.exports = {
                             tag.Key == key && value.test(tag.Value));
                     }
                 });
-                if (ignoreRole) return cb(); 
+                if (ignoreRole) return cb();
             }
 
             if (config.ignore_identity_federation_roles &&
@@ -245,8 +244,7 @@ module.exports = {
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
 
-                        var statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        var statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
                     }
@@ -267,7 +265,7 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
-    } 
+    }
 };
 
 function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
