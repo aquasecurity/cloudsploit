@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'OpenSearch Encryption Enabled',
-    category: 'ES',
+    category: 'OpenSearch',
     domain: 'Databases',
     description: 'Ensure that AWS OpenSearch domains have encryption enabled.',
     more_info: 'OpenSearch domains should be encrypted to ensure that data is secured.',

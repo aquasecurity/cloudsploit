@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-const compliantLifecyleConfigured = require('./compliantLifecyleConfigured');
+const compliantLifecycleConfigured = require('./compliantLifecycleConfigured');
 
 const listBackupPlans = [
     {
@@ -90,11 +90,11 @@ const createCache = (plans, getBackupPlan, plansErr, getBackupPlanErr) => {
     }
 }
 
-describe('compliantLifecyleConfigured', function () {
+describe('compliantLifecycleConfigured', function () {
     describe('run', function () {
         it('should PASS if Backup plan has lifecycle configuration enabled', function (done) {
             const cache = createCache([listBackupPlans[0]], getBackupPlan[0]);
-            compliantLifecyleConfigured.run(cache, {}, (err, results) => {
+            compliantLifecycleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -105,7 +105,7 @@ describe('compliantLifecyleConfigured', function () {
 
         it('should FAIL if Backup plan does not have lifecycle configuration enabled', function (done) {
             const cache = createCache([listBackupPlans[1]], getBackupPlan[1]);
-            compliantLifecyleConfigured.run(cache, {}, (err, results) => {
+            compliantLifecycleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -116,7 +116,7 @@ describe('compliantLifecyleConfigured', function () {
 
         it('should PASS if no Backup plans found', function (done) {
             const cache = createCache([]);
-            compliantLifecyleConfigured.run(cache, {}, (err, results) => {
+            compliantLifecycleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -127,7 +127,7 @@ describe('compliantLifecyleConfigured', function () {
 
         it('should UNKNOWN if Unable to list Backup plans', function (done) {
             const cache = createCache(null, null, { message: "Unable to list Backup plans" });
-            compliantLifecyleConfigured.run(cache, {}, (err, results) => {
+            compliantLifecycleConfigured.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');

@@ -51,7 +51,8 @@ var locations = [
     'brazilsoutheast',      // (South America) Brazil Southeast
     'canadacentral',        // (Canada) Canada Central
     'canadaeast',           // (Canada) Canada East
-    'qatarcentral',         // (Middle East) Qatar Central
+    'qatarcentral',         // (Middle East) Qatar 
+    'polandcentral',        // (Europe) Poland Central
 ];
 
 module.exports = {
@@ -111,6 +112,7 @@ module.exports = {
     applicationGateway: locations,
     wafPolicies: locations,
     routeTables: locations,
+    bastionHosts: locations,
     applications: ['global'],
     eventGrid: locations,
 };
