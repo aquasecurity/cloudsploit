@@ -91,8 +91,6 @@ module.exports = {
             if (!config.only_cachecluster_attached_groups) {
                 helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
             } else {
-
-                
                 var subnetgroup;
                 var privatesubnets =[];
                 var securityGroup = [];
@@ -100,14 +98,12 @@ module.exports = {
                 var describeCluster = helpers.addSource(cache, source,
                     ['elasticache', 'describeCacheClusters', region]);
        
-             
                 if (describeCluster && !describeCluster.err && describeCluster.data && describeCluster.data.length) {
                 
                     var describeSubnets = helpers.addSource(cache, source,
                         ['ec2', 'describeSubnets', region]);
                     
                     if (describeSubnets && !describeSubnets.err && describeSubnets.data && describeSubnets.data.length ){
-
                         for (var subnet of describeSubnets.data) {
                             if (!subnet.MapPublicIpOnLaunch) {
                                 privatesubnets.push(subnet.SubnetId);
@@ -116,9 +112,8 @@ module.exports = {
                     } else {
                         helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
                     }
-    
-                    for ( var cluster of describeCluster.data){
 
+                    for ( var cluster of describeCluster.data){
                         subnetgroup= cluster.CacheSubnetGroupName;
                         var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
@@ -157,7 +152,6 @@ module.exports = {
                             var resource = `arn:aws:ec2:${region}:${privateGroup.OwnerId}:security-group/${privateGroup.groupId}`;
                             helpers.addResult(results, 0, `Security group ${privateGroup.groupId} (${privateGroup.name}) has all private clusters attached`, region, resource);
                         });
-                     
                     }
                     var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
                         return !privatesecurityGroup.includes(group.GroupId);
@@ -171,9 +165,8 @@ module.exports = {
                 } else {
                     helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
                 }
-
             }
-
+            
             rcb();
         }, function(){
             callback(null, results, source);
