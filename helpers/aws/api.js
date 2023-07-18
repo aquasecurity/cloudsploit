@@ -2065,7 +2065,7 @@ var postcalls = [
                 reliesOnService: 'elasticache',
                 reliesOnCall: 'describeCacheClusters',
                 override: true
-           },
+            },
             sendIntegration: serviceMap['ElastiCache']
         },
        

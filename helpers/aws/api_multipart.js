@@ -1387,7 +1387,7 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'CacheSubnetGroupName',
                 filterValue: 'CacheSubnetGroupName'
-           },
+            },
         },
         ES: {
             describeElasticsearchDomain: {
