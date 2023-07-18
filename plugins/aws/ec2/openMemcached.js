@@ -21,7 +21,7 @@ module.exports = {
             name: 'Memcached Cluster Attached Groups',
             description: 'When set to true, checks ports of only the security groups attached to the clusters',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'false',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
