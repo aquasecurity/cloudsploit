@@ -927,6 +927,10 @@ var specialcalls = {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
+        },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     queueService: {
