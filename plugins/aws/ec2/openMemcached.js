@@ -172,7 +172,7 @@ module.exports = {
                                 return securityGroup.includes(group.GroupId);
                                 
                             });
-                            for (var seg of filteredSecurityGroups) {
+                            for (var sg of filteredSecurityGroups) {
                                 var isOpen = false;
                              
                                 for (var permission of sg.IpPermissions) {
