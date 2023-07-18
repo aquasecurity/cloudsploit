@@ -72,7 +72,6 @@ module.exports = {
         var service = 'Memcached';
 
         async.each(regions.ec2, function(region, rcb){
-
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
  
@@ -89,10 +88,8 @@ module.exports = {
                 return rcb();
             }
 
-
             if (!config.only_cachecluster_attached_groups) {
                 helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
-
             } else {
                 var subnetgroup;
                 var privatesubnets =[];
@@ -102,106 +99,55 @@ module.exports = {
        
                 if (!describeCluster) return rcb();
        
-                if (describeCluster.err || ! describeCluster.data ) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for Memchached Cluster ' + helpers.addError(describeCluster), region);
+                if (describeCluster.err || ! describeCluster.data ||  !describeCluster.data.length) {
                     return rcb();
-                }
-
-                if (!describeCluster.data.length){
-                    helpers.addResult(results, 0,
-                        'No memcached cluster found: ' ,region);
-                    return rcb();
-                }
-
-                var describeSubnets = helpers.addSource(cache, source,
-                    ['ec2', 'describeSubnets', region]);
+                } else {
+                    var describeSubnets = helpers.addSource(cache, source,
+                        ['ec2', 'describeSubnets', region]);
+                    
+                    if (!describeSubnets) return rcb();
        
-                if (!describeSubnets) return rcb();
-       
-                if (describeSubnets.err || !describeSubnets.data){
-                    helpers.addResult(results, 3,
-                        'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
-                    return rcb();
-                }
-       
-                if (!describeSubnets.data.length) {
-                    helpers.addResult(results, 0, 'No subnets present', region);
-                    return rcb();
-                }
-       
-                for (var subnet of describeSubnets.data) {
-                    if (!subnet.MapPublicIpOnLaunch) {
-                        privatesubnets.push(subnet.SubnetId);
+                    if (describeSubnets.err || !describeSubnets.data || !describeSubnets.data.length){
+                        return rcb();
+                    }    
+                    for (var subnet of describeSubnets.data) {
+                        if (!subnet.MapPublicIpOnLaunch) {
+                            privatesubnets.push(subnet.SubnetId);
+                        }
                     }
-                }
+                    for ( var cluster of describeCluster.data){
 
-                for ( var cluster of describeCluster.data){
-                       
-                    subnetgroup= cluster.CacheSubnetGroupName;
+                        subnetgroup= cluster.CacheSubnetGroupName;
+                        var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
-                    var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
+                        if (!describeSubnetGroup) continue;
          
-                    if (!describeSubnetGroup) continue;
-         
-                    if (describeSubnetGroup.err || ! describeSubnetGroup.data ) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for subnet groups: ' + helpers.addError(describeSubnetGroup), region);
-                        continue;
-                    }
-       
-                    if (!describeSubnetGroup.data.length) {
-                        helpers.addResult(results, 0, 'No  cache subnets group present', region);
-                        continue;
-                    }
-         
-                    var clusterSubnets = describeSubnetGroup.data[0].Subnets;
-                    var allPrivate = clusterSubnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
-       
-                    if (allPrivate) {
-                        helpers.addResult(results, 0, 'Cluster is within private subnet', region);
-                        continue;
-                    } else {
-                        securityGroup = cluster.SecurityGroups.map(group => group.SecurityGroupId);
+                        if (describeSubnetGroup.err || ! describeSubnetGroup.data  || !describeSubnetGroup.data.length) {
+                            continue;
+                        }
 
-                        if (!securityGroup.length) {
-                            helpers.addResult(results, 0, 'No security group is attached to the cluster', region);
+                        var clusterSubnets = describeSubnetGroup.data[0].Subnets;
+                        var allPrivate = clusterSubnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
+       
+                        if (allPrivate) {
                             continue;
                         } else {
-                            var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
-                                return securityGroup.includes(group.GroupId);
-                                
-                            });
-                            for (var sg of filteredSecurityGroups) {
-                                var isOpen = false;
-                             
-                                for (var permission of sg.IpPermissions) {
-                                    if (permission.IpProtocol === 'tcp' || permission.IpProtocol === 'udp') {
-                                        for (var range of permission.IpRanges) {
-                                            if (range.CidrIp === '0.0.0.0/0' && ports[permission.IpProtocol].includes(permission.FromPort)) {
-                                                isOpen = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                             
-                                    if (isOpen) {
-                                        break;
-                                    }
-                                }
-                                if (isOpen) {
-                                    helpers.addResult(results, 2, 'Memcached has a security group attached with open port', region);
-                                    return;
-                                }
-                            }
-                            helpers.addResult(results, 0, 'No open ports found for Memcached security groups', region);
-                             
-                        }   
-                    }  
-                 
+                            var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
+                            securityGroup.push(...groupIds.filter(groupId => !securityGroup.includes(groupId)));
+                        }  
+                    }
+                    var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
+                        return securityGroup.includes(group.GroupId);
+                    });
+
+                    if (!filteredSecurityGroups.length) {
+                        return rcb();
+                    } else {
+                        helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb);
+                    }
                 }
             }
-        
+
             rcb();
         }, function(){
             callback(null, results, source);
