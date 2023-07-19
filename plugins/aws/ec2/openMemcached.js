@@ -21,7 +21,7 @@ module.exports = {
             name: 'Security Groups with Private Memcached Clusters',
             description: 'When set to true, passes if all the clusters associated with a security group are in a private subnet',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'false',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
