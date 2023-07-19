@@ -21,7 +21,7 @@ module.exports = {
             name: 'Memcached Private Cluster Associated Groups',
             description: 'When set to true, checks if the security group has all the private cluster associated',
             regex: '^(true|false)$',
-            default: 'false',
+            default: 'true',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -54,11 +54,11 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config = {
             ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
-            only_cachecluster_attached_groups: settings.only_cachecluster_attached_groupsn || this.settings.only_cachecluster_attached_groups.default,
+            private_clusters: settings.private_clusters || this.settings.private_clusters.default,
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
-        config.only_cachecluster_attached_groups= (config.only_cachecluster_attached_groups == 'true');
+        config.private_clusters= (config.private_clusters == 'true');
 
         var results = [];
         var source = {};
@@ -88,7 +88,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (!config.only_cachecluster_attached_groups) {
+            if (!config.private_clusters) {
                 helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
             } else {
                 var subnetgroup;
@@ -166,7 +166,7 @@ module.exports = {
                     helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
                 }
             }
-            
+
             rcb();
         }, function(){
             callback(null, results, source);
