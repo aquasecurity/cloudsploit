@@ -17,11 +17,11 @@ module.exports = {
             regex: '^(true|false)$',
             default: 'false',
         },
-        private_clusters :{
+        private_clusters: {
             name: 'Memcached Private Cluster Associated Groups',
             description: 'When set to true, checks if the security group has all the private cluster associated',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'false',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
