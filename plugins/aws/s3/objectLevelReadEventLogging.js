@@ -64,7 +64,7 @@ module.exports = {
                             }
                         }
                     }
-                } else if(describeEventsSelectors.data.AdvancedEventSelectors){
+                } else if (describeEventsSelectors.data.AdvancedEventSelectors) {
                     var eventSelectors = describeEventsSelectors.data.AdvancedEventSelectors;
                     for (const selector of eventSelectors) {
                         const fieldSelectors = selector.FieldSelectors || [];

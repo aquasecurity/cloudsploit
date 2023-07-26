@@ -77,38 +77,35 @@ const getEventSelectors = [
         
         "TrailARN": "arn:aws:cloudtrail:us-east-1:672202477801:trail/trail-1",
          "AdvancedEventSelectors": [
-        {
-            "FieldSelectors": [
-                {
-                    "Field": "eventCategory",
-                    "Equals": [
+            {
+                "FieldSelectors": [
+                   {
+                        "Field": "eventCategory",
+                        "Equals": [
                         "Data"
-                    ]
-                },
-                {
-                    "Field": "resources.type",
-                    "Equals": [
-                        "AWS::S3::Object"
-                    ]
-                }
-            ]
-        },
-        {
-            "Name": "Management events selector",
-            "FieldSelectors": [
-                {
-                    "Field": "eventCategory",
-                    "Equals": [
-                        "Management"
-                    ]
-                }
-            ]
-        }
-    ]
-
+                       ]
+                    },
+                    {
+                        "Field": "resources.type",
+                        "Equals": [
+                            "AWS::S3::Object"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "Management events selector",
+                "FieldSelectors": [
+                    {
+                        "Field": "eventCategory",
+                        "Equals": [
+                            "Management"
+                        ]
+                    }
+                ]
+            }
+        ]
     }
-
-
 ];
 
 const createCache = (buckets, describeTrails, getEventSelectors) => {
