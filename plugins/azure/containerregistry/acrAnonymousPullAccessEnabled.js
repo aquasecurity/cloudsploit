@@ -35,7 +35,6 @@ module.exports = {
             for (let registry of registries.data){
                 if (!registry.id) continue;
 
-            console.log(registry)
                 if (registry.anonymousPullEnabled) {
                     helpers.addResult(results, 0, 'Anonymous pull access is enabled for the container registry', location, registry.id);
                 } else {
