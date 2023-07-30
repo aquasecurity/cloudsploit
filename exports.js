@@ -1435,10 +1435,13 @@ module.exports = {
 
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
         'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
+
+
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
+        'ENImultipleIPmode'             : require(__dirname + '/plugins/alibaba/ack/ENImultipleIPmode.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
     }
-};
+}; 
