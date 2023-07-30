@@ -441,6 +441,11 @@ var calls = {
         listDomains: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
         }
+    },
+    eventHub: {
+        listEventHub: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
+        }
     }
 };
 
