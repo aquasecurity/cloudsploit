@@ -1437,7 +1437,7 @@ module.exports = {
         'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
         
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
-        'webDashboardDisabled'          : require(__dirname + '/plugins/alibaba/ack/webDashboardDisabled.spec.js'),
+        'webDashboardDisabled'          : require(__dirname + '/plugins/alibaba/ack/webDashboardDisabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
