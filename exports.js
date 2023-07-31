@@ -967,7 +967,9 @@ module.exports = {
 
         'recoveryVaultByokEncrypted'    : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultByokEncrypted.js'),
 
-        'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js')
+        'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
+
+        'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

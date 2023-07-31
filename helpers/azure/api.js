@@ -441,7 +441,7 @@ var calls = {
         listDomains: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
         }
-    }
+    },
 };
 
 var postcalls = {
@@ -865,6 +865,11 @@ var tertiarycalls = {
     diagnosticSettings: {
         listByEndpoint: {
             reliesOnPath: 'endpoints.listByProfile',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAzureFrontDoor: {
+            reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
