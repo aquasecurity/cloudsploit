@@ -312,7 +312,14 @@ var postcalls = [
                 filterValue: ['ApiId', 'GroupId'],
                 apiVersion: '2016-07-14'
             }
-        }
+        },
+        ACK: {
+            describeClusterDetail: {
+                reliesOnService: 'ack',
+                reliesOnCall: 'describeClustersV1',
+                override: true
+            }
+        },
     }
 ];
 
