@@ -39,7 +39,7 @@ module.exports = {
             if (cluster.meta_data) {
                 let clusterMeta = JSON.parse(cluster.meta_data);
 
-                if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === "terway-eniip") {
+                if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === 'terway-eniip') {
                     helpers.addResult(results, 0,
                         'Cluster has ENI Multiple IP Mode enabled',
                         defaultRegion, resource);
