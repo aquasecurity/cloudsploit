@@ -12,6 +12,9 @@ const describeClusters = [
 		"created": "2021-06-03T19:26:32+08:00",
 		"updated": "0001-01-01T00:00:00Z",
 		"init_version": "v1.18.8-aliyun.1",
+        "current_version": "v1.18.8-aliyun.1",
+		"meta_data": "{\"Addons\":[{\"name\":\"terway-eniip\",\"version\":\"\",\"disabled\":false,\"required\":\"\",\"config\":\"{\\\"IPVlan\\\":\\\"true\\\",\\\"NetworkPolicy\\\":\\\"true\\\"}\",\"value\":\"\",\"description\":\"\",\"properties\":null},{\"name\":\"csi-plugin\",\"version\":\"\",\"disabled\":false,\"required\":\"\",\"config\":\"\",\"value\":\"\",\"description\":\"\",\"properties\":null},{\"name\":\"csi-provisioner\",\"version\":\"\",\"disabled\":false,\"required\":\"\",\"config\":\"\",\"value\":\"\",\"description\":\"\",\"properties\":null},{\"name\":\"nginx-ingress-controller\",\"version\":\"\",\"disabled\":false,\"required\":\"\",\"config\":\"{\\\"IngressSlbNetworkType\\\":\\\"internet\\\",\\\"IngressSlbSpec\\\":\\\"slb.s2.small\\\"}\",\"value\":\"\",\"description\":\"\",\"properties\":null},{\"name\":\"arms-prometheus\",\"version\":\"\",\"disabled\":false,\"required\":\"\",\"config\":\"\",\"value\":\"\",\"description\":\"\",\"properties\":null}],\"AuditProjectName\":\"\",\"Capabilities\":{\"IntelSGX\":false,\"SandboxRuntime\":true},\"CloudMonitorVersion\":\"\",\"ClusterDomain\":\"\",\"ControlPlaneLogConfig\":{\"log_ttl\":\"\",\"components\":null},\"DockerVersion\":\"\",\"EtcdVersion\":\"\",\"ExtraCertSAN\":null,\"HasSandboxRuntime\":false,\"KubernetesVersion\":\"\",\"MultiAZ\":false,\"NameMode\":\"\",\"NextVersion\":\"\",\"OSType\":\"\",\"Platform\":\"\",\"PodVswitchId\":\"{\\\"us-west-1a\\\":[\\\"vsw-rj98qqgecvwwzn5fzc62p\\\",\\\"vsw-rj94uhhrj5qz5008lwi1x\\\"]}\",\"Provider\":\"\",\"ResourceGroupId\":\"rg-aekzsj44b4lt5fa\",\"Runtime\":\"docker\",\"RuntimeVersion\":\"19.03.5\",\"SubClass\":\"\",\"SupportPlatforms\":null,\"VersionSpec\":null,\"VpcCidr\":\"172.16.0.0/12\"}",
+		"resource_group_id": "rg-aekzsj44b4lt5fa",
 		"current_version": "v1.18.8-aliyun.1",
 		"vpc_id": "vpc-rj9vu86hdve3qr173ew17",
 		"vswitch_id": "vsw-rj9755hwhio2ua0rdnm00",
@@ -191,5 +194,5 @@ describe('webDashboardDisabled', function () {
                 done();
             });
         });
-    })
-}) 
+    });
+}) ;
