@@ -1439,6 +1439,7 @@ module.exports = {
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
-        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
+        'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };

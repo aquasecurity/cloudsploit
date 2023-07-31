@@ -159,7 +159,10 @@ var calls = {
         },
         DescribeVersionConfig: {
             apiVersion: '2018-12-03'
-        }
+        },
+        DescribeVulConfig: {
+            apiVersion: "2018-12-03"
+          }
     }
 };
 
