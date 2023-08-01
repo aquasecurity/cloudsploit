@@ -10,8 +10,8 @@ module.exports = {
     recommended_action: 'Ensure that Azure Front Door Standard and Premium are using minimum TLS version of 1.2.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/end-to-end-tls?pivots=front-door-standard-premium#supported-tls-versions',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
-    
-    run: function(cache, settings, callback) {
+
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -32,9 +32,12 @@ module.exports = {
                 return rcb();
             }
 
-            profiles.data.forEach(function(profile){
-                if (!profile.id || profile.kind!= 'frontdoor') return;
-
+            var frontDoorProfile = false;
+            profiles.data.forEach(function (profile) {
+                if (!profile.id || profile.kind != 'frontdoor') return;
+                
+                frontDoorProfile = true;
+                var failingDomains = {};
                 const customDomains = helpers.addSource(cache, source,
                     ['customDomain', 'listByFrontDoorProfiles', location, profile.id]);
                 if (!customDomains || customDomains.err || !customDomains.data) {
@@ -43,22 +46,29 @@ module.exports = {
                 } else if (!customDomains.data.length) {
                     helpers.addResult(results, 0, 'No existing Front Door custom domains found', location, profile.id);
                 } else {
-                    customDomains.data.forEach(function(customDomain) {
-                        if (customDomain.tlsSettings && 
-                            customDomain.tlsSettings.minimumTlsVersion && 
-                            customDomain.tlsSettings.minimumTlsVersion.toUpperCase() == 'TLS12' ) {
-                            helpers.addResult(results, 0,
-                                'AFD profile custom domain is using TLS version 1.2', location, customDomain.id);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'AFD profile custom domain is not using TLS version 1.2', location, customDomain.id);
-                        }
+                    failingDomains = customDomains.data.filter(customDomain => {
+                        return !(customDomain.tlsSettings &&
+                            customDomain.tlsSettings.minimumTlsVersion &&
+                            customDomain.tlsSettings.minimumTlsVersion.toUpperCase() === 'TLS12');
+                    }).map(function(customDomain) {
+                        return customDomain.name; 
                     });
+
+                    if(failingDomains.length){
+                        helpers.addResult(results, 2,
+                            `Front Door Profile domains are not using TLS version 1.2: ${failingDomains.join(', ')}`, location, profile.id);
+                    } else {
+                        helpers.addResult(results, 0,
+                            `Front Door Profile domains are using TLS version 1.2`, location, profile.id);
+                    }
                 }
             });
-
+            
+            if(!frontDoorProfile) {
+                helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
+            }
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
     }

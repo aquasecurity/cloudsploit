@@ -215,7 +215,7 @@ describe('frontDoorMinimumTlsVersion', function () {
             frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('AFD profile custom domain is using TLS version 1.2');
+                expect(results[0].message).to.include('Front Door Profile domains are using TLS version 1.2');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -226,7 +226,7 @@ describe('frontDoorMinimumTlsVersion', function () {
             frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('AFD profile custom domain is not using TLS version 1.2');
+                expect(results[0].message).to.include('Front Door Profile domains are not using TLS version 1.2');
                 expect(results[0].region).to.equal('global');
                 done();
             });
