@@ -32,9 +32,11 @@ module.exports = {
                 return rcb();
             }
 
+            var frontDoorProfile = false;
             profiles.data.forEach(function(profile) {
                 if (!profile.id || profile.kind!='frontdoor') return;
                 
+                frontDoorProfile = true;
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAzureFrontDoor', location, profile.id]);
 
@@ -58,6 +60,9 @@ module.exports = {
                 }
             });
 
+            if (!frontDoorProfile) {
+                helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
+            }
             rcb();
         }, function() {
             callback(null, results, source);
