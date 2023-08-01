@@ -1,5 +1,7 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
+const { securityhub } = require("./regions");
+
 
 var regions = [
     'cn-north-1',
@@ -122,5 +124,6 @@ module.exports = {
     computeoptimizer: regions,
     appconfig: regions,
     opensearch:regions,
-    opensearchserverless: regions
+    opensearchserverless: regions,
+    securityhub: regions
 };
