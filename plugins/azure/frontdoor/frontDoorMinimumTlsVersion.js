@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/end-to-end-tls?pivots=front-door-standard-premium#supported-tls-versions',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -33,7 +33,7 @@ module.exports = {
             }
 
             var frontDoorProfile = false;
-            profiles.data.forEach(function (profile) {
+            profiles.data.forEach(function(profile) {
                 if (!profile.id || profile.kind != 'frontdoor') return;
                 
                 frontDoorProfile = true;
@@ -54,21 +54,21 @@ module.exports = {
                         return customDomain.name; 
                     });
 
-                    if(failingDomains.length){
+                    if (failingDomains.length){
                         helpers.addResult(results, 2,
                             `Front Door Profile domains are not using TLS version 1.2: ${failingDomains.join(', ')}`, location, profile.id);
                     } else {
                         helpers.addResult(results, 0,
-                            `Front Door Profile domains are using TLS version 1.2`, location, profile.id);
+                            'Front Door Profile domains are using TLS version 1.2', location, profile.id);
                     }
                 }
             });
             
-            if(!frontDoorProfile) {
+            if (!frontDoorProfile) {
                 helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
