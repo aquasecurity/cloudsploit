@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-logs',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         console.log(cache);
         const results = [];
         const source = {};
@@ -34,32 +34,32 @@ module.exports = {
                 return rcb();
             }
 
-            profiles.data.forEach(function (profile) {
+            profiles.data.forEach(function(profile) {
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAzureFrontDoor', location, profile.id]);
 
-                    if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                        helpers.addResult(results, 3, 'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
-                    } else if (!diagnosticSettings.data.length) {
-                        helpers.addResult(results, 2, 'No existing diagnostics settings', location, profile.id);
-                    } else {
-                        var frontDoorAccessLogEnabled = false;
-                        diagnosticSettings.data.forEach(setting => {
-                            var logs = setting.logs;
-                            if (logs.some(log => (log.categoryGroup === "audit" || log.categoryGroup === "allLogs" || log.category === "FrontDoorAccessLog") && log.enabled)) {
-                                frontDoorAccessLogEnabled = true;
-                            }
-                        });
-                        if (frontDoorAccessLogEnabled) {
-                            helpers.addResult(results, 0, 'Front Door Access Logs are enabled', location, profile.id);
-                        } else {
-                            helpers.addResult(results, 2, 'Front Door Access Logs are not enabled', location, profile.id);
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3, 'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
+                } else if (!diagnosticSettings.data.length) {
+                    helpers.addResult(results, 2, 'No existing diagnostics settings', location, profile.id);
+                } else {
+                    var frontDoorAccessLogEnabled = false;
+                    diagnosticSettings.data.forEach(setting => {
+                        var logs = setting.logs;
+                        if (logs.some(log => (log.categoryGroup === 'audit' || log.categoryGroup === 'allLogs' || log.category === 'FrontDoorAccessLog') && log.enabled)) {
+                            frontDoorAccessLogEnabled = true;
                         }
+                    });
+                    if (frontDoorAccessLogEnabled) {
+                        helpers.addResult(results, 0, 'Front Door Access Logs are enabled', location, profile.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Front Door Access Logs are not enabled', location, profile.id);
                     }
+                }
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
