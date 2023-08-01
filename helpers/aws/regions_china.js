@@ -1,6 +1,6 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
-const { securityhub } = require("./regions");
+const { securityHub } = require('./regions');
 
 
 var regions = [
