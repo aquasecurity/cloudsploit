@@ -1,8 +1,5 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
-const { securityHub } = require('./regions');
-
-
 var regions = [
     'cn-north-1',
     'cn-northwest-1'
