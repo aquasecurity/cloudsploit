@@ -1023,6 +1023,12 @@ var calls = [
                 params: {language: 'en'},
             },
         },
+        SecurityHub: {
+            describeHub: {
+                property: '',
+                paginate: 'NextToken'
+            }
+        },
         Transfer: {
             listServers: {
                 property: 'Servers',
