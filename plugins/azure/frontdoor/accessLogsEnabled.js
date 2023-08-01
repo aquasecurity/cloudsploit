@@ -38,7 +38,7 @@ module.exports = {
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAzureFrontDoor', location, profile.id]);
 
-                    if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing Front Door diagnostics settings found', location, profile.id);
