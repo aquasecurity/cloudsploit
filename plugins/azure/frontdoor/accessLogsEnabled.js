@@ -12,11 +12,9 @@ module.exports = {
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
     run: function(cache, settings, callback) {
-        console.log(cache);
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
         async.each(locations.profiles, (location, rcb) => {
             const profiles = helpers.addSource(cache, source,
                 ['profiles', 'list', location]);
@@ -30,18 +28,20 @@ module.exports = {
             }
 
             if (!profiles.data.length) {
-                helpers.addResult(results, 0, 'No existing profiles found', location);
+                helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
                 return rcb();
             }
 
             profiles.data.forEach(function(profile) {
+                if (!profile.id || profile.kind!='frontdoor') return;
+                
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAzureFrontDoor', location, profile.id]);
 
-                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                    helpers.addResult(results, 3, 'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
+                    if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
                 } else if (!diagnosticSettings.data.length) {
-                    helpers.addResult(results, 2, 'No existing diagnostics settings', location, profile.id);
+                    helpers.addResult(results, 2, 'No existing Front Door diagnostics settings found', location, profile.id);
                 } else {
                     var frontDoorAccessLogEnabled = false;
                     diagnosticSettings.data.forEach(setting => {
