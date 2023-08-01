@@ -5,9 +5,9 @@ module.exports = {
     category: 'ACK',
     domain: 'Containers',
     description: 'Ensure Cloud Monitor is set to Enabled on Kubernetes Engine Clusters.',
-    more_info: '',
-    link: '',
-    recommended_action: 'Recreate Kubernetes clusters and set CloudMonitor Agent to enabled under creation options ',
+    more_info: 'Enabling CloudMonitor installation provides system metrics (e.g., CPU, memory usage) and custom metrics for Kubernetes Engine Clusters, collected periodically by a monitor controller and sent to the CloudMonitor server.',
+    link: 'https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/monitor-basic-resources',
+    recommended_action: 'Recreate Kubernetes clusters and set CloudMonitor Agent to enabled under creation options.',
     apis: ['ACK:describeClustersV1', 'STS:GetCallerIdentity', 'ACK:describeClusterDetail'],
 
     run: function(cache, settings, callback) {
@@ -35,24 +35,20 @@ module.exports = {
             if (!cluster.cluster_id) return;
 
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
-
-             var describeClusterDetail = helpers.addSource(cache, source, ['ack', 'describeClusterDetail', defaultRegion, cluster.cluster_id]);
+            var describeClusterDetail = helpers.addSource(cache, source, ['ack', 'describeClusterDetail', defaultRegion, cluster.cluster_id]);
 
             if (!describeClusterDetail)  return;
 
-            if (describeClusterDetail.err || !describeClusterDetail.data ||!describeClusterDetail.data.length) {
-                helpers.addResult(results, 3, `Unable to query ACK clusters: ${helpers.addError(describeClusterDetail)}`, defaultRegion);
+            if (describeClusterDetail.err || !describeClusterDetail.data) {
+                helpers.addResult(results, 3, `Unable to query ACK cluster: ${helpers.addError(describeClusterDetail)}`, defaultRegion);
                 return;
             }
-
-              console.log(describeClusterDetail);
-
-
-
-
-
-
-
+            var cloudMonitorFlags = describeClusterDetail.data.parameters.CloudMonitorFlags;
+            if (cloudMonitorFlags === 'True') {
+                helpers.addResult(results, 0, 'Cluster has Cloud Monitor enabled', defaultRegion, resource);
+            } else {
+                helpers.addResult(results, 2, 'Cluster does not have Cloud Monitor enabled', defaultRegion, resource);
+            }
             
         });
 
