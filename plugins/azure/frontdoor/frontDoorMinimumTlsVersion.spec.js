@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var minimumTlsVersion = require('./minimumTlsVersion.js');
+var frontDoorMinimumTlsVersion = require('./frontDoorMinimumTlsVersion.js');
 
 const profiles = [
     {
@@ -173,12 +173,12 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('minimumTlsVersion', function () {
+describe('frontDoorMinimumTlsVersion', function () {
     describe('run', function () {
 
         it('should give unknown if Unable to query Azure Front Door profiles:', function (done) {
             const cache = createErrorCache('profile');
-            minimumTlsVersion.run(cache, {}, (err, results) => {
+            frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Azure Front Door profiles');
@@ -190,7 +190,7 @@ describe('minimumTlsVersion', function () {
 
         it('should give unknown if Unable to query Front Door custom domains:', function (done) {
             const cache = createErrorCache('customDomains');
-            minimumTlsVersion.run(cache, {}, (err, results) => {
+            frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door custom domains:');
@@ -201,7 +201,7 @@ describe('minimumTlsVersion', function () {
 
         it('should give pass if No existing Front Door custom domains found', function (done) {
             const cache = createCache([profiles[0]], customDomain[1]);
-            minimumTlsVersion.run(cache, {}, (err, results) => {
+            frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Front Door custom domains found');
@@ -212,7 +212,7 @@ describe('minimumTlsVersion', function () {
 
         it('should give pass result if AFD profile custom domain is using TLS version 1.2', function (done) {
             const cache = createCache([profiles[2]], [customDomain[0]]);
-            minimumTlsVersion.run(cache, {}, (err, results) => {
+            frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('AFD profile custom domain is using TLS version 1.2');
@@ -223,7 +223,7 @@ describe('minimumTlsVersion', function () {
 
         it('should give fail result if AFD profile custom domain is not using TLS version 1.2', function (done) {
             const cache = createCache([profiles[2]], [customDomain[2]]);
-            minimumTlsVersion.run(cache, {}, (err, results) => {
+            frontDoorMinimumTlsVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('AFD profile custom domain is not using TLS version 1.2');

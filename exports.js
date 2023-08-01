@@ -969,7 +969,7 @@ module.exports = {
 
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
-        'minimumTlsVersion'             :  require(__dirname + '/plugins/azure/frontdoor/minimumTlsVersion.js')
+        'frontDoorMinimumTlsVersion'    :  require(__dirname + '/plugins/azure/frontdoor/frontDoorminimumTlsVersion.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
