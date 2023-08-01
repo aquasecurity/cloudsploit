@@ -905,7 +905,7 @@ var tertiarycalls = {
             url: '{id}/policy?api-version=7.3',
             vault: true
         }
-    },
+    }
 };
 
 var specialcalls = {
