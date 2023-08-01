@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Minimum TLS Version',
+    title: 'Front Door Minimum TLS Version',
     category: 'Front Door',
     domain: 'CDN Profiles',
-    description: 'Ensures that Azure Front Door Standard and Premium profile custom domains have minimum TLS version of 1.2',
-    more_info: 'By setting the minimum TLS version to 1.2, you significantly improve the security of your custom domains. All Azure Front Door profiles created after September 2019 use TLS 1.2 as the default minimum',
-    recommended_action: 'Ensures that Azure Front Door Standard and Premium should be running minimum TLS version of 1.2',
+    description: 'Ensures that Azure Front Door Standard and Premium profile custom domains have minimum TLS version of 1.2.',
+    more_info: 'By setting the minimum TLS version to 1.2, you significantly improve the security of your custom domains. All Azure Front Door profiles created after September 2019 use TLS 1.2 as the default minimum.',
+    recommended_action: 'Ensure that Azure Front Door Standard and Premium are using minimum TLS version of 1.2.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/end-to-end-tls?pivots=front-door-standard-premium#supported-tls-versions',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
     
