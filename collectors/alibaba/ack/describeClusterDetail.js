@@ -56,7 +56,7 @@ module.exports = function(AlibabaConfig, collection, region, callback) {
             callback();
         };
 
-        var executeSingleClusterDetail = function(cluster, index) {
+        var executeSingleClusterDetail = function(cluster) {
             var clusterId = cluster.cluster_id;
             var uriPath = `${uriPathClusterDetail}${clusterId}`;
             client.request(httpMethod, uriPath, {}, body, headers, requestOption).then((res) => {
@@ -78,7 +78,7 @@ module.exports = function(AlibabaConfig, collection, region, callback) {
         };
 
         for (var i = 0; i < totalClusters; i++) {
-            executeSingleClusterDetail(clusters[i], i);
+            executeSingleClusterDetail(clusters[i]); 
         }
     };
 
