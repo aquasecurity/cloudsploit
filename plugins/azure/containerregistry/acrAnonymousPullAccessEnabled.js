@@ -5,9 +5,9 @@ module.exports = {
     title: 'ACR Anonymous Pull Access Enabled',
     category: 'Container Registry',
     domain: 'Containers',
-    description: 'Ensures that anonymous pull access is enabled for Azure Container registries.',
+    description: 'Ensures that anonymous pull access is not enabled for Azure Container registries.',
     more_info: 'Anonymous pull access to a container registry can pose security risks and lead to unauthorized access to images.',
-    recommended_action: 'Enable anonymous pull access for each container registry.',
+    recommended_action: 'Modify container registry and disable anonymous pull access.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/anonymous-pull-access',
     apis: ['registries:list'],
 
@@ -36,9 +36,9 @@ module.exports = {
                 if (!registry.id) continue;
 
                 if (registry.anonymousPullEnabled) {
-                    helpers.addResult(results, 0, 'Anonymous pull access is enabled for the container registry', location, registry.id);
+                    helpers.addResult(results, 2, 'Anonymous pull access is enabled for the container registry', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Anonymous pull access is not enabled for the container registry', location, registry.id);
+                    helpers.addResult(results, 0, 'Anonymous pull access is not enabled for the container registry', location, registry.id);
                 }
             }
 

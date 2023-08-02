@@ -68,7 +68,7 @@ describe('acrAnonymousPullAccessEnabled', function() {
         it('should give failing result if anonymous pull access is enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Anonymous pull access is enabled for the container registry');
                 expect(results[0].region).to.equal('eastus');
                 done()
@@ -81,7 +81,7 @@ describe('acrAnonymousPullAccessEnabled', function() {
         it('should give passing result if anonymous pull access is not enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Anonymous pull access is not enabled for the container registry');
                 expect(results[0].region).to.equal('eastus');
                 done()
