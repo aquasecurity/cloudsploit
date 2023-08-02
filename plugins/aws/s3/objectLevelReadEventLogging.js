@@ -37,13 +37,17 @@ module.exports = {
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
+
             if (!describeTrails) return rcb();
+
             if (describeTrails.err || !describeTrails.data) {
                 return rcb();
             }
+
             if (!describeTrails.data.length) {
                 return rcb();
             }
+
             describeTrails.data.forEach(event => {
                 var describeEventsSelectors = helpers.addSource(cache, source,
                     ['cloudtrail', 'getEventSelectors', region, event.TrailARN]);
