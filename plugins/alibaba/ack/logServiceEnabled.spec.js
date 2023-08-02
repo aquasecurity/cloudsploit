@@ -159,7 +159,7 @@ describe('logServiceEnabled', function () {
             logServiceEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Cluster does not have Log Service enabled');
+                expect(results[0].message).to.include('Cluster does not have log service enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -170,7 +170,7 @@ describe('logServiceEnabled', function () {
             logServiceEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Cluster has Log Service enabled');
+                expect(results[0].message).to.include('Cluster has log service enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });

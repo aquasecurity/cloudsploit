@@ -37,14 +37,17 @@ module.exports = {
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 
             if (cluster.meta_data) {
-                let clusterMeta = JSON.parse(cluster.meta_data);
+                try {
+                    let clusterMeta = JSON.parse(cluster.meta_data);
        
-                if (clusterMeta.AuditProjectName) {
-                    helpers.addResult(results, 0, 'Cluster has Log Service enabled', defaultRegion, resource);
-                } else {
-                    helpers.addResult(results, 2, 'Cluster does not have Log Service enabled', defaultRegion, resource);
+                    if (clusterMeta.AuditProjectName) {
+                        helpers.addResult(results, 0, 'Cluster has log service enabled', defaultRegion, resource);
+                    } else {
+                        helpers.addResult(results, 2, 'Cluster does not have log service enabled', defaultRegion, resource);
+                    }
+                } catch (e) {
+                    helpers.addResult(results, 3, `Meta-data info of cluster ${cluster.cluster_id} can not be parsed`, defaultRegion, resource);
                 }
-               
             } else {
                 helpers.addResult(results, 3,
                     `Could not find meta-data info for cluster ${cluster.cluster_id}`,
