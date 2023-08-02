@@ -58,7 +58,7 @@ module.exports = {
                                         isall = true;
                                     } else {
                                         buckets = dataResource.Values.map((value) => value.split(':::')[1]);
-                                        buckets = Buckets.map((name) => name.slice(0, -1));
+                                        buckets = buckets.map((name) => name.slice(0, -1));
                                     } 
                                 }
                             }
