@@ -9,25 +9,31 @@ module.exports = {
     recommended_action: 'Enable object level logging for read events for each S3 bucket.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html#enable-cloudtrail-events',
     apis: ['S3:listBuckets', 'CloudTrail:describeTrails', 'CloudTrail:getEventSelectors', 'S3:getBucketLocation'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
+
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', defaultRegion]);
+
         if (!listBuckets) return callback(null, results, source);
+        
         if (listBuckets.err || !listBuckets.data) {
             helpers.addResult(results, 3,
                 'Unable to query for S3 buckets: ' + helpers.addError(listBuckets));
             return callback(null, results, source);
         }
+
         if (!listBuckets.data.length) {
-            helpers.addResult(results, 0, 'No S3 buckets Founds');
+            helpers.addResult(results, 0, 'No S3 buckets found');
             return callback(null, results, source);
         }
+
         var isall = false;
-        var buckets=[];
+        var buckets = [];
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
