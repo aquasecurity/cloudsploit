@@ -4,7 +4,7 @@ module.exports = {
     title: 'S3 Object Write Logging',
     category: 'S3',
     domain: 'Storage',
-    description: 'Ensure that Object-level logging for Write events is enabled for S3 bucket',
+    description: 'Ensure that Object-level logging for write events is enabled for S3 bucket.',
     more_info: 'Enabling Object-level S3 event logging significantly enhances security, especially for sensitive data.',
     recommended_action: 'Enable object level logging for Write events for each S3 bucket.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html#enable-cloudtrail-events.',
@@ -27,7 +27,7 @@ module.exports = {
             return callback(null, results, source);
         }
         var isall = false;
-        var Buckets=[];
+        var buckets=[];
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
@@ -57,8 +57,8 @@ module.exports = {
                                     if (dataResource.Values.includes('arn:aws:s3')) {
                                         isall = true;
                                     } else {
-                                        Buckets = dataResource.Values.map((value) => value.split(':::')[1]);
-                                        Buckets = Buckets.map((name) => name.slice(0, -1));
+                                        buckets = dataResource.Values.map((value) => value.split(':::')[1]);
+                                        buckets = Buckets.map((name) => name.slice(0, -1));
                                     } 
                                 }
                             }
@@ -78,10 +78,10 @@ module.exports = {
                             if ((writeOnlyField || !readOnlyField )&& !resourcesARNField) {
                                 isall = true; 
                             } else {
-                                Buckets = fieldSelectors
+                                buckets = fieldSelectors
                                     .filter((f) => f.Field === 'resources.ARN')
                                     .map((f) => f.Equals[0].split(':::')[1]);
-                                Buckets = Buckets.map((name) => name.slice(0, -1));
+                                buckets = buckets.map((name) => name.slice(0, -1));
                             }
                         }
                     }    
@@ -94,8 +94,8 @@ module.exports = {
                 var bucketLocation = helpers.getS3BucketLocation(cache, defaultRegion, bucket.Name);
                 if (isall) {
                     helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
-                } else if (Buckets.length) {
-                    if (Buckets.includes(bucket.Name)){
+                } else if (buckets.length) {
+                    if (buckets.includes(bucket.Name)){
                         helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
                     } else {
                         helpers.addResult(results, 2, 'Bucket does not has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
