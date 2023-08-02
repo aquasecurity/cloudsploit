@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Security Hub Enabled',
     category: 'SecurityHub',
-    domain: 'Security',
+    domain: 'Management and Governance',
     description: 'Ensure that AWS Security Hub is enabled.',
     more_info: 'AWS Security Hub provides a comprehensive view of your security posture across your AWS accounts. It aggregates, organises, and prioritises security findings from various AWS services.',
     link: 'https://aws.amazon.com/security-hub/',
