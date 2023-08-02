@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const securityHubEnabled = require('./securityhubEnabled.js');
 
 const describeHub = {
-    HubArn: 'arn:aws:securityhub:us-east-1:672202477801:hub/default',
+    HubArn: 'arn:aws:securityhub:us-east-1:000011112222:hub/default',
     SubscribedAt: '2023-08-01T12:46:59.711Z',
     AutoEnableControls: true,
     ControlFindingGenerator: 'SECURITY_CONTROL',
