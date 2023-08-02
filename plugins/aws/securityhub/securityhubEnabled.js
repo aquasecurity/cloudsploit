@@ -23,14 +23,13 @@ module.exports = {
 
             if (describeHub.err && describeHub.err.code==='InvalidAccessException'){
                 helpers.addResult(results, 2, 'Security Hub is not enabled', region);
-                return rcb();
             } else if (describeHub.err || !describeHub.data) {
                 helpers.addResult(results, 3, `Unable to query for Security Hub: ${helpers.addError(describeHub)}`, region);
-                return rcb();
             } else {
                 helpers.addResult(results, 0, 'Security Hub is enabled', region,describeHub.HubArn);
-                return rcb();
             }
+
+            return rcb();
         }, function() {
             callback(null, results, source);
         });
