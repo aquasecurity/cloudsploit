@@ -37,14 +37,18 @@ module.exports = {
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 
             if (cluster.master_url) {
-                var masterUrlData = JSON.parse(cluster.master_url);
-                var dashboardEndpoint = masterUrlData.dashboard_endpoint;
-
-                if (dashboardEndpoint && dashboardEndpoint.trim() !== '') {
-                    helpers.addResult(results, 2, 'Kubernetes Dashboard enabled in cluster', defaultRegion, resource);
-                } else {
-                    helpers.addResult(results, 0, 'Kubernetes Dashboard not enabled in cluster', defaultRegion, resource);
-                }   
+                try {
+                    var masterUrlData = JSON.parse(cluster.master_url);
+                    var dashboardEndpoint = masterUrlData.dashboard_endpoint;
+                
+                    if (dashboardEndpoint && dashboardEndpoint.trim() !== '') {
+                        helpers.addResult(results, 2, 'Kubernetes cluster has dashboard enabled', defaultRegion, resource);
+                    } else {
+                        helpers.addResult(results, 0, 'Kubernetes cluster has dashboard disabled', defaultRegion, resource);
+                    }
+                } catch (e) {
+                    helpers.addResult(results, 3, `Master_url of cluster ${cluster.cluster_id} can not be parsed`, defaultRegion, resource);
+                }
             } else {
                 helpers.addResult(results, 3,
                     `Could not find meta-data info of master_url for cluster ${cluster.cluster_id}`,

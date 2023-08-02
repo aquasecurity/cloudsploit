@@ -156,7 +156,7 @@ describe('webDashboardDisabled', function () {
             webDashboardDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Kubernetes Dashboard enabled in cluster');
+                expect(results[0].message).to.include('Kubernetes cluster has dashboard enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -167,7 +167,7 @@ describe('webDashboardDisabled', function () {
             webDashboardDisabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Kubernetes Dashboard not enabled in cluster');
+                expect(results[0].message).to.include('Kubernetes cluster has dashboard disabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
