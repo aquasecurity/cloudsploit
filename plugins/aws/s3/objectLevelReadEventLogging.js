@@ -28,7 +28,7 @@ module.exports = {
         }
 
         if (!listBuckets.data.length) {
-            helpers.addResult(results, 0, 'No S3 buckets found');
+            helpers.addResult(results, 0, 'No S3 buckets Founds');
             return callback(null, results, source);
         }
 
@@ -41,10 +41,8 @@ module.exports = {
             if (!describeTrails) return rcb();
 
             if (describeTrails.err || !describeTrails.data) {
-                return rcb();
-            }
-
-            if (!describeTrails.data.length) {
+                helpers.addResult(results, 3,
+                    'Unable to query for cloudtrails: ' + helpers.addError(listBuckets));
                 return rcb();
             }
 
@@ -58,9 +56,13 @@ module.exports = {
              
                 if (describeEventsSelectors.data.EventSelectors) {
                     const basicEventSelectors = describeEventsSelectors.data.EventSelectors;
+
                     for (const event of basicEventSelectors) {
+
                         const dataResources = event.DataResources || [];
+
                         for (const dataResource of dataResources) {
+
                             if (dataResource.Type === 'AWS::S3::Object') {
                                 if (event.ReadWriteType === 'All' || event.ReadWriteType === 'ReadOnly') {
                                     if (dataResource.Values.includes('arn:aws:s3')) {
@@ -75,14 +77,16 @@ module.exports = {
                     }
                 } else if (describeEventsSelectors.data.AdvancedEventSelectors) {
                     var eventSelectors = describeEventsSelectors.data.AdvancedEventSelectors;
+
                     for (const selector of eventSelectors) {
+                        
                         const fieldSelectors = selector.FieldSelectors || [];
                         const dataEventCategoryField = fieldSelectors.find((f) => f.Field === 'eventCategory' && f.Equals.includes('Data'));
                         const s3ObjectField = fieldSelectors.find((f) => f.Field === 'resources.type' && f.Equals.includes('AWS::S3::Object'));
                         const readOnlyField = fieldSelectors.find((f) => f.Field === 'readOnly' && f.Equals.includes('true'));
                         const writeOnlyField = fieldSelectors.find((f) => f.Field === 'readOnly' && f.Equals.includes('false'));
-
                         const resourcesARNField = fieldSelectors.find((f) => f.Field === 'resources.ARN');
+
                         if (dataEventCategoryField && s3ObjectField) {
                             if ((readOnlyField || !writeOnlyField )&& !resourcesARNField) {
                                 isall = true; 
@@ -98,13 +102,14 @@ module.exports = {
             });
             rcb();
            
-        },function(){
+        },function() {
             listBuckets.data.forEach(function(bucket){
                 var bucketLocation = helpers.getS3BucketLocation(cache, defaultRegion, bucket.Name);
+
                 if (isall) {
                     helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
                 } else if (buckets.length) {
-                    if (buckets.includes(bucket.Name)){
+                    if (buckets.includes(bucket.Name)) {
                         helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
                     } else {
                         helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
@@ -113,6 +118,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
                 }
             });
+
             callback(null, results, source);
         });
     }
