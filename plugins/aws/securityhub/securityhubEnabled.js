@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Security Hub is Enabled',
+    title: 'Security Hub Enabled',
     category: 'SecurityHub',
     domain: 'Security',
     description: 'Ensure that AWS Security Hub is enabled.',
