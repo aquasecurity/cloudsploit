@@ -132,27 +132,65 @@ const getRolePolicy = [
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-Full',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3A%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ 's3:*' ],
+                Resource: [ '*' ]
+            }
+        ]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-WildCard',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3Ag%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ 's3:g*' ],
+                Resource: [ '*' ]
+            }
+        ]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-Limited',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22AWSCloudTrailCreateLogStream2014110%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3ACreateLogStream%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3Alog-group%3Aaws-cloudtrail-logs-193063503752-432bdd08%3Alog-stream%3A193063503752_CloudTrail_us-east-1%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22AWSCloudTrailPutLogEvents20141101%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3APutLogEvents%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3Alog-group%3Aaws-cloudtrail-logs-193063503752-432bdd08%3Alog-stream%3A193063503752_CloudTrail_us-east-1%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'AWSCloudTrailCreateLogStream2014110',
+                Effect: 'Allow',
+                Action: [ 'logs:CreateLogStream' ],
+                Resource: [ 'arn:aws:logs:us-east-1:193063503752:log-group:aws-cloudtrail-logs-193063503752-432bdd08:log-stream:193063503752_CloudTrail_us-east-1*' ]
+            },
+            {
+                Sid: 'AWSCloudTrailPutLogEvents20141101',
+                Effect: 'Allow',
+                Action: [ 'logs:PutLogEvents' ],
+                Resource: [ 'arn:aws:logs:us-east-1:193063503752:log-group:aws-cloudtrail-logs-193063503752-432bdd08:log-stream:193063503752_CloudTrail_us-east-1*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'All-Action-Resources',
-        "PolicyDocument":'%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ '*' ],
+                Resource: [ '*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'All-Actions',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3A%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ '*' ],
+                Resource: [ 'arn:aws:s3:::*' ]
+            }]
     }
 ];
 
@@ -214,7 +252,7 @@ const getRole = [
             "Tags": [
                 {
                     "Key": "app_name",
-                    "Value": "Aqua CSPM"
+                    "Value": "AquaCSPM"
                 }
             ],
         }  
@@ -428,9 +466,9 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should PASS if role with specific regex is ignored', function (done) {
+        it('should PASS if role with specific tag is ignored', function (done) {
             const cache = createCache([listRoles[0]],getRole[0], listAttachedRolePolicies[2], listRolePolicies[0], getRolePolicy[2]);
-            iamRolePolicies.run(cache, {iam_role_policies_ignore_tag:'app_name:Aqua CSPM'}, (err, results) => {
+            iamRolePolicies.run(cache, {iam_role_policies_ignore_tag:'app_name:AquaCSPM'}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
@@ -438,7 +476,7 @@ describe('iamRolePolicies', function () {
        
         it('should FAIL if role policy allows resources which does not match regex in iam_policy_resource_specific_wildcards', function (done) {
             const cache = createCache([listRoles[2]],getRole[1], listAttachedRolePolicies[3], null, null, getPolicy[1], getPolicyVersion[1]);
-            iamRolePolicies.run(cache, {iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
+            iamRolePolicies.run(cache, {ignore_service_specific_wildcards: 'true',iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('policy does not match provided regex');
                 expect(results[0].status).to.equal(2);

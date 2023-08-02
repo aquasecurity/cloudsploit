@@ -6,7 +6,7 @@ var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 module.exports = {
     title: 'IAM Role Policy Unused Services',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
     more_info: 'IAM role policies should only contain actions for resource types which are being used in your account i.e. dynamodb:ListTables permission should only be given when there are DynamoDB tables to adhere to security best practices and to follow principal of least-privilege.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -87,6 +87,12 @@ module.exports = {
             description: 'Allows policy resources to flag based on regular expression. All the resources in IAM policy, inline or managed, will be tested against this regex and if they don\'t pass the regex, they will be flagged by the plugin.',
             regex: '^.*$',
             default: '^.*$',
+        },
+        ignore_iam_policy_resource_wildcards: {
+            name: 'IAM Role Policies Ignore Resource Specific Wildcards',
+            description: 'Enable this setting to ignore resource wildcards i.e. \'"Resource": "*"\' in the IAM policy, which by default, are being flagged.',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
 
@@ -100,7 +106,8 @@ module.exports = {
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
             whitelist_unused_services: settings.whitelist_unused_services || this.settings.whitelist_unused_services.default,
             whitelist_unused_actions_for_resources: settings.whitelist_unused_actions_for_resources || this.settings.whitelist_unused_actions_for_resources.default,
-            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default
+            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default,
+            ignore_iam_policy_resource_wildcards: settings.ignore_iam_policy_resource_wildcards || this.settings.ignore_iam_policy_resource_wildcards.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -110,6 +117,8 @@ module.exports = {
         config.whitelist_unused_services = config.whitelist_unused_services.replace(/\s/g, '');
         config.whitelist_unused_actions_for_resources = config.whitelist_unused_actions_for_resources.replace(/\s/g, '').toLowerCase();
         var allowedRegex = new RegExp(config.iam_policy_resource_specific_wildcards);
+        config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
+
 
         var custom = helpers.isCustom(settings, this.settings);
 
@@ -370,7 +379,7 @@ module.exports = {
                                     }
                                 }
 
-                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex);
+                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                             }
                         }
                     }
@@ -385,8 +394,7 @@ module.exports = {
                             getRolePolicy[policyName] &&
                             getRolePolicy[policyName].data &&
                             getRolePolicy[policyName].data.PolicyDocument) {
-                            var statements = helpers.normalizePolicyDocument(
-                                getRolePolicy[policyName].data.PolicyDocument);
+                            var statements = getRolePolicy[policyName].data.PolicyDocument;
 
                             if (!statements) break;
 
@@ -419,7 +427,7 @@ module.exports = {
                                 }
                             }
 
-                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex);
+                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                         }
                     }
                 }
@@ -442,7 +450,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -454,7 +462,7 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
-            } else if (statement.Resource && statement.Resource == '*'){
+            } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*'){
                 failMsg = `Role ${policyType} policy allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
@@ -465,8 +473,7 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                     }
                 }
                 if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
-            }
-            if (statement.Resource && statement.Resource.length) {
+            } else if (statement.Resource && statement.Resource.length) {
                 // Check each resource for wildcard
                 let wildcards = [];
                 for (var resource of statement.Resource) {

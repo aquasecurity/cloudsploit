@@ -116,6 +116,7 @@ var compositeResult = function(inputResultsArr, resource, region, results, logic
 };
 
 var validate = function(condition, conditionResult, inputResultsArr, message, property, parsed) {
+
     if (Array.isArray(property)){
         property = property[property.length-1];
     }
@@ -142,19 +143,44 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
     // Compare the property with the operator
     if (condition.op) {
         if (condition.transform && condition.transform == 'EACH' && condition) {
-            // Recurse into the same function
-            var subProcessed = [];
-            if (!condition.parsed.length) {
-                conditionResult = 2;
-                message.push(`${property}: is not iterable using EACH transformation`);
+            if (condition.op == 'CONTAINS') {
+                var stringifiedCondition = JSON.stringify(condition.parsed);
+                if (condition.value && condition.value.includes(':')) {
+                    var key = condition.value.split(/:(?!.*:)/)[0];
+                    var value = condition.value.split(/:(?!.*:)/)[1];
+
+                    if (stringifiedCondition.includes(key) && stringifiedCondition.includes(value)){
+                        message.push(`${property}: ${condition.value} found in ${stringifiedCondition}`);
+                        return 0;
+                    } else {
+                        message.push(`${condition.value} not found in ${stringifiedCondition}`);
+                        return 2;
+                    }
+                } else if (stringifiedCondition && stringifiedCondition.includes(condition.value)) {
+                    message.push(`${property}: ${condition.value} found in ${stringifiedCondition}`);
+                    return 0;
+                } else if (stringifiedCondition && stringifiedCondition.length){
+                    message.push(`${condition.value} not found in ${stringifiedCondition}`);
+                    return 2;
+                } else {
+                    message.push(`${condition.parsed} is not the right property type for this operation`);
+                    return 2;
+                }
             } else {
-                condition.parsed.forEach(function(parsed) {
-                    subProcessed.push(runValidation(parsed, condition, inputResultsArr));
-                });
-                subProcessed.forEach(function(sub) {
-                    if (sub.status) conditionResult = sub.status;
-                    if (sub.message) message.push(sub.message);
-                });
+                // Recurse into the same function
+                var subProcessed = [];
+                if (!condition.parsed.length) {
+                    conditionResult = 2;
+                    message.push(`${property}: is not iterable using EACH transformation`);
+                }  else {
+                    condition.parsed.forEach(function(parsed) {
+                        subProcessed.push(runValidation(parsed, condition, inputResultsArr));
+                    });
+                    subProcessed.forEach(function(sub) {
+                        if (sub.status) conditionResult = sub.status;
+                        if (sub.message) message.push(sub.message);
+                    });
+                }
             }
         } else if (condition.op == 'EQ') {
             if (condition.parsed == condition.value) {
@@ -252,7 +278,6 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
         } else {
             property = condition.property;
         }
-
         condition.parsed = parse(obj, condition.property)[0];
 
         // if ( Array.isArray(obj)) {

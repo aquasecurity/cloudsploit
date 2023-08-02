@@ -47,15 +47,15 @@ const listSharesSegmented = [
 const getShareAcl = [
     {
         name: 'file1',
-        signedIdentifiers: { read: { Permissions: 'raup' } }
+        signedIdentifiers: { accessPolicy: { permissions: 'raup' } }
     },
     {
         name: 'file1',
-        signedIdentifiers: {}
+        signedIdentifiers: []
     },
     {
         name: 'file1',
-        signedIdentifiers: { read: { Permissions: 'cwdl' } }
+        signedIdentifiers: [{ accessPolicy: { permissions: 'cwdl' } }]
     },
 ];
 

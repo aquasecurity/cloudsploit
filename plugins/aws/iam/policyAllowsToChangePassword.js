@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Password Policy Allows To Change Password',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensure IAM password policy allows users to change their passwords.',
     more_info: 'Password policy should allow users to rotate their passwords as a security best practice.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
