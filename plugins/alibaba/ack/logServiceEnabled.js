@@ -1,13 +1,13 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Log Service Enabled',
+    title: 'ACK Log Service Enabled',
     category: 'ACK',
     domain: 'Containers',
     description: 'Ensure that Kubernetes Engine Clusters are configured to enable Log service.',
-    more_info: 'The Log Service in Alibaba Cloud allows you to collect, consume, and analyze logs from your containerized applications. By enabling Log Service on Kubernetes Engine Clusters, you can easily access and monitor log data from your containers, aiding in troubleshooting, analysis, and system monitoring.',
+    more_info: 'Log Service allows you to collect, consume, and analyse logs from your containerised applications. By enabling Log Service on Kubernetes Engine Clusters, you can easily access and monitor log data from your containers, aiding in troubleshooting, analysis, and system monitoring.',
     link: 'https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/user-guide/collect-log-data-from-containers-by-using-log-service',
-    recommended_action: 'Recreate Kubernetes clusters and set Enable Log Service to Enabled option',
+    recommended_action: 'Recreate Kubernetes clusters and set enable log service feature.',
     apis: ['ACK:describeClustersV1', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
