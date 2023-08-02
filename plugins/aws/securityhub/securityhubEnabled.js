@@ -6,7 +6,7 @@ module.exports = {
     category: 'SecurityHub',
     domain: 'Security',
     description: 'Ensure that AWS Security Hub is enabled.',
-    more_info: 'AWS Security Hub is a service that provides a comprehensive view of your security posture across your AWS accounts. It aggregates, organizes, and prioritizes security findings from various AWS services.',
+    more_info: 'AWS Security Hub provides a comprehensive view of your security posture across your AWS accounts. It aggregates, organises, and prioritises security findings from various AWS services.',
     link: 'https://aws.amazon.com/security-hub/',
     recommended_action: 'Enable AWS Security Hub for enhanced security monitoring and compliance.',
     apis: ['SecurityHub:describeHub'],
