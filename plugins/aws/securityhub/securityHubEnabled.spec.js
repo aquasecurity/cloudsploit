@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const securityHubEnabled = require('./securityhubEnabled.js');
+var securityHubEnabled = require('./securityHubEnabled.js')
 
 const describeHub = {
     HubArn: 'arn:aws:securityhub:us-east-1:000011112222:hub/default',
