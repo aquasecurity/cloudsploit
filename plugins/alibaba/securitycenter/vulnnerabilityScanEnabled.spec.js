@@ -121,7 +121,7 @@ describe('vulnerabilityScanEnabled', function () {
             vulnerabilityScanEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No TDS Vulnerability config');
+                expect(results[0].message).to.include('No TDS vulnerability config');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -132,7 +132,7 @@ describe('vulnerabilityScanEnabled', function () {
             vulnerabilityScanEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query TDS Vulnerability config: ');
+                expect(results[0].message).to.include('Unable to query TDS vulnerability config: ');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
