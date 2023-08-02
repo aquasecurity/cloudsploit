@@ -45,11 +45,10 @@ module.exports = {
                 return rcb();
             }
             describeTrails.data.forEach(event => {
-                var resource = event.TrailARN;
                 var describeEventsSelectors = helpers.addSource(cache, source,
-                    ['cloudtrail', 'getEventSelectors', region, resource]);
-                if (!describeEventsSelectors) return;
-                if (describeEventsSelectors.err || !describeEventsSelectors.data ) {
+                    ['cloudtrail', 'getEventSelectors', region, event.TrailARN]);
+
+                if (!describeEventsSelectors || describeEventsSelectors.err || !describeEventsSelectors.data ) {
                     return;
                 }
              
