@@ -18,7 +18,7 @@ const domains = [
             "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain-1",
             "Created": true,
             "Deleted": false,
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "ZoneAwarenessEnabled": false
             },
             "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:560213429563:domain/es-domain-1/*\",\"Condition\":{\"IpAddress\":{\"aws:SourceIp\":[\"18.208.0.0/13\",\"52.95.245.0/24\"]}}}]}",
@@ -31,7 +31,7 @@ const domains = [
             "ARN": "arn:aws:es:us-east-1:1123456654321:domain/test-domain-2",
             "Created": true,
             "Deleted": false,
-            "ElasticsearchClusterConfig": {
+            "ClusterConfig": {
                 "ZoneAwarenessEnabled": true
             },
             "AccessPolicies": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":\"es:*\",\"Resource\":\"arn:aws:es:us-east-1:560213429563:domain/es-domain-1/*\"}]}",
@@ -42,7 +42,7 @@ const domains = [
 const createCache = (domainNames, domains) => {
     if (domainNames && domainNames.length) var name = domainNames[0].DomainName;
     return {
-        OpenSearch: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
@@ -68,7 +68,7 @@ const createCache = (domainNames, domains) => {
 
 const createErrorCache = () => {
     return {
-        OpenSearch: {
+        opensearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {

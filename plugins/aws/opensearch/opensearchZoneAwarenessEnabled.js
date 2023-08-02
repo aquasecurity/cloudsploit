@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To improve the fault-tolerance for your OpenSearch domain, ensure you enable zone awareness. It distributes the OpenSearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
     recommended_action: 'Modify OpenSearch domain configuration and enable domain zone awareness.',
-    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
 
 
     run: function(cache, settings, callback) {
@@ -23,7 +23,7 @@ module.exports = {
 
         async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
-                ['OpenSearch', 'listDomainNames', region]);
+                ['opensearch', 'listDomainNames', region]);
 
             if (!listDomainNames) return rcb();
 
@@ -45,8 +45,8 @@ module.exports = {
                 const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
 
                 var describeOpenSearchDomain = helpers.addSource(cache, source,
-                    ['OpenSearch', 'describeDomain', region, domain.DomainName]);
-
+                    ['opensearch', 'describeDomain', region, domain.DomainName]);
+                
                 if (!describeOpenSearchDomain ||
                     describeOpenSearchDomain.err ||
                     !describeOpenSearchDomain.data) {
@@ -55,8 +55,8 @@ module.exports = {
                     continue;
                 }
 
-                if (describeOpenSearchDomain.data.DomainStatus && describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig &&
-                describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled) {
+                if (describeOpenSearchDomain.data.DomainStatus && describeOpenSearchDomain.data.DomainStatus.ClusterConfig &&
+                describeOpenSearchDomain.data.DomainStatus.ClusterConfig.ZoneAwarenessEnabled) {
                     helpers.addResult(results, 0,'OpenSearch domain has zone awareness enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2,'OpenSearch domain does not have zone awareness enabled', region, resource);
