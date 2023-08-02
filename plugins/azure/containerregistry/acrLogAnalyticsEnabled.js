@@ -6,7 +6,7 @@ module.exports = {
     category: 'Container Registry',
     domain: 'Containers',
     description: 'Ensures that Azure Container registry logs are sent to the Log Analytics workspace.',
-    more_info: 'Access logs provide an audit trail of user activities and Azure management operations on the registry.',
+    more_info: 'Enabling Log Analytics for Azure Container registry ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Modify container registry and enable logs from diagnostic settings.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/monitor-service',
     apis: ['registries:list', 'diagnosticSettings:listByContainerRegistries'],
