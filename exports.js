@@ -309,7 +309,7 @@ module.exports = {
         'opensearchTlsVersion'          : require(__dirname + '/plugins/aws/opensearch/opensearchTlsVersion.js'),
         'opensearchUpgradeAvailable'    : require(__dirname + '/plugins/aws/opensearch/opensearchUpgradeAvailable.js'),    
         'opensearchVersion'             : require(__dirname + '/plugins/aws/opensearch/opensearchVersion.js'),
-        'esZoneAwarenessEnabled'        : require(__dirname + '/plugins/aws/opensearch/esZoneAwarenessEnabled.js'),
+        'opensearchZoneAwarenessEnabled': require(__dirname + '/plugins/aws/opensearch/opensearchZoneAwarenessEnabled.js'),
 
         'vaultPublicAccess'             : require(__dirname + '/plugins/aws/s3glacier/vaultPublicAccess.js'),
         'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const esZoneAwarenessEnabled = require('./esZoneAwarenessEnabled');
+const opensearchZoneAwarenessEnabled = require('./opensearchZoneAwarenessEnabled');
 
 const domainNames = [
     {
@@ -42,17 +42,24 @@ const domains = [
 const createCache = (domainNames, domains) => {
     if (domainNames && domainNames.length) var name = domainNames[0].DomainName;
     return {
-        es: {
+        OpenSearch: {
             listDomainNames: {
                 'us-east-1': {
                     data: domainNames,
                 },
             },
-            describeElasticsearchDomain: {
+            describeDomain: {
                 'us-east-1': {
                     [name]: {
                         data: domains
                     }
+                }
+            }
+        },
+        sts: {
+            getCallerIdentity: {
+                'us-east-1': {
+                data: '11111222222'
                 }
             }
         },
@@ -61,7 +68,7 @@ const createCache = (domainNames, domains) => {
 
 const createErrorCache = () => {
     return {
-        es: {
+        OpenSearch: {
             listDomainNames: {
                 'us-east-1': {
                     err: {
@@ -75,59 +82,59 @@ const createErrorCache = () => {
 
 
 
-describe('esZoneAwarenessEnabled', function () {
+describe('opensearchZoneAwarenessEnabled', function () {
     describe('run', function () {
         it('should FAIL if domain zone awareness is not enabled', function (done) {
             const cache = createCache([domainNames[0]], domains[0]);
-            esZoneAwarenessEnabled.run(cache, {},(err, results) => {
+            opensearchZoneAwarenessEnabled.run(cache, {},(err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Zone Awareness is not enabled for ES domain');
+                expect(results[0].message).to.include('OpenSearch domain does not have zone awareness enabled');
                 done();
             });
         });
 
         it('should PASS if domain zone awareness is enabled', function (done) {
             const cache = createCache([domainNames[1]], domains[1]);
-            esZoneAwarenessEnabled.run(cache, {},(err, results) => {
+            opensearchZoneAwarenessEnabled.run(cache, {},(err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Zone Awareness is enabled for ES domain');
+                expect(results[0].message).to.include('OpenSearch domain has zone awareness enabled');
                 done();
             });
         });
 
         it('should PASS if no domain names found', function (done) {
             const cache = createCache([]);
-            esZoneAwarenessEnabled.run(cache, {},(err, results) => {
+            opensearchZoneAwarenessEnabled.run(cache, {},(err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No ES domains found');
+                expect(results[0].message).to.include('No OpenSearch domains found');
                 done();
             });
         });
 
         it('should UNKNOWN if unable to list domain', function (done) {
             const cache = createErrorCache();
-            esZoneAwarenessEnabled.run(cache, {},(err, results) => {
+            opensearchZoneAwarenessEnabled.run(cache, {},(err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for ES domains:');
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains');
                 done();
             });
         });
 
         it('should not return unknown results if unable to describe domain names', function (done) {
             const cache = createCache([domainNames[0]],null);
-            esZoneAwarenessEnabled.run(cache, {},(err, results) => {
+            opensearchZoneAwarenessEnabled.run(cache, {},(err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for ES domain config');
+                expect(results[0].message).to.include('Unable to query for OpenSearch domain config');
                 done();
             });
         });

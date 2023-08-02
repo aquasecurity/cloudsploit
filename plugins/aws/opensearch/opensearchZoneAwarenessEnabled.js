@@ -17,10 +17,11 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-        var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', accRegion, 'data']);
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
         var awsOrGov = helpers.defaultPartition(settings);
 
-        async.each(regions.es, function(region, rcb) {
+        async.each(regions.opensearch, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
                 ['OpenSearch', 'listDomainNames', region]);
 
@@ -29,12 +30,12 @@ module.exports = {
             if (listDomainNames.err || !listDomainNames.data) {
                 helpers.addResult(
                     results, 3,
-                    `Unable to query for ES domains: ${helpers.addError(listDomainNames)}`, region);
+                    `Unable to query for OpenSearch domains: ${helpers.addError(listDomainNames)}`, region);
                 return rcb();
             }
 
             if (!listDomainNames.data.length){
-                helpers.addResult(results, 0, 'No ES domains found', region);
+                helpers.addResult(results, 0, 'No OpenSearch domains found', region);
                 return rcb();
             }
 
@@ -48,18 +49,17 @@ module.exports = {
 
                 if (!describeOpenSearchDomain ||
                     describeOpenSearchDomain.err ||
-                    !describeOpenSearchDomain.data ||
-                    !describeOpenSearchDomain.data.DomainStatus) {
+                    !describeOpenSearchDomain.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain config: ${helpers.addError(describeOpenSearchDomain)}`, region, resource);
+                        `Unable to query for OpenSearch domain config: ${helpers.addError(describeOpenSearchDomain)}`, region, resource);
                     continue;
                 }
 
-                if (describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig &&
+                if (describeOpenSearchDomain.data.DomainStatus && describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig &&
                 describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled) {
-                    helpers.addResult(results, 0,'Zone Awareness is enabled for ES domain', region, resource);
+                    helpers.addResult(results, 0,'OpenSearch domain has zone awareness enabled', region, resource);
                 } else {
-                    helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
+                    helpers.addResult(results, 2,'OpenSearch domain does not have zone awareness enabled', region, resource);
                 }
 
             }
