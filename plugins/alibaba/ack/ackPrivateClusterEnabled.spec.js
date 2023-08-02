@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var privateClusterEnabled = require('./privateClusterEnabled.js');
+var ackPrivateClusterEnabled = require('./ackPrivateClusterEnabled.js');
 
 const describeClusters = [
     {
@@ -227,14 +227,14 @@ const createCache = (describeClusters, describeClustersErr) => {
     };
 };
 
-describe('privateClusterEnabled', function () {
+describe('ackPrivateClusterEnabled', function () {
     describe('run', function () {
         it('should FAIL if Cluster does not have Private Cluster enabled', function (done) {
             const cache = createCache([describeClusters[0]]);
-            privateClusterEnabled.run(cache, { china: true }, (err, results) => {
+            ackPrivateClusterEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Cluster does not have Private Cluster enabled');
+                expect(results[0].message).to.include('Cluster does not have private cluster feature enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -242,10 +242,10 @@ describe('privateClusterEnabled', function () {
 
         it('should PASS if Cluster have Private Cluster enabled', function (done) {
             const cache = createCache([describeClusters[1]]);
-            privateClusterEnabled.run(cache, { china: true }, (err, results) => {
+            ackPrivateClusterEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Cluster has Private Cluster enabled');
+                expect(results[0].message).to.include('Cluster has private cluster feature enabled');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
@@ -253,7 +253,7 @@ describe('privateClusterEnabled', function () {
 
         it('should PASS if No ACK clusters found', function (done) {
             const cache = createCache([]);
-            privateClusterEnabled.run(cache, { china: true }, (err, results) => {
+            ackPrivateClusterEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No ACK clusters');
@@ -264,7 +264,7 @@ describe('privateClusterEnabled', function () {
 
         it('should UNKNOWN if unable to query ACK clusters', function (done) {
             const cache = createCache(null, { err: 'error' });
-            privateClusterEnabled.run(cache, { china: true }, (err, results) => {
+            ackPrivateClusterEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query ACK clusters');
@@ -274,7 +274,7 @@ describe('privateClusterEnabled', function () {
         });
         it('should UNKNOWN if unable no Master_url is found for  ACK clusters', function (done) {
             const cache = createCache([describeClusters[2]]);
-            privateClusterEnabled.run(cache, { china: true }, (err, results) => {
+            ackPrivateClusterEnabled.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Could not find master_url info for cluster');
