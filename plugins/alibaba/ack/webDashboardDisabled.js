@@ -1,10 +1,10 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Kubernetes DashBoard Disabled',
+    title: 'Kubernetes Dashboard Disabled',
     category: 'ACK',
     domain: 'Containers',
-    description: 'Ensure Kubernetes web UI / Dashboard is not enabled.',
+    description: 'Ensure Kubernetes web UI/Dashboard is not enabled.',
     more_info: 'The Kubernetes Web UI (Dashboard) is backed by a highly privileged Kubernetes Service Account. It is recommended to use ACK User Console instead of Dashboard to avoid any privileged escalation via compromise the dashboard.',
     link: 'https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/',
     recommended_action: 'In ACK console, select the target cluster,choose the kube-system namespace in the Namespace pop-menu, input "dashboard" in the deploy filter bar, verify no result exists after the filter, and delete the dashboard deployment by selecting Delete in the More pop-menu.',
