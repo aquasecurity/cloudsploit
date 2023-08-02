@@ -4,9 +4,11 @@ var api = require('./api.js');
 var api_multipart = require('./api_multipart.js');
 var regRegions = require('./regions.js');
 var govRegions = require('./regions_gov.js');
+var govRegionsFedRamp  = require('./regions_gov_fedramp.js');
 var chinaRegions = require('./regions_china.js');
 
 var regions = function(settings) {
+    if (settings.govcloud && settings.is_fedramp_type_high) return govRegionsFedRamp;
     if (settings.govcloud) return govRegions;
     if (settings.china) return chinaRegions;
     return regRegions;
