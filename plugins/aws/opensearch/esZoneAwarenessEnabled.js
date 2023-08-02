@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ElasticSearch Zone Awareness Enabled',
-    category: 'ES',
+    title: 'OpenSearch Zone Awareness Enabled',
+    category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensure that Elasticsearch domains enable zone awareness',
-    more_info: 'To improve the fault-tolerance for your ES domain, ensure you enable zone awareness. It distributes the Elasticsearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
+    description: 'Ensure that OpenSearch domains have zone awareness enabled',
+    more_info: 'To improve the fault-tolerance for your OpenSearch domain, ensure you enable zone awareness. It distributes the OpenSearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
-    recommended_action: 'Modify Elasticseach domain configuration and enable domain zone awareness.',
+    recommended_action: 'Modify OpenSearch domain configuration and enable domain zone awareness.',
     apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
 
 
