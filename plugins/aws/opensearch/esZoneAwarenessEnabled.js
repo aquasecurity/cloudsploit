@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To improve the fault-tolerance for your OpenSearch domain, ensure you enable zone awareness. It distributes the OpenSearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
     recommended_action: 'Modify OpenSearch domain configuration and enable domain zone awareness.',
-    apis: ['ES:listDomainNames', 'ES:describeElasticsearchDomain'],
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
 
 
     run: function(cache, settings, callback) {
@@ -17,9 +17,12 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
+        var accountId =  helpers.addSource(cache, source, ['sts', 'getCallerIdentity', accRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
+
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
-                ['es', 'listDomainNames', region]);
+                ['OpenSearch', 'listDomainNames', region]);
 
             if (!listDomainNames) return rcb();
 
@@ -35,33 +38,32 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listDomainNames.data, function(domain, dcb){
-                var describeElasticsearchDomain = helpers.addSource(cache, source,
-                    ['es', 'describeElasticsearchDomain', region, domain.DomainName]);
+            for (var domain of listDomainNames.data) {
+                if (!domain.DomainName) continue;
 
-                if (!describeElasticsearchDomain ||
-                    describeElasticsearchDomain.err ||
-                    !describeElasticsearchDomain.data ||
-                    !describeElasticsearchDomain.data.DomainStatus) {
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
+
+                var describeOpenSearchDomain = helpers.addSource(cache, source,
+                    ['OpenSearch', 'describeDomain', region, domain.DomainName]);
+
+                if (!describeOpenSearchDomain ||
+                    describeOpenSearchDomain.err ||
+                    !describeOpenSearchDomain.data ||
+                    !describeOpenSearchDomain.data.DomainStatus) {
                     helpers.addResult(results, 3,
-                        `Unable to query for ES domain config: ${helpers.addError(describeElasticsearchDomain)}`, region);
-                    return dcb();
+                        `Unable to query for ES domain config: ${helpers.addError(describeOpenSearchDomain)}`, region, resource);
+                    continue;
                 }
 
-                let resource = describeElasticsearchDomain.data.DomainStatus.ARN;
-
-                if (describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig && 
-                describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled &&
-                describeElasticsearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled === true) {
+                if (describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig &&
+                describeOpenSearchDomain.data.DomainStatus.ElasticsearchClusterConfig.ZoneAwarenessEnabled) {
                     helpers.addResult(results, 0,'Zone Awareness is enabled for ES domain', region, resource);
                 } else {
                     helpers.addResult(results, 2,'Zone Awareness is not enabled for ES domain', region, resource);
                 }
 
-                dcb();
-            }, function(){
-                rcb();
-            });
+            }
+            rcb();
         }, function() {
             callback(null, results, source);
         });
