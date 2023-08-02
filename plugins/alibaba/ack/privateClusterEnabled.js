@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Private ClusterEnabled',
+    title: 'Private Cluster Enabled',
     category: 'ACK',
     domain: 'Containers',
     description: 'Ensure Kubernetes Cluster is created with Private cluster enabled.',
