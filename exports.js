@@ -1437,7 +1437,7 @@ module.exports = {
         'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
 
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
-        'ENImultipleIPmode'             : require(__dirname + '/plugins/alibaba/ack/ENImultipleIPmode.js'),
+        'multipleIPmode'                : require(__dirname + '/plugins/alibaba/ack/multipleIPmode.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),

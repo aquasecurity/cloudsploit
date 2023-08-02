@@ -1,10 +1,10 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: ' ENI Multiple IP Mode Enabled ',
+    title: 'ENI Multiple IP Mode',
     category: 'ACK',
     domain: 'Containers',
-    description: 'Ensure that Kubernetes Engine Clusters are configured with ENI multiple IP mode enabled using the Terway network plugin.',
+    description: 'Ensure ENI multiple IP mode support for Kubernetes Cluster.',
     more_info: 'Alibaba Cloud ENI (Elastic Network Interface) supports assigning ranges of internal IP addresses as aliases to a single virtual machine\'s ENI network interfaces. This is useful if you have lots of services running on a VM and you want to assign each service a different IP address without quota limitation.',
     link: 'https://www.alibabacloud.com/help/doc-detail/97467.htm?spm=a2c63.p38356.b99.209.1e7b2c60a1yuxS',
     recommended_action: 'Recreate Kubernetes clusters and select Terway for Network Plugin option during cluster creation.',

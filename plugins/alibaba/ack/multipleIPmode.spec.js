@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ENImultipleIPmode = require('./ENImultipleIPmode.js');
+var ENImultipleIPmode = require('./multipleIPmode.js');
 
 const describeClusters = [
     {
