@@ -37,16 +37,20 @@ module.exports = {
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 
             if (cluster.meta_data) {
-                let clusterMeta = JSON.parse(cluster.meta_data);
+                try {
+                    let clusterMeta = JSON.parse(cluster.meta_data);
 
-                if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === 'terway-eniip') {
-                    helpers.addResult(results, 0,
-                        'Cluster has ENI Multiple IP Mode enabled',
-                        defaultRegion, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Cluster does not have ENI Multiple IP Mode enabled',
-                        defaultRegion, resource);
+                    if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === 'terway-eniip') {
+                        helpers.addResult(results, 0,
+                            'Cluster has ENI Multiple IP Mode enabled',
+                            defaultRegion, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Cluster does not have ENI Multiple IP Mode enabled',
+                            defaultRegion, resource);
+                    }
+                } catch (e) {
+                    helpers.addResult(results, 3, `Meta-data info of cluster ${cluster.cluster_id} can not be parsed`, defaultRegion, resource);
                 }
             } else {
                 helpers.addResult(results, 3,
