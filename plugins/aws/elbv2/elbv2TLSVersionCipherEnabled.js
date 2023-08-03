@@ -54,8 +54,6 @@ module.exports = {
                     return cb();
                 }
 
-                let found = false;
-                let cipherEnabled = false;
                 let tlsCipherEnabled = elbv2Attributes.data.Attributes.find(attribute => 
                     attribute.Key && attribute.Key === 'routing.http.x_amzn_tls_version_and_cipher_suite.enabled' &&
                     attribute.Value && attribute.Value === 'true');
