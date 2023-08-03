@@ -384,7 +384,7 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         foundValid = true;
                         values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value) || /^o-[a-zA-Z0-9]{10,32}$/.test(value)) {
                         foundValid = true;
                         values.push(value);
                     }

@@ -33,14 +33,17 @@ module.exports = function(GoogleConfig, collection, settings, regions, call, ser
                         let condition = binding.condition;
                         binding.members.forEach(member => {
                             let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                            let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                            let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : (member.startsWith('user') ? 'users' : (member.startsWith('group') ? 'groups' : 'domains'));
                             let resource = helpers.createResourceName(memberType, accountName, project);
                             if (!memberObj[resource]) memberObj[resource] = {
                                 roles: [],
                                 Id: resource,
-                                email: accountName
+                                email: accountName,
+                                type: memberType
                             };
-                            memberObj[resource].roles.push({role: role, condition: condition});
+                            let roleObj = {role: role};
+                            if (condition) roleObj.condition = condition;
+                            memberObj[resource].roles.push(roleObj);
                         });
                     });
                 }
