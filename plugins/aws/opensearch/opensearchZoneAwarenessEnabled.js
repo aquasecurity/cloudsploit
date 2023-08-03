@@ -5,7 +5,7 @@ module.exports = {
     title: 'OpenSearch Zone Awareness Enabled',
     category: 'OpenSearch',
     domain: 'Databases',
-    description: 'Ensure that OpenSearch domains have zone awareness enabled',
+    description: 'Ensure that OpenSearch domains have zone awareness enabled.',
     more_info: 'To improve the fault-tolerance for your OpenSearch domain, ensure you enable zone awareness. It distributes the OpenSearch nodes across multiple availability zones in the same AWS region and assures the cluster is highly available.',
     link: 'https://aws.amazon.com/blogs/security/how-to-control-access-to-your-amazon-elasticsearch-service-domain/',
     recommended_action: 'Modify OpenSearch domain configuration and enable domain zone awareness.',
