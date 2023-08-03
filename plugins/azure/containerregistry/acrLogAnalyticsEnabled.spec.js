@@ -135,7 +135,7 @@ describe('acrLogAnalyticsEnabled', function() {
             acrLogAnalyticsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Log Analytics enabled for ACR');
+                expect(results[0].message).to.include('Log Analytics is enabled for container registry');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -146,7 +146,7 @@ describe('acrLogAnalyticsEnabled', function() {
             acrLogAnalyticsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Log Analytics are not enabled for ACR');
+                expect(results[0].message).to.include('Log Analytics is not enabled for container registry');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

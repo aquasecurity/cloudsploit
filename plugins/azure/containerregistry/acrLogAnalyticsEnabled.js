@@ -49,9 +49,9 @@ module.exports = {
                     });
 
                     if (found) {
-                        helpers.addResult(results, 0, 'Log Analytics enabled for ACR', location, registry.id);
+                        helpers.addResult(results, 0, 'Log Analytics is enabled for container registry', location, registry.id);
                     } else {
-                        helpers.addResult(results, 2, 'Log Analytics are not enabled for ACR', location, registry.id);
+                        helpers.addResult(results, 2, 'Log Analytics is not enabled for container registry', location, registry.id);
                     }
                 }
             }
