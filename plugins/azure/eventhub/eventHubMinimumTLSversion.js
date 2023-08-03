@@ -52,11 +52,11 @@ module.exports = {
 
                 if (eventHub.minimumTlsVersion && parseFloat(eventHub.minimumTlsVersion) >= desiredVersion) {
                     helpers.addResult(results, 0,
-                        `Event Hub namespace is using TLS version ${eventHub.minimumTlsVersion}`,
+                        `Event Hubs namespace is using TLS version ${eventHub.minimumTlsVersion}`,
                         location, eventHub.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Event Hub namespace is using TLS version ${eventHub.minimumTlsVersion} instead of version ${config.event_hub_min_tls_version}`,
+                        `Event Hubs namespace is using TLS version ${eventHub.minimumTlsVersion} instead of version ${config.event_hub_min_tls_version}`,
                         location, eventHub.id);
                 }
             }
