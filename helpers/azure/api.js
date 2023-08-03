@@ -680,7 +680,14 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
-        },
+        }
+    },
+    customDomain: {
+        listByFrontDoorProfiles: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/customDomains?api-version=2021-06-01'
+        }
     },
     vaults: {
         getKeys: {
