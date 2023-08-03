@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Kubernetes Dashboard Disabled',
+    title: 'Kubernetes Web Dashboard Disabled',
     category: 'ACK',
     domain: 'Containers',
     description: 'Ensure that Kubernetes cluster web UI/Dashboard is not enabled.',
