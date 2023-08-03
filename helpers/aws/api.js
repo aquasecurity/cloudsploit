@@ -1516,6 +1516,12 @@ var calls = {
             property: 'Buckets'
         }
     },
+    SecurityHub: {
+        describeHub: {
+            property:'',
+            paginate: 'NextToken'
+        }
+    },
     SageMaker: {
         listNotebookInstances: {
             property: 'NotebookInstances',

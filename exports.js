@@ -281,8 +281,8 @@ module.exports = {
         'elbv2HasTags'                  : require(__dirname + '/plugins/aws/elbv2/elbv2HasTags.js'),
         'elbv2DeprecatedSslPolicies'    : require(__dirname + '/plugins/aws/elbv2/elbv2DeprecatedSslPolicies.js'),
         'elbv2InsecureCiphers'          : require(__dirname + '/plugins/aws/elbv2/elbv2InsecureCiphers.js'),
+        'elbv2TLSVersionCipherEnabled'  : require(__dirname + '/plugins/aws/elbv2/elbv2TLSVersionCipherEnabled.js'),
         'elbv2crosszoneLoadBalancing'   : require(__dirname + '/plugins/aws/elbv2/elbv2crosszoneLoadBalancing.js'),
-
         'elasticacheDefaultPorts'       : require(__dirname + '/plugins/aws/elasticache/elasticacheDefaultPorts.js'),
 
         'emrClusterLogging'             : require(__dirname + '/plugins/aws/emr/emrClusterLogging.js'),
@@ -309,7 +309,7 @@ module.exports = {
         'opensearchTlsVersion'          : require(__dirname + '/plugins/aws/opensearch/opensearchTlsVersion.js'),
         'opensearchUpgradeAvailable'    : require(__dirname + '/plugins/aws/opensearch/opensearchUpgradeAvailable.js'),    
         'opensearchVersion'             : require(__dirname + '/plugins/aws/opensearch/opensearchVersion.js'),
-
+        'opensearchZoneAwarenessEnabled': require(__dirname + '/plugins/aws/opensearch/opensearchZoneAwarenessEnabled.js'),
 
         'vaultPublicAccess'             : require(__dirname + '/plugins/aws/s3glacier/vaultPublicAccess.js'),
         'firehoseEncrypted'             : require(__dirname + '/plugins/aws/firehose/firehoseEncrypted.js'),
@@ -440,6 +440,8 @@ module.exports = {
         's3BucketHasTags'               : require(__dirname + '/plugins/aws/s3/s3BucketHasTags.js'),
         'bucketPolicyCloudFrontOac'     : require(__dirname + '/plugins/aws/s3/bucketPolicyCloudFrontOac.js'),
         'bucketMFADeleteEnabled'        : require(__dirname + '/plugins/aws/s3/bucketMFADeleteEnabled.js'),
+        'objectLevelReadEventLogging'   : require(__dirname + '/plugins/aws/s3/objectLevelReadEventLogging.js'),
+        'objectLevelWriteEventLogging'  : require(__dirname + '/plugins/aws/s3/objectLevelWriteEventLogging.js'),
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
         'notebookInstanceInVpc'         : require(__dirname + '/plugins/aws/sagemaker/notebookInstanceInVpc.js'),
@@ -649,6 +651,8 @@ module.exports = {
 
         'opensearchCollectionCmkEncrypted': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionCmkEncrypted.js'),
         'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
+
+        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -902,6 +906,8 @@ module.exports = {
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
+        'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
+        'acrAnonymousPullAccessEnabled' : require(__dirname + '/plugins/azure/containerregistry/acrAnonymousPullAccessEnabled.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
@@ -967,7 +973,12 @@ module.exports = {
 
         'recoveryVaultByokEncrypted'    : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultByokEncrypted.js'),
 
-        'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js')
+        'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
+
+        'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
+
+        'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
+        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -1438,10 +1449,16 @@ module.exports = {
 
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
         'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
+
+        'webDashboardDisabled'          : require(__dirname + '/plugins/alibaba/ack/webDashboardDisabled.js'),
+        'multipleIPmode'                : require(__dirname + '/plugins/alibaba/ack/multipleIPmode.js'),
+        'ackPrivateClusterEnabled'      : require(__dirname + '/plugins/alibaba/ack/ackPrivateClusterEnabled.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
+        'logServiceEnabled'             : require(__dirname + '/plugins/alibaba/ack/logServiceEnabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
-        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
+        'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };
