@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!registries.data.length) {
-                helpers.addResult(results, 0, 'No existing Container registries found', location);
+                helpers.addResult(results, 0, 'No existing container registries found', location);
                 return rcb();
             }
             
