@@ -38,16 +38,16 @@ module.exports = {
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 
             if (cluster.meta_data) {
-                let found = false;
                 let clusterMeta = JSON.parse(cluster.meta_data);
-                if (clusterMeta.Addons && clusterMeta.Addons.length) found = clusterMeta.Addons.find(addon => addon.name == 'terway-eniip' && !addon.disabled);
 
-                if (found) {
+                if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === 'terway-eniip') {
                     helpers.addResult(results, 0,
-                        'Cluster has NetworkPolicy enabled', defaultRegion, resource);
+                        'Cluster has NetworkPolicy enabled',
+                        defaultRegion, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Cluster does not have NetworkPolicy enabled', defaultRegion, resource);
+                        'Cluster does not have NetworkPolicy enabled',
+                        defaultRegion, resource);
                 }
             } else {
                 helpers.addResult(results, 3,
