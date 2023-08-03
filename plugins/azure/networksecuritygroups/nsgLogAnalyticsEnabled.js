@@ -51,7 +51,6 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, nsg.id);
                 } else {
-                    let found = false;
                     diagnosticSettings.data.forEach(function(ds) {
                         if (ds.logs && ds.logs.length) found = true;
                     });
