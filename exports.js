@@ -440,6 +440,8 @@ module.exports = {
         's3BucketHasTags'               : require(__dirname + '/plugins/aws/s3/s3BucketHasTags.js'),
         'bucketPolicyCloudFrontOac'     : require(__dirname + '/plugins/aws/s3/bucketPolicyCloudFrontOac.js'),
         'bucketMFADeleteEnabled'        : require(__dirname + '/plugins/aws/s3/bucketMFADeleteEnabled.js'),
+        'objectLevelReadEventLogging'   : require(__dirname + '/plugins/aws/s3/objectLevelReadEventLogging.js'),
+        'objectLevelWriteEventLogging'  : require(__dirname + '/plugins/aws/s3/objectLevelWriteEventLogging.js'),
         'notebookDataEncrypted'         : require(__dirname + '/plugins/aws/sagemaker/notebookDataEncrypted.js'),
         'notebookDirectInternetAccess'  : require(__dirname + '/plugins/aws/sagemaker/notebookDirectInternetAccess.js'),
         'notebookInstanceInVpc'         : require(__dirname + '/plugins/aws/sagemaker/notebookInstanceInVpc.js'),
@@ -649,6 +651,8 @@ module.exports = {
 
         'opensearchCollectionCmkEncrypted': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionCmkEncrypted.js'),
         'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
+
+        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js')
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -970,6 +974,9 @@ module.exports = {
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
+
+        'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
+        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
@@ -1440,10 +1447,16 @@ module.exports = {
 
         'apiProtocol'                   : require(__dirname + '/plugins/alibaba/apigateway/apiProtocol.js'),
         'apiGroupTlsVersion'            : require(__dirname + '/plugins/alibaba/apigateway/apiGroupTlsVersion.js'),
+
+        'webDashboardDisabled'          : require(__dirname + '/plugins/alibaba/ack/webDashboardDisabled.js'),
+        'multipleIPmode'                : require(__dirname + '/plugins/alibaba/ack/multipleIPmode.js'),
+        'ackPrivateClusterEnabled'      : require(__dirname + '/plugins/alibaba/ack/ackPrivateClusterEnabled.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
+        'logServiceEnabled'             : require(__dirname + '/plugins/alibaba/ack/logServiceEnabled.js'),
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
-        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js')
+        'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
+        'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };
