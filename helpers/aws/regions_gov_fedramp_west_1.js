@@ -1,8 +1,5 @@
-// Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
-
 var regions = [
-    'us-gov-west-1',
-    'us-gov-east-1'
+    'us-gov-west-1'
 ];
 
 module.exports = {
@@ -24,7 +21,7 @@ module.exports = {
     cloudtrail: regions,
     cloudwatchlogs: regions,
     cloudformation: regions,
-    comprehend: ['us-gov-west-1'],
+    comprehend: regions,
     cognitoidentityserviceprovider: regions,
     configservice: regions,
     dlm: regions,
