@@ -410,7 +410,7 @@ var serviceMap = {
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Route53 hostedzone', BridgeProvider: 'aws',
             BridgeServiceName: 'route53', BridgePluginCategoryName: 'Route53',
             BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:route53:::{id}',
-            BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Route53',
+            BridgeResourceType: 'hostedzone', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Route53',
             BridgeCollectionService: 'route53', BridgeCall: 'listHostedZones', DataIdentifier: 'data',
         },
     'Proton':
@@ -455,7 +455,7 @@ var serviceMap = {
             InvResourceCategory: 'cloud_resources', InvResourceType: 'broker',
             BridgeProvider: 'aws', BridgeServiceName: 'mq', BridgePluginCategoryName: 'MQ',
             BridgeArnIdentifier: 'BrokerArn', BridgeIdTemplate: '',
-            BridgeResourceType: 'mq', BridgeResourceNameIdentifier: 'BrokerName', BridgeExecutionService: 'MQ',
+            BridgeResourceType: 'broker', BridgeResourceNameIdentifier: 'BrokerName', BridgeExecutionService: 'MQ',
             BridgeCollectionService: 'mq', BridgeCall: 'describeBroker', DataIdentifier: 'data',
         },
     'Managed Blockchain':
@@ -506,11 +506,11 @@ var serviceMap = {
     'Lex':
         {
             enabled: true, isSingleSource: true, InvAsset: 'bot', InvService: 'lex',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Lex Bot',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Lex BotAlias',
             BridgeProvider: 'aws', BridgeServiceName: 'lexmodelsv2', BridgePluginCategoryName: 'Lex',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:lex:{region}:{cloudAccount}:bot/{name}',
-            BridgeResourceType: 'bot', BridgeResourceNameIdentifier: 'botName', BridgeExecutionService: 'Lex',
-            BridgeCollectionService: 'lexmodelsv2', BridgeCall: 'listBots', DataIdentifier: 'data',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:lex:{region}:{cloudAccount}:bot-alias/{id}',
+            BridgeResourceType: 'bot-alias', BridgeResourceNameIdentifier: 'botAliasName', BridgeExecutionService: 'Lex',
+            BridgeCollectionService: 'lexmodelsv2', BridgeCall: 'describeBotAlias', DataIdentifier: 'data',
         },
     'Kinesis Video Streams':
         {
@@ -2584,8 +2584,7 @@ var postcalls = [
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
                 filterValue: 'botId'
-            },
-            sendIntegration: serviceMap['Lex']
+            }
         },
         QLDB: {
             describeLedger: {
@@ -2899,7 +2898,8 @@ var postcalls = [
                 reliesOnService: 'lexmodelsv2',
                 reliesOnCall: 'listBots',
                 override: true,
-            }
+            },
+            sendIntegration: serviceMap['Lex']
         },
         ManagedBlockchain: {
             getMember: {
