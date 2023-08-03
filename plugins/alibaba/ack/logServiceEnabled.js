@@ -1,14 +1,13 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Network Policy Enabled',
+    title: 'ACK Log Service Enabled',
     category: 'ACK',
     domain: 'Containers',
-    description: 'Ensure that Kubernetes Engine Clusters are configured to enable NetworkPolicy.',
-    more_info: 'By default, kubernetes pods accept traffic from any source. But with NetworkPolicy, pods can be configured ' +
-        'to reject any connections which are not allowed by any NetworkPolicy.',
-    link: 'https://www.alibabacloud.com/help/doc-detail/97467.htm?spm=a2c63.p38356.b99.209.1e7b2c60a1yuxS',
-    recommended_action: 'Recreate Kubernetes clusters and select Terway for Network Plug-in option',
+    description: 'Ensure that Kubernetes Engine Clusters are configured to enable Log service.',
+    more_info: 'Log Service allows you to collect, consume, and analyse logs from your containerised applications. By enabling Log Service on Kubernetes Engine Clusters, you can easily access and monitor log data from your containers, aiding in troubleshooting, analysis, and system monitoring.',
+    link: 'https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/user-guide/collect-log-data-from-containers-by-using-log-service',
+    recommended_action: 'Recreate Kubernetes clusters and set enable log service feature.',
     apis: ['ACK:describeClustersV1', 'STS:GetCallerIdentity'],
 
     run: function(cache, settings, callback) {
@@ -38,16 +37,16 @@ module.exports = {
             var resource = helpers.createArn('cs', accountId, 'cluster', cluster.cluster_id, defaultRegion);
 
             if (cluster.meta_data) {
-                let clusterMeta = JSON.parse(cluster.meta_data);
-
-                if (clusterMeta.Capabilities && clusterMeta.Capabilities.Network === 'terway-eniip') {
-                    helpers.addResult(results, 0,
-                        'Cluster has NetworkPolicy enabled',
-                        defaultRegion, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Cluster does not have NetworkPolicy enabled',
-                        defaultRegion, resource);
+                try {
+                    let clusterMeta = JSON.parse(cluster.meta_data);
+       
+                    if (clusterMeta.AuditProjectName) {
+                        helpers.addResult(results, 0, 'Cluster has log service enabled', defaultRegion, resource);
+                    } else {
+                        helpers.addResult(results, 2, 'Cluster does not have log service enabled', defaultRegion, resource);
+                    }
+                } catch (e) {
+                    helpers.addResult(results, 3, `Meta-data info of cluster ${cluster.cluster_id} can not be parsed`, defaultRegion, resource);
                 }
             } else {
                 helpers.addResult(results, 3,

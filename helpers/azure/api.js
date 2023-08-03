@@ -911,6 +911,10 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
@@ -927,6 +931,10 @@ var specialcalls = {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
+        },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     queueService: {
@@ -935,6 +943,10 @@ var specialcalls = {
             rateLimit: 3000
         },
         listQueuesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },

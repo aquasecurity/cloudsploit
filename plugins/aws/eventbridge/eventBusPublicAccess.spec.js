@@ -5,7 +5,7 @@ const listEventBuses = [
     {
         Name: "default",
         Arn: "arn:aws:events:us-east-1:000011112222:event-bus/default",
-        Policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"allow_all_accounts_from_organization_to_put_events\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"events:PutEvents\",\"Resource\":\"arn:aws:events:us-east-1:000011112222:event-bus/default\",\"Condition\":{\"StringEquals\":{\"aws:PrincipalOrgID\":\"o-lcjto3x5wd\"}}}]}"
+        Policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"allow_all_accounts_from_organization_to_put_events\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"events:PutEvents\",\"Resource\":\"arn:aws:events:us-east-1:000011112222:event-bus/default\"}]}"
     },
     {
         Name: "mine1",
@@ -16,6 +16,11 @@ const listEventBuses = [
         Name: 'test-bus',
         Arn: 'arn:aws:events:us-east-1:111111111111:event-bus/test-bus',
     },
+    {
+        Name: "mine2",
+        Arn: "arn:aws:events:us-east-1:000011112222:event-bus/mine2",
+        Policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"allow_all_accounts_from_organization_to_put_events\",\"Effect\":\"Allow\",\"Principal\":{\"*\"},\"Action\":\"events:PutEvents\",\"Resource\":\"arn:aws:events:us-east-1:000011112222:event-bus/mine2\",\"Condition\":{\"StringEquals\":{\"aws:PrincipalOrgID\":\"o-lcjto3x5wd\"}}}]}"
+    }
 ];
 
 const createCache = (eventBus, eventBusErr) => {
@@ -51,11 +56,13 @@ const createNullCache = () => {
 describe('eventBusPublicAccess', function () {
     describe('run', function () {
         it('should PASS if Event bus policy is not exposed to everyone', function (done) {
-            const cache = createCache([listEventBuses[1]]);
+            const cache = createCache([listEventBuses[1], listEventBuses[3]]);
             eventBusPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
+                expect(results[1].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[1].region).to.equal('us-east-1');
                 done();
             });
         });
