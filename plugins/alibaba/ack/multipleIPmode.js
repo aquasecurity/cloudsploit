@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'ENI Multiple IP Mode',
+    title: 'ACK ENI Multiple IP Mode',
     category: 'ACK',
     domain: 'Containers',
     description: 'Ensure ENI multiple IP mode support for Kubernetes Cluster.',
