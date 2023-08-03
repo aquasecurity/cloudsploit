@@ -86,7 +86,7 @@ module.exports = {
                 for (let alias of listBotAliases.data.botAliasSummaries) {
                     if (!alias.botAliasId) continue;
 
-                    var aliasArn = `arn:${awsOrGov}:lex:${region}:${accountId}:bot/${alias.botAliasId}`;
+                    var aliasArn = `arn:${awsOrGov}:lex:${region}:${accountId}:bot-alias/${bot.botId}/${alias.botAliasId}`;
 
                     var describeBotAlias = helpers.addSource(cache, source,
                         ['lexmodelsv2', 'describeBotAlias', region, alias.botAliasId]);

@@ -34,6 +34,10 @@ module.exports = {
             }
 
             subLocations.data.forEach(function(sloc){
+                if (sloc.name !=='global'){
+                    if (!locations.all.includes(sloc.name)) return;
+                }
+
                 const usages = helpers.addSource(cache, source,
                     ['usages', 'list', location, sloc.id]);
 
