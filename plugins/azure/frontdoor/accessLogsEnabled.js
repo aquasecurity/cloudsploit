@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Access Logs Enabled',
+    title: 'Front Door Access Logs Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
     description: 'Ensures that Azure Front Door Access Log is enabled.',
