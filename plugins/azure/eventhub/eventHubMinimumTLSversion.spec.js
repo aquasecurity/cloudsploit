@@ -56,7 +56,7 @@ describe('eventHubMinimumTLSversion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Event Hubs found');
+                expect(results[0].message).to.include('No Event Hubs namespaces found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -69,7 +69,7 @@ describe('eventHubMinimumTLSversion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('less than desired TLS version');
+                expect(results[0].message).to.include('instead of version 1.2');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -82,7 +82,7 @@ describe('eventHubMinimumTLSversion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('equal to or higher than desired TLS version');
+                expect(results[0].message).to.include('is using TLS version 1.2');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -95,7 +95,7 @@ describe('eventHubMinimumTLSversion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Event Hubs:');
+                expect(results[0].message).to.include('Unable to query for Event Hubs namespaces:');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

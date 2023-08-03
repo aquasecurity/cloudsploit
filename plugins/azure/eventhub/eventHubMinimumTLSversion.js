@@ -38,25 +38,25 @@ module.exports = {
 
             if (eventHubs.err || !eventHubs.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Event Hubs: ' + helpers.addError(eventHubs), location);
+                    'Unable to query for Event Hubs namespaces: ' + helpers.addError(eventHubs), location);
                 return rcb();
             }
 
             if (!eventHubs.data.length) {
-                helpers.addResult(results, 0, 'No Event Hubs found', location);
+                helpers.addResult(results, 0, 'No Event Hubs namespaces found', location);
                 return rcb();
             }
-            for (let eventHub of eventHubs.data){
 
+            for (let eventHub of eventHubs.data){
                 if (!eventHub.id) continue;
 
                 if (eventHub.minimumTlsVersion && parseFloat(eventHub.minimumTlsVersion) >= desiredVersion) {
                     helpers.addResult(results, 0,
-                        `Event Hub is using TLS version ${eventHub.minimumTlsVersion} which is equal to or higher than desired TLS version ${config.event_hub_min_tls_version}`,
+                        `Event Hub namespace is using TLS version ${eventHub.minimumTlsVersion}`,
                         location, eventHub.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Event Hub is using TLS version ${eventHub.minimumTlsVersion} which is less than desired TLS version ${config.event_hub_min_tls_version}`,
+                        `Event Hub namespace is using TLS version ${eventHub.minimumTlsVersion} instead of version ${config.event_hub_min_tls_version}`,
                         location, eventHub.id);
                 }
             }
