@@ -58,9 +58,7 @@ module.exports = {
                     attribute.Key && attribute.Key === 'routing.http.x_amzn_tls_version_and_cipher_suite.enabled' &&
                     attribute.Value && attribute.Value === 'true');
 
-                if (!found) {
-                    helpers.addResult(results, 2, 'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
-                } else if (cipherEnabled) {
+                if (tlsCipherEnabled) {
                     helpers.addResult(results, 0,
                         'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
                 } else {
