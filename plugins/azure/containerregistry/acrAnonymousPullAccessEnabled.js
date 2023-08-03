@@ -24,7 +24,7 @@ module.exports = {
 
             if (registries.err || !registries.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Container registries: ' + helpers.addError(registries), location);
+                    'Unable to query for container registries: ' + helpers.addError(registries), location);
                 return rcb();
             }
 
