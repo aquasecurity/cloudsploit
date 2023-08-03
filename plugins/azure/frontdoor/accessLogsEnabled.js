@@ -53,9 +53,9 @@ module.exports = {
                         }
                     });
                     if (frontDoorAccessLogEnabled) {
-                        helpers.addResult(results, 0, 'Front Door Access Logs are enabled', location, profile.id);
+                        helpers.addResult(results, 0, 'Front Door access logs are enabled', location, profile.id);
                     } else {
-                        helpers.addResult(results, 2, 'Front Door Access Logs are not enabled', location, profile.id);
+                        helpers.addResult(results, 2, 'Front Door access logs are not enabled', location, profile.id);
                     }
                 }
             });
