@@ -46,9 +46,9 @@ module.exports = {
                     let found = diagnosticSettings.data.find(logs => logs.length);
 
                     if (found) {
-                        helpers.addResult(results, 0, 'Log Analytics is enabled for container registry', location, registry.id);
+                        helpers.addResult(results, 0, 'Logging is enabled for container registry', location, registry.id);
                     } else {
-                        helpers.addResult(results, 2, 'Log Analytics is not enabled for container registry', location, registry.id);
+                        helpers.addResult(results, 2, 'Logging is not enabled for container registry', location, registry.id);
                     }
                 }
             }
