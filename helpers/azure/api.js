@@ -875,6 +875,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAzureFrontDoor: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
