@@ -43,7 +43,7 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, registry.id);
                 } else {  
-                    let found = diagnosticSettings.data.find(ds.logs => ds.logs.length);
+                    let found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
 
                     if (found) {
                         helpers.addResult(results, 0, 'Logging is enabled for container registry', location, registry.id);
