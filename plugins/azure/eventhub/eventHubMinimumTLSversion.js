@@ -4,7 +4,7 @@ const helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Event Hub Minimum TLS Version',
     category: 'Event Hubs',
-    domain: 'Messaging',
+    domain: 'Content Delivery',
     description: 'Ensures Microsoft Azure Event Hubs do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure Event Hubs.',
     recommended_action: 'Modify Event Hub to set the desired minimum TLS version.',
