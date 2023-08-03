@@ -2,6 +2,13 @@
 
 module.exports = {
     credentials: {
+        alibaba: {
+            // OPTION 1: If using a credential JSON file, enter the path below
+            // credential_file: '/path/to/file.json',
+            // OPTION 2: If using hard-coded credentials, enter them below
+            // access_key: process.env.ALIBABA_ACCESS_KEY_ID || '',
+            // access_key_secret: process.env.ALIBABA_ACCESS_KEY_SECRET || '',    
+        },
         aws: {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
