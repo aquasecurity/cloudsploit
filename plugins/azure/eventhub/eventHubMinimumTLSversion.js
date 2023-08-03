@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensures Microsoft Azure Event Hubs namespaces do not allow outdated TLS certificate versions.',
     more_info: 'To enforce stricter security measures, you can configure your Event Hubs namespace to require that clients send and receive data with a newer version of TLS.',
-    recommended_action: 'Modify Event Hub to set the desired minimum TLS version.',
+    recommended_action: 'Modify Event Hubs namespaces to set the desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/transport-layer-security-enforce-minimum-version',
     apis: ['eventHub:listEventHub'],
     settings: {
