@@ -43,10 +43,7 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, registry.id);
                 } else {  
-                    var found = false;
-                    diagnosticSettings.data.forEach(function(ds) {
-                        if (ds.logs && ds.logs.length) found = true;
-                    });
+                    let found = diagnosticSettings.data.find(logs => logs.length);
 
                     if (found) {
                         helpers.addResult(results, 0, 'Log Analytics is enabled for container registry', location, registry.id);
