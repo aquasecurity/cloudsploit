@@ -56,15 +56,9 @@ module.exports = {
 
                 let found = false;
                 let cipherEnabled = false;
-                for (let attribute of elbv2Attributes.data.Attributes) {
-                    if (attribute.Key && attribute.Key === 'routing.http.x_amzn_tls_version_and_cipher_suite.enabled') {
-                        found = true;
-                        if (attribute.Value && attribute.Value === 'true') {
-                            cipherEnabled = true;
-                            break;
-                        }
-                    }
-                }
+                let tlsCipherEnabled = elbv2Attributes.data.Attributes.find(attribute => 
+                    attribute.Key && attribute.Key === 'routing.http.x_amzn_tls_version_and_cipher_suite.enabled' &&
+                    attribute.Value && attribute.Value === 'true');
 
                 if (!found) {
                     helpers.addResult(results, 2, 'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
