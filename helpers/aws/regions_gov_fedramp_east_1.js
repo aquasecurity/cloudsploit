@@ -1,17 +1,10 @@
-var config  = require(__dirname + '/../../../../config/engine.js');
-// Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
-
 var regions = [
-    config.LAMBDA_REGION
+    'us-gov-east-1'
 ];
-
-// Check if config.LAMBDA_REGION is 'us-gov-west-1'
-// If true, use regions, otherwise use an empty array this service is not available in east
-var comprehendRegions = config.LAMBDA_REGION === 'us-gov-west-1' ? regions : [];
 
 module.exports = {
     default: ['us-gov-west-1'],
-    all: config,
+    all: regions,
     optin: [],
     accessanalyzer: regions,
     acm: regions,
@@ -28,7 +21,7 @@ module.exports = {
     cloudtrail: regions,
     cloudwatchlogs: regions,
     cloudformation: regions,
-    comprehend: comprehendRegions,
+    comprehend: [],
     cognitoidentityserviceprovider: regions,
     configservice: regions,
     dlm: regions,
