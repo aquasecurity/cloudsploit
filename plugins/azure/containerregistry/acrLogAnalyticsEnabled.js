@@ -40,23 +40,19 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3,
                         'Unable to query diagnostics settings: ' + helpers.addError(diagnosticSettings), location, registry.id);
-                    continue;
-                } 
-
-                if (!diagnosticSettings.data.length) {
+                } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, registry.id);
-                    continue;
-                } 
-                    
-                var found = false;
-                diagnosticSettings.data.forEach(function(ds) {
-                    if (ds.logs && ds.logs.length) found = true;
-                });
+                } else {  
+                    var found = false;
+                    diagnosticSettings.data.forEach(function(ds) {
+                        if (ds.logs && ds.logs.length) found = true;
+                    });
 
-                if (found) {
-                    helpers.addResult(results, 0, 'Log Analytics enabled for ACR', location, registry.id);
-                } else {
-                    helpers.addResult(results, 2, 'Log Analytics are not enabled for ACR', location, registry.id);
+                    if (found) {
+                        helpers.addResult(results, 0, 'Log Analytics enabled for ACR', location, registry.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Log Analytics are not enabled for ACR', location, registry.id);
+                    }
                 }
             }
 
