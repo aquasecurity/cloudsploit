@@ -67,7 +67,7 @@ module.exports = {
                 }
 
                 if (!found) {
-                    helpers.addResult(results, 2, 'Deletion protection not found', region, resource);
+                    helpers.addResult(results, 2, 'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
                 } else if (cipherEnabled) {
                     helpers.addResult(results, 0,
                         'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
