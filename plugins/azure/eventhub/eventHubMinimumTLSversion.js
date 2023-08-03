@@ -2,7 +2,7 @@ var async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Event Hub Minimum TLS Version',
+    title: 'Event Hubs Minimum TLS Version',
     category: 'Event Hubs',
     domain: 'Content Delivery',
     description: 'Ensures Microsoft Azure Event Hubs do not allow outdated TLS certificate versions.',
