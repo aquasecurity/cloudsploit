@@ -85,7 +85,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'IAM role does not contain trust relationship statements',
                     'global', role.Arn);
-                    return;          
+                return;          
             }
 
             var restrictedAccountPrincipals = [];
