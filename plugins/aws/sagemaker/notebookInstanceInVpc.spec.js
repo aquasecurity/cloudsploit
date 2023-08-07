@@ -33,7 +33,7 @@ const describeNotebookInstance = [
         "SecurityGroups": [
             "sg-0931c3a02deed68f5"
         ],
-        "RoleArn": "arn:aws:iam::672202477801:role/service-role/AmazonSageMaker-ExecutionRole-20230803T155360",
+        "RoleArn": "arn:aws:iam::11222333445:role/service-role/AmazonSageMaker-ExecutionRole-20230803T155360",
         "NetworkInterfaceId": "eni-0fce758c1693daae7",
         "LastModifiedTime": "2023-08-04T12:59:53.661000+05:00",
         "CreationTime": "2023-08-04T12:59:46.521000+05:00",
@@ -46,7 +46,7 @@ const describeNotebookInstance = [
         }
     },
     {
-        "NotebookInstanceArn": "arn:aws:sagemaker:us-east-1:672202477801:notebook-instance/test",
+        "NotebookInstanceArn": "arn:aws:sagemaker:us-east-1:11222334455:notebook-instance/test",
         "NotebookInstanceName": "test",
         "NotebookInstanceStatus": "Pending",
         "Url": "test-mdbp.notebook.us-east-1.sagemaker.aws",
