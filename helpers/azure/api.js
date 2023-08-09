@@ -851,6 +851,13 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
+    },
+    afdOriginGroups: {
+        listByProfile: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/originGroups?api-version=2021-06-01'
+        }
     }
 };
 
@@ -897,6 +904,14 @@ var tertiarycalls = {
             properties: ['id'],
             url: '{id}/policy?api-version=7.3',
             vault: true
+        }
+    },
+    afdOrigin: {
+        listByOriginGroups: {
+            reliesOnPath: 'afdOriginGroups.listByProfile',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/origins?api-version=2021-06-01'
+
         }
     }
 };
