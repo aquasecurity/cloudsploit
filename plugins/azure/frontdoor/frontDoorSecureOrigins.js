@@ -64,9 +64,11 @@ module.exports = {
                     });
                     if (originFound) {
                         if (insecureOriginGroupNames.length) {
-                            helpers.addResult(results, 2, `Front Door Profile origins are using insecure origins in following origin groups: ${insecureOriginGroupNames.join(', ')}`, location, profile.id);
+                            helpers.addResult(results, 2,
+                                `Front Door Profile origins are using insecure origins in following origin groups: ${insecureOriginGroupNames.join(', ')}`, location, profile.id);
                         } else {
-                            helpers.addResult(results, 0, 'Front Door Profile origins are using secure origins', location, profile.id);
+                            helpers.addResult(results, 0, 
+                                'Front Door Profile origins are using secure origins', location, profile.id);
                         }
                     }
                 }
