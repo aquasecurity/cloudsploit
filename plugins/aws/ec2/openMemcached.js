@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Memcached should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP and UDP port 11211 to known IP addresses',
-    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions', 'EC2:describeSubnets', 'ElastiCache:describeCacheClusters','ElastiCache:describeCacheSubnetGroups' ],
+    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions', 'EC2:describeSubnets', 'EC2:describeRouteTables','ElastiCache:describeCacheClusters','ElastiCache:describeCacheSubnetGroups' ],
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
@@ -21,7 +21,7 @@ module.exports = {
             name: 'Security Groups with Private Memcached Clusters',
             description: 'When set to true, passes if all the clusters associated with a security group are in a private subnet',
             regex: '^(true|false)$',
-            default: 'false',
+            default: 'true',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -98,28 +98,36 @@ module.exports = {
                 var describeCluster = helpers.addSource(cache, source,
                     ['elasticache', 'describeCacheClusters', region]);
        
-                if (describeCluster && !describeCluster.err && describeCluster.data && describeCluster.data.length) {
-                
+                if (describeCluster && !describeCluster.err && describeCluster.data) {
+
                     var describeSubnets = helpers.addSource(cache, source,
                         ['ec2', 'describeSubnets', region]);
+              
+                    var describeRouteTables = helpers.addSource(cache, {},
+                        ['ec2', 'describeRouteTables', region]);
                     
-                    if (describeSubnets && !describeSubnets.err && describeSubnets.data && describeSubnets.data.length ){
-                        for (var subnet of describeSubnets.data) {
-                            if (!subnet.MapPublicIpOnLaunch) {
-                                privatesubnets.push(subnet.SubnetId);
-                            }
+                    if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data ) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for subnets: ' + helpers.addError(describeRouteTables), region);
+                        return rcb();
+                    }     
+                
+                    if (describeSubnets && !describeSubnets.err && describeSubnets.data) {
+                        var subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+                        var privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);        
+                        } else {
+                            helpers.addResult(results, 3,
+                                'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+                            return rcb();
                         }
-                    } else {
-                        helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
-                    }
 
-                    for ( var cluster of describeCluster.data){
+                    for ( var cluster of describeCluster.data) {
                         subnetgroup= cluster.CacheSubnetGroupName;
                         var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
                         if (!describeSubnetGroup) continue;
          
-                        if (describeSubnetGroup.err || ! describeSubnetGroup.data  || !describeSubnetGroup.data.length) {
+                        if (describeSubnetGroup.err || !describeSubnetGroup.data  || !describeSubnetGroup.data.length) {
                             continue;
                         }
 
@@ -162,7 +170,8 @@ module.exports = {
                         helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb);
                     }
                 } else {
-                    helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
+                    helpers.addResult(results, 3,
+                       'Unable to query for clusters: ' + helpers.addError(describeCluster), region);
                 }
             }
 
