@@ -39,8 +39,10 @@ module.exports = {
                 frontDoorProfile = true;
                 var insecureOriginGroupNames = {};
                 var originFound = false;
+
                 const afdOriginGroups = helpers.addSource(cache, source,
                     ['afdOriginGroups', 'listByProfile', location, profile.id]);
+
                 if (!afdOriginGroups || afdOriginGroups.err || !afdOriginGroups.data) {
                     helpers.addResult(results, 3,
                         'Unable to query Azure Front Door Origin Groups: ' + helpers.addError(afdOriginGroups), location, profile.id);
@@ -50,6 +52,7 @@ module.exports = {
                     afdOriginGroups.data.forEach(function(originGroup) {
                         const afdOrigin = helpers.addSource(cache, source,
                             ['afdOrigin', 'listByOriginGroups', location, originGroup.id]);
+
                         if (!afdOrigin || afdOrigin.err || !afdOrigin.data) {
                             helpers.addResult(results, 3,
                                 'Unable to query Azure Front Door Origins: ' + helpers.addError(afdOrigin), location, profile.id);
