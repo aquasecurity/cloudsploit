@@ -271,7 +271,7 @@ describe('frontDoorSecureOrigin', function () {
             frontDoorSecureOrigin.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query Azure Front Door Origin Groups');
+                expect(results[0].message).to.include('Unable to query Azure Front Door profile origin groups');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -282,7 +282,7 @@ describe('frontDoorSecureOrigin', function () {
             frontDoorSecureOrigin.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query Azure Front Door Origin');
+                expect(results[0].message).to.include('Unable to query Azure Front Door origin');
                 expect(results[0].region).to.equal('global');
                 done();
             });

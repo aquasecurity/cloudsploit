@@ -45,7 +45,7 @@ module.exports = {
 
                 if (!afdOriginGroups || afdOriginGroups.err || !afdOriginGroups.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query Azure Front Door Origin Groups: ' + helpers.addError(afdOriginGroups), location, profile.id);
+                        'Unable to query Azure Front Door origin groups: ' + helpers.addError(afdOriginGroups), location, profile.id);
                 } else if (!afdOriginGroups.data.length) {
                     helpers.addResult(results, 0, 'Front Door profile does not have any origin groups', location, profile.id);
                 } else {
@@ -55,7 +55,7 @@ module.exports = {
 
                         if (!afdOrigin || afdOrigin.err || !afdOrigin.data) {
                             helpers.addResult(results, 3,
-                                'Unable to query Azure Front Door Origins: ' + helpers.addError(afdOrigin), location, profile.id);
+                                'Unable to query Azure Front Door origins: ' + helpers.addError(afdOrigin), location, profile.id);
                         } else {
                             originFound = true;
                             insecureOriginGroupNames = afdOrigin.data.filter(origin => {
