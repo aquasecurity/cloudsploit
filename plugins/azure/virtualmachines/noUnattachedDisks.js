@@ -33,7 +33,7 @@ module.exports = {
             }
 
             disks.data.forEach(disk => {
-                if (disk.diskState && disk.diskState.toLowerCase() === 'attached') {
+                if (disk.diskState && disk.diskState.toLowerCase() != 'unattached') {
                     helpers.addResult(results, 0, 'Disk volume is attached to a virtual machine', location, disk.id);
                 } else {
                     helpers.addResult(results, 2, 'Disk volume is not attached to a virtual machine', location, disk.id);

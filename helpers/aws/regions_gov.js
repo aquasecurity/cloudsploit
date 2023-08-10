@@ -12,7 +12,7 @@ module.exports = {
     accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
-    athena: ['us-gov-west-1'],
+    athena: regions,
     backup: regions,
     cloudfront: [],
     autoscaling: regions,
@@ -74,11 +74,11 @@ module.exports = {
     directconnect: regions,
     directoryservice: [],
     organizations: regions,
-    guardduty: ['us-gov-west-1'],
+    guardduty: regions,
     wafregional: [],
     wafv2: regions,
     waf: regions,
-    workspaces: ['us-gov-west-1'],
+    workspaces: regions,
     xray: [],
     resourcegroupstaggingapi: regions,
     codestar: regions,
@@ -121,5 +121,6 @@ module.exports = {
     computeoptimizer: regions,
     appconfig: regions,
     opensearch:regions,
-    opensearchserverless: regions
+    opensearchserverless: regions,
+    securityhub: regions
 };
