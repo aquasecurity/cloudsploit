@@ -47,7 +47,7 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query Azure Front Door Origin Groups: ' + helpers.addError(afdOriginGroups), location, profile.id);
                 } else if (!afdOriginGroups.data.length) {
-                    helpers.addResult(results, 0, 'No existing Azure Front Door Origin Groups found', location, profile.id);
+                    helpers.addResult(results, 0, 'Front Door profile does not have any origin groups', location, profile.id);
                 } else {
                     afdOriginGroups.data.forEach(function(originGroup) {
                         const afdOrigin = helpers.addSource(cache, source,
