@@ -28,21 +28,19 @@ module.exports = function(AlibabaConfig, collection, region, callback) {
         client.request(httpMethod, uriPath, {}, body, headers, requestOption).then((res) => {             
             collection.ack.describeClusterDetail[region][clusterId] = {};
             collection.ack.describeClusterDetail[region][clusterId].data = res;
-
             completedRequests++;
             if (completedRequests === totalClusters) {
                 allRequestsCompleted();
             }
         }, (err) => {
             collection.ack.describeClusterDetail[region][clusterId] = { err: err };
-
             completedRequests++;
             if (completedRequests === totalClusters) {
                 allRequestsCompleted();
             }
         });
     };
-
+    
     for (var i = 0; i < totalClusters; i++) {
         executeSingleClusterDetail(clusters[i]); 
     }
