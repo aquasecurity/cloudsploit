@@ -441,6 +441,11 @@ var calls = {
         listDomains: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
         }
+    },
+    eventHub: {
+        listEventHub: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
+        }
     }
 };
 
@@ -680,7 +685,14 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
-        },
+        }
+    },
+    customDomain: {
+        listByFrontDoorProfiles: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/customDomains?api-version=2021-06-01'
+        }
     },
     vaults: {
         getKeys: {
@@ -868,6 +880,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAzureFrontDoor: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
@@ -882,6 +899,11 @@ var tertiarycalls = {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        },
+        listByContainerRegistries: {
+            reliesOnPath: 'registries.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
     },
     backupShortTermRetentionPolicies: {
@@ -911,6 +933,10 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
@@ -927,6 +953,10 @@ var specialcalls = {
         listContainersSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
+        },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
         }
     },
     queueService: {
@@ -935,6 +965,10 @@ var specialcalls = {
             rateLimit: 3000
         },
         listQueuesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
