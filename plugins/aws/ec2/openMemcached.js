@@ -92,6 +92,7 @@ module.exports = {
                 helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
             } else {
                 var subnetgroup;
+                var subnetRouteTableMap;
                 var privatesubnets =[];
                 var securityGroup = [];
                 var privatesecurityGroup= [];
@@ -113,13 +114,13 @@ module.exports = {
                     }     
                 
                     if (describeSubnets && !describeSubnets.err && describeSubnets.data) {
-                        var subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
-                        var privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);        
-                        } else {
-                            helpers.addResult(results, 3,
-                                'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
-                            return rcb();
-                        }
+                        subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+                        privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);        
+                    } else {
+                        helpers.addResult(results, 3,
+                            'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+                        return rcb();
+                    }
 
                     for ( var cluster of describeCluster.data) {
                         subnetgroup= cluster.CacheSubnetGroupName;
@@ -171,7 +172,7 @@ module.exports = {
                     }
                 } else {
                     helpers.addResult(results, 3,
-                       'Unable to query for clusters: ' + helpers.addError(describeCluster), region);
+                        'Unable to query for clusters: ' + helpers.addError(describeCluster), region);
                 }
             }
 
