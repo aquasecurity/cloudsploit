@@ -18,7 +18,7 @@ module.exports = {
             default: 'false',
         },
         ignore_groups_with_private_clusters: {
-            name: 'Security Groups with Private Memcached Clusters',
+            name: 'Ignore Security Groups with Private Memcached Clusters',
             description: 'When set to true, passes if all the clusters associated with a security group are in a private subnet',
             regex: '^(true|false)$',
             default: 'false',
