@@ -1455,6 +1455,8 @@ module.exports = {
         'ackPrivateClusterEnabled'      : require(__dirname + '/plugins/alibaba/ack/ackPrivateClusterEnabled.js'),
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
         'logServiceEnabled'             : require(__dirname + '/plugins/alibaba/ack/logServiceEnabled.js'),
+        'cloudMonitorEnabled'           : require(__dirname + '/plugins/alibaba/ack/cloudMonitorEnabled.js'),
+
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
