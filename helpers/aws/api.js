@@ -269,30 +269,6 @@ var serviceMap = {
             BridgeCall: 'listAnalyzers', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '',
             BridgeResourceType: 'analyzer', BridgeResourceNameIdentifier: 'name',
             BridgeExecutionService: 'IAM', BridgeCollectionService: 'accessanalyzer', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_user',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listUsers', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'user', BridgeResourceNameIdentifier: 'UserName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_group',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listGroups', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'group', BridgeResourceNameIdentifier: 'GroupName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_role',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listRoles', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'role', BridgeResourceNameIdentifier: 'RoleName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
         }
     ],
     'EMR':
@@ -1268,7 +1244,7 @@ var calls = {
         },
         listUsers: {
             property: 'Users',
-            paginate: 'Marker'
+            paginate: 'Marker',
         },
         listRoles: {
             property: 'Roles',
@@ -2821,21 +2797,6 @@ var postcalls = [
             }
         },
         IAM: {
-            getUserPolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listUsers',
-                override: true
-            },
-            getGroupPolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listGroups',
-                override: true
-            },
-            getRolePolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listRoles',
-                override: true
-            },
             getPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
@@ -2854,7 +2815,10 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName'
             },
-            sendIntegration: [serviceMap['IAM'][1], serviceMap['IAM'][2],serviceMap['IAM'][3]]
+            sendIntegration: {
+                enabled: true,
+                sendLast: true
+            }
         },
         EKS:{
             describeNodegroups: {
@@ -2922,7 +2886,22 @@ var postcalls = [
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
                 override: true
-            }
+            },
+            getUserPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listUsers',
+                override: true
+            },
+            getGroupPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listGroups',
+                override: true
+            },
+            getRolePolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                override: true
+            },
         },
         ECS: {
             describeTasks:  {

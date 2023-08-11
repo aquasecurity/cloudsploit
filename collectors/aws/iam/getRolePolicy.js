@@ -21,8 +21,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             return cb();
         }
 
-        if (role.RoleName && collection.iam &&
-            collection.iam.listAttachedRolePolicies &&
+        if (collection.iam.listAttachedRolePolicies &&
             collection.iam.listAttachedRolePolicies[AWSConfig.region] &&
             collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName] &&
             collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data &&
@@ -31,6 +30,19 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             role.attachedPolicies = collection.iam.listAttachedRolePolicies[AWSConfig.region][role.RoleName].data.AttachedPolicies;
         } else {
             role.attachedPolicies = [];
+        }
+
+        if (collection.iam.getRole &&
+            collection.iam.getRole[AWSConfig.region] &&
+            collection.iam.getRole[AWSConfig.region][role.RoleName] &&
+            collection.iam.getRole[AWSConfig.region][role.RoleName].data &&
+            collection.iam.getRole[AWSConfig.region][role.RoleName].data.Role &&
+            Object.keys(collection.iam.getRole[AWSConfig.region][role.RoleName].data.Role).length) {
+            role.tags = collection.iam.getRole[AWSConfig.region][role.RoleName].data.Role.Tags;
+            role.lastUsed = collection.iam.getRole[AWSConfig.region][role.RoleName].data.Role.RoleLastUsed;
+        } else {
+            role.tags = [];
+            role.lastUsed = [];
         }
 
         collection.iam.getRolePolicy[AWSConfig.region][role.RoleName] = {};
