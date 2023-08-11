@@ -91,12 +91,16 @@ module.exports = {
                 var subnetgroup;
                 var subnetRouteTableMap;
                 var privatesubnets =[];
-                var securityGroup = [];
-                var privatesecurityGroup= [];
-                var describeCluster = helpers.addSource(cache, source,
+                var publicClusterSecurityGroups = [];
+                var privateClusterSecurityGroups= [];
+                var describeClusters = helpers.addSource(cache, source,
                     ['elasticache', 'describeCacheClusters', region]);
        
-                if (describeCluster && !describeCluster.err && describeCluster.data) {
+                if (!describeClusters && describeClusters.err && !describeClusters.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for clusters: ' + helpers.addError(describeClusters), region);
+
+                } else {
 
                     var describeSubnets = helpers.addSource(cache, source,
                         ['ec2', 'describeSubnets', region]);
@@ -110,39 +114,34 @@ module.exports = {
                         return rcb();
                     }     
                 
-                    if (describeSubnets && !describeSubnets.err && describeSubnets.data) {
-                        subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
-                        privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);        
-                    } else {
+                    if (!describeSubnets && describeSubnets.err && !describeSubnets.data) {
                         helpers.addResult(results, 3,
                             'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
-                        return rcb();
+                        return rcb();                  
+                    } else {
+                        subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+                        privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);   
                     }
 
-                    for ( var cluster of describeCluster.data) {
+                    for ( var cluster of describeClusters.data) {
                         subnetgroup= cluster.CacheSubnetGroupName;
                         var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
-                        if (!describeSubnetGroup) continue;
-         
-                        if (describeSubnetGroup.err || !describeSubnetGroup.data  || !describeSubnetGroup.data.length) {
-                            continue;
-                        }
-
-                        var clusterSubnets = describeSubnetGroup.data[0].Subnets;
-                        var allPrivate = clusterSubnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
+                        if (!describeSubnetGroup || describeSubnetGroup.err || !describeSubnetGroup.data  || !describeSubnetGroup.data.length) continue;
+                        var clusterSubnets = describeSubnetGroup.data;
+                        var allPrivate = clusterSubnets[0].Subnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
                         var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
        
                         if (allPrivate) {
-                            privatesecurityGroup.push(...groupIds.filter(groupId => !privatesecurityGroup.includes(groupId)));
+                            privateClusterSecurityGroups.push(...groupIds.filter(groupId => !privateClusterSecurityGroups.includes(groupId)));
                         } else {
-                            securityGroup.push(...groupIds.filter(groupId => !securityGroup.includes(groupId)));
+                            publicClusterSecurityGroups.push(...groupIds.filter(groupId => !publicClusterSecurityGroups.includes(groupId)));
                         }  
                     }
-                    if (privatesecurityGroup.length > 0) {
+                    if (privateClusterSecurityGroups.length > 0) {
                         var privateGroupNames = [];
-                        privatesecurityGroup = privatesecurityGroup.filter(groupId => !securityGroup.includes(groupId));
-                        privatesecurityGroup.forEach(groupId => {
+                        privateClusterSecurityGroups = privateClusterSecurityGroups.filter(groupId => !publicClusterSecurityGroups.includes(groupId));
+                        privateClusterSecurityGroups.forEach(groupId => {
                             var securityGroupData = describeSecurityGroups.data.find(group => group.GroupId === groupId);
                             if (securityGroupData) {
                                 privateGroupNames.push({
@@ -159,20 +158,15 @@ module.exports = {
                         });
                     }
                     var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
-                        return !privatesecurityGroup.includes(group.GroupId);
-                    });
-                
+                        return !privateClusterSecurityGroups.includes(group.GroupId);
+                    });  
                     if (!filteredSecurityGroups.length) {
                         return rcb();
                     } else {
                         helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb);
                     }
-                } else {
-                    helpers.addResult(results, 3,
-                        'Unable to query for clusters: ' + helpers.addError(describeCluster), region);
-                }
+                } 
             }
-
             rcb();
         }, function(){
             callback(null, results, source);
