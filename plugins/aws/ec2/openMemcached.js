@@ -18,8 +18,8 @@ module.exports = {
             default: 'false',
         },
         ignore_groups_with_private_clusters: {
-            name: 'Ignore Security Groups with Private Memcached Clusters',
-            description: 'When set to true, passes if all the clusters associated with a security group are in a private subnet',
+            name: 'Ignore security groups which are associated with clusters in private subnet',
+            description: 'When set to true, pass all the security groups associated with clusters that are in private subnet',
             regex: '^(true|false)$',
             default: 'false',
         }
@@ -74,15 +74,12 @@ module.exports = {
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
- 
             if (!describeSecurityGroups) return rcb();
- 
             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
                 return rcb();
             }
- 
             if (!describeSecurityGroups.data.length) {
                 helpers.addResult(results, 0, 'No security groups present', region);
                 return rcb();
@@ -109,7 +106,7 @@ module.exports = {
                     
                     if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data ) {
                         helpers.addResult(results, 3,
-                            'Unable to query for subnets: ' + helpers.addError(describeRouteTables), region);
+                            'Unable to query for route tables: ' + helpers.addError(describeRouteTables), region);
                         return rcb();
                     }     
                 
