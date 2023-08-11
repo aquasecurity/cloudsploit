@@ -90,9 +90,9 @@ module.exports = {
             } else {
                 var subnetgroup;
                 var subnetRouteTableMap;
-                var privatesubnets =[];
+                var privatesubnets = [];
                 var publicClusterSecurityGroups = [];
-                var privateClusterSecurityGroups= [];
+                var privateClusterSecurityGroups = [];
                 var describeClusters = helpers.addSource(cache, source,
                     ['elasticache', 'describeCacheClusters', region]);
        
@@ -124,7 +124,7 @@ module.exports = {
                         subnetgroup = cluster.CacheSubnetGroupName;
                         var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
-                        if (!describeSubnetGroup || describeSubnetGroup.err || !describeSubnetGroup.data  || !describeSubnetGroup.data.length) continue;
+                        if (!describeSubnetGroup || describeSubnetGroup.err || !describeSubnetGroup.data || !describeSubnetGroup.data.length) continue;
                         var clusterSubnets = describeSubnetGroup.data;
                         var allPrivate = clusterSubnets[0].Subnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
                         var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
