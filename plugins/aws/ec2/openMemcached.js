@@ -122,10 +122,10 @@ module.exports = {
 
                     for ( var cluster of describeClusters.data) {
                         subnetgroup = cluster.CacheSubnetGroupName;
-                        var describeSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
+                        var describeCacheSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
-                        if (!describeSubnetGroups || describeSubnetGroups.err || !describeSubnetGroups.data || !describeSubnetGroups.data.length) continue;
-                        var clusterSubnets = describeSubnetGroups.data;
+                        if (!describeCacheSubnetGroups || describeCacheSubnetGroups.err || !describeCacheSubnetGroups.data || !describeCacheSubnetGroups.data.length) continue;
+                        var clusterSubnets = describeCacheSubnetGroups.data;
                         var allPrivate = clusterSubnets[0].Subnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
                         var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
        
