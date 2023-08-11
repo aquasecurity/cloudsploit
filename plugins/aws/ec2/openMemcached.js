@@ -21,7 +21,7 @@ module.exports = {
             name: 'Ignore security groups which are associated with clusters in private subnet',
             description: 'When set to true, pass all the security groups associated with clusters that are in private subnet',
             regex: '^(true|false)$',
-            default: 'false',
+            default: 'true',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -96,10 +96,10 @@ module.exports = {
                 var describeClusters = helpers.addSource(cache, source,
                     ['elasticache', 'describeCacheClusters', region]);
        
-                if (!describeClusters && describeClusters.err && !describeClusters.data) {
+                if (!describeClusters || describeClusters.err || !describeClusters.data ) {
                     helpers.addResult(results, 3,
                         'Unable to query for clusters: ' + helpers.addError(describeClusters), region);
-                    return rcb();
+                   return rcb();
                 } else {
                     var describeSubnets = helpers.addSource(cache, source,
                         ['ec2', 'describeSubnets', region]);
@@ -112,7 +112,7 @@ module.exports = {
                         return rcb();
                     }     
                 
-                    if (!describeSubnets && describeSubnets.err && !describeSubnets.data) {
+                    if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
                         helpers.addResult(results, 3,
                             'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
                         return rcb();                  
