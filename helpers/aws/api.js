@@ -2068,7 +2068,6 @@ var postcalls = [
             },
             sendIntegration: serviceMap['ElastiCache']
         },
-       
         ES: {
             describeElasticsearchDomain: {
                 reliesOnService: 'es',
