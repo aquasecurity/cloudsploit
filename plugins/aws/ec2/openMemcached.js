@@ -124,7 +124,7 @@ module.exports = {
                     }
 
                     for ( var cluster of describeClusters.data) {
-                        subnetgroup= cluster.CacheSubnetGroupName;
+                        subnetgroup = cluster.CacheSubnetGroupName;
                         var describeSubnetGroup = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
          
                         if (!describeSubnetGroup || describeSubnetGroup.err || !describeSubnetGroup.data  || !describeSubnetGroup.data.length) continue;
