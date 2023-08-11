@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Launching instances can bring multiple advantages such as better networking infrastructure, much more flexible control over access security. Also it makes it possible to access VPC-only resources such as EFS file systems.',
     recommended_action: 'Migrate Notebook instances to exist within a VPC',
     link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/API_CreateNotebookInstance.html#API_CreateNotebookInstance_RequestSyntax',
-    apis: ['SageMaker:listNotebookInstances'],
+    apis: ['SageMaker:listNotebookInstances', 'SageMaker:describeNotebookInstance'],
     compliance: {
         hipaa: 'AWS VPC is the recommended location for processing of HIPAA-related ' +
             'data. All instances storing or processing HIPAA data should be ' +
@@ -49,12 +49,24 @@ module.exports = {
 
                 // A network interface is assigned when the notebook is VPC-based.
                 // Similarly, the instance must be assigned to a subnet if it is VPC-based.
-                if (!instance.NetworkInterfaceId) {
-                    helpers.addResult(results, 2,
-                        'SageMaker Notebook instance not in VPC', region, instanceArn);
+                var describeInstance = helpers.addSource(cache, source,
+                    ['sagemaker', 'describeNotebookInstance', region, instance.NotebookInstanceName]);
+                
+                if (!describeInstance) return;
+                
+                else if (describeInstance.err || !describeInstance.data) {
+                    helpers.addResult(
+                        results, 3, 'Unable to query for Notebook Instance: ' +
+                        helpers.addError(describeInstance), region);
+                    return;
                 } else {
-                    helpers.addResult(results, 0,
-                        'SageMaker Notebook instance in VPC', region, instanceArn);
+                    if (!describeInstance.data.NetworkInterfaceId) {
+                        helpers.addResult(results, 2,
+                            'SageMaker Notebook instance not in VPC', region, instanceArn);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'SageMaker Notebook instance in VPC', region, instanceArn);
+                    }
                 }
             }
 
