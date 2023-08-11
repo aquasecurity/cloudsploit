@@ -88,9 +88,9 @@ module.exports = {
             if (!config.ignore_groups_with_private_clusters) {
                 helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
             } else {
-                var subnetgroup;
+                var subnetGroup;
                 var subnetRouteTableMap;
-                var privatesubnets = [];
+                var privateSubnets = [];
                 var publicClusterSecurityGroups = [];
                 var privateClusterSecurityGroups = [];
                 var describeClusters = helpers.addSource(cache, source,
@@ -117,16 +117,16 @@ module.exports = {
                         return rcb();                  
                     } else {
                         subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
-                        privatesubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);   
+                        privateSubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);   
                     }
 
                     for ( var cluster of describeClusters.data) {
-                        subnetgroup = cluster.CacheSubnetGroupName;
-                        var describeCacheSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetgroup]);
+                        subnetGroup = cluster.CacheSubnetGroupName;
+                        var describeCacheSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetGroup]);
          
                         if (!describeCacheSubnetGroups || describeCacheSubnetGroups.err || !describeCacheSubnetGroups.data || !describeCacheSubnetGroups.data.length) continue;
                         var clusterSubnets = describeCacheSubnetGroups.data;
-                        var allPrivate = clusterSubnets[0].Subnets.every(subnet => privatesubnets.includes(subnet.SubnetIdentifier));
+                        var allPrivate = clusterSubnets[0].Subnets.every(subnet => privateSubnets.includes(subnet.SubnetIdentifier));
                         var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
        
                         if (allPrivate) {
