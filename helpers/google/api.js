@@ -164,15 +164,6 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
             BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
         },
-    'IAM':
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'Instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_user', BridgeServiceName: 'iam',
-            BridgePluginCategoryName: 'gcp-IAM', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'user',
-            BridgeResourceNameIdentifier: 'email', BridgeExecutionService: 'gcp-IAM',
-            BridgeCollectionService: 'gcp-iam', DataIdentifier: 'data',
-        },
     'SQL':
         {
             enabled: true, isSingleSource: true, InvAsset: 'sql', InvService: 'sql',
@@ -584,8 +575,14 @@ var calls = {
             location: null,
             pagination: true,
             paginationKey: 'nextPageToken'
+        },
+        predefined_list: {
+            url: 'https://iam.googleapis.com/v1/roles',
+            location: null,
+            pagination: true,
+            paginationKey: 'nextPageToken'
         }
-    }
+    },
 };
 
 var postcalls = {
@@ -596,11 +593,17 @@ var postcalls = {
             reliesOnService: ['roles'],
             reliesOnCall: ['list'],
             properties: ['name'],
-            pagination: false,
-            sendIntegration: {
-                enabled: true
-            }
-        }
+            pagination: false
+        },
+        predefined_get: {
+            url: 'https://iam.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['roles'],
+            reliesOnCall: ['predefined_list'],
+            properties: ['name'],
+            pagination: false
+        },
+
     },
     instances: {
         getIamPolicy: {
@@ -792,7 +795,18 @@ var postcalls = {
             paginationKey: 'pageSize',
             reqParams: 'filter=state:ENABLED'
         }
-    }
+    },
+    groups: {
+        list: {
+            url: 'https://cloudidentity.googleapis.com/v1/groups?parent=customers/{directoryCustomerId}',
+            location: null,
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['directoryCustomerId'],
+            subObj: 'owner',
+            pagination: false
+        }
+    },
 };
 
 var tertiarycalls = {
@@ -816,6 +830,27 @@ var tertiarycalls = {
             pagination: true,
             maxLimit: 50000
         }
+    },
+    groups: {
+        get: {
+            url: 'https://cloudidentity.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['groups'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        }
+    },
+    memberships: {
+        list: {
+            url: 'https://cloudidentity.googleapis.com/v1/{name}/memberships',
+            location: null,
+            reliesOnService: ['groups'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: true,
+            paginationKey: 'nextPageToken'
+        }
     }
 };
 
@@ -826,7 +861,12 @@ var specialcalls = {
             reliesOnService: ['projects'],
             reliesOnCall: ['getIamPolicy']
         },
-        sendIntegration: serviceMap['IAM']
+        sendIntegration: {
+            integrationReliesOn: {
+                serviceName: ['roles']
+            },
+            enabled: true
+        }
     }
 };
 
