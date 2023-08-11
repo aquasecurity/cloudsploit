@@ -99,6 +99,7 @@ module.exports = {
                 if (!describeClusters && describeClusters.err && !describeClusters.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for clusters: ' + helpers.addError(describeClusters), region);
+                    return rcb();
                 } else {
                     var describeSubnets = helpers.addSource(cache, source,
                         ['ec2', 'describeSubnets', region]);
