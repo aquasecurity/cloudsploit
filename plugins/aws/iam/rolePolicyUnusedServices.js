@@ -413,8 +413,8 @@ module.exports = {
                                         statement.Action[0].split(':')[1].toLowerCase();
                                     if (statement.Action.length > 1 || statement.Action[0] !== '*') {
                                         for (let action of statement.Action) {
-                                            if (config.whitelist_unused_actions_for_resources.includes(action)) continue;
-                                            if (action == "*") continue;
+                                            if (config.whitelist_unused_actions_for_resources.includes(action) ||
+                                                (action && action.length && action === '*')) continue;
                                             let resourceAction = action.split(':')[1].toLowerCase();
 
                                             if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
