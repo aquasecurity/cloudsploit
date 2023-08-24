@@ -398,6 +398,7 @@ module.exports = {
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
         'rdsDefaultUsername'            : require(__dirname + '/plugins/aws/rds/rdsDefaultUsername.js'),
+        'rdsDefaultPort'                : require(__dirname + '/plugins/aws/rds/rdsDefaultPort.js'),
         'rdsSnapshotPubliclyAccessible' : require(__dirname + '/plugins/aws/rds/rdsSnapshotPubliclyAccessible.js'),
         'rdsInstanceHasTags'            : require(__dirname + '/plugins/aws/rds/rdsInstanceHasTags.js'),
         'mysqlVulnerabilityCheck'       : require(__dirname + '/plugins/aws/rds/mysqlVulnerabilityCheck.js'),
