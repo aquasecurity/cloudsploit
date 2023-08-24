@@ -61,7 +61,7 @@ module.exports = {
                 if (allPrivate) {
                     helpers.addResult(results, 0, 'RDS instance has private subnets', region, dbResource);
                 } else { 
-                     helpers.addResult(results, 2, 'RDS instance has public subnets', region, dbResource);
+                    helpers.addResult(results, 2, 'RDS instance has public subnets', region, dbResource);
                 }        
             });
             rcb();
