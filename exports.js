@@ -28,7 +28,7 @@ module.exports = {
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
         'appmeshTLSRequired': require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
-        'appmeshHealthChecks'            : require(__dirname + '/plugins/aws/appmesh/appmeshHealthChecks.js'),
+        'appmeshVGHealthChecks'            : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
         
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
