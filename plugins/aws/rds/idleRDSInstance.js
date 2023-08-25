@@ -58,7 +58,7 @@ module.exports = {
                 if (!getRdsMetricStatistics || getRdsMetricStatistics.err ||
                     !getRdsMetricStatistics.data || !getRdsMetricStatistics.data.Datapoints) {
                     helpers.addResult(results, 3,
-                        `Unable to query for CPU metric statistics: ${helpers.addError(getEcMetricStatistics)}`, region, resource);
+                        `Unable to query for CPU metric statistics: ${helpers.addError(getRdsMetricStatistics)}`, region, resource);
                     return;
                 }
 
