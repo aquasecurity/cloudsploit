@@ -1301,6 +1301,16 @@ var postcalls = [
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
                 override: true, 
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsReadIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {

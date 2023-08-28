@@ -102,8 +102,121 @@ const rdsMetricStatistics = [
         ]
     }
 ]
+const rdsReadMetricStatistics = [
+    {
+        "Datapoints": [
+            {
+                "Timestamp": "2023-08-23T08:00:00+00:00",
+                "Sum": 20.345,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T03:00:00+00:00",
+                "Sum": 25.681474214651491,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T18:00:00+00:00",
+                "Sum": 35.744509676375273,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T13:00:00+00:00",
+                "Sum": 16.948755730537165,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T16:00:00+00:00",
+                "Sum": 20.948286932273096,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T21:00:00+00:00",
+                "Sum": 24.876655210316418,
+                "Unit": "Count/Second"
+            },
+    
+        ]
+    },
+    {
+        "Datapoints": [
+            {
+                "Timestamp": "2018-12-16T17:03:10Z",
+                "Average": 1.99,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2018-12-16T18:03:10Z",
+                "Average": 10.70,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2018-12-16T19:03:10Z",
+                "Average": 7.20,
+                "Unit": "Count/Second"
+            },
+        ]
+    }
+]
+const rdsWriteMetricStatistics = [
+    {
+        "Datapoints": [
+            {
+                "Timestamp": "2023-08-23T08:00:00+00:00",
+                "Sum": 25.79992379178903,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T03:00:00+00:00",
+                "Sum": 35.681474214651491,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T18:00:00+00:00",
+                "Sum": 45.744509676375273,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T13:00:00+00:00",
+                "Sum": 26.948755730537165,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T16:00:00+00:00",
+                "Sum": 17.948286932273096,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2023-08-23T21:00:00+00:00",
+                "Sum": 20.876655210316418,
+                "Unit": "Count/Second"
+            },
+    
+        ]
+    },
+    {
+        "Datapoints": [
+            {
+                "Timestamp": "2018-12-16T17:03:10Z",
+                "Average": 1.99,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2018-12-16T18:03:10Z",
+                "Average": 10.70,
+                "Unit": "Count/Second"
+            },
+            {
+                "Timestamp": "2018-12-16T19:03:10Z",
+                "Average": 7.20,
+                "Unit": "Count/Second"
+            },
+        ]
+    }
+]
 
-const createCache = (instance, metrics) => {
+
+const createCache = (instance, cpuMetrics, writeMetric, readMetric) => {
     if (instance && instance.length) var id = instance[0].DBInstanceIdentifier;
     return {
         rds: {
@@ -117,7 +230,21 @@ const createCache = (instance, metrics) => {
             getRdsMetricStatistics: {
                 'us-east-1': {
                     [id]: {
-                        data: metrics
+                        data: cpuMetrics
+                    }
+                }
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                'us-east-1': {
+                    [id]: {
+                        data: writeMetric
+                    }
+                }
+            },
+            getRdsReadIOPSMetricStatistics: {
+                'us-east-1': {
+                    [id]: {
+                        data: readMetric
                     }
                 }
             }
@@ -143,6 +270,20 @@ const createErrorCache = () => {
                         message: 'error getting metric stats'
                     },
                 }
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                'us-east-1': {
+                    err: {
+                        message: 'error getting metric stats'
+                    },
+                }
+            },
+            getRdsReadIOPSMetricStatistics: {
+                'us-east-1': {
+                    err: {
+                        message: 'error getting metric stats'
+                    },
+                }
             }
         },
     };
@@ -159,14 +300,20 @@ const createNullCache = () => {
             getRdsMetricStatistics: {
                 'us-east-1': null
             },
+            getRdsWriteIOPSMetricStatistics: {
+                'us-east-1': null
+            },
+            getRdsReadIOPSMetricStatistics: {
+                'us-east-1': null
+            },
         },
     };
 };
 
 describe('idleRDSInstance', function () {
     describe('run', function () {
-        it('should PASS if the RDS Instance cpu utilization is more than 1.0 percent', function (done) {
-            const cache = createCache([describeDBInstances[0]], rdsMetricStatistics[1]);
+        it('should PASS if the RDS Instance cpu utilization is more than 1.0 percent or more than 20 Read or Write IOPS', function (done) {
+            const cache = createCache([describeDBInstances[0]], rdsMetricStatistics[1], rdsReadMetricStatistics[0], rdsWriteMetricStatistics[0]);
             idleRDSInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -176,7 +323,7 @@ describe('idleRDSInstance', function () {
         });
 
         it('should FAIL if the RDS Instance cpu utilization is less than or equal to 1.0 percent', function (done) {
-            const cache = createCache([describeDBInstances[1]], rdsMetricStatistics[0]);
+            const cache = createCache([describeDBInstances[1]], rdsMetricStatistics[0], rdsReadMetricStatistics[1], rdsWriteMetricStatistics[1]);
             idleRDSInstance.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
