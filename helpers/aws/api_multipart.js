@@ -815,6 +815,16 @@ var calls = [
                 paginate:'NextToken'
             }
         },
+        Inspector: {
+            listAssessmentTemplates: {
+                property: 'assessmentTemplateArns',
+                paginate:'nextToken'
+            },
+            listAssessmentRuns: {
+                property: 'assessmentRunArns',
+                paginate: 'nextToken'
+            }
+        },
         MWAA: {
             listEnvironments: {
                 property: 'Environments',
@@ -1993,6 +2003,18 @@ var postcalls = [
                 filterKey: 'BrokerId',
                 filterValue: 'BrokerId'
             }
+        },
+        Inspector: {
+            listAssessmentRuns: {
+                reliesOnService: 'inspector',
+                reliesOnCall: 'listAssessmentTemplates',
+                override:true
+            },
+            describeAssessmentRuns: {
+                reliesOnService: 'inspector',
+                reliesOnCall: 'listAssessmentRuns',
+                override: true
+            },
         },
         LookoutMetrics: {
             describeAnomalyDetector: {

@@ -376,6 +376,11 @@ module.exports = {
         listBrokers: 'BrokerArn',
         describeBroker: 'BrokerArn'
     },
+    inspector: {
+        listAssessmentTemplates: 'assessmentTemplateArns',
+        listAssessmentRuns: 'assessmentRunArns',
+        describeAssessmentRuns: 'assessmentRuns',
+    },
     kafka: {
         listClusters: 'ClusterArn',
     },
