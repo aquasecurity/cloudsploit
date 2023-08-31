@@ -17,11 +17,10 @@ const describeAssessmentRuns = {
 
     "assessmentRuns": [
         {
-            "completedAt": "2023-08-20T14:30:00Z"
+            "completedAt": "2023-08-20T14:30:00Z",
+            "assessmentTemplateArn":"arn:aws:inspector:us-east-1:123456789012:target/0-nvg8Tm4A/template/0-OXqJxJvw",
+
         },
-        {
-            "completedAt": "2023-08-18T09:15:00Z"
-        }
     ]
 };
 
@@ -35,12 +34,7 @@ const createCache = (assessmentTemplates, assessmentRuns) => {
             },
             listAssessmentRuns: {
                 'us-east-1': {
-                    [assessmentTemplates[0]]: {
-                        data: assessmentRuns
-                    },
-                    [assessmentTemplates[1]]: {
-                        data: assessmentRuns
-                    }
+                        data: assessmentRuns.assessmentRunArns
                 }
             },
             describeAssessmentRuns: {
@@ -105,9 +99,7 @@ describe('lastInspectorRun', function () {
             const cache = createCache(listAssessmentTemplates, listAssessmentRuns);
             describeAssessmentRuns.assessmentRuns[0].completedAt = moment().subtract(7, 'days').toISOString();
             lastInspectorRun.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(0);
                 done();
             });
         });

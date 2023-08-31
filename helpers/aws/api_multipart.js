@@ -2005,11 +2005,6 @@ var postcalls = [
             }
         },
         Inspector: {
-            listAssessmentRuns: {
-                reliesOnService: 'inspector',
-                reliesOnCall: 'listAssessmentTemplates',
-                override:true
-            },
             describeAssessmentRuns: {
                 reliesOnService: 'inspector',
                 reliesOnCall: 'listAssessmentRuns',

@@ -21,6 +21,8 @@ module.exports = {
         async.each(regions.inspector, function(region, rcb) {
             var listAssessmentTemplates = helpers.addSource(cache, source,
                 ['inspector', 'listAssessmentTemplates', region]);
+            
+           
             if (!listAssessmentTemplates) return rcb();
 
             if (listAssessmentTemplates.err || !listAssessmentTemplates.data) {
@@ -28,24 +30,32 @@ module.exports = {
                     'Unable to query Assessment Templates: ' + helpers.addError(listAssessmentTemplates), region);
                 return rcb();
             }
+
             if (!listAssessmentTemplates.data.length) {
                 helpers.addResult(results, 0, 'No Assessment Templates found', region);
                 return rcb();
             }
+            var listAssessmentRuns = helpers.addSource(cache, source,
+                ['inspector', 'listAssessmentRuns', region]);
+            
+            
             async.each(listAssessmentTemplates.data, function(templateArn, tcb) {
-                var listAssessmentRuns = helpers.addSource(cache, source,
-                    ['inspector', 'listAssessmentRuns', region, templateArn]);
+                
                 var hasRunWithin7Days = false;
                 var currentDate = moment();
 
-                async.each(listAssessmentRuns.data.assessmentRunArns, function(runArn, acb) {
-                    var describeAssessmentRuns = helpers.addSource(cache, source,
-                        ['inspector', 'describeAssessmentRuns', region, runArn]);
-                    var runCompletionDate = moment(describeAssessmentRuns.data.assessmentRuns[0].completedAt);
-                    var timeDifference = currentDate.diff(runCompletionDate, 'days');
-    
-                    if (timeDifference <= daysThreshold ) {
-                        hasRunWithin7Days = true;
+
+                async.each(listAssessmentRuns.data, function(runArn, acb) {
+                    if (!hasRunWithin7Days) {
+                        var describeAssessmentRuns = helpers.addSource(cache, source,
+                            ['inspector', 'describeAssessmentRuns', region, runArn]);
+                        if (describeAssessmentRuns.data.assessmentRuns[0].assessmentTemplateArn == templateArn) {
+                            var runCompletionDate = moment(describeAssessmentRuns.data.assessmentRuns[0].completedAt);
+                            var timeDifference = currentDate.diff(runCompletionDate, 'days');
+                            if (timeDifference <= daysThreshold) {
+                                hasRunWithin7Days = true;
+                            }
+                        }
                     }
                     acb();
                 }, function(err) {
@@ -53,9 +63,11 @@ module.exports = {
                         if (hasRunWithin7Days) {
                             helpers.addResult(results, 0, 'Assessment template run within the last 7 days', region, templateArn);
                         } else {
+                           
                             helpers.addResult(results, 2, 'Assessment template not run in the last 7 days', region, templateArn);
                         }
                     }
+
                     tcb();
                 });
             }, function() {
