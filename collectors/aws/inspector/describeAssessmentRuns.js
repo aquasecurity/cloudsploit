@@ -18,7 +18,6 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             }
 
             collection.inspector.describeAssessmentRuns[AWSConfig.region][runArn].data = data;
-
             cb();
         });
     }, function() {
