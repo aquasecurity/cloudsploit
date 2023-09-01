@@ -2629,6 +2629,11 @@ var postcalls = [
                 reliesOnCall: 'listAssessmentRuns',
                 override: true
             },
+            listExclusions: {
+                reliesOnService: 'inspector',
+                reliesOnCall: 'listAssessmentRuns',
+                override: true
+            },
         },
         LookoutMetrics: {
             describeAnomalyDetector: {

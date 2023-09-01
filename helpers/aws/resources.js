@@ -380,6 +380,7 @@ module.exports = {
         listAssessmentTemplates: '',
         listAssessmentRuns: '',
         describeAssessmentRuns: 'arn',
+        listExclusions: '',
     },
     kafka: {
         listClusters: 'ClusterArn',

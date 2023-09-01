@@ -651,6 +651,7 @@ module.exports = {
         'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
 
         'lastInspectorRun'               : require(__dirname + '/plugins/aws/inspector/lastInspectorRun.js'),
+        'assessmentExclusionsCheck'      : require(__dirname + '/plugins/aws/inspector/assessmentExclusionsCheck.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
