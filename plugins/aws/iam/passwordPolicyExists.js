@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Password Policy Exists',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures that password policy is set for IAM users.',
     more_info: 'You can set a custom password policy on your AWS account to specify login password complexity requirements and mandatory rotation periods for your IAM users\' passwords.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html',
