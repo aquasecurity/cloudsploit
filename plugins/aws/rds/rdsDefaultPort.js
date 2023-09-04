@@ -51,17 +51,16 @@ module.exports = {
             }
 
             for (var instance of describeDBInstances.data) {
-                if (!instance.DBInstanceArn) continue;
-                if (!instance.Engine ||
+                if (!instance.DBInstanceArn || !instance.Engine ||
                     !(instance.Endpoint && instance.Endpoint.Port)) continue;
                 var defaultPort = defaultPorts.filter((d) => {
                     return d.engine == instance.Engine && d.port == instance.Endpoint.Port;
                 });
                 if (defaultPort && defaultPort.length) {
-                    helpers.addResult(results, 2, 'RDS instance has default port',
+                    helpers.addResult(results, 2, 'RDS instance is running on default port',
                         region, instance.DBInstanceArn);
                 } else {
-                    helpers.addResult(results, 0, 'RDS instance does not have default port',
+                    helpers.addResult(results, 0, 'RDS instance is not running on default port',
                         region, instance.DBInstanceArn);
                 }
             }

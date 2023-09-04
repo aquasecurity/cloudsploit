@@ -290,7 +290,7 @@ describe('rdsDefaultPort', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.equal('RDS instance does not have default port');
+                expect(results[0].message).to.equal('RDS instance is not running on default port');
                 done();
             });
         });
@@ -302,7 +302,7 @@ describe('rdsDefaultPort', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.equal('RDS instance has default port');
+                expect(results[0].message).to.equal('RDS instance is running on default port');
                 done();
             });
         });
