@@ -13,19 +13,19 @@ module.exports = {
     settings: {
         rds_idle_instance_cpu_percentage: {
             name: 'RDS Idle Instance Average CPU Usage Percentage',
-            description: 'Return a failing result when consumed RDS instance cpu threshold  equal to or less than this percentage',
+            description: 'Return a failing result when consumed RDS instance cpu threshold is equal to or less than this percentage',
             regex: '^(100|[1-9][0-9]?)$', 
             default: '1.0'
         },
         rds_idle_instance_readIOPS_percentage: {
             name: 'RDS Idle Instance Average Read IOPS Percentage',
-            description: 'Return a failing result when consumed RDS instance read IOPS threshold  equal to or less than this percentage',
+            description: 'Return a failing result when consumed RDS instance read IOPS threshold is equal to or less than this percentage',
             regex: '^(100|[1-9][0-9]?)$', 
             default: '20'
         },
         rds_idle_instance_writeIOPS_percentage: {
             name: 'RDS Idle Instance Average Write IOPS Percentage',
-            description: 'Return a failing result when consumed RDS instance write IOPS threshold equal to or less than this percentage',
+            description: 'Return a failing result when consumed RDS instance write IOPS threshold is equal to or less than this percentage',
             regex: '^(100|[1-9][0-9]?)$', 
             default: '20'
         }
