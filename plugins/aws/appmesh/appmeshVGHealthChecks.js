@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'App Mesh VG Health Check Policies',
     category: 'App Mesh',
-    domain: 'Reliability',
+    domain: 'Content Delivery',
     description: 'Ensure that Amazon App Mesh virtual gateways use health check policies to monitor the availability of virtual nodes.',
     more_info: 'Health check policies in App Mesh are essential to maintain application availability and reliability by monitoring the health of associated virtual nodes.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/virtual_gateway_health_checks.html',
@@ -48,7 +48,7 @@ module.exports = {
                     continue;
                 }
 
-                if (!listVirtualGateways.data.virtualGateways) {
+                if (!listVirtualGateways.data.virtualGateways || !listVirtualGateways.data.virtualGateways.length) {
                     helpers.addResult(results, 0,
                         'No App Mesh virtual gateways found', region, resource);
                     continue;
@@ -76,9 +76,7 @@ module.exports = {
                         const listeners = describeVirtualGateway.data.virtualGateway.spec.listeners;
 
                         const hasHealthCheckPolicies = listeners.every(listener => {
-                            return listener.healthCheck && listener.healthCheck.protocol &&
-                                listener.healthCheck.healthyThreshold && listener.healthCheck.intervalMillis &&
-                                listener.healthCheck.timeoutMillis && listener.healthCheck.unhealthyThreshold;
+                            return listener.healthCheck && Object.keys(listener.healthCheck).length;
                         });
 
                         const status = hasHealthCheckPolicies ? 0 : 2;

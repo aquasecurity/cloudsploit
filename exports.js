@@ -27,8 +27,8 @@ module.exports = {
         'apigatewayAuthorization'       : require(__dirname + '/plugins/aws/apigateway/apigatewayAuthorization.js'),
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
-        'appmeshTLSRequired': require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
-        'appmeshVGHealthChecks'            : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
+        'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
+        'appmeshVGHealthChecks'          : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
         
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
