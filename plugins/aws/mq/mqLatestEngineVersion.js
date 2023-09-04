@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Amazon MQ brokers are using the latest version of Apache ActiveMQ broker engine.',
     more_info: 'Using the latest version of Apache ActiveMQ engine helps follow AWS best practices and benefits from the latest features, performance improvements, and security updates.',
     recommended_action: 'Update Amazon MQ brokers to the latest version of Apache ActiveMQ broker engine.',
-    link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker.html',
+    link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/activemq-version-management.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker'],
 
     run: function(cache, settings, callback) {
