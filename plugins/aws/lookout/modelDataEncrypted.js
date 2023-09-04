@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['LookoutVision:CreateProject' ],
 
     run: function(cache, settings, callback) {
         var results = [];

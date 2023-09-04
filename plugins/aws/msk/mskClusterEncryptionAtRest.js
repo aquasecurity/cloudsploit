@@ -18,6 +18,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['Kafka:CreateCluster'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

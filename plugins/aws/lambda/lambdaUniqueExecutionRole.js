@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html',
     recommended_action: 'Modify Lambda function and add new execution role.',
     apis: ['Lambda:listFunctions'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration', 'lambda:DeleteFunction'],
   
 
     run: function(cache, settings, callback) {

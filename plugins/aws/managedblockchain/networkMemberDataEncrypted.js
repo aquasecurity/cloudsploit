@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['ManagedBlockchain:CreateNetwork','ManagedBlockchain:CreateMember'],
 
     run: function(cache, settings, callback) {
         var results = [];

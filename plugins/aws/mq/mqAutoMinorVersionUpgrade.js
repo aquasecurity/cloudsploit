@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enabled Auto Minor Version Upgrade feature for MQ brokers',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker'],
+    realtime_triggers: ['MQ:CreateBrocker'],
 
     run: function(cache, settings, callback) {
         var results = [];
