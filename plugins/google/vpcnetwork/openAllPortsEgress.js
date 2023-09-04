@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open All Ports Egress',
     category: 'VPC Network',
     domain: 'Network Access Control',
-    description: 'Ensure no firewall rules allow egress to all ports and protocols',
+    description: 'Ensure no firewall rules allow egress to all ports and protocols.',
     more_info: 'Allowing outbound traffic to all protocols and ports can lead to internal resources accessing unwanted and untrusted resources. It is a best practice to follow the principle of least privilege, and grant access to only required protocols and ports.',
     link: 'https://cloud.google.com/vpc-service-controls/docs/ingress-egress-rules',
     recommended_action: 'Restrict outbound traffic to only required protocols and ports.',
