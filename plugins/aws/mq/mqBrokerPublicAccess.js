@@ -36,10 +36,9 @@ module.exports = {
                 if (!broker.BrokerArn) return bcb();
 
                 let resource = broker.BrokerArn;
-                let brokerId = broker.BrokerId;
 
                 var describeBroker = helpers.addSource(cache, source,
-                    ['mq', 'describeBroker', region, brokerId]);
+                    ['mq', 'describeBroker', region, broker.BrokerId]);
 
                 if (!describeBroker || describeBroker.err || !describeBroker.data) {
                     helpers.addResult(results, 3,
@@ -47,13 +46,14 @@ module.exports = {
                         region, resource);
                     return bcb();
                 }
+
                 if (describeBroker.data.PubliclyAccessible) {
                     helpers.addResult(results, 2,
-                        'MQ Broker is publicly accessible from the Internet',
+                        'MQ Broker is publicly accessible',
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'MQ Broker is not publicly accessible from the Internet',
+                        'MQ Broker is not publicly accessible',
                         region, resource);
                 }
 
