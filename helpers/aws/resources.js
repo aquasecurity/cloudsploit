@@ -379,8 +379,10 @@ module.exports = {
     inspector: {
         listAssessmentTemplates: '',
         listAssessmentRuns: '',
-        describeAssessmentRuns: 'arn',
+        describeAssessmentRuns: 'data.assessmentRuns[0].arn',
         listExclusions: '',
+        listFindings: '',
+        describeFindings:'data.findings[0].arn'
     },
     kafka: {
         listClusters: 'ClusterArn',

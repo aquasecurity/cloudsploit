@@ -652,6 +652,7 @@ module.exports = {
 
         'lastInspectorRun'               : require(__dirname + '/plugins/aws/inspector/lastInspectorRun.js'),
         'assessmentExclusionsCheck'      : require(__dirname + '/plugins/aws/inspector/assessmentExclusionsCheck.js'),
+        'inspectorFindingsCheck'         : require(__dirname + '/plugins/aws/inspector/inspectorFindingsCheck.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),

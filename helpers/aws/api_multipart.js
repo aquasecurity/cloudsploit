@@ -823,6 +823,10 @@ var calls = [
             listAssessmentRuns: {
                 property: 'assessmentRunArns',
                 paginate: 'nextToken'
+            },
+            listFindings: {
+                property: 'findingArns',
+                paginate: 'nextToken',
             }
         },
         MWAA: {
@@ -2013,6 +2017,11 @@ var postcalls = [
             listExclusions: {
                 reliesOnService: 'inspector',
                 reliesOnCall: 'listAssessmentRuns',
+                override: true
+            },
+            describeFindings: {
+                reliesOnService: 'inspector',
+                reliesOnCall: 'listFindings',
                 override: true
             }
         },
