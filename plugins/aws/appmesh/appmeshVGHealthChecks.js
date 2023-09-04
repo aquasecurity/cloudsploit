@@ -36,7 +36,7 @@ module.exports = {
             for (let mesh of listMeshes.data){
                 if (!mesh.arn || !mesh.meshName) continue;
 
-                let resource = mesh.arn;
+                let meshResource = mesh.arn;
 
                 var listVirtualGateways = helpers.addSource(cache, source,
                     ['appmesh', 'listVirtualGateways', region, mesh.meshName]);
@@ -44,35 +44,34 @@ module.exports = {
                 if (!listVirtualGateways || listVirtualGateways.err || !listVirtualGateways.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for App Mesh virtual gateways: ' + helpers.addError(listVirtualGateways),
-                        region, resource);
+                        region, meshResource);
                     continue;
                 }
 
                 if (!listVirtualGateways.data.virtualGateways || !listVirtualGateways.data.virtualGateways.length) {
                     helpers.addResult(results, 0,
-                        'No App Mesh virtual gateways found', region, resource);
+                        'No App Mesh virtual gateways found', region, meshResource);
                     continue;
                 }
 
                 for (let gateway of listVirtualGateways.data.virtualGateways) {
                     if (!gateway.arn || !gateway.virtualGatewayName) continue;
 
-                    let resource = gateway.arn;
+                    let gatewayResource = gateway.arn;
 
                     var describeVirtualGateway = helpers.addSource(cache, source,
                         ['appmesh', 'describeVirtualGateway', region, gateway.virtualGatewayName]);
 
                     if (!describeVirtualGateway ||
                         describeVirtualGateway.err ||
-                        !describeVirtualGateway.data) {
+                        !describeVirtualGateway.data ||
+                        !describeVirtualGateway.data.virtualGateway ||
+                        !describeVirtualGateway.data.virtualGateway.spec ||
+                        !describeVirtualGateway.data.virtualGateway.spec.listeners) {
                         helpers.addResult(results, 3,
-                            'Unable to describe App Mesh virtual gateway: ' + helpers.addError(describeVirtualGateway), region, resource);
+                            'Unable to describe App Mesh virtual gateway: ' + helpers.addError(describeVirtualGateway), region, gatewayResource);
                         continue;
-                    }
-
-                    if (describeVirtualGateway.data.virtualGateway &&
-                        describeVirtualGateway.data.virtualGateway.spec &&
-                        describeVirtualGateway.data.virtualGateway.spec.listeners) {
+                    } else {
                         const listeners = describeVirtualGateway.data.virtualGateway.spec.listeners;
 
                         const hasHealthCheckPolicies = listeners.every(listener => {
@@ -82,7 +81,7 @@ module.exports = {
                         const status = hasHealthCheckPolicies ? 0 : 2;
                         helpers.addResult(results, status,
                             `App Mesh virtual gateway ${hasHealthCheckPolicies ? 'has' : 'does not have'} health check policies`,
-                            region, resource);
+                            region, gatewayResource);
                     }
                 }
             }
