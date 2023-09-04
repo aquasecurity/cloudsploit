@@ -6,14 +6,14 @@ module.exports = {
     category: 'RDS',
     domain: 'Databases',
     description: 'Ensure RDS instances do not exceed the alarm threshold for CPU utilization.',
-    more_info: 'Excessive CPU utilization can indicate that the databases running on these servers do not have enough hardware resources to perform optimally.Upgrading overutilized RDS instances to meet the load needs will improve directly the health and success of databases.',
+    more_info: 'High CPU usage may suggest that the databases on these servers lack sufficient hardware resources to operate at their best. Enhancing the performance of overburdened RDS instances by upgrading them can directly enhance the well-being and performance of the databases.',
     link: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/amazon-rds-monitoring-alerting/db-instance-cloudwatch-metrics.html',
     recommended_action: 'Upgrade (upsize) the overused RDS database instances.',
     apis: ['RDS:describeDBInstances', 'CloudWatch:getRdsMetricStatistics'],
     settings: {
         rds_cpu_threshold_fail: {
             name: 'RDS Instance CPU Threshold Fail',
-            description: 'Return a failing result when consumed RDS insatnce cpu threshold equals or exceeds this percentage',
+            description: 'Return a failing result when consumed RDS instance cpu threshold equals or exceeds this percentage',
             regex: '^(100|[1-9][0-9]?)$',
             default: '90'
         }
