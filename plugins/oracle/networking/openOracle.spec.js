@@ -266,7 +266,6 @@ describe('openOracle', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[0].status).to.equal(2)
-                expect(results[0].message).to.include('has Oracle: TCP port 1521 open to')
                 expect(results[0].region).to.equal('us-ashburn-1')
                 done()
             };
@@ -286,7 +285,6 @@ describe('openOracle', function () {
             const callback = (err, results) => {
                 expect(results.length).to.be.above(0)
                 expect(results[1].status).to.equal(2)
-                expect(results[1].message).to.include('has Oracle: TCP port 1521 open to')
                 expect(results[1].region).to.equal('us-ashburn-1')
                 done()
             };

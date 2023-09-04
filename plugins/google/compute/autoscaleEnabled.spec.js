@@ -20,13 +20,13 @@ const createCache = (instanceData, autoscalers, instanceGroupsError, autoScalers
                 }
             }
         },
-        clusters: {
+        kubernetes: {
             list: {
                 'global': {
                     data: clusters,
                     err: null
                 }
-            }
+        }
         },
         projects: {
             get: {
@@ -131,8 +131,8 @@ describe('autoscaleEnabled', function () {
             };
 
             const cache = createCache(
-                instanceGroupData,
-                {
+                [instanceGroupData],
+                [{
                     "zones/us-central1-a": {
                         "autoscalers":
                             [
@@ -146,7 +146,7 @@ describe('autoscaleEnabled', function () {
                                 }
                             ]
                     }
-                },
+                }],
                 null, null
             );
 
@@ -162,8 +162,8 @@ describe('autoscaleEnabled', function () {
             };
 
             const cache = createCache(
-                instanceGroupData,
-                {
+                [instanceGroupData],
+                [{
                     "zones/us-central1-a": {
                         "autoscalers":
                             [
@@ -177,7 +177,7 @@ describe('autoscaleEnabled', function () {
                                 }
                             ]
                     }
-                },
+                }],
                 null, null
             );
 

@@ -48,6 +48,8 @@ module.exports = {
             }
 
             webApps.data.forEach(function(webApp) {
+                if (webApp.kind && webApp.kind.includes('workflowapp')) return;
+
                 const authSettings = helpers.addSource(
                     cache, source, ['webApps', 'getAuthSettings', location, webApp.id]
                 );

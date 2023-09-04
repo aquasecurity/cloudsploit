@@ -46,30 +46,33 @@ module.exports = {
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountUsers = [];
             var notSeparated = [];
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/cloudkms.admin') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
-                }
-            });
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/cloudkms.cryptoKeyDecrypter' &&
-                    roleBinding.members) {
-                    notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1);
-                    }).concat(notSeparated);
-                } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypter' &&
-                    roleBinding.members) {
-                    notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1);
-                    }).concat(notSeparated);
-                } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypterDecrypter' &&
-                    roleBinding.members) {
-                    notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1);
-                    }).concat(notSeparated);
-                }
-            });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/cloudkms.admin') {
+                        serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
+                    }
+                });
+
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/cloudkms.cryptoKeyDecrypter' &&
+                        roleBinding.members) {
+                        notSeparated = roleBinding.members.filter(member => {
+                            return (serviceAccountUsers.indexOf(member) > -1);
+                        }).concat(notSeparated);
+                    } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypter' &&
+                        roleBinding.members) {
+                        notSeparated = roleBinding.members.filter(member => {
+                            return (serviceAccountUsers.indexOf(member) > -1);
+                        }).concat(notSeparated);
+                    } else if (roleBinding.role === 'roles/cloudkms.cryptoKeyEncrypterDecrypter' &&
+                        roleBinding.members) {
+                        notSeparated = roleBinding.members.filter(member => {
+                            return (serviceAccountUsers.indexOf(member) > -1);
+                        }).concat(notSeparated);
+                    }
+                });
+            }
 
             if (notSeparated.length) {
                 notSeparated = [...new Set(notSeparated)];

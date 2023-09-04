@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2'
+    'EC2', 'IAM'
 ];
 
 var calls = [
@@ -30,12 +30,28 @@ var calls = [
             getRestApis: {
                 property: 'items',
                 paginate: 'NextToken'
+            },
+            getDomainNames: {
+                property: 'items',
+                paginate: 'NextToken'
             }
         },
         AppConfig: {
             listApplications: {
                 property: 'Items',
                 paginate: 'NextToken'
+            }
+        },
+        OpenSearchServerless: {
+            listCollections : {
+                paginate: 'NextToken',
+                property: 'collectionSummaries'
+            },
+            listNetworkSecurityPolicies: {
+                override: true, 
+            },
+            listEncryptionSecurityPolicies:{
+                override: true,
             }
         },
         AppMesh: {
@@ -304,7 +320,17 @@ var calls = [
         DocDB: {
             describeDBClusters: {
                 property: 'DBClusters',
-                paginate: 'Marker'
+                paginate: 'Marker',
+                params: {
+                    Filters: [
+                        {
+                            Name: 'engine',
+                            Values: [
+                                'docdb'
+                            ]
+                        }
+                    ]
+                }
             }
         },
         DynamoDB: {
@@ -651,7 +677,7 @@ var calls = [
             },
             listRoles: {
                 property: 'Roles',
-                paginate: 'Marker'
+                override: true
             },
             listPolicies: {
                 property: 'Policies',
@@ -965,10 +991,7 @@ var calls = [
             },
             describeParameters: {
                 property: 'Parameters',
-                params: {
-                    MaxResults: 50
-                },
-                paginate: 'NextToken'
+                override: true
             },
             listAssociations: {
                 property: 'Associations',
@@ -999,6 +1022,12 @@ var calls = [
                 property: 'checks',
                 params: {language: 'en'},
             },
+        },
+        SecurityHub: {
+            describeHub: {
+                property: '',
+                paginate: 'NextToken'
+            }
         },
         Transfer: {
             listServers: {
@@ -1111,7 +1140,16 @@ var calls = [
                 property: 'infrastructureConfigurationSummaryList',
                 paginate: 'nextToken'
             }
-        }
+        },
+        CognitoIdentityServiceProvider: {
+            listUserPools: {
+                property: 'UserPools',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 60
+                }
+            },
+        },
     }
 ];
 
@@ -1249,6 +1287,16 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getEc2MetricStatistics: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+            },
+            getredshiftMetricStatistics: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                override: true,
+            }
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {
@@ -1339,7 +1387,12 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1704,6 +1757,16 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getWebACLForCognitoUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                override: true
+            },
+            getWebACL: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                override: true
             }
         },
         ECS: {
@@ -2239,6 +2302,26 @@ var postcalls = [
                 filterValue: 'arn'
             }
         },
+        CognitoIdentityServiceProvider: {
+            describeUserPool: {
+                reliesOnService: 'cognitoidentityserviceprovider',
+                reliesOnCall: 'listUserPools',
+                filterKey: 'UserPoolId',
+                filterValue: 'Id'
+            }
+        },
+        OpenSearchServerless: {
+            getNetworkSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listNetworkSecurityPolicies',
+                override: true,   
+            },
+            getEncryptionSecurityPolicy: {
+                reliesOnService: 'opensearchserverless',
+                reliesOnCall: 'listEncryptionSecurityPolicies',
+                override: true,   
+            }
+        }
     },
 ];
 

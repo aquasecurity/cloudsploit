@@ -61,7 +61,7 @@ module.exports = {
         // First, login without audience
         performLogin(null, function(err, credentials) {
             if (err) return callback(err);
-            performLogin({ tokenAudience: 'graph' }, function(graphErr, graphCredentials) {
+            performLogin({ tokenAudience: 'https://graph.microsoft.com' }, function(graphErr, graphCredentials) {
                 if (graphErr) return callback(graphErr);
                 performLogin({ tokenAudience: 'https://vault.azure.net' }, function(vaultErr, vaultCredentials) {
                     if (vaultErr) return callback(vaultErr);
@@ -137,6 +137,13 @@ module.exports = {
                             body.message = (body.code + ': ' + body.message);
                         }
                         return callback(body.message);
+                    } else if (body &&
+                        body.Message &&
+                        typeof body.Message == 'string') {
+                        if (body.Code && typeof body.Code == 'string') {
+                            body.Message = (body.Code + ': ' + body.Message);
+                        }
+                        return callback(body.Message);
                     }
 
                     console.log(`[ERROR] Unhandled error from Azure API: Body: ${JSON.stringify(body)}`);

@@ -3,14 +3,12 @@ var plugin = require('./instanceDefaultServiceAccount');
 
 const createCache = (instanceData, projectData, error) => {
     return {
-        instances: {
             compute: {
                 list: {
                     'us-central1-a': {
                         data: instanceData,
                         err: error
                     }
-                }
             }
         },
         projects : {

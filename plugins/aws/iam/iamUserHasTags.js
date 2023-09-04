@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM User Has Tags',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description:  'Ensure that AWS IAM Users have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags_users.html',
@@ -43,9 +43,9 @@ module.exports = {
             }
             
             if (!getUser.data.User.Tags || !getUser.data.User.Tags.length) {
-                helpers.addResult(results, 2, 'IAM User does not have tags', user.Arn);
+                helpers.addResult(results, 2, 'IAM User does not have tags', 'global', user.Arn);
             } else {
-                helpers.addResult(results, 0, 'IAM User has tags', user.Arn);
+                helpers.addResult(results, 0, 'IAM User has tags', 'global', user.Arn);
             }
             
         }

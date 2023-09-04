@@ -325,7 +325,7 @@ function getDenyPermissionsMap(statements, excludeStatementId) {
         let principals = extractStatementPrincipals(statement);
         principals.forEach(principal => {
             let permissionsObj = JSON.parse(JSON.stringify(getDenyActionResourceMap([statement])));
-            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsMap[principal], ...permissionsObj};
+            if (permissionsMap[principal]) permissionsMap[principal] = {...permissionsObj,...permissionsMap[principal]};
             else permissionsMap[principal] = permissionsObj;
         });
     }
@@ -384,7 +384,7 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         foundValid = true;
                         values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value) || /^o-[a-zA-Z0-9]{10,32}$/.test(value)) {
                         foundValid = true;
                         values.push(value);
                     }
@@ -902,7 +902,7 @@ function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
 
     routeTables.forEach(routeTable => {
         if (routeTable.RouteTableId && routeTable.Routes &&
-            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+            routeTable.Routes.every(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
     });
 
     subnets.forEach(subnet => {

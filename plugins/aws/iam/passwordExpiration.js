@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Password Expiration',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures password policy enforces a password expiration',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -51,11 +51,11 @@ module.exports = {
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-        // Handle special case errors
+        // Handle default password policy
         if (getAccountPasswordPolicy.err &&
             getAccountPasswordPolicy.err.code &&
             getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
-            helpers.addResult(results, 2, 'Account does not have a password policy');
+            helpers.addResult(results, 2, 'Account has Default password policy');
             return callback(null, results, source);
         }
 
