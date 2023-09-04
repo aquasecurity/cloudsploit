@@ -33,6 +33,7 @@ module.exports = {
                 'Unable to query for password policy status: ' + helpers.addError(getAccountPasswordPolicy));
             return callback(null, results, source);
         }
+
         helpers.addResult(results, 0, 'Account has a password policy');
         callback(null, results, source);
     },    
