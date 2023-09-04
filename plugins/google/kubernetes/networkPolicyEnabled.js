@@ -50,8 +50,9 @@ module.exports = {
                 } else location = region;
 
                 let resource = helpers.createResourceName('clusters', cluster.name, project, 'location', location);
-                if (cluster.networkPolicy &&
-                    cluster.networkPolicy.enabled) {
+                if ((cluster.networkPolicy && cluster.networkPolicy.enabled) ||
+                    (cluster.networkConfig && cluster.networkConfig.datapathProvider
+                        && cluster.networkConfig.datapathProvider === 'ADVANCED_DATAPATH')) {
                     helpers.addResult(results, 0, 'Network policy is enabled for the Kubernetes cluster', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Network policy is disabled for the Kubernetes cluster', region, resource);

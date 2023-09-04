@@ -43,7 +43,7 @@ module.exports = {
                 var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
                 ARNList.push(resource);
             }
-            helpers.checkTags(cache, 'DynamoDB table', ARNList, region, results);
+            helpers.checkTags(cache, 'DynamoDB table', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

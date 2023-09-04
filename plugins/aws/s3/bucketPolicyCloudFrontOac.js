@@ -21,7 +21,8 @@ module.exports = {
         var results = [];
         var source = {};
 
-        var region = helpers.defaultRegion(settings); 
+        var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
 
         var listDistributions = helpers.addSource(cache, source,
@@ -55,7 +56,7 @@ module.exports = {
                     let bucketName = origin.DomainName.replace(/.s3.*.com/, '');
                     
                     if (origin.OriginAccessControlId && origin.OriginAccessControlId.length) {
-                        cfUser = `arn:aws:cloudfront::${accountId}:distribution/${distribution.Id}`;
+                        cfUser = `arn:${awsOrGov}:cloudfront::${accountId}:distribution/${distribution.Id}`;
                         createAssociation(s3BucketAssociations, bucketName, distribution.Id, cfUser);
                         s3BucketAssociations[bucketName][distribution.Id].OACfound = true;
                         s3OriginFound = true;
@@ -63,7 +64,7 @@ module.exports = {
                                     origin.S3OriginConfig.OriginAccessIdentity &&
                                     origin.S3OriginConfig.OriginAccessIdentity.length) {
                         let oaiId = origin.S3OriginConfig.OriginAccessIdentity.substring(origin.S3OriginConfig.OriginAccessIdentity.lastIndexOf('/') + 1);
-                        cfUser = `arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${oaiId}`;
+                        cfUser = `arn:${awsOrGov}:iam::cloudfront:user/CloudFront Origin Access Identity ${oaiId}`;
                         createAssociation(s3BucketAssociations,bucketName,distribution.Id,cfUser);
                         s3OriginFound = true;
                     } else {
@@ -87,7 +88,7 @@ module.exports = {
             if (Object.keys(cfDistributions).length > 1) {
                 helpers.addResult(results, 2,
                     `S3 bucket is origin to more than one distributions which are these: ${Object.keys(cfDistributions).join(', ')}`,
-                    bucketLocation, `arn:aws:s3:::${bucketName}`);
+                    bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
                 return cb();
             }
 
@@ -95,7 +96,7 @@ module.exports = {
             if (!s3BucketAssociations[bucketName][distributionId].OACfound) {
                 helpers.addResult(results, 2,
                     `S3 bucket is origin to distribution "${distributionId}" without an Origin Access Control`,
-                    bucketLocation, `arn:aws:s3:::${bucketName}`);
+                    bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
                 return cb();
             }
 
@@ -105,14 +106,14 @@ module.exports = {
                     getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
                 helpers.addResult(results, 2,
                     `No bucket policy found for S3 bucket: ${bucketName}`,
-                    bucketLocation, `arn:aws:s3:::${bucketName}`);
+                    bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
                 return cb();
             }
             
             if (!getBucketPolicy || getBucketPolicy.err || !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                 helpers.addResult(results, 3,
                     `Error querying for bucket policy for bucket "${bucketName}": ${helpers.addError(getBucketPolicy)}`,
-                    bucketLocation, `arn:aws:s3:::${bucketName}`);
+                    bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
                 return cb();
             }
 
@@ -164,10 +165,10 @@ module.exports = {
             if (restrictedOrigins.length) policyFailures.push(`does not allow access to these CloudFront origins: ${restrictedOrigins.join(', ')}`);
 
             if (policyFailures.length) {
-                helpers.addResult(results, 2, `S3 bucket is origin to distribution "${distributionId}" and ${policyFailures}`, bucketLocation, `arn:aws:s3:::${bucketName}`);
+                helpers.addResult(results, 2, `S3 bucket is origin to distribution "${distributionId}" and ${policyFailures}`, bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
             } else {
                 helpers.addResult(results, 0,
-                    `S3 bucket is origin to only one CloudFront distribution which is: ${distributionId}`, bucketLocation, `arn:aws:s3:::${bucketName}`);
+                    `S3 bucket is origin to only one CloudFront distribution which is: ${distributionId}`, bucketLocation, `arn:${awsOrGov}:s3:::${bucketName}`);
             }
 
             cb();

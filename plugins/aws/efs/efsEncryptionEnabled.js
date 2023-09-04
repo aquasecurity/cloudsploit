@@ -23,6 +23,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.efs, function(region, rcb) {
             var describeFileSystems = helpers.addSource(cache, source,
@@ -55,7 +56,7 @@ module.exports = {
             } else if (unencryptedEFS.length) {
                 for (var u in unencryptedEFS) {
                     // ARN: arn:aws:elasticfilesystem:region:account-id:file-system/file-system-id
-                    var arn = 'arn:aws:elasticfilesystem:' + region + ':' + unencryptedEFS[u].OwnerId + ':file-system/' + unencryptedEFS[u].FileSystemId;
+                    var arn = `arn:${awsOrGov}:elasticfilesystem:` + region + ':' + unencryptedEFS[u].OwnerId + ':file-system/' + unencryptedEFS[u].FileSystemId;
                     helpers.addResult(results, 2, 'EFS: ' + unencryptedEFS[u].FileSystemId + ' is unencrypted', region, arn);
                 }
             } else {

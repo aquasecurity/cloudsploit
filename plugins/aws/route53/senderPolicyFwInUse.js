@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
 
@@ -36,7 +37,7 @@ module.exports = {
         async.each(listHostedZones.data, function(zone, cb){
             if (!zone.Id) return cb();
 
-            var resource = `arn:aws:route53:::${zone.Id}`;
+            var resource = `arn:${awsOrGov}:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
                 ['route53', 'listResourceRecordSets', region, zone.Id]);

@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -37,7 +38,7 @@ module.exports = {
             var usedGroups = helpers.getUsedSecurityGroups(cache, results, region);
             if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return rcb();
             for (var g in groups) {
-                var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
                 if (groups[g].GroupId && usedGroups && usedGroups.includes(groups[g].GroupId)) {
                     helpers.addResult(results, 0, 'Security group is being used', region, resource);

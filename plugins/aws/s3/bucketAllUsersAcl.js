@@ -35,6 +35,7 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -56,7 +57,7 @@ module.exports = {
             var bucket = listBuckets.data[i];
             if (!bucket.Name) continue;
 
-            var bucketResource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketResource = `arn:${awsOrGov}:s3:::` + bucket.Name;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketAcl = helpers.addSource(cache, source,

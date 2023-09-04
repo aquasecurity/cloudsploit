@@ -17,6 +17,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.elb, function(region, rcb){
@@ -40,7 +41,7 @@ module.exports = {
                 
                 if (!lb.LoadBalancerName) return;
 
-                var elbArn = `arn:aws:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
+                var elbArn = `arn:${awsOrGov}:elasticloadbalancing:${region}:${accountId}:loadbalancer/${lb.LoadBalancerName}`;
             
                 var describeInstanceHealth = helpers.addSource(cache, source,
                     ['elb', 'describeInstanceHealth', region, lb.DNSName]);

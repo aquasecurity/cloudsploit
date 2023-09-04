@@ -28,6 +28,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -53,7 +54,7 @@ module.exports = {
             let strings = [];
             for (let group of describeSecurityGroups.data){
                 strings = [];
-                let resource = 'arn:aws:ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
+                let resource = `arn:${awsOrGov}:ec2:` + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
                 for (let permission of group.IpPermissionsEgress){
                     for (let range  of permission.IpRanges) {
                         if (range.CidrIp === '0.0.0.0/0') {
