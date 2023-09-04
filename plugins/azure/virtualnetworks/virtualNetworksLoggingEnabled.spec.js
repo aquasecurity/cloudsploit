@@ -76,11 +76,11 @@ const createCache = (vn, ds) => {
     };
 };
 
-describe('virtualNetworkDiagnosticLogsEnabled', function() {
+describe('virtualNetworksLoggingEnabled', function() {
     describe('run', function() {
         it('should give passing result if no Virtual Network found', function(done) {
             const cache = createCache([], null);
-            virtualNetworkDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            virtualNetworksLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Networks found');
@@ -91,7 +91,7 @@ describe('virtualNetworkDiagnosticLogsEnabled', function() {
 
         it('should give unknown result if unable to query for virtual networks', function(done) {
             const cache = createCache(null, null);
-            virtualNetworkDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            virtualNetworksLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Networks:');
@@ -102,7 +102,7 @@ describe('virtualNetworkDiagnosticLogsEnabled', function() {
 
         it('should give unknown result if unable to query for diagnostic settings', function(done) {
             const cache = createCache([virtualNetworks[0]], null);
-            virtualNetworkDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            virtualNetworksLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Network diagnostic settings');
@@ -113,7 +113,7 @@ describe('virtualNetworkDiagnosticLogsEnabled', function() {
 
         it('should give passing result if diagnostic logs enabled', function(done) {
             const cache = createCache([virtualNetworks[0]], [diagnosticSettings[0]]);
-            virtualNetworkDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            virtualNetworksLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Virtual Network has diagnostic logs enabled');
@@ -124,7 +124,7 @@ describe('virtualNetworkDiagnosticLogsEnabled', function() {
 
         it('should give failing result if diagnostic logs not enabled', function(done) {
             const cache = createCache([virtualNetworks[0]], [diagnosticSettings[1]]);
-            virtualNetworkDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            virtualNetworksLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Virtual Network does not have diagnostic logs enabled');
