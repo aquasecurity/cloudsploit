@@ -50,7 +50,7 @@ module.exports = {
                         region, resource);
                 } else {
                     let currentVersion = describeBroker.data.EngineVersion;
-                    if (currentVersion === latestVersion) {
+                    if (helpers.compareVersions(currentVersion,latestVersion)===0) {
                         helpers.addResult(results, 0, 'Broker is using the latest ActiveMQ version',
                             region, resource);
                     } else {
