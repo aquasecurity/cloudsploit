@@ -307,7 +307,7 @@ describe('rdsPublicSubnet', function () {
             rdsPublicSubnet.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).includes('RDS instance has private subnets');
+                expect(results[0].message).includes('RDS instance is not in a public subnet');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -318,7 +318,7 @@ describe('rdsPublicSubnet', function () {
             rdsPublicSubnet.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).includes('RDS instance has public subnets');
+                expect(results[0].message).includes('RDS instance is in a public subnet');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

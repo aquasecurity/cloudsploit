@@ -6,7 +6,7 @@ module.exports = {
     category: 'RDS',
     domain: 'Databases',
     description: 'Ensures RDS is not deployed on public subnet.',
-    more_info: 'RDS instances should not be deployed in public subnets to prevent direct exposure to the Internet and reduce the risk of unauthorized access.',
+    more_info: 'RDS instances should not be deployed in public subnets to prevent direct exposure to the internet and reduce the risk of unauthorized access.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/rds-instance-public-access-check.html',
     recommended_action: 'Replace the subnet groups of rds instance with the private subnets.',
     apis: ['RDS:describeDBInstances', 'EC2:describeRouteTables', 'EC2:describeSubnets'],
@@ -59,9 +59,9 @@ module.exports = {
                 const subnetsData = instance.DBSubnetGroup.Subnets;
                 const allPrivate = subnetsData.every(subnet => privateSubnets.includes(subnet.SubnetIdentifier));
                 if (allPrivate) {
-                    helpers.addResult(results, 0, 'RDS instance has private subnets', region, dbResource);
+                    helpers.addResult(results, 0, 'RDS instance is not in a public subnet', region, dbResource);
                 } else { 
-                    helpers.addResult(results, 2, 'RDS instance has public subnets', region, dbResource);
+                    helpers.addResult(results, 2, 'RDS instance is in a public subnet', region, dbResource);
                 }        
             });
             rcb();
