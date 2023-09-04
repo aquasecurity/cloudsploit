@@ -6,8 +6,9 @@ module.exports = {
     category: 'MQ',
     domain: 'Application Integration',
     description: 'Ensure that Amazon MQ brokers are not publicly accessible from the internet.',
+    more_info: 'Public Amazon MQ brokers can be accessed directly, outside of a Virtual Private Cloud (VPC), therefore every machine on the Internet can reach your brokers through their public endpoints and this can increase the opportunity for malicious activity.',
     recommended_action: 'Review and update the security group settings to restrict public access to Amazon MQ brokers.',
-    link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-security-groups.html',
+    link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/using-amazon-mq-securely.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker', 'EC2:describeSecurityGroups'],
 
     run: function(cache, settings, callback) {
@@ -32,8 +33,8 @@ module.exports = {
                 return rcb();
             }
 
-            async.each(listBrokers.data, function(broker, bcb) {
-                if (!broker.BrokerArn) return bcb();
+            for (let broker of listBrokers.data) {	
+                if (!broker.BrokerArn) continue;
 
                 let resource = broker.BrokerArn;
 
@@ -44,23 +45,20 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to describe MQ broker: ${helpers.addError(describeBroker)}`,
                         region, resource);
-                    return bcb();
-                }
-
-                if (describeBroker.data.PubliclyAccessible) {
-                    helpers.addResult(results, 2,
-                        'MQ Broker is publicly accessible',
-                        region, resource);
                 } else {
-                    helpers.addResult(results, 0,
-                        'MQ Broker is not publicly accessible',
-                        region, resource);
+                    if (describeBroker.data.PubliclyAccessible) {
+                        helpers.addResult(results, 2,
+                            'MQ Broker is publicly accessible',
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'MQ Broker is not publicly accessible',
+                            region, resource);
+                    }
+                    
                 }
-
-                bcb();
-            }, function() {
-                rcb();
-            });
+            }
+            rcb();
         }, function() {
             callback(null, results, source);
         });
