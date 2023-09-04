@@ -55,7 +55,6 @@ module.exports = {
                             'MQ Broker is not publicly accessible',
                             region, resource);
                     }
-                    
                 }
             }
             rcb();
