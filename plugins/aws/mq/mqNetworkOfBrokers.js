@@ -37,7 +37,7 @@ module.exports = {
                 if (!broker.BrokerArn) continue;
                
                 let resource = broker.BrokerArn;
-                if (broker.NetworkConfiguration && broker.NetworkConfiguration.BrokerNetworkType === 'FULL_MESH') {
+                if (/\d$/.test(broker.BrokerName)) {
                     helpers.addResult(results, 0, 'Broker is part of a full mesh network',
                         region, resource);
                 } else {
