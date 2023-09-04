@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Review and update the security group settings to restrict public access to Amazon MQ brokers.',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/amazon-mq-security-groups.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker', 'EC2:describeSecurityGroups'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
