@@ -4,7 +4,7 @@ module.exports = {
     title: 'Password Policy Exists',
     category: 'IAM',
     domain: 'Identity and Access management',
-    description: 'Ensures that password policy Enabled',
+    description: 'Ensures that password policy is set for IAM users.',
     more_info: 'You can set a custom password policy on your AWS account to specify complexity requirements and mandatory rotation periods for your IAM users\' password.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html',
     recommended_action: 'Create a password policy under account settings in IAM',
