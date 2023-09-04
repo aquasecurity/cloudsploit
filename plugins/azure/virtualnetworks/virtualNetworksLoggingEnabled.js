@@ -39,7 +39,7 @@ module.exports = {
                     ['diagnosticSettings', 'listByVirtualNetworks', location, vn.id]);
  
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                    helpers.addResult(results, 3, `Unable to query for Vitual Network diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
+                    helpers.addResult(results, 3, `Unable to query for Virtual Network diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
                         location, vn.id);
                     continue;
                 }
