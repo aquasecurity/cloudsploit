@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var virtualNetworkDiagnosticLogsEnabled = require('./virtualNetworkDiagnosticLogsEnabled');
+var virtualNetworksLoggingEnabled = require('./virtualNetworksLoggingEnabled');
 
 const virtualNetworks = [
     {
