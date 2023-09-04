@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Virtual Network Diagnostic Logs Enabled',
+    title: 'Virtual Networks Logging Enabled',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
-    description: 'Ensure that Microsoft Virtual Network have Diagnostic logs enabled.',
+    description: 'Ensure that Microsoft Virtual Networks have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of Virtual Networks. By enabling diagnostic logs, you can monitor network traffic, troubleshoot connectivity issues, and gain visibility into network performance.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/monitor-virtual-network',
-    recommended_action: 'Modify the Virtual Network settings and enable diagnostic logs.',
+    recommended_action: 'Modify the virtual network settings and enable diagnostic logs.',
     apis: ['virtualNetworks:listAll', 'diagnosticSettings:listByVirtualNetworks'],
 
     run: function(cache, settings, callback) {
@@ -31,6 +31,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Virtual Networks found', location);
                 return rcb();
             }
+
             for (let vn of virtualNetworks.data) {
                 if (!vn.id) continue;
 
@@ -38,17 +39,13 @@ module.exports = {
                     ['diagnosticSettings', 'listByVirtualNetworks', location, vn.id]);
  
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                    helpers.addResult(results, 3, 'Unable to query for Diagnostic settings: '
-                    + helpers.addError(diagnosticSettings), location, vn.id);
+                    helpers.addResult(results, 3, `Unable to query for Vitual Network diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
+                        location, vn.id);
                     continue;
                 }
-                var found = false;
-                for (let ds of diagnosticSettings.data) {
-                    if (ds.logs && ds.logs.length) {
-                        found = true;
-                        break;
-                    }
-                }
+
+                var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
+
                 if (found) {
                     helpers.addResult(results, 0, 'Virtual Network has diagnostic logs enabled', location, vn.id);
                 } else {
