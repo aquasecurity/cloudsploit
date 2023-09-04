@@ -14,6 +14,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+
         async.each(regions.mq, function(region, rcb) {
             var listBrokers = helpers.addSource(cache, source,
                 ['mq', 'listBrokers', region]);
