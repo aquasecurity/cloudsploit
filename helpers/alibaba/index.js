@@ -1,8 +1,10 @@
 var shared = require(__dirname + '/../shared.js');
 var functions = require('./functions.js');
+var chinaRegions = require('./regions_china.js');
 var regRegions = require('./regions.js');
 
-var regions = function() {
+var regions = function(settings) {
+    if (settings.china) return chinaRegions;
     return regRegions;
 };
 

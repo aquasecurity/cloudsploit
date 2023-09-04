@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation, it is recommended that instances are not assigned to the default service account, Compute Engine default service account with a scope allowing full access to all cloud APIs.',
     link: 'https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances',
     recommended_action: 'For all instances, if the default service account is used, ensure full access to all cloud APIs is not configured.',
-    apis: ['instances:compute:list', 'projects:get'],
+    apis: ['compute:list'],
     compliance: {
         pci: 'PCI has explicit requirements around default accounts and ' +
             'resources. PCI recommends removing all default accounts, ' +
@@ -33,13 +33,13 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.instances.compute, (region, rcb) => {
+        async.each(regions.compute, (region, rcb) => {
             var zones = regions.zones;
             var noInstances = [];
 
             async.each(zones[region], function(zone, zcb) {
                 var instances = helpers.addSource(cache, source,
-                    ['instances', 'compute','list', zone]);
+                    ['compute','list', zone]);
 
                 if (!instances) return zcb();
 

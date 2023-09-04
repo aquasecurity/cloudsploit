@@ -34,7 +34,7 @@ const describeCacheClusters = [
         "AuthTokenEnabled": false,
         "TransitEncryptionEnabled": false,
         "AtRestEncryptionEnabled": false,
-        "ARN": "arn:aws:elasticache:us-east-1:101363889637:cluster:sadeed-001",
+        "ARN": "arn:aws:elasticache:us-east-1:000011112222:cluster:sadeed-001",
     },
     {
         "CacheClusterId": "sadeed-001",
@@ -160,10 +160,11 @@ const createCache = (clusters, describeReplicationGroups, clustersErr, describeR
 describe('elasticacheRedisMultiAZ', function () {
     describe('run', function () {
         it('should PASS if ElastiCache Redis Cluster has MultiAZ feature enabled.', function (done) {
-            const cache = createCache(describeCacheClusters[0], describeReplicationGroups[0]);
+            const cache = createCache([describeCacheClusters[0]], describeReplicationGroups[0]);
             elasticacheRedisMultiAZ.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('has Multi-AZ feature enabled');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

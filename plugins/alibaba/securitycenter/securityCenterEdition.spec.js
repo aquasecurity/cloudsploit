@@ -85,7 +85,7 @@ describe('securityCenterEdition', function () {
     describe('run', function () {
         it('should FAIL if Security Center edition is Basic or Anti-virus', function (done) {
             const cache = createCache(describeVersionConfig[1]);
-            securityCenterEdition.run(cache, {}, (err, results) => {
+            securityCenterEdition.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Security Center edition is Anti-virus');
@@ -96,7 +96,7 @@ describe('securityCenterEdition', function () {
 
         it('should PASS if Security Center edition is Advanced or plus', function (done) {
             const cache = createCache(describeVersionConfig[0]);
-            securityCenterEdition.run(cache, {}, (err, results) => {
+            securityCenterEdition.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.be.above(0);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Security Center edition is Advanced');
@@ -107,7 +107,7 @@ describe('securityCenterEdition', function () {
 
         it('should UNKNOWN if Unable to query Security Center version config', function (done) {
             const cache = createCache([], { err: 'Unable to query' });
-            securityCenterEdition.run(cache, {}, (err, results) => {
+            securityCenterEdition.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Security Center version config');

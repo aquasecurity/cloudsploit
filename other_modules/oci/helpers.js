@@ -83,13 +83,18 @@ function call(OracleConfig, options, callback) {
         request.write(requestToWrite);
         request.end();
     };
-    makeCall(newOptions);
+
+    try {
+        makeCall(newOptions);
+    } catch (e) {
+        callback([]);
+    }
 }
 
 var buildHeaders = function(allowedHeaders, options) {
     var headers = {
         'content-type': 'application/json',
-        'user-agent': 'Mozilla/5.0'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
     };
 
     for (var h in allowedHeaders) {

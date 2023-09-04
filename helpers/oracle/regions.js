@@ -2,6 +2,7 @@
 
 var regions = [
     'us-ashburn-1',
+    'il-jerusalem-1',
     'us-phoenix-1',
     'eu-frankfurt-1',
     'uk-london-1',
@@ -23,7 +24,13 @@ var regions = [
     'ap-chuncheon-1',
     'me-dubai-1',
     'uk-cardiff-1',
-    'us-sanjose-1'
+    'us-sanjose-1',
+    'mx-queretaro-1',
+    'eu-marseille-1',
+    'eu-milan-1',
+    'ap-singapore-1',
+    'af-johannesburg-1',
+    'eu-stockholm-1'
 ];
 
 module.exports = {
@@ -39,11 +46,18 @@ module.exports = {
     authenticationPolicy: regions,
     exprt: regions,
     exportSummary: regions,
+    fileSystem: regions,
     compartment: regions,
     bucket: regions,
     waasPolicy: regions,
-    policy: regions,
+    rules: regions,
+    topics: regions,
+    subscriptions: regions,
+    policy: ['default'],
+    defaultTags: ['default'],
     subnet: regions,
+    logGroup: regions,
+    log: regions,
     dbHome: regions,
     database: regions,
     instance: regions,
@@ -68,5 +82,10 @@ module.exports = {
     namespace: regions,
     apiKey: ['default'],
     authToken: ['default'],
-    customerSecretKey: ['default']
+    customerSecretKey: ['default'],
+    vault: regions,
+    keys: regions,
+    cluster: regions,
+    cloudguardConfiguration: ['default'],
+    keyVersions: regions,
 };

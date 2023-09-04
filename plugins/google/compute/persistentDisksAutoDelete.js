@@ -9,15 +9,7 @@ module.exports = {
     more_info: 'When auto-delete is enabled, the attached persistent disk are deleted with VM instance deletion. In cloud environments, you might want to keep the attached persistent disks even when the associated VM instance is deleted.',
     link: 'https://cloud.google.com/compute/docs/disks',
     recommended_action: 'Ensure that auto-delete is disabled for all disks associated with your VM instances.',
-    apis: ['disks:list', 'instances:compute:list', 'projects:get'],
-    settings: {
-        disk_result_limit: {
-            name: 'Persistent Disks Auto Delete Result Limit',
-            description: 'If the number of results is greater than this value, combine them into one result',
-            regex: '^[0-9]*$',
-            default: '20',
-        }
-    },
+    apis: ['disks:list', 'compute:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,8 +25,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        var disk_result_limit = parseInt(settings.disk_result_limit || this.settings.disk_result_limit.default);
-
         var project = projects.data[0].name;
 
         async.each(regions.disks, (region, rcb) => {
@@ -42,8 +32,6 @@ module.exports = {
             var zones = regions.zones;
 
             async.each(zones[region], function(zone, zcb) {
-                var badDisks = [];
-                var goodDisks = [];
                 var autoDeleteEnabledDisks = [];
 
                 var disks = helpers.addSource(cache, source,
@@ -63,7 +51,7 @@ module.exports = {
                 }
 
                 var instances = helpers.addSource(cache, source,
-                    ['instances', 'compute', 'list', zone]);
+                    ['compute', 'list', zone]);
 
                 if (instances.data) {
                     instances.data.forEach(instance => {
@@ -77,44 +65,27 @@ module.exports = {
                     });
                 }
 
+                var disksFound = false;
+
                 disks.data.forEach(disk => {
                     if (!disk.id || !disk.selfLink || !disk.creationTimestamp) return;
 
+                    disksFound = true;
+
+                    let resource = helpers.createResourceName('disks', disk.name, project, 'zone', zone);
+
                     if (autoDeleteEnabledDisks.includes(disk.name)) {
-                        badDisks.push(disk.name);
+                        helpers.addResult(results, 2,
+                            'Auto Delete is enabled for disk', region, resource);
                     } else {
-                        goodDisks.push(disk.name);
+                        helpers.addResult(results, 0,
+                            'Auto Delete is disabled for disk', region, resource);
                     }
 
                 });
 
-                if (!goodDisks.length && !badDisks.length) noDisks.push(zone);
+                if (!disksFound) noDisks.push(zone);
 
-                if (badDisks.length) {
-                    if (badDisks.length > disk_result_limit) {
-                        helpers.addResult(results, 2,
-                            `Auto Delete is enabled for ${badDisks.length} disks`, region);
-                    } else {
-                        badDisks.forEach(disk => {
-                            let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
-                            helpers.addResult(results, 2,
-                                'Auto Delete is enabled for disk', region, resource);
-                        });
-                    }
-                }
-
-                if (goodDisks.length) {
-                    if (goodDisks.length > disk_result_limit) {
-                        helpers.addResult(results, 0,
-                            `Auto Delete is disabled for ${goodDisks.length} disks`, region);
-                    } else {
-                        goodDisks.forEach(disk => {
-                            let resource = helpers.createResourceName('disks', disk, project, 'zone', zone);
-                            helpers.addResult(results, 0,
-                                'Auto Delete is disabled for disk', region, resource);
-                        });
-                    }
-                }
                 zcb();
             }, function() {
                 if (noDisks.length) {

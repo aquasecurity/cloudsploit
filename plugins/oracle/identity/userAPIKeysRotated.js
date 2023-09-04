@@ -1,7 +1,7 @@
 var helpers = require('../../../helpers/oracle');
 
 module.exports = {
-    title: 'User Auth Token Rotated',
+    title: 'User API Keys Rotated',
     category: 'Identity',
     domain: 'Identity and Access Management',
     description: 'Ensure that user API keys are rotated regularly in order to reduce accidental exposures.',

@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Ensuring that no users have both roles follows separation of duties, where no user should have access to resources out of the scope of duty.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have both the Service Account User and Service Account Admin role attached.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -46,29 +46,32 @@ module.exports = {
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountUsers = [];
             var notSeparated = {};
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountUser') {
-                    serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
-                }
-            });
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountAdmin' &&
-                    roleBinding.members) {
-                    notSeparated = roleBinding.members.filter(member => {
-                        return (serviceAccountUsers.indexOf(member) > -1);
-                    });
-
-                    if (notSeparated && notSeparated.length) {
-                        notSeparated.forEach(member => {
-                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                            let resource = helpers.createResourceName('serviceAccounts', accountName, project);
-                            helpers.addResult(results, 2,
-                                'The account has both the service account user and admin role', region, resource);
-                        });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountUser') {
+                        serviceAccountUsers = serviceAccountUsers.concat(roleBinding.members);
                     }
-                }
-            });
+                });
+
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountAdmin' &&
+                        roleBinding.members) {
+                        notSeparated = roleBinding.members.filter(member => {
+                            return (serviceAccountUsers.indexOf(member) > -1);
+                        });
+
+                        if (notSeparated && notSeparated.length) {
+                            notSeparated.forEach(member => {
+                                let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                                let resource = helpers.createResourceName('serviceAccounts', accountName, project);
+                                helpers.addResult(results, 2,
+                                    'The account has both the service account user and admin role', region, resource);
+                            });
+                        }
+                    }
+                });
+            }
 
             if (!notSeparated.length) {
                 helpers.addResult(results, 0, 'No accounts have both the service account user and admin roles', region);

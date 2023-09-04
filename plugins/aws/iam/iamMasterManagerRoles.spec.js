@@ -23,6 +23,13 @@ const roles = [
         "Description": "Iam Master role",
         "MaxSessionDuration": 3600,
         "Tags": []
+    },
+    {
+        "Path": "/",
+        "RoleName": "aqua-cspm-security-remediator-rotator",
+        "RoleId": "AROARPGOCGXSYQSXS37BT",
+        "Arn": "arn:aws:iam::000000001111111:role/aqua-cspm-security-remediator-rotator",
+        "CreateDate": "2022-09-21T09:56:11+00:00",
     }
 ];
 
@@ -40,6 +47,9 @@ const listRolePolicies = [
         },
         "PolicyNames": [ 'master-role-policy' ],
         "IsTruncated": false
+    },
+    {
+        "PolicyNames": [ "aqua-cspm-iam-remediator-access" ]
     }
 ];
 
@@ -50,7 +60,60 @@ const getRolePolicy = [
                 "ResponseMetadata": [{}],
                 "RoleName": 'IAM-Manager-Role',
                 "PolicyName": 'manager-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListRoles%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListUsers%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroups%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAddUserToGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetPolicyVersion%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListRolePolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAttachGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroupPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroupsForUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPolicyVersions%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ARemoveUserFromGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListEntitiesForPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateAssumeRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedRolePolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedUserPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedGroupPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPoliciesGrantingServiceAccess%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Deny%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreatePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeletePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAddUserToGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAttachRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreatePolicyVersion%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeletePolicyVersion%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+                "PolicyDocument": [ { Sid: 'VisualEditor0',
+                    Effect: 'Allow',
+                    Action:
+                        [   'iam:GetRole',
+                            'iam:GetUser',
+                            'iam:GetPolicy',
+                            'iam:ListRoles',
+                            'iam:ListUsers',
+                            'iam:ListGroups',
+                            'iam:UpdateUser',
+                            'iam:UpdateGroup',
+                            'iam:ListPolicies',
+                            'iam:GetRolePolicy',
+                            'iam:GetUserPolicy',
+                            'iam:PutUserPolicy',
+                            'iam:AddUserToGroup',
+                            'iam:PutGroupPolicy',
+                            'iam:DeleteUserPolicy',
+                            'iam:DetachRolePolicy',
+                            'iam:DetachUserPolicy',
+                            'iam:GetPolicyVersion',
+                            'iam:ListRolePolicies',
+                            'iam:AttachGroupPolicy',
+                            'iam:DeleteGroupPolicy',
+                            'iam:DetachGroupPolicy',
+                            'iam:ListGroupPolicies',
+                            'iam:ListGroupsForUser',
+                            'iam:ListPolicyVersions',
+                            'iam:RemoveUserFromGroup',
+                            'iam:ListEntitiesForPolicy',
+                            'iam:UpdateAssumeRolePolicy',
+                            'iam:ListAttachedRolePolicies',
+                            'iam:ListAttachedUserPolicies',
+                            'iam:ListAttachedGroupPolicies',
+                            'iam:ListPoliciesGrantingServiceAccess' ],
+                    Resource: [ '*' ] },
+                    { Sid: 'VisualEditor1',
+                        Effect: 'Deny',
+                        Action:
+                            [   'iam:CreateRole',
+                                'iam:CreateUser',
+                                'iam:DeleteRole',
+                                'iam:DeleteUser',
+                                'iam:CreateGroup',
+                                'iam:DeleteGroup',
+                                'iam:CreatePolicy',
+                                'iam:DeletePolicy',
+                                'iam:PutRolePolicy',
+                                'iam:AddUserToGroup',
+                                'iam:AttachRolePolicy',
+                                'iam:DeleteRolePolicy',
+                                'iam:CreatePolicyVersion',
+                                'iam:DeletePolicyVersion' ],
+                        Resource: [ '*' ] } ]
             }
         }
     },
@@ -60,13 +123,119 @@ const getRolePolicy = [
                 "ResponseMetadata": [{}],
                 "RoleName": 'IAM-Master-Role',
                 "PolicyName": 'master-role-policy',
-                "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListRoles%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListUsers%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteRole%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroups%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreateGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreatePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeletePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAttachRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AGetPolicyVersion%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListRolePolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroupsForUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListGroupPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPolicyVersions%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ACreatePolicyVersion%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeletePolicyVersion%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListEntitiesForPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedRolePolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedUserPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListAttachedGroupPolicies%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AListPoliciesGrantingServiceAccess%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Deny%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateUser%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAddUserToGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3APutGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachRolePolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachUserPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AAttachGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADeleteGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ADetachGroupPolicy%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3ARemoveUserFromGroup%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22iam%3AUpdateAssumeRolePolicy%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+                "PolicyDocument": [ { Sid: 'VisualEditor0',
+                    Effect: 'Allow',
+                    Action:
+                        [   'iam:GetRole',
+                            'iam:GetUser',
+                            'iam:GetPolicy',
+                            'iam:ListRoles',
+                            'iam:ListUsers',
+                            'iam:CreateRole',
+                            'iam:CreateUser',
+                            'iam:DeleteRole',
+                            'iam:DeleteUser',
+                            'iam:ListGroups',
+                            'iam:CreateGroup',
+                            'iam:DeleteGroup',
+                            'iam:CreatePolicy',
+                            'iam:DeletePolicy',
+                            'iam:ListPolicies',
+                            'iam:GetRolePolicy',
+                            'iam:PutRolePolicy',
+                            'iam:GetUserPolicy',
+                            'iam:AttachRolePolicy',
+                            'iam:DeleteRolePolicy',
+                            'iam:GetPolicyVersion',
+                            'iam:ListRolePolicies',
+                            'iam:ListGroupsForUser',
+                            'iam:ListGroupPolicies',
+                            'iam:ListPolicyVersions',
+                            'iam:CreatePolicyVersion',
+                            'iam:DeletePolicyVersion',
+                            'iam:ListEntitiesForPolicy',
+                            'iam:ListAttachedRolePolicies',
+                            'iam:ListAttachedUserPolicies',
+                            'iam:ListAttachedGroupPolicies',
+                            'iam:ListPoliciesGrantingServiceAccess' ],
+                    Resource: [ '*' ] },
+                    { Sid: 'VisualEditor1',
+                        Effect: 'Deny',
+                        Action:
+                            [   'iam:UpdateUser',
+                                'iam:UpdateGroup',
+                                'iam:PutUserPolicy',
+                                'iam:AddUserToGroup',
+                                'iam:PutGroupPolicy',
+                                'iam:DeleteUserPolicy',
+                                'iam:DetachRolePolicy',
+                                'iam:DetachUserPolicy',
+                                'iam:AttachGroupPolicy',
+                                'iam:DeleteGroupPolicy',
+                                'iam:DetachGroupPolicy',
+                                'iam:RemoveUserFromGroup',
+                                'iam:UpdateAssumeRolePolicy' ],
+                        Resource: [ '*' ] } ]
+            }
+        }
+    },
+    {
+        "aqua-cspm-iam-remediator-access": {
+            "data": {
+                "ResponseMetadata": [{}],
+                "RoleName": 'aqua-cspm-security-remediator',
+                "PolicyName": 'aqua-cspm-iam-remediator-access',
             }
         }
     }
 ];
 
-const createPassCache = (roles, listRolePolicies, getRolePolicy) => {
+const getRole = [
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "IAM-Manager-Role",
+            "RoleId": "AROAYE32SRU5R232MB5LZ",
+            "Arn": "arn:aws:iam::111122223333:role/IAM-Manager-Role",
+            "Tags": [
+                {
+                    "Key": "app_name",
+                    "Value": "Aqua CSPM"
+                }
+            ]
+        }
+    },
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "IAM-Master-Role",
+            "RoleId": "AROAYE32SRU5R232MB5LZ",
+            "Arn": "arn:aws:iam::111122223333:role/IAM-Master-Role",
+            "Tags": [
+                {
+                    "Key": "app_name",
+                    "Value": "Aqua CSPM"
+                }
+            ]
+        }  
+    },
+    {
+        'Role':{
+            "Path": "/",
+            "RoleName": "aqua-cspm-security-remediator",
+            "RoleId": "AROAYE32SRU5R232MB5LZ",
+            "Arn": "arn:aws:iam::111122223333:role/aqua-cspm-security-remediator",
+            "Tags": [
+                {
+                    "Key": "app_name",
+                    "Value": "Aqua CSPM"
+                }
+            ]
+        }  
+    }
+]
+
+const createPassCache = (roles, listRolePolicies, getRolePolicy, getRole) => {
     return {
         iam: {
             listRoles: {
@@ -89,12 +258,22 @@ const createPassCache = (roles, listRolePolicies, getRolePolicy) => {
                     [roles[0].RoleName]: getRolePolicy[0],
                     [roles[1].RoleName]: getRolePolicy[1]
                 }
+            },
+            getRole: {
+                'us-east-1': {
+                    [roles[0].RoleName]: {
+                        data: getRole[0]
+                    },
+                    [roles[1].RoleName]: {
+                        data: getRole[1]
+                    }
+                }
             }
         }
     };
 };
 
-const createCache = (roles, listRolePolicies, getRolePolicy) => {
+const createCache = (roles, listRolePolicies, getRolePolicy, getRole) => {
     var roleName = (roles && roles.length) ? roles[0].RoleName : null;
     return {
         iam: {
@@ -113,6 +292,14 @@ const createCache = (roles, listRolePolicies, getRolePolicy) => {
             getRolePolicy: {
                 'us-east-1': {
                     [roleName]: getRolePolicy
+                }
+            },
+            getRole: {
+                'us-east-1': {
+                    [roleName]:{   
+                        data: getRole,
+                        err: null    
+                    }              
                 }
             }
         }
@@ -146,36 +333,40 @@ const createNullCache = () => {
 describe('iamMasterManagerRoles', function () {
     describe('run', function () {
         it('should PASS if IAM Master and Manager Roles found', function (done) {
-            const cache = createPassCache(roles, listRolePolicies, getRolePolicy);
+            const cache = createPassCache(roles, listRolePolicies, getRolePolicy, getRole);
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('IAM Master and Manager Roles found');
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
         it('should FAIL if IAM Master Role not found', function (done) {
-            const cache = createCache([roles[0]], listRolePolicies[0], getRolePolicy[0]);
+            const cache = createCache([roles[0]], listRolePolicies[0], getRolePolicy[0], getRole[0]);
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('IAM Master Role not found');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if IAM Manager Role not found', function (done) {
-            const cache = createCache([roles[1]], listRolePolicies[1], getRolePolicy[1]);
+            const cache = createCache([roles[1]], listRolePolicies[1], getRolePolicy[1], getRole[1]);
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('IAM Manager Role not found');
                 expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if IAM Master and Manager Roles not found', function (done) {
-            const cache = createCache([roles[1]], listRolePolicies[0], getRolePolicy[0]);
+            const cache = createCache([roles[2]], listRolePolicies[2], getRolePolicy[2], getRole[2]);
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].message).to.include('IAM Master and Manager Roles not found');
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -184,6 +375,7 @@ describe('iamMasterManagerRoles', function () {
         it('should PASS if no IAM roles found', function (done) {
             const cache = createCache([]);
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
+                expect(results[0].message).to.include('No IAM roles found');
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -193,6 +385,7 @@ describe('iamMasterManagerRoles', function () {
         it('should UNKNOWN if unable to query for IAM roles', function (done) {
             const cache = createErrorCache();
             iamMasterManagerRoles.run(cache, {}, (err, results) => {
+                expect(results[0].message).to.include('Unable to query for IAM roles');
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -206,5 +399,13 @@ describe('iamMasterManagerRoles', function () {
                 done();
             });
         });
+
+        it('should PASS if role with specific regex is ignored', function (done) {
+            const cache =  createPassCache(roles, listRolePolicies, getRolePolicy, getRole)
+            iamMasterManagerRoles.run(cache, {iam_role_policies_ignore_tag:'app_name:Aqua CSPM'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                done();
+            });
+        })
     });
 });

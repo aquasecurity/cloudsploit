@@ -144,6 +144,38 @@ const createCache = (cmk, bucketErr, sseAes, kms, cfMatching) => {
             ]
           }
         }
+      },
+      "appconfig": {
+        "listApplications": {
+          "us-east-1": {
+            data: [
+              {
+                "Id": "wt4b09t",
+                "Name": "appBucket"
+              }
+            ]
+          }
+        },
+        "listConfigurationProfiles": {
+          "us-east-1": {
+            "wt4b09t": {
+              data: {
+                "Items": [
+                  {
+                      "ApplicationId": "wt4b09t",
+                      "Id": "nt17dsn",
+                      "Name": "testConfig",
+                      "LocationUri": "s3://bucket1/mine/AWSLogs/000011112222/Config/test",
+                      "ValidatorTypes": [
+                          "LAMBDA"
+                      ],
+                      "Type": "AWS.Freeform"
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
     }
 };
@@ -177,6 +209,20 @@ describe('bucketEncryption', function () {
 
             s3.run(cache, {}, callback);
         })
+
+        it('should give passing result if S3 bucket is a source to AppConfig configuration profile', function (done) {
+          const callback = (err, results) => {
+              expect(results.length).to.equal(1)
+              expect(results[0].status).to.equal(0)
+              expect(results[0].message).to.include('Bucket is a source to AppConfig configuration profile')
+              expect(results[0].region).to.equal('us-east-1');
+              done()
+          };
+
+          const cache = createCache(false, false, true, false);
+
+          s3.run(cache, { whitelist_appconfig_s3_buckets: 'true' }, callback);
+      })
 
         it('should give passing result if S3 bucket has AWS KMS encryption', function (done) {
             const callback = (err, results) => {

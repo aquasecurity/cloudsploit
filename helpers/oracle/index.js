@@ -64,6 +64,9 @@ function OracleExecutor(OracleConfig) {
                         if (callObj.limit) {
                             parameters['limit'] = callObj.limit;
                         }
+
+                        parameters['lifecycleState'] = 'AVAILABLE';
+
                         oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
                                 aggregatedErrors.push(result);
@@ -134,7 +137,8 @@ function OracleExecutor(OracleConfig) {
 var helpers = {
     regions: regions,
     OracleExecutor: OracleExecutor,
-    MAX_REGIONS_AT_A_TIME: 6
+    MAX_REGIONS_AT_A_TIME: 6,
+    PROTECTION_LEVELS: ['unspecified', 'default', 'cloudcmek', 'cloudhsm'],
 };
 
 for (var s in shared) helpers[s] = shared[s];

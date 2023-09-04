@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The Service Account User role gives users the access to all service accounts of a project. This can result in an elevation of privileges and is not recommended.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have the Service Account User role attached.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -45,17 +45,20 @@ module.exports = {
 
             var iamPolicy = iamPolicies.data[0];
             var serviceAccountExists = false;
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountUser') {
-                    serviceAccountExists = true;
-                    roleBinding.members.forEach(member => {
-                        let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                        let resource = helpers.createResourceName('serviceAccounts', accountName, project);
-                        helpers.addResult(results, 2,
-                            'The account has a service account user role', region, resource);
-                    });
-                }
-            });
+
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountUser') {
+                        serviceAccountExists = true;
+                        roleBinding.members.forEach(member => {
+                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                            let resource = helpers.createResourceName('serviceAccounts', accountName, project);
+                            helpers.addResult(results, 2,
+                                'The account has a service account user role', region, resource);
+                        });
+                    }
+                });
+            }
 
             if (!serviceAccountExists) {
                 helpers.addResult(results, 0, 'No accounts have service account user roles', region);

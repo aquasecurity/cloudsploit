@@ -137,7 +137,7 @@ describe('rdsLogDuration', function () {
     describe('run', function () {
         it('should FAIL if RDS DB instance does not have log_duration parameter enabled', function (done) {
             const cache = createCache(describeDBInstances, describeParameters[1]);
-            rdsLogDuration.run(cache, {}, (err, results) => {
+            rdsLogDuration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('RDS DB instance does not have log_duration parameter enabled');
@@ -148,7 +148,7 @@ describe('rdsLogDuration', function () {
 
         it('should PASS if RDS DB instance has log_duration parameter enabled', function (done) {
             const cache = createCache(describeDBInstances, describeParameters[0]);
-            rdsLogDuration.run(cache, {}, (err, results) => {
+            rdsLogDuration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('RDS DB instance has log_duration parameter enabled');
@@ -159,7 +159,7 @@ describe('rdsLogDuration', function () {
 
         it('should PASS if no RDS DB instances found', function (done) {
             const cache = createCache([]);
-            rdsLogDuration.run(cache, {}, (err, results) => {
+            rdsLogDuration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No RDS DB instances found');
@@ -170,7 +170,7 @@ describe('rdsLogDuration', function () {
 
         it('should UNKNOWN if unable to query RDS DB instances', function (done) {
             const cache = createCache([], null, { err: 'Unable to query RDS DB instances' });
-            rdsLogDuration.run(cache, {}, (err, results) => {
+            rdsLogDuration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query RDS DB instances');
@@ -181,7 +181,7 @@ describe('rdsLogDuration', function () {
 
         it('should UNKNOWN if unable to query DB parameters', function (done) {
             const cache = createCache([describeDBInstances[0]], {}, null, { err: 'Unable to query DB parameters' });
-            rdsLogDuration.run(cache, {}, (err, results) => {
+            rdsLogDuration.run(cache, { china: true }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query DB parameters');

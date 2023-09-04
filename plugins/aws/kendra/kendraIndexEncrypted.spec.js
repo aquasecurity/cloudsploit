@@ -25,7 +25,7 @@ const describeIndex = [
     "Name": "sadeed1",
     "Id": "9280dadd-5d45-4f9c-a105-896e5b230c05",
     "Edition": "DEVELOPER_EDITION",
-    "RoleArn": "arn:aws:iam::101363889637:role/service-role/AmazonKendra-us-east-1-role1",
+    "RoleArn": "arn:aws:iam::000011112222:role/service-role/AmazonKendra-us-east-1-role1",
     "ServerSideEncryptionConfiguration": {
         "KmsKeyId": "arn:aws:kms:us-east-1:000111222333:key/ad013a33-b01d-4d88-ac97-127399c18b3e"
     },
@@ -164,7 +164,7 @@ describe('kendraIndexEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(listIndices, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(listIndices, null, null, null, null, { message: "Unable to list KMS keys" });
             kendraIndexEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);

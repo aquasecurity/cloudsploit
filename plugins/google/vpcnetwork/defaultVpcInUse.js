@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
-    apis: ['networks:list', 'instances:compute:list', 'projects:get'],
+    apis: ['networks:list', 'compute:list'],
     compliance: {
         pci: 'PCI has explicit requirements around default accounts and ' +
             'resources. PCI recommends removing all default accounts, ' +
@@ -66,7 +66,7 @@ module.exports = {
             async.each(regions.zones, function(location, icb){
                 location.forEach(loc => {
                     let instances = helpers.addSource(cache, source,
-                        ['instances', 'compute','list', loc]);
+                        ['compute','list', loc]);
 
                     if (instances && instances.data && instances.data.length) {
                         instances.data.forEach(instance => {

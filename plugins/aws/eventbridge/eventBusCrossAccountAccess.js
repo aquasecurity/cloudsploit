@@ -82,7 +82,7 @@ module.exports = {
             }
 
             if (!listEventBuses.data.length) {
-                helpers.addResult(results, 0, 'Event bus does not use custom policy', region);
+                helpers.addResult(results, 0, 'No Event Buses found', region);
                 return rcb();
             }
             

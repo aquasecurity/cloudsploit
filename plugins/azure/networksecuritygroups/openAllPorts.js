@@ -45,13 +45,13 @@ module.exports = {
 
             let ports = {
                 'TCP': ['*'],
-                'UCP': ['*'],
+                'UDP': ['*'],
                 '*' : ['*']
             };
 
             let service = 'All Ports';
 
-            helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results);
+            helpers.findOpenPorts(networkSecurityGroups.data, ports, service, location, results, true);
 
             rcb();
         }, function() {

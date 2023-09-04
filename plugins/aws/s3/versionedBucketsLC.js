@@ -4,7 +4,7 @@ module.exports = {
     title: 'S3 Versioned Buckets Lifecycle Configuration',
     category: 'S3',
     domain: 'Storage',
-    description: 'Ensure that S3 buckets having versioning enabled also have liecycle policy configured for non-current objects.',
+    description: 'Ensure that S3 buckets having versioning enabled also have lifecycle policy configured for non-current objects.',
     more_info: 'When object versioning is enabled on a bucket, every modification/update to an object results in a new version of the object that will be stored indefinitely. ' +
         'Enable a lifecycle policy, so that non-current object versions are removed or transitioned in a predictable manner.',
     recommended_action: 'Configure lifecycle rules for buckets which have versioning enabled',
@@ -31,11 +31,6 @@ module.exports = {
             helpers.addResult(results, 0, 'No S3 buckets to check');
             return callback(null, results, source);
         }
-
-        var nonCurrentVersionRules = [
-            'NoncurrentVersionTransitions',
-            'NoncurrentVersionExpiration'
-        ];
 
         listBuckets.data.forEach(function(bucket){
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
@@ -68,7 +63,8 @@ module.exports = {
                     if (ruleExists) {
                         var ruleForNonCurrent = getBucketLifecycleConfiguration.data.Rules.find(rule => rule.Status &&
                                 rule.Status.toUpperCase() === 'ENABLED' &&
-                                Object.keys(rule).some(key => nonCurrentVersionRules.includes(key) && rule[key].length));
+                                Object.keys(rule).some(key => (key == 'NoncurrentVersionTransitions' && rule[key].length) ||
+                                                                key == 'NoncurrentVersionExpiration' && Object.keys(rule[key]).length));
                         if (ruleForNonCurrent) {
                             helpers.addResult(results, 0,
                                 `S3 bucket ${bucket.Name} has versioning and lifecycle configuration enabled for non-current versions`,

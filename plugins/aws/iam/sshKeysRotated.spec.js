@@ -8,112 +8,75 @@ passDate.setMonth(passDate.getMonth() - 2);
 var failDate = new Date();
 failDate.setMonth(failDate.getMonth() - 12);
 
-const users = [
+const listUsers = [
     {
-      "user": "<root_account>",
-      "arn": "arn:aws:iam::112233445566:root",
-      "user_creation_time": "2020-08-09T16:55:28+00:00",
-      "password_enabled": "not_supported",
-      "password_last_used": "2020-09-17T21:45:22+00:00",
-      "password_last_changed": "not_supported",
-      "password_next_rotation": "not_supported",
-      "mfa_active": false,
-      "access_key_1_active": true,
-      "access_key_1_last_rotated": "2020-08-18T14:36:56+00:00",
-      "access_key_1_last_used_date": "2020-08-18T15:24:00+00:00",
-      "access_key_1_last_used_region": "us-east-1",
-      "access_key_1_last_used_service": "iam",
-      "access_key_2_active": true,
-      "access_key_2_last_rotated": "2020-08-23T22:07:52+00:00",
-      "access_key_2_last_used_date": "2020-09-06T00:35:00+00:00",
-      "access_key_2_last_used_region": "us-east-1",
-      "access_key_2_last_used_service": "s3",
-      "cert_1_active": false,
-      "cert_1_last_rotated": null,
-      "cert_2_active": false,
-      "cert_2_last_rotated": null
+        'Path': '/',
+        'UserName': 'cloudsploit',
+        'UserId': 'AIDARPGOCGXSSUH7TNLM4',
+        'Arn': 'arn:aws:iam::000011111:user/cloudsploit',
+        'CreateDate': '2021-12-12T13:15:54+00:00'
     },
-    {
-      "user": "test1",
-      "arn": "arn:aws:iam::112233445566:user/test1",
-      "user_creation_time": "2020-03-12T16:58:32+00:00",
-      "password_enabled": true,
-      "password_last_used": "2020-09-24T23:53:25+00:00",
-      "password_last_changed": "2020-09-12T17:02:21+00:00",
-      "password_next_rotation": null,
-      "mfa_active": false,
-      "access_key_1_active": true,
-      "access_key_1_last_rotated": "2020-09-12T16:58:34+00:00",
-      "access_key_1_last_used_date": "2020-09-25T02:55:00+00:00",
-      "access_key_1_last_used_region": "us-east-1",
-      "access_key_1_last_used_service": "autoscaling",
-      "access_key_2_active": false,
-      "access_key_2_last_rotated": null,
-      "access_key_2_last_used_date": null,
-      "access_key_2_last_used_region": null,
-      "access_key_2_last_used_service": null,
-      "cert_1_active": true,
-      "cert_1_last_rotated": failDate,
-      "cert_2_active": false,
-      "cert_2_last_rotated": null
-    },
-    {
-        "user": "test2",
-        "arn": "arn:aws:iam::112233445566:user/test2",
-        "user_creation_time": passDate,
-        "password_enabled": true,
-        "password_last_used": "2020-09-24T23:53:25+00:00",
-        "password_last_changed": "2020-09-12T17:02:21+00:00",
-        "password_next_rotation": null,
-        "mfa_active": false,
-        "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-09-12T16:58:34+00:00",
-        "access_key_1_last_used_date": "2020-09-25T02:55:00+00:00",
-        "access_key_1_last_used_region": "us-east-1",
-        "access_key_1_last_used_service": "autoscaling",
-        "access_key_2_active": false,
-        "access_key_2_last_rotated": null,
-        "access_key_2_last_used_date": null,
-        "access_key_2_last_used_region": null,
-        "access_key_2_last_used_service": null,
-        "cert_1_active": true,
-        "cert_1_last_rotated": "2020-03-25T11:08:44+00:00",
-        "cert_2_active": false,
-        "cert_2_last_rotated": null
-    },
-    {
-        "user": "test3",
-        "arn": "arn:aws:iam::112233445566:user/test3",
-        "user_creation_time": "2020-05-12T16:58:32+00:00",
-        "password_enabled": true,
-        "password_last_used": "2020-09-24T23:53:25+00:00",
-        "password_last_changed": "2020-09-12T17:02:21+00:00",
-        "password_next_rotation": null,
-        "mfa_active": false,
-        "access_key_1_active": true,
-        "access_key_1_last_rotated": "2020-09-12T16:58:34+00:00",
-        "access_key_1_last_used_date": "2020-09-25T02:55:00+00:00",
-        "access_key_1_last_used_region": "us-east-1",
-        "access_key_1_last_used_service": "autoscaling",
-        "access_key_2_active": false,
-        "access_key_2_last_rotated": null,
-        "access_key_2_last_used_date": null,
-        "access_key_2_last_used_region": null,
-        "access_key_2_last_used_service": null,
-        "cert_1_active": true,
-        "cert_1_last_rotated": warnDate,
-        "cert_2_active": false,
-        "cert_2_last_rotated": null
+    { 
+        'Path': '/',
+        'UserName': 'testUser',
+        'UserId': 'AIDARPGOCGXSUSX63OQEM',
+        'Arn': 'arn:aws:iam::0000111111112:user/testUser',
+        'CreateDate': '2022-10-10T11:41:15+00:00'
     }
 ];
 
-const createCache = (users) => {
+var listSSHPublicKeys = [
+    {
+        'SSHPublicKeys': [
+            {
+                'UserName': 'cloudsploit',
+                'SSHPublicKeyId': 'APKASZ433I6EO2NEWLNK',
+                'Status': 'Active',
+                'UploadDate': passDate
+            }
+        ]
+    },{
+        'SSHPublicKeys': [
+            {
+                'UserName': 'testUser',
+                'SSHPublicKeyId': 'APKASZ433I6ELJJ6BQT5',
+                'Status': 'Active',
+                'UploadDate': warnDate
+            }
+        ]
+    },{
+        'SSHPublicKeys': [
+            {
+                'UserName': 'testUser',
+                'SSHPublicKeyId': 'APKASZ433I6ELJJ6BQT5',
+                'Status': 'Active',
+                'UploadDate': failDate
+            }
+        ]
+    },{
+        'SSHPublicKeys': [
+            {}
+        ]
+}];
+
+
+const createCache = (listUsers, listSSHPublicKeys) => {
+    var userName = (listUsers && listUsers.length) ? listUsers[0].UserName : null; 
     return {
         iam: {
-            generateCredentialReport: {
+            listUsers: {
                 'us-east-1': {
-                    data: users,
+                    data: listUsers,
+                    err: null
                 },
+            },
+            listSSHPublicKeys: {
+                'us-east-1': {
+                    [userName]:{   
+                        data: listSSHPublicKeys,
+                        err: null    
+                    }              
+                }
             }
         }
     };
@@ -122,51 +85,43 @@ const createCache = (users) => {
 const createErrorCache = () => {
     return {
         iam: {
-            generateCredentialReport: {
+            listUsers: {
                 'us-east-1': {
                     err: {
-                        message: 'error generating credential report'
+                        message: 'Unable to query for Users:'
                     },
                 },
-            },
-        },
+            }
+        }
     };
 };
 
-const createNullCache = () => {
-    return {
-        iam: {
-            generateCredentialReport: {
-                'us-east-1': null,
-            },
-        },
-    };
-};
 
-describe('sshKeysRotated', function () {
-    describe('run', function () {
-        // it('should PASS if SSH keys has never been rotated but IAM user was created in last 90 days', function (done) {
-        //     const cache = createCache([users[2],users[0]]);
-        //     sshKeysRotated.run(cache, {}, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(0);
-        //         done();
-        //     });
-        // });
+describe('sshKeysRotated', function() {
+    describe('run', function() {
+        it('should PASS if SSH key is less than 180 days old', function(done) {
+            const cache = createCache([listUsers[0]],listSSHPublicKeys[0]);
+            sshKeysRotated.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].resource).to.equal('arn:aws:iam::000011111:user/cloudsploit');
+                done();
+            });
+        });
 
-        // it('should WARN if IAM user was created more than 90 days ago and SSH key is older than set number of days', function (done) {
-        //     const cache = createCache([users[0], users[3]]);
-        //     const settings = { ssh_keys_rotated_warn: 150 }
-        //     sshKeysRotated.run(cache, settings, (err, results) => {
-        //         expect(results.length).to.equal(1);
-        //         expect(results[0].status).to.equal(1);
-        //         done();
-        //     });
-        // });
-
-        it('should FAIL if IAM user was created more than 180 days ago and SSH key is older than set number of days', function (done) {
-            const cache = createCache([users[0], users[1]]);
-            const settings = { ssh_keys_rotated_fail: 300 }
+        it('should WARN if SSH key was created more than 180 days ago', function(done) {
+            const cache = createCache([listUsers[1]],listSSHPublicKeys[1]);
+            const settings = { ssh_keys_rotated_warn: 150 };
+            sshKeysRotated.run(cache, settings, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(1);
+                done();
+            });
+        });
+        
+        it('should FAIL if SSH key was created more than 360 days ago', function(done) {
+            const cache = createCache([listUsers[1]],listSSHPublicKeys[2]);
+            const settings = { ssh_keys_rotated_fail: 300 };
             sshKeysRotated.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -174,39 +129,34 @@ describe('sshKeysRotated', function () {
             });
         });
 
-        it('should PASS if no SSH keys found', function (done) {
-            const cache = createCache([users[1]]);
+        it('should PASS if no SSH keys found', function(done) {
+            const cache = createCache([listUsers[1]],listSSHPublicKeys[3]);
             sshKeysRotated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No SSH keys found');
                 done();
             });
         });
 
-        it('should PASS if no IAM user accounts with SSh keys found', function (done) {
-            const cache = createCache([users[0]]);
-            sshKeysRotated.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should UNKNOWN if there was an error querying for IAM credetial report', function (done) {
+        it('should UNKNOWN if unable to query for users', function(done) {
             const cache = createErrorCache();
             sshKeysRotated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Users:');
                 done();
             });
         });
 
-        it('should not return any results if unable to query for IAM credential report', function (done) {
-            const cache = createNullCache();
+        it('should UNKNOWN if unable to query for SSH Keys', function(done) {
+            const cache = createCache([listUsers[0]]);
             sshKeysRotated.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for SSH Keys:');
                 done();
             });
-        });
+        });       
     });
 });

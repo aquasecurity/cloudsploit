@@ -94,7 +94,6 @@ const createNullCache = () => {
     };
 };
 
-
 describe('bucketSecureTransportEnabled', function () {
     describe('run', function () {
         it('should PASS if S3 bucket enforces SSL to secure data in transit', function (done) {
@@ -103,6 +102,7 @@ describe('bucketSecureTransportEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('enforces SSL to secure data in transit');
                 done();
             });
         });
@@ -113,6 +113,8 @@ describe('bucketSecureTransportEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Bucket policy does not contain any statements');
+
                 done();
             });
         });
@@ -123,6 +125,8 @@ describe('bucketSecureTransportEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('does not enforce SSL to secure data in transit');
+
                 done();
             });
         });
@@ -132,6 +136,7 @@ describe('bucketSecureTransportEnabled', function () {
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for S3 buckets');
                 done();
             });
         });

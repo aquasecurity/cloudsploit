@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Maximum Password Age',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures password policy requires passwords to be reset every 180 days',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -76,11 +76,11 @@ module.exports = {
 
         if (!getAccountPasswordPolicy) return callback(null, results, source);
 
-        // Handle special case errors
+        // Handle default password policy
         if (getAccountPasswordPolicy.err &&
             getAccountPasswordPolicy.err.code &&
             getAccountPasswordPolicy.err.code === 'NoSuchEntity') {
-            helpers.addResult(results, 2, 'Account does not have a password policy');
+            helpers.addResult(results, 2, 'Account has Default password policy');
             return callback(null, results, source);
         }
 
@@ -95,11 +95,11 @@ module.exports = {
         if (!passwordPolicy.MaxPasswordAge) {
             helpers.addResult(results, 2, 'Password policy does not specify a maximum password age');
         } else if (passwordPolicy.MaxPasswordAge > config.max_password_age_fail) {
-            helpers.addResult(results, 2, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than one year', 'global', null, custom);
+            helpers.addResult(results, 2, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is more than ${config.max_password_age_fail}`, 'global', null, custom);
         } else if (passwordPolicy.MaxPasswordAge > config.max_password_age_warn) {
-            helpers.addResult(results, 1, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is more than six months', 'global', null, custom);
+            helpers.addResult(results, 1, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is more than ${config.max_password_age_warn}`, 'global', null, custom);
         } else {
-            helpers.addResult(results, 0, 'Maximum password age of: ' + passwordPolicy.MaxPasswordAge + ' days is suitable', 'global', null, custom);
+            helpers.addResult(results, 0, `Maximum password age of: ${passwordPolicy.MaxPasswordAge} days is suitable`, 'global', null, custom);
         }
 
         callback(null, results, source);

@@ -4,7 +4,7 @@ var cloudtrailBucketAccessLogging = require('./cloudtrailBucketAccessLogging');
 const trails = [
     {
         "Name": "trail-1",
-        "S3BucketName": "cloudtrail-bucket",
+        "S3BucketName": "aws-cloudtrail-logs-123456654321-119d2f9a",
         "IncludeGlobalServiceEvents": true,
         "IsMultiRegionTrail": true,
         "HomeRegion": "us-east-1",
@@ -17,7 +17,19 @@ const trails = [
     },
     {
         "Name": "trail-2",
-        "S3BucketName": "aws-cloudtrail-logs-123456654321-test-events-690d8af2",
+        "S3BucketName": "aws-cloudtrail-logs-123456654321-37b755bd",
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail": false,
+        "HomeRegion": "us-east-1",
+        "TrailARN": "arn:aws:cloudtrail:us-east-1:123456654321:trail/trail-2",
+        "LogFileValidationEnabled": false,
+        "HasCustomEventSelectors": false,
+        "HasInsightSelectors": false,
+        "IsOrganizationTrail": false
+    },
+    {
+        "Name": "trail-3",
+        "S3BucketName": "codepipeline-cloudtrail-placeholder-bucket-us-east-1",
         "IncludeGlobalServiceEvents": true,
         "IsMultiRegionTrail": false,
         "HomeRegion": "us-east-1",
@@ -128,8 +140,17 @@ describe('cloudtrailBucketAccessLogging', function () {
             });
         });
 
+        it('should FAIL if Unable to locate S3 bucket, it may have been deleted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketLogging[1]);
+            cloudtrailBucketAccessLogging.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
         it('should PASS if no S3 bucket to check', function (done) {
-            const cache = createCache([]);
+            const cache = createCache([], [], null);
             cloudtrailBucketAccessLogging.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -155,10 +176,12 @@ describe('cloudtrailBucketAccessLogging', function () {
             });
         });
 
-        it('should not return any results if describe CloudTrail response not found', function (done) {
-            const cache = createNullCache();
-            cloudtrailBucketAccessLogging.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+        it('should PASS if bucket gets whitelisted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketLogging[1]);
+            cloudtrailBucketAccessLogging.run(cache, { whitelist_ct_access_logging_buckets:'codepipeline-cloudtrail' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Bucket is whitelisted');
                 done();
             });
         });

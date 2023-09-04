@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Google provides a simple method of backing up SQL instances at a regular interval. This should be enabled to provide an option for restoring data in the event of a database compromise or hardware failure.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
-    apis: ['instances:sql:list', 'projects:get'],
+    apis: ['sql:list'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -27,9 +27,9 @@ module.exports = {
 
         let project = projects.data[0].name;
 
-        async.each(regions.instances.sql, function(region, rcb){
+        async.each(regions.sql, function(region, rcb){
             let sqlInstances = helpers.addSource(
-                cache, source, ['instances', 'sql', 'list', region]);
+                cache, source, ['sql', 'list', region]);
 
             if (!sqlInstances) return rcb();
 

@@ -5,7 +5,7 @@ module.exports = {
     title: 'Security Agent Installed',
     category: 'Security Center',
     domain: 'Management and Governance',
-    description: 'Ensure that all assets are condifgured to be installed with Security Agent.',
+    description: 'Ensure that all assets are configured to be installed with Security Agent.',
     more_info: 'Security center provides a set of comprehensive endpoint intrusion detection and protection capabilities, ' +
         'such as remote logon detection, webshell detection and removal, anomaly detection, and detection of changes in key files and suspicious accounts in systems and applications. ' +
         'This requires an agent to be installed on the endpoint to work.',
@@ -17,7 +17,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
 
         async.each(regions.tds, function(region, rcb) {
             var describeFieldStatistics = helpers.addSource(cache, source,

@@ -9,6 +9,7 @@
 name: roles/AquaCSPMSecurityAudit
 title: Aqua CSPM Security Audit
 includedPermissions:
+  - cloudasset.assets.listResource
   - cloudkms.cryptoKeys.list
   - cloudkms.keyRings.list
   - cloudsql.instances.list
@@ -51,6 +52,10 @@ includedPermissions:
   - resourcemanager.tagValues.list
   - storage.buckets.getIamPolicy
   - storage.buckets.list
+  - deploymentmanager.deployments.list
+  - dataproc.clusters.list
+  - artifactregistry.repositories.list
+  - composer.environments.list
 stage: GA
 ```
 4. Run the following command to create the role, use your Organization Id to create the Role at the Org Level: ``gcloud iam roles create AquaCSPMSecurityAudit --organization=YOUR_ORGANIZATION_ID --file=aqua-security-audit-role.yaml``

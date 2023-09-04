@@ -26,6 +26,18 @@ const trails = [
         "HasCustomEventSelectors": false,
         "HasInsightSelectors": false,
         "IsOrganizationTrail": false
+    },
+    {
+        "Name": "trail-3",
+        "S3BucketName": "codepipeline-cloudtrail-placeholder-bucket-us-east-1",
+        "IncludeGlobalServiceEvents": true,
+        "IsMultiRegionTrail": false,
+        "HomeRegion": "us-east-1",
+        "TrailARN": "arn:aws:cloudtrail:us-east-1:123456654321:trail/trail-2",
+        "LogFileValidationEnabled": false,
+        "HasCustomEventSelectors": false,
+        "HasInsightSelectors": false,
+        "IsOrganizationTrail": false
     }
 ];
 
@@ -147,8 +159,17 @@ describe('cloudtrailBucketPrivate', function () {
             });
         });
 
+        it('should FAIL if Unable to locate S3 bucket, it may have been deleted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketAcl[0]);
+            cloudtrailBucketPrivate.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
         it('should PASS if no S3 bucket to check', function (done) {
-            const cache = createCache([]);
+            const cache = createCache([], [], null);
             cloudtrailBucketPrivate.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -174,10 +195,12 @@ describe('cloudtrailBucketPrivate', function () {
             });
         });
 
-        it('should not return any results if describe CloudTrail response not found', function (done) {
-            const cache = createNullCache();
-            cloudtrailBucketPrivate.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+        it('should PASS if bucket gets whitelisted', function (done) {
+            const cache = createCache([trails[2]], [listBuckets[1]], getBucketAcl[0]);
+            cloudtrailBucketPrivate.run(cache, { whitelist_ct_private_buckets: 'codepipeline-cloudtrail' }, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Bucket is whitelisted');
                 done();
             });
         });

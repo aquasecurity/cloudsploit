@@ -1,5 +1,5 @@
 var parse = function(obj, path) {
-    // (Array.isArray(obj)) return [obj];
+    //(Array.isArray(obj)) return [obj];
     if (typeof path == 'string' && path.includes('.')) path = path.split('.');
     if (Array.isArray(path) && path.length && typeof obj === 'object') {
         var localPath = path.shift();
@@ -116,6 +116,7 @@ var compositeResult = function(inputResultsArr, resource, region, results, logic
 };
 
 var validate = function(condition, conditionResult, inputResultsArr, message, property, parsed) {
+
     if (Array.isArray(property)){
         property = property[property.length-1];
     }
@@ -142,19 +143,44 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
     // Compare the property with the operator
     if (condition.op) {
         if (condition.transform && condition.transform == 'EACH' && condition) {
-            // Recurse into the same function
-            var subProcessed = [];
-            if (!condition.parsed.length) {
-                conditionResult = 2;
-                message.push(`${property}: is not iterable using EACH transformation`);
+            if (condition.op == 'CONTAINS') {
+                var stringifiedCondition = JSON.stringify(condition.parsed);
+                if (condition.value && condition.value.includes(':')) {
+                    var key = condition.value.split(/:(?!.*:)/)[0];
+                    var value = condition.value.split(/:(?!.*:)/)[1];
+
+                    if (stringifiedCondition.includes(key) && stringifiedCondition.includes(value)){
+                        message.push(`${property}: ${condition.value} found in ${stringifiedCondition}`);
+                        return 0;
+                    } else {
+                        message.push(`${condition.value} not found in ${stringifiedCondition}`);
+                        return 2;
+                    }
+                } else if (stringifiedCondition && stringifiedCondition.includes(condition.value)) {
+                    message.push(`${property}: ${condition.value} found in ${stringifiedCondition}`);
+                    return 0;
+                } else if (stringifiedCondition && stringifiedCondition.length){
+                    message.push(`${condition.value} not found in ${stringifiedCondition}`);
+                    return 2;
+                } else {
+                    message.push(`${condition.parsed} is not the right property type for this operation`);
+                    return 2;
+                }
             } else {
-                condition.parsed.forEach(function(parsed) {
-                    subProcessed.push(runValidation(parsed, condition, inputResultsArr));
-                });
-                subProcessed.forEach(function(sub) {
-                    if (sub.status) conditionResult = sub.status;
-                    if (sub.message) message.push(sub.message);
-                });
+                // Recurse into the same function
+                var subProcessed = [];
+                if (!condition.parsed.length) {
+                    conditionResult = 2;
+                    message.push(`${property}: is not iterable using EACH transformation`);
+                }  else {
+                    condition.parsed.forEach(function(parsed) {
+                        subProcessed.push(runValidation(parsed, condition, inputResultsArr));
+                    });
+                    subProcessed.forEach(function(sub) {
+                        if (sub.status) conditionResult = sub.status;
+                        if (sub.message) message.push(sub.message);
+                    });
+                }
             }
         } else if (condition.op == 'EQ') {
             if (condition.parsed == condition.value) {
@@ -252,7 +278,6 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
         } else {
             property = condition.property;
         }
-
         condition.parsed = parse(obj, condition.property)[0];
 
         // if ( Array.isArray(obj)) {
@@ -449,6 +474,7 @@ var asl = function(source, input, resourceMap, callback) {
     if (!input.conditions || !input.conditions.length) return callback('No conditions provided for input');
 
     let service = input.conditions[0].service;
+    var subService = (input.conditions[0].subservice) ? input.conditions[0].subservice : null;
     let api = input.conditions[0].api;
     let resourcePath;
     if (resourceMap &&
@@ -458,11 +484,15 @@ var asl = function(source, input, resourceMap, callback) {
     }
 
     if (!source[service]) return callback(`Source data did not contain service: ${service}`);
-    if (!source[service][api]) return callback(`Source data did not contain API: ${api}`);
+    if (subService && !source[service][subService]) return callback(`Source data did not contain service: ${service}:${subService}`);
+    if (subService && !source[service][subService][api]) return callback(`Source data did not contain API: ${api}`);
+    if (!subService && !source[service][api]) return callback(`Source data did not contain API: ${api}`);
 
-    let results = [];
-    for (let region in source[service][api]) {
-        let regionVal = source[service][api][region];
+    var results = [];
+    let data = subService ? source[service][subService][api] : source[service][api];
+
+    for (let region in data) {
+        let regionVal = data[region];
         if (typeof regionVal !== 'object') continue;
         if (regionVal.err) {
             results.push({
@@ -509,7 +539,7 @@ var asl = function(source, input, resourceMap, callback) {
         }
     }
 
-    callback(null, results, source[service][api]);
+    callback(null, results, data);
 };
 
 module.exports = asl;

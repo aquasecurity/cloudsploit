@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'For best security practices, use only predefined IAM roles and do not use primitive roles to prevent any unauthorized access to your resources.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has a primitive role.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -46,18 +46,20 @@ module.exports = {
             var iamPolicy = iamPolicies.data[0];
             var primitiveRoleExists = false;
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role && ['roles/editor', 'roles/viewer', 'roles/owner'].includes(roleBinding.role)) {
-                    primitiveRoleExists = true;
-                    roleBinding.members.forEach(member => {
-                        let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                        let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
-                        let resource = helpers.createResourceName(memberType, accountName, project);
-                        helpers.addResult(results, 2,
-                            `The account has the primitive role: ${roleBinding.role}`, region, resource);
-                    });
-                }
-            });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role && ['roles/editor', 'roles/viewer', 'roles/owner'].includes(roleBinding.role)) {
+                        primitiveRoleExists = true;
+                        roleBinding.members.forEach(member => {
+                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                            let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                            let resource = helpers.createResourceName(memberType, accountName, project);
+                            helpers.addResult(results, 2,
+                                `The account has the primitive role: ${roleBinding.role}`, region, resource);
+                        });
+                    }
+                });
+            }
 
             if (!primitiveRoleExists) {
                 helpers.addResult(results, 0, 'No accounts have primitive roles', region);

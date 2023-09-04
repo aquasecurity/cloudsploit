@@ -22,7 +22,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions();
+        var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
         var sqlAuditRetentionPeriod = parseInt(settings.sqlAuditRetentionPeriod || this.settings.sqlAuditRetentionPeriod.default);
 

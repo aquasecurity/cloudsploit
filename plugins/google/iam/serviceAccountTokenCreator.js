@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'For best security practices, IAM users should not have Service Account Token Creator role.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM user have Service Account Token Creator Role at GCP project level.',
-    apis: ['projects:getIamPolicy', 'projects:get'],
+    apis: ['projects:getIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -47,18 +47,20 @@ module.exports = {
 
             var serviceAccountExists = false;
 
-            iamPolicy.bindings.forEach(roleBinding => {
-                if (roleBinding.role === 'roles/iam.serviceAccountTokenCreator') {
-                    serviceAccountExists = true;
-                    roleBinding.members.forEach(member => {
-                        let accountName = (member.includes(':')) ? member.split(':')[1] : member;
-                        let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
-                        let resource = helpers.createResourceName(memberType, accountName, project);
-                        helpers.addResult(results, 2,
-                            'The account has a service account token creator role', region, resource);
-                    });
-                }
-            });
+            if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+                iamPolicy.bindings.forEach(roleBinding => {
+                    if (roleBinding.role === 'roles/iam.serviceAccountTokenCreator') {
+                        serviceAccountExists = true;
+                        roleBinding.members.forEach(member => {
+                            let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                            let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                            let resource = helpers.createResourceName(memberType, accountName, project);
+                            helpers.addResult(results, 2,
+                                'The account has a service account token creator role', region, resource);
+                        });
+                    }
+                });
+            }
 
             if (!serviceAccountExists) {
                 helpers.addResult(results, 0, 'No accounts have service account token creator roles', region);

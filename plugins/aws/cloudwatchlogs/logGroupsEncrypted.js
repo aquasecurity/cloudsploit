@@ -18,6 +18,12 @@ module.exports = {
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
             default: 'awscmk'
+        },
+        cloudwatchlog_whitelist: {
+            name: 'Lambda Functions Whitelisted',
+            description: 'A comma-delimited list of known lambda function Function Names that should be whitelisted',
+            regex: '^.{1,255}$',
+            default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
         }
     },
 
@@ -27,8 +33,16 @@ module.exports = {
         var regions = helpers.regions(settings);
         
         var config = {
-            desiredEncryptionLevelString: settings.cloudwatchlog_groups_desired_encryption_level || this.settings.cloudwatchlog_groups_desired_encryption_level.default
+            desiredEncryptionLevelString: settings.cloudwatchlog_groups_desired_encryption_level || this.settings.cloudwatchlog_groups_desired_encryption_level.default,
+            cloudwatchlog_whitelist: settings.cloudwatchlog_whitelist || this.settings.cloudwatchlog_whitelist.default
         };
+
+        if (config.cloudwatchlog_whitelist &&
+            config.cloudwatchlog_whitelist.length) {
+            config.cloudwatchlog_whitelist = config.cloudwatchlog_whitelist.split(',');
+        } else {
+            config.cloudwatchlog_whitelist = [];
+        }
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
@@ -60,8 +74,23 @@ module.exports = {
 
             for (let logGroup of describeLogGroups.data) {
                 if (!logGroup.arn) continue;
-
                 let resource = logGroup.arn;
+
+                let whitelisted = false;
+                if (config.cloudwatchlog_whitelist.length) {
+                    config.cloudwatchlog_whitelist.forEach(whitelist => {
+                        if (resource.indexOf(whitelist) > -1) {
+                            whitelisted = true;
+                        }
+                    });
+                }
+
+                if (whitelisted) {
+                    helpers.addResult(results, 0,
+                        'The cloudwatch log group is whitelisted.',
+                        region, resource);
+                    return rcb();
+                }
 
                 if (!logGroup.kmsKeyId) {
                     currentEncryptionLevel = 2; //awskms

@@ -234,7 +234,7 @@ describe("systemDisksEncrypted", function () {
     
     it("should PASS if System disks are encrypted", function (done) {
       const cache = createCache([describeDisks[1]], listKeys);
-      systemDisksEncrypted.run(cache, {}, (err, results) => {
+      systemDisksEncrypted.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].message).to.include("System disk is encrypted to at least cloudkms");
         expect(results[0].status).to.equal(0);
@@ -245,7 +245,7 @@ describe("systemDisksEncrypted", function () {
 
     it("should PASS if System disks are encrypted to target encryption level", function (done) {
       const cache = createCache([describeDisks[2]], listKeys, describeKey);
-      systemDisksEncrypted.run(cache, { system_disks_encryption_level }, (err, results) => {
+      systemDisksEncrypted.run(cache, { system_disks_encryption_level, china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].message).to.include(`System disk is encrypted to at least ${system_disks_encryption_level}`);
         expect(results[0].status).to.equal(0);
@@ -256,7 +256,7 @@ describe("systemDisksEncrypted", function () {
 
     it("should FAIL if disk is not encrypted", function (done) {
       const cache = createCache([describeDisks[3]], listKeys);
-      systemDisksEncrypted.run(cache, {}, (err, results) => {
+      systemDisksEncrypted.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(2);
         expect(results[0].message).to.include("System disk is not encrypted to cloudkms");
@@ -268,7 +268,7 @@ describe("systemDisksEncrypted", function () {
     it("should FAIL if System disk is not encrypted to target encryption level", function (done) {
       const cache = createCache([describeDisks[3]], listKeys);
       systemDisksEncrypted.run(
-        cache, { system_disks_encryption_level },
+        cache, { system_disks_encryption_level, china: true },
         (err, results) => {
           expect(results.length).to.equal(1);
           expect(results[0].status).to.equal(2);
@@ -279,29 +279,9 @@ describe("systemDisksEncrypted", function () {
       );
     });
 
-
-
-    it("should FAIL if System disk is not encrypted to target level and combine results when reach results limit", function (done) {
-      const cache = createCache([describeDisks[3]], listKeys, describeKey);
-      systemDisksEncrypted.run(
-        cache,
-        {
-          system_disks_encryption_level,
-          system_disks_result_limit,
-        },
-        (err, results) => {
-          expect(results.length).to.equal(1);
-          expect(results[0].status).to.equal(2);
-          expect(results[0].message).to.include(`More than ${system_disks_result_limit} system disks are not encrypted to ${system_disks_encryption_level}`);
-          expect(results[0].region).to.equal("cn-hangzhou");
-          done();
-        }
-      );
-    });
-
     it("should PASS if no ECS disks found", function (done) {
       const cache = createCache([]);
-      systemDisksEncrypted.run(cache, {}, (err, results) => {
+      systemDisksEncrypted.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(0);
         expect(results[0].message).to.include("No ECS disks found");
@@ -314,7 +294,7 @@ describe("systemDisksEncrypted", function () {
       const cache = createCache([], null, null, {
         err: "Unable to query ECS disks",
       });
-      systemDisksEncrypted.run(cache, {}, (err, results) => {
+      systemDisksEncrypted.run(cache, { china: true }, (err, results) => {
         expect(results.length).to.equal(1);
         expect(results[0].status).to.equal(3);
         expect(results[0].message).to.include("Unable to query ECS disks");

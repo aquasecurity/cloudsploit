@@ -21,18 +21,6 @@ var async = require('async');
 var helpers = require(__dirname + '/../../helpers/alibaba');
 var collectors = require(__dirname + '/../../collectors/alibaba');
 
-var regions = helpers.regions();
-
-var regionEndpointMap = {
-    ecs: ['cn-wulanchabu', 'cn-zhangjiak', 'cn-huhehaote', 'cn-heyuan', 'cn-chengdu', 'ap-southeast-2', 'cn-guangzhou',
-        'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    kms: regions['kms'],
-    rds: ['cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
-        'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1'],
-    actiontrail: regions['actiontrail'],
-    apigateway: regions['apigateway'],
-    tds: ['ap-southeast-3', 'ap-southeast-1']
-};
 
 var globalServices = [
     'OSS',
@@ -170,6 +158,9 @@ var calls = {
             apiVersion: '2018-12-03',
         },
         DescribeVersionConfig: {
+            apiVersion: '2018-12-03'
+        },
+        DescribeVulConfig: {
             apiVersion: '2018-12-03'
         }
     }
@@ -324,7 +315,14 @@ var postcalls = [
                 filterValue: ['ApiId', 'GroupId'],
                 apiVersion: '2016-07-14'
             }
-        }
+        },
+        ACK: {
+            describeClusterDetail: {
+                reliesOnService: 'ack',
+                reliesOnCall: 'describeClustersV1',
+                override: true             
+            }
+        },
     }
 ];
 
@@ -332,6 +330,19 @@ var collect = function(AlibabaConfig, settings, callback) {
     if (settings.gather) {
         return callback(null, calls, postcalls);
     }
+
+    var regions = helpers.regions(settings);
+
+    var regionEndpointMap = {
+        ecs: [ 'cn-hangzhou', 'cn-wulanchabu', 'cn-zhangjiak', 'cn-huhehaote', 'cn-heyuan', 'cn-chengdu', 'ap-southeast-2', 'cn-guangzhou',
+            'ap-southeast-3', 'ap-southeast-5', 'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1' ],
+        kms: regions['kms'],
+        rds: [ 'cn-zhangjiakou', 'cn-huhehaote', 'cn-chengdu', 'ap-southeast-2', 'ap-southeast-3', 'ap-southeast-5',
+            'ap-northeast-1', 'ap-south-1', 'eu-central-1', 'eu-west-1', 'me-east-1' ],
+        actiontrail: regions['actiontrail'],
+        apigateway: regions['apigateway'],
+        tds: ['ap-southeast-3', 'ap-southeast-1']
+    };
 
     var collection = {};
 

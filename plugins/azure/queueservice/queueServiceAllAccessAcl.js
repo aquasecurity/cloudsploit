@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Queues can be configured to allow object read, write or delete. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, delete policies on all queues and ensure the ACL is configured with least privileges.',
     link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmented', 'queueService:getQueueAcl'],
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmentedNew', 'queueService:getQueueAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. Queue Service ACLs enable granular permissions for data access.',
@@ -71,26 +71,22 @@ module.exports = {
                             } else {
                                 var acl = getQueueAcl.data;
                                 var fullPermissions = [];
-
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
-                                        var permissions = acl.signedIdentifiers[ident].Permissions;
+                                        var permissions = acl.signedIdentifiers[ident].accessPolicy.permissions;
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":
                                             //     fullPermissions.push('read');
                                             //     break;
-                                            case 'c':
-                                                fullPermissions.push(`create (via identifier ${ident})`);
+                                            case 'a':
+                                                fullPermissions.push(`add (via identifier ${ident})`);
                                                 break;
-                                            case 'w':
-                                                fullPermissions.push(`write (via identifier ${ident})`);
+                                            case 'u':
+                                                fullPermissions.push(`update (via identifier ${ident})`);
                                                 break;
-                                            case 'd':
-                                                fullPermissions.push(`delete (via identifier ${ident})`);
-                                                break;
-                                            case 'l':
-                                                fullPermissions.push(`list (via identifier ${ident})`);
+                                            case 'p':
+                                                fullPermissions.push(`process (via identifier ${ident})`);
                                                 break;
                                             default:
                                                 break;
