@@ -143,11 +143,15 @@ module.exports = {
     subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
+    groups: ['global'],
+    memberships: ['global'],
+    iam: ['global'],
     deployments: ['global'],
     urlMaps: ['global'],
     apiKeys: ['global'],
     resourceRecordSets: ['global'],
     services: ['global'],
     accessApproval: ['global'],
-    networkRoutes: ['global']
+    networkRoutes: ['global'],
+    roles: ['global']
 };

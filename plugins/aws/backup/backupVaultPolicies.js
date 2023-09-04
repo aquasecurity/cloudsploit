@@ -35,69 +35,72 @@ module.exports = {
                 return rcb();
             }
 
-            for (let vault of listBackupVaults.data){
+            for (let vault of listBackupVaults.data) {
                 if (!vault.BackupVaultArn || !vault.BackupVaultName) continue;
-               
+
                 let resource = vault.BackupVaultArn;
 
                 let getBackupVaultAccessPolicy = helpers.addSource(cache, source,
                     ['backup', 'getBackupVaultAccessPolicy', region, vault.BackupVaultName]);
-    
-                if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data || !getBackupVaultAccessPolicy.data.Policy) {
+
+                if (getBackupVaultAccessPolicy.err && getBackupVaultAccessPolicy.err.message === `Backup Vault ${resource} has no associated POLICY`) {
+                    helpers.addResult(results, 0, 'Backup Vault has no associated policy attached', region, resource);
+                } else if (!getBackupVaultAccessPolicy || getBackupVaultAccessPolicy.err || !getBackupVaultAccessPolicy.data || !getBackupVaultAccessPolicy.data.Policy) {
                     helpers.addResult(results, 3, `Unable to get Backup vault access policy: ${helpers.addError(getBackupVaultAccessPolicy)}`, region, resource);
-                    continue;
-                }
-    
-                var statements = helpers.normalizePolicyDocument(getBackupVaultAccessPolicy.data.Policy);
-    
-                if (!statements || !statements.length) {
-                    helpers.addResult(results, 0,
-                        'Backup Vault policy does not have trust relationship statements',
-                        region, resource);
-                    continue;
-                }
-    
-                var actions = [];
-    
-                for (var statement of statements) {
-                    // Evaluates whether the effect of the statement is to "allow" access to the SNS
-                    var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
+                } else {
+                    var statements = helpers.normalizePolicyDocument(getBackupVaultAccessPolicy.data.Policy);
 
-                    // Evaluates whether the principal is open to everyone/anonymous
-                    var principalEval = helpers.globalPrincipal(statement.Principal);
+                    if (!statements || !statements.length) {
+                        helpers.addResult(results, 0,
+                            'Backup Vault policy does not have trust relationship statements',
+                            region, resource);
+                        continue;
+                    }
 
-                    // Evaluates whether condition is scoped or global
-                    let scopedCondition;
-                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, [], helpers.IAM_CONDITION_OPERATORS, false, accountId);
+                    var actions = [];
 
-                    if (!scopedCondition && principalEval && effectEval) {
-                        if (statement.Action && typeof statement.Action === 'string') {
-                            if (actions.indexOf(statement.Action) === -1) {
-                                actions.push(statement.Action);
-                            }
-                        } else if (statement.Action && statement.Action.length) {
-                            for (var a in statement.Action) {
-                                if (actions.indexOf(statement.Action[a]) === -1) {
-                                    actions.push(statement.Action[a]);
+                    for (var statement of statements) {
+                        // Evaluates whether the effect of the statement is to "allow" access to the SNS
+                        var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
+
+                        // Evaluates whether the principal is open to everyone/anonymous
+                        var principalEval = helpers.globalPrincipal(statement.Principal);
+
+                        // Evaluates whether condition is scoped or global
+                        let scopedCondition;
+                        if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, [], helpers.IAM_CONDITION_OPERATORS, false, accountId);
+
+                        if (!scopedCondition && principalEval && effectEval) {
+                            if (statement.Action && typeof statement.Action === 'string') {
+                                if (actions.indexOf(statement.Action) === -1) {
+                                    actions.push(statement.Action);
+                                }
+                            } else if (statement.Action && statement.Action.length) {
+                                for (var a in statement.Action) {
+                                    if (actions.indexOf(statement.Action[a]) === -1) {
+                                        actions.push(statement.Action[a]);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            
-                if (actions.length) {
-                    helpers.addResult(results, 2,
-                        'Backup Vault policy allows global access to the action(s): ' + actions,
-                        region, resource);
-                } else {
-                    helpers.addResult(results, 0,
-                        'Backup Vault policy does not allow global access.',
-                        region, resource);
+
+                    if (actions.length) {
+                        helpers.addResult(results, 2,
+                            'Backup Vault policy allows global access to the action(s): ' + actions,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Backup Vault policy does not allow global access.',
+                            region, resource);
+                    }
                 }
             }
             rcb();
+
         }, function(){
             callback(null, results, source);
         });
     }
 };
+

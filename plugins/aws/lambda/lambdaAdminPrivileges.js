@@ -59,8 +59,14 @@ module.exports = {
                 var getRolePolicy = helpers.addSource(cache, source,
                     ['iam', 'getRolePolicy', defaultRegion, roleName]);
 
-                if (!listAttachedRolePolicies ||
-                    listAttachedRolePolicies.err ||
+                if (!listAttachedRolePolicies || !listRolePolicies ) {
+                    helpers.addResult(results, 0,
+                        'No IAM Attached Role Found',
+                        region, resource);
+                    return fcb();
+                }
+
+                if (listAttachedRolePolicies.err ||
                     !listAttachedRolePolicies.data ||
                     !listAttachedRolePolicies.data.AttachedPolicies) {
                     helpers.addResult(results, 3,
@@ -69,7 +75,7 @@ module.exports = {
                     return fcb();
                 }
 
-                if (!listRolePolicies || listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
+                if (listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
                     helpers.addResult(results, 3,
                         `Unable to query for IAM role policy for role "${roleName}": ${helpers.addError(listRolePolicies)}`, 
                         region, resource);
@@ -123,8 +129,7 @@ module.exports = {
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        let statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges

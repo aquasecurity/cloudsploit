@@ -37,6 +37,7 @@ module.exports = {
             '2.8.6'  : 'redis',
             '2.6.13' : 'redis',
             '3.2.10' : 'redis',
+            '3.2.6'  : 'redis',
         };
 
         async.each(regions.elasticache, function(region, rcb){

@@ -58,7 +58,7 @@ module.exports = {
         
                     if (!datasets) return rcb();
         
-                    if (datasets.err || !datasets.data) {
+                    if (!datasets.data) {
                         helpers.addResult(results, 3, 'Unable to query BigQuery datasets', region, null, null, datasets.err);
                         return rcb();
                     }
@@ -73,7 +73,7 @@ module.exports = {
         
                     if (!tables) return rcb();
         
-                    if (tables.err || !tables.data) {
+                    if (!tables.data) {
                         helpers.addResult(results, 3, 'Unable to query BigQuery tables', region, null, null, tables.err);
                         return rcb();
                     }

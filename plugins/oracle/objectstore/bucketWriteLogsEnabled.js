@@ -51,9 +51,9 @@ module.exports = {
                     }
 
                     if (bucketLog) {
-                        helpers.addResult(results, 0, 'The bucket has write level logging enabled', region, bucket.name);
+                        helpers.addResult(results, 0, 'The bucket has write level logging enabled', region, bucket.id);
                     } else {
-                        helpers.addResult(results, 2, 'The bucket does not have write level logging enabled', region, bucket.name);
+                        helpers.addResult(results, 2, 'The bucket does not have write level logging enabled', region, bucket.id);
                     }
                 });
             }
