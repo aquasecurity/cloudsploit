@@ -5,7 +5,7 @@ module.exports = {
     title: 'RDS Idle Instance Status',
     category: 'RDS',
     domain: 'Databases',
-    description: 'Ensure there are no RDS instances with CPU utilization below defined threshold within last 7 days.',
+    description: 'Ensure there are no RDS instances with CPU utilization below any of the defined thresholds within last 7 days.',
     more_info: 'Idle Amazon RDS instance is a prime candidate for reducing monthly AWS expenses and preventing unnecessary usage charges from accumulating.',
     link: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/amazon-rds-monitoring-alerting/db-instance-cloudwatch-metrics.html',
     recommended_action: 'Identify and remove idle RDS instance',
@@ -77,6 +77,7 @@ module.exports = {
 
                 if (!getRdsMetricStatistics.data.Datapoints.length) {
                     helpers.addResult(results, 0,'CPU metric statistics are not available', region, instance.DBInstanceArn);
+                    return;
                 }
                    
                    
@@ -88,6 +89,7 @@ module.exports = {
     
                 if (!getRdsReadIOPSMetricStatistics.data.Datapoints.length) {
                     helpers.addResult(results, 0, 'Read IOPS metric statistics are not available', region, instance.DBInstanceArn);
+                    return;
                 }
                         
                 if (!getRdsWriteIOPSMetricStatistics || getRdsWriteIOPSMetricStatistics.err ||
@@ -98,6 +100,7 @@ module.exports = {
         
                 if (!getRdsWriteIOPSMetricStatistics.data.Datapoints.length) {
                     helpers.addResult(results, 0,'Write IOPS metric statistics are not available', region, instance.DBInstanceArn);
+                    return;
                 }
                 var cpuIdle = false;
                 var readIopsIdle = false;
