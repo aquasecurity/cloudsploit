@@ -398,6 +398,7 @@ module.exports = {
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
         'rdsDefaultUsername'            : require(__dirname + '/plugins/aws/rds/rdsDefaultUsername.js'),
+        'rdsDefaultPort'                : require(__dirname + '/plugins/aws/rds/rdsDefaultPort.js'),
         'rdsSnapshotPubliclyAccessible' : require(__dirname + '/plugins/aws/rds/rdsSnapshotPubliclyAccessible.js'),
         'rdsInstanceHasTags'            : require(__dirname + '/plugins/aws/rds/rdsInstanceHasTags.js'),
         'mysqlVulnerabilityCheck'       : require(__dirname + '/plugins/aws/rds/mysqlVulnerabilityCheck.js'),
@@ -1153,6 +1154,7 @@ module.exports = {
         'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
         'openHTTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openHTTP.js'),
         'instanceDefaultNetwork'        : require(__dirname + '/plugins/google/vpcnetwork/instanceDefaultNetwork.js'),
+        'openAllPortsEgress'            : require(__dirname + '/plugins/google/vpcnetwork/openAllPortsEgress.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -1236,6 +1238,8 @@ module.exports = {
         'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
         'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
         'postgresqlLogExecutorStats'    : require(__dirname + '/plugins/google/sql/postgresqlLogExecutorStats.js'),
+        'postgresqlLogParserStats'      : require(__dirname + '/plugins/google/sql/postgresqlLogParserStats.js'),
+        'postgresqlLogPlannerStats'     : require(__dirname + '/plugins/google/sql/postgresqlLogPlannerStats.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),

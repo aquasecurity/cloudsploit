@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -42,7 +43,7 @@ module.exports = {
                     ['athena', 'getWorkGroup', region, wg.Name]);
 
                 // arn:aws:athena:region:account-id:workgroup/workgroup-name
-                var arn = 'arn:aws:athena:' + region + ':' + accountId + ':workgroup/' + wg.Name;
+                var arn = `arn:${awsOrGov}:athena:` + region + ':' + accountId + ':workgroup/' + wg.Name;
 
                 if (!getWorkGroup || getWorkGroup.err || !getWorkGroup.data) {
                     helpers.addResult(results, 3,

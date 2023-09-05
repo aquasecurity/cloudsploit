@@ -29,6 +29,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source,
@@ -60,7 +61,7 @@ module.exports = {
                         found += 1;
                         helpers.addResult(results, 2,
                             'Instance does not use an IAM role', region,
-                            'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
+                            `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' +
                             instance.InstanceId, custom);
                     }
                 }

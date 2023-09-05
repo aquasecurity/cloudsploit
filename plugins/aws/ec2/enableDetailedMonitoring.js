@@ -16,6 +16,7 @@ module.exports = {
         const results = [];
         const source = {};
         const regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb) {
             const describeInstances = helpers.addSource(
@@ -37,7 +38,7 @@ module.exports = {
             for (const reservation of describeInstances.data) {
                 const accountId = reservation.OwnerId;
                 for (const instance of reservation.Instances) {
-                    const arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
+                    const arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
                     if (instance.Monitoring && instance.Monitoring.State && instance.Monitoring.State.toLowerCase() === 'enabled') {
                         helpers.addResult(results, 0,
