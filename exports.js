@@ -512,7 +512,8 @@ module.exports = {
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
         'mqDesiredInstanceType'         : require(__dirname + '/plugins/aws/mq/mqDesiredInstanceType.js'),
         'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
-        'mqBrokerPublicAccess'             : require(__dirname + '/plugins/aws/mq/mqBrokerPublicAccess.js'),
+        'mqLatestEngineVersion'         : require(__dirname + '/plugins/aws/mq/mqLatestEngineVersion.js'),
+        'mqBrokerPublicAccess'          : require(__dirname + '/plugins/aws/mq/mqBrokerPublicAccess.js'),
 
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
 
