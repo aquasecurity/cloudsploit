@@ -64,13 +64,16 @@ module.exports = {
 
                     if (!describeVirtualGateway ||
                         describeVirtualGateway.err ||
-                        !describeVirtualGateway.data ||
-                        !describeVirtualGateway.data.virtualGateway ||
-                        !describeVirtualGateway.data.virtualGateway.spec ||
-                        !describeVirtualGateway.data.virtualGateway.spec.listeners) {
+                        !describeVirtualGateway.data) {
                         helpers.addResult(results, 3,
                             'Unable to describe App Mesh virtual gateway: ' + helpers.addError(describeVirtualGateway), region, gatewayResource);
                         continue;
+                    }
+                    if (!describeVirtualGateway.data.virtualGateway.spec ||
+                        !describeVirtualGateway.data.virtualGateway.spec.listeners ||
+                        !describeVirtualGateway.data.virtualGateway.spec.listeners.length) {
+                        helpers.addResult(results, 0,
+                            'App Mesh virtual gateway does not have listeners', region, gatewayResource);
                     } else {
                         const listeners = describeVirtualGateway.data.virtualGateway.spec.listeners;
 
