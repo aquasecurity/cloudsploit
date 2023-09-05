@@ -206,6 +206,76 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
     }
 }
 
+function findOpenAllPortsEgress(ngs, location, results, cache, source) {
+    let projects = shared.addSource(cache, source,
+        ['projects','get', 'global']);
+
+    if (!projects || projects.err || !projects.data || !projects.data.length) {
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        return;
+    }
+
+    var project = projects.data[0].name;
+    let protocols = {'tcp': '*', 'udp' : '*'};
+    for (let sgroups of ngs) {
+        let strings = [];
+        let resource = createResourceName('firewalls', sgroups.name, project, 'global');
+        if (sgroups.allowed && sgroups.allowed.length) {
+            let firewallRules = sgroups.allowed;
+            let destAddressPrefix = sgroups.destinationRanges;
+
+            if (!destAddressPrefix || !destAddressPrefix.length) continue;
+
+            for (let firewallRule of firewallRules) {
+                for (let protocol in protocols) {
+                    if (sgroups['direction'] && (sgroups['direction'] === 'EGRESS') &&
+                        firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === protocol) &&
+                        !sgroups['disabled'] &&
+                        destAddressPrefix &&
+                        (destAddressPrefix.includes('*') || destAddressPrefix.includes('') || destAddressPrefix.includes('0.0.0.0/0') || destAddressPrefix.includes('<nw>/0') || destAddressPrefix.includes('/0') || destAddressPrefix.includes('internet'))) {
+                        if (firewallRule['ports']) {
+                            firewallRule['ports'].forEach((portRange) => {
+                                if (portRange.includes("-")) {
+                                    portRange = portRange.split("-");
+                                    let startPort = portRange[0];
+                                    let endPort = portRange[1];
+                                    if (parseInt(startPort) === 0 && parseInt(endPort) === 65535) {
+                                        var string = 'all ports open to the public';
+                                        if (strings.indexOf(string) === -1) strings.push(string);
+                                    }
+                                } else if (portRange === 'all') {
+                                    var string = 'all ports open to the public';
+                                    if (strings.indexOf(string) === -1) strings.push(string);
+                                }
+                            });
+                        }
+                    } else if (sgroups['direction'] && (sgroups['direction'] === 'EGRESS') &&
+                        firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === 'all') &&
+                        !sgroups['disabled'] &&
+                        destAddressPrefix &&
+                        (destAddressPrefix.includes('*') || destAddressPrefix.includes('') || destAddressPrefix.includes('0.0.0.0/0') || destAddressPrefix.includes('<nw>/0') || destAddressPrefix.includes('/0') || destAddressPrefix.includes('internet'))) {
+                        var string = 'all ports open to the public';
+                        if (strings.indexOf(string) === -1) strings.push(string);
+                    }
+                }
+            }
+        }
+        if (strings.length) {
+            shared.addResult(results, 2,
+                'Firewall Rule:(' + sgroups.name +
+                ') has ' + strings.join(' and '), location,
+                resource);
+        }
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have all ports open to the public', location,
+                resource);
+        }
+    }
+}
+
 function hasBuckets(buckets){
     if(buckets.length &&
         Object.keys(buckets[0]).length>1) {
@@ -342,5 +412,6 @@ module.exports = {
     listToObj: listToObj,
     createResourceName: createResourceName,
     checkOrgPolicy: checkOrgPolicy,
-    checkIAMRole: checkIAMRole
+    checkIAMRole: checkIAMRole,
+    findOpenAllPortsEgress: findOpenAllPortsEgress
 };

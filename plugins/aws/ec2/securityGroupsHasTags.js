@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -34,7 +35,7 @@ module.exports = {
             }
 
             for (var sg of describeSecurityGroups.data) {
-                const arn = `arn:aws:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`;
+                const arn = `arn:${awsOrGov}:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`;
                 if (!sg.Tags || !sg.Tags.length) {
                     helpers.addResult(results, 2, 'Security group does not have tags', region, arn);
                 } else {

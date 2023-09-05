@@ -1023,6 +1023,12 @@ var calls = [
                 params: {language: 'en'},
             },
         },
+        SecurityHub: {
+            describeHub: {
+                property: '',
+                paginate: 'NextToken'
+            }
+        },
         Transfer: {
             listServers: {
                 property: 'Servers',
@@ -1290,6 +1296,11 @@ var postcalls = [
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
@@ -1381,7 +1392,12 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {

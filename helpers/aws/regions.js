@@ -101,6 +101,7 @@ module.exports = {
         'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-3', 'ap-south-1',
         'sa-east-1', 'me-south-1', 'af-south-1', 'ap-southeast-3'],
     sns: [...regions, ...newRegionsUpdate],
+    securityhub: [...regions, ...newRegionsUpdate],
     sqs: [...regions, ...newRegionsUpdate],
     ssm: [...regions, ...newRegionsUpdate],
     shield: ['us-east-1'],

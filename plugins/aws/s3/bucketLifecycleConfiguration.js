@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -35,7 +36,7 @@ module.exports = {
         async.each(listBuckets.data, function(bucket, cb){
             if (!bucket.Name) return cb();
 
-            var resource = `arn:aws:s3:::${bucket.Name}`;
+            var resource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketLifecycleConfiguration = helpers.addSource(cache, source,
