@@ -37,6 +37,8 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig'], 
+
     run: function(cache, settings, callback) {
         var config= {
             os_whitelisted_aws_account_principals : settings.os_whitelisted_aws_account_principals || this.settings.os_whitelisted_aws_account_principals.default,

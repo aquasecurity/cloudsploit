@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html',
     recommended_action: 'Configure the OpenSearch domain to have an access policy without a global principal or no principal',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html',
     recommended_action: 'Update OpenSearch domain to set to latest engine version.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    realtime_triggers: [], 
 
     run:function(cache, settings, callback) {
         var results = [];

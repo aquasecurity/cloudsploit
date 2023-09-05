@@ -18,6 +18,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['opensearch:CreateDomain'], 
     
     run: function(cache, settings, callback) {
         var config = {
