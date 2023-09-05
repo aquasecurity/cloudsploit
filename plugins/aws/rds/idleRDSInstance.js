@@ -74,21 +74,10 @@ module.exports = {
                     helpers.addResult(results, 3,`Unable to query for CPU metric statistics: ${helpers.addError(getRdsMetricStatistics)}`, region, instance.DBInstanceArn);
                     return;
                 }
-
-                if (!getRdsMetricStatistics.data.Datapoints.length) {
-                    helpers.addResult(results, 0,'CPU metric statistics are not available', region, instance.DBInstanceArn);
-                    return;
-                }
-                   
                    
                 if (!getRdsReadIOPSMetricStatistics || getRdsReadIOPSMetricStatistics.err ||
                         !getRdsReadIOPSMetricStatistics.data || !getRdsReadIOPSMetricStatistics.data.Datapoints) {
                     helpers.addResult(results, 3, `Unable to query for Read IOPS metric statistics: ${helpers.addError(getRdsReadIOPSMetricStatistics)}`, region, instance.DBInstanceArn);
-                    return;
-                }
-    
-                if (!getRdsReadIOPSMetricStatistics.data.Datapoints.length) {
-                    helpers.addResult(results, 0, 'Read IOPS metric statistics are not available', region, instance.DBInstanceArn);
                     return;
                 }
                         
@@ -98,10 +87,11 @@ module.exports = {
                     return;
                 }
         
-                if (!getRdsWriteIOPSMetricStatistics.data.Datapoints.length) {
-                    helpers.addResult(results, 0,'Write IOPS metric statistics are not available', region, instance.DBInstanceArn);
+                if (!getRdsWriteIOPSMetricStatistics.data.Datapoints.length && !getRdsReadIOPSMetricStatistics.data.Datapoints.length && !getRdsMetricStatistics.data.Datapoints.length ) {
+                    helpers.addResult(results, 0,'Metric statistics are not available', region, instance.DBInstanceArn);
                     return;
                 }
+                
                 var cpuIdle = false;
                 var readIopsIdle = false;
                 var writeIopsIdle = false;
