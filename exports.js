@@ -404,6 +404,7 @@ module.exports = {
         'rdsPublicSubnet'               : require(__dirname + '/plugins/aws/rds/rdsPublicSubnet.js'),
         'mysqlVulnerabilityCheck'       : require(__dirname + '/plugins/aws/rds/mysqlVulnerabilityCheck.js'),
         'rdsInstanceGeneration'         : require(__dirname + '/plugins/aws/rds/rdsInstanceGeneration.js'),
+        'overutilizedRDSInstance'       : require(__dirname + '/plugins/aws/rds/overutilizedRDSInstance.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
         'elasticacheClusterInVpc'       : require(__dirname + '/plugins/aws/elasticache/elasticacheClusterInVpc.js'),

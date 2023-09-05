@@ -1296,6 +1296,11 @@ var postcalls = [
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
