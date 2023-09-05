@@ -17,20 +17,11 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var defaultPorts = [
-            { 'engine': 'aurora-mysql', 'port': 3306 },
-            { 'engine': 'aurora-postgresql', 'port': 5432 },
-            { 'engine': 'custom-oracle-ee', 'port': 1521 },
             { 'engine': 'mariadb', 'port': 3306 },
             { 'engine': 'mysql', 'port': 3306 },
-            { 'engine': 'oracle-ee', 'port': 1521 },
-            { 'engine': 'oracle-ee-cdb', 'port': 1521 },
-            { 'engine': 'oracle-se2', 'port': 1521 },
-            { 'engine': 'oracle-se2-cdb', 'port': 1521 },
+            { 'engine': 'oracle', 'port': 1521 },
             { 'engine': 'postgres', 'port': 5432 },
-            { 'engine': 'sqlserver-ee', 'port': 1433 },
-            { 'engine': 'sqlserver-se', 'port': 1433 },
-            { 'engine': 'sqlserver-ex', 'port': 1433 },
-            { 'engine': 'sqlserver-web', 'port': 1433 }
+            { 'engine': 'sqlserver', 'port': 1433 },
         ];
 
         async.each(regions.rds, function(region, rcb){
@@ -54,8 +45,9 @@ module.exports = {
                 if (!instance.DBInstanceArn || !instance.Engine ||
                     !(instance.Endpoint && instance.Endpoint.Port)) continue;
                 var defaultPort = defaultPorts.filter((d) => {
-                    return d.engine == instance.Engine && d.port == instance.Endpoint.Port;
+                    return instance.Engine.toLowerCase().includes(d.engine) && d.port == instance.Endpoint.Port;
                 });
+
                 if (defaultPort && defaultPort.length) {
                     helpers.addResult(results, 2, 'RDS instance is running on default port',
                         region, instance.DBInstanceArn);
@@ -64,6 +56,7 @@ module.exports = {
                         region, instance.DBInstanceArn);
                 }
             }
+            
             rcb();
         }, function(){
             callback(null, results, source);
