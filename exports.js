@@ -1237,6 +1237,7 @@ module.exports = {
         'sqlServerUserOptionsDisabled'  : require(__dirname + '/plugins/google/sql/sqlServerUserOptionsDisabled.js'),
         'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
         'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
+        'postgresqlLogExecutorStats'    : require(__dirname + '/plugins/google/sql/postgresqlLogExecutorStats.js'),
         'postgresqlLogParserStats'      : require(__dirname + '/plugins/google/sql/postgresqlLogParserStats.js'),
         'postgresqlLogPlannerStats'     : require(__dirname + '/plugins/google/sql/postgresqlLogPlannerStats.js'),
 
