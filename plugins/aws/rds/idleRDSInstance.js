@@ -87,11 +87,11 @@ module.exports = {
                     return;
                 }
         
-                if (!getRdsWriteIOPSMetricStatistics.data.Datapoints.length && !getRdsReadIOPSMetricStatistics.data.Datapoints.length && !getRdsMetricStatistics.data.Datapoints.length ) {
+                if (!getRdsWriteIOPSMetricStatistics.data.Datapoints.length || !getRdsReadIOPSMetricStatistics.data.Datapoints.length || !getRdsMetricStatistics.data.Datapoints.length ) {
                     helpers.addResult(results, 0,'Metric statistics are not available', region, instance.DBInstanceArn);
                     return;
                 }
-                
+
                 var cpuIdle = false;
                 var readIopsIdle = false;
                 var writeIopsIdle = false;
@@ -107,7 +107,8 @@ module.exports = {
                 if (getRdsWriteIOPSMetricStatistics.data.Datapoints.every(datapoint => datapoint.Sum <= rds_idle_instance_writeIOPS_percentage)) {
                     writeIopsIdle = true;
                 }
-                if (cpuIdle || readIopsIdle || writeIopsIdle) {
+                
+                if (cpuIdle && readIopsIdle &&  writeIopsIdle) {
                     helpers.addResult(results, 2, 'RDS instance is idle', region, instance.DBInstanceArn);
                 } else {
                     helpers.addResult(results, 0, 'RDS instance is not idle', region, instance.DBInstanceArn);
