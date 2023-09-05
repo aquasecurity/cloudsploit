@@ -15,6 +15,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', defaultRegion]);
@@ -64,7 +65,7 @@ module.exports = {
 
                             if (dataResource.Type === 'AWS::S3::Object') {
                                 if (event.ReadWriteType === 'All' || event.ReadWriteType === 'WriteOnly') {
-                                    if (dataResource.Values.includes('arn:aws:s3')) {
+                                    if (dataResource.Values.includes(`arn:${awsOrGov}:s3`)) {
                                         isall = true;
                                     } else {
                                         buckets = dataResource.Values.map((value) => value.split(':::')[1]);
@@ -107,15 +108,15 @@ module.exports = {
                 var bucketLocation = helpers.getS3BucketLocation(cache, defaultRegion, bucket.Name);
 
                 if (isall) {
-                    helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 } else if (buckets.length) {
                     if (buckets.includes(bucket.Name)){
-                        helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        helpers.addResult(results, 0, 'Bucket has object-level logging for write events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     } else {
-                        helpers.addResult(results, 2, 'Bucket does not has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        helpers.addResult(results, 2, 'Bucket does not has object-level logging for write events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     }
                 } else if (!isall) {
-                    helpers.addResult(results, 2, 'Bucket does not has object-level logging for write events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    helpers.addResult(results, 2, 'Bucket does not has object-level logging for write events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 }
             });
 

@@ -72,9 +72,9 @@ module.exports = {
 
                 for (var statement of statements) {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
-                    var principalEval = helpers.globalPrincipal(statement.Principal);
+                    var principalEval = helpers.globalPrincipal(statement.Principal, settings);
                     let scopedCondition;
-                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId);
+                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId, settings);
 
                     if (!scopedCondition && principalEval && effectEval) {
                         if (statement.Action && typeof statement.Action === 'string') {

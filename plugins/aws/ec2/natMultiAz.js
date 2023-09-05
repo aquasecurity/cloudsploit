@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -70,7 +71,7 @@ module.exports = {
 
                 if (numSubnets) {
                     // arn:aws:ec2:region:account-id:vpc/vpc-id
-                    var vpcArn = 'arn:aws:ec2:' + region +
+                    var vpcArn = `arn:${awsOrGov}:ec2:` + region +
                                  ':' + accountId + ':vpc/' + v;
 
                     if (numSubnets === 1) {

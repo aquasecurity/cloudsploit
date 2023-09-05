@@ -86,7 +86,7 @@ module.exports = {
             }
 
             if (!config.ignore_groups_with_private_clusters) {
-                helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
+                helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb, settings);
             } else {
                 var subnetGroup;
                 var subnetRouteTableMap;
@@ -125,8 +125,8 @@ module.exports = {
                         subnetGroup = cluster.CacheSubnetGroupName;
                         var describeCacheSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetGroup]);
          
-                        if (!describeCacheSubnetGroups || describeCacheSubnetGroups.err || !describeCacheSubnetGroups.data || !describeCacheSubnetGroups.data.length) continue;
-                        var clusterSubnets = describeCacheSubnetGroups.data;
+                        if (!describeCacheSubnetGroups || describeCacheSubnetGroups.err || !describeCacheSubnetGroups.data || !describeCacheSubnetGroups.data.CacheSubnetGroups) continue;
+                        var clusterSubnets = describeCacheSubnetGroups.data.CacheSubnetGroups;
                         var allPrivate = clusterSubnets[0].Subnets.every(subnet => privateSubnets.includes(subnet.SubnetIdentifier));
                         var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
        
@@ -161,7 +161,7 @@ module.exports = {
                     if (!filteredSecurityGroups.length) {
                         return rcb();
                     } else {
-                        helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb);
+                        helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb, settings);
                     }
                 } 
             }

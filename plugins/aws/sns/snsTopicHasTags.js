@@ -38,7 +38,7 @@ module.exports = {
                 if (!topic.TopicArn) continue;
                 topicARN.push(topic.TopicArn);
             }
-            helpers.checkTags(cache, 'SNS topic', topicARN, region, results);
+            helpers.checkTags(cache, 'SNS topic', topicARN, region, results, settings);
 
             rcb();
         }, function(){

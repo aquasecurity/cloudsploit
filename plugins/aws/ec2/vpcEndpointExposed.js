@@ -82,7 +82,7 @@ module.exports = {
                     var statement = statements[s];
                     
                     if (statement.Effect == 'Allow') {
-                        if (helpers.globalPrincipal(statement.Principal)) {
+                        if (helpers.globalPrincipal(statement.Principal, settings)) {
                             publicEndpoint = true;
                             break;
                         }

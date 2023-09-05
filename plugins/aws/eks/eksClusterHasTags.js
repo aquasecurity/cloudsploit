@@ -43,7 +43,7 @@ module.exports = {
                 ARNList.push(arn);
             }
             
-            helpers.checkTags(cache,'EKS cluster', ARNList, region, results);
+            helpers.checkTags(cache,'EKS cluster', ARNList, region, results, settings);
 
             rcb();
         }, function() {

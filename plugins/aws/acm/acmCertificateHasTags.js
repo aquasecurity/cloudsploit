@@ -38,7 +38,7 @@ module.exports = {
                 
                 ARNList.push(cert.CertificateArn);
             }
-            helpers.checkTags(cache, 'ACM certificate', ARNList, region, results);
+            helpers.checkTags(cache, 'ACM certificate', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

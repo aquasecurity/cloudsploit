@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.checkTags(cache,'ECS clsuters', listClusters.data, region, results);
+            helpers.checkTags(cache,'ECS clsuters', listClusters.data, region, results, settings);
 
             rcb();
         }, function() {
