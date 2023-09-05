@@ -55,9 +55,11 @@ module.exports = {
 
             describeDBInstances.data.forEach(instance => {
                 if (!instance.DBInstanceArn ) return;
-                var dbResource = instance.DBInstanceArn;
+
+                const dbResource = instance.DBInstanceArn;
                 const subnetsData = instance.DBSubnetGroup.Subnets;
                 const allPrivate = subnetsData.every(subnet => privateSubnets.includes(subnet.SubnetIdentifier));
+
                 if (allPrivate) {
                     helpers.addResult(results, 0, 'RDS instance is not in a public subnet', region, dbResource);
                 } else { 
