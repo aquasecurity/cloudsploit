@@ -76,11 +76,9 @@ module.exports = {
                             'App Mesh virtual gateway does not have listeners', region, gatewayResource);
                     } else {
                         const listeners = describeVirtualGateway.data.virtualGateway.spec.listeners;
-
                         const hasHealthCheckPolicies = listeners.every(listener => {
                             return listener.healthCheck && Object.keys(listener.healthCheck).length;
                         });
-
                         const status = hasHealthCheckPolicies ? 0 : 2;
                         helpers.addResult(results, status,
                             `App Mesh virtual gateway ${hasHealthCheckPolicies ? 'has' : 'does not have'} health check policies`,
