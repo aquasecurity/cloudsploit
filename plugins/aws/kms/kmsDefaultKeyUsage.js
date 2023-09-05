@@ -27,6 +27,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.kms, function(region, rcb) {
@@ -91,7 +92,7 @@ module.exports = {
                         if (describeVolumes.data[j].KmsKeyId) {
                             services.push({
                                 serviceName: 'EBS',
-                                resource: 'arn:aws:ec2:' + region + ':' + accountId + ':volume/' + describeVolumes.data[j].VolumeId,
+                                resource: `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':volume/' + describeVolumes.data[j].VolumeId,
                                 KMSKey: describeVolumes.data[j].KmsKeyId
                             });
                         }
@@ -154,7 +155,7 @@ module.exports = {
                         if (describeClusters.data[m].KmsKeyId){
                             services.push({
                                 serviceName: 'Redshift',
-                                resource: 'arn:aws:redshift:' + region + ':' + accountId + ':cluster:' + describeClusters.data[m].ClusterIdentifier,
+                                resource: `arn:${awsOrGov}:redshift:` + region + ':' + accountId + ':cluster:' + describeClusters.data[m].ClusterIdentifier,
                                 KMSKey: describeClusters.data[m].KmsKeyId
                             });
                         }
@@ -202,7 +203,7 @@ module.exports = {
                             if (describeWorkspaces.data[p].VolumeEncryptionKey) {
                                 services.push({
                                     serviceName: 'Workspaces',
-                                    resource: 'arn:aws:workspaces:' + region + ':' + accountId + ':workspace/' + describeWorkspaces.data[p].WorkspaceId,
+                                    resource: `arn:${awsOrGov}:workspaces:` + region + ':' + accountId + ':workspace/' + describeWorkspaces.data[p].WorkspaceId,
                                     KMSKey: describeWorkspaces.data[p].VolumeEncryptionKey
                                 });
                             }
@@ -264,7 +265,7 @@ module.exports = {
                             if (describeFileSystems.data[s].KmsKeyId) {
                                 services.push({
                                     serviceName: 'EFS',
-                                    resource: 'arn:aws:elasticfilesystem:' + region + ':' + accountId + ':file-system/' + describeFileSystems.data[s].FileSystemId,
+                                    resource: `arn:${awsOrGov}:elasticfilesystem:` + region + ':' + accountId + ':file-system/' + describeFileSystems.data[s].FileSystemId,
                                     KMSKey: describeFileSystems.data[s].KmsKeyId
                                 });
                             }
@@ -304,7 +305,7 @@ module.exports = {
                                                         getBucketEncryption.data[u].Rules[v].ApplyServerSideEncryptionByDefault.KMSMasterKeyID) {
                                                         services.push({
                                                             serviceName: 'S3',
-                                                            resource: 'arn:aws:s3:::' + bucket.Name,
+                                                            resource: `arn:${awsOrGov}:s3:::` + bucket.Name,
                                                             KMSKey: getBucketEncryption.data[u].Rules[v].ApplyServerSideEncryptionByDefault.KMSMasterKeyID
                                                         });
                                                     }

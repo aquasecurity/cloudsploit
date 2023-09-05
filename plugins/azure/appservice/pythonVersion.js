@@ -68,16 +68,14 @@ module.exports = {
                         found = true;
 
                         var pythonVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
+                        var isLatestVersion = helpers.compareVersions(pythonVersion, config.latestPythonVersion);
 
-                        var version = parseFloat(pythonVersion);
-                        var allowedVersion = parseFloat(config.latestPythonVersion);
-
-                        if (version >= allowedVersion) {
-                            helpers.addResult(results, 0,
-                                `The Python version (${pythonVersion}) is the latest version`, location, webApp.id, custom);
-                        } else {
+                        if (isLatestVersion === -1) {
                             helpers.addResult(results, 2,
                                 `The Python version (${pythonVersion}) is not the latest version`, location, webApp.id, custom);
+                        } else {
+                            helpers.addResult(results, 0,
+                                `The Python version (${pythonVersion}) is the latest version`, location, webApp.id, custom);
                         }
                     }
                 }

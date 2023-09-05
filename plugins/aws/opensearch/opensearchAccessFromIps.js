@@ -74,7 +74,7 @@ module.exports = {
 
                 for (var s in statements) {
                     var statement = statements[s];
-                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal)) {
+                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal, settings)) {
                         globalAccess = true;
                         break;
                     }

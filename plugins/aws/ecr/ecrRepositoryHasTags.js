@@ -37,7 +37,7 @@ module.exports = {
                 if (!repo.repositoryArn) continue;
                 ecrARN.push(repo.repositoryArn);
             }
-            helpers.checkTags(cache, 'ECR repository', ecrARN, region, results);
+            helpers.checkTags(cache, 'ECR repository', ecrARN, region, results, settings);
 
             rcb();
         }, function() {

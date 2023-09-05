@@ -63,17 +63,17 @@ function addResult(results, status, message, region, resource, custom){
     }
 }
 
-function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
+function findOpenPorts(groups, ports, service, region, results, cache, config, callback, settings={}) {
     if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(cache, results, region);
         if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
     }
-
+    var awsOrGov = defaultPartition(settings);
     for (var g in groups) {
         var string;
         var openV4Ports = [];
         var openV6Ports = [];
-        var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
+        var resource = `arn:${awsOrGov}:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -226,7 +226,7 @@ function normalizePolicyDocument(doc) {
     return statementsToReturn;
 }
 
-function globalPrincipal(principal) {
+function globalPrincipal(principal, settings={}) {
     if (!principal) return false;
 
     if (typeof principal === 'string' && principal === '*') {
@@ -238,8 +238,9 @@ function globalPrincipal(principal) {
         awsPrincipals = [awsPrincipals];
     }
 
+    var awsOrGov = defaultPartition(settings);
     if (awsPrincipals.indexOf('*') > -1 ||
-        awsPrincipals.indexOf('arn:aws:iam::*') > -1) {
+        awsPrincipals.indexOf(`arn:${awsOrGov}:iam::*`) > -1) {
         return true;
     }
 
@@ -255,9 +256,10 @@ function userGlobalAccess(statement, restrictedPermissions) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals, settings={}) {
+    var awsOrGov = defaultPartition(settings);
     if (typeof principal === 'string' &&
-        (/^[0-9]{12}$/.test(principal) || /^arn:aws:.*/.test(principal)) &&
+        (/^[0-9]{12}$/.test(principal) || new RegExp(`^arn:${awsOrGov}:.*/`).test(principal)) &&
         !principal.includes(accountId)) {
         if (fetchPrincipals) return [principal];
         return true;
@@ -271,7 +273,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var principals = [];
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:.*/.test(awsPrincipals[a]) &&
+        if (new RegExp(`^arn:${awsOrGov}:.*`).test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
@@ -363,7 +365,7 @@ function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
     return response;
 }
 
-function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId) {
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId, settings={}) {
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
@@ -379,12 +381,13 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 if (!allowedConditionKeys.find(conditionKey => conditionKey.toLowerCase() == keyLower)) continue;
 
                 var value = subCondition[key];
+                var awsOrGov = defaultPartition(settings);
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                     iamConditionOperators.arn[effect].includes(defaultOperator)) {
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         foundValid = true;
                         values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value) || /^o-[a-zA-Z0-9]{10,32}$/.test(value)) {
+                    } else if (/^[0-9]{12}$/.test(value) || new RegExp(`^arn:${awsOrGov}:.+`).test(value) || /^o-[a-zA-Z0-9]{10,32}$/.test(value)) {
                         foundValid = true;
                         values.push(value);
                     }
@@ -1031,7 +1034,7 @@ var collectRateError = function(err, rateError) {
     return isError;
 };
 
-var checkTags = function(cache, resourceName, resourceList, region, results) {
+var checkTags = function(cache, resourceName, resourceList, region, results, settings={}) {
     const allResources = helpers.addSource(cache, {},
         ['resourcegroupstaggingapi', 'getResources', region]);
     
@@ -1040,8 +1043,8 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
             'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
         return;
     }
-
-    const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0].toLowerCase()}:`;
+    var awsOrGov = defaultPartition(settings);
+    const resourceARNPrefix = `arn:${awsOrGov}:${resourceName.split(' ')[0].toLowerCase()}:`;
     const filteredResourceARN = [];
     allResources.data.map(resource => {
         if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){

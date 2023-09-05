@@ -69,7 +69,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenPorts(describeSecurityGroups.data, ports, 'custom', region, results, cache, config, rcb);
+            helpers.findOpenPorts(describeSecurityGroups.data, ports, 'custom', region, results, cache, config, rcb, settings);
 
             rcb();
         }, function(){

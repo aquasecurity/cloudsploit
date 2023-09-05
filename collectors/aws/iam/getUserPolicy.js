@@ -52,6 +52,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             helpers.makeCustomCollectorCall(iam, 'getUserPolicy', {PolicyName: policyName,UserName: user.UserName}, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.iam.getUserPolicy[AWSConfig.region][user.UserName][policyName].err = err;
+                    return pCb();
                 }
 
                 if (data['PolicyDocument']) {

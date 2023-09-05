@@ -84,6 +84,7 @@ module.exports = {
         var allowSkipEncryption = (s3_allow_unencrypted_static_websites == 'true');
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
 
@@ -99,7 +100,7 @@ module.exports = {
         }
 
         for (let bucket of listBuckets.data) {
-            var bucketResource = `arn:aws:s3:::${bucket.Name}`;
+            var bucketResource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             if (allowSkipEncryption) {

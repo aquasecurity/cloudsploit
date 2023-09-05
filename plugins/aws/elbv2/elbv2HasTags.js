@@ -35,7 +35,7 @@ module.exports = {
             for (let lb of describeLoadBalancers.data){
                 arnList.push(lb.LoadBalancerArn);
             }
-            helpers.checkTags(cache, 'ElasticLoadbalancing', arnList, region, results);
+            helpers.checkTags(cache, 'ElasticLoadbalancing', arnList, region, results, settings);
             return rcb();
         }, function(){
             callback(null, results, source);

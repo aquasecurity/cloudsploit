@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeImages = helpers.addSource(cache, source,
@@ -43,7 +44,7 @@ module.exports = {
                     found = true;
 
                     helpers.addResult(results, 1, 'AMI is public', region,
-                        'arn:aws:ec2:' + region + '::image/' + image.ImageId);
+                        `arn:${awsOrGov}:ec2:` + region + '::image/' + image.ImageId);
                 }
             }
 
