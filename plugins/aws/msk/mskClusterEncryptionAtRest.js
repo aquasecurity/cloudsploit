@@ -19,6 +19,7 @@ module.exports = {
         }
     },
     realtime_triggers: ['Kafka:CreateCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

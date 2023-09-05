@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['MWAA:CreateEnvironment'], 
 
     run: function(cache, settings, callback) {
         var results = [];
