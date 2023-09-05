@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -35,7 +36,7 @@ module.exports = {
 
             for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
-                var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
                 if (!sg.GroupName) {
                     helpers.addResult(results, 2,

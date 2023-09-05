@@ -16,6 +16,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.configservice, function(region, rcb) {
             var describeDeliveryChannels = helpers.addSource(cache, source,
@@ -46,7 +47,7 @@ module.exports = {
                     deletedBuckets.push(record);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
-                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, 'arn:aws:s3:::' + record.s3BucketName);
+                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, `arn:${awsOrGov}:s3:::` + record.s3BucketName);
                     continue;
                 }
             }

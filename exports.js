@@ -1153,6 +1153,7 @@ module.exports = {
         'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
         'openHTTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openHTTP.js'),
         'instanceDefaultNetwork'        : require(__dirname + '/plugins/google/vpcnetwork/instanceDefaultNetwork.js'),
+        'openAllPortsEgress'            : require(__dirname + '/plugins/google/vpcnetwork/openAllPortsEgress.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -1236,6 +1237,7 @@ module.exports = {
         'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
         'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
         'postgresqlLogParserStats'      : require(__dirname + '/plugins/google/sql/postgresqlLogParserStats.js'),
+        'postgresqlLogPlannerStats'     : require(__dirname + '/plugins/google/sql/postgresqlLogPlannerStats.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),

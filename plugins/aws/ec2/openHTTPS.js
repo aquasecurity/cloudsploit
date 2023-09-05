@@ -39,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, rcb);
+            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, rcb, settings);
 
             rcb();
         }, function(){

@@ -60,7 +60,7 @@ module.exports = {
 
                     for (var statement of statements) {
                         if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' && statement.Principal) {
-                            var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                            var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
 
                             for (var principal of principals) {
                                 if (!vpc_trusted_cross_account_arns.includes(principal) &&
