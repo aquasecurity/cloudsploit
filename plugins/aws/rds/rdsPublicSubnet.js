@@ -66,6 +66,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'RDS instance is in a public subnet', region, dbResource);
                 }        
             });
+
             rcb();
         }, function(){
             callback(null, results, source);
