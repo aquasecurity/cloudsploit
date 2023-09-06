@@ -63,7 +63,7 @@ module.exports = {
                                 var policy = policies[p];
                                 if (policy.Effect && policy.Effect == 'Allow' && !policy.Principal) {
                                     found.push(policy);
-                                } else if (policy.Effect && policy.Effect == 'Allow' && helpers.globalPrincipal(policy.Principal)) {
+                                } else if (policy.Effect && policy.Effect == 'Allow' && helpers.globalPrincipal(policy.Principal, settings)) {
                                     found.push(policy);
                                 }
                             }

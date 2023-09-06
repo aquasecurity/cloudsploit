@@ -94,9 +94,9 @@ module.exports = {
             for (var statement of statements) {
                 if (!statement.Effect || statement.Effect !== 'Allow') continue;
 
-                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
+                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId, undefined, settings)) {
                     crossAccountRole = true;
-                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
                     if (principals.length) {
                         principals.forEach(principal => {
                             if (whitelistOrganization) {

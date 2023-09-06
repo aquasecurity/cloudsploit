@@ -900,11 +900,17 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
         },
+        listByVirtualNetworks: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByContainerRegistries: {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {

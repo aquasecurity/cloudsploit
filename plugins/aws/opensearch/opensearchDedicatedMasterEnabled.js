@@ -17,6 +17,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.opensearch, function(region, rcb) {
@@ -40,7 +41,7 @@ module.exports = {
             listDomainNames.data.forEach(domain => {
                 if (!domain.DomainName) return;
 
-                const resource = `arn:aws:es:${region}:${accountId}:domain/${domain.DomainName}`;
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var describeDomain = helpers.addSource(cache, source,
                     ['opensearch', 'describeDomain', region, domain.DomainName]);
 

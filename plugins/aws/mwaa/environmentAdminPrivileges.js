@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
-
 module.exports = {
     title: 'Environment Admin Privileges',
     category: 'MWAA',
@@ -23,6 +21,8 @@ module.exports = {
         var defaultRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
+
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.mwaa, function(region, rcb){
             var listEnvironments = helpers.addSource(cache, source,

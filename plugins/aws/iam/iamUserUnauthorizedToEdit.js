@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var adminAccessArn = 'arn:aws:iam::aws:policy/AdministratorAccess';
-var iamFullAccessArn = 'arn:aws:iam::aws:policy/IAMFullAccess';
 
 var iamEditAccessPermissions = [
     '*',
@@ -55,6 +53,10 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var adminAccessArn = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
+        var iamFullAccessArn = `arn:${awsOrGov}:iam::aws:policy/IAMFullAccess`;
 
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);

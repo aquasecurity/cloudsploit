@@ -42,6 +42,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             helpers.makeCustomCollectorCall(iam, 'getGroupPolicy', {PolicyName: policyName, GroupName: group.GroupName}, retries, null, null, null, function(err, data) {
                 if (err) {
                     collection.iam.getGroupPolicy[AWSConfig.region][group.GroupName][policyName].err = err;
+                    return pCb();
                 }
 
                 if (data['PolicyDocument']) {

@@ -40,7 +40,7 @@ module.exports = {
                 existingLambdaARNList.push(lambdaFunc.FunctionArn);
             }
             if (existingLambdaARNList.length){
-                helpers.checkTags(cache, 'Lambda function', existingLambdaARNList, region, results);
+                helpers.checkTags(cache, 'Lambda function', existingLambdaARNList, region, results, settings);
             }
             
             rcb();

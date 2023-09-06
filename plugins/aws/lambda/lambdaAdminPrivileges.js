@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
-
 module.exports = {
     title: 'Lambda Admin Privileges',
     category: 'Lambda',
@@ -20,6 +18,9 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.lambda, function(region, rcb){
             var listFunctions = helpers.addSource(cache, source,

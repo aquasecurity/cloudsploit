@@ -370,6 +370,7 @@ module.exports = {
         'iamUserInUse'                  : require(__dirname + '/plugins/aws/iam/iamUserInUse.js'),
         'policyAllowsToChangePassword'  : require(__dirname + '/plugins/aws/iam/policyAllowsToChangePassword.js'),
         'iamRoleHasTags'                : require(__dirname + '/plugins/aws/iam/iamRoleHasTags.js'),
+        'passwordPolicyExists'          : require(__dirname + '/plugins/aws/iam/passwordPolicyExists.js'),
         'iamUserNotInUse'               : require(__dirname + '/plugins/aws/iam/iamUserNotInUse.js'),
         'iamUserWithoutPermissions'     : require(__dirname + '/plugins/aws/iam/iamUserWithoutPermissions.js'),
 
@@ -398,10 +399,13 @@ module.exports = {
         'rdsTransportEncryption'        : require(__dirname + '/plugins/aws/rds/rdsTransportEncryption'),
         'rdsDeletionProtectionEnabled'  : require(__dirname + '/plugins/aws/rds/rdsDeletionProtectionEnabled.js'),
         'rdsDefaultUsername'            : require(__dirname + '/plugins/aws/rds/rdsDefaultUsername.js'),
+        'rdsDefaultPort'                : require(__dirname + '/plugins/aws/rds/rdsDefaultPort.js'),
         'rdsSnapshotPubliclyAccessible' : require(__dirname + '/plugins/aws/rds/rdsSnapshotPubliclyAccessible.js'),
         'rdsInstanceHasTags'            : require(__dirname + '/plugins/aws/rds/rdsInstanceHasTags.js'),
+        'rdsPublicSubnet'               : require(__dirname + '/plugins/aws/rds/rdsPublicSubnet.js'),
         'mysqlVulnerabilityCheck'       : require(__dirname + '/plugins/aws/rds/mysqlVulnerabilityCheck.js'),
         'rdsInstanceGeneration'         : require(__dirname + '/plugins/aws/rds/rdsInstanceGeneration.js'),
+        'overutilizedRDSInstance'       : require(__dirname + '/plugins/aws/rds/overutilizedRDSInstance.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
         'elasticacheClusterInVpc'       : require(__dirname + '/plugins/aws/elasticache/elasticacheClusterInVpc.js'),
@@ -509,6 +513,8 @@ module.exports = {
         'mqDeploymentMode'              : require(__dirname + '/plugins/aws/mq/mqDeploymentMode.js'),
         'mqDesiredInstanceType'         : require(__dirname + '/plugins/aws/mq/mqDesiredInstanceType.js'),
         'mqBrokerEncrypted'             : require(__dirname + '/plugins/aws/mq/mqBrokerEncrypted.js'),
+        'mqLatestEngineVersion'         : require(__dirname + '/plugins/aws/mq/mqLatestEngineVersion.js'),
+        'mqBrokerPublicAccess'          : require(__dirname + '/plugins/aws/mq/mqBrokerPublicAccess.js'),
 
         'memorydbClusterEncrypted'      : require(__dirname + '/plugins/aws/memorydb/memorydbClusterEncrypted.js'),
 
@@ -692,6 +698,8 @@ module.exports = {
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
         'virtualNetworkHasTags'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkHasTags.js'),
         'routeTableHasTags'             : require(__dirname + '/plugins/azure/virtualnetworks/routeTableHasTags.js'),
+        'virtualNetworksLoggingEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworksLoggingEnabled.js'),
+
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
         'vmAgentEnabled'                : require(__dirname + '/plugins/azure/virtualmachines/vmAgentEnabled.js'),
@@ -1153,6 +1161,7 @@ module.exports = {
         'defaultVPCExists'              : require(__dirname + '/plugins/google/vpcnetwork/defaultVPCExists.js'),
         'openHTTP'                      : require(__dirname + '/plugins/google/vpcnetwork/openHTTP.js'),
         'instanceDefaultNetwork'        : require(__dirname + '/plugins/google/vpcnetwork/instanceDefaultNetwork.js'),
+        'openAllPortsEgress'            : require(__dirname + '/plugins/google/vpcnetwork/openAllPortsEgress.js'),
 
         'instanceMaxCount'              : require(__dirname + '/plugins/google/compute/instanceMaxCount.js'),
         'instancesMultiAz'              : require(__dirname + '/plugins/google/compute/instancesMultiAz.js'),
@@ -1235,6 +1244,9 @@ module.exports = {
         'sqlServerUserOptionsDisabled'  : require(__dirname + '/plugins/google/sql/sqlServerUserOptionsDisabled.js'),
         'sqlServerUserConnections'      : require(__dirname + '/plugins/google/sql/sqlServerUserConnections.js'),
         'postgresqlLogErrorVerbosity'   : require(__dirname + '/plugins/google/sql/postgresqlLogErrorVerbosity.js'),
+        'postgresqlLogExecutorStats'    : require(__dirname + '/plugins/google/sql/postgresqlLogExecutorStats.js'),
+        'postgresqlLogParserStats'      : require(__dirname + '/plugins/google/sql/postgresqlLogParserStats.js'),
+        'postgresqlLogPlannerStats'     : require(__dirname + '/plugins/google/sql/postgresqlLogPlannerStats.js'),
 
         'bucketVersioning'              : require(__dirname + '/plugins/google/storage/bucketVersioning.js'),
         'bucketLogging'                 : require(__dirname + '/plugins/google/storage/bucketLogging.js'),

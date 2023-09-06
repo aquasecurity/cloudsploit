@@ -56,7 +56,7 @@ module.exports = {
             for (var s in statements) {
                 var statement = statements[s];
 
-                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
+                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId, undefined, settings)) {
                     crossAccountRole = true;
 
                     if (!((statement.Condition && statement.Condition.Bool &&
@@ -64,7 +64,7 @@ module.exports = {
                             statement.Condition.Bool['aws:MultiFactorAuthPresent'] === 'true') ||
                             (statement.Condition && statement.Condition.StringEquals &&
                                 statement.Condition.StringEquals['sts:ExternalId']))) {
-                        var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                        var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
                         if (principals.length) {
                             principals.forEach(principal => {
                                 if (!failingArns.includes(principal)) failingArns.push(principal);

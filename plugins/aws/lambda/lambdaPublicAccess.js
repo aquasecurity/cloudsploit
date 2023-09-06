@@ -58,7 +58,7 @@ module.exports = {
                     for (var n in normalized) {
                         var statement = normalized[n];
                         if (statement.Principal) {
-                            var isGlobal = helpers.globalPrincipal(statement.Principal);
+                            var isGlobal = helpers.globalPrincipal(statement.Principal, settings);
                             if (isGlobal) {
                                 for (var s in statement.Action) {
                                     if (found.indexOf(statement.Action[s]) == -1) {

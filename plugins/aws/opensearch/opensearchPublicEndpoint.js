@@ -74,7 +74,7 @@ module.exports = {
                             var policy = policies[p];
                             var containsIpPolicy = policy.Condition && policy.Condition.IpAddress;
 
-                            if (!containsIpPolicy && helpers.globalPrincipal(policy.Principal)) {
+                            if (!containsIpPolicy && helpers.globalPrincipal(policy.Principal, settings)) {
                                 validPolicy = false;
                             }
                         }

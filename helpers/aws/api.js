@@ -1946,6 +1946,11 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeInstances',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
