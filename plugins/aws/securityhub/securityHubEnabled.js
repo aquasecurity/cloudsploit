@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/security-hub/',
     recommended_action: 'Enable AWS Security Hub for enhanced security monitoring and compliance.',
     apis: ['SecurityHub:describeHub'],
+    realtime_triggers: ['securityhub:EnnableSecurityHub'],
    
     run: function(cache, settings, callback) {
         var results = [];

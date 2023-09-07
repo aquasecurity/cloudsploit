@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify SNS topic and add tags.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-tags.html',
     apis: ['SNS:listTopics', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['sns:CreateTopic', 'sns:TagResource', 'sns:UntagResource'],
 
     run: function(cache, settings, callback) {
         var results = [];

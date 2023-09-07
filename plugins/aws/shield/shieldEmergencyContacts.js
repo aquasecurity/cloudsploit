@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Configure emergency contacts within AWS Shield for the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/ddos-edit-drt.html',
     apis: ['Shield:describeEmergencyContactSettings'],
+    realtime_triggers: ['shield:UpdateEmergencyContactSettings'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -28,6 +28,7 @@ module.exports = {
             default: 'awskms',
         }
     },
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:UpdateSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

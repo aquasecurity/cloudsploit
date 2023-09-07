@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Enable AWS Shield Advanced on resources within the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/configure-new-protection.html',
     apis: ['Shield:listProtections'],
+    realtime_triggers: ['shield:CreateProtection'],
 
     run: function(cache, settings, callback) {
         var results = [];

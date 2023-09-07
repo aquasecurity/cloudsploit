@@ -30,7 +30,7 @@ module.exports = {
             required: false
         }
     },
-    realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket'],
+    realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket', 's3:putBucketEncryption'],
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',

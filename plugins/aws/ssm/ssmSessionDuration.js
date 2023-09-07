@@ -19,6 +19,7 @@ module.exports = {
             default: '5'
         }
     },
+    realtime_triggers: ['ssm:StartSession', 'ssm:TerminateSession'],
 
     run: function(cache, settings, callback) {
         var results = [];

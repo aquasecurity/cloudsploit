@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Recreate S3 bucket to use "-" instead of "." in S3 bucket names.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html',
     apis: ['S3:listBuckets', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

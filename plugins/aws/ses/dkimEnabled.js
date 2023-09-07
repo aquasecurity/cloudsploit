@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable DKIM for all domains and addresses in all regions used to send email through SES.',
     link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/easy-dkim.html',
     apis: ['SES:listIdentities', 'SES:getIdentityDkimAttributes', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ses:SetIdentityDkimEnabled'],
 
     run: function(cache, settings, callback) {
         var results = [];

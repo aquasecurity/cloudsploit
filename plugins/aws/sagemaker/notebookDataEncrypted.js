@@ -15,6 +15,7 @@ module.exports = {
                 'data at rest. SageMaker encryption ensures Notebook data is ' +
                 'encrypted at rest.'
     },
+    realtime_triggers: ['sagemaker:CreateNotebookInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

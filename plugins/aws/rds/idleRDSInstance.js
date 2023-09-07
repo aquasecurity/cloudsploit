@@ -30,6 +30,7 @@ module.exports = {
             default: '20'
         }
     },
+    realtime_triggers: ['rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

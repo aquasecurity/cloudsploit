@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Update Amazon SQS queue and configure dead letter queue.',
     link: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html',
     apis: ['SQS:listQueues', 'SQS:getQueueAttributes', 'STS:getCallerIdentity'],
-
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

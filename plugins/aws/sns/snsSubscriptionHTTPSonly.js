@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Create a new SNS subscription using HTTPS protocol.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-http-https-endpoint-as-subscriber.html',
     apis: ['SNS:listSubscriptions'],
+    realtime_triggers: ['sns:Subscribe'],
 
     run: function(cache, settings, callback) {
         var results = [];
