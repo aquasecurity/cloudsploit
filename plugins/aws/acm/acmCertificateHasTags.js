@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/tags.html',
     recommended_action: 'Modify ACM certificate and add tags.',
     apis: ['ACM:listCertificates', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['ACM:requestCertificate','ACM:importCertificate','ACM:addTagsToCertificate', 'ACM:removeTagsFromCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Modify API Gateway custom domain security policy and specify new TLS version.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-custom-domain-tls-version.html',
     apis: ['APIGateway:getDomainNames'],
+    realtime_triggers: ['APIGateway:createDomainName','APIGateway:updateDomainName'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

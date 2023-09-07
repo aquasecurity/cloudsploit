@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['AutoScaling:createAutoScalingGroup','AutoScaling:updateAutoScalingGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

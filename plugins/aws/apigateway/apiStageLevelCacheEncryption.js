@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Modify API Gateway API stages to enable encryption on cache data',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/data-protection-encryption.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['APIGateway:createStage','APIGateway:updateStage'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

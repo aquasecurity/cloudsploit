@@ -12,6 +12,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/security.html',
     recommended_action: 'Deny all traffic to the external services',
     apis: ['AppMesh:listMeshes', 'AppMesh:describeMesh'],
+    realtime_triggers: ['AppMesh:createMesh','AppMesh:updateMesh'],
 
     run: function(cache, settings, callback) {
         var results = [];

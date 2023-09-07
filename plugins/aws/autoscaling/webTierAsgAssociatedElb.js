@@ -18,6 +18,8 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['AutoScaling:createAutoScalingGroup','AutoScaling:attachLoadBalancers'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

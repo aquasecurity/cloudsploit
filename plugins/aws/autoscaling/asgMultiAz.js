@@ -10,6 +10,8 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/autoscaling/latest/userguide/AutoScalingGroup.html',
     recommended_action: 'Modify the autoscaling instance to enable scaling across multiple availability zones.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
+    realtime_triggers: ['AutoScaling:createAutoScalingGroup','AutoScaling:updateAutoScalingGroup'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

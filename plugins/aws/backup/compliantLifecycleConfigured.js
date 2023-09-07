@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable compliant lifecycle configuration for your Amazon Backup plans',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/API_Lifecycle.html',
     apis: ['Backup:listBackupPlans', 'Backup:getBackupPlan'],
+    realtime_triggers: ['Backup:createBackupPlan','Backup:updateBackupPlan'],
 
     run: function(cache, settings, callback) {
         var results = [];

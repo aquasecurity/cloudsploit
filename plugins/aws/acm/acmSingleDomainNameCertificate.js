@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/acm-certificate.html',
     recommended_action: 'Configure ACM managed certificates to use single name domain instead of wildcards.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
+    realtime_triggers: ['ACM:requestCertificate','ACM:importCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

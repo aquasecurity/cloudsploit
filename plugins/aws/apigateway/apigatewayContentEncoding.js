@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Enable content encoding and set minimum compression size of API Gateway API response',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-gzip-compression-decompression.html',
     apis: ['APIGateway:getRestApis'],
+    realtime_triggers: ['APIGateway:createRestApi','APIGateway:updateRestApi'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

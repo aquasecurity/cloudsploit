@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings.html',
     recommended_action: 'Disable the ability for clients to override Athena workgroup configuration options.',
     apis: ['Athena:listWorkGroups', 'Athena:getWorkGroup', 'STS:getCallerIdentity'],
+    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

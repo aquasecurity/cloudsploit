@@ -10,7 +10,9 @@ module.exports = {
     more_info: 'With AWS Backup, you can assign policies to backup vaults and the resources they contain. Assigning policies allows you to do things like grant access to users to create backup plans and on-demand backups, but limit their ability to delete recovery points after they are created.',
     recommended_action: 'Add a statement in Backup vault access policy which denies global access to action: backup:DeleteRecoveryPoint',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
-    apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy' ],
+    apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy'],
+    realtime_triggers: ['Backup:createBackupVault','Backup:putBackupVaultAccessPolicy'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];

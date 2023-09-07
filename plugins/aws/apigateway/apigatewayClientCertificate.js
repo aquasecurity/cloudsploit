@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Attach client certificate to API Gateway API stages',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['APIGateway:createStage','APIGateway:updateStage'],
 
     run: function(cache, settings, callback) {
         var results = [];

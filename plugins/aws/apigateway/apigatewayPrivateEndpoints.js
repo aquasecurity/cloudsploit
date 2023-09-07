@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Set API Gateway API endpoint configuration to private',
     link: 'https://aws.amazon.com/blogs/compute/introducing-amazon-api-gateway-private-endpoints',
     apis: ['APIGateway:getRestApis'],
+    realtime_triggers: ['APIGateway:createRestApi','APIGateway:updateRestApi'],
 
     run: function(cache, settings, callback) {
         var results = [];
