@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Microsoft Azure Key Vault SSL certificates are using the allowed key types.',
     more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
     recommended_action: 'Ensure that Key Vault SSL certificates are using the allowed key types.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/certificate-access-control',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/certificates/certificate-access-control',
     apis: ['vaults:list', 'vaults:getCertificates', 'getCertificatePolicy:get'],
     settings: {
         allowed_certificate_key_types: {

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure Web Apps have automated backups enabled.',
     more_info: 'Protect your Azure App Services web applications against accidental deletion and/or corruption, you can configure application backups to create restorable copies of your app content.',
     recommended_action: 'Configure backup for Azure Web Apps',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/manage-backup',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/manage-backup',
     apis: ['webApps:list', 'webApps:getBackupConfiguration'],
 
     run: function(cache, settings, callback) {

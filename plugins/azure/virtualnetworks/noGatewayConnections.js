@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensures that virtual network gateways do not have any established connections.',
     more_info: 'To meet your organization\'s security compliance requirements.',
-    link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
     recommended_action: 'Delete network gateway connections',
     apis: ['resourceGroups:list', 'networkGatewayConnections:listByResourceGroup'],
 

@@ -37,7 +37,7 @@ module.exports = {
             for (var cluster of describeCacheClusters.data) {
                 ARNList.push(cluster.ARN);
             }
-            helpers.checkTags(cache, 'ElastiCache cluster', ARNList, region, results);
+            helpers.checkTags(cache, 'ElastiCache cluster', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

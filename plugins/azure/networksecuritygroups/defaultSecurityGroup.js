@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensures that default security groups block all traffic by default',
     more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, the default rules should be set to block all traffic to prevent an accidental exposure.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Update the rules for the default security group to deny all traffic by default',
     apis: ['networkSecurityGroups:listAll'],
     compliance: {

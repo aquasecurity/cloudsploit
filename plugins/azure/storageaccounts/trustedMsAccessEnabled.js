@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Trusted Microsoft Services Access is enabled on Storage Accounts',
     more_info: 'Enabling firewall rules on Storage Accounts blocks all access by default. To ensure that Microsoft and Azure services that connect to the Storage Account still retain access, trusted Microsoft services should be allowed to access the storage account.',
     recommended_action: 'For each Storage Account, configure an exception for trusted Microsoft services.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security',
     apis: ['storageAccounts:list'],
 
     run: function(cache, settings, callback) {

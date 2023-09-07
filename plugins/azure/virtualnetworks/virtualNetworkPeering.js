@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensures that Virtual Network has peering connection only with a virtual network in whitelisted subscription.',
     more_info: 'Virtual networks should only have peering connections with whitelisted virtual networks to meet your organization\'s security compliance requirements.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview',
     recommended_action: 'Delete Peering Connection with the subscription which are not whitelisted',
     apis: ['virtualNetworks:listAll', 'virtualNetworkPeerings:list'],
     settings: {

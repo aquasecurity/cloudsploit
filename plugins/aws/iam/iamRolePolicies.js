@@ -1,7 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
     title: 'IAM Role Policies',
@@ -111,6 +110,8 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
@@ -205,9 +206,9 @@ module.exports = {
                         break;
                     }
 
-                    if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+                    if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(policy.PolicyArn)) continue;
 
-                    if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+                    if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(policy.PolicyArn)) continue;
 
                     var getPolicy = helpers.addSource(cache, source,
                         ['iam', 'getPolicy', region, policy.PolicyArn]);

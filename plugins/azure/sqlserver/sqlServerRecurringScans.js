@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Period Recurring Scans feature is enabled for SQL Servers.',
     more_info: 'Setting periodic recurring scans schedules periodic (weekly) vulnerability scanning for the SQL server and corresponding Databases. Periodic and regular vulnerability scanning provides risk visibility based on updated known vulnerability signatures and best practices.',
     recommended_action: 'Ensure that recurring scans feature is set to Enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
     apis: ['servers:listSql', 'vulnerabilityAssessments:listByServer'],
 
     run: function(cache, settings, callback) {

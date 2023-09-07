@@ -40,7 +40,7 @@ module.exports = {
                 if (!vault.BackupVaultArn) continue;
                 vaultARN.push(vault.BackupVaultArn);
             }
-            helpers.checkTags(cache, 'Backup Vault', vaultARN, region, results);
+            helpers.checkTags(cache, 'Backup Vault', vaultARN, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

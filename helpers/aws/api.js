@@ -269,30 +269,6 @@ var serviceMap = {
             BridgeCall: 'listAnalyzers', BridgeArnIdentifier: 'arn', BridgeIdTemplate: '',
             BridgeResourceType: 'analyzer', BridgeResourceNameIdentifier: 'name',
             BridgeExecutionService: 'IAM', BridgeCollectionService: 'accessanalyzer', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_user',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listUsers', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'user', BridgeResourceNameIdentifier: 'UserName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_group',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listGroups', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'group', BridgeResourceNameIdentifier: 'GroupName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
-        },
-        {
-            enabled: true, isSingleSource: true, isIdentity: true, InvAsset: 'instance', InvService: 'iam',
-            InvResourceCategory: 'identity', InvResourceType: 'iam_role',
-            BridgeServiceName: 'iam', BridgePluginCategoryName: 'IAM', BridgeProvider: 'aws',
-            BridgeCall: 'listRoles', BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '',
-            BridgeResourceType: 'role', BridgeResourceNameIdentifier: 'RoleName', sendLast: true,
-            BridgeExecutionService: 'IAM', BridgeCollectionService: 'iam', DataIdentifier: 'data',
         }
     ],
     'EMR':
@@ -410,7 +386,7 @@ var serviceMap = {
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Route53 hostedzone', BridgeProvider: 'aws',
             BridgeServiceName: 'route53', BridgePluginCategoryName: 'Route53',
             BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:route53:::{id}',
-            BridgeResourceType: 'cluster', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Route53',
+            BridgeResourceType: 'hostedzone', BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Route53',
             BridgeCollectionService: 'route53', BridgeCall: 'listHostedZones', DataIdentifier: 'data',
         },
     'Proton':
@@ -455,7 +431,7 @@ var serviceMap = {
             InvResourceCategory: 'cloud_resources', InvResourceType: 'broker',
             BridgeProvider: 'aws', BridgeServiceName: 'mq', BridgePluginCategoryName: 'MQ',
             BridgeArnIdentifier: 'BrokerArn', BridgeIdTemplate: '',
-            BridgeResourceType: 'mq', BridgeResourceNameIdentifier: 'BrokerName', BridgeExecutionService: 'MQ',
+            BridgeResourceType: 'broker', BridgeResourceNameIdentifier: 'BrokerName', BridgeExecutionService: 'MQ',
             BridgeCollectionService: 'mq', BridgeCall: 'describeBroker', DataIdentifier: 'data',
         },
     'Managed Blockchain':
@@ -506,11 +482,11 @@ var serviceMap = {
     'Lex':
         {
             enabled: true, isSingleSource: true, InvAsset: 'bot', InvService: 'lex',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Lex Bot',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Lex BotAlias',
             BridgeProvider: 'aws', BridgeServiceName: 'lexmodelsv2', BridgePluginCategoryName: 'Lex',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:lex:{region}:{cloudAccount}:bot/{name}',
-            BridgeResourceType: 'bot', BridgeResourceNameIdentifier: 'botName', BridgeExecutionService: 'Lex',
-            BridgeCollectionService: 'lexmodelsv2', BridgeCall: 'listBots', DataIdentifier: 'data',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:lex:{region}:{cloudAccount}:bot-alias/{id}',
+            BridgeResourceType: 'bot-alias', BridgeResourceNameIdentifier: 'botAliasName', BridgeExecutionService: 'Lex',
+            BridgeCollectionService: 'lexmodelsv2', BridgeCall: 'describeBotAlias', DataIdentifier: 'data',
         },
     'Kinesis Video Streams':
         {
@@ -1268,7 +1244,7 @@ var calls = {
         },
         listUsers: {
             property: 'Users',
-            paginate: 'Marker'
+            paginate: 'Marker',
         },
         listRoles: {
             property: 'Roles',
@@ -1514,6 +1490,12 @@ var calls = {
     S3: {
         listBuckets: {
             property: 'Buckets'
+        }
+    },
+    SecurityHub: {
+        describeHub: {
+            property:'',
+            paginate: 'NextToken'
         }
     },
     SageMaker: {
@@ -1964,6 +1946,21 @@ var postcalls = [
                 reliesOnService: 'ec2',
                 reliesOnCall: 'describeInstances',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsReadIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
@@ -2060,6 +2057,11 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
             },
             sendIntegration: serviceMap['ElastiCache']
         },
@@ -2584,8 +2586,7 @@ var postcalls = [
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
                 filterValue: 'botId'
-            },
-            sendIntegration: serviceMap['Lex']
+            }
         },
         QLDB: {
             describeLedger: {
@@ -2816,21 +2817,6 @@ var postcalls = [
             }
         },
         IAM: {
-            getUserPolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listUsers',
-                override: true
-            },
-            getGroupPolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listGroups',
-                override: true
-            },
-            getRolePolicy: {
-                reliesOnService: 'iam',
-                reliesOnCall: 'listRoles',
-                override: true
-            },
             getPolicy: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
@@ -2849,7 +2835,10 @@ var postcalls = [
                 filterKey: 'UserName',
                 filterValue: 'UserName'
             },
-            sendIntegration: [serviceMap['IAM'][1], serviceMap['IAM'][2],serviceMap['IAM'][3]]
+            sendIntegration: {
+                enabled: true,
+                sendLast: true
+            }
         },
         EKS:{
             describeNodegroups: {
@@ -2899,7 +2888,8 @@ var postcalls = [
                 reliesOnService: 'lexmodelsv2',
                 reliesOnCall: 'listBots',
                 override: true,
-            }
+            },
+            sendIntegration: serviceMap['Lex']
         },
         ManagedBlockchain: {
             getMember: {
@@ -2916,7 +2906,22 @@ var postcalls = [
                 reliesOnService: 'iam',
                 reliesOnCall: 'listPolicies',
                 override: true
-            }
+            },
+            getUserPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listUsers',
+                override: true
+            },
+            getGroupPolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listGroups',
+                override: true
+            },
+            getRolePolicy: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listRoles',
+                override: true
+            },
         },
         ECS: {
             describeTasks:  {

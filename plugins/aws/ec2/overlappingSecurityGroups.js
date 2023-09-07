@@ -18,6 +18,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -117,7 +118,7 @@ module.exports = {
                                 var compOp2 = otherGroupId + '/' + groupId + ruleStr;
 
                                 // arn:aws:ec2:region:account-id:instance/instance-id
-                                var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instanceId;
+                                var arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + instanceId;
 
                                 if (!overlaps[arn]) {
                                     overlaps[arn] = [compOp1];

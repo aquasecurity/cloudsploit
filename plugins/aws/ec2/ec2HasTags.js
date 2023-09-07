@@ -15,6 +15,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source, ['ec2', 'describeInstances', region]);
@@ -36,7 +37,7 @@ module.exports = {
 
                 for (var instance of instances.Instances) {
                     const { Tags, InstanceId } = instance;
-                    const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
+                    const arn = `arn:${awsOrGov}:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
                     if (!Tags || !Tags.length){
                         helpers.addResult(results, 2, 'EC2 Instance does not have tags associated', region, arn);
                     } else {

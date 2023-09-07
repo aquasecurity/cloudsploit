@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Microsoft Defender is enabled for Azure SQL Server Databases.',
     more_info: 'Turning on Microsoft Defender for Azure SQL Server Databases enables threat detection for Azure SQL database servers, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list'],
 
     run: function(cache, settings, callback) {

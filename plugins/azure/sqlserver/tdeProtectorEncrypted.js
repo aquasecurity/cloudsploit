@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures SQL Server TDE protector is encrypted with BYOK (Bring Your Own Key)',
     more_info: 'Enabling BYOK in the TDE protector allows for greater control and transparency, as well as increasing security by having full control of the encryption keys.',
     recommended_action: 'Ensure that a BYOK key is set for the Transparent Data Encryption of each SQL Server.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/transparent-data-encryption-byok-azure-sql',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/transparent-data-encryption-byok-azure-sql',
     apis: ['servers:listSql', 'encryptionProtectors:listByServer'],
     settings: {
         sql_tde_protector_encryption_key: {

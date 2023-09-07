@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Load Balancers Log Analytics logs are being properly delivered to Azure Monitor',
     more_info: 'Enabling Send to Log Analytics ensures that all Load Balancer logs are being properly monitored and managed.',
     recommended_action: 'Send all diagnostic logs for Load Balancers from the Azure Monitor service to Log Analytics.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['loadBalancers:listAll', 'diagnosticSettings:listByLoadBalancer'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit log record for ' +

@@ -61,7 +61,7 @@ module.exports = {
 
                 for (let statement of statements){  
                     if (statement.Effect && statement.Effect.toUpperCase() === 'DENY' &&
-                        statement.Principal && helpers.globalPrincipal(statement.Principal) &&
+                        statement.Principal && helpers.globalPrincipal(statement.Principal, settings) &&
                         statement.Action && statement.Action.find(action => action.toUpperCase().includes('BACKUP:DELETERECOVERYPOINT'))) {
                         deleteProtected = true;
                     }

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Determine if UDP port 161 for SNMP is open to the public',
     more_info: 'SNMP UDP 161 used by various devices and applications for logging events, monitoring and management. Allowing Inbound traffic from any external IP address on port 161 is vulnerable to DoS attack. It is a best practice to block port 161 completely unless explicitly required.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict UDP port 161 to known IP addresses.',
     apis: ['networkSecurityGroups:listAll'],
     

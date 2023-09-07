@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that all Keys in Azure Key Vault have an expiry time set.',
     more_info: 'Setting an expiry time on all keys forces key rotation and removes unused and forgotten keys from being used.',
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     compliance: {
         pci: 'PCI has strict requirements regarding the use of encryption keys ' +
