@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures file shares do not allow full write, delete, or read ACL permissions',
     more_info: 'File shares can be configured to allow to read, write, or delete permissions from a share. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all file shares and ensure the share ACL is configured with least privileges.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'fileService:listSharesSegmentedNew', 'fileService:getShareAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +

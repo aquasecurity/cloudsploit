@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Log Profiles have a long retention policy.',
     more_info: 'Log retention policies should be configured with sufficient retention to aid in investigation of prior security incidents and for compliance purposes.',
     recommended_action: 'Ensure that the Activity Log export to Event Hub is configured with a retention policy of at least 365 days.',
-    link: 'https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
+    link: 'https://learn.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
     apis: ['logProfiles:list'],
     compliance: {
         pci: 'PCI requires log profile retention history to be' +

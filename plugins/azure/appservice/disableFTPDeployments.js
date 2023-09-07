@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that FTP deployments are disabled for App Services.',
     more_info: 'Disabling FTP deployments ensures that the encrypted traffic between the web application server and the FTP client cannot be decrypted by malicious actors.',
     recommended_action: 'Disable FTP deployments in the general settings for all App Services.',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     
 

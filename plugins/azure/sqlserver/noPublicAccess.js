@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that SQL Servers do not allow public access',
     more_info: 'Unless there is a specific business requirement, SQL Server instances should not have a public endpoint and should only be accessed from within a VNET.',
     recommended_action: 'Ensure that the firewall of each SQL Server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-overview/',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-security-overview/',
     apis: ['servers:listSql','firewallRules:listByServer'],
     settings: {
         server_firewall_end_ip: {

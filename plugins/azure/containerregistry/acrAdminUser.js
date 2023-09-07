@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that the admin user is not enabled on container registries',
     more_info: 'Azure Container Registries have an admin user that is designed for testing. This should be disabled by default to avoid sharing confidential admin credentials.',
     recommended_action: 'Ensure that the admin user is disabled for each container registry.',
-    link: 'https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication',
+    link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication',
     apis: ['registries:list'],
 
     run: function(cache, settings, callback) {

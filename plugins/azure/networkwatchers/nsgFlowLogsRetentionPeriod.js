@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure Network Security Groups (NSGs) have a sufficient flow log retention period',
     more_info: 'A flow log data retention period of 90 days or more, allows you to collect the necessary amount of logging data required to check for anomalies and provide details about any potential security breach.',
     recommended_action: 'Modify NSG flow logs and set desired value in days for retention period',
-    link: 'https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-portal',
     apis: ['networkWatchers:listAll', 'flowLogs:list'],
     settings: {
         nsg_flowlog_retention_period: {

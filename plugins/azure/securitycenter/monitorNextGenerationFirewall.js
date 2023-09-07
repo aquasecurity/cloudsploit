@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Next Generation Firewall (NGFW) Monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will search for deployments where a NGFW is recommended.',
     recommended_action: 'Enable Next Generation Firewall Monitoring by ensuring AuditIfNotExists setting is used for \'All network ports should be restricted on network security groups associated to your virtual machine\' from the Azure Security Center.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
 
     run: function(cache, settings, callback) {

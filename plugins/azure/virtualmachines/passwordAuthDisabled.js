@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that password authentication is disabled on Azure virtual machines.',
     more_info: 'SSH provides secure sign-ins over unsecured connections. Although SSH provides an encrypted connection, using passwords with SSH connections still leaves the VM vulnerable so it is recommended to connect to VM over SSH instead of password.',
     recommended_action: 'Disable password authentication on Azure virtual machine',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed',
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {

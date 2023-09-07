@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures BYOK encryption is properly configured in the Activity Log Storage Account',
     more_info: 'Storage accounts can be configured to encrypt data-at-rest. By default Azure will create a set of keys to encrypt the storage account, but the recommended approach is to create your own keys using Azure Key Vault.',
     recommended_action: 'Ensure the Storage Account used by Activity Logs is configured with a BYOK key.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
     apis: ['storageAccounts:list', 'blobContainers:list', 'diagnosticSettingsOperations:list'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +

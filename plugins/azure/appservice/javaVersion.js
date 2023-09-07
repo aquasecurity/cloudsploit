@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures the latest version of Java is installed for all App Services',
     more_info: 'Installing the latest version of Java will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of Java for all Java-based App Services',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-java',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-web-get-started-java',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestJavaVersion: {
