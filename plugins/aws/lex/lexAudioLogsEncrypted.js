@@ -107,8 +107,6 @@ module.exports = {
                         continue;
                     }
 
-                    console.log(describeBotAlias.data.conversationLogSettings );
-
                     let found = false;
 
                     for (let audioLog of describeBotAlias.data.conversationLogSettings.audioLogSettings){
