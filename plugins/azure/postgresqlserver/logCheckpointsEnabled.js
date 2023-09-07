@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures log checkpoints are enabled for PostgreSQL servers',
     more_info: 'Log checkpoints logs queries and errors that arise in the server, enabling faster detection of incidents.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_checkpoints setting enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit log record for ' +

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures the latest version of Python is installed for all App Services',
     more_info: 'Installing the latest version of Python will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of Python for all Python-based App Services',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/containers/how-to-configure-python',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/containers/how-to-configure-python',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestPythonVersion: {

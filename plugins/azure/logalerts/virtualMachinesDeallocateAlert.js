@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Activity Log alerts for the deallocate Virtual Machine events are enabled.',
     more_info: 'Monitoring for deallocate Virtual Machine events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Machine deallocate events.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
     run: function(cache, settings, callback) {

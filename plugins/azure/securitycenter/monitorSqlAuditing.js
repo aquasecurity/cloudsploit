@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Monitor SQL Auditing is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will monitor SQL databases.',
     recommended_action: 'Ensure SQL auditing monitoring is configured for SQL databases from the Azure Security Center.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
 
     run: function(cache, settings, callback) {

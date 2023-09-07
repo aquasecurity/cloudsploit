@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that identity-based Directory Service for Azure File Authentication is enabled for all Azure Files',
     more_info: 'Enabling identity-based Authentication ensures that only the authorized Active Directory members can access or connect to the file shares, enforcing granular access control.',
     recommended_action: 'Ensure that identity-based Directory Service for Azure File Authentication is enabled for all Azure File Shares.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/files/storage-files-active-directory-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/files/storage-files-active-directory-overview',
     apis: ['storageAccounts:list', 'fileShares:list'],
     settings: {
         storage_account_check_file_share: {

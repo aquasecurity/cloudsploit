@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Determine if TCP port 22 for SSH is open to the public',
     more_info: 'In order to deny ssh access to your virtual machines, you have to set your inbound security rules of Network Security Group to exclude ssh access to your Virtual Machine',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 22 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that security alerts are configured to be sent to admins',
     more_info: 'Enabling security alerts to be sent to admins ensures that detected vulnerabilities and security issues are sent to the subscription admins for quick remediation.',
     recommended_action: 'Ensure that security alerts are configured to be sent to subscription owners.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
     apis: ['securityContacts:list'],
 
     run: function(cache, settings, callback) {

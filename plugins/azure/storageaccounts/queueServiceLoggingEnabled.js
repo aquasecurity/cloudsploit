@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Microsoft Azure Storage Queue service logging is enabled for "Read", "Write", and "Delete" requests.',
     more_info: 'Azure Storage Queue logs contain detailed information about successful and failed requests made to your storage queues for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Queue service within your Microsoft Azure account.',
     recommended_action: 'Modify Queue Service and enable storage logging for "Read", "Write", and "Delete" requests.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:getProperties'],
  
     run: function(cache, settings, callback) {

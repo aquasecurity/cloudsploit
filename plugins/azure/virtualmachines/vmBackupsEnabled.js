@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure virtual machine backups are enabled.',
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs.',
     recommended_action: 'Enable Azure virtual machine backups',
-    link: 'https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
+    link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
     apis: ['virtualMachines:listAll', 'recoveryServiceVaults:listBySubscriptionId', 'backupProtectedItems:listByVault'],
 
     run: function(cache, settings, callback) {

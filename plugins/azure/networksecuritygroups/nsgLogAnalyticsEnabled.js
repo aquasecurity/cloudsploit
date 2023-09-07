@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Network Security Group logs are sent to the Log Analytics workspace',
     more_info: 'Enabling Log Analytics for Network Security Groups ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/collect-activity-logs',
     apis: ['networkSecurityGroups:listAll', 'diagnosticSettings:listByNetworkSecurityGroup'],
     compliance: {
         pci: 'PCI requires monitoring and logging of all network traffic. ' +

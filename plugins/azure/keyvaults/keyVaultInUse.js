@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Key Vaults are being used to store secrets.',
     more_info: 'App secrets control access to the application and thus need to be secured externally to the app configuration, storing the secrets externally and referencing them in the configuration also enables key rotation without having to redeploy the app service.',
     recommended_action: 'Ensure that Azure Key Vaults are being used to store secrets.',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references',
     apis: ['vaults:list', 'vaults:getKeys', 'vaults:getSecrets'],
 
     run: function(cache, settings, callback) {

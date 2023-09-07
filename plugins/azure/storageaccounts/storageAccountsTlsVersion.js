@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Azure Storage accounts permit clients to send and receive data with the oldest version of TLS, TLS 1.0, and above. ' +
         'To enforce stricter security measures, you can configure your storage account to require that clients send and receive data with a newer version of TLS.',
     recommended_action: 'Modify Storage Account configuration and set desired minimum TLS version',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version',
     apis: ['storageAccounts:list'],
     settings: {
         sa_min_tls_version: {

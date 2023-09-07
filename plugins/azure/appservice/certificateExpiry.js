@@ -8,7 +8,7 @@ module.exports = {
     description: 'Detect upcoming expiration of App Service Certificates.',
     more_info: 'Azure App Service Certificates help in securing DNS Domain for the web app of function app. Certificates auto-renewal should be configured to avoid any un expected results.',
     recommended_action: 'Turn On Certificates auto -renewal for Azure App Service Certificates',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-certificate',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/configure-ssl-certificate',
     apis: ['appServiceCertificates:list'],
     settings: {
         days_to_expire: {

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure that Microsoft Azure Cosmos DB accounts are configured to deny public access.',
     more_info: 'Microsoft Azure Cosmos DB accounts should not be accessible from internet and only be accessed from within a VNET.',
-    link: 'https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall',
+    link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall',
     recommended_action: 'Modify firewall and the virtual network configuration for your Cosmos DB accounts to provide access to selected networks.',
     apis: ['databaseAccounts:list'],
 

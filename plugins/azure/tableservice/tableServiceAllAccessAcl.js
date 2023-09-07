@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures tables do not allow full write, delete, or read ACL permissions',
     more_info: 'Table Service tables can be configured to allow to read, write or delete on objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all tables and ensure the ACL is configured with least privileges.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:listTablesSegmentedNew', 'tableService:getTableAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +

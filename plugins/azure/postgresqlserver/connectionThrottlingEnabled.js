@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures connection throttling is enabled for PostgreSQL servers',
     more_info: 'Connection throttling slows the amount of query and error logs sent by the server from the same IP address, limiting DoS attacks or the slowing down of servers due to excessive legitimate user logs.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the connection_throttling setting enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
 
     run: function(cache, settings, callback) {

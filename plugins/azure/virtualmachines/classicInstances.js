@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Azure Resource Manager is being used for instances instead of Cloud Services (VM Classic)',
     more_info: 'ARM is the latest and most secure method of launching Azure resources. VM Classic should not be used.',
     recommended_action: 'Migrate instances from Cloud Service to ARM.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview',
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {
