@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#cluster-platforms',
     recommended_action: 'Update Amazon Redshift cluster and attach it to VPC',
     apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

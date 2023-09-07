@@ -22,6 +22,7 @@ module.exports = {
             default: 'awskms'
         }
     },
+    realtime_triggers: ['workspace:CreateWorkSpaces'],
 
     run: function(cache, settings, callback) {
         var results = [];

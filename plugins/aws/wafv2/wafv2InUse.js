@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html',
     recommended_action: 'Create one or more WAF ACLs with proper actions and rules',
     apis: ['WAFV2:listWebACLs'],
+    realtime_triggers: ['wafv2:CreateWebACL'],
 
     run: function(cache, settings, callback) {
         var results = [];

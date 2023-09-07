@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['Neptune:CreateDBCluster'], 
+    realtime_triggers: ['neptune:CreateDBCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

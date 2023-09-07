@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/workspaces/pricing/',
     recommended_action: 'Identify and remove unused Workspaces instance',
     apis: ['WorkSpaces:describeWorkspacesConnectionStatus','STS:getCallerIdentity'],
+    realtime_triggers: ['workspace:CreateWorkSpaces','workspace:TerminateWorkspaces'],
 
     run: function(cache, settings, callback) {
         var results = [];

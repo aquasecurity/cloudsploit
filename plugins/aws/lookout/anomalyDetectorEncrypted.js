@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['LookoutMetrics:CreateAnomalyDetector', 'LookoutMetrics:UpdateAnomalyDetector'],
+    realtime_triggers: ['lookoutmetrics:CreateAnomalyDetector', 'lookoutmetrics:UpdateAnomalyDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];

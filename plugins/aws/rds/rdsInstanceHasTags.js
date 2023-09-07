@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html',
     recommended_action: 'Modify the RDS instance to add tags.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:AddTagsToResource'],  
 
     run: function(cache, settings, callback) {
         var results = [];

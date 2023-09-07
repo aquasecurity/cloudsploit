@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/gsg/rs-gsg-launch-sample-cluster.html',
     recommended_action: 'Update Amazon Redshift cluster endpoint port.',
     apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

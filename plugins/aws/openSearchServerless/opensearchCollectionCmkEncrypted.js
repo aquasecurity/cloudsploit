@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['OpenSearchServerless:CreateCollection'],
+    realtime_triggers: ['opensearchserverless:CreateCollection'],
     
     run: function(cache, settings, callback) {
         var results = [];

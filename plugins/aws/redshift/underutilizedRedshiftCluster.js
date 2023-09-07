@@ -18,6 +18,7 @@ module.exports = {
             default: '5'
         }
     },
+    realtime_triggers: ['redshift:CreateCluster','redshift:CreateClusterSnapshot', 'redshift:RestoreFromClusterSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];

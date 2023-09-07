@@ -18,6 +18,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['route53:ChangeResourceRecordSets'],
 
     run: function(cache, settings, callback) {
         var results = [];

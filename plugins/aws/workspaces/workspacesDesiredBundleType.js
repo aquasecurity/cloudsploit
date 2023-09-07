@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['workspace:CreateWorkSpaces'],
 
     run: function(cache, settings, callback) {
         var workspace_desired_bundle_type = settings.workspace_desired_bundle_type || this.settings.workspace_desired_bundle_type.default;

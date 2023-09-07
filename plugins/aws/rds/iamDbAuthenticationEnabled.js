@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth.html',
     recommended_action: 'Modify the PostgreSQL and MySQL type RDS instances to enable IAM database authentication.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

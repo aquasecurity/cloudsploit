@@ -24,7 +24,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig'], 
+    realtime_triggers: ['opensearch:CreateDomain'], 
 
     run: function(cache, settings, callback) {
         const results = [];

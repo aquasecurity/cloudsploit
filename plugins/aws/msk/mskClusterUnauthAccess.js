@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/msk/latest/developerguide/msk-authentication.html',
     recommended_action: 'Ensure that MSK clusters does not have unauthenticated access enabled.',
     apis: ['Kafka:listClusters'],
-    realtime_triggers: ['Kafka:CreateCluster','Kafka:UpdateClusterConfiguration'],
+    realtime_triggers: ['kafka:CreateCluster','kafka:UpdateClusterConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

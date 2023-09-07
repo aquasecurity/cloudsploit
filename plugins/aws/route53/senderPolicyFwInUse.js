@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrsets-working-with.html',
     recommended_action: 'Updated the domain records to have SPF.',
     apis: ['Route53:listHostedZones', 'Route53:listResourceRecordSets'],
+    realtime_triggers: ['route53:ChangeResourceRecordSets'],
 
     run: function(cache, settings, callback) {
         var results = [];

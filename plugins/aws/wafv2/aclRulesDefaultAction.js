@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/waf/latest/APIReference/API_DefaultAction.html',
     recommended_action: 'Modify Web ACL and set default action to block requests.',
     apis: ['WAFV2:listWebACLs', 'WAFV2:getWebACL'],
+    realtime_triggers: ['wafv2:CreateWebACL', 'wafv2:UpdateWebACL'],
 
     run: function(cache, settings, callback) {
         var results = [];
