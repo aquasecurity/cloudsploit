@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensure Azure Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network.',
     more_info: 'To meet your organization\'s security compliance requirements.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/nat-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/nat-overview',
     recommended_action: 'Enable Virtual Network NAT gateway for Virtual Networks',
     apis: ['virtualNetworks:listAll', 'natGateways:listBySubscription'],
 

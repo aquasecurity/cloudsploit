@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Activity Log alerts for the create/update and delete Virtual Machine events are enabled',
     more_info: 'Monitoring for create/update and delete Virtual Machine events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Machine create/update and delete events.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
 
     run: function(cache, settings, callback) {

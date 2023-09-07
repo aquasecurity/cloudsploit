@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that SQL Server Auditing is enabled for SQL servers',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL server.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit record for ' +

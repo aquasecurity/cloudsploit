@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures SQL Database instances can be restored to a recent point',
     more_info: 'Automated backups of SQL databases with recent restore points help ensure that database recovery operations can occur without significant data loss.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
     recommended_action: 'Ensure that each SQL database has automated backups configured with a sufficient retention period and that the last known backup operation completes successfully.',
     apis: ['servers:listSql', 'databases:listByServer'],
     compliance: {

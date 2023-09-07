@@ -8,7 +8,7 @@ module.exports = {
     description: 'Proactively check for Key Vault keys expiry date and rotate them before expiry date is reached.',
     more_info: 'After expiry date has reached for Key Vault key, it cannot be used for cryptographic operations anymore.',
     recommended_action: 'Ensure that Key Vault keys are rotated before they get expired.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
         key_vault_key_expiry_fail: {

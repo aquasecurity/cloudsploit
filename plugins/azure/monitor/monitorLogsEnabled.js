@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure that Azure Monitor Logs are enabled for all logging categories and being archived in a Storage Account.',
     more_info: 'Azure Monitor Logs is a feature of Azure Monitor that collects and organizes log and performance data from monitored resources and helps in identifying issues in resources performance.',
     recommended_action: 'Enabled Azure Monitor Logs for all logging categories and archive in a Storage Account',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs',
     apis: ['diagnosticSettingsOperations:list'],
 
     run: function(cache, settings, callback) {

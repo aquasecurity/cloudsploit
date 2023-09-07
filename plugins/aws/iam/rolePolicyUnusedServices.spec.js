@@ -602,7 +602,7 @@ describe('rolePolicyUnusedServices', function () {
             });
         });
 
-        it('should UKNOWN if unable to query for Discovered Resources', function (done) {
+        it('should UNKNOWN if unable to query for Discovered Resources', function (done) {
             const cache = createCache([configStatus[0]], null, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);

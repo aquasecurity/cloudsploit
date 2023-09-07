@@ -28,6 +28,8 @@ module.exports = {
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
         'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
+        'appmeshVGHealthChecks'         : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
+        
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),
@@ -406,6 +408,7 @@ module.exports = {
         'mysqlVulnerabilityCheck'       : require(__dirname + '/plugins/aws/rds/mysqlVulnerabilityCheck.js'),
         'rdsInstanceGeneration'         : require(__dirname + '/plugins/aws/rds/rdsInstanceGeneration.js'),
         'overutilizedRDSInstance'       : require(__dirname + '/plugins/aws/rds/overutilizedRDSInstance.js'),
+        'idleRDSInstance'               : require(__dirname + '/plugins/aws/rds/idleRDSInstance.js'),
 
         'redisClusterEncryptionInTransit': require(__dirname + '/plugins/aws/elasticache/redisClusterEncryptionInTransit.js'),
         'elasticacheClusterInVpc'       : require(__dirname + '/plugins/aws/elasticache/elasticacheClusterInVpc.js'),
@@ -742,6 +745,7 @@ module.exports = {
         'vmScaleSetHasTags'             : require(__dirname + '/plugins/azure/virtualmachines/vmScaleSetHasTags.js'),
         'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
         'systemAssignedIdentityEnabled' : require(__dirname + '/plugins/azure/virtualmachines/systemAssignedIdentityEnabled.js'),
+        'vmWindowsAntiMalwareExtension' : require(__dirname + '/plugins/azure/virtualmachines/vmWindowsAntiMalwareExtension.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
