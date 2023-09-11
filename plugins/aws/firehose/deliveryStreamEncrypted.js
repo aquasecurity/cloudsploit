@@ -20,7 +20,8 @@ module.exports = {
             default: 'awscmk'
         }
     },
-
+    realtime_triggers: ['firehose:UpdateDestination'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

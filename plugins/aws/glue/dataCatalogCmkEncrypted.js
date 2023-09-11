@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Glue data catalog to use CMK instead of AWS-managed Key to encrypt Metadata',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/encrypt-glue-data-catalog.html',
     apis: ['Glue:getDataCatalogEncryptionSettings', 'KMS:listKeys', 'KMS:describeKey'],
+    realtime_triggers: ['glue:PutDataCatalogEncryptionSettings'],
 
     run: function(cache, settings, callback) {
         var results = [];

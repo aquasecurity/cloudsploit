@@ -18,6 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['frauddetector:PutKMSEncryptionKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

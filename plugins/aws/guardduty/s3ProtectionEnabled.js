@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable GuardDuty S3 protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/s3-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:UpdateDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];
