@@ -54,14 +54,14 @@ module.exports = {
                 return rcb();
             }
 
-            // var listKeys = helpers.addSource(cache, source,
-            //     ['kms', 'listKeys', region]);
+            var listKeys = helpers.addSource(cache, source,
+                ['kms', 'listKeys', region]);
 
-            // if (!listKeys || listKeys.err || !listKeys.data) {
-            //     helpers.addResult(results, 3,
-            //         'Unable to list KMS keys: ' + helpers.addError(listKeys), region);
-            //     return rcb();
-            // }
+            if (!listKeys || listKeys.err || !listKeys.data) {
+                helpers.addResult(results, 3,
+                    'Unable to list KMS keys: ' + helpers.addError(listKeys), region);
+                return rcb();
+            }
 
             for (let bot of listBots.data){
                 if (!bot.botId) continue;
@@ -106,8 +106,6 @@ module.exports = {
                             'Bot alias does not have any audio logs configured', region, aliasArn);
                         continue;
                     }
-
-                    console.log(describeBotAlias.data.conversationLogSettings );
 
                     let found = false;
 
