@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['elasticache:CreateCluster', 'elasticache:CreateReplicationGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -24,6 +24,7 @@ module.exports = {
             default: '200'
         },
     },
+    realtime_triggers: ['elasticache:CreateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

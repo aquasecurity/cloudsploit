@@ -13,6 +13,7 @@ module.exports = {
     recommended_action: 'Structure security groups to provide a single category of access and do not ' +
                         'duplicate rules across groups used by the same instances.',
     apis: ['EC2:describeInstances', 'EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:RunInnstance', 'ec2:modify-instance-attribute', 'ec2:ModifySecurityGroupRules'],
 
     run: function(cache, settings, callback) {
         var results = [];

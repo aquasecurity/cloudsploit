@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html',
     recommended_action: 'Create a new snapshot for EBS volume weekly.',
     apis: ['EC2:describeSnapshots','STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

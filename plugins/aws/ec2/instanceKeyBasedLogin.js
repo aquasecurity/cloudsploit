@@ -18,6 +18,7 @@ module.exports = {
             default: '10'
         }
     },
+    realtime_triggers: ['ec2:RunInstance', 'ec2:ModifyInstanceAttribute'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify EBS volumes and add tags',
     link: 'https://aws.amazon.com/blogs/aws/new-tag-ec2-instances-ebs-volumes-on-creation/',
     apis: ['EC2:describeVolumes', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVolume', 'ec2:AddTags', 'ec2:DeleteTags'],
 
     run: function(cache, settings, callback) {
         var results = [];

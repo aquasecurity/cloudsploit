@@ -19,6 +19,7 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['ec2:RunInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

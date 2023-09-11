@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html',
     recommended_action: 'Enable in-transit encryption for ElastiCache clusters',
     apis: ['ElastiCache:describeCacheClusters'],
+    realtime_triggers: ['elasticache:CreateCluster', 'elasticache:CreateReplicationGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

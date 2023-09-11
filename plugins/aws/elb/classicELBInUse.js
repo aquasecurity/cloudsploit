@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/elasticloadbalancing/features/',
     recommended_action: 'Detach Classic Load balancer from HTTP/HTTPS applications and attach Application Load Balancer to those applications',
     apis: ['ELB:describeLoadBalancers', 'STS:getCallerIdentity'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

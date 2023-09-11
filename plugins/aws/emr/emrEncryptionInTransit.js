@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html',
     recommended_action: 'Update security configuration associated with EMR cluster to enable encryption in transit.',
     apis: ['EMR:listClusters', 'EMR:describeCluster', 'EMR:describeSecurityConfiguration'],
+    realtime_triggers: ['emr:CreateCluster', 'emr:CreateSecurityConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

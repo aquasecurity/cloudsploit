@@ -24,6 +24,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: [],
 
     run: function(cache, settings, callback) {
         var config = {

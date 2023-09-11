@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html',
     recommended_action: 'Ensure Internet Gateways have VPC attached to them.',
     apis: ['EC2:describeInternetGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateInternetGateway', 'ec2:DetachInternetGateway', 'ec2:AttachInternetGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

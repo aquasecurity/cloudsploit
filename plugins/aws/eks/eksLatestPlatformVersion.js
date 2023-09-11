@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html',
     recommended_action: 'Check for the version on all EKS clusters to be the latest platform version.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:UpdateClusterVersion'],
 
     run: function(cache, settings, callback) {
         var results = [];

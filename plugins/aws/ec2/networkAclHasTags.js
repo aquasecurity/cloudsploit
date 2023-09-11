@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Network ACL and add tags.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     apis: ['EC2:describeNetworkAcls', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:AddTags', 'ec2:DeleteTags'],
 
     run: function(cache, settings, callback) {
         var results = [];

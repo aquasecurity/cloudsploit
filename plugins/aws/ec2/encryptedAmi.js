@@ -16,6 +16,7 @@ module.exports = {
                 'allow it to remain compliant with the encryption at-rest ' +
                 'regulatory requirement.'
     },
+    realtime_triggers: ['ec2:CreateImage', 'ec2:CopyImage'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/VPCs.EC.html',
     recommended_action: 'Create ElastiCache clusters within VPC network',
     apis: ['ElastiCache:describeCacheClusters'],
+    realtime_triggers: ['elasticache:CreateCluster'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

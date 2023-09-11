@@ -18,6 +18,8 @@ module.exports = {
             default: 'false',
         }
     },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules'],
+
     run: function(cache, settings, callback) {
         var config = {
             ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,

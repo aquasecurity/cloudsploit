@@ -10,6 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
     apis: ['EC2:describeVpcs', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:ModifyVpcAttribute'],
 
     run: function(cache, settings, callback) {
         var results = [];

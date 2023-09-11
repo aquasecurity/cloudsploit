@@ -58,6 +58,7 @@ module.exports = {
         },
        
     },
+    realtime_triggers: ['ec2:CreateVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];

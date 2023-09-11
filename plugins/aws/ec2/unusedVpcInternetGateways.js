@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html',
     recommended_action: 'Remove the unused/detached Internet Gateways and Egress-Only Internet Gateways',
     apis: ['EC2:describeInternetGateways', 'EC2:describeEgressOnlyInternetGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateInternetGateway', 'ec2:DeleteInternetGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

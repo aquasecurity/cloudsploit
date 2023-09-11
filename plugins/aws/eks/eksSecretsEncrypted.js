@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/',
     recommended_action: 'Modify EKS clusters to enable envelope encryption for Kubernetes secrets',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

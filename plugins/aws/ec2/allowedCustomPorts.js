@@ -18,6 +18,8 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

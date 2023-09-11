@@ -24,6 +24,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['emr:CreateCluster'],
 
     run: function(cache, settings, callback) {  
         const results = [];

@@ -18,6 +18,7 @@ module.exports = {
             default: '10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
         }
     },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:RevokeSecurityGroupIngress'],
 
     run: function(cache, settings, callback) {
         var results = [];

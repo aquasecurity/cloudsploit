@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enabled container insights feature for ECS clusters.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:UpdateClusterSettings'],
 
     run: function(cache, settings, callback){
         var results = [];

@@ -12,6 +12,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html',
     apis: ['EC2:describeInstances', 'EC2:describeVolumes', 'DLM:getLifecyclePolicies',
         'DLM:getLifecyclePolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['dlm:CreateLifecyclePolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
