@@ -20,6 +20,7 @@ module.exports = {
              'passwords, it is still strongly encouraged to use a ' +
              'customer-provided CMK rather than the default KMS key.'
     },
+    realtime_triggers: ['CloudTrail:createTrail,CloudTrail:updateTrail,EC2:createVolume,ElasticTranscoder:updatePipeline,ElasticTranscoder:createPipeline,RDS:createDBInstance,RDS:modifyDBInstance,Redshift:createCluster,Redshift:modifyCluster,S3:createBucket,S3:putBucketEncryption,SES:createReceiptRule,SES:updateReceiptRule,Workspaces:createWorkspaces,Lambda:updateFunctionConfiguration,Lambda:createFunction,CloudWatchLogs:createLogGroup,CloudWatchLogs:associateKmsKey,EFS:createFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

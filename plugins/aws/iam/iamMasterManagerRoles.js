@@ -129,6 +129,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['IAM:createRole'],
 
     run: function(cache, settings, callback) {
         var config = {

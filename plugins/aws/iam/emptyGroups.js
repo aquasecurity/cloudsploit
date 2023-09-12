@@ -22,6 +22,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['IAM:createGroup,IAM:deleteGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

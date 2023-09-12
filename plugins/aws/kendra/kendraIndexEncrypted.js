@@ -18,6 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['Kendra:createIndex,Kendra:updateIndex'],
 
     run: function(cache, settings, callback) {
         var results = [];

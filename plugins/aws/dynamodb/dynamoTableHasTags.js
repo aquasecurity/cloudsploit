@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tagging.html',
     recommended_action: 'Modify DynamoDB table and add tags.',
     apis: ['DynamoDB:listTables', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
+    realtime_triggers: ['DynamoDB:createTable','DynamoDB:tagResource','DynamoDB:untagResource'],
 
     run: function(cache, settings, callback) {
         var results = [];

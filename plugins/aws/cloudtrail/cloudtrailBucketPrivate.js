@@ -22,6 +22,8 @@ module.exports = {
         }
 
     },
+    realtime_triggers: ['CloudTrail:createTrail', 'S3:putBucketAcl'],
+
     run: function(cache, settings, callback) {
         var config = {
             whitelist_ct_private_buckets: settings.whitelist_ct_private_buckets ||  this.settings.whitelist_ct_private_buckets.default

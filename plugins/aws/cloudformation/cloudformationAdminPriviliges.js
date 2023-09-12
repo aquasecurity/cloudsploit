@@ -14,6 +14,8 @@ module.exports = {
     recommended_action: 'Modify IAM role attached with AWS CloudFormation stack to provide the minimal amount of access required to perform its tasks',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy'],
+    realtime_triggers: ['CloudFormation:createStack','IAM:createPolicyVersion','IAM:putRolePolicy'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];

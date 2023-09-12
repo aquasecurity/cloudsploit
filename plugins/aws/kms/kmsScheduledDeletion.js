@@ -22,6 +22,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['KMS:scheduleKeyDeletion,KMS:cancelKeyDeletion'],
 
     run: function(cache, settings, callback) {
         var results = [];

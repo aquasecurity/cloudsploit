@@ -9,6 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html',
     recommended_action: 'Create a password policy under account settings in IAM',
     apis: ['IAM:getAccountPasswordPolicy'],
+    realtime_triggers: ['IAM:updateAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

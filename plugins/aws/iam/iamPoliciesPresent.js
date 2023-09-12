@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['IAM:createPolicy,IAM:createPolicyVersion,IAM:putRolePolicy,IAM:updateAssumeRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

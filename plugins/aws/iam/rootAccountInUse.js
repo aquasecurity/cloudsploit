@@ -27,6 +27,7 @@ module.exports = {
             default: 15
         }
     },
+    realtime_triggers: ['IAM:createUser'],
 
     run: function(cache, settings, callback) {
         this._run(cache, settings, callback, new Date());

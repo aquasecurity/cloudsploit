@@ -9,6 +9,7 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/aws/mfa-protection-for-cross-account-access/',
     recommended_action: 'Update the IAM role to either require MFA or use an external ID.',
     apis: ['IAM:listRoles', 'STS:getCallerIdentity'],
+    realtime_triggers: ['IAM:createRole,IAM:updateAssumeRolePolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

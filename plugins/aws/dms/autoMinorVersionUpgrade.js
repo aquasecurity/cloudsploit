@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Auto Minor Version Upgrade feature in order to automatically receive minor engine upgrades for improved performance and security',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.Modifying.html',
     apis: ['DMS:describeReplicationInstances'],
+    realtime_triggers: ['DMS:createReplicationInstance','DMS:modifyReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

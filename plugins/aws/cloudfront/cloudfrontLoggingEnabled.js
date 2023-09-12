@@ -33,6 +33,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
 
     run: function(cache, settings, callback) {
 

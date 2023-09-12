@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ebs-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for EBS volumes.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
+    realtime_triggers: ['EC2:createVolume','EC2:modifyVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];

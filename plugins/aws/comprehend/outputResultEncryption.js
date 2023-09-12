@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Enable output result encryption for the Comprehend job',
     apis: ['Comprehend:listEntitiesDetectionJobs', 'Comprehend:listDominantLanguageDetectionJobs', 'Comprehend:listTopicsDetectionJobs',
         'Comprehend:listDocumentClassificationJobs', 'Comprehend:listKeyPhrasesDetectionJobs', 'Comprehend:listSentimentDetectionJobs'],
+    realtime_triggers: ['Comprehend:startEntitiesDetectionJob'],
 
     run: function(cache, settings, callback) {
         var results = [];

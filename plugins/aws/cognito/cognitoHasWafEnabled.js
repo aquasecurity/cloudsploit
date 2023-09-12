@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable WAF from properties.',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'WAFV2:getWebACLForCognitoUserPool', 'STS:getCallerIdentity'],
+    realtime_triggers: ['CognitoIdentityServiceProvider:createUserPool','CognitoIdentityServiceProvider:updateUserPool'],
 
     run: function(cache, settings, callback) {
         var results = [];

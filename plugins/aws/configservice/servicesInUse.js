@@ -25,6 +25,7 @@ module.exports = {
             default:''
         },
     },
+    realtime_triggers: ['ConfigService:startConfigurationRecorder','ConfigService:startConfigRulesEvaluation'],
 
     run: function(cache, settings, callback) {
         var results = [];

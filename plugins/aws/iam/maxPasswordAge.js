@@ -58,6 +58,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['IAM:updateAccountPasswordPolicy'],
+
     run: function(cache, settings, callback) {
         var config = {
             max_password_age_fail: settings.max_password_age_fail || this.settings.max_password_age_fail.default,

@@ -25,6 +25,7 @@ module.exports = {
             default: 'aqua-cspm'
         }
     },
+    realtime_triggers: ['KMS:createKey,KMS:enableKeyRotation'],
 
     run: function(cache, settings, callback) {
         var results = [];

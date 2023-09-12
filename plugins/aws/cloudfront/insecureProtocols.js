@@ -25,6 +25,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
 
     run: function(cache, settings, callback) {
         var config = {

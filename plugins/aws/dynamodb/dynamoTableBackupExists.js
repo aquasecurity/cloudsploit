@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html',
     recommended_action: 'Create on-demand backups for DynamoDB tables.',
     apis: ['DynamoDB:listTables', 'DynamoDB:listBackups', 'STS:getCallerIdentity'],
+    realtime_triggers: ['DynamoDB:createTable','DynamoDB:createBackup'],
 
     run: function(cache, settings, callback) {
         var results = [];

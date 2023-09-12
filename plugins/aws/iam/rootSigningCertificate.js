@@ -15,6 +15,7 @@ module.exports = {
                 'since it is not tied to a specific user. The root signing keys ' +
                 'should not be used.'
     },
+    realtime_triggers: ['IAM:deleteSigningCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

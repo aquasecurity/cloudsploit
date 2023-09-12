@@ -27,6 +27,7 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.6 Ensure IAM password policy allows users to change their passwords'
     },
+    realtime_triggers: ['IAM:updateAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

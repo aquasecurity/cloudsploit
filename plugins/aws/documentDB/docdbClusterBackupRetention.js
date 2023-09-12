@@ -18,6 +18,7 @@ module.exports = {
             default: 7
         }
     },
+    realtime_triggers: ['DocDB:createDBCluster','DocDB:modifyDBCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

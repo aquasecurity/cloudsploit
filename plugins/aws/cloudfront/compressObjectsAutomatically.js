@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html',
     recommended_action: 'Ensures that CloudFront is configured to automatically compress files',
     apis: ['CloudFront:listDistributions'],
+    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
     
     run: function(cache, settings, callback) {
         var results = [];

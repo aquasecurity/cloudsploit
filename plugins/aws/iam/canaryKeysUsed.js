@@ -32,6 +32,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['IAM:createUser'],
+
     run: function(cache, settings, callback) {
         var config = {
             canary_user: settings.canary_user || this.settings.canary_user.default
