@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html',
     recommended_action: 'Update the Lambda policy to prevent access from the public.',
     apis: ['Lambda:listFunctions', 'Lambda:getPolicy'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:AddPermission', 'lambda:RemovePermission'],
 
     run: function(cache, settings, callback) {
         var results = [];

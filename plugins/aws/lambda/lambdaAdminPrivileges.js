@@ -11,7 +11,8 @@ module.exports = {
     recommended_action: 'Modify IAM role attached with Lambda function to provide the minimal amount of access required to perform its tasks',
     apis: ['Lambda:listFunctions', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy'],
-
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration' ],
+           
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html',
     recommended_action: 'Update the Lambda function permissions to allow CloudWatch logging.',
     apis: ['Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];
