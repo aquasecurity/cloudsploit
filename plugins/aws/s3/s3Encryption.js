@@ -70,6 +70,7 @@ module.exports = {
             default: 'false',
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:putBucketEncryption'],
 
     run: function(cache, settings, callback) {
         var results = [];

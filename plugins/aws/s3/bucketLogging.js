@@ -31,6 +31,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['s3:CreateBucket','s3:PutBucketLogging'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

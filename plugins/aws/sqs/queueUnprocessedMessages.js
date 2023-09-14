@@ -18,6 +18,7 @@ module.exports = {
             default: 1000
         }
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes'],
 
     run: function(cache, settings, callback) {
         var results = [];

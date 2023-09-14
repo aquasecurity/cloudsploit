@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',
     recommended_action: 'Update the SSM agent configuration for all managed instances to use automatic updates.',
     apis: ['SSM:describeInstanceInformation', 'SSM:listAssociations', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:CreateAssoication', 'ssm:UpdateAssociation'],
 
     run: function(cache, settings, callback) {
         var results = [];

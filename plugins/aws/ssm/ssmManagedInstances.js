@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Configure AWS EC2 instance as SSM Managed Instances',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/managed_instances.html',
     apis: ['EC2:describeInstances', 'SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:CreateAssociation', 'ec2:RunInstance', 'ec2:AssociateIamInstanceProfile'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

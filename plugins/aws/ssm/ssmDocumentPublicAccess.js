@@ -9,6 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-share-block.html',
     recommended_action: 'Enable block public sharing setting under SSM  documents preferences.',
     apis: ['SSM:getServiceSetting', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:UpdateServiceSetting'],
 
     run: function(cache, settings, callback) {
         const results = [];

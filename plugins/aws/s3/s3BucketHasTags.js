@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Modify S3 buckets and add tags.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/CostAllocTagging.html',
     apis: ['S3:listBuckets', 'ResourceGroupsTaggingAPI:getResources', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketTagging'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

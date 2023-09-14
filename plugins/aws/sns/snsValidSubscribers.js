@@ -18,6 +18,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['sns:Subscribe', 'sns:Unsubscribe'],
 
     run: function(cache, settings, callback) {
         var results = [];

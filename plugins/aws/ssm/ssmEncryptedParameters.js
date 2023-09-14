@@ -34,6 +34,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['ssm:PutParameter'],
 
     run: function(cache, settings, callback) {
         var results = [];

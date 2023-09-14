@@ -22,6 +22,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersionning'],
 
     run: function(cache, settings, callback) {
         var results = [];

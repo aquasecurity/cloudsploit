@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Enable object level logging for read events for each S3 bucket.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html#enable-cloudtrail-events',
     apis: ['S3:listBuckets', 'CloudTrail:describeTrails', 'CloudTrail:getEventSelectors', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 'cloudtrail:CreateTrail', 'cloudtrail:PutEventSelectors', 'cloudtrail:PutInsightSelectors'],
 
     run: function(cache, settings, callback) {
         var results = [];

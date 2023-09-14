@@ -20,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes'],
 
     run: function(cache, settings, callback) {
         var results = [];

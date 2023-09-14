@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Enable AWS Shield Advanced for the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/ddos-overview.html#ddos-advanced',
     apis: ['Shield:describeSubscription'],
+    realtime_triggers: ['shield:CreateSubscription', 'sheild:UpdateSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];
