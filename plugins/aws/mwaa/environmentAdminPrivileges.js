@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify IAM role attached with MWAA environment to provide the minimal amount of access required to perform its tasks',
     apis: ['MWAA:listEnvironments', 'MWAA:getEnvironment', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['mwaa:CreateEnvironment','mwaa:UpdateEnviroment'],    
 
     run: function(cache, settings, callback) {
         var results = [];

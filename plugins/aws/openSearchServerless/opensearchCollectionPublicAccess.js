@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',
     recommended_action: 'Update the network policy and remove the public access to the collection.',
     apis: ['OpenSearchServerless:listNetworkSecurityPolicies', 'OpenSearchServerless:getNetworkSecurityPolicy', 'OpenSearchServerless:listCollections'],
+    realtime_triggers: ['opensearchserverless:CreateCollection', 'opensearchserverless:CreateSecurityPolicy', 'opensearchserverless:UpdateSecurityPolicy','opensearchserverless:DeleteSecurityPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

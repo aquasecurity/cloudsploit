@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createdomain-configure-slow-logs.html',
     recommended_action: 'Ensure logging is enabled and a CloudWatch log group is specified for each OpenSearch domain.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];

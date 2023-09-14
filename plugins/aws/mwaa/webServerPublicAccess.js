@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/vpc-create.html',
     recommended_action: 'Modify Amazon MWAA environments to set web server access mode to be private only',
     apis: ['MWAA:listEnvironments', 'MWAA:getEnvironment', 'STS:getCallerIdentity'],
+    realtime_triggers: ['mwaa:CreateEnvironment','mwaa:UpdateEnviroment'], 
 
     run: function(cache, settings, callback) {
         var results = [];

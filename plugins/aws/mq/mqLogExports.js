@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Log Exports feature for MQ brokers',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/security-logging-monitoring.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker'],
+    realtime_triggers: ['mq:CreateBroker', 'mq:UpdateBroker'],
 
     run: function(cache, settings, callback) {
         var results = [];

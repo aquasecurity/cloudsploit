@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/version-migration.html',
     recommended_action: 'Ensure each OpenSearch domain is running the latest service software and update out-of-date domains.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'], 
 
     run: function(cache, settings, callback) {
         var results = [];
