@@ -17,7 +17,7 @@ module.exports = {
                 'AWS KMS encryption ensures that the Firehose payload meets the ' +
                 'encryption in transit and at rest requirements of HIPAA.'
     },
-    realtime_triggers: ['firehose:StartDeliveryStreamEncryption', 'kinesis:StartStreamEncryption'],
+    realtime_triggers: ['firehose:CreateDeliveryStreams','firehose:StartDeliveryStreamEncryption', 'kinesis:StartStreamEncryption'],
 
     run: function(cache, settings, callback) {
         var results = [];
