@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#configuring-instance-metadata-service',
     recommended_action: 'Update instance metadata options to use IMDSv2',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstance', 'ec2:ModifyInstanceMetadataOptions'],
 
     run: function(cache, settings, callback) {
         var results = [];

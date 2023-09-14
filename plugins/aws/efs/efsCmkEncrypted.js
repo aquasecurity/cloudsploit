@@ -18,6 +18,7 @@ module.exports = {
             default: 20
         }
     },
+    realtime_triggers: ['efs:CreateFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

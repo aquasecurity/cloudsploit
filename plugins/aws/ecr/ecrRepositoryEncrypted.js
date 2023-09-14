@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['ecr:CreateRepository'],
 
     run: function(cache, settings, callback) {
         var results = [];

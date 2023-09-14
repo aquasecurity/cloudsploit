@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/aws/new-managed-nat-network-address-translation-gateway-for-aws/',
     recommended_action: 'Update VPCs to use Managed NAT Gateways instead of NAT instances',
     apis: ['EC2:describeVpcs', 'EC2:describeNatGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNatGateway', 'ec2:ReplaceRoute'],
 
     run: function(cache, settings, callback) {
         var results = [];

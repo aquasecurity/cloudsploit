@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environment-platform-update-managed.html',
     recommended_action: 'Update the environment to enable managed updates.',
     apis: ['ElasticBeanstalk:describeEnvironments', 'ElasticBeanstalk:describeConfigurationSettings'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

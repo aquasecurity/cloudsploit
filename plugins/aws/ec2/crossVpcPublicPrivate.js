@@ -16,6 +16,7 @@ module.exports = {
              'communicate across these segmented boundaries. Ensure that public ' +
              'services in one VPC cannot communicate with the private tier of another.'
     },
+    realtime_triggers: ['ec2:CreateVpcPeeringConnection', 'ec2:ModifyVpcPeeringConnectionOptions'],
 
     run: function(cache, settings, callback) {
         var results = [];

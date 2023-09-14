@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',
     recommended_action: 'Upgrade the version of Kubernetes on all EKS clusters to the latest available version.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:UpdateClusterVersion'],
 
     run: function(cache, settings, callback) {
         var results = [];

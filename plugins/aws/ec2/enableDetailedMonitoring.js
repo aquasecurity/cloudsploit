@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html',
     recommended_action: 'Modify EC2 instance to enable detailed monitoring.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstance', 'ec2:MonitorInstances'],
 
     run: function(cache, settings, callback) {
         const results = [];

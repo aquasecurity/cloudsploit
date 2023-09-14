@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr-using-tags.html',
     recommended_action: 'Modify ECR repository and add tags.',
     apis: ['ECR:describeRepositories', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:TagResource', 'ecr:UntagResource'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rules.html',
     recommended_action: 'Create EventBridge event rules to meet regulatory and compliance requirement within your organization.',
     apis: ['EventBridge:listRules'],
+    realtime_triggers: ['eventbridge:PutRules', 'eventbridge:EnableRule'],
 
     run: function(cache, settings, callback) {
         var results = [];

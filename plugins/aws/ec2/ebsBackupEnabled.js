@@ -18,6 +18,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:CreateVloume'],
 
     run: function(cache, settings, callback) {
         let results = [];

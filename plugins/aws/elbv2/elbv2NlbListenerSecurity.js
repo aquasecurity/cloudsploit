@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.amazonaws.cn/en_us/elasticloadbalancing/latest/network/create-tls-listener.html',
     recommended_action: 'Attach TLS listener to AWS Network Load Balancer',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:CreateListener', 'elasticloadbalancing:ModifyListener'],
 
     run: function(cache, settings, callback) {
         var results = [];

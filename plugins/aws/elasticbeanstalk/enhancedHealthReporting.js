@@ -12,6 +12,7 @@ module.exports = {
     recommended_action: 'Modify Elastic Beanstalk environmentsand enable enhanced health reporting.',
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html',
     apis: ['ElasticBeanstalk:describeEnvironments'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

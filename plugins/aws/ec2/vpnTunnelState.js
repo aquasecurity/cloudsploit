@@ -18,6 +18,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['ec2:CreateVpnConnection'],
 
     run: function(cache, settings, callback) {
         var results = [];

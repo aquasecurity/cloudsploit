@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/delete-vpn.html',
     recommended_action: 'Remove the unused Virtual Private Gateways (VGWs)',
     apis: ['EC2:describeVpnGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpnGateway', 'ec2:DeleteVpnGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

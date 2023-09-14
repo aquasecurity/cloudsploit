@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html',
     recommended_action: 'Modify EC2 instances and add tags.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstance', 'ec2:AddTags', 'ec2:DeleteTags'],
 
     run: function(cache, settings, callback) {
         var results = [];

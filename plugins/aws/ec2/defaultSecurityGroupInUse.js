@@ -10,6 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
     recommended_action: 'Modify EC2 instances and change security group.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstance', 'ec2:ModifyInstanceAttribute'],
 
     run: function(cache, settings, callback) {
         var results = [];

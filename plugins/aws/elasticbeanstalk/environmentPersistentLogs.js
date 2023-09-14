@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Go to specific environment, select Configuration, edit Software category, and enable Log streaming',
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html',
     apis: ['ElasticBeanstalk:describeEnvironments', 'ElasticBeanstalk:describeConfigurationSettings'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

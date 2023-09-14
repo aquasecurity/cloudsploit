@@ -18,6 +18,7 @@ module.exports = {
             default:'cache.t2.micro'
         }
     },
+    realtime_triggers: ['elasticache:CreateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
