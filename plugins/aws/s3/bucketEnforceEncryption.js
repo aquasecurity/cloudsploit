@@ -23,7 +23,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['s3:CreateBucket' , 's3:PutBucketPolicy'],
+    realtime_triggers: ['s3:CreateBucket' , 's3:PutBucketPolicy','s3:DeleteBucketPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

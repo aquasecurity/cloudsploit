@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update S3 bucket and create lifecycle rule configuration',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/how-to-set-lifecycle-configuration-intro.html',
     apis: ['S3:listBuckets', 'S3:getBucketLifecycleConfiguration', 'S3:getBucketLocation'],
-    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketLifeCycleConfiguration'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketLifeCycleConfiguration', 's3:DeleteBucketLifeCycle'],
 
     run: function(cache, settings, callback) {
         var results = [];
