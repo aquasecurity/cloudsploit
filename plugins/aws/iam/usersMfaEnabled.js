@@ -31,7 +31,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:EnableMFADevice,IAM:DeactivateMFADevice'],
+    realtime_triggers: ['IAM:EnableMFADevice','IAM:DeactivateMFADevice'],
 
     run: function(cache, settings, callback) {
         var results = [];

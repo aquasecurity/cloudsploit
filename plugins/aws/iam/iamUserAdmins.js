@@ -33,7 +33,7 @@ module.exports = {
             default: 2
         }
     },
-    realtime_triggers: ['IAM:AddUserToGroup,IAM:RemoveUserFromGroup,IAM:AttachGroupPolicy,IAM:DetachGroupPolicy,IAM:AttachUserPolicy,IAM:DetachUserPolicy,IAM:PutUserPolicy'],
+    realtime_triggers: ['IAM:AddUserToGroup','IAM:RemoveUserFromGroup','IAM:AttachGroupPolicy','IAM:DetachGroupPolicy','IAM:AttachUserPolicy','IAM:DetachUserPolicy','IAM:PutUserPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

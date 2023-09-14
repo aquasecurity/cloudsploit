@@ -94,7 +94,7 @@ module.exports = {
             default: 'false'
         }
     },
-    realtime_triggers: ['IAM:CreatePolicy,IAM:UpdatePolicy,IAM:PutRolePolicy'],
+    realtime_triggers: ['IAM:CreatePolicy','IAM:UpdatePolicy','IAM:PutRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

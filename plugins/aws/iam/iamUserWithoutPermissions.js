@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify IAM user and attach new permissions or delete the user.',
     apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getPolicyVersion' ,'IAM:listGroupsForUser',
         'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies'],
-    realtime_triggers: ['IAM:AddUserToGroup,IAM:RemoveUserFromGroup,IAM:AttachGroupPolicy,IAM:DetachGroupPolicy,IAM:AttachUserPolicy,IAM:DetachUserPolicy,IAM:PutUserPolicy'],
+    realtime_triggers: ['IAM:AddUserToGroup','IAM:RemoveUserFromGroup','IAM:AttachGroupPolicy','IAM:DetachGroupPolicy','IAM:AttachUserPolicy','IAM:DetachUserPolicy','IAM:PutUserPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
