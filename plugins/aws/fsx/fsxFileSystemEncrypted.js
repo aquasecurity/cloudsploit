@@ -18,6 +18,8 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['fsx:CreateFileSystem'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

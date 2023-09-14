@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable GuardDuty for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
+    realtime_triggers: ['guardduty:CreateDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];
