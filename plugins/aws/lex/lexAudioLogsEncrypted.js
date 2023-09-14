@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['lexmodelsV2:CreateBot', 'lexmodelsV2:UpdateBot'],
+    realtime_triggers: ['lexmodelsV2:CreateBotAlias', 'lexmodelsV2:UpdateBotAlias'],
 
     run: function(cache, settings, callback) {
         var results = [];

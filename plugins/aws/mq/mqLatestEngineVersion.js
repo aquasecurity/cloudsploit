@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update Amazon MQ brokers to the latest version of Apache ActiveMQ broker engine.',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/activemq-version-management.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker'],
-    realtime_triggers: ['mq:CreateBrocker', 'mq:CreateConfiguration','mq:UpdateConfiguration', 'mq:UpdateBrocker'],
+    realtime_triggers: ['mq:CreateBrocker','mq:UpdateBrocker'],
 
     run: function(cache, settings, callback) {
         var results = [];
