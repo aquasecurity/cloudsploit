@@ -19,7 +19,7 @@ module.exports = {
              'cardholder data. Enable VPC flow logs to log these network requests.',
         cis2: '2.9 Ensure VPC flow logging is enabled in all VPCs'
     },
-    realtime_triggers: ['ec2:CreateVpc', 'ec2:CreateFlowLogs'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:CreateFlowLogs', 'ec2:DeleteFlowLogs'],
 
     run: function(cache, settings, callback) {
         var results = [];

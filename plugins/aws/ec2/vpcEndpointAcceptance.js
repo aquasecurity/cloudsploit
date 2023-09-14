@@ -18,7 +18,7 @@ module.exports = {
             default: 'false'
         },
     },
-    realtime_triggers: ['ec2:AcceptVpcEndpointConnections'],
+    realtime_triggers: ['ec2:CreateVpcEndpointServiceConfiguration', 'ec2:ModifyVpcEndpointServicePermissions'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -18,7 +18,7 @@ module.exports = {
             default: 10
         }
     },
-    realtime_triggers: ['ec2:RunInstance'],
+    realtime_triggers: ['ec2:RunInstance','ec2:AssociateIamInstanceProfile', 'ec2:DisassociateIamInstanceProfile'],
 
     run: function(cache, settings, callback) {
         var config = {

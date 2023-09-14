@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Delete the unused/deregistered AMIs',
     apis: ['EC2:describeImages', 'EC2:describeInstances', 'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions',
         'AutoScaling:describeLaunchConfigurations', 'STS:getCallerIdentity'],
-    realtime_triggers: ['ec2:DeregisterImage'],    
+    realtime_triggers: ['ec2:CreateImage','ec2:DeregisterImage'],    
 
     run: function(cache, settings, callback) {
         var results = [];

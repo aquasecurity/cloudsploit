@@ -10,7 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
     apis: ['EC2:describeVpcs', 'EC2:describeInstances', 'ELB:describeLoadBalancers', 'Lambda:listFunctions', 'RDS:describeDBInstances', 'Redshift:describeClusters'],
-    realtime_triggers: ['ec2:CreateVpc', 'ec2:ModifyVpcAttribute', 'ec2:RunInstance','elasticloadbalancing:CreateLoadBalancer', 'lambda:CreateFunction','', 'rds:CreateDBInstance','redshift:CreateCluster'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:ModifyVpcAttribute', 'ec2:RunInstance','elasticloadbalancing:CreateLoadBalancer', 'lambda:CreateFunction', 'rds:CreateDBInstance','redshift:CreateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

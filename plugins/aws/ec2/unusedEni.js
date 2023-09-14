@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Delete the unused AWS Elastic Network Interfaces',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html',
     apis: ['EC2:describeNetworkInterfaces', 'STS:getCallerIdentity'],
-    realtime_triggers: ['ec2:DeleteNetworkInterface'],
+    realtime_triggers: ['ec2:CreateNetworkInterface','ec2:DeleteNetworkInterface'],
 
     run: function(cache, settings, callback) {
         var results = [];

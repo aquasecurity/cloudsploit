@@ -10,7 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 80 to known IP addresses',
     apis: ['EC2:describeSecurityGroups'],
-    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress'],
 
     run: function(cache, settings, callback) {
 

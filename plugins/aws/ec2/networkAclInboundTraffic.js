@@ -14,6 +14,7 @@ module.exports = {
         cis1: '5.1 Ensure no Network ACLs allow ingress from 0.0.0.0/0 to remote server administration ports',
     },
     realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:ReplaceNetworkAclEntry'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
