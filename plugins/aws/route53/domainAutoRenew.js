@@ -9,6 +9,8 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/Route53/latest/APIReference/api-enable-domain-auto-renew.html',
     recommended_action: 'Enable auto renew for the domain',
     apis: ['Route53Domains:listDomains'],
+    realtime_triggers: ['route53domains:RegisterDomain','route53domains:EnableAutoRenew'], 
+
 
     run: function(cache, settings, callback) {
         var results = [];

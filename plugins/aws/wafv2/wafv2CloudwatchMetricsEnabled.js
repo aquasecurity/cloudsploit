@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/monitoring-cloudwatch.html',
     recommended_action: 'Modify WAFv2 and enable cloud watch metrics.',
     apis: ['WAFV2:listWebACLs', 'WAFV2:getWebACL'],
+    realtime_triggers: ['wafv2:CreateWebACL','wafv2:updateWebACL'],
 
     run: function(cache, settings, callback) {
         var results = [];

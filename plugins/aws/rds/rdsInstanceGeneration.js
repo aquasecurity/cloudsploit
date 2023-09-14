@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html',
     recommended_action: 'Upgrade the instance to its latest generation.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

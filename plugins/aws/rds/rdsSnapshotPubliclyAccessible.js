@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ShareSnapshot.html',
     recommended_action: 'Ensure Amazon RDS database snapshot is not publicly accessible and available for any AWS account to copy or restore it.',
     apis: ['RDS:describeDBSnapshots', 'RDS:describeDBSnapshotAttributes'],
+    realtime_triggers: ['rds:CreateDBSnapshot', 'rds:ModifyDBSnapshotAttribute'], 
 
     run: function(cache, settings, callback) {
         var results = [];

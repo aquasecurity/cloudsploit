@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing-console.html',
     recommended_action: 'Modify Redshift clusters to enable audit logging',
     apis: ['Redshift:describeClusters', 'Redshift:describeLoggingStatus', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:EditLogging'], 
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -18,6 +18,7 @@ module.exports = {
             default: '50'
         }
     },
+    realtime_triggers: ['workspaces:CreateWorkspaces'],
 
     run: function(cache, settings, callback) {
         var results = [];

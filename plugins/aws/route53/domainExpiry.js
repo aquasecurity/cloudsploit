@@ -9,6 +9,8 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html',
     recommended_action: 'Reregister the expiring domain',
     apis: ['Route53Domains:listDomains'],
+    realtime_triggers: ['route53domains:RegisterDomain','route53domains:RenewDomain'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

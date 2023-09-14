@@ -29,6 +29,7 @@ module.exports = {
             default: 6
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

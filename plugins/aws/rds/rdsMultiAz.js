@@ -18,6 +18,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

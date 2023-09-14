@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['qldb:CreateLedger', 'qldb:UpdateLedger'], 
 
     run: function(cache, settings, callback) {
         var results = [];
