@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['Kinesis:createStream,Kinesis:startStreamEncryption'],
+    realtime_triggers: ['Kinesis:CreateStream,Kinesis:StartStreamEncryption'],
 
 
     run: function(cache, settings, callback) {

@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update CloudTrail to enable management events logging',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getEventSelectors'],
-    realtime_triggers: ['CloudTrail:createTrail', 'CloudTrail:putEventSelectors'],
+    realtime_triggers: ['CloudTrail:CreateTrail', 'CloudTrail:PutEventSelectors'],
 
     run: function(cache, settings, callback) {
         var results = [];

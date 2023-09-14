@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-lambda-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for Lambda functions.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
-    realtime_triggers: ['Lambda:createFunction','Lambda:updateFunctionConfiguration'],
+    realtime_triggers: ['Lambda:CreateFunction','Lambda:UpdateFunctionConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

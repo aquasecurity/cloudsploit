@@ -29,7 +29,7 @@ module.exports = {
             default: false
         }
     },
-    realtime_triggers: ['DMS:createReplicationInstance'],
+    realtime_triggers: ['DMS:CreateReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var config = {

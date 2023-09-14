@@ -57,7 +57,7 @@ module.exports = {
             default: 'false'
         },
     },
-    realtime_triggers: ['KMS:createKey,KMS:putKeyPolicy'],
+    realtime_triggers: ['KMS:CreateKey,KMS:PutKeyPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -18,7 +18,7 @@ module.exports = {
             default: '^.*$'
         }
     },
-    realtime_triggers: ['IAM:createAccessKey,IAM:deleteAccessKey'],
+    realtime_triggers: ['IAM:CreateAccessKey,IAM:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -9,7 +9,7 @@ module.exports = {
     recommended_action: 'Create KMS grants with minimum permission required',
     link: 'https://docs.aws.amazon.com/kms/latest/developerguide/grants.html',
     apis: ['KMS:listKeys', 'KMS:listGrants', 'KMS:describeKey'],
-    realtime_triggers: ['KMS:createKey,KMS:createGrant'],
+    realtime_triggers: ['KMS:CreateKey,KMS:CreateGrant'],
 
     run: function(cache, settings, callback) {
         var results = [];

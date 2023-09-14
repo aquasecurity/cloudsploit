@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Add a statement in Backup vault access policy which denies global access to action: backup:DeleteRecoveryPoint',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy'],
-    realtime_triggers: ['Backup:createBackupVault','Backup:putBackupVaultAccessPolicy'],
+    realtime_triggers: ['Backup:CreateBackupVault','Backup:PutBackupVaultAccessPolicy'],
     
 
     run: function(cache, settings, callback) {

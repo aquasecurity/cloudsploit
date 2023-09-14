@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['CodeBuild:createProject', 'CodeBuild:updateProject'],
+    realtime_triggers: ['CodeBuild:CreateProject', 'CodeBuild:UpdateProject'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Backup Vault and add tags.', 
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
     apis: ['Backup:listBackupVaults', 'ResourceGroupsTaggingAPI:getResources'],
-    realtime_triggers: ['Backup:createBackupVault','Backup:tagResource'],
+    realtime_triggers: ['Backup:CreateBackupVault','Backup:TagResource'],
    
 
     run: function(cache, settings, callback) {

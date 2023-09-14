@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['CloudTrail:createTrail', 'CloudTrail:updateTrail'],
+    realtime_triggers: ['CloudTrail:CreateTrail', 'CloudTrail:UpdateTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable MFA from sign in experience.',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'CognitoIdentityServiceProvider:describeUserPool', 'STS:getCallerIdentity'],
-    realtime_triggers: ['CognitoIdentityServiceProvider:createUserPool','CognitoIdentityServiceProvider:updateUserPool'],
+    realtime_triggers: ['CognitoIdentityServiceProvider:CreateUserPool','CognitoIdentityServiceProvider:UpdateUserPool'],
 
     run: function(cache, settings, callback) {
         var results = [];

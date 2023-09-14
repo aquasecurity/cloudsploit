@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-suspend-resume-processes.html',
     recommended_action: 'Update the AutoScaling group to resume the suspended processes.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
-    realtime_triggers: ['AutoScaling:createAutoScalingGroup','AutoScaling:resumeProcesses'],
+    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:ResumeProcesses'],
 
 
 

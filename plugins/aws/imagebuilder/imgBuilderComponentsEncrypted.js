@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['Imagebuilder:createComponent'],
+    realtime_triggers: ['Imagebuilder:CreateComponent'],
 
     run: function(cache, settings, callback) {
         var results = [];

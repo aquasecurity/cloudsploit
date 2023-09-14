@@ -17,7 +17,7 @@ module.exports = {
             default: '15'
         }
     },
-    realtime_triggers: ['IAM:createUser,IAM:deleteUser'],
+    realtime_triggers: ['IAM:CreateUser,IAM:DeleteUser'],
 
     run: function(cache, settings, callback) {
         const config = {

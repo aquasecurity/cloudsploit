@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Configure Backup vaults to sent notifications alert for failed backup job events.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/sns-notifications.html',
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultNotifications'],
-    realtime_triggers: ['Backup:createBackupVault','Backup:putBackupVaultNotifications'],
+    realtime_triggers: ['Backup:CreateBackupVault','Backup:PutBackupVaultNotifications'],
 
     run: function(cache, settings, callback) {
         var results = [];

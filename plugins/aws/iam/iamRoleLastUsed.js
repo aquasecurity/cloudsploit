@@ -54,7 +54,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:createRole,IAM:deleteRole'],
+    realtime_triggers: ['IAM:CreateRole,IAM:DeleteRole'],
 
     run: function(cache, settings, callback) {
         var config = {

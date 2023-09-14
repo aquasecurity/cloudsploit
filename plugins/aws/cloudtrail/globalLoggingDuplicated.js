@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update CloudTrail trails to log global services events enabled for only one trail',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html',
     apis: ['CloudTrail:describeTrails'],
-    realtime_triggers: ['CloudTrail:createTrail', 'CloudTrail:updateTrail'],
+    realtime_triggers: ['CloudTrail:CreateTrail', 'CloudTrail:UpdateTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

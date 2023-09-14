@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/start-build-image-pipeline.html',
     recommended_action: 'Enable enhanced metadata collection for image pipeline.',
     apis: ['Imagebuilder:listImagePipelines'],
-    realtime_triggers: ['Imagebuilder:createImagePipeline,Imagebuilder:updateImagePipeline'],
+    realtime_triggers: ['Imagebuilder:CreateImagePipeline,Imagebuilder:UpdateImagePipeline'],
     
     run: function(cache, settings, callback) {
         var results = [];

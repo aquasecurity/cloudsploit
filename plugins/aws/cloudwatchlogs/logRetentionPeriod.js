@@ -18,7 +18,7 @@ module.exports = {
             default: '90'
         }
     },
-    realtime_triggers: ['CloudWatchLogs:createLogGroup', 'CloudWatchLogs:putRetentionPolicy'],
+    realtime_triggers: ['CloudWatchLogs:CreateLogGroup', 'CloudWatchLogs:PutRetentionPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

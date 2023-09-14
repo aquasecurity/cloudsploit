@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Delete duplicate grants for AWS KMS keys',
     link: 'https://docs.aws.amazon.com/kms/latest/developerguide/grants.html',
     apis: ['KMS:listKeys', 'KMS:listGrants', 'KMS:describeKey'],
-    realtime_triggers: ['KMS:createKey,KMS:revokeGrant'],
+    realtime_triggers: ['KMS:CreateKey,KMS:RevokeGrant'],
 
     run: function(cache, settings, callback) {
         var results = [];

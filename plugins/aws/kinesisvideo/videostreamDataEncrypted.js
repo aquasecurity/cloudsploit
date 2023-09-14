@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['KinesisVideo:CreateStream', 'KinesisVideo:updateStream'],
+    realtime_triggers: ['KinesisVideo:CreateStream', 'KinesisVideo:UpdateStream'],
 
     run: function(cache, settings, callback) {
         var results = [];

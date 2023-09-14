@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['CodeArtifact:createDomain', 'CodeArtifact:deleteDomain'],
+    realtime_triggers: ['CodeArtifact:CreateDomain', 'CodeArtifact:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

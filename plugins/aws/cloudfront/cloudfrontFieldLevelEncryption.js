@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html',
     recommended_action: 'Enable field-level encryption for CloudFront distributions.',
     apis: ['CloudFront:listDistributions'],
-    realtime_triggers: ['CloudFront:createDistribution','CloudFront:updateDistribution'],
+    realtime_triggers: ['CloudFront:CreateDistribution','CloudFront:UpdateDistribution'],
 
 
     run: function(cache, settings, callback) {

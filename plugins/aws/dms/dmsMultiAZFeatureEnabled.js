@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable Multi-AZ deployment feature in order to get high availability and failover support',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.html',
     apis: ['DMS:describeReplicationInstances'],
-    realtime_triggers: ['DMS:createReplicationInstance','DMS:modifyReplicationInstance'],
+    realtime_triggers: ['DMS:CreateReplicationInstance','DMS:ModifyReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

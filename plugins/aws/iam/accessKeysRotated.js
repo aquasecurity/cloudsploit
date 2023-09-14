@@ -33,7 +33,7 @@ module.exports = {
             default: 90
         }
     },
-    realtime_triggers: ['IAM:createAccessKey,IAM:deleteAccessKey'],
+    realtime_triggers: ['IAM:CreateAccessKey,IAM:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_physical.html',
     recommended_action: 'Enable a hardware MFA device for the root account and disable any virtual devices',
     apis: ['IAM:listVirtualMFADevices', 'IAM:getAccountSummary'],
-    realtime_triggers: ['IAM:enableMFADevice,IAM:deactivateMFADevice'],
+    realtime_triggers: ['IAM:EnableMFADevice,IAM:DeactivateMFADevice'],
 
     run: function(cache, settings, callback) {
         var results = [];

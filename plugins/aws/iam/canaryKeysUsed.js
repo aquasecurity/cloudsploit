@@ -32,7 +32,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:createUser'],
+    realtime_triggers: ['IAM:CreateUser'],
 
     run: function(cache, settings, callback) {
         var config = {

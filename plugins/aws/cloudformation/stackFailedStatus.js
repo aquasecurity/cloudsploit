@@ -18,7 +18,7 @@ module.exports = {
             default: 0
         }
     },
-    realtime_triggers: ['CloudFormation:createStack','CloudFormation:deleteStack'],
+    realtime_triggers: ['CloudFormation:CreateStack','CloudFormation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

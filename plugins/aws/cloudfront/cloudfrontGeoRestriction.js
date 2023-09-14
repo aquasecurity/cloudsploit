@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['CloudFront:createDistribution','CloudFront:updateDistribution'],
+    realtime_triggers: ['CloudFront:CreateDistribution','CloudFront:UpdateDistribution'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify API Gateway API stages to enable CloudWatch Logs',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
-    realtime_triggers: ['APIGateway:createStage','APIGateway:updateStage'],
+    realtime_triggers: ['APIGateway:CreateStage','APIGateway:UpdateStage'],
 
     run: function(cache, settings, callback) {
         var results = [];

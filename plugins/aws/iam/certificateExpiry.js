@@ -35,7 +35,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:uploadServerCertificate,ELB:setLoadBalancerListenerSSLCertificate'],
+    realtime_triggers: ['IAM:UploadServerCertificate,ELB:SetLoadBalancerListenerSSLCertificate'],
 
     run: function(cache, settings, callback) {
         var config = {

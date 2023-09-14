@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable volume encryption for the Comprehend job',
     apis: ['Comprehend:listEntitiesDetectionJobs', 'Comprehend:listDominantLanguageDetectionJobs', 'Comprehend:listTopicsDetectionJobs',
         'Comprehend:listDocumentClassificationJobs', 'Comprehend:listKeyPhrasesDetectionJobs', 'Comprehend:listSentimentDetectionJobs'],
-    realtime_triggers: ['Comprehend:startEntitiesDetectionJob'],
+    realtime_triggers: ['Comprehend:StartEntitiesDetectionJob'],
 
     run: function(cache, settings, callback) {
         var results = [];

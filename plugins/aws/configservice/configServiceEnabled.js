@@ -17,7 +17,7 @@ module.exports = {
              'could introduce security risks.',
         cis1: '2.5 Ensure AWS Config is enabled in all regions'
     },
-    realtime_triggers: ['ConfigService:startConfigurationRecorder','ConfigService:stopConfigurationRecorder'],
+    realtime_triggers: ['ConfigService:StartConfigurationRecorder','ConfigService:StopConfigurationRecorder'],
 
     run: function(cache, settings, callback) {
         var results = [];

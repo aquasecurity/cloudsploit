@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/app-mesh/latest/APIReference/API_ListenerTls.html',
     recommended_action: 'Restrict AWS App Mesh virtual gateway listeners to accept only TLS enabled connections.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
-    realtime_triggers: ['AppMesh:createVirtualGateway','AppMesh:updateVirtualGateway'],
+    realtime_triggers: ['AppMesh:CreateVirtualGateway','AppMesh:UpdateVirtualGateway'],
 
    
     run: function(cache, settings, callback) {

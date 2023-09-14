@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['AutoScaling:createAutoScalingGroup','AutoScaling:attachLoadBalancers'],
+    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:AttachLoadBalancers'],
 
 
     run: function(cache, settings, callback) {

@@ -23,7 +23,7 @@ module.exports = {
             default: 180
         }
     },
-    realtime_triggers: ['IAM:uploadSSHPublicKey'],
+    realtime_triggers: ['IAM:UploadSSHPublicKey'],
 
     run: function(cache, settings, callback) {
         var config = {
