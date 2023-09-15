@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/virtual_gateway_health_checks.html',
     recommended_action: 'Configure health check policies for the virtual gateway listeners in your App Mesh, specifying values for healthy threshold, health check interval, health check protocol, timeout period, and unhealthy threshold.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
-    realtime_triggers: ['AppMesh:CreateVirtualGateway','AppMesh:UpdateVirtualGateway'],
+    realtime_triggers: ['appmesh:CreateVirtualGateway','appmesh:UpdateVirtualGateway'],
    
     run: function(cache, settings, callback) {
         var results = [];

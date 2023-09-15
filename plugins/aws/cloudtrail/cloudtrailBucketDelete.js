@@ -24,7 +24,7 @@ module.exports = {
             default: '',
         }
     },
-    realtime_triggers: ['CloudTrail:CreateTrail', 'S3:PutBucketVersioning'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 's3:PutBucketVersioning'],
 
     run: function(cache, settings, callback) {
         var config = {

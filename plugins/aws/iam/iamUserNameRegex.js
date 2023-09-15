@@ -30,7 +30,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:CreateUser','IAM:DeleteUser','IAM:UpdateUser'],
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:UpdateUser'],
 
     run: function(cache, settings, callback) {
         var results = [];

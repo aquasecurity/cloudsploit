@@ -22,7 +22,7 @@ module.exports = {
         }
 
     },
-    realtime_triggers: ['CloudTrail:CreateTrail', 'S3:PutBucketAcl'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 's3:PutBucketAcl'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify API Gateway configuration and ensure that appropriate authorizers are set up for each API.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getAuthorizers'],
-    realtime_triggers: ['APIGateway:CreateRestApi','APIGateway:CreateAuthorizer'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:CreateAuthorizer'],
     
     run: function(cache, settings, callback) {
         var results = [];

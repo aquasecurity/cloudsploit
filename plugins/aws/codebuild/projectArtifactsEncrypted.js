@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['CodeBuild:CreateProject', 'CodeBuild:UpdateProject'],
+    realtime_triggers: ['codebuild:CreateProject', 'codebuild:UpdateProject'],
 
     run: function(cache, settings, callback) {
         var results = [];

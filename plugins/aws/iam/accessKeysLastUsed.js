@@ -41,7 +41,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:DeleteAccessKey'],
+    realtime_triggers: ['iam:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var config = {

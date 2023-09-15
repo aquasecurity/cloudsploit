@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resource-import-resolve-drift.html',
     recommended_action: 'Resolve CloudFormation stack drift by importing drifted resource back to the stack.',
     apis: ['CloudFormation:listStacks'],
-    realtime_triggers: ['CloudFormation:CreateStack','CloudFormation:UpdateStack'],
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack'],
     
     run: function(cache, settings, callback) {
         var results = [];

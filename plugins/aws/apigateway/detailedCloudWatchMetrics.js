@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Add CloudWatch role ARN to API settings and enabled detailed metrics for each stage',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-metrics.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
-    realtime_triggers: ['APIGateway:CreateStage','APIGateway:UpdateStage'],
+    realtime_triggers: ['apigateway:CreateStage','apigateway:UpdateStage'],
 
 
     run: function(cache, settings, callback) {

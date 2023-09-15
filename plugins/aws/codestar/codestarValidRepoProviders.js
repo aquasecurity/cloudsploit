@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['CodeStar:CreateProject','CodeStar:UpdateProject'],
+    realtime_triggers: ['codestar:CreateProject','codestar:UpdateProject'],
 
     run: function(cache, settings, callback) {
         var results = [];

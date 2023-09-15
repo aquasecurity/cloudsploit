@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html',
     recommended_action: 'Remove inline policies attached to groups',
     apis: ['IAM:listGroups', 'IAM:listGroupPolicies'],
-    realtime_triggers: ['IAM:CreatePolicy','IAM:DeleteGroupPolicy'],
+    realtime_triggers: ['iam:CreatePolicy','iam:DeleteGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

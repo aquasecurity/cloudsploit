@@ -76,7 +76,7 @@ module.exports = {
     compliance: {
         cis1: '3.0 Monitoring metrics are enabled'
     },
-    realtime_triggers: ['CloudWatchLogs:CreateLogGroup', 'CloudWatchLogs:PutMetricFilter'],
+    realtime_triggers: ['cloudwatchlogs:CreateLogGroup', 'cloudwatchlogs:PutMetricFilter'],
 
     run: function(cache, settings, callback) {
         var results = [];

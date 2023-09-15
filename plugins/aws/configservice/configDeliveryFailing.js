@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Configure AWS Config log files to be delivered without any failures to designated S3 bucket.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/select-resources.html',
     apis: ['ConfigService:describeConfigurationRecorderStatus'],
-    realtime_triggers: ['ConfigService:StartConfigurationRecorder','ConfigService:PutDeliveryChannel'],
+    realtime_triggers: ['configservice:StartConfigurationRecorder','configservice:PutDeliveryChannel'],
 
     run: function(cache, settings, callback) {
         var results = [];

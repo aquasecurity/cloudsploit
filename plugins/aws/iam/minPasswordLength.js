@@ -59,7 +59,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['IAM:UpdateAccountPasswordPolicy'],
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

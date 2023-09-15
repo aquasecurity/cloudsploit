@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-availability-zone.html',
     recommended_action: 'Update the ELB to use the same availability zones as the autoscaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers', 'ELBv2:describeLoadBalancers'],
-    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:UpdateAutoScalingGroup'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup'],
 
 
 

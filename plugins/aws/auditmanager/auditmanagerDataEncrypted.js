@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['AuditManager:UpdateSettings'],
+    realtime_triggers: ['auditmanager:UpdateSettings'],
 
     run: function(cache, settings, callback) {
         var results = [];

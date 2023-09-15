@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html',
     recommended_action: 'Create IAM user(s) and use them to access AWS services and resources.',
     apis: ['IAM:listUsers'],
-    realtime_triggers: ['IAM:CreateUser'],
+    realtime_triggers: ['iam:CreateUser'],
           
     run: function(cache, settings, callback) {
         var results = [];

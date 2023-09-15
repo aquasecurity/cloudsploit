@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html',
     recommended_action: 'Enable Compute Optimizer Opt In options for current of all AWS account in your organization.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
-    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus'],
+    realtime_triggers: ['computeoptimizer:UpdateEnrollmentStatus'],
 
     run: function(cache, settings, callback) {
         var results = [];

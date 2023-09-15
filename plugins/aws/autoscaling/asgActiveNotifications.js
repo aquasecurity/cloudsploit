@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/ASGettingNotifications.html',
     recommended_action: 'Add a notification endpoint to the auto scaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeNotificationConfigurations'],
-    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:PutNotificationConfiguration'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:PutNotificationConfiguration'],
 
 
     run: function(cache, settings, callback) {

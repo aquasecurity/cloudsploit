@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update CloudTrail to enable data events.',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getEventSelectors'],
-    realtime_triggers: ['CloudTrail:CreateTrail', 'CloudTrail:PutEventSelectors'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:PutEventSelectors'],
 
     run: function(cache, settings, callback) {
         var results = [];

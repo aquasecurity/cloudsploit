@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['Imagebuilder:PutDefaultEncryptionConfiguration'],
+    realtime_triggers: ['imagebuilder:PutDefaultEncryptionConfiguration'],
    
     run: function(cache, settings, callback) {
         var results = [];

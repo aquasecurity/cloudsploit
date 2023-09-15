@@ -13,7 +13,7 @@ module.exports = {
     compliance: {
         cis1: '1.16 Ensure IAM policies are attached only to groups or roles'
     },
-    realtime_triggers: ['IAM:AttachUserPolicy','IAM:DetachUserPolicy'],
+    realtime_triggers: ['iam:AttachUserPolicy','iam:DetachUserPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

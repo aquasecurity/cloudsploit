@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags_users.html',
     recommended_action: 'Modify IAM User and add tags',
     apis: ['IAM:listUsers', 'IAM:getUser'],
-    realtime_triggers: ['IAM:CreateUser','IAM:TagUser','IAM:UntagUser'],
+    realtime_triggers: ['iam:CreateUser','iam:TagUser','iam:UntagUser'],
           
     run: function(cache, settings, callback) {
         var results = [];

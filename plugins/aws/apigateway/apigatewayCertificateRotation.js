@@ -18,7 +18,7 @@ module.exports = {
             default: '30',
         }
     },
-    realtime_triggers: ['APIGateway:CreateRestApi','APIGateway:GenerateClientCertificate','APIGateway:DeleteClientCertificate'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:GenerateClientCertificate','apigateway:DeleteClientCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

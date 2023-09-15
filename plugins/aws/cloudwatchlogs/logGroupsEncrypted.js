@@ -26,7 +26,7 @@ module.exports = {
             default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
         }
     },
-    realtime_triggers: ['CloudWatchLogs:CreateLogGroup', 'CloudWatchLogs:AssociateKmsKey'],
+    realtime_triggers: ['cloudwatchlogs:CreateLogGroup', 'cloudwatchlogs:AssociateKmsKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

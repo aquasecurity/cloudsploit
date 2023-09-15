@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',
     recommended_action: 'Identify and remove any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations'],
-    realtime_triggers: ['AutoScaling:CreateLaunchConfiguration','AutoScaling:DeleteLaunchConfiguration'],
+    realtime_triggers: ['autoscaling:CreateLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
 
     
     run: function(cache, settings, callback) {

@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['DocDB:CreateDBCluster','DocDB:CreateDBInstance'],
+    realtime_triggers: ['docdb:CreateDBCluster','docdb:CreateDBInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

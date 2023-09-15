@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-elb-healthcheck.html',
     recommended_action: 'Enable ELB health check for the Auto Scaling groups.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
-    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:UpdateAutoScalingGroup'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup'],
 
 
     run: function(cache, settings, callback) {

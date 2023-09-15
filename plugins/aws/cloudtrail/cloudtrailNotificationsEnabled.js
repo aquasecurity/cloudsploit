@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Make sure that CloudTrail trails are using active SNS topics and that SNS topics have not been deleted after trail creation.',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/configure-sns-notifications-for-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'SNS:listTopics', 'SNS:getTopicAttributes'],
-    realtime_triggers: ['CloudTrail:CreateTrail', 'CloudTrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

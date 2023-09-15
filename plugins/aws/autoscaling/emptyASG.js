@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html',
     recommended_action: 'Delete the unused AutoScaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
-    realtime_triggers: ['AutoScaling:CreateAutoScalingGroup','AutoScaling:DeleteAutoScalingGroup'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup'],
 
 
     run: function(cache, settings, callback) {

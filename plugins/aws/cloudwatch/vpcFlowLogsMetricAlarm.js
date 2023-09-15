@@ -21,7 +21,7 @@ module.exports = {
             default: 'vpc_flow_logs'
         }
     },
-    realtime_triggers: ['CloudWatchLogs:PutMetricFilter', 'CloudWatch:PutMetricAlarm'],
+    realtime_triggers: ['cloudwatchlogs:PutMetricFilter', 'cloudwatch:PutMetricAlarm'],
 
     run: function(cache, settings, callback) {
         var results = [];
