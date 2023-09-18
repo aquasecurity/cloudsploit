@@ -44,7 +44,7 @@ function parseCollection(path, obj) {
     }
 }
 
-var collect = function(AzureConfig, settings, callback) {
+let collect = function(AzureConfig, settings, callback) {
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls, tertiarycalls, specialcalls);
@@ -92,10 +92,12 @@ var collect = function(AzureConfig, settings, callback) {
             });
         };
 
-        var processCall = function(obj, cb, localData) {
-            var localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+        let processCall = function(obj, cb, localData) {
+            let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
                 setTimeout(function() {
+                    console.log('timeout check');
+                    console.log(`url: ${localUrl} obj: ${JSON.stringify(obj)} localData: ${JSON.stringify(localData)}`);
                     makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
