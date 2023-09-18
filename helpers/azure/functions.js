@@ -2,7 +2,7 @@ var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
 var async = require('async');
 
-const defualyPolicyAssignments = {
+const defualtPolicyAssignments = {
     adaptiveApplicationControlsMonitoringEffect: 'AuditIfNotExists',
     diskEncryptionMonitoringEffect: 'AuditIfNotExists',
     endpointProtectionMonitoringEffect: 'AuditIfNotExists',
@@ -178,8 +178,8 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
 
     const policyAssignment = policyAssignments.data.find((policyAssignment) => {
         return (policyAssignment &&
-                policyAssignment.displayName &&
-                policyAssignment.displayName.toLowerCase().includes('asc default'));
+            policyAssignment.displayName &&
+            policyAssignment.displayName.toLowerCase().includes('asc default'));
     });
 
     if (!policyAssignment) {
@@ -191,16 +191,14 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     // This check is required to handle a defect in the Azure API that causes
     // unmodified ASC policies to return an empty object for parameters: {}
     // https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000PMSZCA4
-    if (policyAssignment.parameters &&
-        !Object.keys(policyAssignment.parameters).length) {
-        addResult(results, 0,
-            'There ASC Default Policy Assignment includes all plugins', location,
-            policyAssignment.id);
-        return;
-    }
 
-    const policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) ||
-    defualyPolicyAssignments[param] || '';
+    // The api used returns empty parameters in case of all the default values,
+    var policyAssignmentStatus = '';
+    if (policyAssignment.parameters && Object.keys(policyAssignment.parameters).length) {
+        policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) || defualtPolicyAssignments[param] || '';
+    } else {
+        policyAssignmentStatus =  defualtPolicyAssignments[param]
+    }
 
     if (!policyAssignmentStatus.length) {
         addResult(results, 0,

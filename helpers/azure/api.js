@@ -143,6 +143,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
             BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
         },
+    'File Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
+            InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
+            BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
+            BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
+        },
     'SQL Databases':
         {
             enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
@@ -950,10 +959,7 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
-        listSharesSegmentedNew: {
-            reliesOnPath: ['storageAccounts.listKeys'],
-            rateLimit: 3000
-        }
+        sendIntegration: serviceMap['File Service']
     },
     blobService: {
         listContainersSegmented: {
