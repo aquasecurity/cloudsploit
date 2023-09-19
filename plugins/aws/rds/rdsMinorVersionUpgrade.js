@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades',
     recommended_action: 'Enable automatic minor version upgrades on RDS and DocumentDB databases',
     apis: ['RDS:describeDBInstances'],
-    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'],  
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'],  
 
     run: function(cache, settings, callback) {
         var results = [];

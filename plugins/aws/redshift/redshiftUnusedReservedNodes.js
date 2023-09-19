@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/purchase-reserved-node-instance.html',
     recommended_action: 'Provision new Redshift clusters matching the criteria of reserved nodes',
     apis: ['Redshift:describeClusters', 'Redshift:describeReservedNodes', 'STS:getCallerIdentity'],
-    realtime_triggers: ['redshift:CreateCluster'], 
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:RestoreFromClusterSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];

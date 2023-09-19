@@ -20,7 +20,7 @@ module.exports = {
              'Ensure RDS instances are not accessible from the Internet ' +
              'and use proper jump box access mechanisms.'
     },
-    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'], 
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'], 
 
     run: function(cache, settings, callback) {
         var results = [];

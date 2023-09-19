@@ -9,7 +9,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-from-route-53.html',
     recommended_action: 'Enable the transfer lock for the domain',
     apis: ['Route53Domains:listDomains'],
-    realtime_triggers: ['route53domains:RegisterDomain', 'route53Domain:EnableDomainTransferLock'],
+    realtime_triggers: ['route53domains:RegisterDomain', 'route53domain:EnableDomainTransferLock', 'route53domain:DisableDomainTransferLock'],
 
     run: function(cache, settings, callback) {
         var results = [];

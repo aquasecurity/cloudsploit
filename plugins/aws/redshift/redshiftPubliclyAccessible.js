@@ -20,7 +20,7 @@ module.exports = {
              'Ensure Redshift instances are not accessible from the Internet ' +
              'and use proper jump box access mechanisms.'
     },
-    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster'], 
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -18,7 +18,7 @@ module.exports = {
             default: '100'
         },
     },
-    realtime_triggers: ['redshift:CreateCluster', 'redshift:DeleteCluster'], 
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:DeleteCluster', 'redshift:RestoreFromClusterSnapshot'], 
 
     run: function(cache, settings, callback) {
         var redshift_nodes_count = parseInt(settings.redshift_nodes_count || this.settings.redshift_nodes_count.default);

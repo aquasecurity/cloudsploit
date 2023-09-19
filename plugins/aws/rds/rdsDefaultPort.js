@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.Connect.html',
     recommended_action: 'Change the default port number of the RDS instance to non-default port.',
     apis: ['RDS:describeDBInstances'],
-    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance'],  
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'],  
 
     run: function(cache, settings, callback) {
         var results = [];
