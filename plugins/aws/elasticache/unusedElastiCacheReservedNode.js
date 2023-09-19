@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',
     recommended_action: 'Enable prevention of unused reserved nodes for ElastiCache clusters',
     apis: ['ElastiCache:describeCacheClusters', 'ElastiCache:describeReservedCacheNodes'],
-    realtime_triggers: ['elasticache:CreateCluster'],
+    realtime_triggers: ['elasticache:CreateCluster','elasticache: PurchaseReservedCacheNodesOffering'],
 
     run: function(cache, settings, callback) {
         var results = [];

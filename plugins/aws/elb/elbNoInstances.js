@@ -24,7 +24,7 @@ module.exports = {
         remediate: ['elasticloadbalancing:DeleteLoadBalancer'],
         rollback: ['elasticloadbalancing:CreateLoadBalancer']
     },
-    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer'],
+    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

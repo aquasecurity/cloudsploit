@@ -19,7 +19,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
         }
     },
-    realtime_triggers: ['eventbridge:CreateEventBus', 'eventbridge:PutRule', 'eventbridge:PutTarget'],
+    realtime_triggers: ['eventbridge:CreateEventBus', 'eventbridge:PutRule', 'eventbridge:PutTarget','eventbridge:PutPermission'],
 
     run: function(cache, settings, callback) {
         var results = [];

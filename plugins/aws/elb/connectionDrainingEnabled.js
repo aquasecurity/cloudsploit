@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-conn-drain.html',
     recommended_action: 'Update ELBs to enable connection draining',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes', 'STS:getCallerIdentity'],
-    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elaticloadbalancing:ModifyLoadBalancerAttributes'],
+    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:ModifyLoadBalancerAttributes'],
 
     run: function(cache, settings, callback) {
         var results = [];
