@@ -11,7 +11,7 @@ module.exports = {
     cs_link: 'https://cloudsploit.com/remediations/aws/acm/acm-certificate-validation',
     recommended_action: 'Configure ACM managed certificates to use DNS validation.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
-    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate'],
+    realtime_triggers: ['acm:RequestCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

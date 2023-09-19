@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-work-with-findings.html',
     recommended_action: 'Investigate into active findings in your account and do the needful until you have zero active findings.',
     apis: ['AccessAnalyzer:listAnalyzers', 'AccessAnalyzer:listFindings'],
-    realtime_triggers: ['accessanalyzer:CreateAnalyzer','accessanalyzer:CreateArchiveRule','accessanalyzer:UpdateArchiveRule'],
+    realtime_triggers: ['accessanalyzer:CreateAnalyzer','accessanalyzer:CreateArchiveRule','accessanalyzer:StartResourceScan'],
 
     run: function(cache, settings, callback) {
         var results = [];

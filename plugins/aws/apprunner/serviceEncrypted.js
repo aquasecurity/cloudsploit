@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['apprunner:CreateService','apprunner:UpdateService'],
+    realtime_triggers: ['apprunner:CreateService'],
 
 
     run: function(cache, settings, callback) {
