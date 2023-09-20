@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['location:CreateTracker', 'location:UpdateTracker'],
+    realtime_triggers: ['location:CreateTracker', 'location:UpdateTracker', 'location:DeleteTracker'],
 
     run: function(cache, settings, callback) {
         var results = [];

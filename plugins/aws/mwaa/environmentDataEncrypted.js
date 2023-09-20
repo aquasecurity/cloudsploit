@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['mwaa:CreateEnvironment'], 
+    realtime_triggers: ['mwaa:CreateEnvironment', 'mwaa:DeleteEnvironment'], 
 
     run: function(cache, settings, callback) {
         var results = [];

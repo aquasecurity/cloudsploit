@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['location:CreateGeofenceCollection'],
+    realtime_triggers: ['location:CreateGeofenceCollection', 'location:DeleteGeofenceCollection'],
 
     run: function(cache, settings, callback) {
         var results = [];

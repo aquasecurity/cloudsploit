@@ -20,7 +20,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['lambda:CreateFunction', 'lambda:UpdateFunctionConfiguration'],
+    realtime_triggers: ['lambda:CreateFunction', 'lambda:UpdateFunctionConfiguration', 'lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

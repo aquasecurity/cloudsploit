@@ -37,7 +37,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
-    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig'], 
+    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
 
     run: function(cache, settings, callback) {
         var config= {

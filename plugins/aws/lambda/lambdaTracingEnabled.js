@@ -18,7 +18,7 @@ module.exports = {
             default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
         }
     },
-    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

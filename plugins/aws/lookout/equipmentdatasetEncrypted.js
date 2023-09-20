@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['lookoutequipment:CreateDataset'],
+    realtime_triggers: ['lookoutequipment:CreateDataset', 'lookoutequipment:DeleteDataset'],
 
     run: function(cache, settings, callback) {
         var results = [];

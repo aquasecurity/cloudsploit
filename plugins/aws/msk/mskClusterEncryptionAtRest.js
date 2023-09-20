@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['kafka:CreateCluster'],
+    realtime_triggers: ['kafka:CreateCluster', 'kafka:DeleteCluster'],
     
     run: function(cache, settings, callback) {
         var results = [];

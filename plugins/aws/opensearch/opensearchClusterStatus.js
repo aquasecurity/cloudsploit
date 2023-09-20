@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html',
     recommended_action: 'Configure alarms to send notification if cluster status remains red for more than a minute.',
     apis: ['OpenSearch:listDomainNames', 'CloudWatch:getEsMetricStatistics', 'STS:getCallerIdentity'],
-    realtime_triggers: ['openSearch:CreateDomain', 'opensearch:UpdateDomainConfig'], 
+    realtime_triggers: ['openSearch:CreateDomain', 'opensearch:UpdateDomainConfig','opensearch:DeleteDomain'], 
 
     run: function(cache, settings, callback) {
         var results = [];
