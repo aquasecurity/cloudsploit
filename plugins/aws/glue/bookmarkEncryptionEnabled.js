@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Recreate Glue security configurations and enable job bookmark encryption',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/console-security-configurations.html',
     apis: ['Glue:getSecurityConfigurations', 'STS:getCallerIdentity'],
-    realtime_triggers: ['glue:CreateSecurityConfiguration'],
+    realtime_triggers: ['glue:CreateSecurityConfiguration', 'glue:DeleteSecurityConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['forecast:CreateForecastExportJob'],
+    realtime_triggers: ['forecast:CreateForecastExportJob', 'forecast:DeleteForecastExportjob'],
 
     run: function(cache, settings, callback) {
         var results = [];

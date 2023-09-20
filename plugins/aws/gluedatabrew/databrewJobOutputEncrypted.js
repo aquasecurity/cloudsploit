@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['databrew:CreateRecipeJob', 'databrew:UpdateRecipeJob'],
+    realtime_triggers: ['databrew:CreateRecipeJob', 'databrew:UpdateRecipeJob', 'databrew:DeleteJob'],
 
     run: function(cache, settings, callback) {
         var results = [];

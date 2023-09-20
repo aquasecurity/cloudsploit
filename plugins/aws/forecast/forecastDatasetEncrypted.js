@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['forecastservice:CreateDataset'],
+    realtime_triggers: ['forecastservice:CreateDataset', 'forecastservice:DeleteDataset'],
 
 
     run: function(cache, settings, callback) {

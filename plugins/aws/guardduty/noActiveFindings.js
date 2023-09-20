@@ -20,7 +20,7 @@ module.exports = {
             default: '48'
         }
     },
-    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:ArchiveFindings'],
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:ArchiveFindings', 'guardduty:DeleteDetector'],
 
     run: function(cache, settings, callback) {
         const results = [];

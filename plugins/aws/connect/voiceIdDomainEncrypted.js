@@ -22,7 +22,7 @@ module.exports = {
             default: 'awskms'
         }
     },
-    realtime_triggers: ['voiceid:CreateDomain', 'voiceid:UpdateDomain'],
+    realtime_triggers: ['voiceid:CreateDomain', 'voiceid:UpdateDomain', 'voiceid:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

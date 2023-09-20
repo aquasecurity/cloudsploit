@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['customerprofiles:CreateDomain', 'customerprofiles:UpdateDomain'],
+    realtime_triggers: ['customerprofiles:CreateDomain', 'customerprofiles:UpdateDomain', 'customerprofile:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

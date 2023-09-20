@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['healthlake:CreateFHIRDatastore'],
+    realtime_triggers: ['healthlake:CreateFHIRDatastore', 'healthlake:DeleteFHIRDatastore'],
 
     run: function(cache, settings, callback) {
         var results = [];
