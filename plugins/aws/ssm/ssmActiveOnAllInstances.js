@@ -18,7 +18,7 @@ module.exports = {
             default: 20
         }
     },
-    realtime_triggers: ['ec2:RunInstance', 'ssm:CreateAssociation', 'ssm:UpdateAssociation'],
+    realtime_triggers: ['ec2:RunInstance', 'ssm:CreateAssociation', 'ssm:UpdateAssociation', 'ec2:TerminateInstance', 'ssm:DeleteAssociation'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -28,7 +28,7 @@ module.exports = {
         remediate: ['s3:PutBucketAcl'],
         rollback: ['s3:PutBucketAcl']
     },
-    realtime_triggers: ['s3:PutBucketAcl', 's3:CreateBucket'],
+    realtime_triggers: ['s3:PutBucketAcl', 's3:CreateBucket', 's3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

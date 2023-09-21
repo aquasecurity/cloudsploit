@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Update SNS topics to use Customer Master Keys (CMKs) for Server-Side Encryption.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
-    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes','sns:DeleteTopic'],
 
     run: function(cache, settings, callback) {
         var results = [];

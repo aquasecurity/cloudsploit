@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/transfer/latest/userguide/update-endpoint-type-vpc.html',
     recommended_action: 'Configure the SFTP server endpoints to use endpoints powered by PrivateLink.',
     apis: ['Transfer:listServers'],
-    realtime_triggers: ['transfer:CreateServer', 'trannsfer:UpdateServer'],
+    realtime_triggers: ['transfer:CreateServer', 'trannsfer:UpdateServer', 'transfer:DeleteServer'],
 
     run: function(cache, settings, callback) {
         var results = [];

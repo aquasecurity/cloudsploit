@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update Secrets and add tags.',
     apis: ['SecretsManager:listSecrets'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/managing-secrets_tagging.html',
-    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:TagResource', 'secretesmanager:UntagResource'],
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:TagResource', 'secretesmanager:UntagResource', 'secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

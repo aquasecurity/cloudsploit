@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['ses:CreateEmailIdentity','ses:SetActiveReceiptRuleSet'],
+    realtime_triggers: ['ses:CreateEmailIdentity','ses:SetActiveReceiptRuleSet','ses:DeleteEmailIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];

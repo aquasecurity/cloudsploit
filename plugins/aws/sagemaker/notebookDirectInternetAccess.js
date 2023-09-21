@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Disable DirectInternetAccess for each SageMaker notebook.',
     link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
     apis: ['SageMaker:listNotebookInstances'],
-    realtime_triggers: ['sagemaker:CreateNotebookInstance', 'sagemaker:UpdateNootbookInstance'],
+    realtime_triggers: ['sagemaker:CreateNotebookInstance', 'sagemaker:UpdateNootbookInstance','sagemaker:DeleteNotebookInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',
     recommended_action: 'Update the SSM agent on all Linux hosts to the latest version.',
     apis: ['SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
-    realtime_triggers: ['ssm:CreateAssociation', 'ssm:UpdateAssociation'],
+    realtime_triggers: ['ssm:CreateAssociation', 'ssm:UpdateAssociation', 'ssm:DeleteAssociation'],
 
     run: function(cache, settings, callback) {
         var results = [];

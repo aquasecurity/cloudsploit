@@ -18,7 +18,7 @@ module.exports = {
             'segmentation criteria for PCI. Ensure all instances are launched ' +
             'within a VPC to comply with isolation requirements.'
     },
-    realtime_triggers: ['sagemaker:CreateNotebookInstance'],
+    realtime_triggers: ['sagemaker:CreateNotebookInstance','sagemaker:DeleteNotebookInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

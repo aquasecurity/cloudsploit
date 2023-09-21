@@ -35,7 +35,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
-    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes'],
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes','sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];

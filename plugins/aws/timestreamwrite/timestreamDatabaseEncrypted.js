@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['timestreamwrite:CreateDatabase', 'timestreamwrite:UpdateDatabase'],
+    realtime_triggers: ['timestreamwrite:CreateDatabase', 'timestreamwrite:UpdateDatabase', 'timestreamwrite:DeleteDatabase'],
 
     run: function(cache, settings, callback) {
         var results = [];
