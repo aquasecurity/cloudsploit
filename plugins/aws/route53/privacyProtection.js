@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-privacy-protection.html',
     recommended_action: 'Enable Privacy Protection for Domain',
     apis: ['Route53Domains:listDomains', 'Route53Domains:getDomainDetail'],
-    realtime_triggers: ['route53domains:RegisterDomain', 'route53domains:UpdateDomainContactPrivacy'],
+    realtime_triggers: ['route53domains:RegisterDomain', 'route53domains:UpdateDomainContactPrivacy','route53domians:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

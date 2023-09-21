@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-ip-access-control-groups.html',
     recommended_action: 'Enable proper IP Access Controls for all workspaces',
     apis: ['WorkSpaces:describeWorkspaces', 'WorkSpaces:describeWorkspaceDirectories', 'WorkSpaces:describeIpGroups', 'STS:getCallerIdentity'],
-    realtime_triggers: ['workspaces:CreateWorkspaces', 'workspaces:ModifyWorkspaceAccessProperties'],
+    realtime_triggers: ['workspaces:CreateWorkspaces', 'workspaces:ModifyWorkspaceAccessProperties', 'workspace:TerminateWorkspaces'],
 
     run: function(cache, settings, callback) {
         var results = [];

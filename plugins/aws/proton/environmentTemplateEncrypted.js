@@ -18,7 +18,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['proton:CreateEnviromentTemplate'], 
+    realtime_triggers: ['proton:CreateEnviromentTemplate', 'proton:DeleteEnviromentTemplate'], 
 
     run: function(cache, settings, callback) {
         var results = [];

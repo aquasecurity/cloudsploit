@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html',
     recommended_action: 'Update the parameter group associated with the RDS instance to have rds.force_ssl set to true',
     apis: ['RDS:describeDBInstances', 'RDS:describeDBParameters', 'RDS:describeDBParameterGroups'],
-    realtime_triggers: ['rds:CreateDBParameterGroup', 'rds:ModifyDBParameterGroup'], 
+    realtime_triggers: ['rds:CreateDBParameterGroup', 'rds:ModifyDBParameterGroup', 'rds:DeleteDBParameterGroup'], 
 
     run: function(cache, settings, callback) {
         var results = [];

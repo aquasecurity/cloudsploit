@@ -18,7 +18,7 @@ module.exports = {
             default: 6
         }
     },
-    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance','rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'], 
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance','rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

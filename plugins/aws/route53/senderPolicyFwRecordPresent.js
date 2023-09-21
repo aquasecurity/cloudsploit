@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html',
     recommended_action: 'Add SPF records to the DNS records.',
     apis: ['Route53:listHostedZones', 'Route53:listResourceRecordSets'],
-    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets'],
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets','route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];

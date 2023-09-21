@@ -18,7 +18,7 @@ module.exports = {
             default: 'false'
         }
     },
-    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets'],
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets', 'route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];

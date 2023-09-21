@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/rds-instance-public-access-check.html',
     recommended_action: 'Replace the subnet groups of rds instance with the private subnets.',
     apis: ['RDS:describeDBInstances', 'EC2:describeRouteTables', 'EC2:describeSubnets'],
-    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'], 
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

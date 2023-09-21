@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'A bundle in AWS WorkSpaces defines the hardware and software for AWS WorkSpaces. You can create a WorkSpaces instance using a predefined or custom bundle. Setting a limit to the types that can be used will help you control billing and address internal compliance requirements.',
     recommended_action: 'Ensure that WorkSpaces instances are using desired bundle types',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-bundles.html',
-    apis: ['WorkSpaces:describeWorkspaces', 'STS:getCallerIdentity'],
+    apis: ['WorkSpaces:describeWorkspaces', 'STS:getCallerIdentity','workspace:TerminateWorkspaces'],
     settings: {
         workspace_desired_bundle_type: {
             name: 'Workspaces desired bundle type',

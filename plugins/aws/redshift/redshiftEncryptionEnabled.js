@@ -16,7 +16,7 @@ module.exports = {
                 'is implemented by providing KMS-backed encryption for all Redshift ' +
                 'data.'
     },
-    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot'], 
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];
