@@ -24,7 +24,7 @@ module.exports = {
             default: 75
         }
     },
-    realtime_triggers: ['ec2:CreateSubnet'],
+    realtime_triggers: ['ec2:CreateSubnet', 'ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var config = {

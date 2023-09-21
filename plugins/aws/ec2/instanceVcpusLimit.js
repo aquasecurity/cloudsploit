@@ -24,7 +24,7 @@ module.exports = {
             default: 75
         }
     },
-    realtime_triggers: ['ec2:RunInstance', 'ec2:TerminateInstance', 'servicequotas:RequestServiceQuotaIncrease'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances', 'servicequotas:RequestServiceQuotaIncrease'],
 
     run: function(cache, settings, callback) {
         var config = {

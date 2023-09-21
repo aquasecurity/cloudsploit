@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html',
     recommended_action: 'Update ECR registry configurations to ensure image tag mutability is set to immutable.',
     apis: ['ECR:describeRepositories'],
-    realtime_triggers: ['ecr:CreateRepository', 'ecr:PutImageTagMutability'],
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:PutImageTagMutability', 'ecr:DeleteRepository'],
 
     run: function(cache, settings, callback) {
         var results = [];

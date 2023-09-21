@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/compute/tag-amazon-ebs-snapshots-on-creation-and-implement-stronger-security-policies/',
     recommended_action: 'Modify EBS snapshots and add tags.',
     apis: ['EC2:describeSnapshots'],
-    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:AddTags', 'ec2:DeleteTags'],
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:AddTags', 'ec2:DeleteTags','ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -18,7 +18,7 @@ module.exports = {
             default: 'false',
         }
     },
-    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
     
     run: function(cache, settings, callback) {
         var config = {

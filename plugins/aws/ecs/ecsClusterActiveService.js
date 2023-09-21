@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Cluster and create new service.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
-    realtime_triggers: ['ecs:CreateCluster', 'ecs:CreateService', 'ecs:UpdateService', 'ecs:DeleteService'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:CreateService', 'ecs:UpdateService', 'ecs:DeleteService', 'ecs:DeleteCluster'],
 
     run: function(cache, settings, callback){
         var results = [];

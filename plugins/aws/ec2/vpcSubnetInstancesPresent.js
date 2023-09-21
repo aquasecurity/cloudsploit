@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update VPC subnets and attach instances to it or remove the unused VPC subnets',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
     apis: ['EC2:describeInstances', 'EC2:describeSubnets'],
-    realtime_triggers: ['ec2:RunInstance', 'ec2:CreateSubnet', 'ec2:TerminateInstance','ec2:DeleteSubnet'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:CreateSubnet', 'ec2:TerminateInstances','ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var results = [];

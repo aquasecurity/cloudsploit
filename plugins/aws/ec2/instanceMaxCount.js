@@ -205,7 +205,7 @@ module.exports = {
         },
 
     },
-    realtime_triggers: ['ec2:RunInstance', 'ec2:TerminateInstance'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var config = {

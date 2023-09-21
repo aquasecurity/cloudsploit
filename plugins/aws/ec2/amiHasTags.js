@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/12/amazon-machine-images-support-tag-on-create-tag-based-access-control/',
     recommended_action: 'Modify AMI and add tags.',
     apis: ['EC2:describeImages'],
-    realtime_triggers: ['ec2:CreateImage', 'ec2:CreateTags', 'ec2:DeleteTags'],
+    realtime_triggers: ['ec2:CreateImage', 'ec2:CreateTags', 'ec2:DeleteTags', 'ec2:DeregisterImage'],
 
     run: function(cache, settings, callback) {
         var results = [];

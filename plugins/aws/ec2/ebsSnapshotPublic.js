@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html',
     recommended_action: 'Modify the permissions of public snapshots to remove public access.',
     apis: ['EC2:describeSnapshots', 'EC2:describeSnapshotAttribute'],
-    realtime_triggers: ['ec2:CreateSnapshot' , 'ec2:ModifySnapshotAttribute'],
+    realtime_triggers: ['ec2:CreateSnapshot' , 'ec2:ModifySnapshotAttribute', 'ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

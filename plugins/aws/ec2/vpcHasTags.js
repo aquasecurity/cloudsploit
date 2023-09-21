@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/amazon-vpc-resources-support-tag-on-create/',
     recommended_action: 'Modify VPCs and add new tags',
     apis: ['EC2:describeVpcs'],
-    realtime_triggers: ['ec2:CreateVpc', 'ec2:AddTags', 'ec2:DeleteTags'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:AddTags', 'ec2:DeleteTags', 'ec2:DeleteVpc'],
 
     run: function(cache, settings, callback) {
         var results = [];

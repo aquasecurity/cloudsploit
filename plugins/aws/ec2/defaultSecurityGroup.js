@@ -17,7 +17,7 @@ module.exports = {
              'unintended traffic to cross these isolation boundaries.',
         cis2: '4.3 Ensure the default security group of every VPC restricts all traffic'
     },
-    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress'],
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

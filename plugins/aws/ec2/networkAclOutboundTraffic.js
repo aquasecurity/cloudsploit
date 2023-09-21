@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Update Network ACL to allow outbound/egress traffic to specific port ranges only',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     apis: ['EC2:describeNetworkAcls', 'STS:getCallerIdentity'],
-    realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:ReplaceNetworkAclEntry'],
+    realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:ReplaceNetworkAclEntry', 'ec2:DeleteNetworkAcl'],
 
     run: function(cache, settings, callback) {
         var results = [];

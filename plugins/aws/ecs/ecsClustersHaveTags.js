@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-using-tags.html',
     recommended_action: 'Modify ECS Cluster and add tags.',
     apis: ['ECS:listClusters', 'ResourceGroupsTaggingAPI:getResources'],
-    realtime_triggers: ['ecs:CreateCluster', 'ecs:TagResource', 'ecs:UntagResource'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:TagResource', 'ecs:UntagResource', 'ecs:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
