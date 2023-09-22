@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/aws/elastic-load-balancer-support-for-ssl-termination/',
     recommended_action: 'Attach SSL certificate with the listener to AWS Elastic Load Balancer',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
-    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:CreateListeners','elbv2:ModifyListener'],
+    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:CreateListeners','elbv2:ModifyListener', 'elbv2:DeleteLoadBalancer', 'elbv2:DeleteListener'],
 
     run: function(cache, settings, callback) {
         var results = [];

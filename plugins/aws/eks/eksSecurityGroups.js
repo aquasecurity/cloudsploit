@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html',
     recommended_action: 'Configure security groups for the EKS control plane to allow access only on port 443.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'EC2:describeSecurityGroups', 'STS:getCallerIdentity'],
-    realtime_triggers: ['eks:CreateCluster', 'ec2:RevokeSecurityGroupIngress', 'ec2:AuthorizeSecurityGroupIngress'],
+    realtime_triggers: ['eks:CreateCluster', 'ec2:RevokeSecurityGroupIngress', 'ec2:AuthorizeSecurityGroupIngress', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

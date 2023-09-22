@@ -24,7 +24,7 @@ module.exports = {
             default: 'ELBSecurityPolicy-2016-08,ELBSecurityPolicy-TLS-1-2-2017-01,ELBSecurityPolicy-TLS-1-1-2017-01'
         }
     },
-    realtime_triggers: ['elb:CreateLoadBalancerListeners','elb:CreateLoadBalancer'],
+    realtime_triggers: ['elb:CreateLoadBalancerListeners','elb:CreateLoadBalancer', 'elb:DeleteLoadBalancer', 'elb:DeleteLoadBalancerListeners'],
 
     run: function(cache, settings, callback) {
         var results = [];

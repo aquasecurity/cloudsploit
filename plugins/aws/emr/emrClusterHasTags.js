@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-tags-add-new.html',
     recommended_action: 'Modify EMR cluster and add tags.',
     apis: ['EMR:listClusters', 'EMR:describeCluster'],
-    realtime_triggers: ['emr:CreateCluster', 'emr:AddTags', 'emr:RemoveTags'],
+    realtime_triggers: ['emr:CreateCluster', 'emr:AddTags', 'emr:RemoveTags', 'emr:TerminateClusters'],
 
     run: function(cache, settings, callback) {
         var results = [];

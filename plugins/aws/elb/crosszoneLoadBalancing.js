@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-disable-crosszone-lb.html',
     recommended_action: 'Update AWS ELB to enable cross zone load balancing',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeLoadBalancerAttributes', 'STS:getCallerIdentity'],
-    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:ModifyLoadBalancerAttributes', 'elb:AttachLoadBalancerToSubnets'],
+    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:ModifyLoadBalancerAttributes', 'elb:AttachLoadBalancerToSubnets', 'elb:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

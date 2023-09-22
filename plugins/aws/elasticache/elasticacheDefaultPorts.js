@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/accessing-elasticache.html',
     recommended_action: 'Configure ElastiCache clusters to use the non-default ports.',
     apis: ['ElastiCache:describeCacheClusters'],
-    realtime_triggers: ['elasticache:CreateCluster'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

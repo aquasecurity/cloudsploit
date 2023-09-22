@@ -18,7 +18,7 @@ module.exports = {
             'encryption should be enabled for all volumes storing this type ' +
             'of data.'
     },
-    realtime_triggers: ['efs:CreateFileSystem'],
+    realtime_triggers: ['efs:CreateFileSystem','efs:DeleteFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

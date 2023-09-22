@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://aws.amazon.com/elasticache/previous-generation/',
     recommended_action: 'Upgrade ElastiCache instance generaion to the latest available generation.',
     apis: ['ElastiCache:describeCacheClusters'],
-    realtime_triggers: ['elasticache:CreateCluster', 'elasticache:ModifyCacheCluster'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:ModifyCacheCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

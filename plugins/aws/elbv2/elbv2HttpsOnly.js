@@ -20,7 +20,7 @@ module.exports = {
     apis_remediate: ['ELBv2:describeLoadBalancers','ELBv2:describeListeners'],
     actions: {remediate: ['ELBv2:deleteListener'], rollback: ['ELBv2:createListener']},
     permissions: {remediate: ['elasticloadbalancing:DeleteListener'], rollback: ['elasticloadbalancing:CreateListener']},
-    realtime_triggers: ['elbv2:CreateListener','elbv2:CreateLoadBalancer'],
+    realtime_triggers: ['elbv2:CreateListener','elbv2:CreateLoadBalancer',  'elbv2:DeleteLoadBalancer', 'elbv2:DeleteListener'],
 
     run: function(cache, settings, callback) {
         var results = [];

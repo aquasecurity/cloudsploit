@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html',
     recommended_action: 'Modify EMR clusters to enable cluster logging',
     apis: ['EMR:listClusters', 'EMR:describeCluster'],
-    realtime_triggers: ['emr:CreateCluster','emr:TerminateJobFlows'],
+    realtime_triggers: ['emr:CreateCluster','emr:TerminateJobFlows', 'emr:TerminateClusters'],
 
     run: function(cache, settings, callback) {
         var results = [];

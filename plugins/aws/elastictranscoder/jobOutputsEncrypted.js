@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable encryption for Elastic Transcoder job outputs',
     link: 'https://docs.aws.amazon.com/elastictranscoder/latest/developerguide/encryption.html',
     apis: ['ElasticTranscoder:listPipelines', 'ElasticTranscoder:listJobsByPipeline'],
-    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline'],
+    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline', 'elastictranscoder:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html',
     recommended_action: 'Upgrade the version of Redis on all ElastiCache clusters to the latest available version.',
     apis: ['ElastiCache:describeCacheClusters'],
-    realtime_triggers: ['elasticache:CreateCluster', 'elasticache:ModifyCacheCluster'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:ModifyCacheCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

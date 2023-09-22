@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html',
     recommended_action: 'Modify ELBv2 listeners with the latest predefined AWS security policies.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
-    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:CreateListener', 'elbv2:ModifyListener'],
+    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:CreateListener', 'elbv2:ModifyListener', 'elbv2:DeleteLoadBalancer', 'elbv2:DeleteListener'],
     
     run: function(cache, settings, callback) {
         var results = [];

@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline'],
+    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline', 'elastictranscoder:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];
