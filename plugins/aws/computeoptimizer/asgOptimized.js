@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-asg-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for Auto Scaling groups.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
-    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:StartInstanceRefresh'],
+    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus','autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:StartInstanceRefresh','autoscaling:DeleteAutoScalingGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

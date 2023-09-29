@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable the AWS Config Service rules for compliance checks and close security gaps.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html',
     apis: ['ConfigService:describeConfigRules', 'ConfigService:getComplianceDetailsByConfigRule'],
-    realtime_triggers: ['configservice:StartConfigurationRecorder','configservice:PutConfigRule'],
+    realtime_triggers: ['configservice:PutConfigurationRecorder','configservice:PutConfigRule','configservice:DeleteConfigRule'],
 
     run: function(cache, settings, callback) {
         var results = [];

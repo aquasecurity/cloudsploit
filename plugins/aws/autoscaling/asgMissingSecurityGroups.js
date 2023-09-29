@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/GettingStartedTutorial.html',
     recommended_action: 'Ensure that the launch configuration security group has not been deleted. If so, remove it from launch configurations',
     apis: ['AutoScaling:describeLaunchConfigurations', 'EC2:describeSecurityGroups'],
-    realtime_triggers: ['autoscaling:CreateLaunchConfiguration'],
+    realtime_triggers: ['autoscaling:CreateLaunchConfiguration','autoscaling:DeleteLaunchConfiguration','ec2:CreateSecurityGroup','ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

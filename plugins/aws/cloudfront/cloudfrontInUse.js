@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html',
     recommended_action: 'Create CloudFront distributions as per requirement.',
     apis: ['CloudFront:listDistributions'],
-    realtime_triggers: ['cloudfront:CreateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:DeleteDistribution'],
 
 
     run: function(cache, settings, callback) {

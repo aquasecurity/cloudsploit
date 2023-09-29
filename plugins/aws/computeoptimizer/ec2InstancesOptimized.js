@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ec2-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for EC2 instances.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
-    realtime_triggers: ['ec2:RunInstances','ec2:ModifyInstanceAttribute','ec2:StartInstances'],
+    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus','ec2:RunInstances','ec2:TerminateInstances','ec2:ModifyInstanceAttribute','ec2:StartInstances','ec2:stopInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];

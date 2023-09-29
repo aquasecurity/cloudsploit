@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify API Gateway to disable default execute-api endpoint.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html',
     apis: ['APIGateway:getRestApis'],
-    realtime_triggers: ['apigateway:CreateRestApi','apigateway:UpdateRestApi'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:UpdateRestApi','apigateway:DeleteRestApi'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -27,7 +27,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['iam:CreateAccessKey','iam:DeleteAccessKey'],
+    realtime_triggers: ['iam:CreateAccessKey','iam:UpdateAccessKey','iam:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
 

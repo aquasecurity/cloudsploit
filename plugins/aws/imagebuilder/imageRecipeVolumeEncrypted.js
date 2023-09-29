@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['Imagebuilder:CreateImageRecipe'],
+    realtime_triggers: ['Imagebuilder:CreateImageRecipe','Imagebuilder:DeleteImageRecipe'],
     
     run: function(cache, settings, callback) {
         var results = [];

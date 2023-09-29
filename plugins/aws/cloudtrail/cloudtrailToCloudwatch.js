@@ -13,7 +13,7 @@ module.exports = {
     compliance: {
         cis1: '2.4 Ensure CloudTrail trails are integrated with CloudWatch Logs'
     },
-    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -27,7 +27,7 @@ module.exports = {
             default: 30
         }
     },
-    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate'],
+    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate','acm:DeleteCertificate'],
 
     run: function(cache, settings, callback) {
         var config = {

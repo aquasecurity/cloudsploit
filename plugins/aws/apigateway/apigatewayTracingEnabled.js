@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable tracing on API Gateway API stages',
     link: 'https://docs.aws.amazon.com/xray/latest/devguide/xray-services-apigateway.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
-    realtime_triggers: ['apigateway:CreateStage','apigateway:UpdateStage'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:DeleteRestApi','apigateway:CreateStage','apigateway:UpdateStage','apigateway:DeleteStage'],
 
 
     run: function(cache, settings, callback) {

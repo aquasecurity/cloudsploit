@@ -20,7 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
-    realtime_triggers: ['codepipeline:CreatePipeline', 'codepipeline:UpdatePipeline'],
+    realtime_triggers: ['codepipeline:CreatePipeline','codepipeline:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];

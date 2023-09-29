@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html',
     recommended_action: 'Check if CloudFormation is in use or not by observing the stacks',
     apis: ['CloudFormation:describeStacks'],
-    realtime_triggers: ['cloudformation:CreateStack'],
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,7 +22,6 @@ module.exports = {
         async.each(regions.cloudformation, function(region, rcb){
             var describeStacks = helpers.addSource(cache, source,
                 ['cloudformation', 'describeStacks', region]);
-
             if (!describeStacks) return rcb();
 
             if (describeStacks.err || !describeStacks.data) {

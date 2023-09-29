@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

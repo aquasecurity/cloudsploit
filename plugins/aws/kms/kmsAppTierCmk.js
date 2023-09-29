@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         },
     },
-    realtime_triggers: ['kms:CreateKey','kms:TagResource'],
+    realtime_triggers: ['kms:CreateKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

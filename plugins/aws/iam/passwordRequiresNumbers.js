@@ -27,7 +27,7 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.8 Ensure IAM password policy require at least one number'
     },
-    realtime_triggers: ['iam:UpdateAccountPasswordPolicy'],
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

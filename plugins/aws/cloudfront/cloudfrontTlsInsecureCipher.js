@@ -9,7 +9,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
     apis: ['CloudFront:listDistributions'],
-    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

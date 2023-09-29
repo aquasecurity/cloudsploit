@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAXEncryptionAtRest.html',
     recommended_action: 'Enable encryption for DAX cluster.',
     apis: ['DAX:describeClusters'],
-    realtime_triggers: ['dax:CreateCluster'],
+    realtime_triggers: ['dax:CreateCluster','dax:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

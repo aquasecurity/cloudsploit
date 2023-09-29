@@ -82,7 +82,7 @@ module.exports = {
             default: 'false'
         }
     },
-    realtime_triggers: ['iam:CreatePolicy','iam:CreatePolicyVersion','iam:PutRolePolicy','iam:UpdateAssumeRolePolicy'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

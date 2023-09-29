@@ -19,7 +19,7 @@ module.exports = {
             'within environments containing cardholder data.',
         cis1: '2.1 Ensure CloudTrail is enabled in all regions'
     },
-    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:StartLogging','cloudtrail:StopLogging','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

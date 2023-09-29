@@ -19,7 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
-    realtime_triggers: ['appflow:CreateFlow'],
+    realtime_triggers: ['appflow:CreateFlow','appflow:DeleteFlow'],
 
 
     run: function(cache, settings, callback) {

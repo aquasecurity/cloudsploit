@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-getting-started.html',
     recommended_action: 'Enable Access Analyzer for all regions',
     apis: ['AccessAnalyzer:listAnalyzers'],
-    realtime_triggers: ['accessanalyzer:CreateAnalyzer'],
+    realtime_triggers: ['accessanalyzer:CreateAnalyzer','accessanalyzer:DeleteAnalyzer'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Add a notification channel to DevOps Guru',
     link: 'https://docs.aws.amazon.com/devops-guru/latest/userguide/setting-up.html',
     apis: ['DevOpsGuru:listNotificationChannels'],
-    realtime_triggers: ['devopsguru:AddNotificationChannel'],
+    realtime_triggers: ['devopsguru:AddNotificationChannel','devopsguru:RemoveNotificationChannel'],
 
     run: function(cache, settings, callback) {
         var results = [];

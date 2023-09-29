@@ -45,7 +45,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['iam:AddUserToGroup','iam:RemoveUserFromGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy'],
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AddUserToGroup','iam:RemoveUserFromGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var whitelisted_users = settings.iam_authorized_user_arns || this.settings.iam_authorized_user_arns.default;

@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/cloudfront-tls-security-policy/',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
     apis: ['CloudFront:listDistributions'],
-    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
 
     run: function(cache, settings, callback) {
         var results = [];

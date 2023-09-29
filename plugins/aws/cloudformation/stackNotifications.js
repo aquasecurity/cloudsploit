@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-view-stack-data-resources.html',
     recommended_action: 'Associate an Amazon SNS topic to all CloudFormation stacks',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks'],
-    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack'],
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

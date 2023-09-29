@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that Amazon Config service is referencing an active S3 bucket in order to save configuration information.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-policy.html',
     apis: ['S3:listBuckets', 'ConfigService:describeDeliveryChannels', 'S3:headBucket'],
-    realtime_triggers: ['configservice:StartConfigurationRecorder','configservice:PutDeliveryChannel'],
+    realtime_triggers: ['configservice:PutConfigurationRecorder','s3:DeleteBucket'],
   
     run: function(cache, settings, callback) {
         var results = [];

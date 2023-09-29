@@ -27,7 +27,7 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.5 Ensure IAM password policy requires at least one uppercase letter'
     },
-    realtime_triggers: ['iam:UpdateAccountPasswordPolicy'],
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

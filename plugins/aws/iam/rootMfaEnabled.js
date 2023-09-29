@@ -15,7 +15,7 @@ module.exports = {
              'a safe location for use as backup for named IAM users.',
         cis1: '1.13 Ensure MFA is enabled for the "root" account'
     },
-    realtime_triggers: ['iam:EnableMFADevice','iam:DeactivateMFADevice'],
+    realtime_triggers: ['iam:CreateVirtualMFADevice','iam:DeleteVirtualMFADevice'],
 
     run: function(cache, settings, callback) {
         var results = [];

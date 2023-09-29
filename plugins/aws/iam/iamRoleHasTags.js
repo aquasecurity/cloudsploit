@@ -9,7 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_tags.html',
     recommended_action: 'Modify Roles to add tags.',
     apis: ['IAM:listRoles', 'IAM:getRole'],
-    realtime_triggers: ['iam:CreateRole','iam:TagRole','iam:UntagRole'],
+    realtime_triggers: ['iam:CreateRole','iam:TagRole','iam:UntagRole','iam:DeleteRole'],
 
     run: function(cache, settings, callback) {
         var results = [];

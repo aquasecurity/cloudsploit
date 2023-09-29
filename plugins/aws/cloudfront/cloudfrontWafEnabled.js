@@ -9,7 +9,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-associating-cloudfront-distribution.html',
     recommended_action: '1. Enter the WAF service. 2. Enter Web ACLs and filter by global. 3. If no Web ACL is found, Create a new global Web ACL and in Resource type to associate with web ACL, select the CloudFront Distribution. ',
     apis: ['CloudFront:listDistributions'],
-    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 

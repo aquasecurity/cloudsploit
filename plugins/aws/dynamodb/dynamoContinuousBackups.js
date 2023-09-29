@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/aws/new-amazon-dynamodb-continuous-backups-and-point-in-time-recovery-pitr/',
     recommended_action: 'Enable Continuous Backups and Point-In-Time Recovery (PITR) features.',
     apis: ['DynamoDB:listTables', 'DynamoDB:describeContinuousBackups', 'STS:getCallerIdentity'],
-    realtime_triggers: ['dynamodb:CreateTable','dynamodb:UpdateContinuousBackups'],
+    realtime_triggers: ['dynamodb:CreateTable','dynamodb:UpdateContinuousBackups','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

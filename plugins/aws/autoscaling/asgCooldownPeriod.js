@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/Cooldown.html',
     recommended_action: 'Implement proper cool down period for Auto Scaling groups to temporarily suspend any scaling actions.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
-    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
