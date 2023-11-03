@@ -17,6 +17,11 @@
  *********************/
 
 var AWS = require('aws-sdk');
+
+const {
+    EC2
+} = require("@aws-sdk/client-ec2");
+
 var async = require('async');
 var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
@@ -25,6 +30,9 @@ var collectData = require(__dirname + '/../../helpers/shared.js');
 
 // Override max sockets
 var agent = new https.Agent({maxSockets: 100});
+// JS SDK v3 does not support global configuration.
+// Codemod has attempted to pass values to each service client in this file.
+// You may need to update clients outside of this file, if they use global config.
 AWS.config.update({httpOptions: {agent: agent}});
 
 var CALLS_CONFIG = {
@@ -80,7 +88,7 @@ var collect = function(AWSConfig, settings, callback) {
 
     let runApiCalls = [];
 
-    var AWSEC2 = new AWS.EC2(AWSConfig);
+    var AWSEC2 = new EC2(AWSConfig);
     var params = {AllRegions: true};
     var excludeRegions = [];
     var timeoutCheck;
