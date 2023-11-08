@@ -78,6 +78,7 @@
     "@aws-sdk/client-support": "^3.441.0",
     "@aws-sdk/client-waf-regional": "^3.441.0",
     "@aws-sdk/client-wafv2": "^3.441.0",
+    "@aws-sdk/node-http-handler": "^3.374.0",
     "@azure/data-tables": "^13.2.2",
     "@azure/storage-blob": "^12.14.0",
     "@azure/storage-file-share": "^12.14.0",
