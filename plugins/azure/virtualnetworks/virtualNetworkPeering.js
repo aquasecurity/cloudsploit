@@ -81,7 +81,7 @@ module.exports = {
                 });
 
                 if (unknownSubscriptions.length) {
-                    helpers.addResult(results, 2, `Vitual network has peering with these unknown subscriptions: ${unknownSubscriptions.join(', ')}`, location, virtualNetwork.id);
+                    helpers.addResult(results, 2, `Virtual network has peering with these unknown subscriptions: ${unknownSubscriptions.join(', ')}`, location, virtualNetwork.id);
                 } else {
                     helpers.addResult(results, 0, 'Virtual network is connected with a virtual network in whitelisted subscription', location, virtualNetwork.id);
                 }

@@ -81,7 +81,9 @@ module.exports = {
             });
          
             for (let queue of listQueues.data) {
-                let resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queue}`;
+                var queueName = queue.split('/');
+                queueName = queueName[queueName.length-1];
+                let resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queueName}`;
                 
                 var getQueueAttributes = helpers.addSource(cache, source,
                     ['sqs', 'getQueueAttributes', region, queue]);  

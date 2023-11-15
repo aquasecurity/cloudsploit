@@ -40,6 +40,8 @@ module.exports = {
 
                 async.each(loadBalancers.data, function (lb, cb) {
                     if (lb.backendSets) {
+                        if (!lb.displayName) return cb;
+                        
                         var lbBackend = lb.backendSets['bs_' + lb.displayName];
                         if (lbBackend &&
                             lbBackend.backends &&

@@ -9,8 +9,8 @@ module.exports = {
     description: 'Ensures file shares do not allow full write, delete, or read ACL permissions',
     more_info: 'File shares can be configured to allow to read, write, or delete permissions from a share. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all file shares and ensure the share ACL is configured with least privileges.',
-    link: 'https://learn.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'fileService:listSharesSegmentedNew', 'fileService:getShareAcl'],
+    link: 'https://docs.microsoft.com/en-us/azure/storage/files/storage-how-to-create-file-share#create-a-file-share-through-the-azure-portal',
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'fileService:listSharesSegmented', 'fileService:getShareAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. File Service ACLs enable granular permissions for data access.',
@@ -60,7 +60,6 @@ module.exports = {
                             'No existing File Service shares found', location, storageAccount.id);
                     } else {
                         listSharesSegmented.data.forEach(function(fileShare) {
-                            fileShare.id = `${storageAccount.id}/fileService/${fileShare.name}`;
                             // Add share ACL
                             var getShareAcl = helpers.addSource(cache, source,
                                 ['fileService', 'getShareAcl', location, fileShare.id]);

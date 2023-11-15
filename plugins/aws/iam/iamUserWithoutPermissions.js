@@ -90,7 +90,8 @@ module.exports = {
                         return cb();
                     }
 
-                    if (listGroupPolicies.data.PolicyNames.length || listAttachedGroupPolicies.data.AttachedPolicies.length ){
+                    if ((listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length) || 
+                        (listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length)){
                         break;
                     }
                 }

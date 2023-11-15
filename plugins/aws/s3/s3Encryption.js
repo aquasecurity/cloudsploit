@@ -22,7 +22,7 @@ function statementTargetsAction(statement, targetAction) {
  */
 function getEncryptionLevel(statement) {
     if (statement) {
-        if (statement.Effect === 'Deny' && statement.Principal === '*') {
+        if (statement.Effect === 'Deny' && helpers.globalPrincipal(statement.Principal)) {
             if (statementTargetsAction(statement, 's3:PutObject')) {
                 if (statement.Condition && statement.Condition.StringNotEquals) {
                     if (statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption'] === 'AES256') {

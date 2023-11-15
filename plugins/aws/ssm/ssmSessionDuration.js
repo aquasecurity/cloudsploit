@@ -60,12 +60,12 @@ module.exports = {
             });
 
             for (let instance of sessionsByInstances) {
-                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${instance.instanceId}`;
+                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${instance.instanceId}`;
 
                 let failingSessions = '';
                 for (let session of instance.sessions) {
                     let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
-                    
+
                     if (sessionMaxDuration && sessionMaxDuration < activeSessionTimeInMins) {
                         failingSessions += `${session.SessionId} - ${activeSessionTimeInMins} mins\n`;
                     }

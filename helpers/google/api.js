@@ -552,7 +552,8 @@ var calls = {
             url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/managedZones/{id}/rrsets',
             reliesOnService: ['managedZones'],
             reliesOnCall: ['list'],
-            properties: ['id']
+            properties: ['id'],
+            pagination: true
         }
     },
     accessApproval: {
