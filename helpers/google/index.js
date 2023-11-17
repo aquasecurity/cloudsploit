@@ -15,7 +15,7 @@ var authenticate = async function(GoogleConfig) {
         email: GoogleConfig.client_email,
         key: GoogleConfig.private_key,
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-    });   
+    });
     return client;
 };
 
@@ -78,7 +78,7 @@ var processCall = function(GoogleConfig, collection, settings, regions, call, se
 
 
 var run = function(GoogleConfig, collection, settings, service, callObj, callKey, region, regionCb, client, myEngine) {
-    
+
     if (settings.skip_regions &&
         settings.skip_regions.indexOf(region) > -1) return regionCb();
     var LocalGoogleConfig = JSON.parse(JSON.stringify(GoogleConfig));
@@ -95,13 +95,13 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
         params : {}
     };
 
-    var records;    
+    var records;
     if (myEngine) {
         if (!collection[service][myEngine][callKey][region]) {
             collection[service][myEngine][callKey][region] = {};
             collection[service][myEngine][callKey][region].data = [];
         }
-        
+
         if (callObj.reliesOnService) {
             if (!callObj.reliesOnService.length) {
                 return regionCb();
@@ -150,8 +150,8 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
             for (reliedService in callObj.reliesOnService) {
                 if (callObj.reliesOnService[reliedService] && !collection[callObj.reliesOnService[reliedService]]) {
                     return regionCb();
-                } 
-                
+                }
+
                 if (callObj.reliesOnService[reliedService] &&
                     (!collection[callObj.reliesOnService[reliedService]] ||
                     !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
@@ -304,7 +304,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             if (myEngine) collection[service][myEngine][callKey][region] = resultItems;
             else collection[service][callKey][region] = resultItems;
         }
-        if (data.data && data.data.nextPageToken && (!callObj.maxLimit
+        if (data.data && callObj.pagination && data.data.nextPageToken && (!callObj.maxLimit
             || (callObj.maxLimit && collectionItems.data && collectionItems.data.length < callObj.maxLimit))) {
             makeApiCall(client, url, executorCb, data.data.nextPageToken, { pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams });
         } else {
@@ -317,7 +317,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             }
         }
     };
-  
+
     if (callObj.url || callObj.urlToCall) {
         let url = callObj.urlToCall ? callObj.urlToCall : callObj.url;
         url = url.replace('{projectId}', LocalGoogleConfig.project);
@@ -393,7 +393,7 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
         });
     }, function(err, data){
         callCb(err, data);
-    });    
+    });
 }
 
 function setData(collection, dataToAdd, postCall, parent, serviceInfo) {

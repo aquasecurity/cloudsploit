@@ -200,7 +200,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
         policyAssignmentStatus =  defualtPolicyAssignments[param]
     }
 
-    if (!policyAssignmentStatus.length) {
+    if (!policyAssignmentStatus || !policyAssignmentStatus.length) {
         addResult(results, 0,
             text + ' is no supported', location, policyAssignment.id);
     } else if (policyAssignmentStatus == 'AuditIfNotExists' || policyAssignmentStatus == 'Audit') {

@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         deployments_expiration_time: {
             name: 'Deployments Expiration Time',
-            description: 'Number of days from creation of depoyment after which it should be considered expired',
+            description: 'Number of days from creation of deployment after which it should be considered expired',
             regex: '^.*$',
             default: false
         }

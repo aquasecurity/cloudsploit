@@ -455,10 +455,48 @@ var calls = {
         listEventHub: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
+    },
+    // For CIEM
+    aad: {
+        listRoleAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01'
+        },
+        listDenyAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
+        }
+    },
+    // For CIEM
+    groups: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/groups',
+            graph: true
+        }
+    },
+    // For CIEM
+    servicePrincipals: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
+            graph: true
+        }
     }
 };
 
 var postcalls = {
+    //For CIEM
+    aad: {
+        getGroupMembers: {
+            reliesOnPath: 'groups.list',
+            properties: ['id'],
+            url: 'https://graph.microsoft.com/v1.0/groups/{id}/members',
+            graph: true
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['roleDefinitions','users','groups','servicePrincipals']
+            }
+        }
+    },
     recoveryServiceVaults: {
         getRecoveryServiceVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',

@@ -24,7 +24,7 @@ module.exports = {
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
-        
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
@@ -85,7 +85,8 @@ module.exports = {
                     }
                 }
                 if (strings.length) {
-                    if (config.ec2_skip_unused_groups && group.GroupId && !usedGroups.includes(group.GroupId)) {
+                    if (config.ec2_skip_unused_groups && group.GroupId && usedGroups &&
+                        usedGroups.length && !usedGroups.includes(group.GroupId)) {
                         helpers.addResult(results, 1, `Security Group: ${group.GroupId} is not in use`,
                             region, resource);
                     } else {
@@ -94,14 +95,14 @@ module.exports = {
                             ' (' + group.GroupName +
                             ') has ' + strings.join(' and '), region,
                             resource);
-                    }   
+                    }
                 } else {
                     helpers.addResult(results, 0,
                         `Security group: ${group.GroupId} (${group.GroupName}) does not have all ports or protocols open to the public`,
                         region, resource);
                 }
             }
-        
+
             rcb();
         }, function(){
             callback(null, results, source);

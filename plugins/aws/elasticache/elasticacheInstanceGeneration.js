@@ -9,7 +9,7 @@ module.exports = {
     more_info: 'Using the latest generation of Amazon ElastiCache instances instances will benefit clusters for higher hardware performance, ' +
         'better support for latest Memcached and Redis in-memory engines versions and lower costs.',
     link: 'https://aws.amazon.com/elasticache/previous-generation/',
-    recommended_action: 'Upgrade ElastiCache instance generaion to the latest available generation.',
+    recommended_action: 'Upgrade ElastiCache instance generation to the latest available generation.',
     apis: ['ElastiCache:describeCacheClusters'],
 
     run: function(cache, settings, callback) {
