@@ -197,7 +197,7 @@ var collect = function(GoogleConfig, settings, callback) {
                 },
 
             ], function() {
-                if (collection && (!collection.projects || !collection.projects.get)) {
+                if (collection && (!collection.projects || !collection.projects.get || (collection.projects && collection.projects.get && !Object.keys(collection.projects.get).length))) {
                     collection.projects = {
                         ...collection.projects,
                         get: {

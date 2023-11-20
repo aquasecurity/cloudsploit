@@ -27,8 +27,10 @@ module.exports = {
             // for Subnets
             var describeSubnets = helpers.addSource(cache, source, ['ec2', 'describeSubnets', region]);
 
+            if (!describeSubnets) return rcb();
+
             // error handling
-            if (!describeSubnets || !describeSubnets.data || describeSubnets.err) {
+            if (describeSubnets.data || describeSubnets.err) {
                 helpers.addResult(results, 3, 'Unable to query for Subnets: ' + helpers.addError(describeSubnets), region);
                 return rcb();
             }
