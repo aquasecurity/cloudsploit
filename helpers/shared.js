@@ -20,6 +20,10 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     let localSettings = {};
     localSettings = settings;
 
+    if (settings.govcloud) {
+        localEvent.awsOrGov = 'aws-us-gov';
+    }
+    
     localEvent.collection = {};
     localEvent.previousCollection = {};
 

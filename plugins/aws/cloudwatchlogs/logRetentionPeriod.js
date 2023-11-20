@@ -30,7 +30,9 @@ module.exports = {
         async.each(regions.cloudwatchlogs, function(region, rcb){
             var describeLogGroups = helpers.addSource(cache, source, ['cloudwatchlogs', 'describeLogGroups', region]);
 
-            if (!describeLogGroups || describeLogGroups.err ||
+            if (!describeLogGroups) return rcb();
+
+            if (describeLogGroups.err ||
                 !describeLogGroups.data) {
                 helpers.addResult(results, 3, `Unable to query CloudWatch Logs log groups: ${helpers.addError(describeLogGroups)}`, region);
                 return rcb();

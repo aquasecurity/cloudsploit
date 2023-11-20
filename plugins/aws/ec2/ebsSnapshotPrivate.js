@@ -19,7 +19,9 @@ module.exports = {
         async.each(regions.support, function(region, rcb) {
             var describeTrustedAdvisorChecks = helpers.addSource(cache, source, ['support', 'describeTrustedAdvisorChecks', region]);
 
-            if (!describeTrustedAdvisorChecks || describeTrustedAdvisorChecks.err || !describeTrustedAdvisorChecks.data) {
+            if (!describeTrustedAdvisorChecks) return rcb();
+
+            if (describeTrustedAdvisorChecks.err || !describeTrustedAdvisorChecks.data) {
                 var errMsg = helpers.addError(describeTrustedAdvisorChecks);
                 if (errMsg === 'AWS Premium Support Subscription is required to use this service.') {
                     errMsg = 'Please activate AWS Premium Support';

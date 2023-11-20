@@ -126,7 +126,7 @@ module.exports = {
                             if (statement.Effect &&
                                 statement.Effect === 'Deny' &&
                                 statement.Principal &&
-                                ((typeof statement.Principal == 'string' && statement.Principal == '*') ||
+                                ((helpers.globalPrincipal(statement.Principal)) ||
                                  (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
                                 statement.Action &&
                                 ((typeof statement.Action == 'string' && statement.Action == 's3:PutObject') ||
