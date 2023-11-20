@@ -25,7 +25,7 @@ module.exports = {
         remediate: ['s3:DeleteBucketPolicy'],
         rollback: ['s3:PutBucketPolicy']
     },
-    realtime_triggers: [],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketPolicy', 's3:DeleteBucketPolicy','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

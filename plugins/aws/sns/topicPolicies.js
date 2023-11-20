@@ -22,6 +22,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount,sns:Endpoint'
         }
     },
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes','sns:DeleteTopic'],
 
     run: function(cache, settings, callback) {
         var results = [];

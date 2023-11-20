@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Adjust the topic policy to only allow authorized AWS users in known accounts to send or subscribe via the HTTP protocol.',
     link: 'http://docs.aws.amazon.com/sns/latest/dg/AccessPolicyLanguage.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
-
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes','sns:DeleteTopic'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
