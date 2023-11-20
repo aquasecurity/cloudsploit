@@ -53,6 +53,7 @@ let collect = function(AzureConfig, settings, callback) {
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
 
     let services = [];
+    let skip_locations= settings.skip_regions || [];
 
     // Login using the Azure config
     helpers.login(AzureConfig, function(loginErr, loginData) {
@@ -140,7 +141,7 @@ let collect = function(AzureConfig, settings, callback) {
             function(cb) {
                 function processTopCall(collectionObj, service, subCallObj, subCallCb) {
                     processCall(subCallObj, function(processCallErr, processCallData) {
-                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData);
+                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData , skip_locations);
                         subCallCb();
                     });
                 }

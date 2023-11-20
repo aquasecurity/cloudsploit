@@ -24,7 +24,9 @@ module.exports = {
         var diagnosticSettingsOperations = helpers.addSource(cache, source,
             ['diagnosticSettingsOperations', 'list', 'global']);
 
-        if (!diagnosticSettingsOperations || diagnosticSettingsOperations.err || !diagnosticSettingsOperations.data) {
+        if (!diagnosticSettingsOperations) return callback(null, results, source);
+
+        if (diagnosticSettingsOperations.err || !diagnosticSettingsOperations.data) {
             helpers.addResult(results, 3,
                 'Unable to query for diagnostic settings: ' + helpers.addError(diagnosticSettingsOperations), 'global');
             return callback(null, results, source);
