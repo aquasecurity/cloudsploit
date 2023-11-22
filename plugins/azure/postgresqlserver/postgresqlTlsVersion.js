@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures Microsoft Azure PostgreSQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure PostgreSQL server. This setting applies to all databases associated with the server.',
-    recommended_action: 'Modify SQL server firewall and virtual network settings to set desired minimum TLS version.',
+    recommended_action: 'Modify PostgreSQL server to set desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-tls-configurations',
     apis: ['servers:listPostgres'],
     settings: {
