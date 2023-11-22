@@ -478,7 +478,14 @@ var calls = {
             url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
             graph: true
         }
-    }
+    },
+    afdWafPolicies: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontdoorWebApplicationFirewallPolicies?api-version=2022-05-01'
+
+        }
+    },
+   
 };
 
 var postcalls = {
@@ -910,7 +917,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
-    }
+    },
 };
 
 var tertiarycalls = {
