@@ -917,7 +917,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
-    },
+    }
 };
 
 var tertiarycalls = {
