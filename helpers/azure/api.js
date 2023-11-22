@@ -478,6 +478,11 @@ var calls = {
             url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
             graph: true
         }
+    },
+    classicFrontDoors: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontDoors?api-version=2019-05-01'
+        }
     }
 };
 
