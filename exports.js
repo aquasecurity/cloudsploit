@@ -815,7 +815,7 @@ module.exports = {
         'geoRedundantBackupEnabled'     : require(__dirname + '/plugins/azure/postgresqlserver/geoRedundantBackupEnabled.js'),
         'postgresqlServerHasTags'       : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlServerHasTags.js'),
         'postgresqlInfraDoubleEncryption': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlInfraDoubleEncryption.js'),
-        'privateAccessEnabled'          : require(__dirname + '/plugins/azure/postgresqlserver/privateAccessEnabled.js'),
+        'postgresqlPrivateEndpoints'    : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlPrivateEndpoints.js'),
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
