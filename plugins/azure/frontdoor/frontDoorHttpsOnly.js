@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!classicFrontDoors.data.length) {
-                helpers.addResult(results, 0, 'No existing Classic Front Door profiles found', location);
+                helpers.addResult(results, 0, 'No existing Front Door profiles found', location);
                 return rcb();
             }
 
@@ -52,9 +52,9 @@ module.exports = {
                 }
 
                 if (ruleFound) {
-                    helpers.addResult(results, 0, 'Classic Front Door profile is configured to use HTTPS only', location, frontDoor.id);
+                    helpers.addResult(results, 0, 'Front Door profile is configured to use HTTPS only', location, frontDoor.id);
                 } else {
-                    helpers.addResult(results, 2, 'Classic Front Door profile is not configured to use HTTPS only', location, frontDoor.id);
+                    helpers.addResult(results, 2, 'Front Door profile is not configured to use HTTPS only', location, frontDoor.id);
                 }
                
             });

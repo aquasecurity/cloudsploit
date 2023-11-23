@@ -96,7 +96,7 @@ describe('frontDoorHttpsOnly', function () {
             frontDoorHttpsOnly.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Classic Front Door profiles found');
+                expect(results[0].message).to.include('No existing Front Door profiles found');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -107,7 +107,7 @@ describe('frontDoorHttpsOnly', function () {
             frontDoorHttpsOnly.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Classic Front Door profile is configured to use HTTPS only');
+                expect(results[0].message).to.include('Front Door profile is configured to use HTTPS only');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -118,7 +118,7 @@ describe('frontDoorHttpsOnly', function () {
             frontDoorHttpsOnly.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Classic Front Door profile is not configured to use HTTPS only');
+                expect(results[0].message).to.include('Front Door profile is not configured to use HTTPS only');
                 expect(results[0].region).to.equal('global');
                 done();
             });
