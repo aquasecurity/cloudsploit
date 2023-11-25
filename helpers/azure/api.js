@@ -456,6 +456,12 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
     },
+    mediaServices:{
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
+        }
+
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -465,6 +471,7 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
         }
     },
+
     // For CIEM
     groups: {
         list: {
@@ -910,6 +917,13 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
+    },
+    mediaServices: {
+        get: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-01-01'
+        }
     }
 };
 
@@ -974,6 +988,7 @@ var tertiarycalls = {
             vault: true
         }
     }
+    
 };
 
 var specialcalls = {
