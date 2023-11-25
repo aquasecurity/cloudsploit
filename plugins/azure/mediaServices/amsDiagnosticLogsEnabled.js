@@ -43,7 +43,6 @@ module.exports = {
                         location, mediaService.id);
                     continue;
                 }
-                console.log(diagnosticSettings.data[0].logs)
                 var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
 
                 if (found) {
