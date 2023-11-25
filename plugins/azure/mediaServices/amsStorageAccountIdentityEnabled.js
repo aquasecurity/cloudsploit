@@ -1,0 +1,50 @@
+var async = require('async');
+var helpers = require('../../../helpers/azure');
+
+module.exports = {
+    title: 'Azure Media Services Managed Identity for Storage Account Authentication',
+    category: 'Media Services',
+    domain: 'Identity and Access Management',
+    description: 'Ensure that Azure Media Services have managed identity enabled for Storage Account authentication.',
+    more_info: 'Enabling managed identity for storage authentication allows secure access to Azure Storage without explicit credentials, enhancing security and simplifying access management for Azure Media Services.',
+    link: 'https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview',
+    recommended_action: 'Modify the media service\'s storage account settings and enable diagnostic logs.',
+    apis: ['mediaServices:listAll'],
+
+    run: function(cache, settings, callback) {
+        var results = [];
+        var source = {};
+        var locations = helpers.locations(settings.govcloud);
+
+        async.each(locations.mediaServices, function(location, rcb){
+            var mediaServices = helpers.addSource(cache, source, 
+                ['mediaServices', 'listAll', location]);
+
+            if (!mediaServices) return rcb();
+
+            if (mediaServices.err || !mediaServices.data) {
+                helpers.addResult(results, 3, 'Unable to query for Media Services: ' + helpers.addError(mediaServices), location);
+                return rcb();
+            }
+
+            if (!mediaServices.data.length) {
+                helpers.addResult(results, 0, 'No existing Media Services found', location);
+                return rcb();
+            }
+
+            for (let mediaService of mediaServices.data) {
+                if (!mediaService.id) continue;
+
+                if (mediaService.storageAuthentication && mediaService.storageAuthentication.toLowerCase() === 'managedidentity') {
+                    helpers.addResult(results, 0, 'Managed Identity is enabled for Azure Media Service storage authentication', location, mediaService.id);
+                } else {
+                    helpers.addResult(results, 2, 'Managed Identity is not enabled for Azure Media Service storage authentication', location, mediaService.id);
+                }
+            }
+
+            rcb();
+        }, function(){
+            callback(null, results, source);
+        });
+    }
+};
