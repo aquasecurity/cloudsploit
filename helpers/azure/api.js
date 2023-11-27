@@ -418,6 +418,9 @@ var calls = {
         },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
+        },
+        listPostgresFlexibleServer: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/flexibleServers?api-version=2022-12-01'
         }
     },
     databaseAccounts: {
@@ -546,6 +549,7 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+
     advancedThreatProtectionSettings: {
         listByServer: {
             reliesOnPath: 'servers.listSql',
@@ -593,7 +597,12 @@ var postcalls = {
             reliesOnPath: 'servers.listMysqlFlexibleServer',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2021-05-01'
-        }
+        },
+        listByPostgresServer: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/configurations?api-version=2022-12-01'
+        },
     },
     serverAdministrators: {
         list: {
@@ -973,7 +982,8 @@ var tertiarycalls = {
             url: '{id}/policy?api-version=7.3',
             vault: true
         }
-    }
+    },
+
 };
 
 var specialcalls = {
