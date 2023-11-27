@@ -692,6 +692,19 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function diagnosticSettingLogs(diagnosticSettings, logsCategory, categoryGroup) {
+    var logsEnabled = false;
+    diagnosticSettings.data.forEach(setting => {
+        var logs = setting.logs;
+        if (logs.some(log => (categoryGroup.indexOf(log.categoryGroup) > -1 || log.category == logsCategory) && log.enabled)) {
+            logsEnabled = true;
+            return;
+        }
+    });
+
+    return logsEnabled;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -702,5 +715,6 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
-    remediateOpenPortsHelper: remediateOpenPortsHelper
+    remediateOpenPortsHelper: remediateOpenPortsHelper,
+    diagnosticSettingLogs: diagnosticSettingLogs,
 };

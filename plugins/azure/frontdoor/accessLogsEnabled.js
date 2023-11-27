@@ -45,14 +45,8 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing Front Door diagnostics settings found', location, profile.id);
                 } else {
-                    var frontDoorAccessLogEnabled = false;
-                    diagnosticSettings.data.forEach(setting => {
-                        var logs = setting.logs;
-                        if (logs.some(log => (log.categoryGroup === 'audit' || log.categoryGroup === 'allLogs' || log.category === 'FrontDoorAccessLog') && log.enabled)) {
-                            frontDoorAccessLogEnabled = true;
-                        }
-                    });
-                    if (frontDoorAccessLogEnabled) {
+                    var accessLogsEnabled = helpers.diagnosticSettingLogs(diagnosticSettings, 'FrontDoorAccessLog', ['audit','allLogs']);
+                    if (accessLogsEnabled) {
                         helpers.addResult(results, 0, 'Front Door access logs are enabled', location, profile.id);
                     } else {
                         helpers.addResult(results, 2, 'Front Door access logs are not enabled', location, profile.id);

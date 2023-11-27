@@ -45,17 +45,11 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing Front Door diagnostics settings found', location, profile.id);
                 } else {
-                    var frontDoorWafLogsEnabled = false;
-                    diagnosticSettings.data.forEach(setting => {
-                        var logs = setting.logs;
-                        if (logs.some(log => (log.categoryGroup === 'allLogs' || log.category === 'FrontDoorWebApplicationFirewallLog') && log.enabled)) {
-                            frontDoorWafLogsEnabled = true;
-                        }
-                    });
+                    var frontDoorWafLogsEnabled = helpers.diagnosticSettingLogs(diagnosticSettings, 'FrontDoorWebApplicationFirewallLog', ['allLogs']);
                     if (frontDoorWafLogsEnabled) {
-                        helpers.addResult(results, 0, 'Front Door profile has WAF logs are enabled', location, profile.id);
+                        helpers.addResult(results, 0, 'Front Door profile WAF logs are enabled', location, profile.id);
                     } else {
-                        helpers.addResult(results, 2, 'Front Door access profile does not have WAF logs enabled', location, profile.id);
+                        helpers.addResult(results, 2, 'Front Door profile WAF logs are not enabled', location, profile.id);
                     }
                 }
             });
