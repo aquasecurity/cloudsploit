@@ -214,7 +214,7 @@ describe('wafLogsEnabled', function () {
             });
         });
 
-        it('should give failing result if Request logging is not enabled for endpoint', function (done) {
+        it('should give failing result if Front Door profile WAF logs are not enabled for Azure Front Door', function (done) {
             const cache = createCache([profiles[1]], [diagnosticSettings[0]]);
             wafLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
