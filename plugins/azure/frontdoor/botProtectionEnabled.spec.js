@@ -104,18 +104,7 @@ describe('botProtectionEnabled', function () {
                 done();
             });
         });
-
-        it('should give pass result if no existing front door premium waf policy found', function (done) {
-            const cache = createCache([afdWafPolicies[2]]);
-            botProtectionEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Front Door WAF policies found');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
+        
         it('should give fail result if bot protection is not enabled for front door waf policy', function (done) {
             const cache = createCache([afdWafPolicies[1]]);
             botProtectionEnabled.run(cache, {}, (err, results) => {

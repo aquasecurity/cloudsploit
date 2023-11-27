@@ -32,12 +32,8 @@ module.exports = {
                 return rcb();
             }
 
-            var frontDoorWafPolicies = false;
-
             for (let policy of afdWafPolicies.data) {
-                if (!policy.id || !policy.sku || policy.sku.name.toLowerCase() != 'premium_azurefrontdoor') continue;
-
-                frontDoorWafPolicies = true;
+                if (!policy.id) continue;
 
                 var found = policy.managedRules &&
                     policy.managedRules.managedRuleSets ?
@@ -48,10 +44,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Front Door profile WAF policy does not have bot protection enabled', location, policy.id);
                 }
-            }
-
-            if (!frontDoorWafPolicies) {
-                helpers.addResult(results, 0, 'No existing Front Door WAF policies found', location);
             }
 
             rcb();
