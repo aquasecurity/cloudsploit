@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Namespace Minimum TLS Version',
+    title: 'Namespace Local Authentication Disabled',
     category: 'Service Bus',
     domain: 'Application Integration',
-    description: 'Ensures that Azure Service Bus namespace is using the latest TLS version.',
-    more_info: 'TLS versions 1.0 and 1.1 are known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses. So there\'s an industry-wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
-    recommended_action: 'Ensure that Azure Srvice Bus namespaces are using the latest TLS version',
-    link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/transport-layer-security-enforce-minimum-version',
+    description: 'Ensures local authentication is disabled for Service Bus namespaces.',
+    more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication (shared access policies) in Azure Service Bus namespaces.',
+    recommended_action: 'Ensure that Azure Service Bus namespaces have local authentication disabled.',
+    link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/disable-local-authentication',
     apis: ['serviceBus:listNamespacesBySubscription'],
 
     run: function(cache, settings, callback) {
@@ -34,10 +34,10 @@ module.exports = {
             }
 
             for (let namespace of namespaces.data) {
-                if (namespace.minimumTlsVersion && (parseFloat(namespace.minimumTlsVersion) >= 1.2)) {
-                    helpers.addResult(results, 0, 'Service Bus namespace is using the latest TLS Version', location, namespace.id);
-                } else {
-                    helpers.addResult(results, 2, 'Service Bus namespace is not using the latest TLS Version', location, namespace.id);
+                if (namespace.disableLocalAuth) {
+                    helpers.addResult(results, 0, 'Service Bus Namespace has local authentication disabled', location, namespace.id);
+                }  else {
+                    helpers.addResult(results, 2, 'Service Bus Namespace has local authentication enabled', location, namespace.id);
                 }
             }
 

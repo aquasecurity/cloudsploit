@@ -992,6 +992,7 @@ module.exports = {
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
 
         'namespaceLocalAuth'           : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
+        'namespaceTlsVersion'          : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
