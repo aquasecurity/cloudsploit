@@ -456,6 +456,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
     },
+    serviceBus: {
+        listNamespacesBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -479,6 +484,8 @@ var calls = {
             graph: true
         }
     }
+
+
 };
 
 var postcalls = {
