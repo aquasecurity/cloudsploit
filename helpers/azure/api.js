@@ -765,7 +765,7 @@ var postcalls = {
         listByServer: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
+            url: 'https://management.azure.com/{id}/databases?api-version=2023-02-01-preview'
         },
         sendIntegration: serviceMap['SQL Databases']
     },
@@ -956,6 +956,11 @@ var tertiarycalls = {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByDatabase: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
 
     },
@@ -972,6 +977,41 @@ var tertiarycalls = {
             properties: ['id'],
             url: '{id}/policy?api-version=7.3',
             vault: true
+        }
+    },
+    syncGroups: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/syncGroups?api-version=2021-11-01'
+        }
+    },
+    transparentDataEncryption: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/transparentDataEncryption?api-version=2021-11-01'
+        }
+    },
+    dataMaskingPolicies: {
+        get: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/dataMaskingPolicies/Default?api-version=2021-11-01',
+        }
+    },
+    ledgerDigestUploads: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/ledgerDigestUploads?api-version=2021-11-01'
+        }
+    },
+    currentSensitivityLabels: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/currentSensitivityLabels?api-version=2021-11-01'
         }
     }
 };

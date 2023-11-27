@@ -58,7 +58,8 @@ module.exports = {
         listByKeyVault: '',
         listByEndpoint: 'id',
         listByLoadBalancer: 'id',
-        listByNetworkSecurityGroup: 'id'
+        listByNetworkSecurityGroup: 'id',
+        listByDatabase: 'id'
     },
     diagnosticSettingsOperations: {
         list: 'id'
@@ -241,5 +242,20 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
-    }
+    },
+    syncGroups: {
+        list: 'id'
+    },
+    transparentDataEncryption: {
+        list: 'id'
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
+    currentSensitivityLabels: {
+        list: 'id'
+    },
 };

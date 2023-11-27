@@ -989,7 +989,15 @@ module.exports = {
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
-        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js')
+        'frontDoorMinimumTlsVersion': require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
+        'dbSyncGroupPrivateLink': require(__dirname + '/plugins/azure/sqldatabases/dbSyncGroupPrivateLink.js'),
+        'dbTDEEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbTDEEnabled.js'),
+        'dbDataMaskingEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbDataMaskingEnabled.js'),
+        'dbLedgerEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbLedgerEnabled.js'),
+        'dbLedgerDigestStorageEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
+        'dbEnableSecureEnclaves': require(__dirname + '/plugins/azure/sqldatabases/dbEnableSecureEnclaves.js'),
+        'dbDataDiscoveryClassification': require(__dirname + '/plugins/azure/sqldatabases/dbDataDiscoveryClassification.js'),
+        'dbDiagnosticLoggingEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbDiagnosticLoggingEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
