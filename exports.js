@@ -993,6 +993,7 @@ module.exports = {
 
         'namespaceLocalAuth'           : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
         'namespaceTlsVersion'          : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
+        'namespaceEncryptionAtRest'    : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
