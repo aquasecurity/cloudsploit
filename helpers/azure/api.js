@@ -536,7 +536,7 @@ var postcalls = {
         get: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/auditingSettings?api-version=2017-03-01-preview'
+            url: 'https://management.azure.com/{id}/auditingSettings?api-version=2021-11-01'
         }
     },
     serverSecurityAlertPolicies: {
