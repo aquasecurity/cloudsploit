@@ -973,6 +973,13 @@ var tertiarycalls = {
             url: '{id}/policy?api-version=7.3',
             vault: true
         }
+    },
+    currentSensitivityLabels: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/currentSensitivityLabels?api-version=2021-11-01'
+        }
     }
 };
 
