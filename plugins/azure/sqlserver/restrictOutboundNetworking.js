@@ -36,9 +36,9 @@ module.exports = {
 
             for (const server of servers.data) {
                 if (server.restrictOutboundNetworkAccess && server.restrictOutboundNetworkAccess.toLowerCase()=='enabled') {
-                    helpers.addResult(results, 0, 'Outbound networking restrictions are configured for the SQL server', location, server.name);
+                    helpers.addResult(results, 0, 'Outbound networking restrictions are configured for the SQL server', location, server.id);
                 } else {
-                    helpers.addResult(results, 2, 'Outbound networking restrictions are not configured for the SQL server', location, server.name);
+                    helpers.addResult(results, 2, 'Outbound networking restrictions are not configured for the SQL server', location, server.id);
                 }
             }
 
