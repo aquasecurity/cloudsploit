@@ -241,5 +241,8 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
-    }
+    },
+    transparentDataEncryption: {
+        list: 'id'
+    },
 };
