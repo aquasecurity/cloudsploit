@@ -6,7 +6,7 @@ module.exports = {
     category: 'Application Gateway',
     domain: 'Network Access Control',
     description: 'Ensures that Application Gateway Access Log is enabled.',
-    more_info: 'Application Gateway logs provide detailed information for events related to a resource and its operations. Access logs helps to analyze important information includeing the caller\'s IP, requested URL, response latency, return code, and bytes in and out. An access log is collected every 60 seconds.',
+    more_info: 'Application Gateway logs provide detailed information for events related to a resource and its operations. Access logs helps to analyze important information including the caller\'s IP, requested URL, response latency, return code, and bytes in and out. An access log is collected every 60 seconds.',
     recommended_action: 'Ensure that diagnostic setting for Application Gateway Access Log is enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-diagnostics',
     apis: ['applicationGateway:listAll', 'diagnosticSettings:listByApplicationGateways'],
