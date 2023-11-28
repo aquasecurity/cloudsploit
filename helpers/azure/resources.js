@@ -241,5 +241,8 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
-    }
+    },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
 };
