@@ -973,7 +973,14 @@ var tertiarycalls = {
             url: '{id}/policy?api-version=7.3',
             vault: true
         }
-    }
+    },
+    dataMaskingPolicies: {
+        get: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/dataMaskingPolicies/Default?api-version=2021-11-01',
+        }
+    },
 };
 
 var specialcalls = {
