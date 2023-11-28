@@ -765,7 +765,7 @@ var postcalls = {
         listByServer: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
+            url: 'https://management.azure.com/{id}/databases?api-version=2023-02-01-preview'
         },
         sendIntegration: serviceMap['SQL Databases']
     },
@@ -954,6 +954,11 @@ var tertiarycalls = {
         },
         listByContainerRegistries: {
             reliesOnPath: 'registries.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByDatabase: {
+            reliesOnPath: 'databases.listByServer',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }

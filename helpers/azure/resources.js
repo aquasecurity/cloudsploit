@@ -58,7 +58,8 @@ module.exports = {
         listByKeyVault: '',
         listByEndpoint: 'id',
         listByLoadBalancer: 'id',
-        listByNetworkSecurityGroup: 'id'
+        listByNetworkSecurityGroup: 'id',
+        listByDatabase: 'id'
     },
     diagnosticSettingsOperations: {
         list: 'id'
