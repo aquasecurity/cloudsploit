@@ -456,6 +456,12 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
     },
+    mediaServices:{
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
+        }
+
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -909,6 +915,13 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
+        }
+    },
+    mediaServices: {
+        listContentKeyPolicies: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/contentKeyPolicies?api-version=2023-01-01'
         }
     }
 };
