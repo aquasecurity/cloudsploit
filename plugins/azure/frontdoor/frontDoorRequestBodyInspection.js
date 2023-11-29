@@ -5,9 +5,9 @@ module.exports = {
     title: 'Front Door Request Body Inspection',
     category: 'Front Door',
     domain: 'Content Delivery',
-    description: 'Ensures that request body inspection is enabled for Azure Front Door premium WAF policy.',
-    more_info: 'Web Application Firewalls associated to Azure Front Doors premium that have request body inspection enabled, allows to inspect properties within the HTTP body that may not be evaluated in the HTTP headers, cookies, or URI.',
-    recommended_action: 'Ensure that request body inspection in policy settings for Azure Front Door WAF policy is enabled.',
+    description: 'Ensures that request body inspection is enabled for Azure Front Door WAF policy.',
+    more_info: 'Web Application Firewalls associated to Azure Front Doors that have request body inspection enabled, allows to inspect properties within the HTTP body that may not be evaluated in the HTTP headers, cookies, or URI.',
+    recommended_action: 'Modify Front Door WAF policy and enable request body inspection in policy settings.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/application-gateway-waf-request-size-limits#request-body-inspection',
     apis: ['afdWafPolicies:listAll'],
 
@@ -34,9 +34,8 @@ module.exports = {
 
             var frontDoorWafPolicies = false;
             for (let policy of afdWafPolicies.data) {
-                if (!policy.id || !policy.sku || policy.sku.name.toLowerCase() != 'premium_azurefrontdoor') continue;
+                if (!policy.id) continue;
 
-                frontDoorWafPolicies = true;
                 if (policy.policySettings && 
                     policy.policySettings.requestBodyCheck && 
                     policy.policySettings.requestBodyCheck.toLowerCase() == 'enabled') {
@@ -44,10 +43,6 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2, 'Front Door WAF policy does not have request body inspection enabled', location, policy.id);
                 }
-            }
-
-            if (!frontDoorWafPolicies) {
-                helpers.addResult(results, 0, 'No existing Front Door WAF policies found', location);
             }
 
             rcb();
