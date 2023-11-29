@@ -965,6 +965,11 @@ var tertiarycalls = {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByPostgresFlexibleServers: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
 
     },
