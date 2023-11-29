@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Front Door Domain Managed DNS',
+    title: 'Front Door Azure Managed DNS',
     category: 'Front Door',
     domain: 'Content Delivery',
-    description: 'Ensures that Front Door Standard and Premium profile custom domains are configured to use Azure Managed DNS',
+    description: 'Ensures that Front Door standard and premium profile custom domains are configured to use Azure Managed DNS',
     more_info: 'Azure Managed DNS is a hosting service for DNS domains that provides name resolution by using Microsoft Azure infrastructure.',
-    recommended_action: 'Ensure that Non-Azure validated domains for Front Door Standard and Premium are using Azure Managed DNS.',
+    recommended_action: 'Ensure that Non-Azure validated domains for Front Door profiles are using Azure Managed DNS.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-configure-https-custom-domain?tabs=powershell#azure-front-door-managed-certificates-for-non-azure-pre-validated-domains',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
 
@@ -54,10 +54,10 @@ module.exports = {
 
                     if (failingDomains.length){
                         helpers.addResult(results, 2,
-                            `Front Door Profile domains are not using Azure managed DNS ${failingDomains.join(', ')}`, location, profile.id);
+                            `Front Door profile custom domains are not using Azure managed DNS: ${failingDomains.join(', ')}`, location, profile.id);
                     } else {
                         helpers.addResult(results, 0,
-                            'Front Door Profile domains are using Azure managed DNS', location, profile.id);
+                            'Front Door profile custom domains are using Azure managed DNS', location, profile.id);
                     }
                 }
             });

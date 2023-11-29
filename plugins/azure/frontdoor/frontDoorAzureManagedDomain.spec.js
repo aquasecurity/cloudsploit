@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var frontDoorDnsManagedDomain = require('./frontDoorDnsManagedDomain.js');
+var frontDoorAzureManagedDomain = require('./frontDoorAzureManagedDomain.js');
 
 const profiles = [
     {
@@ -171,12 +171,12 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('frontDoorDnsManagedDomain', function () {
+describe('frontDoorAzureManagedDomain', function () {
     describe('run', function () {
 
         it('should give unknown if Unable to query Azure Front Door profiles:', function (done) {
             const cache = createErrorCache('profile');
-            frontDoorDnsManagedDomain.run(cache, {}, (err, results) => {
+            frontDoorAzureManagedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Azure Front Door profiles');
@@ -188,7 +188,7 @@ describe('frontDoorDnsManagedDomain', function () {
 
         it('should give unknown if Unable to query Front Door custom domains:', function (done) {
             const cache = createErrorCache('customDomains');
-            frontDoorDnsManagedDomain.run(cache, {}, (err, results) => {
+            frontDoorAzureManagedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door custom domains:');
@@ -199,7 +199,7 @@ describe('frontDoorDnsManagedDomain', function () {
 
         it('should give pass if No existing Front Door custom domains found', function (done) {
             const cache = createCache([profiles[0]], customDomain[1]);
-            frontDoorDnsManagedDomain.run(cache, {}, (err, results) => {
+            frontDoorAzureManagedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Front Door custom domains found');
@@ -210,10 +210,10 @@ describe('frontDoorDnsManagedDomain', function () {
 
         it('should give pass result if AFD profile custom domain is using Azure managed DNS', function (done) {
             const cache = createCache([profiles[2]], [customDomain[0]]);
-            frontDoorDnsManagedDomain.run(cache, {}, (err, results) => {
+            frontDoorAzureManagedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Front Door Profile domains are using Azure managed DNS');
+                expect(results[0].message).to.include('Front Door profile custom domains are using Azure managed DNS');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -221,10 +221,10 @@ describe('frontDoorDnsManagedDomain', function () {
 
         it('should give fail result if AFD profile custom domain is not using Azure managed DNS', function (done) {
             const cache = createCache([profiles[2]], [customDomain[2]]);
-            frontDoorDnsManagedDomain.run(cache, {}, (err, results) => {
+            frontDoorAzureManagedDomain.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door Profile domains are not using Azure managed DNS');
+                expect(results[0].message).to.include('Front Door profile custom domains are not using Azure managed DNS:');
                 expect(results[0].region).to.equal('global');
                 done();
             });

@@ -990,7 +990,7 @@ module.exports = {
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
-        'frontDoorDnsManagedDomain'     : require(__dirname + '/plugins/azure/frontdoor/frontDoorDnsManagedDomain.js')
+        'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js')
 
     },
     github: {
