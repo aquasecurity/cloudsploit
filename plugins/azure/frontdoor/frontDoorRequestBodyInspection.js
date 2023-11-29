@@ -32,7 +32,6 @@ module.exports = {
                 return rcb();
             }
 
-            var frontDoorWafPolicies = false;
             for (let policy of afdWafPolicies.data) {
                 if (!policy.id) continue;
 
