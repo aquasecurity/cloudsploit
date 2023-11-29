@@ -6,7 +6,7 @@ module.exports = {
     category: 'Front Door',
     domain: 'Content Delivery',
     description: 'Ensure that WAF policy for Azure Front Door is set to Detection mode.',
-    more_info: 'Azure Web Application Firewall (WAF) on Azure Front Door provides centralized protection of your web applications from common exploits and vulnerabilities. Web applications are increasingly targeted by malicious attacks that exploit commonly known vulnerabilities. It monitors and logs the request and its matched WAF rule to WAF logs.',
+    more_info: 'Web Application Firewall (WAF) on Front Door provides centralized protection of your web applications from common exploits and vulnerabilities. Web applications are increasingly targeted by malicious attacks that exploit commonly known vulnerabilities. It monitors and logs the request and its matched WAF rule to WAF logs.',
     recommended_action: 'Modify Front Door WAF policy and enable prevention mode.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/afds-overview',
     apis: ['afdWafPolicies:listAll'],
