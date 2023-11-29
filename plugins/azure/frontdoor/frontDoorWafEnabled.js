@@ -31,7 +31,6 @@ module.exports = {
                 return rcb();
             }
 
-            var frontDoorPremium = false;
 
             profiles.data.forEach(function(profile) {
                 if (!profile.id) return;
