@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensure that Bot Protection for Azure Front Door WAF policy is enabled.',
     more_info: 'Azure Web Application Firewall (WAF) for Front Door provides bot rules to protect from bad bots and to block or log requests from known malicious IP addresses.',
-    recommended_action: 'Ensure that WAF policy has Bot Protection rule set enabled.',
+    recommended_action: 'Modify Front Door WAF policy and add bot protection rule set in managed rules.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-policy-configure-bot-protection?pivots=portal',
     apis: ['afdWafPolicies:listAll'],
 
@@ -40,9 +40,9 @@ module.exports = {
                     policy.managedRules.managedRuleSets.find(ruleset => ruleset.ruleSetType.toLowerCase() == 'microsoft_botmanagerruleset') : false;
 
                 if (found) {
-                    helpers.addResult(results, 0, 'Front Door profile WAF policy has bot protection enabled', location, policy.id);
+                    helpers.addResult(results, 0, 'Front Door WAF policy has bot protection enabled', location, policy.id);
                 } else {
-                    helpers.addResult(results, 2, 'Front Door profile WAF policy does not have bot protection enabled', location, policy.id);
+                    helpers.addResult(results, 2, 'Front Door WAF policy does not have bot protection enabled', location, policy.id);
                 }
             }
 

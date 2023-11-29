@@ -99,7 +99,7 @@ describe('botProtectionEnabled', function () {
             botProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Front Door profile WAF policy has bot protection enabled');
+                expect(results[0].message).to.include('Front Door WAF policy has bot protection enabled');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -110,7 +110,7 @@ describe('botProtectionEnabled', function () {
             botProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door profile WAF policy does not have bot protection enabled');
+                expect(results[0].message).to.include('Front Door WAF policy does not have bot protection enabled');
                 expect(results[0].region).to.equal('global');
                 done();
             });
