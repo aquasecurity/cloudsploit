@@ -5,9 +5,9 @@ module.exports = {
     title: 'Front Door Waf Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
-    description: 'Ensure that WAF is enabled for Azure Front Door premium profile.',
+    description: 'Ensure that Web Application Firewall (WAF) is enabled for Azure Front Door premium and standard profiles.',
     more_info: 'WAF actively inspects incoming requests to the front door and blocks requests that are determined to be malicious based on a set of rules.',
-    recommended_action: 'Ensure that Azure Front Door premium profile has WAF policy attached in security policies section.',
+    recommended_action: 'Modify the Azure Front Door profile and attach WAF policy under security policies section.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-policy-settings',
     apis: ['profiles:list', 'afdSecurityPolicies:listByProfile',],
 
@@ -34,9 +34,8 @@ module.exports = {
             var frontDoorPremium = false;
 
             profiles.data.forEach(function(profile) {
-                if (!profile.id || !profile.sku || profile.sku.name.toLowerCase() != 'premium_azurefrontdoor') return;
+                if (!profile.id) return;
                 
-                frontDoorPremium = true;
                 const afdSecurityPolicies = helpers.addSource(cache, source,
                     ['afdSecurityPolicies', 'listByProfile', location, profile.id]);
                 if (!afdSecurityPolicies || afdSecurityPolicies.err || !afdSecurityPolicies.data) {
@@ -50,9 +49,6 @@ module.exports = {
                 }
             });
             
-            if (!frontDoorPremium) {
-                helpers.addResult(results, 0, 'No existing Front Door profiles found', location);
-            }
             rcb();
         }, function() {
             callback(null, results, source);
