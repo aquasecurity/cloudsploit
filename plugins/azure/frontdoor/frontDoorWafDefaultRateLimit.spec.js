@@ -127,12 +127,12 @@ const createErrorCache = () => {
 describe('frontDoorWafDefaultRateLimit', function () {
     describe('run', function () {
 
-        it('should give pass result front door profile waf policy has rate limit custom rule configured', function (done) {
+        it('should give pass result front door waf policy has rate limit custom rule configured', function (done) {
             const cache = createCache([afdWafPolicies[0]]);
             frontDoorWafDefaultRateLimit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Front Door profile WAF policy has rate limit custom rule configured');
+                expect(results[0].message).to.include('Front Door WAF policy has rate limit custom rule configured');
                 expect(results[0].region).to.equal('global');
                 done();
             });
@@ -149,12 +149,12 @@ describe('frontDoorWafDefaultRateLimit', function () {
             });
         });
 
-        it('should give fail result if front door profile WAF policy does not have rate limit custom rule configured', function (done) {
+        it('should give fail result if front door WAF policy does not have rate limit custom rule configured', function (done) {
             const cache = createCache([afdWafPolicies[1]]);
             frontDoorWafDefaultRateLimit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door profile WAF policy does not have rate limit custom rule configured');
+                expect(results[0].message).to.include('Front Door WAF policy does not have rate limit custom rule configured');
                 expect(results[0].region).to.equal('global');
                 done();
             });

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensures that Front Door WAF policy has rate limit custom rule configured.',
     more_info: 'Rate limiting enables you to detect and block abnormally high levels of traffic from any socket IP address. By using Azure Web Application Firewall in Azure Front Door, you can mitigate some types of denial-of-service attacks.',
-    recommended_action: 'Ensures that Front Door WAF policy has default rate limit custom rule configured.',
+    recommended_action: 'Modify the Front Door WAF policy and add default rate limit custom rule.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-rate-limit',
     apis: ['afdWafPolicies:listAll'],
 
@@ -35,12 +35,12 @@ module.exports = {
             for (let policy of afdWafPolicies.data) {
                 if (!policy.id) continue;
                 var found = policy.customRules && policy.customRules.rules?
-                            policy.customRules.rules.find(rule => rule.ruleType.toLowerCase() == 'ratelimitrule' && rule.action.toLowerCase() == 'block') : 'false'
+                    policy.customRules.rules.find(rule => rule.ruleType.toLowerCase() == 'ratelimitrule' && rule.action.toLowerCase() == 'block') : 'false';
                 
                 if (found) {
-                    helpers.addResult(results, 0, 'Front Door profile WAF policy has rate limit custom rule configured', location, policy.id);
+                    helpers.addResult(results, 0, 'Front Door WAF policy has rate limit custom rule configured', location, policy.id);
                 } else {
-                    helpers.addResult(results, 2, 'Front Door profile WAF policy does not have rate limit custom rule configured', location, policy.id);
+                    helpers.addResult(results, 2, 'Front Door WAF policy does not have rate limit custom rule configured', location, policy.id);
                 }
             }
 
