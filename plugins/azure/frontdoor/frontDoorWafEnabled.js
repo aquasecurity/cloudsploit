@@ -37,6 +37,7 @@ module.exports = {
                 
                 const afdSecurityPolicies = helpers.addSource(cache, source,
                     ['afdSecurityPolicies', 'listByProfile', location, profile.id]);
+                    
                 if (!afdSecurityPolicies || afdSecurityPolicies.err || !afdSecurityPolicies.data) {
                     helpers.addResult(results, 3, 'Unable to query Front Door security policies : ' + helpers.addError(afdSecurityPolicies), location, profile.id);
                 } else {
