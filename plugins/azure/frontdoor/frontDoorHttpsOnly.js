@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     description: 'Ensures HTTPS Only is enabled for Front Door classic profile, redirecting all HTTP traffic to HTTPS.',
     more_info: 'By using the HTTPS only protocol, you ensure that your sensitive data is delivered securely via TLS/SSL encryption.',
-    recommended_action: 'Modify the Front Door classic profile and add  HTTP to HTTPS redirect rule under the frontend hosts section.',
+    recommended_action: 'Modify the Front Door classic profile and add HTTP to HTTPS redirect rule under the frontend hosts section.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/front-door-how-to-redirect-https',
     apis: ['classicFrontDoors:list'],
 
