@@ -14,7 +14,7 @@ const listPostgres = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.DBforPostgreSQL/servers/server1',
         'name': 'server1',
         'type': 'Microsoft.DBforPostgreSQL/servers',
-        'administratorLogin': 'Aquaadmin',
+        'administratorLogin': 'test',
         'storageProfile': {
             'storageMB': 5120,
             'backupRetentionDays': 7,
