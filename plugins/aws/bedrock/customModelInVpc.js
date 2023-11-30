@@ -66,7 +66,7 @@ module.exports = {
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Bedrock custom model doesnot have VPC configured',
+                        'Bedrock custom model does not have VPC configured',
                         region, resource);
                 }
             }
