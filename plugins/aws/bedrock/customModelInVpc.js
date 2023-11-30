@@ -60,7 +60,7 @@ module.exports = {
                     continue;
                 }
 
-                if(getModelJob.data.vpcConfig && getModelJob.data.vpcConfig != '') {
+                if (getModelJob.data.vpcConfig && getModelJob.data.vpcConfig != '') {
                     helpers.addResult(results, 0,
                         'Bedrock custom model has VPC configured',
                         region, resource);
