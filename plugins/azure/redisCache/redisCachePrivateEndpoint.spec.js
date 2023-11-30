@@ -48,6 +48,7 @@ describe('redisCachePrivateEndpoint', function() {
 
             plugin.run(cache, {}, callback);
         });
+        
         it('should give unknown result if unable to query for redis caches', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
@@ -61,6 +62,7 @@ describe('redisCachePrivateEndpoint', function() {
 
             plugin.run(cache, {}, callback);
         });
+        
         it('should give passing result if redis cache is only accessible through private endpoint', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
