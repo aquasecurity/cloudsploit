@@ -29,7 +29,7 @@ module.exports = {
             }
 
             if (!namespaces.data.length) {
-                helpers.addResult(results, 0, 'No Service Bus namespaces found', location);
+                helpers.addResult(results, 0, 'No existing Service Bus namespaces found', location);
                 return rcb();
             }
 
