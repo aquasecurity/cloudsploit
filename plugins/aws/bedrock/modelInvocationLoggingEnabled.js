@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     description: 'Ensure that an Amazon Bedrock model invocation logging is enabled.',
     more_info: 'With invocation logging, you can collect the full request data, response data, and metadata associated with all calls performed in account.',
-    recommended_action: 'Enable invocation logging for bedrock mdoels',
+    recommended_action: 'Enable invocation logging for bedrock models',
     link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/settings.html#model-invocation-logging',
     apis: ['Bedrock:getModelInvocationLoggingConfiguration'],
 
