@@ -14,6 +14,7 @@ module.exports = {
     acm: [],
     apigateway: regions,
     athena: [],
+    bedrock: regions,
     cloudfront: [],
     efs: [],
     autoscaling: regions,
