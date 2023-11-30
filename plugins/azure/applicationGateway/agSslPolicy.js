@@ -18,7 +18,6 @@ module.exports = {
         const recommendedSSLPolicies = ['AppGwSslPolicy20170401S', 'AppGwSslPolicy20220101' , 'AppGwSslPolicy20220101S'];
         
         async.each(locations.applicationGateway, (location, rcb) => {
-
             var appGateways = helpers.addSource(cache, source, 
                 ['applicationGateway', 'listAll', location]);
 
@@ -40,7 +39,7 @@ module.exports = {
                 const sslPolicy = appGateway.sslPolicy? appGateway.sslPolicy : '';
                 if ((sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) ||
                     (sslPolicy.policyType == 'Custom' && sslPolicy.minProtocolVersion && sslPolicy.minProtocolVersion.toLowerCase() == 'tlsv1_2')) {
-                    helpers.addResult(results, 0, 'Application Gateway is using SSL policy  which supports TLSV1_2', location, appGateway.id);
+                    helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports TLSV1_2', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support TLSV1_2', location, appGateway.id);
                 } 
