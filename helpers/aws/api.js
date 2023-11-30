@@ -634,7 +634,7 @@ var calls = {
             paginate: 'NextToken',
         },
         listModelCustomizationJobs:{
-            property: 'modelCustomizationJobSummaries"',
+            property: 'modelCustomizationJobSummaries',
             paginate: 'NextToken',
         }
     },
@@ -1871,6 +1871,12 @@ var postcalls = [
                 reliesOnCall: 'listCustomModels',
                 filterKey: 'modelIdentifier',
                 filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
             }
         },
         CloudFormation: {

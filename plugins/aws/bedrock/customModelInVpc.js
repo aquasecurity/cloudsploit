@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Custom Model Encryption Enabled',
+    title: 'Custom Model In VPC  ',
     category: 'BedRock',
     domain: 'Application Integration',
-    description: 'Ensure that an Amazon Bedrock custom model is encrypted by AWS KMS Customer Master Keys.',
-    more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
-    recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Master Keys',
-    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/encryption-custom-job.html',
-    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel'],
+    description: 'Ensure that an Amazon Bedrock custom model is configured within a VPC.',
+    more_info: 'When the custom model is configured within a VPC, it establishes a secure environment that prevents unauthorized internet access to your training data, enhancing the overall security and confidentiality of your model.',
+    recommended_action: 'Create the custom model with configuration',
+    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/usingVPC.html',
+    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel','Bedrock:listModelCustomizationJobs', 'Bedrock:getModelCustomizationJob'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -38,7 +38,6 @@ module.exports = {
                 return rcb();
             }
 
-
             for (let model of listCustomModels.data){
                 if (!model.modelArn|| !model.modelName) continue;
                
@@ -52,14 +51,22 @@ module.exports = {
                     helpers.addResult(results, 3, `Unable to describe Bedrock custom model : ${helpers.addError(getCustomModel)}`, region, resource);
                     continue;
                 }
+                
+                let getModelJob = helpers.addSource(cache, source,
+                    ['bedrock', 'getModelCustomizationJob', region, getCustomModel.data.jobArn]);
+                
+                if (!getModelJob || getModelJob.err || !getModelJob.data) {
+                    helpers.addResult(results, 3, `Unable to describe Bedrock model customzation job : ${helpers.addError(getModelJob)}`, region, resource);
+                    continue;
+                }
 
-                if (getCustomModel.data.modelKmsKeyArn) {
+                if(getModelJob.data.vpcConfig && getModelJob.data.vpcConfig != '') {
                     helpers.addResult(results, 0,
-                        'Bedrock custom model have CMK encryption enabled',
+                        'Bedrock custom model has VPC configured',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Bedrock custom model does not have CMK encryption enabled',
+                        'Bedrock custom model doesnot have VPC configured',
                         region, resource);
                 }
             }

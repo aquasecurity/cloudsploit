@@ -1266,6 +1266,12 @@ var postcalls = [
                 reliesOnCall: 'listCustomModels',
                 filterKey: 'modelIdentifier',
                 filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
             }
         },
         CloudFront: {
