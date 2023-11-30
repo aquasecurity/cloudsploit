@@ -745,7 +745,8 @@ module.exports = {
         'vmScaleSetHasTags'             : require(__dirname + '/plugins/azure/virtualmachines/vmScaleSetHasTags.js'),
         'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
         'systemAssignedIdentityEnabled' : require(__dirname + '/plugins/azure/virtualmachines/systemAssignedIdentityEnabled.js'),
-        'vmWindowsAntiMalwareExtension' : require(__dirname + '/plugins/azure/virtualmachines/vmWindowsAntiMalwareExtension.js'),
+        'vmWindowsAntiMalwareExtension': require(__dirname + '/plugins/azure/virtualmachines/vmWindowsAntiMalwareExtension.js'),
+        'vmSecurityType': require(__dirname + '/plugins/azure/virtualmachines/vmSecurityType.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
