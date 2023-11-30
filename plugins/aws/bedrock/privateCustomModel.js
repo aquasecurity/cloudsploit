@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Custom Model In VPC',
+    title: 'Private Custom Model',
     category: 'BedRock',
     domain: 'Machine Learning',
-    description: 'Ensure that an Amazon Bedrock custom model is configured within a VPC.',
-    more_info: 'When the custom model is configured within a VPC, it establishes a secure environment that prevents unauthorized internet access to your training data, enhancing the overall security and confidentiality of your model.',
-    recommended_action: 'Create the custom model with configuration',
-    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/usingVPC.html',
-    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel','Bedrock:listModelCustomizationJobs', 'Bedrock:getModelCustomizationJob'],
+    description: 'Ensure that an Amazon Bedrock custom model is configured within a private VPC.',
+    more_info: 'When the custom model is configured within a private VPC or with a private VPC endpoint, it enhances security by restricting access to authorized networks only, preventing exposure to the public internet.',
+    recommended_action: 'Configure the custom model with  VPC and private VPC endpoint',
+    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/vpc-interface-endpoints.html',
+    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel','Bedrock:listModelCustomizationJobs', 'Bedrock:getModelCustomizationJob','EC2:describeSubnets', 'EC2:describeRouteTables'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,6 +37,28 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Bedrock custom model found', region);
                 return rcb();
             }
+            var subnetRouteTableMap;
+            var privateSubnets = [];
+
+            var describeSubnets = helpers.addSource(cache, source,
+                ['ec2', 'describeSubnets', region]);
+            var describeRouteTables = helpers.addSource(cache, {},
+                ['ec2', 'describeRouteTables', region]);
+                
+            if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data ) {
+                helpers.addResult(results, 3,
+                    'Unable to query for route tables: ' + helpers.addError(describeRouteTables), region);
+                return rcb();
+            }     
+            
+            if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+                return rcb();                  
+            } else {
+                subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+                privateSubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);   
+            }
 
             for (let model of listCustomModels.data){
                 if (!model.modelArn|| !model.modelName) continue;
@@ -61,9 +83,18 @@ module.exports = {
                 }
 
                 if (getModelJob.data.vpcConfig && getModelJob.data.vpcConfig != '') {
-                    helpers.addResult(results, 0,
-                        'Bedrock custom model has VPC configured',
-                        region, resource);
+
+                    var allPrivate = getModelJob.data.vpcConfig.subnetIds.every(subnetId => privateSubnets.includes(subnetId));
+                    
+                    if (allPrivate) {
+                        helpers.addResult(results, 0,
+                            'Bedrock custom model is a private model',
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Bedrock custom model is not a private model',
+                            region, resource);
+                    }
                 } else {
                     helpers.addResult(results, 2,
                         'Bedrock custom model does not have VPC configured',

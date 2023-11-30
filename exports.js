@@ -32,7 +32,8 @@ module.exports = {
 
         'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
         'customModelInVpc'              :require(__dirname + '/plugins/aws/bedrock/customModelInVpc.js'),
-        
+        'privateCustomModel'            :require(__dirname + '/plugins/aws/bedrock/PrivateCustomModel.js'),
+        'modelInvocationLoggingEnabled' :require(__dirname + '/plugins/aws/bedrock/modelInvocationLoggingEnabled.js'),
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
         'asgActiveNotifications'        : require(__dirname + '/plugins/aws/autoscaling/asgActiveNotifications.js'),

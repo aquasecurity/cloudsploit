@@ -629,13 +629,17 @@ var calls = {
         }
     },
     Bedrock:{
-        listCustomModels:{
+        listCustomModels: {
             property: 'modelSummaries',
             paginate: 'NextToken',
         },
-        listModelCustomizationJobs:{
+        listModelCustomizationJobs: {
             property: 'modelCustomizationJobSummaries',
             paginate: 'NextToken',
+        },
+        getModelInvocationLoggingConfiguration: {
+            property: 'loggingConfig', 
+            paginate: 'NextToken'
         }
     },
     CloudFormation: {
@@ -1865,7 +1869,7 @@ var postcalls = [
             },
             sendIntegration: serviceMap['Backup']
         },
-        Bedrock:{
+        Bedrock: {
             getCustomModel: {
                 reliesOnService: 'bedrock',
                 reliesOnCall: 'listCustomModels',

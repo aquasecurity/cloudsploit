@@ -118,14 +118,18 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
-        Bedrock:{
-            listCustomModels:{
+        Bedrock: {
+            listCustomModels: {
                 property: 'modelSummaries',
                 paginate: 'NextToken',
             },
-            listModelCustomizationJobs:{
+            listModelCustomizationJobs: {
                 property: 'modelCustomizationJobSummaries"',
                 paginate: 'NextToken',
+            },
+            getModelInvocationLoggingConfiguration: {
+                property: 'loggingConfig', 
+                paginate: 'NextToken'
             }
         },
         CloudFormation: {
