@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            classicFrontDoors.data.forEach(function(frontDoor) {
+            classicFrontDoors.data.forEach(frontDoor => {
                 if (!frontDoor.id || !frontDoor.routingRules) return;
 
                 var ruleFound = false;
