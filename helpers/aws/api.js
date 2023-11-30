@@ -628,6 +628,16 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    Bedrock:{
+        listCustomModels:{
+            property: 'modelSummaries',
+            paginate: 'NextToken',
+        },
+        listModelCustomizationJobs:{
+            property: 'modelCustomizationJobSummaries"',
+            paginate: 'NextToken',
+        }
+    },
     CloudFormation: {
         listStacks: {
             property: 'StackSummaries',
@@ -1854,6 +1864,14 @@ var postcalls = [
                 filterValue: 'BackupPlanId',
             },
             sendIntegration: serviceMap['Backup']
+        },
+        Bedrock:{
+            getCustomModel: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listCustomModels',
+                filterKey: 'modelIdentifier',
+                filterValue: 'modelName',
+            }
         },
         CloudFormation: {
             describeStackEvents: {
