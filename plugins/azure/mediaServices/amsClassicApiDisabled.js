@@ -45,7 +45,7 @@ module.exports = {
                 }
 
                 if (getMediaService.data.identity) {
-                     helpers.addResult(results, 0, 'Classic API is disabled for the Media Service account', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Classic API is disabled for the Media Service account', location, mediaService.id);
                 } else {
                     helpers.addResult(results, 2, 'Classic API is enabled for the Media Service account', location, mediaService.id);
                 }
