@@ -31,6 +31,7 @@ module.exports = {
         'appmeshVGHealthChecks'         : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
 
         'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
+        'modelInvocationLoggingEnabled' :require(__dirname + '/plugins/aws/bedrock/modelInvocationLoggingEnabled.js'),
         
 
         'asgMultiAz'                    : require(__dirname + '/plugins/aws/autoscaling/asgMultiAz.js'),
