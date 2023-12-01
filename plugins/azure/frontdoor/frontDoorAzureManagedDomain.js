@@ -16,6 +16,7 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
         async.each(locations.profiles, (location, rcb) => {
+
             const profiles = helpers.addSource(cache, source,
                 ['profiles', 'list', location]);
 
@@ -37,7 +38,7 @@ module.exports = {
                 if (!profile.id || profile.kind != 'frontdoor') return;
                 
                 frontDoorProfile = true;
-                var failingDomains = {};
+                var failingDomains = [];
                 const customDomains = helpers.addSource(cache, source,
                     ['customDomain', 'listByFrontDoorProfiles', location, profile.id]);
                 if (!customDomains || customDomains.err || !customDomains.data) {
@@ -46,11 +47,8 @@ module.exports = {
                 } else if (!customDomains.data.length) {
                     helpers.addResult(results, 0, 'No existing Front Door custom domains found', location, profile.id);
                 } else {
-                    failingDomains = customDomains.data.filter(customDomain => {
-                        return (!customDomain.azureDnsZone);
-                    }).map(function(customDomain) {
-                        return customDomain.name; 
-                    });
+                    failingDomains = customDomains.data.filter(customDomain => !customDomain.azureDnsZone)
+                    .map(customDomain => customDomain.name);
 
                     if (failingDomains.length){
                         helpers.addResult(results, 2,
