@@ -26,6 +26,18 @@ const appGateway = [
             "policyType": "Predefined",
             "policyName": "AppGwSslPolicy20150101"
         },
+    },
+    {   "sku": {
+        "tier": "WAF_v2"
+        },
+        "name": 'test-gateway',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test-gateway",',
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "eastus",
+        "sslPolicy": {
+            "policyType": "Custom",
+            "minProtocolVersion": "TLSV1_2"
+        },
     }
 ];
 
@@ -88,6 +100,17 @@ describe('agSslPolicy', function() {
 
         it('should give passing result if Application Gateway is using ssl policy which supports minimum TLS version', function(done) {
             const cache = createCache([appGateway[0]]);
+            agSslPolicy.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('SSL policy which supports TLSV1_2');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if Application Gateway is using custom ssl policy which supports minimum TLS version', function(done) {
+            const cache = createCache([appGateway[2]]);
             agSslPolicy.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
