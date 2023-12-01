@@ -37,8 +37,8 @@ module.exports = {
                 if (!appGateway.id) continue;
 
                 const sslPolicy = appGateway.sslPolicy? appGateway.sslPolicy : '';
-                if ((sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) ||
-                    (sslPolicy.policyType == 'Custom' && sslPolicy.minProtocolVersion && sslPolicy.minProtocolVersion.toLowerCase() == 'tlsv1_2')) {
+                if (sslPolicy.policyType && ((sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) ||
+                    (sslPolicy.policyType == 'Custom' && sslPolicy.minProtocolVersion && sslPolicy.minProtocolVersion.toLowerCase() == 'tlsv1_2'))) {
                     helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports TLSV1_2', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support TLSV1_2', location, appGateway.id);
