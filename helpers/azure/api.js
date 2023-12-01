@@ -418,6 +418,9 @@ var calls = {
         },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
+        },
+        listPostgresFlexibleServer: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/flexibleServers?api-version=2022-12-01'
         }
     },
     databaseAccounts: {
@@ -798,6 +801,11 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/firewallRules?api-version=2017-12-01'
+        },
+        listByFlexibleServerPostgres: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/firewallRules?api-version=2022-12-01'
         }
     },
     outboundFirewallRules: {

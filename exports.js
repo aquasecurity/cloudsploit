@@ -816,6 +816,7 @@ module.exports = {
         'postgresqlServerHasTags'       : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlServerHasTags.js'),
         'postgresqlInfraDoubleEncryption': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlInfraDoubleEncryption.js'),
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
+        'flexibleServerPrivateAccess'   : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateAccess'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'networkWatcherEnabled'         : require(__dirname + '/plugins/azure/networksecuritygroups/networkWatcherEnabled.js'),
