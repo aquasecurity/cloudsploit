@@ -6,7 +6,7 @@ module.exports = {
     category: 'Front Door',
     domain: 'Content Delivery',
     description: 'Ensures that Front Door standard and premium profile custom domains are configured to use Azure Managed DNS',
-    more_info: 'Azure Managed DNS is a hosting service for DNS domains that provides name resolution by using Microsoft Azure infrastructure.',
+    more_info: 'DNS domains in Azure DNS are hosted on the Azure global network of DNS name servers. This system uses Anycast networking so that each DNS query is answered by the closest available DNS server. Azure DNS provides fast performance and high availability for your domain.',
     recommended_action: 'Ensure that Non-Azure validated domains for Front Door profiles are using Azure Managed DNS.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-configure-https-custom-domain?tabs=powershell#azure-front-door-managed-certificates-for-non-azure-pre-validated-domains',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
