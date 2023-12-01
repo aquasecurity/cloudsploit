@@ -913,7 +913,7 @@ var postcalls = {
     },
     afdSecurityPolicies: {
         listByProfile: {
-            reliesOnPath: 'profiles.listPostgres',
+            reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
