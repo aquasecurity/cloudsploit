@@ -49,7 +49,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'No existing Front Door custom domains found', location, profile.id);
                 } else {
                     failingDomains = customDomains.data.filter(customDomain => !customDomain.azureDnsZone)
-                    .map(customDomain => customDomain.name);
+                        .map(customDomain => customDomain.name);
 
                     if (failingDomains.length){
                         helpers.addResult(results, 2,
