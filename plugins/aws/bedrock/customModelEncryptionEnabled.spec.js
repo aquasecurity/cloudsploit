@@ -24,7 +24,7 @@ const getCustomModel = [
         "modelName": "model2",
         "jobArn": "arn:aws:bedrock:us-east-1:672202477801:model-customization-job/amazon.titan-text-lite-v1:0:4k/lo7152tvvl3f",
         "baseModelArn": "arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-text-lite-v1:0:4k",
-        "modelKmsKeyArn": "arn:aws:kms:us-east-1:672202477801:key/29c2507e-ba0d-4b70-b20d-8b30b761685b",
+        "modelKmsKeyArn": "arn:aws:kms:us-east-1:012345678910:key/abcdef10-1517-49d8-b085-77c50b904149",
         "hyperParameters": {
             "batchSize": "2",
             "epochCount": "2",
@@ -68,7 +68,20 @@ const getCustomModel = [
     }
 ];
 
-const createCache = (customModel, getCustomModel, customModelErr, getCustomModelErr) => {
+
+const listAliases = [
+    {
+        "AliasArn": "arn:aws:kms:us-east-1:012345678910:alias/example1", 
+        "AliasName": "custom/key", 
+        "TargetKeyId": "abcdef10-1517-49d8-b085-77c50b904149"
+    },
+    {
+        "AliasArn": "arn:aws:kms:us-east-1:012345678910:alias/custombedrockKey", 
+        "AliasName": "alias/aws/rds", 
+        "TargetKeyId": "abcdef10-1517-49d8-b085-77c50b904149"
+    }
+];
+const createCache = (customModel, getCustomModel, kmsAliases, customModelErr, getCustomModelErr) => {
     var modelName = (customModel && customModel.length) ? customModel[0].modelName: null;
     return {
         bedrock: {
@@ -86,14 +99,22 @@ const createCache = (customModel, getCustomModel, customModelErr, getCustomModel
                     }
                 }
             }
-        }
+        },
+        kms: {
+            listAliases: {
+                'us-east-1': {
+                    err: null,
+                    data: kmsAliases
+                },
+            },
+        },
     };
 };
 
 describe('customModelEncryptionEnabled', function () {
     describe('run', function () {
         it('should PASS if Bedrock Custom Model is Encrypted using CMK', function (done) {
-            const cache = createCache([listCustomModels[0]], getCustomModel[0]);
+            const cache = createCache([listCustomModels[0]], getCustomModel[0], [listAliases[0]]);
             customModelEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -103,7 +124,7 @@ describe('customModelEncryptionEnabled', function () {
         });
 
         it('should FAIL if Bedrock Custom Model is encrypted with AWS owned key', function (done) {
-            const cache = createCache([listCustomModels[1]], getCustomModel[1]);
+            const cache = createCache([listCustomModels[1]], getCustomModel[1], [listAliases[0]]);
             customModelEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
