@@ -7,28 +7,14 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures Microsoft Azure PostgreSQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure PostgreSQL server. This setting applies to all databases associated with the server.',
-    recommended_action: 'Modify PostgreSQL server to set desired minimum TLS version.',
+    recommended_action: 'Modify PostgreSQL server to use TLS version 1.2 or higher.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-tls-configurations',
     apis: ['servers:listPostgres'],
-    settings: {
-        postgresql_server_min_tls_version: {
-            name: 'PostgreSQL Server Minimum TLS Version',
-            description: 'Minimum desired TLS version for Microsoft Azure PostgreSQL servers',
-            regex: '^(1.0|1.1|1.2)$',
-            default: '1.2'
-        }
-    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
-
-        var config = {
-            postgresql_server_min_tls_version: settings.postgresql_server_min_tls_version || this.settings.postgresql_server_min_tls_version.default
-        };
-
-        var desiredVersion = parseFloat(config.postgresql_server_min_tls_version);
 
         async.each(locations.servers, function(location, rcb) {
             var servers = helpers.addSource(cache, source,
@@ -57,13 +43,13 @@ module.exports = {
                             location, server.id);
                     } else {
                         var numericTlsVersion = parseFloat(server.minimalTlsVersion.replace('TLS', '').replace('_', '.'));
-                        if (numericTlsVersion >= desiredVersion) {
+                        if (numericTlsVersion >= 1.2) {
                             helpers.addResult(results, 0,
-                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than desired TLS version ${config.postgresql_server_min_tls_version}`,
+                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than 1.2`,
                                 location, server.id);
                         } else {
                             helpers.addResult(results, 2,
-                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is less than desired TLS version ${config.postgresql_server_min_tls_version}`,
+                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is less than 1.2`,
                                 location, server.id);  
                         }    
                           
