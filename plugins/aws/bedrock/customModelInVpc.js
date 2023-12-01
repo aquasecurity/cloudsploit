@@ -61,12 +61,12 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2,
                         'Bedrock custom model is not configured within a VPC', region, resource);
-                    }
                 }
+            }
     
-                rcb();
-            }, function(){
-                callback(null, results, source);
-            });
-        }
-    };
+            rcb();
+        }, function(){
+            callback(null, results, source);
+        });
+    }
+};
