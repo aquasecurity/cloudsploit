@@ -89,22 +89,22 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'Bedrock custom model is configured within a private VPC',
                             region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'Bedrock custom model is not configured within a private VPC',
-                                region, resource);
-                        }
                     } else {
                         helpers.addResult(results, 2,
-                            'Bedrock custom model does not have VPC configured',
+                            'Bedrock custom model is not configured within a private VPC',
                             region, resource);
                     }
+                } else {
+                    helpers.addResult(results, 2,
+                        'Bedrock custom model does not have VPC configured',
+                        region, resource);
                 }
+            }
     
-                rcb();
-            }, function(){
-                callback(null, results, source);
-            });
-        }
-    };
+            rcb();
+        }, function(){
+            callback(null, results, source);
+        });
+    }
+};
                     
