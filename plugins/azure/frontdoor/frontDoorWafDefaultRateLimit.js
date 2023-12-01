@@ -35,7 +35,7 @@ module.exports = {
             for (let policy of afdWafPolicies.data) {
                 if (!policy.id) continue;
                 var found = policy.customRules && policy.customRules.rules?
-                    policy.customRules.rules.find(rule => rule.ruleType.toLowerCase() == 'ratelimitrule' && rule.action.toLowerCase() == 'block') : 'false';
+                    policy.customRules.rules.find(rule => rule.ruleType && rule.ruleType.toLowerCase() == 'ratelimitrule' && rule.action && rule.action.toLowerCase() == 'block') : false;
                 
                 if (found) {
                     helpers.addResult(results, 0, 'Front Door WAF policy has rate limit custom rule configured', location, policy.id);
