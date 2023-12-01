@@ -44,7 +44,7 @@ module.exports = {
                     continue;
                 }
                 if (listContentKeyPolicies.data.length > 0) {
-                     helpers.addResult(results, 0, 'Azure Media Service has content key policy configured', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Azure Media Service has content key policy configured', location, mediaService.id);
                 } else {
                     helpers.addResult(results, 2, 'Azure Media Service does not have content key policy configured', location, mediaService.id);
                 }
