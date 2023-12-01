@@ -41,6 +41,7 @@ module.exports = {
                 var failingDomains = [];
                 const customDomains = helpers.addSource(cache, source,
                     ['customDomain', 'listByFrontDoorProfiles', location, profile.id]);
+
                 if (!customDomains || customDomains.err || !customDomains.data) {
                     helpers.addResult(results, 3,
                         'Unable to query Front Door custom domains: ' + helpers.addError(customDomains), location, profile.id);
