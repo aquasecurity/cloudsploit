@@ -35,6 +35,7 @@ module.exports = {
 
             for (let server of servers.data) {
                 if (!server.id) continue;
+
                 if (server.byokEnforcement && server.byokEnforcement.toLowerCase() === 'enabled') {
                     helpers.addResult(results, 0, 'PostgreSQL server is encrypted using CMK', location, server.id);
                 } else {
