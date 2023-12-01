@@ -30,6 +30,7 @@ module.exports = {
         'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
         'appmeshVGHealthChecks'         : require(__dirname + '/plugins/aws/appmesh/appmeshVGHealthChecks.js'),
 
+        'privateCustomModel'            :require(__dirname + '/plugins/aws/bedrock/privateCustomModel.js'),
         'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
         
 
