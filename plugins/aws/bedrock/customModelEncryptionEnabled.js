@@ -9,12 +9,26 @@ module.exports = {
     more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
     recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Master Keys',
     link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/encryption-custom-job.html',
-    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel', 'KMS:listAliases'],
+    apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel', 'KMS:listKeys', 'KMS:describeKey'],
+    settings: {
+        bedrock_model_desired_encryption_level: {
+            name: 'Bedrock Custom Model Encryption Level',
+            description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
+            regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
+            default: 'awscmk',
+        }
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var config = {
+            desiredEncryptionLevelString: settings.bedrock_model_desired_encryption_level || this.settings.bedrock_model_desired_encryption_level.default
+        };
+
+        var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
+        var currentEncryptionLevel;
 
         async.each(regions.bedrock, function(region, rcb){
             var listCustomModels = helpers.addSource(cache, source,
@@ -32,26 +46,14 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Bedrock custom model found', region);
                 return rcb();
             }
-            var listAliases = helpers.addSource(cache, source,
-                ['kms', 'listAliases', region]);
+            var listKeys = helpers.addSource(cache, source,
+                ['kms', 'listKeys', region]);
 
-            if (!listAliases || listAliases.err || !listAliases.data) {
+            if (!listKeys || listKeys.err || !listKeys.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for KMS aliases: ${helpers.addError(listAliases)}`,
-                    region);
+                    `Unable to list KMS keys: ${helpers.addError(listKeys)}`, region);
                 return rcb();
             }
-
-            var aliasId;
-            var kmsAliases = {};
-            //Create an object where key is kms key ARN and value is alias name
-            listAliases.data.forEach(function(alias){
-                if (alias.AliasArn && alias.TargetKeyId) {
-                    aliasId = alias.AliasArn.replace(/:alias\/.*/, ':key/' + alias.TargetKeyId);
-                    kmsAliases[aliasId] = alias.AliasName;
-                }
-            });
-
 
             for (let model of listCustomModels.data){
                 if (!model.modelArn|| !model.modelName) continue;
@@ -68,27 +70,42 @@ module.exports = {
                 }
 
                 if (getCustomModel.data.modelKmsKeyArn) {
+                    var kmsKeyId = getCustomModel.data.modelKmsKeyArn.split('/')[1] ? getCustomModel.data.modelKmsKeyArn.split('/')[1] : getCustomModel.data.modelKmsKeyArn;
 
-                    if (kmsAliases[getCustomModel.data.modelKmsKeyArn]) {
-                        if (kmsAliases[getCustomModel.data.modelKmsKeyArn] === 'alias/aws/bedrock'){
-                            helpers.addResult(results, 2,
-                                'Bedrock custom model is not using Customer Master Key for encryption',
-                                region, resource);
-                        } else {
-                            helpers.addResult(results, 0,
-                                'Bedrock custom model is using Customer Master Key for encryption',
-                                region, resource);
-                        }
+                    var describeKey = helpers.addSource(cache, source,
+                        ['kms', 'describeKey', region, kmsKeyId]);  
+                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                        helpers.addResult(results, 3,
+                            `Unable to query KMS key: ${helpers.addError(describeKey)}`,
+                            region, getCustomModel.data.modelKmsKeyArn);
+                        continue;
+                    }
+                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} \
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Bedrock custom modelencryption key "${getCustomModel.data.modelKmsKeyArn}" not found`,
+                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} \
+                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
+                
+                } else if(desiredEncryptionLevel == 2){
+                    helpers.addResult(results, 0,
+                        `Bedrock Custom model is encrypted with awskms \
+                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Bedrock custom model does not have encryption at rest enabled',
+                        `Bedrock Custom model is encrypted with awskms \
+                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                         region, resource);
-                }          
+                }         
             }
 
             rcb();
