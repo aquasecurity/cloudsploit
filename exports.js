@@ -806,7 +806,7 @@ module.exports = {
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
         'logDurationEnabled'            : require(__dirname + '/plugins/azure/postgresqlserver/logDurationEnabled.js'),
-        'postgresqlCMKEncrypted'        : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlEncryptionAtRestWithCMK.js'),
+        'postgresqlCMKEncrypted'        : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlCMKEncrypted.js'),
         'logDisconnectionsEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/logDisconnectionsEnabled.js'),
         'logConnectionsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logConnectionsEnabled.js'),
         'logCheckpointsEnabled'         : require(__dirname + '/plugins/azure/postgresqlserver/logCheckpointsEnabled.js'),

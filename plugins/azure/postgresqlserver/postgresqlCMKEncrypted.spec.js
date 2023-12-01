@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var postgresqlEncryptionAtRestWithCMK = require('./postgresqlEncryptionAtRestWithCMK');
+var postgresqlCMKEncrypted = require('./postgresqlCMKEncrypted');
 
 const listPostgres = [
     {
@@ -80,11 +80,11 @@ const createCache = (listPostgres) => {
     };
 };
 
-describe('postgresqlEncryptionAtRestWithCMK', function() {
+describe('postgresqlCMKEncrypted', function() {
     describe('run', function() {
         it('should give passing result if no servers', function(done) {
             const cache = createCache({});
-            postgresqlEncryptionAtRestWithCMK.run(cache, {}, (err, results) => {
+            postgresqlCMKEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing PostgreSQL Servers found');
@@ -95,7 +95,7 @@ describe('postgresqlEncryptionAtRestWithCMK', function() {
 
         it('should give failing result if PostgreSQL Server is not encrypted using CMK', function(done) {
             const cache = createCache([listPostgres[0]]);
-            postgresqlEncryptionAtRestWithCMK.run(cache, {}, (err, results) => {
+            postgresqlCMKEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('PostgreSQL server is not encrypted using CMK');
@@ -106,7 +106,7 @@ describe('postgresqlEncryptionAtRestWithCMK', function() {
 
         it('should give passing result if PostgreSQL Server is encrypted using CMK', function(done) {
             const cache = createCache([listPostgres[1]]);
-            postgresqlEncryptionAtRestWithCMK.run(cache, {}, (err, results) => {
+            postgresqlCMKEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('PostgreSQL server is encrypted using CMK');
@@ -116,7 +116,7 @@ describe('postgresqlEncryptionAtRestWithCMK', function() {
         });
         it('should give UnKnown result if unable to query postgreSQL Server', function(done) {
             const cache = createCache(null);
-            postgresqlEncryptionAtRestWithCMK.run(cache, {}, (err, results) => {
+            postgresqlCMKEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for PostgreSQL Servers:');
