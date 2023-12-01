@@ -32,7 +32,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Bedrock custom model found', region);
                 return rcb();
             }
-             var listAliases = helpers.addSource(cache, source,
+            var listAliases = helpers.addSource(cache, source,
                 ['kms', 'listAliases', region]);
 
             if (!listAliases || listAliases.err || !listAliases.data) {
