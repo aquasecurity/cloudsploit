@@ -47,7 +47,7 @@ describe('namespaceLocalAuth', function () {
             namespaceLocalAuth.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Service Bus namespaces found');
+                expect(results[0].message).to.include('No existing Service Bus namespaces found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
