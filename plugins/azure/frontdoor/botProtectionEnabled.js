@@ -37,7 +37,7 @@ module.exports = {
 
                 var found = policy.managedRules &&
                     policy.managedRules.managedRuleSets ?
-                    policy.managedRules.managedRuleSets.find(ruleset => ruleset.ruleSetType.toLowerCase() == 'microsoft_botmanagerruleset') : false;
+                    policy.managedRules.managedRuleSets.find(ruleset => ruleset.ruleSetType && ruleset.ruleSetType.toLowerCase() == 'microsoft_botmanagerruleset') : false;
 
                 if (found) {
                     helpers.addResult(results, 0, 'Front Door WAF policy has bot protection enabled', location, policy.id);

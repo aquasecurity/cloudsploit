@@ -80,7 +80,8 @@ const createCache = (afdWafPolicies) => {
     };
 };
 
-const createErrorCache = () => {
+const createErrorCache = (key) => {
+  if (key == 'noAfd') {
     return {
         afdWafPolicies: {
             listAll: {
@@ -90,6 +91,15 @@ const createErrorCache = () => {
             }
         }
     };
+  } else {
+    return {
+      afdWafPolicies: {
+          listAll: {
+              'global': {}
+          }
+      }
+  };
+  }
 };
 describe('botProtectionEnabled', function () {
     describe('run', function () {
@@ -117,7 +127,7 @@ describe('botProtectionEnabled', function () {
         });
 
         it('should give pass result if no existing front door waf policy found', function (done) {
-            const cache = createErrorCache();
+            const cache = createErrorCache('noAfd');
             botProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -126,6 +136,17 @@ describe('botProtectionEnabled', function () {
                 done();
             });
         });
+
+        it('should give unknown result if Unable to query for Front Door WAF policies:', function (done) {
+          const cache = createErrorCache();
+          botProtectionEnabled.run(cache, {}, (err, results) => {
+              expect(results.length).to.equal(1);
+              expect(results[0].status).to.equal(3);
+              expect(results[0].message).to.include('Unable to query for Front Door WAF policies:');
+              expect(results[0].region).to.equal('global');
+              done();
+          });
+      });
 
     });
 });
