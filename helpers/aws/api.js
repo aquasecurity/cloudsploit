@@ -636,6 +636,10 @@ var calls = {
         listModelCustomizationJobs:{
             property: 'modelCustomizationJobSummaries"',
             paginate: 'NextToken',
+        },
+        getModelInvocationLoggingConfiguration: {
+            property: 'loggingConfig', 
+            paginate: 'NextToken'
         }
     },
     CloudFormation: {
@@ -1871,6 +1875,12 @@ var postcalls = [
                 reliesOnCall: 'listCustomModels',
                 filterKey: 'modelIdentifier',
                 filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
             }
         },
         CloudFormation: {

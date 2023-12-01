@@ -4,11 +4,11 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Custom Model Encryption Enabled',
     category: 'BedRock',
-    domain: 'Application Integration',
-    description: 'Ensure that an Amazon Bedrock custom model is encrypted by AWS KMS Customer Master Keys.',
+    domain: 'Machine Learning',
+    description: 'Ensure that an Amazon Bedrock custom models are encrypted using KMS customer master keys (CMKs)',
     more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
     recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Master Keys',
-    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/encryption-custom-job.html',
+    link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/data-encryption.html',
     apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel'],
 
     run: function(cache, settings, callback) {
@@ -38,7 +38,6 @@ module.exports = {
                 return rcb();
             }
 
-
             for (let model of listCustomModels.data){
                 if (!model.modelArn|| !model.modelName) continue;
                
@@ -55,11 +54,11 @@ module.exports = {
 
                 if (getCustomModel.data.modelKmsKeyArn) {
                     helpers.addResult(results, 0,
-                        'Bedrock custom model have CMK encryption enabled',
+                        'Bedrock custom model is encrypted using KMS customer master key(CMK)',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        'Bedrock custom model does not have CMK encryption enabled',
+                        'Bedrock custom model is not encrypted using KMS customer master key(CMK)',
                         region, resource);
                 }
             }
