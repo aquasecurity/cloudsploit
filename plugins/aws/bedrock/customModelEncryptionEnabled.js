@@ -95,11 +95,11 @@ module.exports = {
                             region, resource);
                     }
                 
-                } else if(desiredEncryptionLevel == 2){
+                } else if (desiredEncryptionLevel == 2){
                     helpers.addResult(results, 0,
                         `Bedrock Custom model is encrypted with awskms \
                             which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                            region, resource);
+                        region, resource);
                 } else {
                     helpers.addResult(results, 2,
                         `Bedrock Custom model is encrypted with awskms \
