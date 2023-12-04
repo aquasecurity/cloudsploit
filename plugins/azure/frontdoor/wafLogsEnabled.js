@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure Front Door WAF logs are enabled.',
     more_info: 'Azure Front Door captures several types of logs. Web application firewall (WAF) logs can be used to detect potential attacks, and false positive detections that might indicate legitimate requests that the WAF blocked.',
     recommended_action: 'Ensure that diagnostic setting for Front Door WAF logs is enabled.',
-    link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-logs',
+    link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-monitor?pivots=front-door-standard-premium',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
     run: function(cache, settings, callback) {
