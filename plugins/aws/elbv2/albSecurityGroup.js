@@ -36,7 +36,9 @@ module.exports = {
 
             for (let alb of describeLoadBalancers.data){
 
-                if (!alb.LoadBalancerArn || (!alb.Type && alb.Type.toLowerCase() === 'application')) continue;
+                if (!alb.LoadBalancerArn || (!alb.Type || alb.Type.toLowerCase() !== 'application')) {
+                    continue;
+                }
 
                 if (alb.SecurityGroups && alb.SecurityGroups.length){
                     helpers.addResult(results, 0, 'Application Load Balancer has security group associated', region,alb.LoadBalancerArn);
