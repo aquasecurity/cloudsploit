@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Services Managed Identity for Storage Account Authentication',
+    title: 'Media Services Managed Identity for Storage Account Authentication',
     category: 'Media Services',
-    domain: 'Identity and Access Management',
+    domain: 'Content Delivery',
     description: 'Ensure that Azure Media Services have managed identity enabled for Storage Account authentication.',
     more_info: 'Enabling managed identity for storage authentication allows secure access to Azure Storage without explicit credentials, enhancing security and simplifying access management for Azure Media Services.',
-    link: 'https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview',
-    recommended_action: 'Modify the media service\'s storage account settings and enable diagnostic logs.',
+    link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities#media-services-managed-identity-scenarios',
+    recommended_action: 'Modify the media service\'s storage account settings and enable managed identity.',
     apis: ['mediaServices:listAll'],
 
     run: function(cache, settings, callback) {
@@ -36,9 +36,9 @@ module.exports = {
                 if (!mediaService.id) continue;
 
                 if (mediaService.storageAuthentication && mediaService.storageAuthentication.toLowerCase() === 'managedidentity') {
-                    helpers.addResult(results, 0, 'Managed Identity is enabled for Azure Media Service storage authentication', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account has managed identity enabled for storage account authentication', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Managed Identity is not enabled for Azure Media Service storage authentication', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account has managed identity disabled for storage account authentication', location, mediaService.id);
                 }
             }
 
