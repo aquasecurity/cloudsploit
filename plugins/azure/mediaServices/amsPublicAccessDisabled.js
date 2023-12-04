@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Services Public Access Disabled',
+    title: 'Media Services Public Access Disabled',
     category: 'Media Services',
-    domain: 'Network Access Control',
+    domain: 'Content Delivery',
     description: 'Ensure that Microsoft Azure Media Services have public access disabled.',
-    more_info: 'Diagnostic logs provide valuable insights into the operation and health of Media Services. By enabling diagnostic logs, you can gather diagnostic data that could be useful to create notification alerts.',
-    link: 'https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/media-services-security-baseline',
+    more_info: 'Disabling public network access improves security by ensuring that Media Services resources are not exposed on the public internet. ',
+    link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/security-azure-policy',
     recommended_action: 'Modify the media service network settings and enable private access.',
     apis: ['mediaServices:listAll'],
 
