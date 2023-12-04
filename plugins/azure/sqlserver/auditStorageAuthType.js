@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function(server) {
+            servers.data.forEach(server=> {
                 const serverBlobAuditingPolicies = helpers.addSource(cache, source,
                     ['serverBlobAuditingPolicies', 'get', location, server.id]);
 
@@ -49,15 +49,15 @@ module.exports = {
                             if (serverBlobAuditingPolicy.state.toLowerCase()=='enabled') {
                                 if (serverBlobAuditingPolicy.storageAccountSubscriptionId !== '00000000-0000-0000-0000-000000000000') {
                                     if (serverBlobAuditingPolicy.isManagedIdentityInUse) {
-                                        helpers.addResult(results, 0, 'Managed identity is configured as authentication type for audit logs storage on the SQL server', location, server.id);
+                                        helpers.addResult(results, 0, 'Managed identity is configured as authentication type for audit logs storage on SQL server', location, server.id);
                                     } else {
-                                        helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on the SQL server', location, server.id);
+                                        helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
                                     }
                                 } else {
-                                    helpers.addResult(results, 0, 'Azure SQL Auditing not using account storage for the SQL serverr', location, server.id);
+                                    helpers.addResult(results, 0, 'Azure SQL Auditing not using account storage for SQL serverr', location, server.id);
                                 }
                             } else {
-                                helpers.addResult(results, 0, 'Azure SQL Auditing disabled for the SQL server', location, server.id);
+                                helpers.addResult(results, 0, 'Azure SQL Auditing disabled for SQL server', location, server.id);
                             }
                         });
                     }
