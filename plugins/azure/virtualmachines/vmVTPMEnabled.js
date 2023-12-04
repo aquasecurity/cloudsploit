@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure VMs vTPM Enabled',
+    title: 'VM vTPM Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Virtual Trusted Platform Module (vTPM) is enabled for Azure virtual machines (VM) to validate boot integrity, securely store keys and secrets, and support advanced threat detection.',
