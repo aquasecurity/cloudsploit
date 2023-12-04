@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Transparent Data Encryption on SQL Databases',
+    title: 'Transparent Data Encryption Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Enables Transparent Data Encryption (TDE) on SQL databases for enhanced security',
+    description: 'Ensure Transparent Data Encryption (TDE) is enabled on SQL databases for enhanced security',
     more_info: 'TDE helps protect sensitive data at rest by encrypting the database files.',
     recommended_action: 'Enable TDE for SQL databases to enhance data security.',
     link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption?view=sql-server-ver15',
@@ -31,7 +31,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function(server) {
+            servers.data.forEach(server=> {
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -43,19 +43,19 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
                             
                             var transparentDataEncryption = helpers.addSource(cache, source, ['transparentDataEncryption', 'list', location, database.id]);
                             
                             if (!transparentDataEncryption || transparentDataEncryption.err || !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
-                                helpers.addResult(results, 3, 'Unable to query for SQL Database transparent data encryption: ' + helpers.addError(transparentDataEncryption), location, database.id);
+                                helpers.addResult(results, 3, 'Unable to query transparent data encryption for SQL Database: ' + helpers.addError(transparentDataEncryption), location, database.id);
                                 return;
                             }
 
                             if (transparentDataEncryption.data[0].state.toLowerCase()=='enabled') {
-                                helpers.addResult(results, 0, 'SQL Database transparent data encryption is Enabled', location, database.id);
+                                helpers.addResult(results, 0, 'Transparent data encryption is Enabled for SQL Database', location, database.id);
                             } else {
-                                helpers.addResult(results, 2, 'SQL Database transparent data encryption is Disabled', location, database.id);
+                                helpers.addResult(results, 2, 'Transparent data encryption is Disabled for SQL Database', location, database.id);
                             }
                         });
                     }
