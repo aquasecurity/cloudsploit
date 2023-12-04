@@ -47,7 +47,7 @@ module.exports = {
                         // Loop through databases
                         databases.data.forEach(database=> {
                           
-                            if (database.isLedgerOn==true) {
+                            if (database.isLedgerOn == true) {
                                 helpers.addResult(results, 0, 'Azure ledger is enabled for SQL database', location, database.id);
                             } else {
                                 helpers.addResult(results, 2, 'Azure ledger is not enabled for SQL database', location, database.id);
