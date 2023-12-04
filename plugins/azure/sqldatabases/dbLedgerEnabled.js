@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Database Azure Ledger Enabled',
+    title: 'Database Ledger Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensure Azure ledger is enabled to protect the integrity of data for SQL databases.',
+    description: 'Ensure ledger is enabled to protect the integrity of data for SQL databases.',
     more_info: 'Azure ledger helps protect the integrity of data by enabling customers to use cryptographic seals on their data.',
     recommended_action: 'Enable Azure ledger for all future tables in the SQL database to enhance data integrity.',
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver16',
@@ -48,9 +48,9 @@ module.exports = {
                         databases.data.forEach(database=> {
                           
                             if (database.isLedgerOn == true) {
-                                helpers.addResult(results, 0, 'Azure ledger is enabled for SQL database', location, database.id);
+                                helpers.addResult(results, 0, 'Ledger is enabled for SQL database', location, database.id);
                             } else {
-                                helpers.addResult(results, 2, 'Azure ledger is not enabled for SQL database', location, database.id);
+                                helpers.addResult(results, 2, 'Ledger is not enabled for SQL database', location, database.id);
                             }
                                 
                         });
