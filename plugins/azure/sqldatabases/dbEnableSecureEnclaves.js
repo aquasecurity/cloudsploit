@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure Always Encrypted with secure enclaves is enabled at the database level for enhanced data security.',
     more_info: 'Always Encrypted with secure enclaves allows encrypted data to be processed inside a secure enclave for improved security.',
     recommended_action: 'Enable Always Encrypted with secure enclaves for the SQL database to enhance data security.',
-    link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-enclaves-security-features?view=sql-server-ver15',
+    link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-enclaves?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer'],
     
     run: function(cache, settings, callback) {
