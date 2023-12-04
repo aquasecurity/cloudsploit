@@ -50,7 +50,7 @@ module.exports = {
                             frontDoorWafLogsEnabled = true;
                         }
                     });
-                 if (frontDoorWafLogsEnabled) {
+                    if (frontDoorWafLogsEnabled) {
                         helpers.addResult(results, 0, 'Front Door profile WAF logs are enabled', location, profile.id);
                     } else {
                         helpers.addResult(results, 2, 'Front Door profile WAF logs are not enabled', location, profile.id);
