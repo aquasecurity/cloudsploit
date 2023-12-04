@@ -52,7 +52,7 @@ module.exports = {
                                 helpers.addResult(results, 3, 'Unable to query diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
                             } else {
                                 if (!diagnosticSettings.data.length) {
-                                    helpers.addResult(results, 2, 'diagnostic settings not configured for SQL database', location, database.id);
+                                    helpers.addResult(results, 2, 'Diagnostic settings not configured for SQL database', location, database.id);
                                 } else { 
                                     diagnosticSettings.data.forEach(settings=> { 
                                         var enabledDiagnosticSettings = [...settings.metrics, ...settings.logs].filter((e => e.enabled)).map((e)=>e.category);
