@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure VMs Security Type',
+    title: 'VM Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensure Trusted Launch is selected for Azure virtual machines (VM) to enhance security against advanced and persistent attack techniques.',
+    description: 'Ensure Trusted Launch is selected for Azure virtual machines (VM).',
     more_info: 'Trusted Launch provides additional security features on Gen 2 virtual machines, offering defense against sophisticated threats.',
-    recommended_action: 'Enable Trusted Launch for Azure virtual machines to leverage coordinated infrastructure technologies for enhanced security.',
+    recommended_action: 'Select Trusted Launch as security type for Azure virtual machines.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
     apis: ['virtualMachines:listAll'],
 
@@ -23,7 +23,7 @@ module.exports = {
             if (!virtualMachines) return rcb();
 
             if (virtualMachines.err || !virtualMachines.data) {
-                helpers.addResult(results, 3, 'Unable to query for virtual machines: ' + helpers.addError(virtualMachines), location);
+                helpers.addResult(results, 3, 'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
             }
 
