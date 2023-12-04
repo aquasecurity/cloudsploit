@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure automatic Ledger digest storage is enabled for enhanced data integrity.',
     more_info: 'Configuring automatic Ledger digest storage allows for the generation and storage of digests for later verification.',
-    recommended_action: 'Configure an Azure Storage account or Azure Confidential Ledger for automatic Ledger digest storage. Alternatively, manually generate digests and store them in a secure location.',
+    recommended_action: 'Configure an Azure Storage account or Azure Confidential Ledger for automatic Ledger digest storage. ',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-ledger-overview',
     apis: ['servers:listSql', 'databases:listByServer', 'ledgerDigestUploads:list'],
     
