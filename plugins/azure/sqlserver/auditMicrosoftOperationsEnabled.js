@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure auditing of Microsoft support operations is enabled on SQL server.',
     more_info: 'Enabling this option captures Microsoft support engineers (DevOps) operations for enhanced monitoring and troubleshooting.',
     recommended_action: 'Enable the option to capture Microsoft support operations and write them to a selected Storage account, Log Analytics workspace, or Event Hub.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/security-overview-auditing?tabs=azure-powershell#configure-azure-sql-auditing',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-microsoft-support-operations?view=azuresql',
     apis: ['servers:listSql', 'devOpsAuditingSettings:list'],
     run: function(cache, settings, callback) {
         var results = [];
