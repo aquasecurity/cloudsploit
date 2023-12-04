@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Automatically Delete Disks on VM Termination',
+    title: 'Azure VM"s Automatic Disks Delete Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Enable the option to automatically delete disks when the associated VM is terminated to ensure all confidential information is wiped.',
+    description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated to ensure all confidential information is wiped.',
     more_info: 'Disks persist independently from VMs. Enabling this option ensures that all disks associated with a VM are deleted automatically when the VM is terminated, enhancing security.',
     recommended_action: 'Configure VMs to automatically delete disks when the VM is terminated to enhance security and prevent lingering confidential information.',
     link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/disk-delete',
@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.storageProfile && virtualMachine.storageProfile.osDisk && virtualMachine.storageProfile.osDisk.deleteOption=='Delete') {
-                    helpers.addResult(results, 0, 'Automatically delete disks with VM is configured', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Automatic disks delete with VM is enabled', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Automatically delete disks with VM is not configured', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Automatic disks delete with VM is not enabled', location, virtualMachine.id);
                 }
             });
             rcb();

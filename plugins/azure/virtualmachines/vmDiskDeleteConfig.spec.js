@@ -67,7 +67,7 @@ describe('autoDeleteDisks', function() {
             autoDeleteDisks.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Automatically delete disks with VM is configured');
+                expect(results[0].message).to.include('Automatic disks delete with VM is enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -78,7 +78,7 @@ describe('autoDeleteDisks', function() {
             autoDeleteDisks.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Automatically delete disks with VM is not configured');
+                expect(results[0].message).to.include('Automatic disks delete with VM is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
