@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Azure Ledger for SQL Databases',
+    title: 'Database Azure Ledger Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Enable Azure ledger to protect the integrity of data for SQL databases.',
+    description: 'Ensure Azure ledger is enabled to protect the integrity of data for SQL databases.',
     more_info: 'Azure ledger helps protect the integrity of data by enabling customers to use cryptographic seals on their data.',
     recommended_action: 'Enable Azure ledger for all future tables in the SQL database to enhance data integrity.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-ledger-overview',
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             // Loop through servers and check databases
-            servers.data.forEach(function(server) {
+            servers.data.forEach(server=> {
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -45,12 +45,12 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         // Loop through databases
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
                           
                             if (database.isLedgerOn==true) {
-                                helpers.addResult(results, 0, 'Azure ledger is enabled', location, database.id);
+                                helpers.addResult(results, 0, 'Azure ledger is enabled for SQL database', location, database.id);
                             } else {
-                                helpers.addResult(results, 2, 'Azure ledger is disabled', location, database.id);
+                                helpers.addResult(results, 2, 'Azure ledger is disabled for SQL database', location, database.id);
                             }
                                 
                         });
