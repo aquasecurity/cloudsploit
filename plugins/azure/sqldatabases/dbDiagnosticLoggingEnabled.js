@@ -5,7 +5,7 @@ module.exports = {
     title: 'Database Diagnostic Logging Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensure diagnostic logging is enabled for enhanced monitoring and troubleshooting.',
+    description: 'Ensure diagnostic logging is enabled for SQL databases.',
     more_info: 'Enabling diagnostic logging provides valuable insights into SQL database performance and helps identify issues.',
     recommended_action: 'Enable diagnostic logging for SQL databases with the minimum required data recording settings: SQLInsights, ErrorsTimeouts, BlocksDeadlocks, BasicInstanceAndApp, AdvancedWorkloadManagement.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-monitoring-with-dmvs?tabs=sql-insights',
