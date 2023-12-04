@@ -51,7 +51,8 @@ var locations = [
     'brazilsoutheast',      // (South America) Brazil Southeast
     'canadacentral',        // (Canada) Canada Central
     'canadaeast',           // (Canada) Canada East
-    'qatarcentral',         // (Middle East) Qatar Central
+    'qatarcentral',         // (Middle East) Qatar
+    'polandcentral',        // (Europe) Poland Central
 ];
 
 module.exports = {
@@ -95,6 +96,9 @@ module.exports = {
     redisCaches: locations,
     pricings: ['global'],
     roleDefinitions: ['global'],
+    aad: ['global'],
+    groups: ['global'],
+    servicePrincipals: ['global'],
     autoscaleSettings: locations,
     resourceGroups: locations,
     policyDefinitions: locations,
@@ -114,4 +118,5 @@ module.exports = {
     bastionHosts: locations,
     applications: ['global'],
     eventGrid: locations,
+    eventHub: locations
 };

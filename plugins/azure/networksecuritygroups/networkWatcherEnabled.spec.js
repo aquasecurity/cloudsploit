@@ -2,28 +2,24 @@ var expect = require('chai').expect;
 var networkWatcherEnabled = require('./networkWatcherEnabled');
 
 const networkWatchers = [
-  {
-    "name": "NetworkWatcher_eastus",
-    "id": "/subscriptions/def1d0ac-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus",
-    "etag": "W/\"a12bcd34-5333-4361-a645-0f110712c17e\"",
-    "type": "Microsoft.Network/networkWatchers",
-    "location": "eastus",
-    "properties": {
-      "provisioningState": "Succeeded",
-      "runningOperationIds": []
+    {
+        "name": "NetworkWatcher_eastus",
+        "id": "/subscriptions/def1d0ac-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus",
+        "etag": "W/\"a12bcd34-5333-4361-a645-0f110712c17e\"",
+        "type": "Microsoft.Network/networkWatchers",
+        "location": "eastus",
+        "provisioningState": "Succeeded",
+        "runningOperationIds": []
+    },
+    {
+        "name": "NetworkWatcher_eastus2",
+        "id": "/subscriptions/def1d0ac-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus2",
+        "etag": "W/\"s31sde21-686a-449e-b678-1eb7bc38310e\"",
+        "type": "Microsoft.Network/networkWatchers",
+        "location": "eastus2",
+        "provisioningState": "Failed",
+        "runningOperationIds": []
     }
-  },
-  {
-    "name": "NetworkWatcher_eastus2",
-    "id": "/subscriptions/def1d0ac-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus2",
-    "etag": "W/\"s31sde21-686a-449e-b678-1eb7bc38310e\"",
-    "type": "Microsoft.Network/networkWatchers",
-    "location": "eastus2",
-    "properties": {
-      "provisioningState": "Failed",
-      "runningOperationIds": []
-    }
-  }
 ];
 
 const virtualNetworks = [
@@ -41,22 +37,22 @@ const virtualNetworks = [
             ]
         },
         "subnets": [
-        {
-            "name": "aadds-subnet",
-            "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Network/virtualNetworks/aadds-vnet/subnets/aadds-subnet",
-            "etag": "W/\"9647a968-4864-4a13-a916-5cf7dd6fabff\"",
-            "properties": {
-            "provisioningState": "Succeeded",
-            "addressPrefix": "10.0.6.0/24",
-            "networkSecurityGroup": {
-                "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Network/networkSecurityGroups/aadds-nsg"
-            },
-            "delegations": [],
-            "privateEndpointNetworkPolicies": "Enabled",
-            "privateLinkServiceNetworkPolicies": "Enabled"
-            },
-            "type": "Microsoft.Network/virtualNetworks/subnets"
-        }
+            {
+                "name": "aadds-subnet",
+                "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Network/virtualNetworks/aadds-vnet/subnets/aadds-subnet",
+                "etag": "W/\"9647a968-4864-4a13-a916-5cf7dd6fabff\"",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "addressPrefix": "10.0.6.0/24",
+                    "networkSecurityGroup": {
+                        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/akhtar-rg/providers/Microsoft.Network/networkSecurityGroups/aadds-nsg"
+                    },
+                    "delegations": [],
+                    "privateEndpointNetworkPolicies": "Enabled",
+                    "privateLinkServiceNetworkPolicies": "Enabled"
+                },
+                "type": "Microsoft.Network/virtualNetworks/subnets"
+            }
         ],
         "virtualNetworkPeerings": [],
         "enableDdosProtection": false

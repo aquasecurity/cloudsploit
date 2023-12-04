@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures that VM OS Disk Encryption is enabled for virtual machines',
     more_info: 'Encrypting VM OS disks (boot volume) ensures that the entire contents are fully unrecoverable without a key, protecting the volume from unwarranted reads.',
     recommended_action: 'Enable VM OS Disk Encryption on all virtual machines',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-apply-disk-encryption',
     apis: ['disks:list'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +

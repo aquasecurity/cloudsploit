@@ -119,6 +119,46 @@ const describeSecurityGroups = [
     }
 ];
 
+const describeNetworkInterfaces = [
+    {
+        "AvailabilityZone": "us-east-1b",
+        "Description": "RDSNetworkInterface",
+        "Groups": [
+            {
+                "GroupName": "default",
+                "GroupId": "sg-aa941691"
+            },
+            {
+                "GroupName": "HTTP-Access",
+                "GroupId": "sg-02e2c70cd463dca29"
+            },
+        ],
+        "InterfaceType": "interface",
+        "Ipv6Addresses": [],
+        "MacAddress": "12:95:7b:ae:63:91",
+        "NetworkInterfaceId": "eni-0681cbf0930452492",
+        "OwnerId": "111122223333",
+        "PrivateDnsName": "ip-172-31-93-52.ec2.internal",
+        "PrivateIpAddress": "172.31.93.52",
+        "PrivateIpAddresses": [
+            {
+                "Primary": true,
+                "PrivateDnsName": "ip-172-31-93-52.ec2.internal",
+                "PrivateIpAddress": "172.31.93.52"
+            }
+        ],
+        "Ipv4Prefixes": [],
+        "Ipv6Prefixes": [],
+        "RequesterId": "amazon-rds",
+        "RequesterManaged": true,
+        "SourceDestCheck": true,
+        "Status": "available",
+        "SubnetId": "subnet-673a9a46",
+        "TagSet": [],
+        "VpcId": "vpc-99de2fe4"
+    },
+]
+
 const createCache = (securityGroups, networkInterfaces, functions, securityGroupsErr, networkInterfacesErr, functionsErr) => {
     return {
         ec2:{
@@ -167,7 +207,7 @@ const createNullCache = () => {
 describe('openHTTP', function () {
     describe('run', function () {
         it('should PASS if no public open ports found', function (done) {
-            const cache = createCache([describeSecurityGroups[0]]);
+            const cache = createCache([describeSecurityGroups[0]], [describeNetworkInterfaces[0]]);
             openHTTP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -176,7 +216,7 @@ describe('openHTTP', function () {
         });
 
         it('should FAIL if security group has HTTP TCP port open to public', function (done) {
-            const cache = createCache([describeSecurityGroups[1]]);
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]]);
             openHTTP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -206,6 +246,15 @@ describe('openHTTP', function () {
             const cache = createNullCache();
             openHTTP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should PASS if open port security group attached to the network interface has no public IP associated', function (done) {
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]] );
+            openHTTP.run(cache, {check_network_interface:'true'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Authentication is enabled for App Services, redirecting unauthenticated users to the login page.',
     more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. It also handles authentication of users with specific providers (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter).',
     recommended_action: 'Enable App Service Authentication for all App Services.',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-authentication-authorization',
     apis: ['webApps:list', 'webApps:getAuthSettings'],
     remediation_min_version: '202104011300',
     remediation_description: 'The App Service Authentication option will be enabled for the web app',
@@ -48,6 +48,8 @@ module.exports = {
             }
 
             webApps.data.forEach(function(webApp) {
+                if (webApp.kind && webApp.kind.includes('workflowapp')) return;
+
                 const authSettings = helpers.addSource(
                     cache, source, ['webApps', 'getAuthSettings', location, webApp.id]
                 );

@@ -113,7 +113,7 @@ module.exports = {
         'asia-east1', 'asia-east2', 'asia-northeast1', 'asia-northeast2', 'asia-northeast3', 'australia-southeast1'
     ],
     cloudbuild: ['global', 'us-east1', 'us-east4', 'us-west2', 'us-west3', 'us-west4', 'us-central1', 'us-west1',
-        'northamerica-northeast1', 'northamerica-northeast2', 'southamerica-east1', 'southamerica-west1', 'europe-west1', 'europe-west2', 
+        'northamerica-northeast1', 'northamerica-northeast2', 'southamerica-east1', 'southamerica-west1', 'europe-west1', 'europe-west2',
         'europe-west3', 'europe-west4', 'europe-west6', 'europe-central2', 'europe-north1', 'asia-south1', 'asia-south2', 'asia-southeast1', 'asia-southeast2',
         'asia-east1', 'asia-east2', 'asia-northeast1', 'asia-northeast2', 'asia-northeast3', 'australia-southeast1', 'australia-southeast2'
     ],
@@ -143,11 +143,15 @@ module.exports = {
     subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
+    groups: ['global'],
+    memberships: ['global'],
+    iam: ['global'],
     deployments: ['global'],
     urlMaps: ['global'],
     apiKeys: ['global'],
     resourceRecordSets: ['global'],
     services: ['global'],
     accessApproval: ['global'],
-    networkRoutes: ['global']
+    networkRoutes: ['global'],
+    roles: ['global']
 };

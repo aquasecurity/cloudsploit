@@ -65,6 +65,19 @@ describe('output', function () {
             expect(buffer.cache).to.include(' errors="1" ');
             expect(buffer.cache).to.include('error message');
         })
+
+        it('content should not contain XML characters', function() {
+            var buffer = createOutputBuffer();
+            var handler = output.createJunit(buffer, { mocha: true, junit: 'test.junit' });
+            handler.writeResult({status: 0}, {title:'myTitle&<>"\''}, 'key');
+            handler.writeResult({status: 2, message: 'fail message&<>"\''}, {title:'myTitleFail'}, 'key-fail');
+            handler.writeResult({status: 3, message: 'error message&<>"\''}, {title:'myTitleError'}, 'key-error');
+            handler.close();
+
+            expect(buffer.cache).to.include('myTitle&amp;&lt;&gt;&quot;&apos;');
+            expect(buffer.cache).to.include(' fail message&amp;&lt;&gt;&quot;&apos;');
+            expect(buffer.cache).to.include(' error message&amp;&lt;&gt;&quot;&apos;');
+        })
     })
 
     describe('csv', function () {

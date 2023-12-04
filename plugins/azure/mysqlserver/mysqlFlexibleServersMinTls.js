@@ -40,6 +40,7 @@ module.exports = {
                 if (!configurations || configurations.err || !configurations.data) {
                     helpers.addResult(results, 3,
                         'Unable to query for  ' + helpers.addError(configurations), location, flexibleServer.id);
+                    continue;
                 }
                     
                 var configuration = configurations.data.filter(config => {

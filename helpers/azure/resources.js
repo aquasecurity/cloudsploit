@@ -147,6 +147,16 @@ module.exports = {
     roleDefinitions: {
         list: 'id'
     },
+    aad: {
+        listRoleAssignments: 'id',
+        listDenyAssignments: 'id'
+    },
+    groups: {
+        list: 'id'
+    },
+    servicePrincipals: {
+        list: 'id'
+    },
     securityContacts: {
         list: 'id'
     },

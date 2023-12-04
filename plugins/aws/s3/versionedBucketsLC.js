@@ -10,11 +10,13 @@ module.exports = {
     recommended_action: 'Configure lifecycle rules for buckets which have versioning enabled',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/how-to-set-lifecycle-configuration-intro.html',
     apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation', 'S3:getBucketLifecycleConfiguration'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioninng', 's3:putBucketLifecycleConfiguration','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -42,7 +44,7 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket versioning for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketVersioning),
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (getBucketVersioning.data.Status == 'Enabled') {
                 var getBucketLifecycleConfiguration = helpers.addSource(cache, source,
                     ['s3', 'getBucketLifecycleConfiguration', region, bucket.Name]);
@@ -51,11 +53,11 @@ module.exports = {
                     getBucketLifecycleConfiguration.err.code && getBucketLifecycleConfiguration.err.code == 'NoSuchLifecycleConfiguration') {
                     helpers.addResult(results, 2,
                         `S3 bucket ${bucket.Name} has versioning enabled but has lifecycle configuration disabled`,
-                        bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 } else if (!getBucketLifecycleConfiguration || getBucketLifecycleConfiguration.err || !getBucketLifecycleConfiguration.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for S3 bucket lifecycle configuration: ${helpers.addError(getBucketLifecycleConfiguration)}`,
-                        bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 } else if (getBucketLifecycleConfiguration.data.Rules &&
                     getBucketLifecycleConfiguration.data.Rules.length) {
                     var ruleExists = getBucketLifecycleConfiguration.data.Rules.find(rule => rule.Status && rule.Status.toUpperCase() === 'ENABLED');
@@ -68,26 +70,26 @@ module.exports = {
                         if (ruleForNonCurrent) {
                             helpers.addResult(results, 0,
                                 `S3 bucket ${bucket.Name} has versioning and lifecycle configuration enabled for non-current versions`,
-                                bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                                bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                         } else {
                             helpers.addResult(results, 2,
                                 `S3 bucket ${bucket.Name} has versioning and lifecycle configuration enabled but lifecycle policy includes no rule for non-current objects`,
-                                bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                                bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                         }
                     } else {
                         helpers.addResult(results, 2,
                             `S3 bucket ${bucket.Name} has versioning and lifecycle configuration configured but lifecycle policy does not have enabled rules`,
-                            bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                            bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     }
                 } else {
                     helpers.addResult(results, 2,
                         `S3 bucket ${bucket.Name} has versioning enabled but has lifecycle configuration disabled`,
-                        bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 }
             } else {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has versioning disabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             }
         });
 

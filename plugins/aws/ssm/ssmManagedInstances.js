@@ -4,12 +4,14 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Managed Instances',
     category: 'EC2',
-    domain: 'Identity Access and Management',
+    domain: 'Identity and Access Management',
     description: 'Ensure that all Amazon EC2 instances are managed by AWS Systems Manager (SSM).',
     more_info: 'Systems Manager simplifies AWS cloud resource management, quickly detects and resolve operational problems, and makes it easier to operate and manage your instances securely at large scale.',
     recommended_action: 'Configure AWS EC2 instance as SSM Managed Instances',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/managed_instances.html',
     apis: ['EC2:describeInstances', 'SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:CreateAssociation', 'ec2:RunInstances', 'ec2:AssociateIamInstanceProfile', 'ec2:TerminateInsatance', 'ssm:DeleteAssociation'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

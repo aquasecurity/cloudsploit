@@ -202,7 +202,7 @@ module.exports = {
                     var conditionalCaller = null;
 
                     if (statement.Condition) {
-                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
+                        conditionalCaller = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId, settings);
                     }
 
                     // Check for wildcards without condition

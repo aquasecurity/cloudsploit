@@ -19,6 +19,7 @@ var async = require('async');
 
 var helpers     = require(__dirname + '/../../helpers/google');
 var collectData = require(__dirname + '/../../helpers/shared');
+var collectors = require(__dirname + '/index.js');
 var apiCalls    = require(__dirname + '/../../helpers/google/api.js');
 
 var calls = apiCalls.calls;
@@ -26,6 +27,8 @@ var calls = apiCalls.calls;
 var postcalls = apiCalls.postcalls;
 
 var tertiarycalls = apiCalls.tertiarycalls;
+
+var specialcalls = apiCalls.specialcalls;
 
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
@@ -171,9 +174,30 @@ var collect = function(GoogleConfig, settings, callback) {
                             cb();
                         }
                     });
-                }
+                },
+                function(cb) {
+                    async.eachOfLimit(specialcalls, 10, function(specialCallObj, service, specialCallCb) {
+                        async.eachOfLimit(specialCallObj, 10, function(subCallObj, one, subCallCb) {
+                            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + one) === -1) return subCallCb();
+                            collectors[service][one](GoogleConfig, collection, settings, regions, specialCallObj, service, client, function() {
+                                if (settings.identifier && specialcalls[service].sendIntegration && specialcalls[service].sendIntegration.enabled) {
+                                    integrationCall(collection, settings, service, [], [specialcalls], function() {
+                                        subCallCb();
+                                    });
+                                } else {
+                                    subCallCb();
+                                }
+                            });
+                        }, function() {
+                            specialCallCb();
+                        });
+                    }, function() {
+                        cb();
+                    });
+                },
+
             ], function() {
-                if (collection && (!collection.projects || !collection.projects.get)) {
+                if (collection && (!collection.projects || !collection.projects.get || (collection.projects && collection.projects.get && !Object.keys(collection.projects.get).length))) {
                     collection.projects = {
                         ...collection.projects,
                         get: {

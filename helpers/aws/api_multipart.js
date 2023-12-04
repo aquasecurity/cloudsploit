@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2'
+    'EC2', 'IAM'
 ];
 
 var calls = [
@@ -677,7 +677,7 @@ var calls = [
             },
             listRoles: {
                 property: 'Roles',
-                paginate: 'Marker'
+                override: true
             },
             listPolicies: {
                 property: 'Policies',
@@ -991,10 +991,7 @@ var calls = [
             },
             describeParameters: {
                 property: 'Parameters',
-                params: {
-                    MaxResults: 50
-                },
-                paginate: 'NextToken'
+                override: true
             },
             listAssociations: {
                 property: 'Associations',
@@ -1025,6 +1022,12 @@ var calls = [
                 property: 'checks',
                 params: {language: 'en'},
             },
+        },
+        SecurityHub: {
+            describeHub: {
+                property: '',
+                paginate: 'NextToken'
+            }
         },
         Transfer: {
             listServers: {
@@ -1293,6 +1296,21 @@ var postcalls = [
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsReadIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
@@ -1384,7 +1402,12 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Advanced Threat Protection is enabled on SQL Servers.',
     more_info: 'Azure Defender for SQL is a unified package for advanced SQL security capabilities.',
     recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
     apis: ['servers:listSql', 'advancedThreatProtectionSettings:listByServer'],
 
     run: function(cache, settings, callback) {

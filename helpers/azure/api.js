@@ -31,9 +31,11 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'LogAlerts'
  InvService: 'LogAlerts'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'LogAlerts'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'LogAlerts'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
 
  Take the reference from the below map
 */
@@ -140,7 +142,25 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
             BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
-        }
+        },
+    'File Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
+            InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
+            BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
+            BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
+        },
+    'SQL Databases':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
+            BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
+            BridgeCollectionService: 'databases', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations
@@ -430,10 +450,53 @@ var calls = {
         listDomains: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
         }
+    },
+    eventHub: {
+        listEventHub: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
+        }
+    },
+    // For CIEM
+    aad: {
+        listRoleAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01'
+        },
+        listDenyAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
+        }
+    },
+    // For CIEM
+    groups: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/groups',
+            graph: true
+        }
+    },
+    // For CIEM
+    servicePrincipals: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
+            graph: true
+        }
     }
 };
 
 var postcalls = {
+    //For CIEM
+    aad: {
+        getGroupMembers: {
+            reliesOnPath: 'groups.list',
+            properties: ['id'],
+            url: 'https://graph.microsoft.com/v1.0/groups/{id}/members',
+            graph: true
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['roleDefinitions','users','groups','servicePrincipals']
+            }
+        }
+    },
     recoveryServiceVaults: {
         getRecoveryServiceVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
@@ -669,7 +732,14 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
-        },
+        }
+    },
+    customDomain: {
+        listByFrontDoorProfiles: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/customDomains?api-version=2021-06-01'
+        }
     },
     vaults: {
         getKeys: {
@@ -697,6 +767,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
         },
+        sendIntegration: serviceMap['SQL Databases']
     },
     serverAzureADAdministrators: {
         listByServer: {
@@ -856,6 +927,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAzureFrontDoor: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
@@ -875,7 +951,18 @@ var tertiarycalls = {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByVirtualNetworks: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByContainerRegistries: {
+            reliesOnPath: 'registries.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
@@ -904,6 +991,10 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
         sendIntegration: serviceMap['Table Service']
     },
     fileService: {
@@ -911,13 +1002,14 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
-        listSharesSegmentedNew: {
-            reliesOnPath: ['storageAccounts.listKeys'],
-            rateLimit: 3000
-        }
+        sendIntegration: serviceMap['File Service']
     },
     blobService: {
         listContainersSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }
@@ -928,6 +1020,10 @@ var specialcalls = {
             rateLimit: 3000
         },
         listQueuesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },

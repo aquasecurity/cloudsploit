@@ -155,9 +155,10 @@ module.exports = {
         });
     },
 
-    addLocations: function(obj, service, collection, err, data) {
+    addLocations: function(obj, service, collection, err, data , skip_locations) {
         if (!service || !locations[service]) return;
         locations[service].forEach(function(location) {
+            if (skip_locations.includes(location)) return;
             collection[location.toLowerCase()] = {};
             if (err) {
                 collection[location.toLowerCase()].err = err;

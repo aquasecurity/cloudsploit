@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that SQL Server Auditing retention policy is set to greater than 90 days',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity. Having a long retention policy ensures that all logs are kept for auditing and legal purposes.',
     recommended_action: 'Ensure that the storage account retention policy for each SQL server is set to greater than 90 days.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
 
     run: function(cache, settings, callback) {

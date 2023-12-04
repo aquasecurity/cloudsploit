@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Determine if TCP port 9042 for Cassandra Client is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Cassandra Client should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 9042 to known IP addresses. ',
     apis: ['networkSecurityGroups:listAll'],
     

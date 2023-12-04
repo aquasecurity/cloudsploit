@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures that approved virtual machine extensions are installed.',
     more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. Extensions installed should be approved by the organization to meet the organizational security requirements.',
     recommended_action: 'Uninstall unapproved virtual machine extensions',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
     settings: {
         vm_approved_extensions: {

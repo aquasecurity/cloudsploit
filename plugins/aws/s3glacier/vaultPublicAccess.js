@@ -17,6 +17,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
         }
     },
+    realtime_triggers: ['glacier:CreateVault', 'glacier:SetVaultAccessPolicy', 'glacier:DeleteVault'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -83,11 +84,11 @@ module.exports = {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
                     // Evaluates whether the principal is open to everyone/anonymous
-                    var principalEval = helpers.globalPrincipal(statement.Principal);
+                    var principalEval = helpers.globalPrincipal(statement.Principal, settings);
 
                     // Evaluates whether condition is scoped or global
                     let scopedCondition;
-                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId);
+                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId, settings);
 
                     if (!scopedCondition && principalEval && effectEval) {
                         if (statement.Action && typeof statement.Action === 'string') {

@@ -4,7 +4,7 @@
 
 1. Log into your Google Cloud console and "Activate" your Cloud Shell.
 1. Create a new file called aqua-security-audit-role.yaml. You can use: ``nano aqua-security-audit-role.yaml``.
-1. Copy and paste the following yaml code in the file on your Cloud Shell, press Ctrl + X and type "Y" to save the file.
+1. Copy and paste the following yaml code in the file on your Cloud Shell, press Ctrl + X and type "Y" to save the file. *Note!* Exclude all rows starting with 'resourcemanager' if you do not use Organization.
 ```   
 name: roles/AquaCSPMSecurityAudit
 title: Aqua CSPM Security Audit
@@ -52,9 +52,14 @@ includedPermissions:
   - resourcemanager.tagValues.list
   - storage.buckets.getIamPolicy
   - storage.buckets.list
+  - deploymentmanager.deployments.list
+  - dataproc.clusters.list
+  - artifactregistry.repositories.list
+  - composer.environments.list
 stage: GA
 ```
 4. Run the following command to create the role, use your Organization Id to create the Role at the Org Level: ``gcloud iam roles create AquaCSPMSecurityAudit --organization=YOUR_ORGANIZATION_ID --file=aqua-security-audit-role.yaml``
+   * *You can use ``--project=YOUR_PROJECT_ID`` instead of ``--organization=<YOUR_ORGANIZATION_ID>``*
 
 ## Create Service Account
 

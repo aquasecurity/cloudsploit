@@ -17,12 +17,14 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketWebsite', 's3:DeleteBucketWebsite','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var config = {
             s3_website_whitelist_empty_buckets: settings.s3_website_whitelist_empty_buckets || this.settings.s3_website_whitelist_empty_buckets.default,
         };
@@ -53,13 +55,13 @@ module.exports = {
 
                 if (!listObjects || listObjects.err || !listObjects.data) {
                     helpers.addResult(results, 3,
-                        'Unable to list S3 bucket objects: ' + helpers.addError(listObjects), bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        'Unable to list S3 bucket objects: ' + helpers.addError(listObjects), bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     return;
                 }
 
                 if (!listObjects.data.Contents || !listObjects.data.Contents.length){
                     helpers.addResult(results, 0,
-                        'Bucket : ' + bucket.Name + ' is empty', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        'Bucket : ' + bucket.Name + ' is empty', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     return;
                 }
             }
@@ -71,20 +73,20 @@ module.exports = {
                 getBucketWebsite.err.code && getBucketWebsite.err.code == 'NoSuchWebsiteConfiguration') {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' does not have static website hosting enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (!getBucketWebsite || getBucketWebsite.err || !getBucketWebsite.data) {
                 helpers.addResult(results, 3,
                     'Error querying bucket website for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketWebsite),
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (Object.keys(getBucketWebsite.data).length) {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' has static website hosting enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' does not have static website hosting enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             }
         });
         callback(null, results, source);

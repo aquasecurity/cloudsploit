@@ -24,10 +24,11 @@ module.exports = {
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
-        
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -53,7 +54,7 @@ module.exports = {
             let strings = [];
             for (let group of describeSecurityGroups.data){
                 strings = [];
-                let resource = 'arn:aws:ec2:' + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
+                let resource = `arn:${awsOrGov}:ec2:` + region + ':' + group.OwnerId + ':security-group/' + group.GroupId;
                 for (let permission of group.IpPermissionsEgress){
                     for (let range  of permission.IpRanges) {
                         if (range.CidrIp === '0.0.0.0/0') {
@@ -84,7 +85,8 @@ module.exports = {
                     }
                 }
                 if (strings.length) {
-                    if (config.ec2_skip_unused_groups && group.GroupId && !usedGroups.includes(group.GroupId)) {
+                    if (config.ec2_skip_unused_groups && group.GroupId && usedGroups &&
+                        usedGroups.length && !usedGroups.includes(group.GroupId)) {
                         helpers.addResult(results, 1, `Security Group: ${group.GroupId} is not in use`,
                             region, resource);
                     } else {
@@ -93,14 +95,14 @@ module.exports = {
                             ' (' + group.GroupName +
                             ') has ' + strings.join(' and '), region,
                             resource);
-                    }   
+                    }
                 } else {
                     helpers.addResult(results, 0,
                         `Security group: ${group.GroupId} (${group.GroupName}) does not have all ports or protocols open to the public`,
                         region, resource);
                 }
             }
-        
+
             rcb();
         }, function(){
             callback(null, results, source);

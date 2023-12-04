@@ -157,32 +157,80 @@ const getRolePolicy = [
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-Full',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3A%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor0',
+                Effect: 'Allow',
+                Action: [ 's3:*' ],
+                Resource: [ '*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-WildCard',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22s3%3Ag%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ 's3:g*' ],
+                Resource: [ '*' ]
+            }
+        ]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'S3-Limited',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22AWSCloudTrailCreateLogStream2014110%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3ACreateLogStream%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3Alog-group%3Aaws-cloudtrail-logs-193063503752-432bdd08%3Alog-stream%3A193063503752_CloudTrail_us-east-1%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22AWSCloudTrailPutLogEvents20141101%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22logs%3APutLogEvents%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Alogs%3Aus-east-1%3A193063503752%3Alog-group%3Aaws-cloudtrail-logs-193063503752-432bdd08%3Alog-stream%3A193063503752_CloudTrail_us-east-1%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'AWSCloudTrailCreateLogStream2014110',
+                Effect: 'Allow',
+                Action: [ 'logs:CreateLogStream' ],
+                Resource: [ 'arn:aws:logs:us-east-1:193063503752:log-group:aws-cloudtrail-logs-193063503752-432bdd08:log-stream:193063503752_CloudTrail_us-east-1*' ]
+            },
+            {
+                Sid: 'AWSCloudTrailPutLogEvents20141101',
+                Effect: 'Allow',
+                Action: [ 'logs:PutLogEvents' ],
+                Resource: [ 'arn:aws:logs:us-east-1:193063503752:log-group:aws-cloudtrail-logs-193063503752-432bdd08:log-stream:193063503752_CloudTrail_us-east-1*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'All-Action-Resources',
-        "PolicyDocument":'%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ '*' ],
+                Resource: [ '*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'All-Actions',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%22%2A%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%22arn%3Aaws%3As3%3A%3A%3A%2A%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ '*' ],
+                Resource: [ 'arn:aws:s3:::*' ]
+            }]
     },
     {
         "RoleName": 'test-role-2',
         "PolicyName": 'All-Actions',
-        "PolicyDocument": '%7B%0A%20%20%20%20%22Version%22%3A%20%222012-10-17%22%2C%0A%20%20%20%20%22Statement%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor0%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22s3%3AputObject%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22ec2%3ACreateFleet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3As3%3A%3A%3A%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Sid%22%3A%20%22VisualEditor1%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Effect%22%3A%20%22Allow%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Action%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22ec2%3ACreateFleet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22Resource%22%3A%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22arn%3Aaws%3Aec2%3Aus-east-1%3A193063503752%3Ainstance%2F%2A%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%5D%0A%7D'
+        "PolicyDocument": [
+            {
+                Sid: 'VisualEditor0',
+                Effect: 'Allow',
+                Action: [ 's3:putObject', 'ec2:CreateFleet' ],
+                Resource: [ 'arn:aws:s3:::*' ] },
+            {
+                Sid: 'VisualEditor1',
+                Effect: 'Allow',
+                Action: [ 'ec2:CreateFleet' ],
+                Resource: [ 'arn:aws:ec2:us-east-1:193063503752:instance/*' ]
+            }]
     }
 ];
 
@@ -554,7 +602,7 @@ describe('rolePolicyUnusedServices', function () {
             });
         });
 
-        it('should UKNOWN if unable to query for Discovered Resources', function (done) {
+        it('should UNKNOWN if unable to query for Discovered Resources', function (done) {
             const cache = createCache([configStatus[0]], null, [listRoles[1]], getRole[1], listAttachedRolePolicies[0]);
             rolePolicyUnusedServices.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);

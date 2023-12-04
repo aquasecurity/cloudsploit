@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Microsoft Defender is enabled for Storage.',
     more_info: 'Turning on Microsoft Defender for Storage enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Storage in Defender plans for the subscription.',
-    link: 'https://docs.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
     apis: ['pricings:list'],
 
     run: function(cache, settings, callback) {

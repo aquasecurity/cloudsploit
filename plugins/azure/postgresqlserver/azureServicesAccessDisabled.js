@@ -42,6 +42,12 @@ module.exports = {
                 if (!firewallRules || firewallRules.err || !firewallRules.data) {
                     helpers.addResult(results, 3,
                         'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, postgresServer.id);
+                    continue;
+                }
+
+                if (!firewallRules.data.length) {
+                    helpers.addResult(results, 0, 'No existing SQL Server Firewall Rules found', location, postgresServer.id);
+                    continue;
                 }
 
                 let accessToServices =  true;
@@ -49,7 +55,7 @@ module.exports = {
                     if (rule.name && rule.name.toLowerCase() === 'allowallwindowsazureips') {
                         accessToServices = false;
                         break;
-                    }   
+                    }
                 }
 
                 if (accessToServices) {

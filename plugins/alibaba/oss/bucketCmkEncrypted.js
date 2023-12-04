@@ -59,7 +59,9 @@ module.exports = {
 
         var listKeys = helpers.addSource(cache, source, ['kms', 'ListKeys', region]);
 
-        if (!listKeys || listKeys.err || !listKeys.data) {
+        if (!listKeys) return callback(null, results, source);
+
+        if (listKeys.err || !listKeys.data) {
             helpers.addResult(results, 3, 'Unable to query KMS keys: ' + helpers.addError(listKeys), region);
             return callback(null, results, source);
         }

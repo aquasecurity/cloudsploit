@@ -26,14 +26,12 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 ]
             };
 
-            helpers.makeCustomCollectorCall( cloudwatch, 'getMetricStatistics', params,retries, null, null, null, function(err, data) {
-                if (err) {
-                    collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].err = err;
-                }
-                collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].data = data;
-                cb();
+            helpers.makeCustomCollectorCall(cloudwatch, 'getMetricStatistics', params,retries, null, null, null, function(err, data) {
+                if (err) collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].err = err;
+                if (data) collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].data = data;
             });
         });
+        cb();
     }, function() {
         callback();
     });

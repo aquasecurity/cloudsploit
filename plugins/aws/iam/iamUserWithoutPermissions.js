@@ -4,7 +4,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM User Without Permissions',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensure that no IAM user exists without any permissions.',
     more_info: 'IAM users are created to perform any Console, CLI or API based operations on AWS cloud accounts. They are associated with policies that grant them permissions to perform required operations. An IAM user without any permission is a security risk, it is recommended to either add required permissions or delete them to adhere to compliance standards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html',
@@ -90,7 +90,8 @@ module.exports = {
                         return cb();
                     }
 
-                    if (listGroupPolicies.data.PolicyNames.length || listAttachedGroupPolicies.data.AttachedPolicies.length ){
+                    if ((listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length) || 
+                        (listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length)){
                         break;
                     }
                 }
