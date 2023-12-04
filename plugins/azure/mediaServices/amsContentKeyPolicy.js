@@ -2,9 +2,9 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Services Content Key Policy Exists',
+    title: 'Media Service Content Key Policy Exists',
     category: 'Media Services',
-    domain: 'Media Service Configuration',
+    domain: 'Content Delivery',
     description: 'Ensure that Microsoft Azure Media Services have Content Key Policy configured.',
     more_info: 'A Content Key Policy in Azure Media Services dictates how content keys, ensuring secure asset access, are delivered to end clients. It allows setting requirements or restrictions that keys with specific configurations must meet before being delivered to clients.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/drm-content-key-policy-concept',
