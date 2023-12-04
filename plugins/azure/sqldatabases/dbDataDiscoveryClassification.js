@@ -5,7 +5,7 @@ module.exports = {
     title: 'Data Discovery and Classification for SQL Databases',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Use data discovery and classification to classify the sensitivity of your data on SQL databases.',
+    description: 'Ensures data discovery and classification is implemented for SQL databases.',
     more_info: 'Data discovery and classification help identify and label sensitive data, enabling better data protection and compliance.',
     recommended_action: 'Implement data discovery and classification for SQL databases to classify the sensitivity of your data. Add appropriate classifications as needed.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-data-discovery-and-classification-get-started-portal',
@@ -31,7 +31,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function(server) {
+            servers.data.forEach(server => {
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -47,8 +47,8 @@ module.exports = {
 
                             var currentSensitivityLabels = helpers.addSource(cache, source, ['currentSensitivityLabels', 'list', location, database.id]);
 
-                            if (!currentSensitivityLabels || currentSensitivityLabels.err) {
-                                helpers.addResult(results, 2, 'Failed to check data discovery and classification: ' + helpers.addError(currentSensitivityLabels), location, database.id);
+                            if (!currentSensitivityLabels || !currentSensitivityLabels.data ||  currentSensitivityLabels.err) {
+                                helpers.addResult(results, 2, 'Unable to query data discovery and classification information: ' + helpers.addError(currentSensitivityLabels), location, database.id);
                             } else {
                                 if (currentSensitivityLabels.data.length) {
                                     helpers.addResult(results, 0, 'Data discovery and classification is being used', location, database.id);
