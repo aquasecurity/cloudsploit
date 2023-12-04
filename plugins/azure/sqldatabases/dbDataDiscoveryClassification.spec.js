@@ -174,7 +174,7 @@ describe('dataDiscoveryAndClassification', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Failed to check data discovery and classification');
+                expect(results[0].message).to.include('Unable to query data discovery and classification information: ');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
