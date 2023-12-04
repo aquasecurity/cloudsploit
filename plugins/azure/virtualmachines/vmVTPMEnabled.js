@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Virtual Trusted Platform Module (vTPM) is enabled for Azure virtual machines (VM).',
-    more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets.',
+    more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets. The vTPM enables attestation by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers).',
     recommended_action: 'Enable vTPM for Azure virtual machines.',
     link: 'https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-tpms-in-azure-confidential-vm',
     apis: ['virtualMachines:listAll'],
