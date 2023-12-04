@@ -5,7 +5,7 @@ module.exports = {
     title: 'Data Discovery and Classification for SQL Databases',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensures data discovery and classification is implemented for SQL databases.',
+    description: 'Ensures that data discovery and classification is implemented for SQL databases.',
     more_info: 'Data discovery and classification help identify and label sensitive data, enabling better data protection and compliance.',
     recommended_action: 'Implement data discovery and classification for SQL databases to classify the sensitivity of your data. Add appropriate classifications as needed.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-data-discovery-and-classification-get-started-portal',
