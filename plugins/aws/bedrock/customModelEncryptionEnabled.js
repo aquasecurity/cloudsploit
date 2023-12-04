@@ -5,9 +5,9 @@ module.exports = {
     title: 'Custom Model Encryption Enabled',
     category: 'BedRock',
     domain: 'Machine Learning',
-    description: 'Ensure that an Amazon Bedrock custom models are encrypted using KMS customer master keys (CMKs)',
-    more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Master Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
-    recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Master Keys',
+    description: 'Ensure that an Amazon Bedrock custom models are encrypted using KMS customer managed keys (CMKs)',
+    more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Managed Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
+    recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Managed Keys',
     link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/encryption-custom-job.html',
     apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
