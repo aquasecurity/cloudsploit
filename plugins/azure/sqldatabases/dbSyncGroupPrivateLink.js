@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'SQL Databases Private Link Enabled',
+    title: 'Database Private Link Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures SQL Database sync groups use private link when SQL DB sync with others databases.',
@@ -60,9 +60,9 @@ module.exports = {
 
                             syncGroups.data.forEach(syncGroup=> {
                                 if (syncGroup.usePrivateLinkConnection) {
-                                    helpers.addResult(results, 0, 'SQL Database sync group uses private link to sync with other databases', location, syncGroup.id);
+                                    helpers.addResult(results, 0, 'Database sync group uses private link to sync with other databases', location, syncGroup.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'SQL Database sync group does not uses private link to sync with other databases', location, syncGroup.id);
+                                    helpers.addResult(results, 2, 'Database sync group does not uses private link to sync with other databases', location, syncGroup.id);
                                 }
                             });
                         });
