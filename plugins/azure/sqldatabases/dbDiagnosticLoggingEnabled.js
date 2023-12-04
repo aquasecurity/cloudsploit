@@ -58,7 +58,7 @@ module.exports = {
                                         var enabledDiagnosticSettings = [...settings.metrics, ...settings.logs].filter((e => e.enabled)).map((e)=>e.category);
                                         var skippedRecommendedSettings = recommendedDiagnosticSettings.filter((e) => !enabledDiagnosticSettings.includes(e));
                                         if (skippedRecommendedSettings.length) {
-                                            helpers.addResult(results, 2, 'diagnostic settings are not configured with minimum requirements', location, settings.id);
+                                            helpers.addResult(results, 2, 'Diagnostic settings are not configured with minimum requirements', location, settings.id);
                                         } else {
                                             helpers.addResult(results, 0,
                                                 'Diagnostic settings are configured with minimum requirements', location, settings.id);
