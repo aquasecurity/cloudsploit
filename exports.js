@@ -882,8 +882,8 @@ module.exports = {
         'serverSendEmailToAdmins'       : require(__dirname + '/plugins/azure/sqlserver/serverSendEmailToAdmins.js'),
         'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
         'sqlServerSendScanReports'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerSendScanReports.js'),
-        'sqlServerHasTags': require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
-        'restrictOutboundNetworking': require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),
+        'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
+        'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),
         
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),

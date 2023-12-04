@@ -27,7 +27,7 @@ describe('restrictOutboundNetworking', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Outbound networking restrictions are configured for the SQL server');
+                expect(results[0].message).to.include('Outbound networking restrictions are configured for SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -39,11 +39,11 @@ describe('restrictOutboundNetworking', function () {
             restrictOutboundNetworking.run(cache, {}, callback);
         });
 
-        it('should give failing result if outbound networking restrictions are not configured for the SQL server', function (done) {
+        it('should give failing result if outbound networking restrictions are not configured for SQL server', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Outbound networking restrictions are not configured for the SQL server');
+                expect(results[0].message).to.include('Outbound networking restrictions are not configured for SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
