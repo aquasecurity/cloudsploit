@@ -2,9 +2,9 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Services Diagnostic Logs Enabled',
+    title: 'Media Services Diagnostic Logs Enabled',
     category: 'Media Services',
-    domain: 'Network Access Control',
+    domain: 'Content Delivery',
     description: 'Ensure that Microsoft Azure Media Services have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of Media Services. By enabling diagnostic logs, you can gather diagnostic data that could be useful to create notification alerts.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/monitoring/monitor-media-services',
@@ -43,6 +43,12 @@ module.exports = {
                         location, mediaService.id);
                     continue;
                 }
+
+                if (!diagnosticSettings.data.length){
+                    helpers.addResult(results, 0, 'No Diagnostic settings found', location, mediaService.id);
+                    continue;
+                }
+
                 var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
 
                 if (found) {

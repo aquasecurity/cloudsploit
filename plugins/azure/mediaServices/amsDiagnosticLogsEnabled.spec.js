@@ -133,5 +133,15 @@ describe('amsDiagnosticLogsEnabled', function() {
                 done();
             });
         });
+        it('should give passing result if no diagnostic settings found', function(done) {
+            const cache = createCache([mediaServices[0]], []);
+            amsDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Diagnostic settings found');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
     });
 });
