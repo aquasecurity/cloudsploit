@@ -77,11 +77,11 @@ describe('enableAzureLedger', function() {
             enableAzureLedger.run(cache, {}, callback);
         });
 
-        it('should give passing result if Azure ledger is enabled for the database', function(done) {
+        it('should give passing result if Ledger is enabled for the database', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure ledger is enabled for SQL database');
+                expect(results[0].message).to.include('Ledger is enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -94,11 +94,11 @@ describe('enableAzureLedger', function() {
             enableAzureLedger.run(cache, {}, callback);
         });
 
-        it('should give failing result if Azure ledger is not enabled for the database', function(done) {
+        it('should give failing result if Ledger is not enabled for the database', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure ledger is not enabled for SQL database');
+                expect(results[0].message).to.include('Ledger is not enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
