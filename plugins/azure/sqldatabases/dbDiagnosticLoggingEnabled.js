@@ -61,7 +61,7 @@ module.exports = {
                                             helpers.addResult(results, 2, 'diagnostic settings are not configured with minimum requirements', location, settings.id);
                                         } else {
                                             helpers.addResult(results, 0,
-                                                'diagnostic settings are configured with minimum requirements', location, settings.id);
+                                                'Diagnostic settings are configured with minimum requirements', location, settings.id);
                                         }
                                     });
 
