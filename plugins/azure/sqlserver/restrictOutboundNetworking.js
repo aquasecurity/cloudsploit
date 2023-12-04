@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure outbound networking restrictions are configured for the Azure SQL logical server.',
     more_info: 'Outbound firewall rules limit network traffic from the Azure SQL logical server to a customer-defined list of Azure Storage accounts and Azure SQL logical servers.',
     recommended_action: 'Configure outbound networking restrictions to allow access only to specified Azure Storage accounts and Azure SQL logical servers.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/firewall-configure#configure-outbound-networking-restrictions',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/outbound-firewall-rule-overview?view=azuresql',
     apis: ['servers:listSql'],
 
     run: function(cache, settings, callback) {
