@@ -62,23 +62,23 @@ describe('selectVTPM', function() {
             });
         });
 
-        it('should give passing result if vTPM is selected', function(done) {
+        it('should give passing result if vTPM is enabled', function(done) {
             const cache = createCache([virtualMachines[0]]);
             selectVTPM.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('vTPM is selected for Azure Virtual Machine');
+                expect(results[0].message).to.include('vTPM is enabled for Azure Virtual Machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if vTPM is not selected', function(done) {
+        it('should give failing result if vTPM is not enabled', function(done) {
             const cache = createCache([virtualMachines[1]]);
             selectVTPM.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('vTPM is not selected for Azure Virtual Machine');
+                expect(results[0].message).to.include('vTPM is not enabled for Azure Virtual Machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Select vTPM for Azure VMs',
+    title: 'Azure VMs vTPM Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Virtual Trusted Platform Module (vTPM) is enabled for Azure virtual machines (VM) to validate boot integrity, securely store keys and secrets, and support advanced threat detection.',
@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings.vTpmEnabled) {
-                    helpers.addResult(results, 0, 'vTPM is selected for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'vTPM is enabled for Azure Virtual Machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'vTPM is not selected for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'vTPM is not enabled for Azure Virtual Machine', location, virtualMachine.id);
                 }
             });
 
