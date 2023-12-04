@@ -36,12 +36,32 @@ module.exports = {
             for (let appGateway of appGateways.data) {
                 if (!appGateway.id) continue;
 
-                const sslPolicy = appGateway.sslPolicy? appGateway.sslPolicy : '';
-                if (sslPolicy.policyType && ((sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) ||
-                    (sslPolicy.policyType == 'Custom' && sslPolicy.minProtocolVersion && sslPolicy.minProtocolVersion.toLowerCase() == 'tlsv1_2'))) {
-                    helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports TLSV1_2', location, appGateway.id);
+                var found = false;
+                if (appGateway.sslPolicy && appGateway.sslPolicy.policyType) {
+                   const sslPolicy = appGateway.sslPolicy;
+                    if (sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) {
+                        found = true;
+                    } else if ((sslPolicy.policyType == 'Custom' ||  sslPolicy.policyType == 'CustomV2') && sslPolicy.minProtocolVersion) {
+                        // Check for protocol version if it matches the regex TLSV1.2 and then split on letter v
+                        var regexMatched = /^(tls)(v(\d+)_(\d+))$/i.test(sslPolicy.minProtocolVersion)? sslPolicy.minProtocolVersion.replace('_', '.').split(/v/i): ''
+                        if (regexMatched){ 
+                            var tlsVersion = parseFloat(regexMatched[1]);
+                            if (tlsVersion >= 1.2){
+                                found = true;
+                            }
+                        } else {
+                            helpers.addResult(results, 2, 'Application Gateway TLS version cannot be parsed', location, appGateway.id);
+                            break;
+                        }
+                    } 
+                    
+                    if (found){
+                        helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports latest TLS version', location, appGateway.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support latest TLS version', location, appGateway.id);
+                    }
                 } else {
-                    helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support TLSV1_2', location, appGateway.id);
+                    helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support latest TLS version', location, appGateway.id);
                 } 
             }
 
