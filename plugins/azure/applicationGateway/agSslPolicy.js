@@ -54,15 +54,12 @@ module.exports = {
                             break;
                         }
                     } 
-                    
-                    if (found){
-                        helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports latest TLS version', location, appGateway.id);
-                    } else {
-                        helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support latest TLS version', location, appGateway.id);
-                    }
+                } 
+                if (found){
+                    helpers.addResult(results, 0, 'Application Gateway is using SSL policy which supports latest TLS version', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Application Gateway is using SSL policy which does not support latest TLS version', location, appGateway.id);
-                } 
+                }
             }
 
             rcb();
