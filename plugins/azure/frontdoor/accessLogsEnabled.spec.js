@@ -191,17 +191,6 @@ describe('accessLogsEnabled', function () {
             });
         });
 
-        it('should give pass result if No existing Front Door diagnostics settings', function (done) {
-            const cache = createCache([profiles[1]], diagnosticSettings[2]);
-            accessLogsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No existing Front Door diagnostics settings');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
         it('should give passing result if Access Log are enabled for Azure Front Door', function (done) {
             const cache = createCache([profiles[0]], [diagnosticSettings[0]]);
             accessLogsEnabled.run(cache, {}, (err, results) => {

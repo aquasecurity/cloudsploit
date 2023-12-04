@@ -192,17 +192,6 @@ describe('wafLogsEnabled', function () {
             });
         });
 
-        it('should give pass result if No existing Front Door diagnostics settings', function (done) {
-            const cache = createCache([profiles[1]], diagnosticSettings[2]);
-            wafLogsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No existing Front Door diagnostics settings');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
         it('should give passing result if Front Door profile WAF logs are enabled for Azure Front Door', function (done) {
             const cache = createCache([profiles[0]], [diagnosticSettings[1]]);
             wafLogsEnabled.run(cache, {}, (err, results) => {

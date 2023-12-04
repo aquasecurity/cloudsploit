@@ -42,11 +42,15 @@ module.exports = {
 
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
-                } else if (!diagnosticSettings.data.length) {
-                    helpers.addResult(results, 2, 'No existing Front Door diagnostics settings found', location, profile.id);
                 } else {
-                    var accessLogsEnabled = helpers.diagnosticSettingLogs(diagnosticSettings, 'FrontDoorAccessLog', ['audit','allLogs']);
-                    if (accessLogsEnabled) {
+                    var frontDoorAccessLogEnabled = false;
+                    diagnosticSettings.data.forEach(setting => {
+                        var logs = setting.logs;
+                        if (logs.some(log => (log.categoryGroup === 'audit' || log.categoryGroup === 'allLogs' || log.category === 'FrontDoorAccessLog') && log.enabled)) {
+                            frontDoorAccessLogEnabled = true;
+                        }
+                    });
+                    if (frontDoorAccessLogEnabled) {
                         helpers.addResult(results, 0, 'Front Door access logs are enabled', location, profile.id);
                     } else {
                         helpers.addResult(results, 2, 'Front Door access logs are not enabled', location, profile.id);
