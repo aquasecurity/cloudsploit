@@ -37,7 +37,7 @@ module.exports = {
                 if (!server.id) return;
 
                 if (server.minimalTlsVersion && server.minimalTlsVersion !== 'TLSEnforcementDisabled') {
-                    const tlsVersionRegex = /^TLS1_\d$/;
+                    const tlsVersionRegex = /^TLS\d+_\d+$/;
                     if (!tlsVersionRegex.test(server.minimalTlsVersion)) {
                         helpers.addResult(results, 2, 'Postgresql server TLS version cannot be parsed', location, server.id);
                     } else {
