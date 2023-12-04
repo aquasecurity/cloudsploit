@@ -57,7 +57,7 @@ module.exports = {
                                     helpers.addResult(results, 0, 'Azure SQL Auditing not using account storage for SQL serverr', location, server.id);
                                 }
                             } else {
-                                helpers.addResult(results, 0, 'Azure SQL Auditing disabled for SQL server', location, server.id);
+                                helpers.addResult(results, 0, 'Azure SQL Auditing is not enabled for SQL server', location, server.id);
                             }
                         });
                     }
