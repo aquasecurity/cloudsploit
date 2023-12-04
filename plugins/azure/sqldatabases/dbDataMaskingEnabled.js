@@ -5,7 +5,7 @@ module.exports = {
     title: 'Dynamic Data Masking Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensures dynamic data masking is enabeld for all SQL databases.',
+    description: 'Ensures dynamic data masking is enabled for all SQL databases.',
     more_info: 'Dynamic data masking helps prevent unauthorized access to sensitive data by hiding it in query results.',
     recommended_action: 'Set up dynamic data masking to protect sensitive data exposure in SQL databases.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-dynamic-data-masking-get-started-portal',
