@@ -52,7 +52,7 @@ module.exports = {
                                 if (ledgerDigestUploads.data[0].state.toLowerCase() == 'enabled') {
                                     helpers.addResult(results, 0, 'Automatic Ledger digest storage is enabled for SQL database', location, database.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'Automatic Ledger digest storage is disabled for SQL database', location, database.id);
+                                    helpers.addResult(results, 2, 'Automatic Ledger digest storage is not enabled for SQL database', location, database.id);
                                 }
                             
                             }
