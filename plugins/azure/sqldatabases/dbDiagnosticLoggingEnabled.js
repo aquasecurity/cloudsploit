@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Diagnostic Logging for SQL Databases',
+    title: 'Database Diagnostic Logging Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Enable diagnostic logging for enhanced monitoring and troubleshooting.',
+    description: 'Ensure diagnostic logging is enabled for enhanced monitoring and troubleshooting.',
     more_info: 'Enabling diagnostic logging provides valuable insights into SQL database performance and helps identify issues.',
     recommended_action: 'Enable diagnostic logging for SQL databases with the minimum required data recording settings: SQLInsights, ErrorsTimeouts, BlocksDeadlocks, BasicInstanceAndApp, AdvancedWorkloadManagement.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-monitoring-with-dmvs?tabs=sql-insights',
@@ -44,7 +44,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
                             
                             var diagnosticSettings = helpers.addSource(cache, source, ['diagnosticSettings', 'listByDatabase', location, database.id]);
                         
@@ -52,16 +52,16 @@ module.exports = {
                                 helpers.addResult(results, 3, 'Unable to query diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
                             } else {
                                 if (!diagnosticSettings.data.length) {
-                                    helpers.addResult(results, 2, 'diagnostic settings not configured for the database', location, database.id);
+                                    helpers.addResult(results, 2, 'diagnostic settings not configured for SQL database', location, database.id);
                                 } else { 
-                                    diagnosticSettings.data.forEach(function(settings) { 
+                                    diagnosticSettings.data.forEach(settings=> { 
                                         var enabledDiagnosticSettings = [...settings.metrics, ...settings.logs].filter((e => e.enabled)).map((e)=>e.category);
                                         var skippedRecommendedSettings = recommendedDiagnosticSettings.filter((e) => !enabledDiagnosticSettings.includes(e));
                                         if (skippedRecommendedSettings.length) {
-                                            helpers.addResult(results, 2, 'diagnostic settings not configured with minimum requirements', location, settings.id);
+                                            helpers.addResult(results, 2, 'diagnostic settings are not configured with minimum requirements', location, settings.id);
                                         } else {
                                             helpers.addResult(results, 0,
-                                                'diagnostic settings configured with minimum requirements', location, settings.id);
+                                                'diagnostic settings are configured with minimum requirements', location, settings.id);
                                         }
                                     });
 
