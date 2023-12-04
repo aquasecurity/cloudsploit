@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure VM Automatic Disks Delete Enabled',
+    title: 'VM Automatic Disks Delete Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated to ensure all confidential information is wiped.',
+    description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated.',
     more_info: 'Disks persist independently from VMs. Enabling this option ensures that all disks associated with a VM are deleted automatically when the VM is terminated, enhancing security.',
-    recommended_action: 'Configure VMs to automatically delete disks when the VM is terminated to enhance security and prevent lingering confidential information.',
+    recommended_action: 'Configure VMs to automatically delete disks when the VM is terminated.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/delete?tabs=portal2%2Ccli3%2Cportal4%2Cportal5',
     apis: ['virtualMachines:listAll'],
 
@@ -23,7 +23,7 @@ module.exports = {
             if (!virtualMachines) return rcb();
 
             if (virtualMachines.err || !virtualMachines.data) {
-                helpers.addResult(results, 3, 'Unable to query for virtual machines: ' + helpers.addError(virtualMachines), location);
+                helpers.addResult(results, 3, 'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
             }
 
