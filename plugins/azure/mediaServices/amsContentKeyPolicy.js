@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Media Service Content Key Policy Exists',
+    title: 'Media Services Content Key Policy Exists',
     category: 'Media Services',
     domain: 'Content Delivery',
     description: 'Ensure that Microsoft Azure Media Services have Content Key Policy configured.',
