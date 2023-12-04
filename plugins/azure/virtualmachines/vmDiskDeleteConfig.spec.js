@@ -56,7 +56,7 @@ describe('autoDeleteDisks', function() {
             autoDeleteDisks.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for virtual machines');
+                expect(results[0].message).to.include('Unable to query for Virtual Machines');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
