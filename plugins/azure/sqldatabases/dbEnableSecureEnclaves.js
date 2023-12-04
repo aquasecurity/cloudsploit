@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Always Encrypted with Secure Enclaves for SQL Databases',
+    title: 'Database Secure Enclaves Encryption Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Enable Always Encrypted with secure enclaves at the database level for enhanced data security.',
+    description: 'Ensure Always Encrypted with secure enclaves is enabled at the database level for enhanced data security.',
     more_info: 'Always Encrypted with secure enclaves allows encrypted data to be processed inside a secure enclave for improved security.',
     recommended_action: 'Enable Always Encrypted with secure enclaves for the SQL database to enhance data security.',
     link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-enclaves-security-features?view=sql-server-ver15',
@@ -31,7 +31,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(function(server) {
+            servers.data.forEach(server=> {
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -43,12 +43,12 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
 
                             if (!database.preferredEnclaveType) {
-                                helpers.addResult(results, 2, 'Always Encrypted with secure enclaves disabled', location, database.id);
+                                helpers.addResult(results, 2, 'Always Encrypted with secure enclaves is disabled for SQL database', location, database.id);
                             } else {
-                                helpers.addResult(results, 0, 'Always Encrypted with secure enclaves enabled', location, database.id);
+                                helpers.addResult(results, 0, 'Always Encrypted with secure enclaves is enabled for SQL database', location, database.id);
                             }
                         }
                         );
