@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures data immutability is properly configured for blob services to protect critical data against deletion',
     more_info: 'Immutable storage helps store data securely by protecting critical data against deletion.',
     recommended_action: 'Enable a data immutability policy for all storage containers in the Azure storage account.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
     apis: ['storageAccounts:list', 'blobContainers:list', 'blobServices:list'],
     compliance: {
         hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +

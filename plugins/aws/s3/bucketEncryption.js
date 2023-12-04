@@ -30,7 +30,7 @@ module.exports = {
             required: false
         }
     },
-    realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket'],
+    realtime_triggers: ['s3:DeleteBucketEncryption', 's3:CreateBucket', 's3:putBucketEncryption','s3:DeleteBucket'],
     settings: {
         s3_encryption_require_cmk: {
             name: 'S3 Encryption Require CMK',
@@ -47,7 +47,7 @@ module.exports = {
         s3_encryption_kms_alias: {
             name: 'S3 Encryption KMS Alias',
             description: 'If set, S3 encryption must be configured using the KMS key alias specified. Be sure to include the alias/ prefix. Comma-delimited.',
-            regex: '^alias/[a-zA-Z0-9_/-,]{0,256}$',
+            regex: '^alias/[a-zA-Z0-9_\\/,\\-]{0,256}$',
             default: ''
         },
         s3_encryption_allow_cloudfront: {
@@ -256,6 +256,7 @@ module.exports = {
             // Check the S3 buckets for encryption
             function(cb) {
                 var region = helpers.defaultRegion(settings);
+                var awsOrGov = helpers.defaultPartition(settings);
 
                 var listBuckets = helpers.addSource(cache, source,
                     ['s3', 'listBuckets', region]);
@@ -277,7 +278,7 @@ module.exports = {
                     config.s3_encryption_allow_pattern.length) ? new RegExp(config.s3_encryption_allow_pattern) : false;
 
                 listBuckets.data.forEach(function(bucket){
-                    let bucketResource = 'arn:aws:s3:::' + bucket.Name;
+                    let bucketResource = `arn:${awsOrGov}:s3:::` + bucket.Name;
                     var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
                     if (config.whitelist_appconfig_s3_buckets && appConfigBuckets.includes(bucket.Name)) {
                         helpers.addResult(results, 0,
@@ -289,7 +290,7 @@ module.exports = {
                     if (allowRegex && allowRegex.test(bucket.Name)) {
                         helpers.addResult(results, 0,
                             'Bucket: ' + bucket.Name + ' is whitelisted via custom setting.',
-                            bucketLocation, 'arn:aws:s3:::' + bucket.Name, custom);
+                            bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name, custom);
                     } else {
                         if (config.s3_allow_unencrypted_static_websites) {
                             var getBucketWebsite = helpers.addSource(cache, source, ['s3', 'getBucketWebsite', region, bucket.Name]);

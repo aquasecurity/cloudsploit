@@ -23,6 +23,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['s3:CreateBucket' , 's3:PutBucketPolicy','s3:DeleteBucketPolicy','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -38,6 +39,7 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -63,7 +65,7 @@ module.exports = {
             if (!bucket.Name) continue;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
-            var bucketResource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketResource = `arn:${awsOrGov}:s3:::` + bucket.Name;
 
             if (allowRegex && allowRegex.test(bucket.Name)) {
                 helpers.addResult(results, 0,
@@ -124,7 +126,7 @@ module.exports = {
                             if (statement.Effect &&
                                 statement.Effect === 'Deny' &&
                                 statement.Principal &&
-                                ((typeof statement.Principal == 'string' && statement.Principal == '*') ||
+                                ((helpers.globalPrincipal(statement.Principal)) ||
                                  (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
                                 statement.Action &&
                                 ((typeof statement.Action == 'string' && statement.Action == 's3:PutObject') ||

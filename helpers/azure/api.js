@@ -11,7 +11,8 @@
 
  BridgeArnIdentifier: no need to pass.
 
- BridgeArnTemplate: no need to pass.
+ BridgeIdTemplate:  this should be the template for creating the resource id.
+                    supported values: name, region, cloudAccount, project, id
 
  BridgeResourceType: this should be type of the resource, fetch it from the id.
                      Eg. 'servers'
@@ -30,9 +31,11 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'LogAlerts'
  InvService: 'LogAlerts'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'LogAlerts'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'LogAlerts'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
 
  Take the reference from the below map
 */
@@ -46,10 +49,118 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'redisCaches', InvService: 'redisCaches',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Redis Cache', BridgeServiceName: 'rediscaches',
             BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
-            BridgeArnIdentifier: '', BridgeArnTemplate: '', BridgeResourceType: 'Redis',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'Redis',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
             BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
-        }
+        },
+    'CDN Profiles':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cdnProfiles', InvService: 'cdnProfiles',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CDN_Profiles', BridgeServiceName: 'profiles',
+            BridgePluginCategoryName: 'CDN Profiles', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'profiles',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
+            BridgeCollectionService: 'profiles', DataIdentifier: 'data',
+        },
+    'Cosmos DB':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cosmosdb', InvService: 'cosmosDB',
+            InvResourceCategory: 'database', InvResourceType: 'cosmos_DB', BridgeServiceName: 'databaseaccounts',
+            BridgePluginCategoryName: 'Cosmos DB', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databaseAccounts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Cosmos DB',
+            BridgeCollectionService: 'databaseaccounts', DataIdentifier: 'data',
+        },
+    'Key Vaults':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'vaults', InvService: 'keyVaults',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'key vaults', BridgeServiceName: 'vaults',
+            BridgePluginCategoryName: 'Key Vaults', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'vaults',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Key Vaults',
+            BridgeCollectionService: 'vaults', DataIdentifier: 'data',
+        },
+    'Load Balancer':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'loadBalancer', InvService: 'loadBalancer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'load_balancer', BridgeServiceName: 'loadbalancers',
+            BridgePluginCategoryName: 'Load Balancer', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'loadBalancers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Load Balancer',
+            BridgeCollectionService: 'loadbalancers', DataIdentifier: 'data',
+        },
+    'Log Alerts':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'logAlerts', InvService: 'logAlerts',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'log alerts', BridgeServiceName: 'activitylogalerts',
+            BridgePluginCategoryName: 'Log Alerts', BridgeProvider: 'Azure', BridgeCall: 'listBySubscriptionId',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'activityLogAlerts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Log Alerts',
+            BridgeCollectionService: 'activitylogalerts', DataIdentifier: 'data',
+        },
+    'Network Watcher':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'networkWatcher', InvService: 'networkWatcher',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'network_watcher', BridgeServiceName: 'networkwatchers',
+            BridgePluginCategoryName: 'Network Watcher', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networkWatchers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Network Watcher',
+            BridgeCollectionService: 'networkwatchers', DataIdentifier: 'data',
+        },
+    'Azure Policy':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'azurePolicy', InvService: 'azurePolicy',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'azure_policy', BridgeServiceName: 'policyassignments',
+            BridgePluginCategoryName: 'Azure Policy', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'policyAssignments',
+            BridgeResourceNameIdentifier: 'displayName', BridgeExecutionService: 'Azure Policy',
+            BridgeCollectionService: 'policyassignments', DataIdentifier: 'data',
+        },
+    'Virtual Networks':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'virtual_network', InvService: 'virtual_network',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Virtual Network', BridgeServiceName: 'virtualnetworks',
+            BridgePluginCategoryName: 'Virtual Networks', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualNetworks',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
+            BridgeCollectionService: 'virtualnetworks', DataIdentifier: 'data',
+        },
+    'Queue Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'queueService', InvService: 'queueService',
+            InvResourceCategory: 'storage', InvResourceType: 'queue_service', BridgeServiceName: 'queueservice',
+            BridgePluginCategoryName: 'Queue Service', BridgeProvider: 'Azure', BridgeCall: 'getQueueAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'queueService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Queue Service',
+            BridgeCollectionService: 'queueservice', DataIdentifier: 'data',
+        },
+    'Table Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'tableService', InvService: 'tableService',
+            InvResourceCategory: 'storage', InvResourceType: 'table_service', BridgeServiceName: 'tableservice',
+            BridgePluginCategoryName: 'Table Service', BridgeProvider: 'Azure', BridgeCall: 'getTableAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
+            BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
+        },
+    'File Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
+            InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
+            BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
+            BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
+        },
+    'SQL Databases':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
+            BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
+            BridgeCollectionService: 'databases', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations
@@ -67,7 +178,8 @@ var calls = {
     activityLogAlerts: {
         listBySubscriptionId: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/activityLogAlerts?api-version=2020-10-01'
-        }
+        },
+        sendIntegration: serviceMap['Log Alerts']
     },
     storageAccounts: {
         list: {
@@ -78,7 +190,8 @@ var calls = {
     virtualNetworks: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
-        }
+        },
+        sendIntegration: serviceMap['Virtual Networks']
     },
     natGateways: {
         listBySubscription: {
@@ -126,7 +239,8 @@ var calls = {
     vaults: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
-        }
+        },
+        sendIntegration: serviceMap['Key Vaults'],
     },
     recoveryServiceVaults: {
         listBySubscriptionId: {
@@ -135,8 +249,8 @@ var calls = {
     },
     resources: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2019-10-01'
-        }
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/resources?api-version=2021-04-01'
+        },
     },
     redisCaches: {
         listBySubscription: {
@@ -157,12 +271,14 @@ var calls = {
     networkWatchers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2022-01-01'
-        }
+        },
+        sendIntegration: serviceMap['Network Watcher']
     },
     policyAssignments: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyAssignments?api-version=2019-09-01',
-        }
+        },
+        sendIntegration: serviceMap['Azure Policy']
     },
     policyDefinitions: {
         list: {
@@ -187,7 +303,8 @@ var calls = {
     profiles: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2019-04-15'
-        }
+        },
+        sendIntegration: serviceMap['CDN Profiles']
     },
     autoProvisioningSettings: {
         list: {
@@ -215,6 +332,10 @@ var calls = {
     subscriptions: {
         listLocations: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
+        },
+        get: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}?api-version=2020-01-01',
+            getCompleteResponse: true,
         }
     },
     roleDefinitions: {
@@ -230,17 +351,24 @@ var calls = {
     loadBalancers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-03-01'
-        }
+        },
+        sendIntegration: serviceMap['Load Balancer']
     },
     users: {
         list: {
-            url: 'https://graph.windows.net/myorganization/users?api-version=1.6',
+            url: 'https://graph.microsoft.com/v1.0/users',
             graph: true
+        }
+    },
+    applications: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/applications/',
+            graph: true,
         }
     },
     registries: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2019-05-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2023-01-01-preview'
         }
     },
     pricings: {
@@ -256,6 +384,11 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+        }
+    },
+    bastionHosts: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/bastionHosts?api-version=2022-09-01'
         }
     },
     wafPolicies: {
@@ -290,7 +423,8 @@ var calls = {
     databaseAccounts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DocumentDB/databaseAccounts?api-version=2020-06-01-preview'
-        }
+        },
+        sendIntegration: serviceMap['Cosmos DB']
     },
     securityCenter: {
         list: {
@@ -311,10 +445,65 @@ var calls = {
         listBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/privateEndpoints?api-version=2022-01-01'
         }
+    },
+    eventGrid: {
+        listDomains: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2021-06-01-preview'
+        }
+    },
+    eventHub: {
+        listEventHub: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
+        }
+    },
+    // For CIEM
+    aad: {
+        listRoleAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01'
+        },
+        listDenyAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
+        }
+    },
+    // For CIEM
+    groups: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/groups',
+            graph: true
+        }
+    },
+    // For CIEM
+    servicePrincipals: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
+            graph: true
+        }
     }
 };
 
 var postcalls = {
+    //For CIEM
+    aad: {
+        getGroupMembers: {
+            reliesOnPath: 'groups.list',
+            properties: ['id'],
+            url: 'https://graph.microsoft.com/v1.0/groups/{id}/members',
+            graph: true
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['roleDefinitions','users','groups','servicePrincipals']
+            }
+        }
+    },
+    recoveryServiceVaults: {
+        getRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-04-01'
+        }
+    },
     availabilitySets:{
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
@@ -543,7 +732,14 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
-        },
+        }
+    },
+    customDomain: {
+        listByFrontDoorProfiles: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/customDomains?api-version=2021-06-01'
+        }
     },
     vaults: {
         getKeys: {
@@ -571,6 +767,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
         },
+        sendIntegration: serviceMap['SQL Databases']
     },
     serverAzureADAdministrators: {
         listByServer: {
@@ -730,6 +927,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAzureFrontDoor: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
@@ -744,7 +946,18 @@ var tertiarycalls = {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+        },
+        listByVirtualNetworks: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByContainerRegistries: {
+            reliesOnPath: 'registries.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
@@ -768,16 +981,30 @@ var specialcalls = {
         listTablesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
-        }
+        },
+        listTablesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        sendIntegration: serviceMap['Table Service']
     },
     fileService: {
         listSharesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
-        }
+        },
+        sendIntegration: serviceMap['File Service']
     },
     blobService: {
         listContainersSegmented: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         }
@@ -786,7 +1013,16 @@ var specialcalls = {
         listQueuesSegmented: {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
-        }
+        },
+        listQueuesSegmentedNew: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        getProperties: {
+            reliesOnPath: ['storageAccounts.listKeys'],
+            rateLimit: 3000
+        },
+        sendIntegration: serviceMap['Queue Service']
     }
 };
 

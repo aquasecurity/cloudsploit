@@ -9,12 +9,14 @@ module.exports = {
     recommended_action: 'Modify S3 bucket to enable transfer acceleration.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html',
     apis: ['S3:listBuckets', 'S3:getBucketAccelerateConfiguration', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketAccelerateConfiguration','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -33,7 +35,7 @@ module.exports = {
         }
 
         listBuckets.data.forEach(function(bucket){
-            var resource = `arn:aws:s3:::${bucket.Name}`;
+            var resource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketAccelerateConfiguration = helpers.addSource(cache, source,

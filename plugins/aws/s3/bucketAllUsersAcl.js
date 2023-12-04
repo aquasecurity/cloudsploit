@@ -28,13 +28,14 @@ module.exports = {
         remediate: ['s3:PutBucketAcl'],
         rollback: ['s3:PutBucketAcl']
     },
-    realtime_triggers: [],
+    realtime_triggers: ['s3:PutBucketAcl', 's3:CreateBucket', 's3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -56,7 +57,7 @@ module.exports = {
             var bucket = listBuckets.data[i];
             if (!bucket.Name) continue;
 
-            var bucketResource = 'arn:aws:s3:::' + bucket.Name;
+            var bucketResource = `arn:${awsOrGov}:s3:::` + bucket.Name;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketAcl = helpers.addSource(cache, source,

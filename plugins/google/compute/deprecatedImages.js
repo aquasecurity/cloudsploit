@@ -29,10 +29,15 @@ module.exports = {
         var images = helpers.addSource(cache, source,
             ['images', 'list', 'global']);
 
-        
-        if (!images || images.err || !images.data || !images.data.length) {
-            helpers.addResult(results, 3,
-                'Unable to query for disk images: ' + helpers.addError(images), 'global', null, null, (images) ? images.err : null);
+        if (!images) return callback(null, results, source);
+
+        if (images.err || !images.data) {
+            ('Unable to query for disk images: ' + helpers.addError(images), 'global', null, null, images.err);
+            return callback(null, results, source);
+        }
+
+        if (!images.data.length) {
+            helpers.addResult(results, 0, 'No disk images found', 'global');
             return callback(null, results, source);
         }
 

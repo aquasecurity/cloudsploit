@@ -40,22 +40,23 @@ const listKeys = [
 
 const listSharesSegmented = [
     {
-        "name": "file1 "
+        "name": "file1",
+        "id": "/subscriptions/1234/resourceGroups/cloud-shell-storage-eastus/providers/Microsoft.Storage/storageAccounts/csb100320011e293683/fileService/file1"
     }
 ];
 
 const getShareAcl = [
     {
         name: 'file1',
-        signedIdentifiers: { read: { Permissions: 'raup' } }
+        signedIdentifiers: { accessPolicy: { permissions: 'raup' } }
     },
     {
         name: 'file1',
-        signedIdentifiers: {}
+        signedIdentifiers: []
     },
     {
         name: 'file1',
-        signedIdentifiers: { read: { Permissions: 'cwdl' } }
+        signedIdentifiers: [{ accessPolicy: { permissions: 'cwdl' } }]
     },
 ];
 

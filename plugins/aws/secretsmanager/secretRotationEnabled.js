@@ -18,6 +18,7 @@ module.exports = {
             default: '40',
         }
     },
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:RotateSecret', 'secretsmanager:CancelRotateSecret','secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

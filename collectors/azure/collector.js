@@ -44,7 +44,7 @@ function parseCollection(path, obj) {
     }
 }
 
-var collect = function(AzureConfig, settings, callback) {
+let collect = function(AzureConfig, settings, callback) {
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls, tertiarycalls, specialcalls);
@@ -53,6 +53,7 @@ var collect = function(AzureConfig, settings, callback) {
     var helpers = require(__dirname + '/../../helpers/azure/auth.js');
 
     let services = [];
+    let skip_locations= settings.skip_regions || [];
 
     // Login using the Azure config
     helpers.login(AzureConfig, function(loginErr, loginData) {
@@ -72,6 +73,10 @@ var collect = function(AzureConfig, settings, callback) {
                 // be a need to hold on to the previous value
                 if (data && obj.hasListResponse && data.length) data.value = data;
 
+                if (data && obj.getCompleteResponse) {
+                    data = {value: [data]};
+                }
+
                 obj.nextUrl = null;
                 if (data && data.value && Array.isArray(data.value) && data.value.length && localData && localData.value) {
                     localData.value = localData.value.concat(data.value);
@@ -88,10 +93,12 @@ var collect = function(AzureConfig, settings, callback) {
             });
         };
 
-        var processCall = function(obj, cb, localData) {
-            var localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+        let processCall = function(obj, cb, localData) {
+            let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
                 setTimeout(function() {
+                    console.log('timeout check');
+                    console.log(`url: ${localUrl} obj: ${JSON.stringify(obj)} localData: ${JSON.stringify(localData)}`);
                     makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
@@ -134,7 +141,7 @@ var collect = function(AzureConfig, settings, callback) {
             function(cb) {
                 function processTopCall(collectionObj, service, subCallObj, subCallCb) {
                     processCall(subCallObj, function(processCallErr, processCallData) {
-                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData);
+                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData , skip_locations);
                         subCallCb();
                     });
                 }

@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Trusted Cross Account Roles',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
     description: 'Ensures that only trusted cross-account IAM roles can be used.',
     more_info: 'IAM roles should be configured to allow access to trusted account IDs.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_aws-accounts.html',
@@ -85,6 +85,7 @@ module.exports = {
                 helpers.addResult(results, 0,
                     'IAM role does not contain trust relationship statements',
                     'global', role.Arn);
+                return;          
             }
 
             var restrictedAccountPrincipals = [];
@@ -93,9 +94,9 @@ module.exports = {
             for (var statement of statements) {
                 if (!statement.Effect || statement.Effect !== 'Allow') continue;
 
-                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId)) {
+                if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, accountId, undefined, settings)) {
                     crossAccountRole = true;
-                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                    var principals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
                     if (principals.length) {
                         principals.forEach(principal => {
                             if (whitelistOrganization) {

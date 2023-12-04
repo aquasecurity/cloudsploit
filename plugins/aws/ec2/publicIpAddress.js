@@ -60,13 +60,13 @@ module.exports = {
 
             describeInstances.data.forEach(function(instance){
                 if (!instance.Instances || !instance.Instances.length) {
-                    helpers.addResult(results, 0, 
+                    helpers.addResult(results, 0,
                         'EC2 instance description is not found', region);
                     return;
                 }
 
                 instance.Instances.forEach(function(element){
-                    var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${element.InstanceId}`;
+                    var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${element.InstanceId}`;
                     var openSg = false;
                     for (var sg of element.SecurityGroups) {
                         if (openSgs.includes(sg.GroupId)) openSg = true;

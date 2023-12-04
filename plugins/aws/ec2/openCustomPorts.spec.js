@@ -337,5 +337,14 @@ describe('openCustomPorts', function () {
                 done();
             });
         });
+
+        it('should PASS if open port security group attached to the network interface has no public IP associated', function (done) {
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
+            openCustomPorts.run(cache, {check_network_interface:'true', restricted_open_ports: 'tcp:22'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
     });
 });

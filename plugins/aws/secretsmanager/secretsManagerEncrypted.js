@@ -28,11 +28,13 @@ module.exports = {
             default: 'awskms',
         }
     },
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:UpdateSecret','secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var desiredEncryptionLevelString = settings.secretsmanager_minimum_encryption_level || this.settings.secretsmanager_minimum_encryption_level.default;
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(desiredEncryptionLevelString);
@@ -58,7 +60,7 @@ module.exports = {
 
                 if (!secret.KmsKeyId) encryptionLevel = 2; //awskms
                 else {
-                    const keyId = secret.KmsKeyId.startsWith('arn:aws:kms')
+                    const keyId = secret.KmsKeyId.startsWith(`arn:${awsOrGov}:kms`)
                         ? secret.KmsKeyId.split('/')[1]
                         : secret.KmsKeyId;
 

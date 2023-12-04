@@ -34,10 +34,11 @@ module.exports = {
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
-        
+
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -63,7 +64,7 @@ module.exports = {
 
             for (var g in groups) {
                 var strings = [];
-                var resource = 'arn:aws:ec2:' + region + ':' +
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' +
                                groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;
 
@@ -104,7 +105,8 @@ module.exports = {
                 }
 
                 if (strings.length) {
-                    if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+                    if (config.ec2_skip_unused_groups && groups[g].GroupId && usedGroups &&
+                            usedGroups.length && !usedGroups.includes(groups[g].GroupId)) {
                         helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                             region, resource);
                     } else {

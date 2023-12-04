@@ -23,7 +23,7 @@ module.exports = {
         remediate: ['s3:PutBucketVersioning'],
         rollback: ['s3:PutBucketVersioning']
     },
-    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning','s3:DeleteBucket'],
     asl: {
         conditions: [
             {
@@ -58,6 +58,7 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -85,15 +86,15 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket versioning for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketVersioning),
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (getBucketVersioning.data.Status == 'Enabled') {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has versioning enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' has versioning disabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             }
         });
 

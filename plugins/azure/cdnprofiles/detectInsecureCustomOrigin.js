@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that HTTPS is enabled for CDN endpoints with a custom origin',
     more_info: 'All Azure CDN endpoints should enable HTTPS to secure traffic to the backend custom origin.',
     recommended_action: 'Enable HTTPS and disable HTTP for each custom origin endpoint for each CDN profile.',
-    link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
+    link: 'https://learn.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
     apis: ['profiles:list', 'endpoints:listByProfile'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +

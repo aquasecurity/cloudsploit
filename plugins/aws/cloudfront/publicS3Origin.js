@@ -12,8 +12,8 @@ module.exports = {
     apis: ['CloudFront:listDistributions'],
     compliance: {
         hipaa: 'HIPAA requires that access to protected information is controlled and audited. ' +
-                'If an S3 bucket backing a CloudFront distribution does not require the end ' +
-                'user to access the contents through CloudFront, this policy may be violated.'
+            'If an S3 bucket backing a CloudFront distribution does not require the end ' +
+            'user to access the contents through CloudFront, this policy may be violated.'
     },
 
     run: function(cache, settings, callback) {
@@ -46,19 +46,23 @@ module.exports = {
                     'global', distribution.ARN);
                 return cb();
             }
-
+            let publicOrigins = [];
             for (var o in distribution.Origins.Items) {
                 var origin = distribution.Origins.Items[o];
-
-                if (origin.S3OriginConfig &&
+                if (origin.DomainName && origin.DomainName.match(/s3(.*)\.amazonaws\.com/) &&
+                    origin.S3OriginConfig &&
                     (!origin.S3OriginConfig.OriginAccessIdentity ||
-                     !origin.S3OriginConfig.OriginAccessIdentity.length)) {
-                    helpers.addResult(results, 2, 'CloudFront distribution is using an S3 ' + 
-                        'origin without an origin access identity', 'global', distribution.ARN);
-                } else {
-                    helpers.addResult(results, 0, 'CloudFront distribution origin is not setup ' +
-                        'without an origin access identity', 'global', distribution.ARN);
+                        !origin.S3OriginConfig.OriginAccessIdentity.length) && !origin.OriginAccessControlId) {
+                    publicOrigins.push(origin.Id);
                 }
+            }
+
+            if (publicOrigins.length) {
+                helpers.addResult(results, 2, 'CloudFront distribution is using these S3 ' +
+                    `origins without an origin access identity: ${publicOrigins.join(',')}`, 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 0, 'CloudFront distribution does not have any origin setup ' +
+                    'without an origin access identity', 'global', distribution.ARN);
             }
 
             cb();

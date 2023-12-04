@@ -16,6 +16,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(
@@ -35,7 +36,7 @@ module.exports = {
             for (var reservation of describeInstances.data) {
                 var accountId = reservation.OwnerId;
                 for (var instance of reservation.Instances) {
-                    var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
+                    var arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
                     if (!instance.MetadataOptions) {
                         helpers.addResult(results, 3, 'Unable to get instance metadata options', region, arn);
@@ -71,8 +72,8 @@ module.exports = {
                 for (var kArn of instancesInsecure) {
                     helpers.addResult(results, 2, 'Instance has instance metadata endpoint enabled and does not require HttpTokens', region, kArn);
                 }
-            } 
-            
+            }
+
             return rcb();
         }, function(){
             callback(null, results, source);

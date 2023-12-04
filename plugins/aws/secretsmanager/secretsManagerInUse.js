@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Use Secrets Manager service to store sensitive information in your AWS account.',
     apis: ['SecretsManager:listSecrets'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/asm_access.html',
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

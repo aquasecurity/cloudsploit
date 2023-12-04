@@ -4,9 +4,9 @@ module.exports = {
     title: 'CloudFront Compress Objects Automatically',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    description: 'Ensure that your Amazon Cloudfront distributions are configured to automatically compress files(object).',
-    more_info: ' Cloudfront data transfer is based on the total amount of data served, sending compressed files to the viewers is much less expensive than sending uncompressed files. ' +
-               'To optimise your AWS cloud costs and speed up your web applications, configure your Cloudfront distributions to compress the web content served with compression enabled.',
+    description: 'Ensure that your Amazon CloudFront distributions are configured to automatically compress files(object).',
+    more_info: ' CloudFront data transfer is based on the total amount of data served, sending compressed files to the viewers is much less expensive than sending uncompressed files. ' +
+               'To optimize your AWS cloud costs and speed up your web applications, configure your CloudFront distributions to compress the web content served with compression enabled.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/ServingCompressedFiles.html',
     recommended_action: 'Ensures that CloudFront is configured to automatically compress files',
     apis: ['CloudFront:listDistributions'],

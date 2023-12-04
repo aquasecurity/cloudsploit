@@ -14,7 +14,8 @@ COPY . /var/scan/cloudsploit/
 # Install cloudsploit/scan into the container using npm from NPM
 RUN cd /var/scan \
 && npm init --yes \
-&& npm install ${PACKAGENAME}
+&& npm install ${PACKAGENAME} \
+&& npm link /var/scan/cloudsploit
 
 # Setup the container's path so that you can run cloudsploit directly
 # in case someone wants to customize it when running the container.
@@ -24,5 +25,5 @@ ENV PATH "$PATH:/var/scan/node_modules/.bin"
 # command line arguments to the run command to control how this executes.
 # Thus, you can use the parameters that you would normally give to index.js
 # when running in a container.
-ENTRYPOINT ["cloudsploit-scan"]
+ENTRYPOINT ["cloudsploitscan"]
 CMD []
