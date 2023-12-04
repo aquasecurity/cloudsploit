@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Auditing of Microsoft Support Operations',
+    title: 'Microsoft Support Operations Auditing Enabled',
     category: 'SQL Server',
     domain: 'Databases',
     description: 'Ensure auditing of Microsoft support operations is enabled on SQL server.',
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (const server of servers.data) {
+            servers.data.forEach(server => {
                 const devOpsAuditingSettings = helpers.addSource(cache, source,
                     ['devOpsAuditingSettings', 'list', location, server.id]);
 
@@ -41,13 +41,13 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query Auditing Policies: ' + helpers.addError(devOpsAuditingSettings), location, server.id);
                 } else {
-                    if (devOpsAuditingSettings.data[0].state.toLowerCase()=='enabled') {
-                        helpers.addResult(results, 0, 'Auditing of Microsoft support operations is enabled on the SQL server', location, server.name);
+                    if (devOpsAuditingSettings.data[0].state.toLowerCase() == 'enabled') {
+                        helpers.addResult(results, 0, 'Microsoft support operations auditing is enabled on SQL server', location, server.id);
                     } else {
-                        helpers.addResult(results, 2, 'Auditing of Microsoft support operations is not enabled on the SQL server', location, server.name);
+                        helpers.addResult(results, 2, 'Microsoft support operations auditing is not enabled on SQL server', location, server.id);
                     }
                 }
-            }
+            });
 
             rcb();
         }, function() {

@@ -47,7 +47,7 @@ describe('Auditing of Microsoft Support Operations', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Auditing of Microsoft support operations is enabled on the SQL server');
+                expect(results[0].message).to.include('Microsoft support operations auditing is enabled on SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -84,7 +84,7 @@ describe('Auditing of Microsoft Support Operations', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Auditing of Microsoft support operations is not enabled on the SQL server');
+                expect(results[0].message).to.include('Microsoft support operations auditing is not enabled on SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };

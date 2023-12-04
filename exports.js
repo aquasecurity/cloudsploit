@@ -882,7 +882,7 @@ module.exports = {
         'serverSendEmailToAdmins'       : require(__dirname + '/plugins/azure/sqlserver/serverSendEmailToAdmins.js'),
         'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
         'sqlServerSendScanReports'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerSendScanReports.js'),
-        'sqlServerHasTags': require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
+        'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
         'auditMicrosoftOperationsEnabled':require(__dirname + '/plugins/azure/sqlserver/auditMicrosoftOperationsEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
