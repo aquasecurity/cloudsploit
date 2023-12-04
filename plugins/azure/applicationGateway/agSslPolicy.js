@@ -38,12 +38,12 @@ module.exports = {
 
                 var found = false;
                 if (appGateway.sslPolicy && appGateway.sslPolicy.policyType) {
-                   const sslPolicy = appGateway.sslPolicy;
+                    const sslPolicy = appGateway.sslPolicy;
                     if (sslPolicy.policyType == 'Predefined' && sslPolicy.policyName && recommendedSSLPolicies.indexOf(sslPolicy.policyName) > -1) {
                         found = true;
                     } else if ((sslPolicy.policyType == 'Custom' ||  sslPolicy.policyType == 'CustomV2') && sslPolicy.minProtocolVersion) {
                         // Check for protocol version if it matches the regex TLSV1.2 and then split on letter v
-                        var regexMatched = /^(tls)(v(\d+)_(\d+))$/i.test(sslPolicy.minProtocolVersion)? sslPolicy.minProtocolVersion.replace('_', '.').split(/v/i): ''
+                        var regexMatched = /^(tls)(v(\d+)_(\d+))$/i.test(sslPolicy.minProtocolVersion)? sslPolicy.minProtocolVersion.replace('_', '.').split(/v/i): '';
                         if (regexMatched){ 
                             var tlsVersion = parseFloat(regexMatched[1]);
                             if (tlsVersion >= 1.2){
