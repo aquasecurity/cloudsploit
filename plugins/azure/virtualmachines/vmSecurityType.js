@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Select Trusted Launch for Azure VMs',
+    title: 'Azure VMs Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Trusted Launch is selected for Azure virtual machines (VM) to enhance security against advanced and persistent attack techniques.',
