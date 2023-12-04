@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Media Services Managed Identity for Storage Account Authentication',
+    title: 'Media Services Storage Account Managed Identity',
     category: 'Media Services',
     domain: 'Content Delivery',
     description: 'Ensure that Azure Media Services have managed identity enabled for Storage Account authentication.',
