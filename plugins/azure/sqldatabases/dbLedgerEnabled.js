@@ -50,7 +50,7 @@ module.exports = {
                             if (database.isLedgerOn==true) {
                                 helpers.addResult(results, 0, 'Azure ledger is enabled for SQL database', location, database.id);
                             } else {
-                                helpers.addResult(results, 2, 'Azure ledger is disabled for SQL database', location, database.id);
+                                helpers.addResult(results, 2, 'Azure ledger is not enabled for SQL database', location, database.id);
                             }
                                 
                         });
