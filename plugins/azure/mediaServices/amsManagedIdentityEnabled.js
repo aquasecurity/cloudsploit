@@ -2,9 +2,9 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Service Managed Identity Enabled',
+    title: 'Media Service Managed Identity Enabled',
     category: 'Media Services',
-    domain: 'Identity and Access Management',
+    domain: 'Content Delivery',
     description: 'Ensure that Azure Media Services have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities',
@@ -48,9 +48,9 @@ module.exports = {
                 && (getMediaService.data.identity.type.toLowerCase() === 'userassigned' ||
                  getMediaService.data.identity.type.toLowerCase() === 'systemassigned')) {
 
-                    helpers.addResult(results, 0, 'Managed Identity is enabled for Azure Media Service account', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account has managed Identity enabled', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Managed Identity is not enabled for Azure Media Service account', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account does not have managed Identity enabled', location, mediaService.id);
                 }
             }
 
