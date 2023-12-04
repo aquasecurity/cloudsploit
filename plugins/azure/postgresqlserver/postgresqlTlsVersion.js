@@ -36,29 +36,28 @@ module.exports = {
             servers.data.forEach(function(server) {
                 if (!server.id) return;
 
-                if (server.minimalTlsVersion) {
-                    if (server.minimalTlsVersion === 'TLSEnforcementDisabled') {
-                        helpers.addResult(results, 2,
-                            'PostgreSQL server allows all TLS versions',
-                            location, server.id);
+                if (server.minimalTlsVersion && server.minimalTlsVersion !== 'TLSEnforcementDisabled') {
+                    const tlsVersionRegex = /^TLS1_\d$/;
+                    if (!tlsVersionRegex.test(server.minimalTlsVersion)) {
+                        helpers.addResult(results, 2, 'Postgresql server TLS version cannot be parsed', location, server.id);
                     } else {
                         var numericTlsVersion = parseFloat(server.minimalTlsVersion.replace('TLS', '').replace('_', '.'));
                         if (numericTlsVersion >= 1.2) {
                             helpers.addResult(results, 0,
-                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than 1.2`,
+                                'PostgreSQL server is using TLS version 1.2 or higher',
                                 location, server.id);
                         } else {
                             helpers.addResult(results, 2,
-                                `PostgreSQL server is using TLS version ${server.minimalTlsVersion} which is less than 1.2`,
+                                'PostgreSQL server is not using TLS version 1.2',
                                 location, server.id);  
-                        }    
-                          
+                        } 
                     }
                 } else {
                     helpers.addResult(results, 2,
                         'PostgreSQL server allows all TLS versions',
                         location, server.id);
-                }
+                } 
+                
             });
 
             rcb();
