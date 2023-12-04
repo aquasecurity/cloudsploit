@@ -2,9 +2,9 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Media Services Classic API Disabled',
+    title: 'Media Services Classic API Disabled',
     category: 'Media Services',
-    domain: 'Media Service Configuration',
+    domain: 'Content Delivery',
     description: 'Ensure that Microsoft Azure Media Services do not have the Classic API enabled.',
     more_info: 'Disabling the Classic API for Azure Media Services is recommended to utilize modern APIs and features. Enabling classic features can enable the use of classic V2 APIs but might disable advanced security features like managed identities.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/migrate-v-2-v-3-differences-api-access',
@@ -45,9 +45,9 @@ module.exports = {
                 }
 
                 if (getMediaService.data.identity) {
-                    helpers.addResult(results, 0, 'Classic API is disabled for the Media Service account', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account has classic API disabled', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Classic API is enabled for the Media Service account', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account has classic API enabled', location, mediaService.id);
                 }
             }
 
