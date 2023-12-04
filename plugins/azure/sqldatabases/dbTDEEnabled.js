@@ -53,7 +53,7 @@ module.exports = {
                             }
 
                             if (transparentDataEncryption.data[0].state.toLowerCase()=='enabled') {
-                                helpers.addResult(results, 0, 'Transparent data encryption is Enabled for SQL Database', location, database.id);
+                                helpers.addResult(results, 0, 'Transparent data encryption is enabled for SQL Database', location, database.id);
                             } else {
                                 helpers.addResult(results, 2, 'Transparent data encryption is Disabled for SQL Database', location, database.id);
                             }
