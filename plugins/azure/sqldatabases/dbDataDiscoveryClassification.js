@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures that data discovery and classification is implemented for SQL databases.',
     more_info: 'Data discovery and classification help identify and label sensitive data, enabling better data protection and compliance.',
-    recommended_action: 'Implement data discovery and classification for SQL databases to classify the sensitivity of your data. Add appropriate classifications as needed.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-data-discovery-and-classification-get-started-portal',
+    recommended_action: 'Implement data discovery and classification for SQL databases.',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'currentSensitivityLabels:list'],
     
     run: function(cache, settings, callback) {
