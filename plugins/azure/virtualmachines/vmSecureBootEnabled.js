@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure VMs Secure Boot Enabled',
+    title: 'VM Secure Boot Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Secure Boot is enabled for Azure virtual machines (VM) to protect against boot kits, rootkits, and kernel-level malware.',
