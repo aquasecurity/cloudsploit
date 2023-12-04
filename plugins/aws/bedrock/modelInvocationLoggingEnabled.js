@@ -22,14 +22,12 @@ module.exports = {
 
             if (!invocationLoggingConfiguration) return rcb();
 
-            if (invocationLoggingConfiguration.err && invocationLoggingConfiguration.err.message.includes('This service may not be available in')) {
-                helpers.addResult(results, 0, 'Bedrock service is not available in this region', region);
-                return rcb();
-            } else if (invocationLoggingConfiguration.err ) {
+            if (invocationLoggingConfiguration.err) {
                 helpers.addResult(results, 3,
-                    `Unable to query for Invocation Logging Configuration: ${helpers.addError(invocationLoggingConfiguration)}`, region); 
-                return rcb();   
+                    `Unable to query for Bedrock custom model list: ${helpers.addError(invocationLoggingConfiguration)}`, region);
+                return rcb();
             }
+
 
             if (!invocationLoggingConfiguration.data) {
                 helpers.addResult(results, 2, 'Invocation logging is not enabled for bedrock models', region);
