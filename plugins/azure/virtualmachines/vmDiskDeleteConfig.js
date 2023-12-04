@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated to ensure all confidential information is wiped.',
     more_info: 'Disks persist independently from VMs. Enabling this option ensures that all disks associated with a VM are deleted automatically when the VM is terminated, enhancing security.',
     recommended_action: 'Configure VMs to automatically delete disks when the VM is terminated to enhance security and prevent lingering confidential information.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/disk-delete',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/delete?tabs=portal2%2Ccli3%2Cportal4%2Cportal5',
     apis: ['virtualMachines:listAll'],
 
     run: function(cache, settings, callback) {
