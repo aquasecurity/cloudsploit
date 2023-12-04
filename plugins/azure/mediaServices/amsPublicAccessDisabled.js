@@ -5,10 +5,10 @@ module.exports = {
     title: 'Media Services Public Access Disabled',
     category: 'Media Services',
     domain: 'Content Delivery',
-    description: 'Ensure that Microsoft Azure Media Services have public access disabled.',
-    more_info: 'Disabling public network access improves security by ensuring that Media Services resources are not exposed on the public internet. ',
-    link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/security-azure-policy',
-    recommended_action: 'Modify the media service network settings and enable private access.',
+    description: 'Ensures that Azure Media Services have public access disabled.',
+    more_info: 'Disabling public network access improves security by ensuring that Media Services resources are not exposed on the public internet.',
+    link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/security-azure-policy#azure-policies-private-endpoints-and-media-services',
+    recommended_action: 'Modify Media Service network settings and enable private access.',
     apis: ['mediaServices:listAll'],
 
     run: function(cache, settings, callback) {
