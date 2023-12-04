@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Private Link Enabled for SQL Databases',
+    title: 'SQL Databases Private Link Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures SQL Database sync groups use private link when SQL DB sync with others databases.',
