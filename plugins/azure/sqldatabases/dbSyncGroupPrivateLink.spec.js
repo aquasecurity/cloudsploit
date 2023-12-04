@@ -113,7 +113,6 @@ describe('sqlDatabaseSyncGroups', function() {
 
         it('should give failing result if SQL Database sync group does not use private link', function(done) {
             const callback = (err, results) => {
-                console.log('here-----',results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('SQL Database sync group does not uses private link to sync with other databases');

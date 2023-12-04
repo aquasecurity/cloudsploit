@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'SQL Database Sync Groups - Private Link & Manual Approval',
+    title: 'Private Link Enabled for SQL Databases',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures SQL Database sync groups use private link when SQL DB sync with others databases.',
@@ -45,7 +45,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
                             
                             var syncGroups = helpers.addSource(cache, source, ['syncGroups', 'list', location, database.id]);
 
@@ -58,7 +58,7 @@ module.exports = {
                                     'No Database sync group found for SQL database', location, database.id);
                             }
 
-                            syncGroups.data.forEach(function(syncGroup) {
+                            syncGroups.data.forEach(syncGroup=> {
                                 if (syncGroup.usePrivateLinkConnection) {
                                     helpers.addResult(results, 0, 'SQL Database sync group uses private link to sync with other databases', location, syncGroup.id);
                                 } else {
