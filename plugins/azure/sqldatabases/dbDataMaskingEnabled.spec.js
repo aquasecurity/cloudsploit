@@ -97,11 +97,11 @@ describe('setDynamicDataMasking', function() {
             setDynamicDataMasking.run(cache, {}, callback);
         });
 
-        it('should give passing result if Dynamic data masking is enabled for the database', function(done) {
+        it('should give passing result if Dynamic data masking is enabled for SQL database', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Dynamic data masking is enabled for the database');
+                expect(results[0].message).to.include('Dynamic data masking is enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -115,11 +115,11 @@ describe('setDynamicDataMasking', function() {
             setDynamicDataMasking.run(cache, {}, callback);
         });
 
-        it('should give failing result if Dynamic data masking is not enabled for the database', function(done) {
+        it('should give failing result if Dynamic data masking is not enabled for SQL database', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Dynamic data masking is not enabled for the database');
+                expect(results[0].message).to.include('Dynamic data masking is not enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
