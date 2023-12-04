@@ -62,23 +62,23 @@ describe('selectSecureBoot', function() {
             });
         });
 
-        it('should give passing result if Secure Boot is selected', function(done) {
+        it('should give passing result if Secure Boot is enabled', function(done) {
             const cache = createCache([virtualMachines[0]]);
             selectSecureBoot.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Secure Boot is selected for Azure Virtual Machine');
+                expect(results[0].message).to.include('Secure Boot is enabled for Azure Virtual Machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Secure Boot is not selected', function(done) {
+        it('should give failing result if Secure Boot is not enabled', function(done) {
             const cache = createCache([virtualMachines[1]]);
             selectSecureBoot.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Secure Boot is not selected for Azure Virtual Machine');
+                expect(results[0].message).to.include('Secure Boot is not enabled for Azure Virtual Machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

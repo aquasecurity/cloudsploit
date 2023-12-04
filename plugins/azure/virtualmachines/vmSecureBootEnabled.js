@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Select Secure Boot for Azure VMs',
+    title: 'Azure VMs Secure Boot Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Secure Boot is enabled for Azure virtual machines (VM) to protect against boot kits, rootkits, and kernel-level malware.',
@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings.secureBootEnabled) {
-                    helpers.addResult(results, 0, 'Secure Boot is selected for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Secure Boot is enabled for Azure Virtual Machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Secure Boot is not selected for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Secure Boot is not enabled for Azure Virtual Machine', location, virtualMachine.id);
 
                 }
             });
