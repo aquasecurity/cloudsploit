@@ -33,7 +33,7 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings.vTpmEnabled) {
+                if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings && virtualMachine.securityProfile.uefiSettings.vTpmEnabled) {
                     helpers.addResult(results, 0, 'vTPM is enabled for Azure Virtual Machine', location, virtualMachine.id);
                 } else {
                     helpers.addResult(results, 2, 'vTPM is not enabled for Azure Virtual Machine', location, virtualMachine.id);
