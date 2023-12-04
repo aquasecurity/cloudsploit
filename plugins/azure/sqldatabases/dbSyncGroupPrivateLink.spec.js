@@ -97,7 +97,7 @@ describe('sqlDatabaseSyncGroups', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL Database sync group uses private link to sync with other databases');
+                expect(results[0].message).to.include('Database sync group uses private link to sync with other databases');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -115,7 +115,7 @@ describe('sqlDatabaseSyncGroups', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL Database sync group does not uses private link to sync with other databases');
+                expect(results[0].message).to.include('Database sync group does not uses private link to sync with other databases');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
