@@ -702,5 +702,5 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
-    remediateOpenPortsHelper: remediateOpenPortsHelper,
+    remediateOpenPortsHelper: remediateOpenPortsHelper
 };
