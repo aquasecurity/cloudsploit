@@ -33,7 +33,7 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings.secureBootEnabled) {
+                if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings && virtualMachine.securityProfile.uefiSettings.secureBootEnabled) {
                     helpers.addResult(results, 0, 'Secure Boot is enabled for Azure Virtual Machine', location, virtualMachine.id);
                 } else {
                     helpers.addResult(results, 2, 'Secure Boot is not enabled for Azure Virtual Machine', location, virtualMachine.id);
