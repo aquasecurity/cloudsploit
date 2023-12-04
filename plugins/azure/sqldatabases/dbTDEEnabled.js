@@ -5,9 +5,9 @@ module.exports = {
     title: 'Transparent Data Encryption Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensure Transparent Data Encryption (TDE) is enabled on SQL databases for enhanced security',
+    description: 'Ensure Transparent Data Encryption (TDE) is enabled on SQL databases.',
     more_info: 'Transparent data encryption (TDE) helps protect Azure SQL Database against the threat of malicious offline activity by encrypting data at rest.',
-    recommended_action: 'Enable TDE for SQL databases to enhance data security.',
+    recommended_action: 'Enable Transparent Data Encryption (TDE) for SQL databases.',
     link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption?view=sql-server-ver15',
     apis: ['servers:listSql','databases:listByServer','transparentDataEncryption:list'],
     
