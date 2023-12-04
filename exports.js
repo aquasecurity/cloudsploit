@@ -935,6 +935,7 @@ module.exports = {
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
+        'dbLedgerDigestStorageEnabled'  : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
         'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
 
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
@@ -989,8 +990,7 @@ module.exports = {
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
-        'frontDoorMinimumTlsVersion': require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
-        'dbLedgerDigestStorageEnabled': require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
+        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

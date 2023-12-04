@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Automatic Ledger Digest Storage for SQL Databases',
+    title: 'Ledger Digest Storage Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Enable automatic Ledger digest storage for enhanced data integrity.',
+    description: 'Ensure automatic Ledger digest storage is enabled for enhanced data integrity.',
     more_info: 'Configuring automatic Ledger digest storage allows for the generation and storage of digests for later verification.',
     recommended_action: 'Configure an Azure Storage account or Azure Confidential Ledger for automatic Ledger digest storage. Alternatively, manually generate digests and store them in a secure location.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-ledger-overview',
@@ -44,15 +44,15 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(function(database) {
+                        databases.data.forEach(database=> {
                             var ledgerDigestUploads = helpers.addSource(cache, source, ['ledgerDigestUploads', 'list', location, database.id]);
                             if (!ledgerDigestUploads || ledgerDigestUploads.err) {
                                 helpers.addResult(results, 3, 'Unable to query for Azure ledger: ' + helpers.addError(ledgerDigestUploads), location, database.id);
                             } else {
                                 if (ledgerDigestUploads.data[0].state.toLowerCase() == 'enabled') {
-                                    helpers.addResult(results, 0, 'Automatic Ledger digest storage is enabled', location, database.id);
+                                    helpers.addResult(results, 0, 'Automatic Ledger digest storage is enabled for SQL database', location, database.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'Automatic Ledger digest storage is disbaled', location, database.id);
+                                    helpers.addResult(results, 2, 'Automatic Ledger digest storage is disabled for SQL database', location, database.id);
                                 }
                             
                             }
