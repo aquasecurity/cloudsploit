@@ -117,7 +117,7 @@ module.exports = {
                             usedGroups.length && !usedGroups.includes(groups[g].GroupId)) {
                         helpers.addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                             region, resource);
-                    } else if( config.check_network_interface) {
+                    } else if ( config.check_network_interface) {
                         var resultString =  `Security group:${groups[g].GroupId} (${groups[g].GroupName}) has ${strings.join(' and ')}`;
                         helpers.checkNetworkInterface(groups[g].GroupId, groups[g].GroupName, resultString, region, results, resource, cache);
                     } else {
