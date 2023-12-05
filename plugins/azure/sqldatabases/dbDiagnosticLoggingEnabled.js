@@ -5,10 +5,10 @@ module.exports = {
     title: 'Database Diagnostic Logging Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensure diagnostic logging is enabled for SQL databases.',
-    more_info: 'Enabling diagnostic logging provides valuable insights into SQL database performance and helps identify issues.',
+    description: 'Ensures diagnostic logging is enabled for SQL databases.',
+    more_info: 'Enabling diagnostic logging provides valuable insights into SQL database that helps to monitor resources for their availability, performance, and operation.',
     recommended_action: 'Enable diagnostic logging for SQL databases with the minimum required data recording settings: SQLInsights, ErrorsTimeouts, BlocksDeadlocks, BasicInstanceAndApp, AdvancedWorkloadManagement.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-monitoring-with-dmvs?tabs=sql-insights',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/monitoring-sql-database-azure-monitor?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'diagnosticSettings:listByDatabase'],
     
     run: function(cache, settings, callback) {
@@ -49,7 +49,7 @@ module.exports = {
                             var diagnosticSettings = helpers.addSource(cache, source, ['diagnosticSettings', 'listByDatabase', location, database.id]);
                         
                             if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                                helpers.addResult(results, 3, 'Unable to query diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
+                                helpers.addResult(results, 3, 'Unable to query SQL database diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
                             } else {
                                 if (!diagnosticSettings.data.length) {
                                     helpers.addResult(results, 2, 'Diagnostic settings not configured for SQL database', location, database.id);
