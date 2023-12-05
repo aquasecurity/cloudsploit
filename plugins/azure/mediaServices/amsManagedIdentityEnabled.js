@@ -5,10 +5,10 @@ module.exports = {
     title: 'Media Services Managed Identity Enabled',
     category: 'Media Services',
     domain: 'Content Delivery',
-    description: 'Ensure that Azure Media Services have managed identity enabled.',
+    description: 'Ensures that Azure Media Service accounts have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities',
-    recommended_action: 'Remove Azure Media Services accounts and create a new account with managed identity enabled.',
+    recommended_action: 'Create a new Media service account with managed identity for storage account enabled.',
     apis: ['mediaServices:listAll', 'mediaServices:get'],
 
     run: function(cache, settings, callback) {
@@ -39,7 +39,7 @@ module.exports = {
                     ['mediaServices', 'get', location, mediaService.id]);
 
                 if (!getMediaService || getMediaService.err || !getMediaService.data) {
-                    helpers.addResult(results, 3, `Unable to query for Media Service: ${helpers.addError(getMediaService)}`,
+                    helpers.addResult(results, 3, `Unable to query for Media Service data: ${helpers.addError(getMediaService)}`,
                         location, mediaService.id);
                     continue;
                 }
@@ -48,9 +48,9 @@ module.exports = {
                 && (getMediaService.data.identity.type.toLowerCase() === 'userassigned' ||
                  getMediaService.data.identity.type.toLowerCase() === 'systemassigned')) {
 
-                    helpers.addResult(results, 0, 'Media Service account has managed Identity enabled', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account has managed identity enabled', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Media Service account does not have managed Identity enabled', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account does not have managed identity enabled', location, mediaService.id);
                 }
             }
 
