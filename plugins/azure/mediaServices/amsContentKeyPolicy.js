@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Media Services Content Key Policy Exists',
+    title: 'Media Services Content Key Policy',
     category: 'Media Services',
     domain: 'Content Delivery',
-    description: 'Ensure that Microsoft Azure Media Services have Content Key Policy configured.',
+    description: 'Ensure that Azure Media Services have Content Key Policy configured.',
     more_info: 'A Content Key Policy in Azure Media Services dictates how content keys, ensuring secure asset access, are delivered to end clients. It allows setting requirements or restrictions that keys with specific configurations must meet before being delivered to clients.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/drm-content-key-policy-concept',
-    recommended_action: 'Modify media service account and add a content key policy.',
+    recommended_action: 'Modify media service account and add content key policy.',
     apis: ['mediaServices:listAll', 'mediaServices:listContentKeyPolicies'],
 
     run: function(cache, settings, callback) {
@@ -39,14 +39,14 @@ module.exports = {
                     ['mediaServices', 'listContentKeyPolicies', location, mediaService.id]);
 
                 if (!listContentKeyPolicies || listContentKeyPolicies.err || !listContentKeyPolicies.data) {
-                    helpers.addResult(results, 3, `Unable to query for Content Key Policy: ${helpers.addError(listContentKeyPolicies)}`,
+                    helpers.addResult(results, 3, `Unable to query Content Key Policy for Media service account: ${helpers.addError(listContentKeyPolicies)}`,
                         location, mediaService.id);
                     continue;
                 }
                 if (listContentKeyPolicies.data.length > 0) {
-                    helpers.addResult(results, 0, 'Azure Media Service has content key policy configured', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account has content key policy configured', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure Media Service does not have content key policy configured', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account does not have content key policy configured', location, mediaService.id);
                 }
             }
 
