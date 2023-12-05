@@ -51,7 +51,7 @@ module.exports = {
                                 helpers.addResult(results, 2, 'Unable to query data discovery and classification information: ' + helpers.addError(currentSensitivityLabels), location, database.id);
                             } else {
                                 if (currentSensitivityLabels.data.length) {
-                                    helpers.addResult(results, 0, 'Data discovery and classification is being used', location, database.id);
+                                    helpers.addResult(results, 0, 'SQL Database is using data discovery and classification', location, database.id);
                                 } else {
                                     helpers.addResult(results, 2, 'SQL Database is not using data discovery and classification', location, database.id);
                                 }
