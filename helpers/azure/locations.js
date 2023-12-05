@@ -118,5 +118,7 @@ module.exports = {
     bastionHosts: locations,
     applications: ['global'],
     eventGrid: locations,
-    eventHub: locations
+    eventHub: locations,
+    classicFrontDoors: ['global'],
+    afdWafPolicies: ['global']
 };
