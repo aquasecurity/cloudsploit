@@ -992,7 +992,7 @@ module.exports = {
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
-        'frontDoorWafDetectionMode'     : require(__dirname + '/plugins/azure/frontDoor/frontDoorWafDetectionMode.js'),
+        'frontDoorWafDetectionMode'     : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDetectionMode.js'),
         'frontDoorRequestBodyInspection': require(__dirname + '/plugins/azure/frontdoor/frontDoorRequestBodyInspection.js'),
         'frontDoorWafEnabled'           : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafEnabled.js'),
         'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
