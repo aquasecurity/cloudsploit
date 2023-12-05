@@ -80,7 +80,7 @@ describe('enableAlwaysEncrypted', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Always Encrypted with secure enclaves is enabled for SQL database');
+                expect(results[0].message).to.include('Secure enclaves encryption is enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -97,7 +97,7 @@ describe('enableAlwaysEncrypted', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Always Encrypted with secure enclaves is disabled for SQL database');
+                expect(results[0].message).to.include('Secure enclaves encryption is disabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
