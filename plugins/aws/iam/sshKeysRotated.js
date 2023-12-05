@@ -59,7 +59,7 @@ module.exports = {
 
             if (!listSSHPublicKeys || listSSHPublicKeys.err || !listSSHPublicKeys.data || !listSSHPublicKeys.data.SSHPublicKeys) {
                 helpers.addResult(results, 3,
-                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), user.Arn);
+                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), 'global', user.Arn);
                 continue;
             }
 

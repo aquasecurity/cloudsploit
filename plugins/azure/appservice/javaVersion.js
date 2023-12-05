@@ -48,6 +48,7 @@ module.exports = {
             }
             let found = false;
             for (let webApp of webApps.data) {
+                found = false;
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]);
                 if (!webConfigs || webConfigs.err || !webConfigs.data || !webConfigs.data.length) {
@@ -73,8 +74,9 @@ module.exports = {
                     if (appConfig.linuxFxVersion &&
                     (appConfig.linuxFxVersion.toLowerCase().indexOf('java') > -1)){
                         found = true;
-                        let version = appConfig.linuxFxVersion;
-                        currentVersion = appConfig.linuxFxVersion.substring(version.indexOf('|')+1, version.lastIndexOf('-'));
+                        const versionPattern =/java\|(\d+)(?:-([\w\d]+))?/i;
+                        const match = appConfig.linuxFxVersion.match(versionPattern);
+                        currentVersion = match ? match[1] : '';
                         if (currentVersion && currentVersion != '' && parseFloat(currentVersion) >= parseFloat(config.latestJavaVersion)){
                             versionAvailable = true;
                         }
