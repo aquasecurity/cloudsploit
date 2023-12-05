@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure Trusted Launch is selected for Azure virtual machines (VM).',
-    more_info: 'Trusted Launch provides additional security features on Gen 2 virtual machines, offering defense against sophisticated threats.',
+    more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
     recommended_action: 'Select Trusted Launch as security type for Azure virtual machines.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
     apis: ['virtualMachines:listAll'],
