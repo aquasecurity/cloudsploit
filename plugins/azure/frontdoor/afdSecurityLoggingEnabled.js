@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-monitor?pivots=front-door-standard-premium',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -33,7 +33,7 @@ module.exports = {
             }
 
             var frontDoorProfile = false;
-            profiles.data.forEach(function (profile) {
+            profiles.data.forEach(function(profile) {
                 if (!profile.id || profile.kind != 'frontdoor') return;
 
                 frontDoorProfile = true;
@@ -63,7 +63,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
