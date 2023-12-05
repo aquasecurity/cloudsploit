@@ -996,8 +996,9 @@ module.exports = {
         'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
 
-        'namespaceEncryptionAtRest'    : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
-        'namespaceTlsVersion'          : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
+        'namespaceEncryptionAtRest'     : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
+        'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
+        'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
 
     },
     github: {
