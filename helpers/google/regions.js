@@ -143,6 +143,7 @@ module.exports = {
     subscriptions: ['global'],
     jobs: regions,
     organizations: ['global'],
+    folders: ['global'],
     groups: ['global'],
     memberships: ['global'],
     iam: ['global'],
