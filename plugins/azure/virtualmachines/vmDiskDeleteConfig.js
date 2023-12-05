@@ -33,7 +33,7 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.storageProfile && virtualMachine.storageProfile.osDisk && virtualMachine.storageProfile.osDisk.deleteOption && virtualMachine.storageProfile.osDisk === 'Delete') {
+                if (virtualMachine.storageProfile && virtualMachine.storageProfile.osDisk && virtualMachine.storageProfile.osDisk.deleteOption && virtualMachine.storageProfile.osDisk.deleteOption === 'Delete') {
                     helpers.addResult(results, 0, 'Automatic disks delete with VM is enabled', location, virtualMachine.id);
                 } else {
                     helpers.addResult(results, 2, 'Automatic disks delete with VM is not enabled', location, virtualMachine.id);
