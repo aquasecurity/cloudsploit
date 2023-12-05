@@ -41,6 +41,7 @@ module.exports = {
     acm: [...regions, ...newRegionsUpdate],
     apigateway: [...regions, ...newRegionsUpdate],
     athena: regions,
+    bedrock: ['us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-northeast-1', 'eu-central-1'],
     cloudfront: ['us-east-1'], // CloudFront uses the default global region
     autoscaling: [...regions, ...newRegionsUpdate],
     iam: ['us-east-1'],
