@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var accessLogsEnabled = require('./accessLogsEnabled.js');
+var afdSecurityLoggingEnabled = require('./afdSecurityLoggingEnabled.js');
 
 const profiles = [
     {
@@ -34,6 +34,7 @@ const profiles = [
     }
 ];
 
+
 const diagnosticSettings = [
     {
         id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/profiles/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
@@ -42,7 +43,25 @@ const diagnosticSettings = [
         location: 'global',
         logs: [
             {
-              "category": "FrontDoorAccessLog",
+                "category": "FrontDoorWebApplicationFirewallLog",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+          ],
+          "logAnalyticsDestinationType": null
+    },
+    {
+        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/profiles/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        type: 'Microsoft.Insights/diagnosticSettings',
+        name: 'testwaflogs',
+        location: 'global',
+        logs: [
+            {
+              "category": "FrontDoorWebApplicationFirewallLog",
               "categoryGroup": null,
               "enabled": true,
               "retentionPolicy": {
@@ -50,24 +69,15 @@ const diagnosticSettings = [
                 "days": 0
               }
             },
-          ],
-          "logAnalyticsDestinationType": null
-    },
-    {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/profiles/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
-        type: 'Microsoft.Insights/diagnosticSettings',
-        name: 'testaccesslogs',
-        location: 'global',
-        logs: [
             {
-              "category": "FrontDoorAccessLog",
-              "categoryGroup": null,
-              "enabled": false,
-              "retentionPolicy": {
-                "enabled": false,
-                "days": 0
-              }
-            },
+                "category": "FrontDoorAccessLog",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
           ],
           "logAnalyticsDestinationType": null
     },
@@ -155,12 +165,12 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('accessLogsEnabled', function () {
+describe('afdSecurityLoggingEnabled', function () {
     describe('run', function () {
 
         it('should give pass result if No existing Azure Front Door profiles found', function (done) {
             const cache = createErrorCache('noprofile');
-            accessLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Azure Front Door profiles found');
@@ -171,7 +181,7 @@ describe('accessLogsEnabled', function () {
 
         it('should give unknown result if Unable to query Front Door profiles:', function (done) {
             const cache = createErrorCache('profile');
-            accessLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door profiles:');
@@ -182,7 +192,7 @@ describe('accessLogsEnabled', function () {
 
         it('should give unknown result if Unable to query diagnostics settings', function (done) {
             const cache = createErrorCache('policy');
-            accessLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door diagnostics settings');
@@ -191,23 +201,23 @@ describe('accessLogsEnabled', function () {
             });
         });
 
-        it('should give passing result if Access Log are enabled for Azure Front Door', function (done) {
-            const cache = createCache([profiles[0]], [diagnosticSettings[0]]);
-            accessLogsEnabled.run(cache, {}, (err, results) => {
+        it('should give passing result if front Door profile has security logging enabled', function (done) {
+            const cache = createCache([profiles[0]], [diagnosticSettings[1]]);
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Front Door access logs are enabled');
+                expect(results[0].message).to.include('Front Door profile has security logging enabled');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give failing result if Access logging is not enabled for Azure Front Door', function (done) {
-            const cache = createCache([profiles[1]], [diagnosticSettings[1]]);
-            accessLogsEnabled.run(cache, {}, (err, results) => {
+        it('should give failing result if Front Door profile does not have security logging enabled', function (done) {
+            const cache = createCache([profiles[1]], [diagnosticSettings[0]]);
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door access logs are not enabled');
+                expect(results[0].message).to.include('Front Door profile does not have security logging enabled. Missing Logs FrontDoorAccessLog');
                 expect(results[0].region).to.equal('global');
                 done();
             });
