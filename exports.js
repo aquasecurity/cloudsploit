@@ -997,6 +997,7 @@ module.exports = {
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
 
         'namespaceEncryptionAtRest'    : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
+        'namespaceTlsVersion'          : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
 
     },
     github: {
