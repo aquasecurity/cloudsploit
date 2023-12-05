@@ -40,7 +40,6 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Application Gateway diagnostics settings: ' + helpers.addError(diagnosticSettings), location, appGateway.id);
                 } else {
-
                     var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
                     
                     const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
@@ -54,9 +53,6 @@ module.exports = {
                     } else {
                         helpers.addResult(results, 0, 'Application Gateway has security logging enabled', location, appGateway.id);
                     }
-
-
-
                 }
             });
 
