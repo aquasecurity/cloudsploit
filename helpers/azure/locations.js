@@ -122,4 +122,5 @@ module.exports = {
     serviceBus: locations,
     classicFrontDoors: ['global'],
     afdWafPolicies: ['global']
+    
 };
