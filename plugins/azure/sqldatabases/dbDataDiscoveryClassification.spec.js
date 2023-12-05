@@ -99,7 +99,7 @@ describe('dataDiscoveryAndClassification', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Data discovery and classification is being used');
+                expect(results[0].message).to.include('SQL Database is using data discovery and classification');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -117,7 +117,7 @@ describe('dataDiscoveryAndClassification', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Data discovery and classification not being used');
+                expect(results[0].message).to.include('SQL Database is not using data discovery and classification');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
