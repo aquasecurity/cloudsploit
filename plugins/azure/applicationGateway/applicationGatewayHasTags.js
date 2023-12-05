@@ -3,8 +3,8 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Application Gateway Has Tags',
-    category: 'Load Balancer',
-    domain: 'Availability',
+    category: 'Application Gateway',
+    domain: 'Network Access Control',
     description: 'Ensures that Microsoft Azure Application Gateway has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify application gateways and add tags.',
