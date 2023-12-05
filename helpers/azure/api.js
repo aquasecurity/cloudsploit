@@ -254,7 +254,7 @@ var calls = {
     },
     redisCaches: {
         listBySubscription: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2023-08-01'
         },
         sendIntegration: serviceMap['Redis Cache']
     },
