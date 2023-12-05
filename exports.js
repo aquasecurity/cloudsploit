@@ -52,6 +52,8 @@ module.exports = {
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
 
+        'customModelInVpc'              :require(__dirname + '/plugins/aws/bedrock/customModelInVpc.js'),
+        'privateCustomModel'            :require(__dirname + '/plugins/aws/bedrock/privateCustomModel.js'),
         'modelInvocationLoggingEnabled' :require(__dirname + '/plugins/aws/bedrock/modelInvocationLoggingEnabled.js'),
         'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
 
@@ -823,6 +825,7 @@ module.exports = {
         'postgresqlPrivateEndpoints'    : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlPrivateEndpoints.js'),
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
         'postgresqlTlsVersion'          : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlTlsVersion.js'),
+        'flexibleServerPrivateAccess'   : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateAccess'),
         'diagnosticLoggingEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/diagnosticLoggingEnabled.js'),
         'flexibleServerSCRAMEnabled'    : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerSCRAMEnabled.js'),
         'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),

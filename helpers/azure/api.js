@@ -824,6 +824,11 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/firewallRules?api-version=2017-12-01'
+        },
+        listByFlexibleServerPostgres: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/firewallRules?api-version=2022-12-01'
         }
     },
     outboundFirewallRules: {
