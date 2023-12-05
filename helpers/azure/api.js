@@ -992,6 +992,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByPostgresServers: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByServiceBusNamespaces: {
             reliesOnPath: 'serviceBus.listNamespacesBySubscription',
             properties: ['id'],
