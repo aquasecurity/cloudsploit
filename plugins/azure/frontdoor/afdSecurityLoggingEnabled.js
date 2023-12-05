@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-monitor?pivots=front-door-standard-premium',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -33,9 +33,9 @@ module.exports = {
             }
 
             var frontDoorProfile = false;
-            profiles.data.forEach(function(profile) {
-                if (!profile.id || profile.kind!='frontdoor') return;
-                
+            profiles.data.forEach(function (profile) {
+                if (!profile.id || profile.kind != 'frontdoor') return;
+
                 frontDoorProfile = true;
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAzureFrontDoor', location, profile.id]);
@@ -44,24 +44,18 @@ module.exports = {
                     helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
                 } else {
                     var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
-                   
+
                     const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
-                    if (allLogsEnabled) {
-                        helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
+                    const requiredLogs = ['FrontDoorAccessLog', 'FrontDoorWebApplicationFirewallLog'];
+                    const missingLogs = requiredLogs.filter(requiredCategory =>
+                        !logs.find(log => (log.category === requiredCategory && log.enabled))
+                    );
+
+                    if (!allLogsEnabled && missingLogs.length) {
+                        helpers.addResult(results, 2, `Front Door profile does not have security logging enabled. Missing Logs ${missingLogs}`, location, profile.id);
                     } else {
-                        const requiredLogs = ['FrontDoorAccessLog', 'FrontDoorWebApplicationFirewallLog'];
-                        const missingLogs = requiredLogs.filter(requiredCategory => 
-                            !logs.find(log => (log.category === requiredCategory && log.enabled))
-                        );
-                        
-                        if (missingLogs.length) {
-                            helpers.addResult(results, 2, `Front Door profile does not have security logging enabled. Missing Logs ${missingLogs}`, location, profile.id);
-                        } else {
-                            helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
-                        }
-                        
-                    } 
-                   
+                        helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
+                    }
                 }
             });
 
@@ -69,7 +63,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Azure Front Door profiles found', location);
             }
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
     }
