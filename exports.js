@@ -976,6 +976,7 @@ module.exports = {
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
+        'agSecurityLoggingEnabled'      : require(__dirname + '/plugins/azure/applicationGateway/agSecurityLoggingEnabled.js'),
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
 
         'rgHasTags'                     : require(__dirname + '/plugins/azure/resourceGroup/rgHasTags.js'),
