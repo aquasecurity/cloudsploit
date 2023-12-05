@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Data Discovery and Classification for SQL Databases',
+    title: 'SQL Database Data Discovery and Classification',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures that data discovery and classification is implemented for SQL databases.',
