@@ -22,11 +22,6 @@ module.exports = {
 
             if (!listCustomModels) return rcb();
 
-            if (listCustomModels.err && listCustomModels.err.message.includes('This service may not be available in')) {
-                helpers.addResult(results, 0, 'Bedrock service is not available in this region', region);
-                return rcb();
-            }
-
             if (listCustomModels.err || !listCustomModels.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for Bedrock custom model list: ${helpers.addError(listCustomModels)}`, region);
