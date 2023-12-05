@@ -981,7 +981,6 @@ module.exports = {
         'enableDefenderForKeyVaults'     : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
-        'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
         'agSecurityLoggingEnabled'      : require(__dirname + '/plugins/azure/applicationGateway/agSecurityLoggingEnabled.js'),
         'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
