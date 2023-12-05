@@ -5,9 +5,9 @@ module.exports = {
     title: 'Custom Model Encryption Enabled',
     category: 'BedRock',
     domain: 'Machine Learning',
-    description: 'Ensure that an Amazon Bedrock custom models are encrypted using KMS customer managed keys (CMKs)',
-    more_info: 'When you encrypt AWS Bedrock custom model using your own AWS KMS Customer Managed Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
-    recommended_action: 'Encrypt Bedrock custom model using AWS KMS Customer Managed Keys',
+    description: 'Ensure that an Amazon Bedrock custom models are encrypted with desired encryption level.',
+    more_info: 'When you encrypt AWS Bedrock custom model using your own AWS Customer Managed Keys (CMKs) for enhanced protection, you have full control over who can use the encryption keys to access your custom model.',
+    recommended_action: 'Encrypt Bedrock custom model with desired encryption level.',
     link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/encryption-custom-job.html',
     apis: ['Bedrock:listCustomModels', 'Bedrock:getCustomModel', 'KMS:listKeys', 'KMS:describeKey'],
     settings: {
@@ -15,7 +15,7 @@ module.exports = {
             name: 'Bedrock Custom Model Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
 
@@ -55,7 +55,7 @@ module.exports = {
                 return rcb();
             }
 
-            for (let model of listCustomModels.data){
+            for (let model of listCustomModels.data) {
                 if (!model.modelArn|| !model.modelName) continue;
                
                 let resource = model.modelArn;
@@ -71,7 +71,7 @@ module.exports = {
 
                 if (getCustomModel.data.modelKmsKeyArn) {
                     var kmsKeyId = getCustomModel.data.modelKmsKeyArn.split('/')[1] ? getCustomModel.data.modelKmsKeyArn.split('/')[1] : getCustomModel.data.modelKmsKeyArn;
-
+    
                     var describeKey = helpers.addSource(cache, source,
                         ['kms', 'describeKey', region, kmsKeyId]);  
                     if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
@@ -81,31 +81,22 @@ module.exports = {
                         continue;
                     }
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
+                    
+                } else  currentEncryptionLevel = 2; 
+                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
+    
                     if (currentEncryptionLevel >= desiredEncryptionLevel) {
                         helpers.addResult(results, 0,
-                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} \
-                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
+                                which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} \
-                            which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
+                                which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
                             region, resource);
                     }
                 
-                } else if (desiredEncryptionLevel == 2){
-                    helpers.addResult(results, 0,
-                        `Bedrock Custom model is encrypted with awskms \
-                            which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        `Bedrock Custom model is encrypted with awskms \
-                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
-                }         
             }
 
             rcb();

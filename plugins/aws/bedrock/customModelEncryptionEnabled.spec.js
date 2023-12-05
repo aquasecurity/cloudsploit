@@ -160,7 +160,7 @@ describe('customModelEncryptionEnabled', function () {
     describe('run', function () {
         it('should PASS if Bedrock Custom Model is Encrypted using CMK', function (done) {
             const cache = createCache([listCustomModels[0]], getCustomModel[0], listKeys, describeKey[0]);
-            customModelEncryptionEnabled.run(cache, {}, (err, results) => {
+            customModelEncryptionEnabled.run(cache, {bedrock_model_desired_encryption_level: 'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -170,7 +170,7 @@ describe('customModelEncryptionEnabled', function () {
 
         it('should FAIL if Bedrock Custom Model is encrypted with AWS owned key', function (done) {
             const cache = createCache([listCustomModels[1]], getCustomModel[1], listKeys, describeKey[1]);
-            customModelEncryptionEnabled.run(cache, {}, (err, results) => {
+            customModelEncryptionEnabled.run(cache, {bedrock_model_desired_encryption_level: 'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -180,7 +180,7 @@ describe('customModelEncryptionEnabled', function () {
 
         it('should PASS if the desired encryption level for bedrock custom model is awskms', function (done) {
             const cache = createCache([listCustomModels[1]], getCustomModel[1], listKeys, describeKey[1]);
-            customModelEncryptionEnabled.run(cache, {bedrock_model_desired_encryption_level: 'awskms'}, (err, results) => {
+            customModelEncryptionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
