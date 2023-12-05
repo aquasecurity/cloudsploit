@@ -45,9 +45,9 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         // Loop through databases
-                        databases.data.forEach(database=> {
+                        databases.data.forEach(database => {
                           
-                            if (database.isLedgerOn == true) {
+                            if (database.isLedgerOn) {
                                 helpers.addResult(results, 0, 'Ledger is enabled for SQL database', location, database.id);
                             } else {
                                 helpers.addResult(results, 2, 'Ledger is not enabled for SQL database', location, database.id);
