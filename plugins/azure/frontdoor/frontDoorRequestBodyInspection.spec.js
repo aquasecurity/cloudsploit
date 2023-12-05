@@ -92,7 +92,7 @@ describe('frontDoorRequestBodyInspection', function () {
         });
 
         it('should give pass result if no existing front door waf policy found', function (done) {
-            const cache = createCache([afdWafPolicies[2]]);
+            const cache = createCache([]);
             frontDoorRequestBodyInspection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
