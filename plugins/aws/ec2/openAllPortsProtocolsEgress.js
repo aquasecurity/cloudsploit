@@ -21,7 +21,7 @@ module.exports = {
             name: 'Check Associated ENI',
             description: 'When set to true, checks elastic network interfaces associated to the security group and returns FAIL if both the security group and ENI are publicly exposed',
             regex: '^(true|false)$',
-            default: 'flase',
+            default: 'false',
         }
     },
     run: function(cache, settings, callback) {
