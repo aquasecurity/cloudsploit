@@ -52,12 +52,16 @@ module.exports = {
             for (let ec2Instance of ec2Instances) {
                 const arn = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${ec2Instance.InstanceId}`;
 
-                let instanceInfo = describeInstanceInformation.data.find((instanceInfo) => instanceInfo.InstanceId && instanceInfo.InstanceId === ec2Instance.InstanceId);
+                if (ec2Instance.State.Name === 'running') {
+                    let instanceInfo = describeInstanceInformation.data.find((instanceInfo) => instanceInfo.InstanceId && instanceInfo.InstanceId === ec2Instance.InstanceId);
 
-                if (instanceInfo) {
-                    helpers.addResult(results, 0, `EC2 Instance: ${ec2Instance.InstanceId} is managed by AWS Systems Manager`, region, arn);
-                } else {
-                    helpers.addResult(results, 2, `EC2 Instance: ${ec2Instance.InstanceId} is not managed by AWS Systems Manager`, region, arn);
+                    if (instanceInfo) {
+                        helpers.addResult(results, 0, `EC2 Instance: ${ec2Instance.InstanceId} is managed by AWS Systems Manager`, region, arn);
+                    } else {
+                        helpers.addResult(results, 2, `EC2 Instance: ${ec2Instance.InstanceId} is not managed by AWS Systems Manager`, region, arn);
+                    }
+                } else  {
+                    helpers.addResult(results, 0, `EC2 Instance: ${ec2Instance.InstanceId} is not in running state`, region, arn);
                 }
             }
 
