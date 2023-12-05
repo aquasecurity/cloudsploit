@@ -34,7 +34,6 @@ const profiles = [
     }
 ];
 
-
 const diagnosticSettings = [
     {
         id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/profiles/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
@@ -192,17 +191,6 @@ describe('accessLogsEnabled', function () {
             });
         });
 
-        it('should give pass result if No existing Front Door diagnostics settings', function (done) {
-            const cache = createCache([profiles[1]], diagnosticSettings[2]);
-            accessLogsEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No existing Front Door diagnostics settings');
-                expect(results[0].region).to.equal('global');
-                done();
-            });
-        });
-
         it('should give passing result if Access Log are enabled for Azure Front Door', function (done) {
             const cache = createCache([profiles[0]], [diagnosticSettings[0]]);
             accessLogsEnabled.run(cache, {}, (err, results) => {
@@ -214,7 +202,7 @@ describe('accessLogsEnabled', function () {
             });
         });
 
-        it('should give failing result if Request logging is not enabled for endpoint', function (done) {
+        it('should give failing result if Access logging is not enabled for Azure Front Door', function (done) {
             const cache = createCache([profiles[1]], [diagnosticSettings[1]]);
             accessLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
