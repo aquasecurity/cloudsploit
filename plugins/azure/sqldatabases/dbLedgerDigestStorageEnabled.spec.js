@@ -119,7 +119,7 @@ describe('enableAutomaticLedgerDigestStorage', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Automatic Ledger digest storage is not enabled for SQL database');
+                expect(results[0].message).to.include('Ledger automatic digest storage is not enabled for SQL database');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -176,7 +176,7 @@ describe('enableAutomaticLedgerDigestStorage', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Azure ledger');
+                expect(results[0].message).to.include('Unable to query for Ledger Digest Uploads for SQL database:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
