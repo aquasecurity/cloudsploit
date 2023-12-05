@@ -52,6 +52,8 @@ module.exports = {
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
 
+        'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
+
         'infraConfigNotificationEnabled': require(__dirname + '/plugins/aws/imagebuilder/infraConfigNotificationEnabled.js'),
         'publicS3Origin'                : require(__dirname + '/plugins/aws/cloudfront/publicS3Origin.js'),
         'secureOrigin'                  : require(__dirname + '/plugins/aws/cloudfront/secureOrigin.js'),
@@ -692,6 +694,7 @@ module.exports = {
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
         'redisCacheHasTags'             : require(__dirname + '/plugins/azure/redisCache/redisCacheHasTags.js'),
+        'redisCachePrivateEndpoint'     : require(__dirname + '/plugins/azure/redisCache/redisCachePrivateEndpoint.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
@@ -816,6 +819,9 @@ module.exports = {
         'postgresqlServerHasTags'       : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlServerHasTags.js'),
         'postgresqlInfraDoubleEncryption': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlInfraDoubleEncryption.js'),
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
+        'diagnosticLoggingEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/diagnosticLoggingEnabled.js'),
+        'flexibleServerSCRAMEnabled'    : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerSCRAMEnabled.js'),
+        'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'networkWatcherEnabled'         : require(__dirname + '/plugins/azure/networksecuritygroups/networkWatcherEnabled.js'),
@@ -977,6 +983,10 @@ module.exports = {
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),
         'agSecurityLoggingEnabled'      : require(__dirname + '/plugins/azure/applicationGateway/agSecurityLoggingEnabled.js'),
+        'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
+        'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
+        'agRequestBodyInspection'       : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodyInspection'),
+
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
 
         'rgHasTags'                     : require(__dirname + '/plugins/azure/resourceGroup/rgHasTags.js'),
@@ -990,7 +1000,21 @@ module.exports = {
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
-        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js')
+        'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
+        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
+        'frontDoorWafDefaultRateLimit'  : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRateLimit.js'),
+        'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js'),
+        'frontDoorWafDetectionMode'     : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDetectionMode.js'),
+        'frontDoorRequestBodyInspection': require(__dirname + '/plugins/azure/frontdoor/frontDoorRequestBodyInspection.js'),
+        'frontDoorWafEnabled'           : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafEnabled.js'),
+        'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
+        'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
+
+        'namespaceEncryptionAtRest'     : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
+        'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
+        'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
+        'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js')
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
