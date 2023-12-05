@@ -120,4 +120,5 @@ module.exports = {
     eventGrid: locations,
     eventHub: locations,
     classicFrontDoors: ['global'],
+    afdWafPolicies: ['global']
 };
