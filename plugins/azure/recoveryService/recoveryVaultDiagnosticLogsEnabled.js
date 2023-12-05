@@ -5,7 +5,7 @@ module.exports = {
     title: 'Recovery Services Vault Diagnostic Logs Enabled',
     category: 'Recovery Service Vault',
     domain: 'Backup',
-    description: 'Ensure that Microsoft Azure Recovery Services Vaults have Diagnostic logs enabled.',
+    description: 'Ensure that Azure Recovery Services Vaults have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of the Recovery Services Vault. By enabling diagnostic logs, you can monitor and troubleshoot issues more effectively.',
     recommended_action: 'Modify the Recovery Service vault and enable diagnostic logs.',
     link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-diagnostic-events?tabs=recovery-services-vaults',
@@ -39,18 +39,12 @@ module.exports = {
                 const diagnosticSettings = helpers.addSource(cache, source, 
                     ['diagnosticSettings', 'listByRecoveryServiceVault', location, vault.id]);
 
-                if (!diagnosticSettings.data || diagnosticSettings.err) {
+                if (!diagnosticSettings || !diagnosticSettings.data || diagnosticSettings.err) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Diagnostic settings: ' + helpers.addError(diagnosticSettings), location, vault.id);
+                        'Unable to query for Recovery Service Vault diagnostic settings: ' + helpers.addError(diagnosticSettings), location, vault.id);
                     continue;
                 }
-                var found = false;
-                for (let ds of diagnosticSettings.data) {
-                    if (ds.logs && ds.logs.length) {
-                        found = true;
-                        break;
-                    }
-                }
+                var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
 
                 if (found) {
                     helpers.addResult(results, 0, 'Recovery Service Vault has diagnostic logs enabled', location, vault.id);
