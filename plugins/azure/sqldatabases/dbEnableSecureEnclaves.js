@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensure Always Encrypted with secure enclaves is enabled at the database level.',
-    more_info: 'Always Encrypted with secure enclaves allows encrypted data to be processed inside a secure enclave for improved security. These properties make the secure enclave a trusted execution environment that can safely access cryptographic keys and sensitive data in plaintext, without compromising data confidentiality.',
+    more_info: 'Always Encrypted protects the data by encrypting it on the client side and never allowing the data or the corresponding cryptographic keys to appear in plaintext inside the Database Engine. As a result, the functionality on encrypted columns inside the database is severely restricted.',
     recommended_action: 'Enable Always Encrypted with secure enclaves for the SQL database.',
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-enclaves?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer'],
