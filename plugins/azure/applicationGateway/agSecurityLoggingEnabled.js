@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-diagnostics',
     apis: ['applicationGateway:listAll', 'diagnosticSettings:listByApplicationGateways'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            applicationGateways.data.forEach(function(appGateway) {
+            applicationGateways.data.forEach(function (appGateway) {
                 if (!appGateway.id) return;
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByApplicationGateways', location, appGateway.id]);
@@ -42,28 +42,26 @@ module.exports = {
                 } else {
 
                     var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
+                    
                     const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
-                    if (allLogsEnabled) {
-                        helpers.addResult(results, 0, 'Application Gateway has security logging enabled', location, appGateway.id);
+                    const requiredLogs = ['ApplicationGatewayAccessLog', 'ApplicationGatewayFirewallLog'];
+                    const missingLogs = requiredLogs.filter(requiredCategory =>
+                        !logs.find(log => (log.category === requiredCategory && log.enabled))
+                    );
+
+                    if (!allLogsEnabled && missingLogs.length) {
+                        helpers.addResult(results, 2, `Application Gateway does not have security logging enabled. Missing Logs ${missingLogs}`, location, appGateway.id);
                     } else {
-                        const requiredLogs = ['ApplicationGatewayAccessLog', 'ApplicationGatewayFirewallLog'];
-                        const missingLogs = requiredLogs.filter(requiredCategory => 
-                            !logs.find(log => (log.category === requiredCategory && log.enabled))
-                        );
-                        
-                        if (missingLogs.length) {
-                            helpers.addResult(results, 2, `Application Gateway does not have security logging enabled. Missing Logs ${missingLogs}`, location, appGateway.id);
-                        } else {
-                            helpers.addResult(results, 0, 'Application Gateway has security logging enabled', location, appGateway.id);
-                        }
-                        
-                    } 
-                   
+                        helpers.addResult(results, 0, 'Application Gateway has security logging enabled', location, appGateway.id);
+                    }
+
+
+
                 }
             });
 
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
     }

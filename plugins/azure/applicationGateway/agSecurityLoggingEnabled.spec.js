@@ -197,7 +197,7 @@ describe('agSecurityLoggingEnabled', function() {
             agSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Application Gateway does not have security logging enabled due to ApplicationGatewayFirewallLog');
+                expect(results[0].message).to.include('Application Gateway does not have security logging enabled. Missing Logs ApplicationGatewayFirewallLog');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
