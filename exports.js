@@ -992,6 +992,7 @@ module.exports = {
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
+        'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
 
         'namespaceEncryptionAtRest'    : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),

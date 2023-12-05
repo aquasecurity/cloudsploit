@@ -120,5 +120,6 @@ module.exports = {
     eventGrid: locations,
     eventHub: locations,
     serviceBus: locations,
+    classicFrontDoors: ['global'],
     afdWafPolicies: ['global']
 };

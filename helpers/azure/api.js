@@ -487,6 +487,11 @@ var calls = {
             graph: true
         }
     },
+    classicFrontDoors: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontDoors?api-version=2019-05-01'
+        }
+    },
     afdWafPolicies: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontdoorWebApplicationFirewallPolicies?api-version=2022-05-01'
