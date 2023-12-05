@@ -28,7 +28,6 @@ module.exports = {
         };
 
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
-        var currentEncryptionLevel;
 
         async.each(regions.bedrock, function(region, rcb){
             var listCustomModels = helpers.addSource(cache, source,
@@ -56,7 +55,7 @@ module.exports = {
             }
 
             for (let model of listCustomModels.data) {
-                if (!model.modelArn|| !model.modelName) continue;
+                if (!model.modelArn) continue;
                
                 let resource = model.modelArn;
 
@@ -68,6 +67,8 @@ module.exports = {
                     helpers.addResult(results, 3, `Unable to describe Bedrock custom model : ${helpers.addError(getCustomModel)}`, region, resource);
                     continue;
                 }
+
+                let currentEncryptionLevel = 2;
 
                 if (getCustomModel.data.modelKmsKeyArn) {
                     var kmsKeyId = getCustomModel.data.modelKmsKeyArn.split('/')[1] ? getCustomModel.data.modelKmsKeyArn.split('/')[1] : getCustomModel.data.modelKmsKeyArn;
@@ -82,9 +83,8 @@ module.exports = {
                     }
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
                     
-                } else  currentEncryptionLevel = 2; 
+                }
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-    
                 if (currentEncryptionLevel >= desiredEncryptionLevel) {
                     helpers.addResult(results, 0,
                         `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
