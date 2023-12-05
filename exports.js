@@ -1008,7 +1008,6 @@ module.exports = {
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
         'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
-        'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
         'frontDoorWafDefaultRateLimit'  : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRateLimit.js'),
         'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js'),
         'frontDoorWafDetectionMode'     : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDetectionMode.js'),
