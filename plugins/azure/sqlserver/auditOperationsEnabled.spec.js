@@ -1,7 +1,7 @@
 // Import necessary modules and the code to be tested
 var assert = require('assert');
 var expect = require('chai').expect;
-var auditSupportOperations = require('./auditMicrosoftOperationsEnabled');
+var auditSupportOperations = require('./auditOperationsEnabled');
 
 // Function to create a sample cache
 const createCache = (err, list, get) => {

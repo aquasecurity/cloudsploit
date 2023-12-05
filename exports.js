@@ -883,7 +883,7 @@ module.exports = {
         'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
         'sqlServerSendScanReports'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerSendScanReports.js'),
         'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
-        'auditMicrosoftOperationsEnabled':require(__dirname + '/plugins/azure/sqlserver/auditMicrosoftOperationsEnabled.js'),
+        'auditOperationsEnabled':require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),

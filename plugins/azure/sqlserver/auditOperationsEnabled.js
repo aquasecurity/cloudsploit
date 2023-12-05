@@ -41,11 +41,16 @@ module.exports = {
                     helpers.addResult(results, 3,
                         'Unable to query Auditing Policies: ' + helpers.addError(devOpsAuditingSettings), location, server.id);
                 } else {
-                    if (devOpsAuditingSettings.data[0].state.toLowerCase() == 'enabled') {
-                        helpers.addResult(results, 0, 'Microsoft support operations auditing is enabled on SQL server', location, server.id);
+                    if (devOpsAuditingSettings.data.length) {
+                        if ( devOpsAuditingSettings.data[0].state && devOpsAuditingSettings.data[0].state.toLowerCase() == 'enabled') {
+                            helpers.addResult(results, 0, 'Microsoft support operations auditing is enabled on SQL server', location, server.id);
+                        } else {
+                            helpers.addResult(results, 2, 'Microsoft support operations auditing is not enabled on SQL server', location, server.id);
+                        }
                     } else {
-                        helpers.addResult(results, 2, 'Microsoft support operations auditing is not enabled on SQL server', location, server.id);
+                        helpers.addResult(results, 2, 'No existing auditing policies found', location, server.id);
                     }
+                    
                 }
             });
 
