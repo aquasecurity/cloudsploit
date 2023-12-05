@@ -6,8 +6,8 @@ module.exports = {
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensure that ledger automatic digest storage is enabled.',
-    more_info: 'Configuring automatic Ledger digest storage allows for the generation and storage of digests for later verification.',
-    recommended_action: 'Configure an Azure Storage account or Azure Confidential Ledger for automatic Ledger digest storage. ',
+    more_info: 'Configuring Ledger automatic digest storage allows the generation and storage of digests for later verification. Automatic database digests are generated on a predefined interval of 30 seconds and uploaded to the selected storage service.',
+    recommended_action: 'Modify SQL database ledger and add storage account for automatic digest storage.',
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer', 'ledgerDigestUploads:list'],
     
