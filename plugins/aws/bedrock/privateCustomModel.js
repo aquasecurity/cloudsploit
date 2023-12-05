@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Private Custom Model',
-    category: 'BedRock',
+    category: 'Amazon Bedrock',
     domain: 'Machine Learning',
     description: 'Ensure that an Amazon Bedrock custom model is configured within a private VPC.',
     more_info: 'When the custom model is configured within a private VPC or with a private VPC endpoint, it enhances security by restricting access to authorized networks only, preventing exposure to the public internet.',
