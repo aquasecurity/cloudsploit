@@ -57,6 +57,7 @@ const createErrorCache = () => {
         }
     };
 };
+
 describe('frontDoorWafDetectionMode', function () {
     describe('run', function () {
 
