@@ -936,6 +936,14 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
+    },
+    afdSecurityPolicies: {
+        listByProfile: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
+
+        }
     }
 };
 
