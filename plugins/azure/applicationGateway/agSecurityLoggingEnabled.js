@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-diagnostics',
     apis: ['applicationGateway:listAll', 'diagnosticSettings:listByApplicationGateways'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -32,7 +32,7 @@ module.exports = {
                 return rcb();
             }
 
-            applicationGateways.data.forEach(function (appGateway) {
+            applicationGateways.data.forEach(function(appGateway) {
                 if (!appGateway.id) return;
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByApplicationGateways', location, appGateway.id]);
@@ -57,7 +57,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
