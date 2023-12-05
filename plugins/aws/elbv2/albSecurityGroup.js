@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ALB Associated With Security Group',
+    title: 'ALB Security Group',
     category: 'ELBv2',
     domain: 'Content Delivery',
     description: 'Ensure Application Load Balancers are associated with security group.',
     more_info: 'It is a security best practice to always have application load balancers associated with security groups to avoid any data loss or unauthorized access.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html',
-    recommended_action: 'Modify Application Load Balancer and Add Security Groups',
+    recommended_action: 'Modify Application Load Balancer and add security group.',
     apis: ['ELBv2:describeLoadBalancers'],
 
     run: function(cache, settings, callback) {
@@ -41,9 +41,9 @@ module.exports = {
                 }
 
                 if (alb.SecurityGroups && alb.SecurityGroups.length){
-                    helpers.addResult(results, 0, 'Application Load Balancer has security group associated', region,alb.LoadBalancerArn);
+                    helpers.addResult(results, 0, 'Application Load Balancer has security group associated', region, alb.LoadBalancerArn);
                 } else {
-                    helpers.addResult(results, 2, 'Application Load Balancer does not have security group associated', region,alb.LoadBalancerArn);
+                    helpers.addResult(results, 2, 'Application Load Balancer does not have security group associated', region, alb.LoadBalancerArn);
                 }
             }
 
