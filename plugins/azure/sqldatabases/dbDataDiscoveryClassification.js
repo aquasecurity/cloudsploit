@@ -53,7 +53,7 @@ module.exports = {
                                 if (currentSensitivityLabels.data.length) {
                                     helpers.addResult(results, 0, 'Data discovery and classification is being used', location, database.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'Data discovery and classification not being used.', location, database.id);
+                                    helpers.addResult(results, 2, 'SQL Database is not using data discovery and classification', location, database.id);
                                 }
                             }
                         } );
