@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL Server',
     domain: 'Databases',
     description: 'Ensure managed identity is set as the authentication type when storage account is chosen as the destination for audit logs on SQL server.',
-    more_info: 'Enabling managed identity as authentication type enhances security when using a storage account as the destination for audit logs.',
+    more_info: 'Enabling managed identity as authentication type enhances security when using a storage account as the destination for audit logs. Managed Identity can be a system-assigned managed identity (SMI) or user-assigned managed identity (UMI).',
     recommended_action: 'Configure managed identity as the authentication type when choosing a storage account as the destination for audit logs on SQL server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-setup?view=azuresql',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
