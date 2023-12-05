@@ -85,17 +85,17 @@ module.exports = {
                 } else  currentEncryptionLevel = 2; 
                 var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
     
-                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                        helpers.addResult(results, 0,
-                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
+                if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                    helpers.addResult(results, 0,
+                        `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
                                 which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                            region, resource);
-                    } else {
-                        helpers.addResult(results, 2,
-                            `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
+                        region, resource);
+                } else {
+                    helpers.addResult(results, 2,
+                        `Bedrock Custom model is encrypted with ${currentEncryptionLevelString} 
                                 which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                            region, resource);
-                    }
+                        region, resource);
+                }
                 
             }
 
