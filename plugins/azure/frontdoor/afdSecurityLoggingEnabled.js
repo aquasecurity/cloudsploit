@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Front Door WAF Logs Enabled',
+    title: 'Front Door Security Logging Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
-    description: 'Ensures that Azure Front Door WAF logs are enabled.',
-    more_info: 'Azure Front Door captures several types of logs. Web application firewall (WAF) logs can be used to detect potential attacks, and false positive detections that might indicate legitimate requests that the WAF blocked.',
-    recommended_action: 'Ensure that diagnostic setting for Front Door WAF logs is enabled.',
+    description: 'Ensures that Azure Front Door Access and WAF logs are enabled.',
+    more_info: 'Azure Front Door captures several types of logs. Access logs can be used to identify slow requests, determine error rates, and understand how Front Door\'s caching behavior is working for your solution. Web application firewall (WAF) logs can be used to detect potential attacks, and false positive detections that might indicate legitimate requests that the WAF blocked.',
+    recommended_action: 'Modify Front Door profile and add diagnostic settings for Access and WAF Logs.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-monitor?pivots=front-door-standard-premium',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
 
@@ -43,18 +43,25 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
                 } else {
-                    var frontDoorWafLogsEnabled = false;
-                    diagnosticSettings.data.forEach(setting => {
-                        var logs = setting.logs;
-                        if (logs.some(log => (log.categoryGroup === 'allLogs' || log.category === 'FrontDoorWebApplicationFirewallLog') && log.enabled)) {
-                            frontDoorWafLogsEnabled = true;
-                        }
-                    });
-                    if (frontDoorWafLogsEnabled) {
-                        helpers.addResult(results, 0, 'Front Door profile WAF logs are enabled', location, profile.id);
+                    var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
+                   
+                    const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
+                    if (allLogsEnabled) {
+                        helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
                     } else {
-                        helpers.addResult(results, 2, 'Front Door profile WAF logs are not enabled', location, profile.id);
-                    }
+                        const requiredLogs = ['FrontDoorAccessLog', 'FrontDoorWebApplicationFirewallLog'];
+                        const missingLogs = requiredLogs.filter(requiredCategory => 
+                            !logs.find(log => (log.category === requiredCategory && log.enabled))
+                        );
+                        
+                        if (missingLogs.length) {
+                            helpers.addResult(results, 2, `Front Door profile does not have security logging enabled. Missing Logs ${missingLogs}`, location, profile.id);
+                        } else {
+                            helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
+                        }
+                        
+                    } 
+                   
                 }
             });
 

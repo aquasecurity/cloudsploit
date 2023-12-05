@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var wafLogsEnabled = require('./wafLogsEnabled.js');
+var afdSecurityLoggingEnabled = require('./afdSecurityLoggingEnabled.js');
 
 const profiles = [
     {
@@ -43,14 +43,14 @@ const diagnosticSettings = [
         location: 'global',
         logs: [
             {
-              "category": "FrontDoorAccessLog",
-              "categoryGroup": null,
-              "enabled": true,
-              "retentionPolicy": {
-                "enabled": false,
-                "days": 0
-              }
-            },
+                "category": "FrontDoorWebApplicationFirewallLog",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
           ],
           "logAnalyticsDestinationType": null
     },
@@ -69,6 +69,15 @@ const diagnosticSettings = [
                 "days": 0
               }
             },
+            {
+                "category": "FrontDoorAccessLog",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
           ],
           "logAnalyticsDestinationType": null
     },
@@ -156,12 +165,12 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('wafLogsEnabled', function () {
+describe('afdSecurityLoggingEnabled', function () {
     describe('run', function () {
 
         it('should give pass result if No existing Azure Front Door profiles found', function (done) {
             const cache = createErrorCache('noprofile');
-            wafLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Azure Front Door profiles found');
@@ -172,7 +181,7 @@ describe('wafLogsEnabled', function () {
 
         it('should give unknown result if Unable to query Front Door profiles:', function (done) {
             const cache = createErrorCache('profile');
-            wafLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door profiles:');
@@ -183,7 +192,7 @@ describe('wafLogsEnabled', function () {
 
         it('should give unknown result if Unable to query diagnostics settings', function (done) {
             const cache = createErrorCache('policy');
-            wafLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Front Door diagnostics settings');
@@ -192,23 +201,23 @@ describe('wafLogsEnabled', function () {
             });
         });
 
-        it('should give passing result if Front Door profile WAF logs are enabled for Azure Front Door', function (done) {
+        it('should give passing result if front Door profile has security logging enabled', function (done) {
             const cache = createCache([profiles[0]], [diagnosticSettings[1]]);
-            wafLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Front Door profile WAF logs are enabled');
+                expect(results[0].message).to.include('Front Door profile has security logging enabled');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give failing result if Front Door profile WAF logs are not enabled for Azure Front Door', function (done) {
+        it('should give failing result if Front Door profile does not have security logging enabled', function (done) {
             const cache = createCache([profiles[1]], [diagnosticSettings[0]]);
-            wafLogsEnabled.run(cache, {}, (err, results) => {
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door profile WAF logs are not enabled');
+                expect(results[0].message).to.include('Front Door profile does not have security logging enabled. Missing Logs FrontDoorAccessLog');
                 expect(results[0].region).to.equal('global');
                 done();
             });
