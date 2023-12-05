@@ -995,6 +995,8 @@ module.exports = {
         'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
 
+        'namespaceEncryptionAtRest'    : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

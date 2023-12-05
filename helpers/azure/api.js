@@ -459,6 +459,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
     },
+    serviceBus: {
+        listNamespacesBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -977,7 +982,12 @@ var tertiarycalls = {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
-        }
+        },
+        listByServiceBusNamespaces: {
+            reliesOnPath: 'serviceBus.listNamespacesBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
 
     },
     backupShortTermRetentionPolicies: {
