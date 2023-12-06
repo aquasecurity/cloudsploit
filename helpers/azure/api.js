@@ -1051,6 +1051,13 @@ var tertiarycalls = {
             vault: true
         }
     },
+    ledgerDigestUploads: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/ledgerDigestUploads?api-version=2021-11-01'
+        }
+    },
     transparentDataEncryption: {
         list: {
             reliesOnPath: 'databases.listByServer',

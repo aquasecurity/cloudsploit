@@ -242,6 +242,9 @@ module.exports = {
         getAuthSettings: '',
         getBackupConfiguration: 'id',
     },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
     transparentDataEncryption: {
         list: 'id'
     },
