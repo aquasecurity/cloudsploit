@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Storage Authentication Type for Audit Logs',
+    title: 'Auditing Storage Authentication Type',
     category: 'SQL Server',
     domain: 'Databases',
     description: 'Ensure managed identity is set as the authentication type when storage account is chosen as the destination for audit logs on SQL server.',
@@ -54,10 +54,10 @@ module.exports = {
                                         helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
                                     }
                                 } else {
-                                    helpers.addResult(results, 0, 'Azure SQL Auditing not using account storage for SQL serverr', location, server.id);
+                                    helpers.addResult(results, 0, 'Auditing storage authentication type is not using account storage for SQL serverr', location, server.id);
                                 }
                             } else {
-                                helpers.addResult(results, 0, 'Azure SQL Auditing is not enabled for SQL server', location, server.id);
+                                helpers.addResult(results, 0, 'Auditing is not enabled for SQL server', location, server.id);
                             }
                         });
                     }
