@@ -1051,6 +1051,13 @@ var tertiarycalls = {
             vault: true
         }
     },
+    devOpsAuditingSettings: {
+        list: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
+        }
+    }
 
 };
 
