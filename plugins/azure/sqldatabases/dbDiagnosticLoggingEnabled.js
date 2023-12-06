@@ -52,18 +52,20 @@ module.exports = {
                                 helpers.addResult(results, 3, 'Unable to query SQL database diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
                             } else {
                                 if (!diagnosticSettings.data.length) {
-                                    helpers.addResult(results, 2, 'Diagnostic settings not configured for SQL database', location, database.id);
+                                    helpers.addResult(results, 2, 'Diagnostic settings are not configured for SQL database', location, database.id);
                                 } else { 
+                                    var enabledDiagnosticSettings = [];
                                     diagnosticSettings.data.forEach(settings=> { 
-                                        var enabledDiagnosticSettings = [...settings.metrics, ...settings.logs].filter((e => e.enabled)).map((e)=>e.category);
-                                        var skippedRecommendedSettings = recommendedDiagnosticSettings.filter((e) => !enabledDiagnosticSettings.includes(e));
-                                        if (skippedRecommendedSettings.length) {
-                                            helpers.addResult(results, 2, 'Diagnostic settings are not configured with minimum requirements', location, settings.id);
-                                        } else {
-                                            helpers.addResult(results, 0,
-                                                'Diagnostic settings are configured with minimum requirements', location, settings.id);
-                                        }
+                                        enabledDiagnosticSettings = [...enabledDiagnosticSettings,...[...settings.metrics, ...settings.logs].filter((e => e.enabled)).map((e)=>e.category)];
                                     });
+                                    var skippedRecommendedSettings = recommendedDiagnosticSettings.filter((e) => !enabledDiagnosticSettings.includes(e));
+
+                                    if (skippedRecommendedSettings.length) {
+                                        helpers.addResult(results, 2, `Database diagnostic settings are configured with minimum requirements. Missing: ${skippedRecommendedSettings.join(', ')} `, location, database.id);
+                                    } else {
+                                        helpers.addResult(results, 0,
+                                            'Database diagnostic settings are configured with minimum requirements', location, database.id);
+                                    }
 
                                 }
                             }
