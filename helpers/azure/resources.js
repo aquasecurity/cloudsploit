@@ -244,5 +244,8 @@ module.exports = {
     },
     dataMaskingPolicies: {
         list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list:'id'
     }
 };
