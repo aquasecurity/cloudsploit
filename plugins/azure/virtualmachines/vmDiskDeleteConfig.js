@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'VM Automatic Disks Delete Enabled',
+    title: 'VM Disks Deletion Config',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated.',
