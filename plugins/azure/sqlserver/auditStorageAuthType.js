@@ -54,7 +54,7 @@ module.exports = {
                                         helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
                                     }
                                 } else {
-                                    helpers.addResult(results, 0, 'Auditing storage authentication is not using account storage for SQL serverr', location, server.id);
+                                    helpers.addResult(results, 0, 'Auditing storage authentication is not using account storage for SQL server', location, server.id);
                                 }
                             } else {
                                 helpers.addResult(results, 0, 'Auditing is not enabled for SQL server', location, server.id);

@@ -44,7 +44,7 @@ describe('Storage Authentication Type for Audit Logs', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure SQL Auditing not using account storage for SQL server');
+                expect(results[0].message).to.include('Auditing storage authentication is not using account storage for SQL server');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
