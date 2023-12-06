@@ -241,5 +241,11 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list:'id'
     }
 };
