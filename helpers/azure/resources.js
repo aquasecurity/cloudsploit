@@ -245,4 +245,13 @@ module.exports = {
     ledgerDigestUploads: {
         list: 'id'
     },
+    transparentDataEncryption: {
+        list: 'id'
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list:'id'
+    }
 };

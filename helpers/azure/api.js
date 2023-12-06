@@ -200,7 +200,7 @@ var calls = {
     },
     virtualMachines: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01',
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2023-07-01',
             paginate: 'nextLink'
         }
     },
@@ -463,6 +463,12 @@ var calls = {
         listNamespacesBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
         }
+    },
+    mediaServices:{
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
+        }
+
     },
     // For CIEM
     aad: {
@@ -791,7 +797,7 @@ var postcalls = {
         listByServer: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
+            url: 'https://management.azure.com/{id}/databases?api-version=2023-02-01-preview'
         },
         sendIntegration: serviceMap['SQL Databases']
     },
@@ -942,6 +948,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     },
+    mediaServices: {
+        get: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-01-01'
+        }
+    },
     afdSecurityPolicies: {
         listByProfile: {
             reliesOnPath: 'profiles.list',
@@ -1002,6 +1015,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByMediaService: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByPostgresFlexibleServers: {
             reliesOnPath: 'servers.listPostgresFlexibleServer',
             properties: ['id'],
@@ -1017,7 +1035,6 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
@@ -1041,7 +1058,27 @@ var tertiarycalls = {
             url: 'https://management.azure.com/{id}/ledgerDigestUploads?api-version=2021-11-01'
         }
     },
-
+    transparentDataEncryption: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/transparentDataEncryption?api-version=2021-11-01'
+        }
+    },
+    dataMaskingPolicies: {
+        get: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/dataMaskingPolicies/Default?api-version=2021-11-01',
+        }
+    },
+    devOpsAuditingSettings: {
+        list: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
+        }
+    }
 };
 
 var specialcalls = {
