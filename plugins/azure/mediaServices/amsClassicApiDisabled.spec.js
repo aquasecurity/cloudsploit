@@ -89,7 +89,7 @@ describe('amsClassicApiDisabled', function() {
             amsClassicApiDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Media Service');
+                expect(results[0].message).to.include('Unable to query for Media Service data');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -100,7 +100,7 @@ describe('amsClassicApiDisabled', function() {
             amsClassicApiDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Media Service account has classic API disabled');
+                expect(results[0].message).to.include('Media Service account is not using classic v2 APIs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -111,7 +111,7 @@ describe('amsClassicApiDisabled', function() {
             amsClassicApiDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Media Service account has classic API enabled');
+                expect(results[0].message).to.include('Media Service account is using classic v2 APIs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

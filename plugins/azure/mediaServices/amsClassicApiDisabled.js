@@ -39,15 +39,15 @@ module.exports = {
                     ['mediaServices', 'get', location, mediaService.id]);
 
                 if (!getMediaService || getMediaService.err || !getMediaService.data) {
-                    helpers.addResult(results, 3, `Unable to query for Media Service: ${helpers.addError(getMediaService)}`,
+                    helpers.addResult(results, 3, `Unable to query for Media Service data: ${helpers.addError(getMediaService)}`,
                         location, mediaService.id);
                     continue;
                 }
 
                 if (getMediaService.data.identity) {
-                    helpers.addResult(results, 0, 'Media Service account has classic API disabled', location, mediaService.id);
+                    helpers.addResult(results, 0, 'Media Service account is not using classic v2 APIs', location, mediaService.id);
                 } else {
-                    helpers.addResult(results, 2, 'Media Service account has classic API enabled', location, mediaService.id);
+                    helpers.addResult(results, 2, 'Media Service account is using classic v2 APIs', location, mediaService.id);
                 }
             }
 
