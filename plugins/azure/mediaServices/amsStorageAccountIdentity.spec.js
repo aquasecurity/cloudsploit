@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var amsStorageAccountIdentityEnabled = require('./amsStorageAccountIdentityEnabled');
+var amsStorageAccountIdentity = require('./amsStorageAccountIdentity');
 
 const mediaServices = [
     {
@@ -38,11 +38,11 @@ const createCache = (ams, ds) => {
     };
 };
 
-describe('amsStorageAccountIdentityEnabled', function() {
+describe('amsStorageAccountIdentity', function() {
     describe('run', function() {
         it('should give passing result if no media services found', function(done) {
             const cache = createCache([]);
-            amsStorageAccountIdentityEnabled.run(cache, {}, (err, results) => {
+            amsStorageAccountIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Media Services found');
@@ -53,7 +53,7 @@ describe('amsStorageAccountIdentityEnabled', function() {
 
         it('should give unknown result if unable to query for media services', function(done) {
             const cache = createCache(null);
-            amsStorageAccountIdentityEnabled.run(cache, {}, (err, results) => {
+            amsStorageAccountIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Media Services:');
@@ -64,7 +64,7 @@ describe('amsStorageAccountIdentityEnabled', function() {
 
         it('should give passing result if storage account managed identity enabled for authentication', function(done) {
             const cache = createCache([mediaServices[1]]);
-            amsStorageAccountIdentityEnabled.run(cache, {}, (err, results) => {
+            amsStorageAccountIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Media Service account has managed identity enabled for storage account authentication');
@@ -75,7 +75,7 @@ describe('amsStorageAccountIdentityEnabled', function() {
 
         it('should give failing result if system authentication enabled', function(done) {
             const cache = createCache([mediaServices[0]]);
-            amsStorageAccountIdentityEnabled.run(cache, {}, (err, results) => {
+            amsStorageAccountIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Media Service account has managed identity disabled for storage account authentication');
