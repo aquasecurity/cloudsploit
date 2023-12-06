@@ -55,7 +55,7 @@ module.exports = {
                             }
                             if (!syncGroups.data.length) {
                                 helpers.addResult(results, 0,
-                                    'No Database sync group found for SQL database', location, database.id);
+                                    'No sync groups found for SQL database', location, database.id);
                             }
 
                             syncGroups.data.forEach(syncGroup=> {
