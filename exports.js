@@ -956,6 +956,7 @@ module.exports = {
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
         'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
+        'dbLedgerEnabled'               : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerEnabled.js'),
         'dbEnableSecureEnclaves'        : require(__dirname + '/plugins/azure/sqldatabases/dbEnableSecureEnclaves.js'),
         
 
