@@ -57,13 +57,13 @@ module.exports = {
                                 helpers.addResult(results, 0,
                                     'No sync groups found for SQL database', location, database.id);
                             } else {
-                                var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e)=>e.name);
+                                var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e) => e.name);
     
                                 if (missingPrivateConfigGrps.length) {
-                                    helpers.addResult(results, 2, `SQL Database following sync groups are not configured to use private link: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
+                                    helpers.addResult(results, 2, `Following SQL Database sync groups are not configured to use private link: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
                                    
                                 } else {
-                                    helpers.addResult(results, 0, 'SQL Database sync groups are configured to use private link', location, database.id);
+                                    helpers.addResult(results, 0, 'All SQL Database sync groups are configured to use private link', location, database.id);
                                 }
                             }
                            
