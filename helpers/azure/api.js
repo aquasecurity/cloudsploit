@@ -200,7 +200,7 @@ var calls = {
     },
     virtualMachines: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01',
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2023-07-01',
             paginate: 'nextLink'
         }
     },
@@ -468,6 +468,12 @@ var calls = {
         listNamespacesBySubscription: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
         }
+    },
+    mediaServices:{
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
+        }
+
     },
     // For CIEM
     aad: {
