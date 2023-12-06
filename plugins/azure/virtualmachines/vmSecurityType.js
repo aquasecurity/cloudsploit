@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.securityProfile && virtualMachine.securityProfile.securityType == 'TrustedLaunch') {
-                    helpers.addResult(results, 0, 'Trusted Launch is selected as security type for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Trusted launch is selected as security type for virtual machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Trusted Launch is not selected as security type for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Trusted launch is not selected as security type for virtual machine', location, virtualMachine.id);
                 }
                 
             });

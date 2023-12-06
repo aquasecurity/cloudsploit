@@ -63,7 +63,7 @@ describe('selectTrustedLaunch', function() {
             selectTrustedLaunch.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Trusted Launch is selected as security type for Azure Virtual Machine');
+                expect(results[0].message).to.include('Trusted launch is selected as security type for virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -74,7 +74,7 @@ describe('selectTrustedLaunch', function() {
             selectTrustedLaunch.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Trusted Launch is not selected as security type for Azure Virtual Machine');
+                expect(results[0].message).to.include('Trusted launch is not selected as security type for virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
