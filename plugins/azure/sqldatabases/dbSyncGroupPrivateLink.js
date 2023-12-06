@@ -45,7 +45,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(database=> {
+                        databases.data.forEach(database => {
                             
                             var syncGroups = helpers.addSource(cache, source, ['syncGroups', 'list', location, database.id]);
 
