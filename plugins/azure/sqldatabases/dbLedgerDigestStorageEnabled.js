@@ -49,7 +49,7 @@ module.exports = {
                             if (!ledgerDigestUploads || ledgerDigestUploads.err || !ledgerDigestUploads.data) {
                                 helpers.addResult(results, 3, 'Unable to query for Ledger Digest Uploads for SQL database: ' + helpers.addError(ledgerDigestUploads), location, database.id);
                             } else {
-                                if (ledgerDigestUploads.data.length && ledgerDigestUploads.data[0].state.toLowerCase() == 'enabled') {
+                                if (ledgerDigestUploads.data.length && ledgerDigestUploads.data[0].state && ledgerDigestUploads.data[0].state.toLowerCase() == 'enabled') {
                                     helpers.addResult(results, 0, 'Ledger automatic digest storage is enabled for SQL database', location, database.id);
                                 } else {
                                     helpers.addResult(results, 2, 'Ledger automatic digest storage is not enabled for SQL database', location, database.id);
