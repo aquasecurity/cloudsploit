@@ -1051,6 +1051,13 @@ var tertiarycalls = {
             vault: true
         }
     },
+    syncGroups: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/syncGroups?api-version=2021-11-01'
+        }
+    },
     ledgerDigestUploads: {
         list: {
             reliesOnPath: 'databases.listByServer',

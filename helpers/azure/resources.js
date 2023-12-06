@@ -242,6 +242,9 @@ module.exports = {
         getAuthSettings: '',
         getBackupConfiguration: 'id',
     },
+    syncGroups: {
+        list: 'id'
+    },
     ledgerDigestUploads: {
         list: 'id'
     },

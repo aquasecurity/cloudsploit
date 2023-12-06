@@ -957,6 +957,7 @@ module.exports = {
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
         'dbLedgerDigestStorageEnabled'  : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
         'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
+        'dbSyncGroupPrivateLink'        : require(__dirname + '/plugins/azure/sqldatabases/dbSyncGroupPrivateLink.js'),
         'dbTDEEnabled'                  : require(__dirname + '/plugins/azure/sqldatabases/dbTDEEnabled.js'),
         'dbLedgerEnabled'               : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerEnabled.js'),
         'dbEnableSecureEnclaves'        : require(__dirname + '/plugins/azure/sqldatabases/dbEnableSecureEnclaves.js'),
