@@ -752,6 +752,7 @@ module.exports = {
         'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
         'systemAssignedIdentityEnabled' : require(__dirname + '/plugins/azure/virtualmachines/systemAssignedIdentityEnabled.js'),
         'vmWindowsAntiMalwareExtension' : require(__dirname + '/plugins/azure/virtualmachines/vmWindowsAntiMalwareExtension.js'),
+        'vmSecureBootEnabled'           :require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
