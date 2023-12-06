@@ -47,6 +47,7 @@ module.exports = {
                         databases.data.forEach(database =>  {
                             
                             var dataMaskingPolicies = helpers.addSource(cache, source, ['dataMaskingPolicies', 'get', location, database.id]);
+                            
                             if (!dataMaskingPolicies || dataMaskingPolicies.err || !dataMaskingPolicies.data || !dataMaskingPolicies.data) {
                                 helpers.addResult(results, 3, 'Unable to query dynamic data masking policies: ' + helpers.addError(dataMaskingPolicies), location, database.id);
                             } else {
