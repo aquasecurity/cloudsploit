@@ -40,15 +40,17 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Application Gateway diagnostics settings: ' + helpers.addError(diagnosticSettings), location, appGateway.id);
                 } else {
-                    var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
-                    
-                    const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
-                    const requiredLogs = ['ApplicationGatewayAccessLog', 'ApplicationGatewayFirewallLog'];
-                    const missingLogs = requiredLogs.filter(requiredCategory =>
-                        !logs.find(log => (log.category === requiredCategory && log.enabled))
-                    );
+                    //First consider that all the logs are missing then remove the ones that are present
+                    var missingLogs = ['ApplicationGatewayAccessLog', 'ApplicationGatewayFirewallLog'];
 
-                    if (!allLogsEnabled && missingLogs.length) {
+                    diagnosticSettings.data.forEach(settings => {
+                        const logs = settings.logs;
+                        missingLogs = missingLogs.filter(requiredCategory =>
+                            !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                        );
+                    });
+
+                    if (missingLogs.length) {
                         helpers.addResult(results, 2, `Application Gateway does not have security logging enabled. Missing Logs ${missingLogs}`, location, appGateway.id);
                     } else {
                         helpers.addResult(results, 0, 'Application Gateway has security logging enabled', location, appGateway.id);
