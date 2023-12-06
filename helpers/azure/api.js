@@ -947,6 +947,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/configurations?api-version=2017-12-01'
         }
     },
+    mediaServices: {
+        get: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-01-01'
+        }
+    },
     afdSecurityPolicies: {
         listByProfile: {
             reliesOnPath: 'profiles.list',
