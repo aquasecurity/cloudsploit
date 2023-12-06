@@ -245,4 +245,16 @@ module.exports = {
     syncGroups: {
         list: 'id'
     },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
+    transparentDataEncryption: {
+        list: 'id'
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list:'id'
+    }
 };
