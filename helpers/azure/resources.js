@@ -245,4 +245,10 @@ module.exports = {
     transparentDataEncryption: {
         list: 'id'
     },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list:'id'
+    }
 };

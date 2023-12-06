@@ -81,7 +81,25 @@ const diagnosticSettings = [
           ],
           "logAnalyticsDestinationType": null
     },
-    {}
+    {},
+    {
+        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/profiles/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        type: 'Microsoft.Insights/diagnosticSettings',
+        name: 'testwaflogs',
+        location: 'global',
+        logs: [
+            {
+              "category": "",
+              "categoryGroup": "allLogs",
+              "enabled": true,
+              "retentionPolicy": {
+                "enabled": false,
+                "days": 0
+              }
+            }
+          ],
+          "logAnalyticsDestinationType": null
+    },
 ]
 
 const createCache = (profiles, diagnostics) => {
@@ -218,6 +236,18 @@ describe('afdSecurityLoggingEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Front Door profile does not have security logging enabled. Missing Logs FrontDoorAccessLog');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
+
+        it('should give pass result if Application Gateway have allLogs Enabled', function(done) {
+            const cache = createCache([profiles[1]], [diagnosticSettings[3]]);
+            afdSecurityLoggingEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Front Door profile has security logging enabled');
                 expect(results[0].region).to.equal('global');
                 done();
             });

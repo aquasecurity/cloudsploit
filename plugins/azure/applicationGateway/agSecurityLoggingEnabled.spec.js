@@ -64,6 +64,23 @@ const diagnosticSettings = [
         ],
         "logAnalyticsDestinationType": null
     },
+    {
+        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/meerab-rg/providers/microsoft.network/applicationgateways/meerab-test/providers/microsoft.insights/diagnosticSettings/app-ds",
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "name": "app-ds",
+        "logs": [
+          {
+            "category": "",
+            "categoryGroup": "allLogs",
+            "enabled": true,
+            "retentionPolicy": {
+              "enabled": false,
+              "days": 0
+            }
+          },
+        ],
+        "logAnalyticsDestinationType": null
+    },
 ]
 const createCache = (applicationGateway, diagnostics) => {
     let diagnostic = {};
@@ -198,6 +215,17 @@ describe('agSecurityLoggingEnabled', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Application Gateway does not have security logging enabled. Missing Logs ApplicationGatewayFirewallLog');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give pass result if Application Gateway have allLogs Enabled', function(done) {
+            const cache = createCache([appGateway[0]],[diagnosticSettings[3]]);
+            agSecurityLoggingEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Application Gateway has security logging enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

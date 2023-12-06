@@ -43,15 +43,15 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Front Door diagnostics settings: ' + helpers.addError(diagnosticSettings), location, profile.id);
                 } else {
-                    var logs = diagnosticSettings.data[0] && diagnosticSettings.data[0].logs ? diagnosticSettings.data[0].logs : [];
+                    var missingLogs = ['FrontDoorAccessLog', 'FrontDoorWebApplicationFirewallLog'];
+                    diagnosticSettings.data.forEach(settings => {
+                        const logs = settings.logs;
+                        missingLogs = missingLogs.filter(requiredCategory =>
+                            !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                        );
+                    });
 
-                    const allLogsEnabled = logs.some(log => log.categoryGroup === 'allLogs' && log.enabled);
-                    const requiredLogs = ['FrontDoorAccessLog', 'FrontDoorWebApplicationFirewallLog'];
-                    const missingLogs = requiredLogs.filter(requiredCategory =>
-                        !logs.find(log => (log.category === requiredCategory && log.enabled))
-                    );
-
-                    if (!allLogsEnabled && missingLogs.length) {
+                    if (missingLogs.length) {
                         helpers.addResult(results, 2, `Front Door profile does not have security logging enabled. Missing Logs ${missingLogs}`, location, profile.id);
                     } else {
                         helpers.addResult(results, 0, 'Front Door profile has security logging enabled', location, profile.id);
