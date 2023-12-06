@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures SQL Database sync groups use private link when SQL DB sync with others databases.',
-    more_info: 'Private Link is the way to create Sync groups using secure connection with databases sitting behind a firewall. SQL Data Sync Private Link is Microsoft-managed endpoint and internally creates a subnet within the existing virtual network, so there is no need to create another virtual network or subnet.',
+    more_info: 'Private link feature allows you to choose a service managed private endpoint to establish a secure connection between the sync service and your member/hub databases during the data synchronization process. A service managed private endpoint is a private IP address within a specific virtual network and subnet.',
     recommended_action: 'Configure SQL Database sync groups to use private link and mandate manual approval for private endpoint connections.',
     link: 'https://learn.microsoft.com/en-us/azure/private-link/private-link-overview',
     apis: ['servers:listSql','databases:listByServer','syncGroups:list'],
