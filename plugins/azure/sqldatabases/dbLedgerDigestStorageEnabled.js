@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Ledger Digest Storage Enabled',
+    title: 'Ledger Automatic Digest Storage',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensure that ledger automatic digest storage is enabled.',
