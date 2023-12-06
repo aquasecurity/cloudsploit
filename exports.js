@@ -1021,7 +1021,8 @@ module.exports = {
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
       
-        'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js')
+        'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
+        'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
 
 
     },
