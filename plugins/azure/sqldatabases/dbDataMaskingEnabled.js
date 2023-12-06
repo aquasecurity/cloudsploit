@@ -2,10 +2,10 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Dynamic Data Masking Enabled',
+    title: 'SQL Databases Data Masking Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
-    description: 'Ensures dynamic data masking is enabled for all SQL databases.',
+    description: 'Ensures dynamic data masking is enabeld for all SQL databases.',
     more_info: 'Dynamic data masking helps prevent unauthorized access to sensitive data by enabling customers to specify how much sensitive data to reveal with minimal effect on the application layer. DDM can be configured on designated database fields to hide sensitive data in the result sets of queries.',
     recommended_action: 'Enable dynamic data masking for SQL databases.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-dynamic-data-masking-get-started-portal',
