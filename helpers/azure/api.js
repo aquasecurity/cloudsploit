@@ -1051,6 +1051,13 @@ var tertiarycalls = {
             vault: true
         }
     },
+    dataMaskingPolicies: {
+        get: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/dataMaskingPolicies/Default?api-version=2021-11-01',
+        }
+    },
     devOpsAuditingSettings: {
         list: {
             reliesOnPath: 'servers.listSql',
@@ -1058,7 +1065,6 @@ var tertiarycalls = {
             url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
         }
     }
-
 };
 
 var specialcalls = {
