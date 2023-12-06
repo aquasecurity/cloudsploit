@@ -479,7 +479,6 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
         }
     },
-
     // For CIEM
     groups: {
         list: {
@@ -1016,6 +1015,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByMediaService: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByPostgresFlexibleServers: {
             reliesOnPath: 'servers.listPostgresFlexibleServer',
             properties: ['id'],
@@ -1031,7 +1035,6 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {

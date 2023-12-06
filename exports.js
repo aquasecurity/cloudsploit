@@ -1006,8 +1006,8 @@ module.exports = {
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
-        'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
+        'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
         'frontDoorWafDefaultRateLimit'  : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRateLimit.js'),
         'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js'),
         'frontDoorWafDetectionMode'     : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDetectionMode.js'),
@@ -1020,7 +1020,10 @@ module.exports = {
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
-
+      
+        'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
+        'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
+        'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js')
     },
     github: {
