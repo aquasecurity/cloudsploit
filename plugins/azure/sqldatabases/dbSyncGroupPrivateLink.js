@@ -60,10 +60,10 @@ module.exports = {
                                 var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e)=>e.name);
     
                                 if (missingPrivateConfigGrps.length) {
-                                    helpers.addResult(results, 2, `Database is not configured to use private link in following sync groups: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
+                                    helpers.addResult(results, 2, `SQL Database following sync groups are not configured to use private link: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
                                    
                                 } else {
-                                    helpers.addResult(results, 0, 'Database sync groups are configured to use private link', location, database.id);
+                                    helpers.addResult(results, 0, 'SQL Database sync groups are configured to use private link', location, database.id);
                                 }
                             }
                            
