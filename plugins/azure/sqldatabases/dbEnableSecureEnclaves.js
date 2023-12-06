@@ -43,7 +43,7 @@ module.exports = {
                         helpers.addResult(results, 0,
                             'No databases found for SQL server', location, server.id);
                     } else {
-                        databases.data.forEach(database=> {
+                        databases.data.forEach(database => {
                             if (!database.preferredEnclaveType) {
                                 helpers.addResult(results, 2, 'Secure enclaves encryption is disabled for SQL database', location, database.id);
                             } else {
