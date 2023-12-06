@@ -119,5 +119,9 @@ module.exports = {
     applications: ['global'],
     eventGrid: locations,
     eventHub: locations,
-    mediaServices: locations
+    mediaServices: locations,
+    serviceBus: locations,
+    classicFrontDoors: ['global'],
+    afdWafPolicies: ['global']
+    
 };
