@@ -47,10 +47,10 @@ module.exports = {
                         databases.data.forEach(database =>  {
                             
                             var dataMaskingPolicies = helpers.addSource(cache, source, ['dataMaskingPolicies', 'get', location, database.id]);
-                            if (!dataMaskingPolicies || dataMaskingPolicies.err || !dataMaskingPolicies.data || !dataMaskingPolicies.data.dataMaskingState) {
+                            if (!dataMaskingPolicies || dataMaskingPolicies.err || !dataMaskingPolicies.data || !dataMaskingPolicies.data) {
                                 helpers.addResult(results, 3, 'Unable to query dynamic data masking policies: ' + helpers.addError(dataMaskingPolicies), location, database.id);
                             } else {
-                                if (dataMaskingPolicies.data.dataMaskingState.toLowerCase()=='enabled') {
+                                if (dataMaskingPolicies.data.dataMaskingState && dataMaskingPolicies.data.dataMaskingState.toLowerCase()=='enabled') {
                                     helpers.addResult(results, 0, 'Dynamic data masking is enabled for SQL database', location, database.id);
                                 } else {
                                     helpers.addResult(results, 2, 'Dynamic data masking is not enabled for SQL database', location, database.id);
