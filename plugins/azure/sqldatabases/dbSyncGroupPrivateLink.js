@@ -56,15 +56,17 @@ module.exports = {
                             if (!syncGroups.data.length) {
                                 helpers.addResult(results, 0,
                                     'No sync groups found for SQL database', location, database.id);
-                            }
-
-                            syncGroups.data.forEach(syncGroup=> {
-                                if (syncGroup.usePrivateLinkConnection) {
-                                    helpers.addResult(results, 0, 'Database sync group uses private link to sync with other databases', location, syncGroup.id);
+                            } else {
+                                var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e)=>e.name);
+    
+                                if (missingPrivateConfigGrps.length) {
+                                    helpers.addResult(results, 2, `Database is not configured to use private link in following sync groups: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
+                                   
                                 } else {
-                                    helpers.addResult(results, 2, 'Database sync group does not uses private link to sync with other databases', location, syncGroup.id);
+                                    helpers.addResult(results, 0, 'Database sync groups are configured to use private link', location, database.id);
                                 }
-                            });
+                            }
+                           
                         });
                     }
                 }
