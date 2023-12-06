@@ -5,9 +5,9 @@ module.exports = {
     title: 'VM vTPM Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensure Virtual Trusted Platform Module (vTPM) is enabled for Azure virtual machines (VM).',
+    description: 'Ensure that Virtual Trusted Platform Module (vTPM) is enabled for Azure virtual machines.',
     more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets. The vTPM enables attestation by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers).',
-    recommended_action: 'Enable vTPM for Azure virtual machines.',
+    recommended_action: 'Modify virtual machine and enable vTPM.',
     link: 'https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-tpms-in-azure-confidential-vm',
     apis: ['virtualMachines:listAll'],
 
@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings && virtualMachine.securityProfile.uefiSettings.vTpmEnabled) {
-                    helpers.addResult(results, 0, 'vTPM is enabled for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'vTPM is enabled for virtual machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'vTPM is not enabled for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'vTPM is not enabled for virtual machine', location, virtualMachine.id);
                 }
             });
 
