@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var recoveryVaultDiagnosticLogsEnabled = require('./recoveryVaultDiagnosticLogsEnabled');
+var recoveryVaultLoggingEnabled = require('./recoveryVaultLoggingEnabled');
 
 const listServiceVaults = [
     {
@@ -69,11 +69,11 @@ const createCache = (listServiceVault, ds) => {
     };
 };
 
-describe('recoveryVaultDiagnosticLogsEnabled', function() {
+describe('recoveryVaultLoggingEnabled', function() {
     describe('run', function() {
         it('should give passing result if no Recovery Service vault found', function(done) {
             const cache = createCache([], null);
-            recoveryVaultDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            recoveryVaultLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No Recovery Service Vaults found');
@@ -84,7 +84,7 @@ describe('recoveryVaultDiagnosticLogsEnabled', function() {
 
         it('should give unknown result if unable to query for list Recovery Service vault', function(done) {
             const cache = createCache(null, null);
-            recoveryVaultDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            recoveryVaultLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to list Recovery Service Vaults:');
@@ -95,7 +95,7 @@ describe('recoveryVaultDiagnosticLogsEnabled', function() {
 
         it('should give unknown result if unable to query for diagnostic settings', function(done) {
             const cache = createCache([listServiceVaults[0]], null);
-            recoveryVaultDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            recoveryVaultLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Recovery Service Vault diagnostic settings: ');
@@ -106,7 +106,7 @@ describe('recoveryVaultDiagnosticLogsEnabled', function() {
 
         it('should give passing result if diagnostic logs enabled', function(done) {
             const cache = createCache([listServiceVaults[0]], [diagnosticSettings[0]]);
-            recoveryVaultDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            recoveryVaultLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Recovery Service Vault has diagnostic logs enabled');
@@ -117,7 +117,7 @@ describe('recoveryVaultDiagnosticLogsEnabled', function() {
 
         it('should give failing result if diagnostic logs not enabled', function(done) {
             const cache = createCache([listServiceVaults[0]], [diagnosticSettings[1]]);
-            recoveryVaultDiagnosticLogsEnabled.run(cache, {}, (err, results) => {
+            recoveryVaultLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Recovery Service Vault does not have diagnostic logs enabled');

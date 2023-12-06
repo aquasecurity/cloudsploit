@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Recovery Services Vault Diagnostic Logs Enabled',
+    title: 'Recovery Services Vault Logging Enabled',
     category: 'Recovery Service Vault',
     domain: 'Backup',
     description: 'Ensure that Azure Recovery Services Vaults have diagnostic logs enabled.',
