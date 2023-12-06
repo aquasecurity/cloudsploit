@@ -67,7 +67,7 @@ describe('selectSecureBoot', function() {
             selectSecureBoot.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Secure Boot is enabled for Azure Virtual Machine');
+                expect(results[0].message).to.include('Secure Boot is enabled for virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -78,7 +78,7 @@ describe('selectSecureBoot', function() {
             selectSecureBoot.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Secure Boot is not enabled for Azure Virtual Machine');
+                expect(results[0].message).to.include('Secure Boot is not enabled for virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

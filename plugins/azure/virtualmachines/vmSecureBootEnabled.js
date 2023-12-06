@@ -5,9 +5,9 @@ module.exports = {
     title: 'VM Secure Boot Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensure Secure Boot is enabled for Azure virtual machines (VM).',
+    description: 'Ensures that secure boot is enabled for Azure virtual machines (VM).',
     more_info: 'Secure Boot, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VM.',
-    recommended_action: 'Enable Secure Boot for Azure virtual machines.',
+    recommended_action: 'Modify Virtual Machine and enable secure boot.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch#secure-boot',
     apis: ['virtualMachines:listAll'],
 
@@ -34,9 +34,9 @@ module.exports = {
 
             virtualMachines.data.forEach(virtualMachine => {
                 if (virtualMachine.securityProfile && virtualMachine.securityProfile.uefiSettings && virtualMachine.securityProfile.uefiSettings.secureBootEnabled) {
-                    helpers.addResult(results, 0, 'Secure Boot is enabled for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Secure Boot is enabled for virtual machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Secure Boot is not enabled for Azure Virtual Machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Secure Boot is not enabled for virtual machine', location, virtualMachine.id);
 
                 }
             });
