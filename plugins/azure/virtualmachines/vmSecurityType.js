@@ -5,7 +5,7 @@ module.exports = {
     title: 'VM Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Trusted Launch is selected for Azure virtual machines.',
+    description: 'Ensures that Trusted launch is selected for Azure virtual machines.',
     more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
     recommended_action: 'Select Trusted launch as security type for Azure virtual machines.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
