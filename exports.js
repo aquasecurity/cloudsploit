@@ -900,6 +900,7 @@ module.exports = {
         'sqlServerRecurringScans'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerRecurringScans.js'),
         'sqlServerSendScanReports'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerSendScanReports.js'),
         'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
+        'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),        
         'auditOperationsEnabled'        : require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
