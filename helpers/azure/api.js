@@ -1051,6 +1051,13 @@ var tertiarycalls = {
             vault: true
         }
     },
+    transparentDataEncryption: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/transparentDataEncryption?api-version=2021-11-01'
+        }
+    },
     dataMaskingPolicies: {
         get: {
             reliesOnPath: 'databases.listByServer',

@@ -242,6 +242,9 @@ module.exports = {
         getAuthSettings: '',
         getBackupConfiguration: 'id',
     },
+    transparentDataEncryption: {
+        list: 'id'
+    },
     dataMaskingPolicies: {
         list: 'id'
     },
