@@ -43,7 +43,7 @@ module.exports = {
                         location, mediaService.id);
                     continue;
                 }
-                if (listContentKeyPolicies.data.length > 0) {
+                if (listContentKeyPolicies.data.length) {
                     helpers.addResult(results, 0, 'Media Service account has content key policy configured', location, mediaService.id);
                 } else {
                     helpers.addResult(results, 2, 'Media Service account does not have content key policy configured', location, mediaService.id);
