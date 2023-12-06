@@ -164,7 +164,11 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
                 async.eachLimit(records, callObj.maxLimit ? 35 : 10, function(record, recordCb) {
                     callObj.urlToCall = callObj.url;
                     for (var property in callObj.properties) {
-                        callObj.urlToCall = callObj.urlToCall.replace(`{${callObj.properties[property]}}`, !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]]);
+                        let data = !callObj.subObj ? record[callObj.properties[property]] :  record[callObj.subObj][callObj.properties[property]];
+                        if (callObj.encodeProperty){
+                            data = encodeURIComponent(data);
+                        }
+                        callObj.urlToCall = callObj.urlToCall.replace(`{${callObj.properties[property]}}`, data);
                     }
                     if (!callObj.maxLimit || (callObj.maxLimit && collectionItems.data && collectionItems.data.length < callObj.maxLimit)) {
                         execute(LocalGoogleConfig, collection, service, callObj, callKey, region, recordCb, client, options, myEngine, true, record);
