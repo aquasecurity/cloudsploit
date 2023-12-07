@@ -80,7 +80,13 @@ module.exports = {
 
         if (adminGroup) {
 
-            let adminUsers = userGroups.data.map(userGroup => userGroup.userId) || [];
+            let adminUsers = [];
+            userGroups.data.forEach(userGroup => {
+                if (userGroup.groupId === adminGroup.id) {
+                    // User group is part of the 'Administrators' group
+                    adminUsers.push(userGroup.userId); // Add user ID to the array
+                }
+            });
 
             for (let user of users.data) {
                 if (!user.id) continue;
