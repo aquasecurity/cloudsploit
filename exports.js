@@ -965,7 +965,6 @@ module.exports = {
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/azure/loadbalancer/lbNoInstances.js'),
         'lbHasTags'                     : require(__dirname + '/plugins/azure/loadbalancer/lbHasTags.js'),
-        'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/loadbalancer/applicationGatewayHasTags.js'),
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/loadbalancer/lbLogAnalyticsEnabled.js'),
 
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
@@ -1000,6 +999,7 @@ module.exports = {
         'enableDefenderForKeyVaults'     : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
+        'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/applicationGateway/applicationGatewayHasTags.js'),
         'agSecurityLoggingEnabled'      : require(__dirname + '/plugins/azure/applicationGateway/agSecurityLoggingEnabled.js'),
         'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
