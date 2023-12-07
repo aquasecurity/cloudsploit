@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure/');
 
 module.exports = {
     title: 'Network Watcher Enabled',
-    category: 'Network Security Groups',
+    category: 'Network Watcher',
     domain: 'Network Access Control',
     description: 'Ensures Network Watcher is enabled in all locations',
     more_info: 'Network Watcher helps locate, diagnose, and gain insights into Azure networks. Enabling Network Watcher in all locations ensures that no resources are being used in locations that are not authorized.',

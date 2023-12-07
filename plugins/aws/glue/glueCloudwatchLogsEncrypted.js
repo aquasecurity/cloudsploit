@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'AWS Glue CloudWatch Encrypted Logs',
-    category: 'AWS Glue',
+    category: 'Glue',
     domain: 'Content Delivery',
     description: 'Ensures that encryption at-rest is enabled when writing AWS Glue logs to Amazon CloudWatch.',
     more_info: 'AWS Glue should have encryption at-rest enabled for AWS Glue logs to ensure security of AWS Glue logs.',
