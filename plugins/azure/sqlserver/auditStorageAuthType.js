@@ -45,21 +45,20 @@ module.exports = {
                     if (!serverBlobAuditingPolicies.data.length) {
                         helpers.addResult(results, 0, 'No Server Auditing policies found', location, server.id);
                     } else {
-                        serverBlobAuditingPolicies.data.forEach(serverBlobAuditingPolicy => {
-                            if (serverBlobAuditingPolicy.state.toLowerCase()=='enabled') {
-                                if (serverBlobAuditingPolicy.storageAccountSubscriptionId !== '00000000-0000-0000-0000-000000000000') {
-                                    if (serverBlobAuditingPolicy.isManagedIdentityInUse) {
-                                        helpers.addResult(results, 0, 'Managed identity is configured as authentication type for audit logs storage on SQL server', location, server.id);
-                                    } else {
-                                        helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
-                                    }
+                        let serverAuditingEnabled = serverBlobAuditingPolicies.data.length && serverBlobAuditingPolicies.data.find(auditPolicy => auditPolicy.state && auditPolicy.state.toLowerCase() == 'enabled');
+                        if (serverAuditingEnabled) {
+                            if (serverAuditingEnabled.storageAccountSubscriptionId !== '00000000-0000-0000-0000-000000000000') {
+                                if (serverAuditingEnabled.isManagedIdentityInUse) {
+                                    helpers.addResult(results, 0, 'Managed identity is configured as authentication type for audit logs storage on SQL server', location, server.id);
                                 } else {
-                                    helpers.addResult(results, 0, 'Auditing storage authentication is not using account storage for SQL server', location, server.id);
+                                    helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
                                 }
                             } else {
-                                helpers.addResult(results, 0, 'Auditing is not enabled for SQL server', location, server.id);
+                                helpers.addResult(results, 0, 'Auditing is not using storage account for SQL server', location, server.id);
                             }
-                        });
+                        } else {
+                            helpers.addResult(results, 0, 'Auditing is not enabled for SQL server', location, server.id);
+                        }
                     }
                 }
             });
