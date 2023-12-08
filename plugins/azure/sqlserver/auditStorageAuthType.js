@@ -5,10 +5,10 @@ module.exports = {
     title: 'Auditing Storage Authentication Type',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensure that managed identity is set as the authentication type when storage account is chosen as the destination for audit logs on SQL server.',
-    more_info: 'Enabling managed identity as authentication type enhances security when using a storage account as the destination for audit logs. Managed Identity can be a system-assigned managed identity (SMI) or user-assigned managed identity (UMI).',
-    recommended_action: 'Configure managed identity as the authentication type when choosing a storage account as the destination for audit logs on SQL server.',
-    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-setup?view=azuresql',
+    description: 'Ensures that managed identity is configured as authentication type when storage account is chosen as the destination for audit logs on SQL server.',
+    more_info: 'Enabling managed identity as authentication type enhances security when using a storage account as the destination for audit logs. Managed Identity can be a system-assigned managed identity or user-assigned managed identity.',
+    recommended_action: 'Ensure managed identity is configured as authentication type when choosing a storage account as the destination for audit logs on SQL server.',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-managed-identity?view=azuresql&tabs=azure-portal',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
 
     run: function(cache, settings, callback) {
@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            servers.data.forEach(server=> {
+            servers.data.forEach(server => {
                 const serverBlobAuditingPolicies = helpers.addSource(cache, source,
                     ['serverBlobAuditingPolicies', 'get', location, server.id]);
 
