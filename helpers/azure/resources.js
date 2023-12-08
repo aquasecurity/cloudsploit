@@ -256,5 +256,8 @@ module.exports = {
     },
     devOpsAuditingSettings:{
         list:'id'
+    },
+    connectionPolicies:{
+        listByServer:'id'
     }
 };

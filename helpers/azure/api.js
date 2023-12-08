@@ -962,6 +962,14 @@ var postcalls = {
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
         }
+    },
+    connectionPolicies: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/connectionPolicies?api-version=2021-05-01-preview'
+
+        }
     }
     
 };
