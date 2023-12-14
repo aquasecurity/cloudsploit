@@ -1,6 +1,6 @@
 const {
     Connect
-} = require("@aws-sdk/client-connect");
+} = require('@aws-sdk/client-connect');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

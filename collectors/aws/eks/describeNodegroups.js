@@ -1,6 +1,6 @@
 const {
     EKS
-} = require("@aws-sdk/client-eks");
+} = require('@aws-sdk/client-eks');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

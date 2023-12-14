@@ -1,6 +1,6 @@
 const {
     CodeBuild
-} = require("@aws-sdk/client-codebuild");
+} = require('@aws-sdk/client-codebuild');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

@@ -1,6 +1,6 @@
 const {
     CloudWatch
-} = require("@aws-sdk/client-cloudwatch");
+} = require('@aws-sdk/client-cloudwatch');
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 

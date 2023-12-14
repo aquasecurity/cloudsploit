@@ -1,6 +1,6 @@
 const {
     OpenSearchServerless
-} = require("@aws-sdk/client-opensearchserverless");
+} = require('@aws-sdk/client-opensearchserverless');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

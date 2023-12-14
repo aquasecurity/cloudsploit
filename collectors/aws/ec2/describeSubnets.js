@@ -1,6 +1,6 @@
 const {
     EC2
-} = require("@aws-sdk/client-ec2");
+} = require('@aws-sdk/client-ec2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

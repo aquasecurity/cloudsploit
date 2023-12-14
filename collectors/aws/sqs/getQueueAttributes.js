@@ -1,6 +1,6 @@
 const {
     SQS
-} = require("@aws-sdk/client-sqs");
+} = require('@aws-sdk/client-sqs');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

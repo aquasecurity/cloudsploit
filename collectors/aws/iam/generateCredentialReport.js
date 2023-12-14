@@ -1,6 +1,6 @@
 const {
     IAM
-} = require("@aws-sdk/client-iam");
+} = require('@aws-sdk/client-iam');
 var async = require('async');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

@@ -1,6 +1,6 @@
 const {
     KMS
-} = require("@aws-sdk/client-kms");
+} = require('@aws-sdk/client-kms');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

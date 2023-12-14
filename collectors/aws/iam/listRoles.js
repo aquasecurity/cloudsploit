@@ -1,6 +1,6 @@
 const {
     IAM
-} = require("@aws-sdk/client-iam");
+} = require('@aws-sdk/client-iam');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

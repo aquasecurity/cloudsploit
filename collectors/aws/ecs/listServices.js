@@ -1,6 +1,6 @@
 const {
     ECS
-} = require("@aws-sdk/client-ecs");
+} = require('@aws-sdk/client-ecs');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

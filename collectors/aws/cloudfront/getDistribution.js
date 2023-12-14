@@ -1,6 +1,6 @@
 const {
     CloudFront
-} = require("@aws-sdk/client-cloudfront");
+} = require('@aws-sdk/client-cloudfront');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

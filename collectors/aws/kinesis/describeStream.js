@@ -1,6 +1,6 @@
 const {
     Kinesis
-} = require("@aws-sdk/client-kinesis");
+} = require('@aws-sdk/client-kinesis');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

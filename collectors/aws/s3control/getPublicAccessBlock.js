@@ -1,6 +1,6 @@
 const {
     S3Control
-} = require("@aws-sdk/client-s3-control");
+} = require('@aws-sdk/client-s3-control');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

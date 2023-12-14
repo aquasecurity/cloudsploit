@@ -1,6 +1,6 @@
 const {
     S3
-} = require("@aws-sdk/client-s3");
+} = require('@aws-sdk/client-s3');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

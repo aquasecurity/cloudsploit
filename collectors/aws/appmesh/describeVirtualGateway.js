@@ -1,6 +1,6 @@
 const {
     AppMesh
-} = require("@aws-sdk/client-app-mesh");
+} = require('@aws-sdk/client-app-mesh');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

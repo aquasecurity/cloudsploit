@@ -1,6 +1,6 @@
 const {
     AutoScaling
-} = require("@aws-sdk/client-auto-scaling");
+} = require('@aws-sdk/client-auto-scaling');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

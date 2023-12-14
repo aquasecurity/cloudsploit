@@ -1,6 +1,6 @@
 const {
     ManagedBlockchain
-} = require("@aws-sdk/client-managedblockchain");
+} = require('@aws-sdk/client-managedblockchain');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

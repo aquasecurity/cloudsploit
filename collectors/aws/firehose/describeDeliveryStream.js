@@ -1,6 +1,6 @@
 const {
     Firehose
-} = require("@aws-sdk/client-firehose");
+} = require('@aws-sdk/client-firehose');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

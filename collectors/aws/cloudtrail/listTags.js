@@ -1,6 +1,6 @@
 const {
     CloudTrail
-} = require("@aws-sdk/client-cloudtrail");
+} = require('@aws-sdk/client-cloudtrail');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

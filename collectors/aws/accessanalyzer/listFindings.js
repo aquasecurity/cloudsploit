@@ -1,6 +1,6 @@
 const {
     AccessAnalyzer
-} = require("@aws-sdk/client-accessanalyzer");
+} = require('@aws-sdk/client-accessanalyzer');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

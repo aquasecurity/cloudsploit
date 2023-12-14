@@ -1,6 +1,6 @@
 const {
     ElasticBeanstalk
-} = require("@aws-sdk/client-elastic-beanstalk");
+} = require('@aws-sdk/client-elastic-beanstalk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

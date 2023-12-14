@@ -1,6 +1,6 @@
 const {
     Support
-} = require("@aws-sdk/client-support");
+} = require('@aws-sdk/client-support');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

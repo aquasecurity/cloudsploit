@@ -1,6 +1,6 @@
 const {
     RDS
-} = require("@aws-sdk/client-rds");
+} = require('@aws-sdk/client-rds');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

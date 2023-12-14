@@ -1,6 +1,6 @@
 const {
     IAM
-} = require("@aws-sdk/client-iam");
+} = require('@aws-sdk/client-iam');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

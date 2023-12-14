@@ -1,6 +1,6 @@
 const {
     SES
-} = require("@aws-sdk/client-ses");
+} = require('@aws-sdk/client-ses');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

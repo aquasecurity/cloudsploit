@@ -1,6 +1,6 @@
 const {
     WAFRegional
-} = require("@aws-sdk/client-waf-regional");
+} = require('@aws-sdk/client-waf-regional');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

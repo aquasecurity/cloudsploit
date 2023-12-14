@@ -1,6 +1,6 @@
 const {
     LookoutVision
-} = require("@aws-sdk/client-lookoutvision");
+} = require('@aws-sdk/client-lookoutvision');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

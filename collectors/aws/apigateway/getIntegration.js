@@ -1,6 +1,6 @@
 const {
     APIGateway
-} = require("@aws-sdk/client-api-gateway");
+} = require('@aws-sdk/client-api-gateway');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

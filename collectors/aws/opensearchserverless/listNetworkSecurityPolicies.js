@@ -1,6 +1,6 @@
 const {
     OpenSearchServerless
-} = require("@aws-sdk/client-opensearchserverless");
+} = require('@aws-sdk/client-opensearchserverless');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

@@ -1,6 +1,6 @@
 const {
     SSM
-} = require("@aws-sdk/client-ssm");
+} = require('@aws-sdk/client-ssm');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {

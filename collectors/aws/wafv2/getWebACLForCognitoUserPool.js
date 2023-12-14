@@ -1,6 +1,6 @@
 const {
     WAFV2
-} = require("@aws-sdk/client-wafv2");
+} = require('@aws-sdk/client-wafv2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

@@ -1,6 +1,6 @@
 const {
     ElasticLoadBalancingV2
-} = require("@aws-sdk/client-elastic-load-balancing-v2");
+} = require('@aws-sdk/client-elastic-load-balancing-v2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

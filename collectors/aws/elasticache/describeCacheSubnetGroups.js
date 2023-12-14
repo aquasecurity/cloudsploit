@@ -1,6 +1,6 @@
 const {
     ElastiCache
-} = require("@aws-sdk/client-elasticache");
+} = require('@aws-sdk/client-elasticache');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

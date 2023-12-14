@@ -1,6 +1,6 @@
 const {
     LexModelsV2
-} = require("@aws-sdk/client-lex-models-v2");
+} = require('@aws-sdk/client-lex-models-v2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

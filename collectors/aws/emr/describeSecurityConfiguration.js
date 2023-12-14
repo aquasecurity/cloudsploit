@@ -1,6 +1,6 @@
 const {
     EMR
-} = require("@aws-sdk/client-emr");
+} = require('@aws-sdk/client-emr');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

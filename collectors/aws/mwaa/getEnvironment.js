@@ -1,6 +1,6 @@
 const {
     MWAA
-} = require("@aws-sdk/client-mwaa");
+} = require('@aws-sdk/client-mwaa');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

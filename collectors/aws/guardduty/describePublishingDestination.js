@@ -1,6 +1,6 @@
 const {
     GuardDuty
-} = require("@aws-sdk/client-guardduty");
+} = require('@aws-sdk/client-guardduty');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 

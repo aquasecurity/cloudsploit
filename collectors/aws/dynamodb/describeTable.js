@@ -1,6 +1,6 @@
 const {
     DynamoDB
-} = require("@aws-sdk/client-dynamodb");
+} = require('@aws-sdk/client-dynamodb');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
