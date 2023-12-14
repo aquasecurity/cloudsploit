@@ -35,12 +35,6 @@ var collectData = require(__dirname + '/../../helpers/shared.js');
 // You may need to update clients outside of this file, if they use global config.
 const { Agent } = require('https');
 const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
-const dynamodbClient = new DynamoDBClient({
-    requestHandler: new NodeHttpHandler({
-        httpsAgent: new Agent({maxSockets: 100
-        }),
-    }),
-});
 
 var CALLS_CONFIG = {
     TOTAL_PARTS: 14,

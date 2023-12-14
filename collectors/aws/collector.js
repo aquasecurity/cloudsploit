@@ -33,25 +33,9 @@ var collectData = require(__dirname + '/../../helpers/shared.js');
 // Codemod has attempted to pass values to each service client in this file.
 // You may need to update clients outside of this file, if they use global config.
 
-//var agent = new https.Agent({maxSockets: 100})
 const { Agent } = require('https');
 const { Agent: HttpAgent } = require("http");
 const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
-// Override max sockets
-/* AWSConfig.NodeHttpHandler = new NodeHttpHandler({
-    httpsAgent: new Agent({maxSockets: 100
-    }),
-    httpAgent: new HttpAgent({maxSockets: 100
-    })
-}),
-const dynamodbClient = new DynamoDBClient({
-    requestHandler: new NodeHttpHandler({
-        httpsAgent: new Agent({maxSockets: 100
-        }),
-        httpAgent: new HttpAgent({maxSockets: 100
-        })
-    }),
-});*/
 
 var rateError = {message: 'rate', statusCode: 429};
 
@@ -90,6 +74,7 @@ var collect = function(AWSConfig, settings, callback) {
 
     let runApiCalls = [];
 
+    // Override max sockets
     var AWSEC2 = new EC2 ({  
         AWSConfig,
         requestHandler: new NodeHttpHandler({
