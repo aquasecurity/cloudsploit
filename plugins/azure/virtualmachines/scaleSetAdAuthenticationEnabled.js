@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-title: 'Scale Sets Active Directory Authentication Enabled',
+    title: 'Scale Sets Active Directory Authentication Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that Azure Active Directory (AD) authentication is enabled for virtual machine scale sets.',
