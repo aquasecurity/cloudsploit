@@ -33,7 +33,7 @@ module.exports = {
             }
 
             for (let cache of caches.data) {
-                if(!cache.id || !cache.redisVersion) return;
+                if (!cache.id || !cache.redisVersion) return;
               
                 let version = parseFloat(cache.redisVersion);
                 if (version && version >= 6) {
