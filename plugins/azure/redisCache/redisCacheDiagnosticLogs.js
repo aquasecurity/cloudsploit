@@ -5,10 +5,10 @@ module.exports = {
     title: 'Redis Cache Diagnostic Logs Enabled',
     category: 'Redis Cache',
     domain: 'Databases',
-    description: '',
-    more_info: '',
-    recommended_action: '',
-    link: '',
+    description: 'Ensures diagnostic logging is enabled for Azure Cache for Redis.',
+    more_info: 'Enabling diagnostic setting helps you understand who is connecting to your caches and the timestamp of those connections. The log data could be used to identify the scope of a security breach and for security auditing purposes.',
+    recommended_action: 'Enable diagnostic logging for all Redis Caches.',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-monitor-diagnostic-settings?tabs=basic-standard-premium',
     apis: ['redisCaches:listBySubscription','diagnosticSettings:listByRedisCache'],
 
     run: function(cache, settings, callback) {
