@@ -1090,7 +1090,14 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
         }
-    }
+    },
+    patchSchedules: {
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/patchSchedules?api-version=2023-08-01'
+        }
+    },
 };
 
 var specialcalls = {

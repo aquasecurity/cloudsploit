@@ -699,6 +699,7 @@ module.exports = {
         'redisCacheHasTags'             : require(__dirname + '/plugins/azure/redisCache/redisCacheHasTags.js'),
         'redisCachePrivateEndpoint'     : require(__dirname + '/plugins/azure/redisCache/redisCachePrivateEndpoint.js'),
         'redisCacheDiagnosticLogs'      : require(__dirname + '/plugins/azure/redisCache/redisCacheDiagnosticLogs.js'),
+        'redisCacheScheduledUpdates'    : require(__dirname + '/plugins/azure/redisCache/redisCacheScheduledUpdates.js'),
         
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
