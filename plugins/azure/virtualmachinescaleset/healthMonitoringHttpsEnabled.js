@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'VM Scale Sets Health Monitoring HTTPS Enabled Check',
+    title: 'Health Monitoring HTTPS Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Checks whether health monitoring is enabled and if HTTPS protocol is configured for VM scale sets.',
-    more_info: 'Health monitoring ensures VM health inside the scale set instance. HTTPS protocol provides secure communication for health monitoring.',
-    recommended_action: 'Enable health monitoring and configure the extension properties protocol to HTTPS for VM scale sets.',
+    description: 'Ensures that virtual machine scale set has HTTPS enabled for health monitoring.',
+    more_info: 'Scale set health monitoring feature reports on VM health from inside the scale set instance and can be configured to probe on an application endpoint and update the status of the application on that instance. That instance status is checked by Azure to determine whether an instance is eligible for upgrade operations and HTTPS protocol provides secure communication for health monitoring.',
+    recommended_action: 'Modify virtual machine scale set extensions and enable HTTPS for health monitoring.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension',
     apis: ['virtualMachineScaleSets:listAll'],
 
