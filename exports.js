@@ -934,6 +934,7 @@ module.exports = {
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
+        'acrManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/containerregistry/acrManagedIdentityEnabled.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
         'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
