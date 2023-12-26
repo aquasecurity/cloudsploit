@@ -77,7 +77,7 @@ describe('acrContentTrustEnabled', function() {
             acrContentTrustEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Content trsut is not enabled for container registry');
+                expect(results[0].message).to.include('Content trust is not enabled for container registry');
                 expect(results[0].region).to.equal('eastus');
                 done()
             });
@@ -89,7 +89,7 @@ describe('acrContentTrustEnabled', function() {
             acrContentTrustEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Content trsut is enabled for container registry');
+                expect(results[0].message).to.include('Content trust is enabled for container registry');
                 expect(results[0].region).to.equal('eastus');
                 done()
             });

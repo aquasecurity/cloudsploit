@@ -42,9 +42,9 @@ module.exports = {
                 var trustPolicy = registry.policies && registry.policies.trustPolicy? registry.policies.trustPolicy : null;
 
                 if (trustPolicy && trustPolicy.status && trustPolicy.status.toLowerCase() == 'enabled'){
-                    helpers.addResult(results, 0, 'Content trsut is enabled for container registry', location, registry.id);
+                    helpers.addResult(results, 0, 'Content trust is enabled for container registry', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Content trsut is not enabled for container registry', location, registry.id);
+                    helpers.addResult(results, 2, 'Content trust is not enabled for container registry', location, registry.id);
                 } 
             }
             
