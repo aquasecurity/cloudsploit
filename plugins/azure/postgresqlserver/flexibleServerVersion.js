@@ -46,7 +46,7 @@ module.exports = {
 
             for (var flexibleServer of servers.data) {
 
-                if(flexibleServer.version >= config.server_desired_version) {
+                if (flexibleServer.version >= config.server_desired_version) {
                     helpers.addResult(results, 0,
                         'Postgresql flexible server has the latest server version', location, flexibleServer.id);
                 } else {
