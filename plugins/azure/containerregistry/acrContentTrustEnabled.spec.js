@@ -1,5 +1,4 @@
-var assert = require('assert');
-
+var expect = require('chai').expect;
 var acrContentTrustEnabled = require('./acrContentTrustEnabled');
 
 registries = [
