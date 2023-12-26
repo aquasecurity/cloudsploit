@@ -33,16 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let vmPricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'virtualmachines');
-            if (vmPricing) {
-                if (vmPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Virtual Machines', location, vmPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Virtual Machines', vmPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Virtual Machines', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'virtualmachines', 'Virtual Machines', results, location);
 
             rcb();
         }, function(){
