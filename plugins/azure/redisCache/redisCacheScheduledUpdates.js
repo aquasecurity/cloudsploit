@@ -44,7 +44,7 @@ module.exports = {
                         helpers.addResult(results, 3, 'Unable to query Redis Cache scheduled updates ' + helpers.addError(patchSchedules), location, redisCache.id);
                     }
                 } else {
-                    helpers.addResult(results, 0, 'Redis Cache has scheduled udpates enabled', location, redisCache.id);
+                    helpers.addResult(results, 0, 'Redis Cache has scheduled updates enabled', location, redisCache.id);
                 }
             });
 
