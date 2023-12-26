@@ -6,7 +6,7 @@ module.exports = {
     category: 'Automation',
     domain: 'Management and Governance',
     description: 'Ensures that diagnostic logging is enabled for Azure Automation account.',
-    more_info: 'Azure Automation can send runbook job status and job streams to get insights, alert emails and correlate jobs accross automation accounts. It also allows you to get the audit logs related to Automation accounts, runbooks, and other asset create, modify and delete operations.',
+    more_info: 'Azure Automation can send runbook job status and job streams to get insights, alert emails and correlate jobs across automation accounts. It also allows you to get the audit logs related to Automation accounts, runbooks, and other asset create, modify and delete operations.',
     recommended_action: 'Enable diagnostic logging for all Automation accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/automation-manage-send-joblogs-log-analytics#azure-automation-diagnostic-settings',
     apis: ['automationAccounts:list','diagnosticSettings:listByAutomationAccounts'],
@@ -55,7 +55,7 @@ module.exports = {
                 });
 
                 if (missingLogs.length) {
-                    helpers.addResult(results, 2, `Automation account does not have diagnostic logs enabled. Missings logs: ${missingLogs}`, location, account.id);
+                    helpers.addResult(results, 2, `Automation account does not have diagnostic logs enabled. Missing logs: ${missingLogs}`, location, account.id);
                 } else {
                     helpers.addResult(results, 0, 'Automation account has diagnostic logs enabled', location, account.id);
                 }
