@@ -756,6 +756,7 @@ module.exports = {
         'vmVTPMEnabled'                 : require(__dirname + '/plugins/azure/virtualmachines/vmVTPMEnabled.js'),
         'vmSecureBootEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
+        'vmDiskDoubleEncryption'        : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDoubleEncryption.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
