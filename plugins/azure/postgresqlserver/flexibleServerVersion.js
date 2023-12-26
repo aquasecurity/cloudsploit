@@ -12,7 +12,7 @@ module.exports = {
     apis: ['servers:listPostgresFlexibleServer'],   
     settings: {
         server_desired_version: {
-            name: 'Postgressql Flexible Server Desired Version',
+            name: 'Postgresql Flexible Server Desired Version',
             description: 'Desire Postgressql Flexible Server Version ',
             regex: '^[0-9]+$',
             default: '11'
@@ -51,7 +51,7 @@ module.exports = {
                         'Postgresql flexible server has the latest server version', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Postgresql flexible server doesnot the latest server version', location, flexibleServer.id);
+                        'Postgresql flexible server does not the latest server version', location, flexibleServer.id);
                 }
             }
             rcb();
