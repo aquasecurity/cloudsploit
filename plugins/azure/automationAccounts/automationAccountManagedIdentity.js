@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Automation Account Diagnostic Logs',
+    title: 'Automation Account Managed Identity',
     category: 'Automation',
     domain: 'Management and Governance',
-    description: 'Ensures that diagnostic logging is enabled for Azure Automation account.',
-    more_info: 'Azure Automation can send runbook job status and job streams to get insights, alert emails and correlate jobs across automation accounts. It also allows you to get the audit logs related to Automation accounts, runbooks, and other asset create, modify and delete operations.',
-    recommended_action: 'Enable diagnostic logging for all Automation accounts.',
-    link: 'https://learn.microsoft.com/en-us/azure/automation/automation-manage-send-joblogs-log-analytics#azure-automation-diagnostic-settings',
-    apis: ['automationAccounts:list','getAutomationAccount:listByAccounts'],
+    description: 'Ensure that Azure Automation accounts have managed identity enabled.',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    recommended_action: 'Modify automation account and enabled managed identity.',
+    link: 'https://learn.microsoft.com/en-us/azure/automation/quickstarts/enable-managed-identity',
+    apis: ['automationAccounts:list'],
 
     run: function(cache, settings, callback) {
         const results = [];
