@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         server_desired_version: {
             name: 'Postgresql Flexible Server Desired Version',
-            description: 'Desire Postgressql Flexible Server Version ',
+            description: 'Desire Postgresql Flexible Server Version ',
             regex: '^[0-9]+$',
             default: '11'
         }
