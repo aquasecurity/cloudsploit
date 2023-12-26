@@ -48,7 +48,7 @@ module.exports = {
                 } 
             }
             
-            if(!found) {
+            if (!found) {
                 helpers.addResult(results, 2, 'No existing container registries found', location);
             }
 
