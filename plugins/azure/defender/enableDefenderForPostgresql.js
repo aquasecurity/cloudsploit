@@ -33,17 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let postgresqlServersPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'opensourcerelationaldatabases');
-            
-            if (postgresqlServersPricing) {
-                if (postgresqlServersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for PostgreSQL Flexible Servers', location, postgresqlServersPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for PostgreSQL Flexible Servers', location, postgresqlServersPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for PostgreSQL Flexible Servers', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'opensourcerelationaldatabases', 'PostgreSQL Flexible Servers', results, location);
 
             rcb();
         }, function(){
