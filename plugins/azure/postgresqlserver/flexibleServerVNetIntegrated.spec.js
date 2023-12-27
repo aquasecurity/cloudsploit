@@ -70,7 +70,7 @@ describe('flexibleServerVNetIntegrated', function() {
             });
         });
 
-        it('should give should give passing result if private endpoints are configured', function(done) {
+        it('should give should give passing result if Vnet is configured', function(done) {
             const cache = createCache([listPostgresFlexibleServer[1]]);
             flexibleServerVNetIntegrated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
