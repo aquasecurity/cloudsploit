@@ -6,8 +6,8 @@ module.exports = {
     category: 'App Configuration',
     domain: 'Developer Tools',
     description: 'Ensures that Azure App Configurations have public access disabled.',
-    more_info: '',
-    link: '',
+    more_info: 'Disabling public network access improves security by ensuring that the app configuration isn\'t exposed on the public internet. Limit exposure of your resources by creating private endpoints instead.',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-disable-public-access?tabs=azure-portal',
     recommended_action: 'Modify App Configuration and disable public access.',
     apis: ['appConfigurations:list'],
 
