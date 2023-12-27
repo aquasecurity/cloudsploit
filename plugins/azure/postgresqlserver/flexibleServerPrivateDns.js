@@ -34,7 +34,7 @@ module.exports = {
             }
 
             for (let flexibleServer of servers.data) {
-                if (!postgresServer.id) continue;
+                if (!flexibleServer.id) continue;
                 
                 if (flexibleServer.network && flexibleServer.network.privateDnsZoneArmResourceId) {
                     helpers.addResult(results, 0, 'PostgreSQL flexible server has Private DNS Zone integrated', location, flexibleServer.id);
