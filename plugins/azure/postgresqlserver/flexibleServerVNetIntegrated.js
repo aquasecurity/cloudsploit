@@ -34,6 +34,7 @@ module.exports = {
             }
 
             for (let flexibleServer of servers.data) {
+                if (!flexibleServer.id) continue;
                 if (flexibleServer.network && flexibleServer.network.delegatedSubnetResourceId) {
                     helpers.addResult(results, 0, 'PostgreSQL flexible server has VNet integrated', location, flexibleServer.id);
                 } else {
