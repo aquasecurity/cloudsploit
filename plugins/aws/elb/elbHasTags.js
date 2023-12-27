@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
     recommended_action: 'Modify ELB and add tags.',
     apis: ['ELB:describeLoadBalancers', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
-    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:AddTags', 'elb:RemoveTags', 'elb:DeleteLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:AddTags', 'elasticloadbalancing:RemoveTags', 'elasticloadbalancing:DeleteLoadBalancer'],
     
     run: function(cache, settings, callback) {
         var results = [];

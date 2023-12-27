@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html',
     recommended_action: 'Investigate and resolve the health issues with the instances attached to the ELB.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
-    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:ModifyTargetGroups', 'elbv2:RegisterTarget', 'elbv2:DeregisterTargets', 'elbv2:DeleteLoadBalancer', 'elbv2:DeleteTargetGroup'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyTargetGroups', 'elasticloadbalancing:RegisterTarget', 'elasticloadbalancing:DeregisterTargets', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteTargetGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

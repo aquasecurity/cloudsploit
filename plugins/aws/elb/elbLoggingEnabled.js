@@ -22,7 +22,7 @@ module.exports = {
         pci: 'PCI requires logging of all network access to environments containing ' +
              'cardholder data. Enable ELB logs to log these network requests.'
     },
-    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:ModifyLoadBalancerAttributes',  'elb:DeleteLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyLoadBalancerAttributes',  'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

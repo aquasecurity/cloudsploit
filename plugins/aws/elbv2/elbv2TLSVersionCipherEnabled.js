@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html',
     recommended_action: 'Update ELBv2 load balancer traffic configuration to enable TLS version and cipher headers',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeLoadBalancerAttributes'],
-    realtime_triggers: ['elbv2:CreateLoadBalancer', 'elbv2:ModifyLoadBalancerAttributes', 'elbv2:DeleteLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyLoadBalancerAttributes', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -92,7 +92,7 @@ module.exports = {
         pci: 'PCI requires secure transfer of cardholder data. It does not permit SSL or TLS ' +
              'version 1.0. ELB listeners should be configured for TLS v1.2.'
     },
-    realtime_triggers: ['elb:CreateLoadBalancer','elb:CreateLoadBalancerPolicy', 'elb:DeleteLoadBalancerPolicy',  'elb:DeleteLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:CreateLoadBalancerPolicy', 'elasticloadbalancing:DeleteLoadBalancerPolicy',  'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

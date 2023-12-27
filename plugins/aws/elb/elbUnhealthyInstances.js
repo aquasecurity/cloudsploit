@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-healthchecks.html#check-instance-health',
     recommended_action: 'Investigate and resolve the health issues of the instances attached to the ELB.',
     apis: ['ELB:describeLoadBalancers', 'ELB:describeInstanceHealth', 'STS:getCallerIdentity'],
-    realtime_triggers: ['elb:CreateLoadBalancer', 'elb:RegisterInstancesWithLoadBalancer', 'elb:DeregisterInstancesWithLoadBalancer',  'elb:DeleteLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:RegisterInstancesWithLoadBalancer', 'elasticloadbalancing:DeregisterInstancesWithLoadBalancer',  'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];
