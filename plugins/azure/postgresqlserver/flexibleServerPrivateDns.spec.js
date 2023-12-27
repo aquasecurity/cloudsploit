@@ -59,7 +59,7 @@ describe('flexibleServerPrivateDns', function() {
             });
         });
 
-        it('should give failing result if Vnet is not configured', function(done) {
+        it('should give failing result if Private Dns Zone is not integrated', function(done) {
             const cache = createCache([listPostgresFlexibleServer[0]]);
             flexibleServerPrivateDns.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -70,7 +70,7 @@ describe('flexibleServerPrivateDns', function() {
             });
         });
 
-        it('should give should give passing result if Vnet is configured', function(done) {
+        it('should give should give passing result if Private Dns Zone is integrated', function(done) {
             const cache = createCache([listPostgresFlexibleServer[1]]);
             flexibleServerPrivateDns.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
