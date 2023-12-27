@@ -33,6 +33,7 @@ module.exports = {
              'encryption should be enabled for all instances storing this type ' +
              'of data.'
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {
