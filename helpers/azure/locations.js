@@ -122,6 +122,7 @@ module.exports = {
     mediaServices: locations,
     serviceBus: locations,
     classicFrontDoors: ['global'],
-    afdWafPolicies: ['global']
+    afdWafPolicies: ['global'],
+    appConfigurations: locations
     
 };
