@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Flexible Server Private DNS Integrated',
+    title: 'Private DNS Integrated',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     description: 'Ensure that PostgreSQL flexible servers has Private DNS Zone integrated.',
