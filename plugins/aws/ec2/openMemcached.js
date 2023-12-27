@@ -22,6 +22,12 @@ module.exports = {
             description: 'When set to true, pass all the security groups associated with clusters that are in private subnet',
             regex: '^(true|false)$',
             default: 'false',
+        },
+        check_network_interface: {
+            name: 'Check Associated ENI',
+            description: 'When set to true, checks elastic network interfaces associated to the security group and returns FAIL if both the security group and ENI are publicly exposed',
+            regex: '^(true|false)$',
+            default: 'false',
         }
     },
     remediation_description: 'The impacted security group rule will be deleted if no input is provided. Otherwise, any input will replace the open CIDR rule.',
@@ -55,10 +61,12 @@ module.exports = {
         var config = {
             ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
             ignore_groups_with_private_clusters: settings.ignore_groups_with_private_clusters|| this.settings.ignore_groups_with_private_clusters.default,
+            check_network_interface: settings.check_network_interface || this.settings.check_network_interface.default,
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
         config.ignore_groups_with_private_clusters = (config.ignore_groups_with_private_clusters == 'true');
+        config.check_network_interface = (config.check_network_interface == 'true');
 
         var results = [];
         var source = {};

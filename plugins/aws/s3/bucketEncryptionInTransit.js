@@ -38,7 +38,7 @@ module.exports = {
         remediate: ['s3:PutBucketPolicy'],
         rollback: ['s3:PutBucketPolicy ']
     },
-    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket'],
+    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket','s3:DeleteBucket'],
     settings: {
         s3_allow_unencrypted_static_websites: {
             name: 'S3 Allow Unencrypted Static Websites',

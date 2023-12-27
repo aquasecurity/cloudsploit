@@ -15,7 +15,6 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
         async.each(locations.webApps, function(location, rcb) {
 
             const webApps = helpers.addSource(
@@ -36,10 +35,14 @@ module.exports = {
             }
 
             webApps.data.forEach(function(webApp) {
-                if (webApp.clientCertEnabled) {
+                if (webApp.siteConfig && webApp.siteConfig.http20Enabled) {
                     helpers.addResult(results, 0, 'The App Service has Client Certificates enabled', location, webApp.id);
                 } else {
-                    helpers.addResult(results, 2, 'The App Service does not have Client Certificates enabled', location, webApp.id);
+                    if (webApp.clientCertEnabled) {
+                        helpers.addResult(results, 0, 'The App Service has Client Certificates enabled', location, webApp.id);
+                    } else {
+                        helpers.addResult(results, 2, 'The App Service does not have Client Certificates enabled', location, webApp.id);
+                    }
                 }
             });
 

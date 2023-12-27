@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         service_account_keys_rotated_fail: {
             name: 'Service Account Keys Rotated Fail',
-            description: 'Return a failing result when service accoun keys exceed this number of days without being rotated',
+            description: 'Return a failing result when service account keys exceed this number of days without being rotated',
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '90'
         }

@@ -14,6 +14,7 @@ module.exports = {
         hipaa: 'HIPAA requires that all data access is audited via proper logging configurations.',
         pci: 'PCI requires that all account access activity be logged.'
     },
+    realtime_triggers: ['transfer:CreateServer', 'transfer:UpdateServer', 'transfer:DeleteServer'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -23,6 +23,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['s3:CreateBucket' , 's3:PutBucketPolicy','s3:DeleteBucketPolicy','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -125,7 +126,7 @@ module.exports = {
                             if (statement.Effect &&
                                 statement.Effect === 'Deny' &&
                                 statement.Principal &&
-                                ((typeof statement.Principal == 'string' && statement.Principal == '*') ||
+                                ((helpers.globalPrincipal(statement.Principal)) ||
                                  (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
                                 statement.Action &&
                                 ((typeof statement.Action == 'string' && statement.Action == 's3:PutObject') ||

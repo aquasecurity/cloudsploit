@@ -23,6 +23,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutPublicAccessBlock','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -17,6 +17,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
         }
     },
+    realtime_triggers: ['glacier:CreateVault', 'glacier:SetVaultAccessPolicy', 'glacier:DeleteVault'],
 
     run: function(cache, settings, callback) {
         const results = [];
