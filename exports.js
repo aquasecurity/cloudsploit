@@ -1041,6 +1041,8 @@ module.exports = {
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
     
         'appConfigurationManagedIdentity': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationManagedIdentity.js'),
+        'appConfigurationDiagnosticLogs': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
