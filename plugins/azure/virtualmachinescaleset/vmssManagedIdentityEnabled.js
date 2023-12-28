@@ -2,7 +2,6 @@ var async = require('async');
 
 var helpers = require('../../../helpers/azure');
 
-
 module.exports = {
     title: 'VM Scale Set Managed Identity Enabled',
     category: 'Virtual Machines',
