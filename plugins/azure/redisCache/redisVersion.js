@@ -6,7 +6,7 @@ module.exports = {
     category: 'Redis Cache',
     domain: 'Databases',
     description: 'Ensures that Azure Cache for Redis is using the latest redis version.',
-    more_info: 'Using the latest Redis Version will add new security features and ensures better performance.',
+    more_info: 'Using the latest Redis Version ensures access to the latest features, improvements, and security patches, enhancing performance and reducing vulnerabilities.',
     recommended_action: 'Ensure that Azure cache for Redis is using the latest version',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-overview#redis-versions',
     apis: ['redisCaches:listBySubscription'],
