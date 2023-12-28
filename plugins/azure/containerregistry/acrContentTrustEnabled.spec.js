@@ -3,7 +3,7 @@ var acrContentTrustEnabled = require('./acrContentTrustEnabled');
 
 registries = [
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
         "name": "testregistry12543",
         "type": "Microsoft.ContainerRegistry/registries",
         "location": "eastus",
@@ -24,7 +24,7 @@ registries = [
         }
     },
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
         "name": "testregistry12543",
         "type": "Microsoft.ContainerRegistry/registries",
         "location": "eastus",
@@ -33,6 +33,27 @@ registries = [
         "sku": {
             "name": "Premium",
             "tier": "Premium"
+        },
+        "policies": {
+            "quarantinePolicy": {
+              "status": "disabled"
+            },
+            "trustPolicy": {
+              "type": "Notary",
+              "status": "enabled"
+            },
+        }
+    },
+    {
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "name": "testregistry12543",
+        "type": "Microsoft.ContainerRegistry/registries",
+        "location": "eastus",
+        "tags": {},
+        "anonymousPullEnabled": false,
+        "sku": {
+            "name": "Basic",
+            "tier": "Basic"
         },
         "policies": {
             "quarantinePolicy": {
@@ -101,6 +122,18 @@ describe('acrContentTrustEnabled', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for container registries:');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            });
+
+        });
+
+        it('should give passing result if registry is non premium', function(done) {
+            const cache = createCache(null, [registries[2]]);
+            acrContentTrustEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Content trust is feature of Premium tier container registry only');
                 expect(results[0].region).to.equal('eastus');
                 done()
             });

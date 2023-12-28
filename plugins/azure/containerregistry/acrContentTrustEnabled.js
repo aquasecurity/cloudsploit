@@ -34,23 +34,23 @@ module.exports = {
                 return rcb();
             }
 
-            var found = false;
             for (let registry of registries.data) {
-                if (!registry.id || (registry.sku && registry.sku.tier && registry.sku.tier!= 'Premium')) continue;
+                if (!registry.id) continue;
 
-                found = true;
-                var trustPolicy = registry.policies && registry.policies.trustPolicy? registry.policies.trustPolicy : null;
-
-                if (trustPolicy && trustPolicy.status && trustPolicy.status.toLowerCase() == 'enabled'){
-                    helpers.addResult(results, 0, 'Content trust is enabled for container registry', location, registry.id);
+                if (registry.sku && registry.sku.tier && registry.sku.tier!='Premium') {
+                    helpers.addResult(results, 0, 'Content trust is feature of Premium tier container registry', location, registry.id);
                 } else {
-                    helpers.addResult(results, 2, 'Content trust is not enabled for container registry', location, registry.id);
-                } 
+
+                    var trustPolicy = registry.policies && registry.policies.trustPolicy? registry.policies.trustPolicy : null;
+
+                    if (trustPolicy && trustPolicy.status && trustPolicy.status.toLowerCase() == 'enabled'){
+                        helpers.addResult(results, 0, 'Content trust is enabled for container registry', location, registry.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Content trust is not enabled for container registry', location, registry.id);
+                    } 
+                }
             }
             
-            if (!found) {
-                helpers.addResult(results, 2, 'No existing container registries found', location);
-            }
 
             rcb();
         }, function() {
