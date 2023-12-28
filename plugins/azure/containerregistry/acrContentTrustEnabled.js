@@ -6,7 +6,7 @@ module.exports = {
     category: 'Container Registry',
     domain: 'Containers',
     description: 'Ensure that content trust is enabled for Azure premium container registries.',
-    more_info: 'Content trust allows you to sign the images you push to your registry. Consumers of your images (people or systems pulling images from your registry) can configure their clients to pull only signed images.',
+    more_info: 'Content trust allows you to sign the images you push to your registry. Consumers of your images (people or systems pulling images from your registry) can configure their clients to pull only signed images which enhances container image security by ensuring the integrity and authenticity of images and safeguards against unauthorized or tampered content.',
     recommended_action: 'Modify your container registry and enable content trust.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-content-trust#enable-registry-content-trust',
     apis: ['registries:list'],
