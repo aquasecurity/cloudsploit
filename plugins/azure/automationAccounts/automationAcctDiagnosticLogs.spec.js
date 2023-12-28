@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
-var automationAccountDiagnosticLogs = require('./automationAccountDiagnosticLogs.js');
+var automationAccountDiagnosticLogs = require('./automationAcctDiagnosticLogs.js');
 
 const automationAccounts = [
     {
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-EUS2",
+        "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-EUS2",
         "location": "EastUS2",
-        "name": "Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-EUS2",
+        "name": "Automate-12345-EUS2",
         "type": "Microsoft.Automation/AutomationAccounts",
         "tags": {},
         "properties": {
@@ -14,9 +14,9 @@ const automationAccounts = [
         }
     },
     {
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/DefaultResourceGroup-CUS/providers/Microsoft.Automation/automationAccounts/Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-CUS",
+        "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-CUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-CUS",
         "location": "centralus",
-        "name": "Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-CUS",
+        "name": "Automate-12345-CUS",
         "type": "Microsoft.Automation/AutomationAccounts",
         "tags": {},
         "properties": {
@@ -28,7 +28,7 @@ const automationAccounts = [
 
 const diagnosticSettings = [
     {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        id: '/subscriptions/12345/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
         type: 'Microsoft.Insights/diagnosticSettings',
         name: 'testaccesslogs',
         location: 'global',
@@ -46,7 +46,7 @@ const diagnosticSettings = [
           "logAnalyticsDestinationType": null
     },
     {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        id: '/subscriptions/12345/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
         type: 'Microsoft.Insights/diagnosticSettings',
         name: 'testwaflogs',
         location: 'global',
@@ -93,7 +93,7 @@ const diagnosticSettings = [
     },
     {},
     {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        id: '/subscriptions/12345/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
         type: 'Microsoft.Insights/diagnosticSettings',
         name: 'testwaflogs',
         location: 'global',
@@ -107,6 +107,24 @@ const diagnosticSettings = [
                 "days": 0
               }
             }
+          ],
+          "logAnalyticsDestinationType": null
+    },
+    {
+        id: '/subscriptions/12345/resourcegroups/cloudsploit-dev/providers/microsoft.cdn/automationAccounts/omer-cdn-profile-test/providers/microsoft.insights/diagnosticSettings/testaccesslogs',
+        type: 'Microsoft.Insights/diagnosticSettings',
+        name: 'testwaflogs',
+        location: 'global',
+        logs: [
+            {
+                "category": "DummyCategory",
+                "categoryGroup": "",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
           ],
           "logAnalyticsDestinationType": null
     },
@@ -245,12 +263,11 @@ describe('automationAccountDiagnosticLogs', function () {
             automationAccountDiagnosticLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Automation account does not have diagnostic logs enabled. Missing');
+                expect(results[0].message).to.include('Automation account does not have diagnostic logs enabled for following');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
-
 
         it('should give pass result if automation account have allLogs Enabled', function(done) {
             const cache = createCache([automationAccounts[1]], [diagnosticSettings[3]]);
@@ -258,6 +275,28 @@ describe('automationAccountDiagnosticLogs', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Automation account has diagnostic logs enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result with * setting', function (done) {
+            const cache = createCache([automationAccounts[1]], [diagnosticSettings[4]]);
+            automationAccountDiagnosticLogs.run(cache, {diagnostic_logs: '*'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Automation account has diagnostic logs enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if Automation Account does not have diagnostic logs enabled with settings', function (done) {
+            const cache = createCache([automationAccounts[1]], [diagnosticSettings[1]]);
+            automationAccountDiagnosticLogs.run(cache, {diagnostic_logs: 'testsetting'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Automation account does not have diagnostic logs enabled for following:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
