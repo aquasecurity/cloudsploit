@@ -1,5 +1,4 @@
 var async = require('async');
-
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
