@@ -10,11 +10,23 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all Redis Caches.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-monitor-diagnostic-settings?tabs=basic-standard-premium',
     apis: ['redisCaches:listBySubscription','diagnosticSettings:listByRedisCache'],
+    settings: {
+        diagnostic_logs: {
+            name: 'Diagnostic Logs Enabled',
+            description: 'Comma separated list of diagnostic logs that should be enabled at minimum i.e. ConnectedClientList. If you have enabled allLogs, then resource produces pass result',
+            regex: '^.*$',
+            default: 'ConnectedClientList'
+        },
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            diagnostic_logs: settings.diagnostic_logs || this.settings.diagnostic_logs.default,
+        };
 
         async.each(locations.redisCaches, function(location, rcb) {
             const caches = helpers.addSource(cache, source,
@@ -41,18 +53,19 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Redis Cache diagnostics settings: ' + helpers.addError(diagnosticSettings), location, redisCache.id);
                 } else {
-                    var redisCacheDiagnosticLogs = false;
-                    diagnosticSettings.data.forEach(setting => {
-                        var logs = setting.logs;
-                        if (logs.some(log => (log.categoryGroup === 'audit' || log.categoryGroup === 'allLogs' || log.category === 'ConnectedClientList') && log.enabled)) {
-                            redisCacheDiagnosticLogs = true;
-                        }
+                    var missingLogs = config.diagnostic_logs.split(',');
+
+                    diagnosticSettings.data.forEach(settings => {
+                        const logs = settings.logs;
+                        missingLogs = missingLogs.filter(requiredCategory =>
+                            !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                        );
                     });
 
-                    if (redisCacheDiagnosticLogs) {
-                        helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled', location, redisCache.id);
+                    if (missingLogs.length) {
+                        helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled for following: ${missingLogs}`, location, redisCache.id);
                     } else {
-                        helpers.addResult(results, 2, 'Redis Cache does not have diagnostic logs enabled', location, redisCache.id);
+                        helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled.', location, redisCache.id);
                     }
                 }
             });
