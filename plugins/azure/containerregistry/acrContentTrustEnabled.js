@@ -37,7 +37,7 @@ module.exports = {
             for (let registry of registries.data) {
                 if (!registry.id) continue;
 
-                if (registry.sku && registry.sku.tier && registry.sku.tier!='Premium') {
+                if (registry.sku && registry.sku.tier && registry.sku.tier.toLowerCase() !='premium') {
                     helpers.addResult(results, 0, 'Content trust is feature of Premium tier container registry', location, registry.id);
                 } else {
 
