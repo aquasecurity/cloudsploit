@@ -25,8 +25,8 @@ const listPostgresFlexibleServer = [
         "storageAutogrow": "Disabled"
     },
     "network":{
-        "delegatedSubnetResourceId" : "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/virtualNetworks/omer-virtual-network-test/subnets/default",
-        "privateDnsZoneArmResourceId" : "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/privateDnsZones/testflexibleserver11.private.postgres.database.azure.com",
+        "delegatedSubnetResourceId" : "/subscriptions/12345/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/virtualNetworks/test/subnets/default",
+        "privateDnsZoneArmResourceId" : "/subscriptions/12345/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/privateDnsZones/testflexibleserver11.private.postgres.database.azure.com",
         "publicNetworkAccess": "Disabled"
     }
     
@@ -59,23 +59,23 @@ describe('flexibleServerPrivateDns', function() {
             });
         });
 
-        it('should give failing result if Private Dns Zone is not integrated', function(done) {
+        it('should give failing result if private Dns zone is not integrated', function(done) {
             const cache = createCache([listPostgresFlexibleServer[0]]);
             flexibleServerPrivateDns.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('PostgreSQL flexible server does not have Private DNS Zone integrated');
+                expect(results[0].message).to.include('PostgreSQL flexible server does not have private DNS zone integrated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give should give passing result if Private Dns Zone is integrated', function(done) {
+        it('should give should give passing result if private Dns zone is integrated', function(done) {
             const cache = createCache([listPostgresFlexibleServer[1]]);
             flexibleServerPrivateDns.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('PostgreSQL flexible server has Private DNS Zone integrated');
+                expect(results[0].message).to.include('PostgreSQL flexible server has private DNS zone integrated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

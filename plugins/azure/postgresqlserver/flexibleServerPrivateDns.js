@@ -5,10 +5,10 @@ module.exports = {
     title: 'Private DNS Zone Integrated',
     category: 'PostgreSQL Server',
     domain: 'Databases',
-    description: 'Ensure that PostgreSQL flexible servers has Private DNS Zone integrated.',
-    more_info: 'Integrate Private DNS Zones with PostgreSQL flexible servers to enhance DNS service reliability and security within your Azure virtual network, ensuring seamless DNS resolution and streamlined domain management.',
-    recommended_action: 'Ensures Vnet and Private DNS Zone (private access) is integrated for PostgreSQL flexible server.',
-    link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private',
+    description: 'Ensure that PostgreSQL flexible servers have private DNS zone integrated.',
+    more_info: 'Integrating Private DNS Zones with PostgreSQL flexible servers enhances DNS service reliability and security within your Azure virtual network, ensuring seamless DNS resolution and streamlined domain management.',
+    recommended_action: 'Ensure Vnet and private DNS zone (private access) is integrated for PostgreSQL flexible server.',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private#using-private-dns-zone',
     apis: ['servers:listPostgresFlexibleServer'],
 
     run: function(cache, settings, callback) {
@@ -37,9 +37,9 @@ module.exports = {
                 if (!flexibleServer.id) continue;
                 
                 if (flexibleServer.network && flexibleServer.network.privateDnsZoneArmResourceId) {
-                    helpers.addResult(results, 0, 'PostgreSQL flexible server has Private DNS Zone integrated', location, flexibleServer.id);
+                    helpers.addResult(results, 0, 'PostgreSQL flexible server has private DNS zone integrated', location, flexibleServer.id);
                 } else {
-                    helpers.addResult(results, 2, 'PostgreSQL flexible server does not have Private DNS Zone integrated', location, flexibleServer.id);
+                    helpers.addResult(results, 2, 'PostgreSQL flexible server does not have private DNS zone integrated', location, flexibleServer.id);
                 }
             }
 
