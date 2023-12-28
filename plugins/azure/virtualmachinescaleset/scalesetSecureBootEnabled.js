@@ -35,9 +35,10 @@ module.exports = {
 
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
 
-                if (virtualMachineScaleSet.virtualMachineProfile && virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled) {
+                if (virtualMachineScaleSet.virtualMachineProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled) {
                     helpers.addResult(results, 0,
                         'Virtual Machine Scale Set has secure boot enabled', location, virtualMachineScaleSet.id);
                 } else {
