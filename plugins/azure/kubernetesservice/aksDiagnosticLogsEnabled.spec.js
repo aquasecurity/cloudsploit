@@ -3,7 +3,7 @@ var aksDiagnosticLogsEnabled = require('./aksDiagnosticLogsEnabled');
 
 const clusters = [
     {
-        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourcegroups/ABSBAKS2/providers/Microsoft.ContainerService/managedClusters/absbaks2",
+        "id": "/subscriptions/123-test/resourcegroups/ABSBAKS2/providers/Microsoft.ContainerService/managedClusters/absbaks2",
     },
 ];
    
