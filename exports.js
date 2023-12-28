@@ -1040,8 +1040,8 @@ module.exports = {
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
 
-        'automationAccountDiagnosticLogs': require(__dirname + '/plugins/azure/automationAccounts/automationAccountDiagnosticLogs.js'),
-        'automationAccountManagedIdentity': require(__dirname + '/plugins/azure/automationAccounts/automationAccountManagedIdentity.js'),
+        'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
+        'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAccttManagedIdentity.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
