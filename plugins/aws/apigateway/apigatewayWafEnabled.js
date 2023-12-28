@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Associate API Gateway API with Web Application Firewall',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-aws-waf.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:DeleteRestApi','apigateway:CreateStage','apigateway:DeleteStage','wafregional:AssociateWebACL'],
+
 
     run: function(cache, settings, callback) {
         var results = [];
