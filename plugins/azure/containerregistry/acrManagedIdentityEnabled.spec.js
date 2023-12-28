@@ -3,7 +3,7 @@ var acrManagedIdentityEnabled = require('./acrManagedIdentityEnabled');
 
 registries = [
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
         "name": "testregistry12543",
         "type": "Microsoft.ContainerRegistry/registries",
         "location": "eastus",
@@ -20,19 +20,19 @@ registries = [
             },
         },
         "identity": {
-            "principalId": "f61fb52b-80c1-4adf-b9c4-0cc80c71d6d7",
-            "tenantId": "d207c7bd-fcb1-4dd3-855a-cfd2f9b651e8",
+            "principalId": "1234",
+            "tenantId": "1234009",
             "type": "systemAssigned",
             "userAssignedIdentities": {
-              "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
-                "principalId": "1d34c2cd-bd53-487d-b3a9-6064465497c9",
-                "clientId": "2071caa1-3668-4de3-babc-155cfe3e38e5"
+              "/subscriptions/12343345/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
+                "principalId": "1234333345",
+                "clientId": "1234333345"
               }
             }
           },
     },
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
         "name": "testregistry12543",
         "type": "Microsoft.ContainerRegistry/registries",
         "location": "eastus",
@@ -50,7 +50,7 @@ registries = [
         },
     },
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
+        "id": "/subscriptions/123445/resourceGroups/devresourcegroup/providers/Microsoft.ContainerRegistry/registries/testregistry12543",
         "name": "testregistry12543",
         "type": "Microsoft.ContainerRegistry/registries",
         "location": "eastus",
@@ -67,13 +67,13 @@ registries = [
             },
         },
         "identity": {
-            "principalId": "f61fb52b-80c1-4adf-b9c4-0cc80c71d6d7",
-            "tenantId": "d207c7bd-fcb1-4dd3-855a-cfd2f9b651e8",
+            "principalId": "1234",
+            "tenantId": "1234009",
             "type": "systemAssigned, userAssigned",
             "userAssignedIdentities": {
-              "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
-                "principalId": "1d34c2cd-bd53-487d-b3a9-6064465497c9",
-                "clientId": "2071caa1-3668-4de3-babc-155cfe3e38e5"
+              "/subscriptions/12343345/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
+                "principalId": "1234333345",
+                "clientId": "1234333345"
               }
             }
           },
