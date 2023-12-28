@@ -5,7 +5,7 @@ module.exports = {
     title: 'Scale Sets Secure Boot Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that secure boot is enabled for virtual machine scale sets.',
+    description: 'Ensures that secure boot is enabled for Virtual Machine Scale Sets.',
     more_info: 'Secure Boot, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VMSS.',
     recommended_action: 'Modify virtual machine scale set configurations and enable secure boot',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch#secure-boot',
@@ -43,7 +43,7 @@ module.exports = {
                         'Virtual Machine Scale Set has secure boot enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has secure boot disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set does not have secure boot enabled', location, virtualMachineScaleSet.id);
                 }
             }
             rcb();
