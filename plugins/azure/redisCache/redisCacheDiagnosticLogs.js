@@ -58,11 +58,12 @@ module.exports = {
                     if (config.diagnostic_logs == '*') {
                         found = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length);
                     } else {
-                        missingLogs = config.diagnostic_logs.split(',');
+                        config.diagnostic_logs = config.diagnostic_logs.replace(/\s/g, '');
+                        missingLogs = config.diagnostic_logs.toLowerCase().split(',');
                         diagnosticSettings.data.forEach(settings => {
                             const logs = settings.logs;
                             missingLogs = missingLogs.filter(requiredCategory =>
-                                !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                                !logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
                             );
                         });
 
