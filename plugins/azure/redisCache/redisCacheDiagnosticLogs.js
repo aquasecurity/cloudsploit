@@ -19,7 +19,7 @@ module.exports = {
         },
     },
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -28,7 +28,7 @@ module.exports = {
             diagnostic_logs: settings.diagnostic_logs || this.settings.diagnostic_logs.default,
         };
 
-        async.each(locations.redisCaches, function (location, rcb) {
+        async.each(locations.redisCaches, function(location, rcb) {
             const caches = helpers.addSource(cache, source,
                 ['redisCaches', 'listBySubscription', location]);
 
@@ -44,7 +44,7 @@ module.exports = {
                 return rcb();
             }
 
-            caches.data.forEach(function (redisCache) {
+            caches.data.forEach(function(redisCache) {
                 if (!redisCache.id) return;
 
                 const diagnosticSettings = helpers.addSource(cache, source,
@@ -58,7 +58,7 @@ module.exports = {
                     if (config.diagnostic_logs == '*') {
                         found = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length);
                     } else {
-                         missingLogs = config.diagnostic_logs.split(',');
+                        missingLogs = config.diagnostic_logs.split(',');
                         diagnosticSettings.data.forEach(settings => {
                             const logs = settings.logs;
                             missingLogs = missingLogs.filter(requiredCategory =>
@@ -67,7 +67,7 @@ module.exports = {
                         });
 
                     }
-                    if(!missingLogs.length && found) {
+                    if (!missingLogs.length && found) {
                         helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled.', location, redisCache.id);
                     } else {
                         helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled ${missingLogs.length? `for following: ${missingLogs}`: ''}`, location, redisCache.id);
@@ -76,7 +76,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             // Global checking goes here
             callback(null, results, source);
         });
