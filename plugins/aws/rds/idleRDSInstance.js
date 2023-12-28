@@ -30,6 +30,7 @@ module.exports = {
             default: '20'
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance','rds:DeleteDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'], 
 
     run: function(cache, settings, callback) {
         var results = [];
