@@ -53,21 +53,24 @@ module.exports = {
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, 'Unable to query Redis Cache diagnostics settings: ' + helpers.addError(diagnosticSettings), location, redisCache.id);
                 } else {
-                    if (config.diagnostic_logs == '*' ) {
-                        helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled.', location, redisCache.id);
+                    var found = true;
+                    var missingLogs = [];
+                    if (config.diagnostic_logs == '*') {
+                        found = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length);
                     } else {
-                        var missingLogs = config.diagnostic_logs.split(',');
+                         missingLogs = config.diagnostic_logs.split(',');
                         diagnosticSettings.data.forEach(settings => {
                             const logs = settings.logs;
                             missingLogs = missingLogs.filter(requiredCategory =>
                                 !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
                             );
                         });
-                        if (missingLogs.length) {
-                            helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled for following: ${missingLogs}`, location, redisCache.id);
-                        } else {
-                            helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled.', location, redisCache.id);
-                        }
+
+                    }
+                    if(!missingLogs.length && found) {
+                        helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled.', location, redisCache.id);
+                    } else {
+                        helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled ${missingLogs.length? `for following: ${missingLogs}`: ''}`, location, redisCache.id);
                     }
                 }
             });
