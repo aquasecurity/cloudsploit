@@ -38,7 +38,7 @@ module.exports = {
 
                 var identityType = registry.identity && registry.identity.type? registry.identity.type : null;
 
-                if (identityType && (identityType.includes('systemAssigned') || identityType.includes('userAssigned'))) {
+                if (identityType && (identityType.toLowerCase().includes('systemassigned') || identityType.toLowerCase().includes('userassigned'))) {
                     helpers.addResult(results, 0, 'Container registry has managed identity enabled', location, registry.id);
                 } else {
                     helpers.addResult(results, 2, 'Container registry does not have managed identity enabled', location, registry.id);
