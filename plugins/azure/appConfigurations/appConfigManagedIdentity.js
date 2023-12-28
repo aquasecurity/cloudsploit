@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Developer Tools',
     description: 'Ensures that Azure App Configurations have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
-    link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-integrate-azure-managed-service-identity?tabs=core6x&pivots=framework-dotnet',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview-managed-identity',
     recommended_action: 'Modify App Configuration store and add managed identity.',
     apis: ['appConfigurations:list'],
 
@@ -34,9 +34,8 @@ module.exports = {
 
             for (let appConfiguration of appConfigurations.data) {
                 if (!appConfiguration.id) continue;
-                var identityType = appConfiguration.identity && appConfiguration.identity.type? appConfiguration.identity.type : null;
 
-                if (identityType && (identityType.includes('systemassigned') || identityType.includes('userassigned'))) {
+                if (appConfiguration.identity) {
                     helpers.addResult(results, 0, 'App Configuration has managed identity enabled', location, appConfiguration.id);
                 } else {
                     helpers.addResult(results, 2, 'App Configuration does not have managed identity enabled', location, appConfiguration.id);
