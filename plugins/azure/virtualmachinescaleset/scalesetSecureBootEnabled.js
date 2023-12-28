@@ -43,7 +43,7 @@ module.exports = {
                         'Virtual Machine Scale Set has secure boot enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set does not have secure boot enabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set have secure boot disabled', location, virtualMachineScaleSet.id);
                 }
             }
             rcb();
