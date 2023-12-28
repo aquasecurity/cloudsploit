@@ -21,6 +21,7 @@ module.exports = {
                 ['serviceBus', 'listNamespacesBySubscription', location]);
 
             if (!namespaces) return rcb();
+            
             if (namespaces.err || !namespaces.data) {
                 helpers.addResult(results, 3, 'Unable to query Service Bus namespaces: ' + helpers.addError(namespaces), location);
                 return rcb();
