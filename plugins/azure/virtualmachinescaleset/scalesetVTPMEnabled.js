@@ -36,9 +36,9 @@ module.exports = {
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
 
                 if (virtualMachineScaleSet.virtualMachineProfile &&
-                     virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
-                     virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
-                     virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled) {
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled) {
                     helpers.addResult(results, 0,
                         'Virtual Machine Scale Set has vTPM enabled', location, virtualMachineScaleSet.id);
                 } else {
