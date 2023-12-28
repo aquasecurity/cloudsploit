@@ -252,5 +252,16 @@ describe('redisCacheDiagnosticLogs', function () {
                 done();
             });
         });
+
+        it('should give passing result if Redis Cache has diagnostic logs enabled with * setting', function (done) {
+            const cache = createCache([redisCaches[1]], [diagnosticSettings[1]]);
+            redisCacheDiagnosticLogs.run(cache, {diagnostic_logs: '*'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Redis Cache has diagnostic logs enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
     });
 });
