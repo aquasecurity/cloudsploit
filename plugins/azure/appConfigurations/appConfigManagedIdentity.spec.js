@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var appConfigurationManagedIdentity = require('./appConfigurationManagedIdentity.js');
+var appConfigManagedIdentity = require('./appConfigManagedIdentity.js');
 
 const appConfigurations = [
     {
@@ -68,12 +68,12 @@ const createCache = (appConfigurations,err) => {
     }
 };
 
-describe('appConfigurationManagedIdentity', function () {
+describe('appConfigManagedIdentity', function () {
     describe('run', function () {
 
         it('should give pass result if No existing app configurations found', function (done) {
             const cache = createCache([]);
-            appConfigurationManagedIdentity.run(cache, {}, (err, results) => {
+            appConfigManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing App Configurations found');
@@ -84,7 +84,7 @@ describe('appConfigurationManagedIdentity', function () {
 
         it('should give unknown result if Unable to query app configurations:', function (done) {
             const cache = createCache(null, 'Error');
-            appConfigurationManagedIdentity.run(cache, {}, (err, results) => {
+            appConfigManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query App Configuration:');
@@ -95,7 +95,7 @@ describe('appConfigurationManagedIdentity', function () {
 
         it('should give passing result if App Configuration has managed identity enabled', function (done) {
             const cache = createCache([appConfigurations[1]]);
-            appConfigurationManagedIdentity.run(cache, {}, (err, results) => {
+            appConfigManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('App Configuration has managed identity enabled');
@@ -106,7 +106,7 @@ describe('appConfigurationManagedIdentity', function () {
 
         it('should give failing result if App Configuration does not have managed identity enabled', function (done) {
             const cache = createCache([appConfigurations[0]]);
-            appConfigurationManagedIdentity.run(cache, {}, (err, results) => {
+            appConfigManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('App Configuration does not have managed identity enabled');
