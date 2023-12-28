@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     description: 'Ensure that Azure Automation accounts have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
-    recommended_action: 'Modify automation account and enabled managed identity.',
+    recommended_action: 'Modify automation account and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/quickstarts/enable-managed-identity',
     apis: ['automationAccounts:list'],
 
@@ -35,9 +35,8 @@ module.exports = {
 
             for (var account of automationAccounts.data) {
                 if (!account.id) continue;
-                var identityType = account.identity && account.identity.type? account.identity.type : null;
 
-                if (identityType && (identityType.includes('systemassigned') || identityType.includes('userassigned'))) {
+                if (account.identity && account.identity.type) {
                     helpers.addResult(results, 0, 'Automation account has managed identity enabled', location, account.id);
                 } else {
                     helpers.addResult(results, 2, 'Automation account does not have managed identity enabled', location, account.id);

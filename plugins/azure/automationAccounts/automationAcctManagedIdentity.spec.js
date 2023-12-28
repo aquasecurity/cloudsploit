@@ -1,11 +1,11 @@
 var expect = require('chai').expect;
-var automationAccountManagedIdentity = require('./automationAccountManagedIdentity.js');
+var automationAccountManagedIdentity = require('./automationAcctManagedIdentity.js');
 
 const automationAccounts = [
     {
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-EUS2",
+        "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-EUS2",
         "location": "EastUS2",
-        "name": "Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-EUS2",
+        "name": "Automate-12345-EUS2",
         "type": "Microsoft.Automation/AutomationAccounts",
         "tags": {},
         "properties": {
@@ -17,17 +17,17 @@ const automationAccounts = [
             "principalId": "dc03d47d-e6df-491f-aebe-50a93412a890",
             "tenantId": "d207c7bd-fcb1-4dd3-855a-cfd2f9b651e8",
             "userAssignedIdentities": {
-              "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
-                "PrincipalId": "1d34c2cd-bd53-487d-b3a9-6064465497c9",
-                "ClientId": "2071caa1-3668-4de3-babc-155cfe3e38e5"
+              "/subscriptions/12345/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
+                "PrincipalId": "123455",
+                "ClientId": "1234554"
               }
             }
         }
     },
     {
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/DefaultResourceGroup-CUS/providers/Microsoft.Automation/automationAccounts/Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-CUS",
+        "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-CUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-CUS",
         "location": "centralus",
-        "name": "Automate-26a1a07e-06dd-4892-92c9-e4996b0fc546-CUS",
+        "name": "Automate-12345-CUS",
         "type": "Microsoft.Automation/AutomationAccounts",
         "tags": {},
         "properties": {
