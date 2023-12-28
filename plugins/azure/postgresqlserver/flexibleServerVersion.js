@@ -34,8 +34,9 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
+                let version = parseFloat(flexibleServer.version);
 
-                if (flexibleServer.version >= 13) {
+                if (version && version >= 13) {
                     helpers.addResult(results, 0,
                         'Postgresql flexible server has the latest server version', location, flexibleServer.id);
                 } else {
