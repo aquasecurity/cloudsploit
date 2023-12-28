@@ -995,7 +995,7 @@ module.exports = {
         'enableDefenderForStorage'      : require(__dirname + '/plugins/azure/defender/enableDefenderForStorage.js'),
         'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
-        'enableDefenderForPostgresql'   : require(__dirname + '/plugins/azure/defender/enableDefenderForPostgresql.js'),
+        'enableDefenderForOSRD'         : require(__dirname + '/plugins/azure/defender/enableDefenderForOSRD.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
         'enableDefenderForDNS'          : require(__dirname + '/plugins/azure/defender/enableDefenderForDNS.js'),
         'enableDefenderForKeyVaults'     : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
