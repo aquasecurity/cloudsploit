@@ -18,7 +18,7 @@ module.exports = {
             default: ''
         }
     },
-    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:createLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:CreateLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];
