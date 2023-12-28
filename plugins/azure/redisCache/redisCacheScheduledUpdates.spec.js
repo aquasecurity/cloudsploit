@@ -19,7 +19,7 @@ const redisCaches = [
 ];
 
 const patchSchedules = {
-  "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/cloudsploit-dev/providers/Microsoft.Cache/Redis/omerredistest/patchSchedules/default",
+  "id": "/subscriptions/123/resourceGroups/cloudsploit-dev/providers/Microsoft.Cache/Redis/omerredistest/patchSchedules/default",
       "location": "East US",
       "name": "omerredistest/default",
       "type": "Microsoft.Cache/Redis/PatchSchedules",
