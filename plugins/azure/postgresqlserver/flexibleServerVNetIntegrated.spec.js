@@ -25,8 +25,8 @@ const listPostgresFlexibleServer = [
         "storageAutogrow": "Disabled"
     },
     "network":{
-        "delegatedSubnetResourceId" : "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/virtualNetworks/omer-virtual-network-test/subnets/default",
-        "privateDnsZoneArmResourceId" : "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/privateDnsZones/testflexibleserver11.private.postgres.database.azure.com",
+        "delegatedSubnetResourceId" : "/subscriptions/12345/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/virtualNetworks/test/subnets/default",
+        "privateDnsZoneArmResourceId" : "/subscriptions/12345/resourceGroups/cloudsploit-dev/providers/Microsoft.Network/privateDnsZones/testflexibleserver11.private.postgres.database.azure.com",
         "publicNetworkAccess": "Disabled"
     }
     

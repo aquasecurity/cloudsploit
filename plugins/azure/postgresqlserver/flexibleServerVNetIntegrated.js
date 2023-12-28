@@ -2,10 +2,10 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Flexible Server VNet integrated',
+    title: 'PostgreSQL Flexible Server VNet Integrated',
     category: 'PostgreSQL Server',
     domain: 'Databases',
-    description: 'Ensure that PostgreSQL flexible servers has VNet integrated.',
+    description: 'Ensures that PostgreSQL flexible servers have VNet integrated.',
     more_info: 'Configuring PostgreSQL flexible server to operate within a Virtual Network (VNet) offers a myriad of benefits for enhanced security and operational control. By integrating with a VNet, you are proactively safeguarding your server against potential security threats and unauthorized access.',
     recommended_action: 'Ensures Vnet (private access) is integrated for PostgreSQL flexible server.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private',
