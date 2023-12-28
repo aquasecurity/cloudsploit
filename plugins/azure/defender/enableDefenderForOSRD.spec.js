@@ -47,7 +47,7 @@ describe('enableDefenderForPostgresql', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/12340a/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/12340/providers/Microsoft.Security/pricings/default",
                         "name": "openSourceRelationalDatabases",
                         "type": "Microsoft.Security/pricings",
                         "pricingTier": "free",
@@ -72,7 +72,7 @@ describe('enableDefenderForPostgresql', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/12345/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/12340/providers/Microsoft.Security/pricings/default",
                         "name": "openSourceRelationalDatabases",
                         "type": "Microsoft.Security/pricings",
                         "pricingTier": "Standard",
