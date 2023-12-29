@@ -64,7 +64,7 @@ describe('enableDefenderForVMs', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/12345/providers/Microsoft.Security/pricings/default",
                         "name": "KubernetesService",
                         "type": "Microsoft.Security/pricings",
                         "pricingTier": "free",
@@ -89,7 +89,7 @@ describe('enableDefenderForVMs', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/12345/providers/Microsoft.Security/pricings/default",
                         "name": "VirtualMachines",
                         "type": "Microsoft.Security/pricings",
                         "pricingTier": "Standard",
