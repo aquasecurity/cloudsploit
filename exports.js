@@ -983,7 +983,7 @@ module.exports = {
         'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
 
         'recoveryVaultByokEncrypted'    : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultByokEncrypted.js'),
-        'recoveryVaultLoggingEnabled': require(__dirname + '/plugins/azure/recoveryService/recoveryVaultLoggingEnabled.js'),
+        'recoveryVaultLoggingEnabled'   : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultLoggingEnabled.js'),
 
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
