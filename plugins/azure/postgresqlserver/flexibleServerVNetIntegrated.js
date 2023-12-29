@@ -6,8 +6,8 @@ module.exports = {
     category: 'PostgreSQL Server',
     domain: 'Databases',
     description: 'Ensures that PostgreSQL flexible servers have VNet integrated.',
-    more_info: 'Configuring PostgreSQL flexible server to operate within a Virtual Network (VNet) offers a myriad of benefits for enhanced security and operational control. By integrating with a VNet, you are proactively safeguarding your server against potential security threats and unauthorized access.',
-    recommended_action: 'Ensures Vnet (private access) is integrated for PostgreSQL flexible server.',
+    more_info: 'Configuring PostgreSQL flexible server to operate within a Virtual Network (VNet) offers a myriad of benefits for enhanced security and operational control. By integrating with a VNet allows to proactively safeguard your server against potential security threats and unauthorized access.',
+    recommended_action: 'Ensures VNet (private access) is integrated for PostgreSQL flexible server.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private',
     apis: ['servers:listPostgresFlexibleServer'],
 
