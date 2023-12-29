@@ -24,7 +24,7 @@ module.exports = {
             if (!virtualMachines) return rcb();
 
             if (virtualMachines.err || !virtualMachines.data) {
-                helpers.addResult(results, 3, 'Unable to query for virtualMachines: ' + helpers.addError(virtualMachines), location);
+                helpers.addResult(results, 3, 'Unable to query for Virtual Machines: ' + helpers.addError(virtualMachines), location);
                 return rcb();
             }
 
