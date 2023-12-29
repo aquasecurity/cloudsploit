@@ -38,10 +38,10 @@ module.exports = {
 
                 if (version && version >= 13) {
                     helpers.addResult(results, 0,
-                        'Postgresql flexible server has the latest server version', location, flexibleServer.id);
+                        'PostgreSQL flexible server has the latest server version', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Postgresql flexible server does not the latest server version', location, flexibleServer.id);
+                        'PostgreSQL flexible server does not the latest server version', location, flexibleServer.id);
                 }
             }
             rcb();

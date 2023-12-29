@@ -59,7 +59,7 @@ describe('flexibleServerVersion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Postgresql flexible server does not the latest server version');
+                expect(results[0].message).to.include('PostgreSQL flexible server does not the latest server version');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -75,7 +75,7 @@ describe('flexibleServerVersion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Postgresql flexible server has the latest server version');
+                expect(results[0].message).to.include('PostgreSQL flexible server has the latest server version');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
