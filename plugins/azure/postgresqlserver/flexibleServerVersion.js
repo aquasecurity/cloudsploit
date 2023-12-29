@@ -34,6 +34,8 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
+                If (!flexibleServer.id || !flexibleServer.version) return;
+                
                 let version = parseFloat(flexibleServer.version);
 
                 if (version && version >= 13) {
