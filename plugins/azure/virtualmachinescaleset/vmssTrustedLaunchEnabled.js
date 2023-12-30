@@ -35,9 +35,10 @@ module.exports = {
             
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
 
-                if (virtualMachineScaleSet.virtualMachineProfile && virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.securityType && 
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.securityType.toLowerCase() == 'trustedlaunch') {
+                if (virtualMachineScaleSet.virtualMachineProfile &&
+                     virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                     virtualMachineScaleSet.virtualMachineProfile.securityProfile.securityType && 
+                     virtualMachineScaleSet.virtualMachineProfile.securityProfile.securityType.toLowerCase() == 'trustedlaunch') {
                     helpers.addResult(results, 0,
                         'Virtual Machine Scale Set has trusted launch enabled', location, virtualMachineScaleSet.id);
                 } else {
