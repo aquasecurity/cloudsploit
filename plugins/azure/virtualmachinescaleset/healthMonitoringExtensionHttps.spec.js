@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var healthMonitoringHttpsEnabled = require('./healthMonitoringHttpsEnabled');
+var healthMonitoringExtensionHttps = require('./healthMonitoringExtensionHttps');
 
 const virtualMachineScaleSets = [
     {
@@ -78,11 +78,11 @@ const createCache = (virtualMachineScaleSets) => {
     };
 };
 
-describe('healthMonitoringHttpsEnabled', function() {
+describe('healthMonitoringExtensionHttps', function() {
     describe('run', function() {
         it('should give passing result if no virtual machine scale sets', function(done) {
             const cache = createCache([]);
-            healthMonitoringHttpsEnabled.run(cache, {}, (err, results) => {
+            healthMonitoringExtensionHttps.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Machine Scale Sets found');
@@ -93,7 +93,7 @@ describe('healthMonitoringHttpsEnabled', function() {
 
         it('should give unknown result if unable to query for virtual machine scale sets', function(done) {
             const cache = createCache();
-            healthMonitoringHttpsEnabled.run(cache, {}, (err, results) => {
+            healthMonitoringExtensionHttps.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Machine Scale Sets:');
@@ -104,7 +104,7 @@ describe('healthMonitoringHttpsEnabled', function() {
 
         it('should give passing result if Virtual Machine Scale Set does not have HTTPS enabled for health monitoring', function(done) {
             const cache = createCache([virtualMachineScaleSets[0]]);
-            healthMonitoringHttpsEnabled.run(cache, {}, (err, results) => {
+            healthMonitoringExtensionHttps.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Virtual Machine Scale Set does not have HTTPS enabled for health monitoring extension');
@@ -115,7 +115,7 @@ describe('healthMonitoringHttpsEnabled', function() {
 
         it('should give passing result if Virtual Machine Scale Set has HTTPS enabled for health monitoring', function(done) {
             const cache = createCache([virtualMachineScaleSets[1]]);
-            healthMonitoringHttpsEnabled.run(cache, {}, (err, results) => {
+            healthMonitoringExtensionHttps.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Virtual Machine Scale Set has HTTPS enabled for health monitoring extension');
@@ -126,7 +126,7 @@ describe('healthMonitoringHttpsEnabled', function() {
 
         it('should give failing result if Virtual Machine Scale Set has health monitoring disabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[2]]);
-            healthMonitoringHttpsEnabled.run(cache, {}, (err, results) => {
+            healthMonitoringExtensionHttps.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Virtual Machine Scale Set has health monitoring disabled');
