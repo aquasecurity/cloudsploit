@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Automatic Instance Repairs Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensures that automatic instance repairs is enabled for Azure virtual machine scale sets.',
     more_info: 'Enabling automatic instance repairs for Azure virtual machine scale sets helps achieve high availability for applications by maintaining a set of healthy instances.',
