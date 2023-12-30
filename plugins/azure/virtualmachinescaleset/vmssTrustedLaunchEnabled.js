@@ -3,11 +3,11 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Scale Sets Trusted Launch Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that Trusted launch security option is enabled for virtual machine scale sets.',
+    description: 'Ensures that trusted launch security option is enabled for Virtual Machine Scale Sets.',
     more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
-    recommended_action: 'Modify VMSS configurations and enable trusted launch.',
+    recommended_action: 'Remove existing Virtual Machine Scale Set and create a new one with trusted launch enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch',
     apis: ['virtualMachineScaleSets:listAll'],
 

@@ -756,7 +756,6 @@ module.exports = {
         'vmVTPMEnabled'                 : require(__dirname + '/plugins/azure/virtualmachines/vmVTPMEnabled.js'),
         'vmSecureBootEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
-        'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachines/vmssTrustedLaunchEnabled.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
@@ -1039,7 +1038,9 @@ module.exports = {
         'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
         'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
-        'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js')
+        'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
+
+        'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
