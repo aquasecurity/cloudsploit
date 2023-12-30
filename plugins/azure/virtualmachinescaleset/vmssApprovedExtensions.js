@@ -2,20 +2,20 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'VM Approved Extensions',
+    title: 'VM Scale Set Approved Extensions',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that approved virtual machine extensions are installed.',
+    description: 'Ensures that approved Virtual Machine Scale Set extensions are installed.',
     more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. Extensions installed should be approved by the organization to meet the organizational security requirements.',
     recommended_action: 'Uninstall unapproved virtual machine extensions',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
-    apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    link: 'https://learn.microsoft.com/en-us/rest/api/compute/virtual-machine-scale-set-extensions/list',
+    apis: ['virtualMachineScaleSets:listAll'],
     settings: {
         vmss_approved_extensions: {
             name: 'Approved VM extensions',
             description: 'List of comma separated approved extension names',
             regex: '^.*$',
-            default: 'healthRepairExtension'
+            default: ''
         }
     },
 
