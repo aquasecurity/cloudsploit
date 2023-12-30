@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'VM Scale Set Linux SSH Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensures that Azure Virtual Machine scale sets with Linux OS has SSH enabled.',
     more_info: 'SSH is an encrypted connection protocol that allows secure sign-ins over unsecured connections. SSH is the default connection protocol for Linux VMs hosted in Azure.',
