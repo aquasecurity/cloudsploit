@@ -2,11 +2,11 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Scale Sets Active Directory Authentication Enabled',
-    category: 'Virtual Machines',
+    title: 'Scale Sets AD Authentication',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for virtual machine scale sets.',
-    more_info: 'Organizations can now improve the security of virtual machine Scale Sets in Azure by integrating with Azure Active Directory (AD) authentication. Enabling Azure Active Directory (AD) authentication for Azure virtual machine scale set ensures access to VMs from one central point and simplifies access permission management.',
+    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for Virtual Machine Scale Sets.',
+    more_info: 'Enabling Azure Active Directory (AD) authentication for VM Scale Sets ensures access from one central point and simplifies access permission management. It allows conditional access by using Role-Based Access Control (RBAC) policies, and enable MFA.',
     recommended_action: 'Enable Azure Active Directory authentication for Azure virtual machines scale sets.',
     link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-linux',
     apis: ['virtualMachineScaleSets:listAll'],
@@ -39,17 +39,19 @@ module.exports = {
                     ? virtualMachineScaleSet.virtualMachineProfile.extensionProfile.extensions 
                     : [];
                 const adAuthentication = scaleSetExtensions.length 
-                    ? scaleSetExtensions.some((extension) => (extension.properties.type === 'AADLoginForWindows' || 
-                    extension.properties.type === 'AADLoginForLinux' || extension.properties.type === 'AADSSHLoginForLinux'
+                    ? scaleSetExtensions.some((extension) => (extension.properties && extension.properties.type &&
+                     (extension.properties.type.toLowerCase() === 'aadloginforwindows' || 
+                    extension.properties.type.toLowerCase() === 'aadloginforlinux' || 
+                    extension.properties.type.toLowerCase() === 'aadsshloginforlinux')
                     )) 
                     : false;
 
                 if (adAuthentication) {
                     helpers.addResult(results, 0,
-                        'Virtual Machine Scale Set has active directory authentication enabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Active Directory authentication enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has active directory authentication disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Active Directory authentication disabled', location, virtualMachineScaleSet.id);
                 }
             }
             rcb();

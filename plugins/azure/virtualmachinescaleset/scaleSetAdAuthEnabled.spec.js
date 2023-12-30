@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var scaleSetAdAuthenticationEnabled = require('./scaleSetAdAuthenticationEnabled');
+var scaleSetAdAuthEnabled = require('./scaleSetAdAuthEnabled');
 
 const virtualMachineScaleSets = [
     {
@@ -68,11 +68,11 @@ const createCache = (virtualMachineScaleSets) => {
     };
 };
 
-describe('scaleSetAdAuthenticationEnabled', function() {
+describe('scaleSetAdAuthEnabled', function() {
     describe('run', function() {
         it('should give passing result if no virtual machine scale sets', function(done) {
             const cache = createCache([]);
-            scaleSetAdAuthenticationEnabled.run(cache, {}, (err, results) => {
+            scaleSetAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Virtual Machine Scale Sets found');
@@ -83,7 +83,7 @@ describe('scaleSetAdAuthenticationEnabled', function() {
 
         it('should give unknown result if unable to query for virtual machine scale sets', function(done) {
             const cache = createCache();
-            scaleSetAdAuthenticationEnabled.run(cache, {}, (err, results) => {
+            scaleSetAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Virtual Machine Scale Sets');
@@ -92,22 +92,22 @@ describe('scaleSetAdAuthenticationEnabled', function() {
             });
         });
 
-        it('should give passing result if Virtual Machine Scale Set has AD authentication enabled', function(done) {
+        it('should give passing result if linux Virtual Machine Scale Set has AD authentication enabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[0]]);
-            scaleSetAdAuthenticationEnabled.run(cache, {}, (err, results) => {
+            scaleSetAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Virtual Machine Scale Set has active directory authentication enabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set has Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
-        it('should give passing result if Virtual Machine Scale Set has AD authentication enabled', function(done) {
+        it('should give passing result if windows Virtual Machine Scale Set has AD authentication enabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[1]]);
-            scaleSetAdAuthenticationEnabled.run(cache, {}, (err, results) => {
+            scaleSetAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Virtual Machine Scale Set has active directory authentication enabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set has Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -115,10 +115,10 @@ describe('scaleSetAdAuthenticationEnabled', function() {
 
         it('should give failing result if Virtual Machine Scale Set has AD authentication disabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[2]]);
-            scaleSetAdAuthenticationEnabled.run(cache, {}, (err, results) => {
+            scaleSetAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Virtual Machine Scale Set has active directory authentication disabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set has Active Directory authentication disabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
