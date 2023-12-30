@@ -70,7 +70,7 @@ describe('vmssManagedIdentityEnabled', function() {
 
         it('should give failing result if VM scale set does not have managed identity enabled', function(done) {
             const cache = createCache([virtualMachineScaleSets[1]]);
-            vmssManagedIdentityEnabled.run(cache, { vmss_approved_extensions: 'healthRepairExtension' }, (err, results) => {
+            vmssManagedIdentityEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('VM scale set does not have managed identity enabled');
