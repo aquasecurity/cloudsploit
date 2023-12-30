@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Scale Sets Secure Boot Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensures that secure boot is enabled for virtual machine scale sets.',
     more_info: 'Secure Boot, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VMSS.',
