@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that approved Virtual Machine Scale Set extensions are installed.',
     more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. Extensions installed should be approved by the organization to meet the organizational security requirements.',
     recommended_action: 'Uninstall unapproved virtual machine extensions',
-    link: 'https://learn.microsoft.com/en-us/rest/api/compute/virtual-machine-scale-set-extensions/list',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/overview',
     apis: ['virtualMachineScaleSets:listAll'],
     settings: {
         vmss_approved_extensions: {
