@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Scale Sets vTPM Enabled',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensure that Virtual Trusted Platform Module (vTPM) is enabled for virtual machine scale sets.',
     more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets. The vTPM enables attestation by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers).',
