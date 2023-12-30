@@ -5,10 +5,10 @@ module.exports = {
     title: 'Scale Sets vTPM Enabled',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensure that Virtual Trusted Platform Module (vTPM) is enabled for virtual machine scale sets.',
+    description: 'Ensures that Virtual Trusted Platform Module (vTPM) is enabled for Virtual Machine Scale Sets.',
     more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets. The vTPM enables attestation by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers).',
     recommended_action: 'Modify virtual machine scale set configurations and enable vTPM',
-    link: 'https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-tpms-in-azure-confidential-vm',
+    link: 'https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/trusted-platform-module-overview',
     apis: ['virtualMachineScaleSets:listAll'],
 
     run: function(cache, settings, callback) {
@@ -35,9 +35,10 @@ module.exports = {
 
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
 
-                if (virtualMachineScaleSet.virtualMachineProfile && virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
-                virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled) {
+                if (virtualMachineScaleSet.virtualMachineProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled) {
                     helpers.addResult(results, 0,
                         'Virtual Machine Scale Set has vTPM enabled', location, virtualMachineScaleSet.id);
                 } else {
