@@ -1040,7 +1040,7 @@ module.exports = {
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
 
-        'healthMonitoringHttpsEnabled'  : require(__dirname + '/plugins/azure/virtualmachinescaleset/healthMonitoringHttpsEnabled.js')
+        'healthMonitoringExtensionHttps'  : require(__dirname + '/plugins/azure/virtualmachinescaleset/healthMonitoringExtensionHttps.js')
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

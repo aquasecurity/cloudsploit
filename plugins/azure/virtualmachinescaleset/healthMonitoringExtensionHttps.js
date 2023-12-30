@@ -2,11 +2,11 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Health Monitoring HTTPS Enabled',
-    category: 'Virtual Machines',
+    title: 'Health Monitoring Extension HTTPS Enabled',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that virtual machine scale set has HTTPS enabled for health monitoring.',
-    more_info: 'Scale set health monitoring feature reports on VM health from inside the scale set instance and can be configured to probe on an application endpoint and update the status of the application on that instance. That instance status is checked by Azure to determine whether an instance is eligible for upgrade operations and HTTPS protocol provides secure communication for health monitoring.',
+    description: 'Ensures that Virtual Machine Scale Set has HTTPS enabled for health monitoring.',
+    more_info: 'Enabling Application Health Extension in Virtual Machine Scale Set instance reports on application health from inside based on HTTPS responses received from the application. This allows to initiate repairs on unhealthy instances and to determine if an instance is eligible for upgrade operations.',
     recommended_action: 'Modify virtual machine scale set extensions and enable HTTPS for health monitoring.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension',
     apis: ['virtualMachineScaleSets:listAll'],
@@ -55,13 +55,13 @@ module.exports = {
                 if (healthMonitoringEnabled) {
                     if (hasHTTPSProtocol) {
                         helpers.addResult(results, 0,
-                            'Virtual Machine Scale Set has HTTPS enabled for health monitoring', location, virtualMachineScaleSet.id);
+                            'Virtual Machine Scale Set has HTTPS enabled for health monitoring extension', location, virtualMachineScaleSet.id);
                     } else {
                         helpers.addResult(results, 2,
-                            'Virtual Machine Scale Set does not have HTTPS enabled for health monitoring', location, virtualMachineScaleSet.id);
+                            'Virtual Machine Scale Set does not have HTTPS enabled for health monitoring extension', location, virtualMachineScaleSet.id);
                     }
                 } else {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'Virtual Machine Scale Set has health monitoring disabled', location, virtualMachineScaleSet.id);
                 }
             }
