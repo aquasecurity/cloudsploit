@@ -8,8 +8,8 @@ const virtualMachineScaleSets = [
         'type': 'Microsoft.Compute/virtualMachineScaleSets',
         "identity": {
             "type": "SystemAssigned",
-            "principalId": "5db3ed52-909e-4016-a31f-d2fe043952a4",
-            "tenantId": "d207c7bd-fcb1-4dd3-855a-cfd2f9b651e8"
+            "principalId": "123454",
+            "tenantId": "1234548"
         },
     },
     {
