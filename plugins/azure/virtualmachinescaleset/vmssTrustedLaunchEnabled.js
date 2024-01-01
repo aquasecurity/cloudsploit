@@ -34,7 +34,7 @@ module.exports = {
             }
             
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
-                if(!virtualMachineScaleSet.id) continue;
+                if (!virtualMachineScaleSet.id) continue;
 
                 if (virtualMachineScaleSet.virtualMachineProfile &&
                      virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
