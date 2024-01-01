@@ -49,6 +49,14 @@ module.exports = {
         describeRegionSettings: '',
         getBackupPlan: 'BackupPlanArn'
     },
+    bedrock: {
+        listCustomModels: 'modelArn',
+        getCustomModel: 'modelArn',
+        listModelCustomizationJobs: 'jobArn',
+        getModelCustomizationJob: 'jobArn',
+        getModelInvocationLoggingConfiguration: ''
+
+    },
     cloudformation: {
         describeStacks: 'StackId',
         listStacks: 'StackId',
