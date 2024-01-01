@@ -18,6 +18,7 @@ module.exports = {
             default: 'secret,password,privatekey'
         }
     },
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];
