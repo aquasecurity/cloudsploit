@@ -34,9 +34,9 @@ module.exports = {
                 if (!scaleSet.id) continue;
 
                 if (scaleSet.identity && scaleSet.identity.type){
-                    helpers.addResult(results, 0, 'VM scale set has managed identity enabled', location, scaleSet.id);
+                    helpers.addResult(results, 0, 'Virtual Machine Scale Set has managed identity enabled', location, scaleSet.id);
                 } else {
-                    helpers.addResult(results, 2, 'VM scale set does not have managed identity enabled', location, scaleSet.id);
+                    helpers.addResult(results, 2, 'Virtual Machine Scale Set does not have managed identity enabled', location, scaleSet.id);
                 }
             }
             rcb();

@@ -62,7 +62,7 @@ describe('vmssManagedIdentityEnabled', function() {
             vmssManagedIdentityEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('VM scale set has managed identity enabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set has managed identity enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -73,7 +73,7 @@ describe('vmssManagedIdentityEnabled', function() {
             vmssManagedIdentityEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('VM scale set does not have managed identity enabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set does not have managed identity enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
