@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Defender For SQL Servers',
+    title: 'Enable Defender For App Services',
     category: 'Defender',
     domain: 'Management and Governance',
-    description: 'Ensures that Microsoft Defender is enabled for Azure SQL Server Databases.',
-    more_info: 'Turning on Microsoft Defender for Azure SQL Server Databases enables threat detection for Azure SQL database servers, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
-    recommended_action: 'Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
+    description: 'Ensures that Microsoft Defender is enabled for App Services.',
+    more_info: 'Turning on Microsoft Defender for App Services enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
+    recommended_action: 'Enable Microsoft Defender for App Services in Defender plans for the subscription.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-app-service-introduction',
     apis: ['pricings:list'],
 
     run: function(cache, settings, callback) {
@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.checkMicrosoftDefender(pricings, 'sqlservers', 'SQL Server Databases', results, location);
+            helpers.checkMicrosoftDefender(pricings, 'appservices', 'App Services', results, location);
 
             rcb();
         }, function(){
