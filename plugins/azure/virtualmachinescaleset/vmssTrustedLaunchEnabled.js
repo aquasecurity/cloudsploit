@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensures that trusted launch security option is enabled for Virtual Machine Scale Sets.',
-    more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
+    more_info: 'Enabling trusted launch works in seamless way to improve the security of VM scale sets. Trusted launch protects against advanced and persistent attack techniques. It is composed of several, coordinated infrastructure technologies that can be enabled independently, providing another layer of defense against sophisticated threats.',
     recommended_action: 'Remove existing Virtual Machine Scale Set and create a new one with trusted launch enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch',
     apis: ['virtualMachineScaleSets:listAll'],
