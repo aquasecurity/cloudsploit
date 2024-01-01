@@ -42,10 +42,9 @@ module.exports = {
 
                 const healthMonitoringEnabled = scaleSetExtensions.length 
                     ? scaleSetExtensions.some((extension) => (
-                        extension.properties && (extension.properties.type === 'ApplicationHealthWindows' ||
-                        extension.properties.type === 'ApplicationHealthLinux'))
-                    )
-                    : false;
+                        extension.properties && extension.properties.type && 
+                        (extension.properties.type === 'ApplicationHealthWindows' || extension.properties.type === 'ApplicationHealthLinux'))
+                    ) : false;
 
                 const hasHTTPSProtocol = scaleSetExtensions.some((extension) => (
                     extension.properties && extension.properties.settings && extension.properties.settings.protocol &&
