@@ -35,6 +35,7 @@ module.exports = {
             
             for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
                 if(!virtualMachineScaleSet.id) continue;
+                
                 const scaleSetExtensions = virtualMachineScaleSet.virtualMachineProfile && virtualMachineScaleSet.virtualMachineProfile.extensionProfile &&
                 virtualMachineScaleSet.virtualMachineProfile.extensionProfile.extensions 
                     ? virtualMachineScaleSet.virtualMachineProfile.extensionProfile.extensions 
