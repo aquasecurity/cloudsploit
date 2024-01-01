@@ -12,7 +12,7 @@ module.exports = {
     apis: ['virtualMachineScaleSets:listAll'],
     settings: {
         vmss_approved_extensions: {
-            name: 'Approved VM extensions',
+            name: 'Approved Virtual Machine Scale set extensions',
             description: 'List of comma separated approved extension names',
             regex: '^.*$',
             default: ''
