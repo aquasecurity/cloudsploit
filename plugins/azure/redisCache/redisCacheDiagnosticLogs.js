@@ -71,7 +71,7 @@ module.exports = {
                     if (!missingLogs.length && found) {
                         helpers.addResult(results, 0, 'Redis Cache has diagnostic logs enabled', location, redisCache.id);
                     } else {
-                        helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled${missingLogs.length? ` for following: ${missingLogs}`: ''}`, location, redisCache.id);
+                        helpers.addResult(results, 2, `Redis Cache does not have diagnostic logs enabled ${missingLogs.length? `for following: ${missingLogs}`: ''}`, location, redisCache.id);
                     }
                 }
             });
