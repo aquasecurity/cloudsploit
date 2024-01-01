@@ -44,6 +44,7 @@ module.exports = {
                         'Unable to query for Recovery Service Vault diagnostic settings: ' + helpers.addError(diagnosticSettings), location, vault.id);
                     continue;
                 }
+
                 var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
 
                 if (found) {
