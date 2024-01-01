@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-snapshots.html',
     recommended_action: 'Modify Amazon Redshift cluster to set snapshot retention period',
     apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];
