@@ -76,6 +76,8 @@ module.exports = {
     compliance: {
         cis1: '3.0 Monitoring metrics are enabled'
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:UpdateTrail','cloudtrail:DeleteTrail', 'cloudwatchlogs:PutMetricFilter','cloudwatchlogs:DeleteMetricFilter'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];

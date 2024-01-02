@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Delete the instances using deprecated AMIs',
     apis: ['EC2:describeImages', 'EC2:describeInstances', 'AutoScaling:describeLaunchConfigurations',
         'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions','STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         const results = [];

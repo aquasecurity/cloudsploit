@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that DMS replication instances have only private IP address and not public IP address',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.PublicPrivate.html',
     apis: ['DMS:describeReplicationInstances'],
+    realtime_triggers: ['dms:CreateReplicationInstance','dms:DeleteReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];
