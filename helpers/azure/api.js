@@ -187,6 +187,11 @@ var calls = {
             rateLimit: 3000
         }
     },
+    appConfigurations: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01'
+        }
+    },
     virtualNetworks: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'

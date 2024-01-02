@@ -123,6 +123,6 @@ module.exports = {
     serviceBus: locations,
     classicFrontDoors: ['global'],
     afdWafPolicies: ['global'],
-    automationAccounts: locations
-    
+    appConfigurations: locations,
+    automationAccounts: locations    
 };
