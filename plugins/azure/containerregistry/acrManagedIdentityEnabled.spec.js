@@ -57,13 +57,13 @@ registries = [
         "tags": {},
         "anonymousPullEnabled": true,
         "sku": {
-            "name": "Premium",
-            "tier": "Premium"
+            "name": "Basic",
+            "tier": "Basic"
         },
         "policies": {
             "trustPolicy": {
               "type": "Notary",
-              "status": "disabled"
+              "status": "enabled"
             },
         },
         "identity": {

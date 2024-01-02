@@ -1060,6 +1060,7 @@ module.exports = {
         'scalesetSecureBootEnabled'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetSecureBootEnabled.js'),
         'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions'),
 
+        'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
 
     },
     github: {
