@@ -1050,6 +1050,7 @@ module.exports = {
         'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
         'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
         'vmssManagedIdentityEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssManagedIdentityEnabled.js'),
+        'scalesetVTPMEnabled'           : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetVTPMEnabled.js'),
 
     },
     github: {
