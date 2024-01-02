@@ -258,6 +258,9 @@ module.exports = {
         list: 'id'
     },
     appConfigurations: {
+        list:'id'
+    },
+    automationAccounts:{
         list: 'id'
     }
 };

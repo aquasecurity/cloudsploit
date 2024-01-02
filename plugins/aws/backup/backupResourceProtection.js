@@ -19,6 +19,7 @@ module.exports = {
             default:''
         }
     },
+    realtime_triggers: ['backup:UpdateRegionSettings'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['MemoryDB:CreateCluster', 'MemoryDB:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

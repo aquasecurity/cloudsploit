@@ -21,7 +21,7 @@ module.exports = {
         remediate: ['rds:ModifyDBParameterGroup'],
         rollback: ['rds:ModifyDBParameterGroup']
     },
-    realtime_triggers: ['rds:CreateDBParameterGroup', 'rds:ModifyDBParameterGroup'],
+    realtime_triggers: ['rds:CreateDBParameterGroup', 'rds:ModifyDBParameterGroup','rds:DeleteDBParameterGroup'],
     
     run: function(cache, settings, callback) {
         var results = [];

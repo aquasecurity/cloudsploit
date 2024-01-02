@@ -24,6 +24,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:SetRepositoryPolicy', 'ecr:DeleteRepository'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -27,6 +27,8 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.7 Ensure IAM password policy require at least one symbol'
     },
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

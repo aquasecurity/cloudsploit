@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-ssl-support.html',
     recommended_action: 'Update Redshift parameter groups to have require-ssl parameter set to true.',
     apis: ['Redshift:describeClusters', 'Redshift:describeClusterParameterGroups', 'Redshift:describeClusterParameters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyClusterParameterGroup', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
