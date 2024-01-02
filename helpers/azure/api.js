@@ -371,6 +371,11 @@ var calls = {
             graph: true,
         }
     },
+    automationAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Automation/automationAccounts?api-version=2023-11-01'
+        }
+    },
     registries: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2023-01-01-preview'
@@ -1054,7 +1059,13 @@ var tertiarycalls = {
             reliesOnPath: 'redisCaches.listBySubscription',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
+        
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
