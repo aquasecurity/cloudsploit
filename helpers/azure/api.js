@@ -1055,6 +1055,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAksClusters: {
+            reliesOnPath: 'managedClusters.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByAppConfigurations: {
             reliesOnPath: 'appConfigurations.list',
             properties: ['id'],
