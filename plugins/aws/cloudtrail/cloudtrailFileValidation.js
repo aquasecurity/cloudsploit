@@ -15,7 +15,7 @@ module.exports = {
     apis_remediate: ['CloudTrail:describeTrails'],
     actions: {remediate: ['CloudTrail:updateTrail'], rollback: ['CloudTrail:updateTrail']},
     permissions: {remediate: ['cloudtrail:UpdateTrail'], rollback: ['cloudtrail:UpdateTrail']},
-    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail'],
     compliance: {
         hipaa: 'The auditing requirements of HIPAA require logs to be kept securely ' +
                 'in a manner that prevents tampering. CloudTrail log validation ' +
