@@ -33,6 +33,7 @@ module.exports = {
              'Security groups should be properly secured to prevent access to ' +
              'backend services.'
     },
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var config = {

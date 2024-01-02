@@ -32,7 +32,7 @@ module.exports = {
         remediate: ['cloudtrail:UpdateTrail'],
         rollback: ['cloudtrail:UpdateTrail']
     },
-    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];
