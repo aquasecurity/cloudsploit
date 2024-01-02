@@ -137,7 +137,6 @@ describe('acrContentTrustEnabled', function() {
         //         expect(results[0].region).to.equal('eastus');
         //         done()
         //     });
-
         // });
 
     })
