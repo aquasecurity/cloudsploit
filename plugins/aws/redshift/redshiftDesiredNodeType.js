@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var redshift_cluster_node_type = settings.redshift_cluster_node_type || this.settings.redshift_cluster_node_type.default;

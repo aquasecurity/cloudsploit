@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html',
     recommended_action: 'Remove the public IP address from the EC2 instances to block public access to the instance',
     apis: ['EC2:describeInstances', 'STS:getCallerIdentity', 'EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:RunInstances','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];

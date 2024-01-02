@@ -30,6 +30,7 @@ module.exports = {
             default: 30
         }
     },
+    realtime_triggers: ['ec2:CreateSecurityGroup', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var config = {

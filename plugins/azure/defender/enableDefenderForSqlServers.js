@@ -33,17 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let sqlServersPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'sqlservers');
-
-            if (sqlServersPricing) {
-                if (sqlServersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for SQL Server Databases', location, sqlServersPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location, sqlServersPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'sqlservers', 'SQL Server Databases', results, location);
 
             rcb();
         }, function(){

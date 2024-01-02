@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/efs/latest/ug/manage-fs-tags.html',
     recommended_action: 'Modify EFS file systems to add tags.',
     apis: ['EFS:describeFileSystems'],
+    realtime_triggers: ['efs:CreateFileSystem', 'efs:TagResource', 'efs:UnTagResource','efs:DeleteFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -21,7 +21,7 @@ module.exports = {
         remediate: ['athena:UpdateWorkGroup'],
         rollback: ['athena:UpdateWorkGroup']
     },
-    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup'],
+    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup', 'athena:DeleteWorkGroup'],
     remediation_inputs: {
         encryptionOption: {
             name: '(Mandatory) Encryption method',
