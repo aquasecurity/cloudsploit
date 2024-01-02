@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
     recommended_action: 'Ensure that the Auto Scaling group load balancer has not been deleted. If so, remove it from the ASG.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers', 'ELBv2:describeLoadBalancers'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:AttachLoadBalancers','autoscaling:DetachLoadBalancers','elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:DeleteLoadBalancer','elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

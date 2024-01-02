@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2018/09/amazon-rds-now-provides-database-deletion-protection/',
     recommended_action: 'Modify the RDS instances to enable deletion protection.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'],  
 
     run: function(cache, settings, callback) {
         var results = [];

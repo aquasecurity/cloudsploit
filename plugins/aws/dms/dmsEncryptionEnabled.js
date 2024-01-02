@@ -29,6 +29,7 @@ module.exports = {
             default: false
         }
     },
+    realtime_triggers: ['dms:CreateReplicationInstance','dms:DeleteReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var config = {
