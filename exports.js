@@ -1054,7 +1054,8 @@ module.exports = {
         'amsContentKeyPolicy'           : require(__dirname + '/plugins/azure/mediaServices/amsContentKeyPolicy.js'),
 
         'appConfigManagedIdentity'      : require(__dirname + '/plugins/azure/appConfigurations/appConfigManagedIdentity.js'),
-        'appConfigurationPublicAccess'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationPublicAccess.js'),
+        'appConfigurationDiagnosticLogs'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
+         'appConfigurationPublicAccess'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationPublicAccess.js'),
 
         'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
         'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
