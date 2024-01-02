@@ -9,6 +9,7 @@ module.exports = {
     recommended_action: 'Enable all AWS Organizations features',
     link: 'https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html?icmpid=docs_orgs_console',
     apis: ['Organizations:listHandshakesForAccount'],
+    realtime_triggers: ['organizations:CreateOrganization', 'organizations:AcceptHandshake' ,'organizations:DeclineHandshake', 'organizations:CancleHandshake', 'organizations:DeleteOrganization'], 
 
     run: function(cache, settings, callback) {
         var results = [];
