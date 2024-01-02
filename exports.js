@@ -1046,7 +1046,6 @@ module.exports = {
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
         'amsContentKeyPolicy'           : require(__dirname + '/plugins/azure/mediaServices/amsContentKeyPolicy.js'),
-        'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
       
         'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
 
