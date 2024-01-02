@@ -1045,6 +1045,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        }
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {

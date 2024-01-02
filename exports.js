@@ -698,6 +698,7 @@ module.exports = {
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
         'redisCacheHasTags'             : require(__dirname + '/plugins/azure/redisCache/redisCacheHasTags.js'),
         'redisCachePrivateEndpoint'     : require(__dirname + '/plugins/azure/redisCache/redisCachePrivateEndpoint.js'),
+        'redisCacheDiagnosticLogs'      : require(__dirname + '/plugins/azure/redisCache/redisCacheDiagnosticLogs.js'),
         'redisVersion'                  : require(__dirname + '/plugins/azure/redisCache/redisVersion.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
