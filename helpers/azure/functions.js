@@ -357,7 +357,7 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
 }
 
 function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
-    
+
     let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
     if (pricingData) {
         if (pricingData.pricingTier.toLowerCase() === 'standard') {
