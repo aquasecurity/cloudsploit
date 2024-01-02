@@ -756,6 +756,7 @@ module.exports = {
         'vmVTPMEnabled'                 : require(__dirname + '/plugins/azure/virtualmachines/vmVTPMEnabled.js'),
         'vmSecureBootEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
+        'vmEncryptionAtHost'            : require(__dirname + '/plugins/azure/virtualmachines/vmEncryptionAtHost.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
@@ -996,7 +997,9 @@ module.exports = {
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
         'enableDefenderForDNS'          : require(__dirname + '/plugins/azure/defender/enableDefenderForDNS.js'),
-        'enableDefenderForKeyVaults'     : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
+        'enableDefenderForKeyVaults'    : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
+        'enableDefenderForVMs'          : require(__dirname + '/plugins/azure/defender/enableDefenderForVMs.js'),
+        'enableDefenderForAppService'   : require(__dirname + '/plugins/azure/defender/enableDefenderForAppService.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/applicationGateway/applicationGatewayHasTags.js'),
@@ -1012,6 +1015,7 @@ module.exports = {
         'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
 
         'recoveryVaultByokEncrypted'    : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultByokEncrypted.js'),
+        'recoveryVaultLoggingEnabled'   : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultLoggingEnabled.js'),
 
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
@@ -1034,13 +1038,21 @@ module.exports = {
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
+        'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
+        'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),
       
         'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
         'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
+        'amsContentKeyPolicy'           : require(__dirname + '/plugins/azure/mediaServices/amsContentKeyPolicy.js'),
+        'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
 
+        'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
+        'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
+        'vmssManagedIdentityEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssManagedIdentityEnabled.js'),
         'scalesetVTPMEnabled'           : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetVTPMEnabled.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

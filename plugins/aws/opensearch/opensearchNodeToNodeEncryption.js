@@ -21,7 +21,7 @@ module.exports = {
         remediate: ['opensearch:UpdateDomainConfig'],
         rollback: ['opensearch:UpdateDomainConfig']
     },
-    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];
