@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['finspace:CreateEnviromennt', 'finspace:DeleteEnviroment'],
 
     run: function(cache, settings, callback) {
         var results = [];

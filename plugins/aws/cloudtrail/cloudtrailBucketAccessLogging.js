@@ -26,6 +26,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:UpdateTrail','s3:PutBucketLogging','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -52,7 +53,7 @@ module.exports = {
 
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
-
+            
             if (!describeTrails) return rcb();
 
             if (describeTrails.err || !describeTrails.data) {

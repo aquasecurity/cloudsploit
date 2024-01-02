@@ -30,6 +30,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole'],
 
     run: function(cache, settings, callback) {
         var config= {

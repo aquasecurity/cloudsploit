@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',
     recommended_action: 'Upgrade the version of Kubernetes on all EKS clusters to the latest available version.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:UpdateClusterVersion', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -39,6 +40,7 @@ module.exports = {
             '1.25': '2024-05-01',
             '1.26': '2024-06-01',
             '1.27': '2024-06-01',
+            '1.28': '2024-09-01'
         };
 
         var outdatedVersions = {
@@ -84,7 +86,8 @@ module.exports = {
                     let versionOutdatedDate = (outdatedVersions[version]) ? outdatedVersions[version] : null;
                     let today = new Date();
                     let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
-                    today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
+                    let month = (today.getMonth() < 10) ? '0' + (today.getMonth()+1) : today.getMonth();
+                    today = `${today.getFullYear()}-${month}-${dateToday}`;
 
                     if (versionDeprecationDate && today > versionDeprecationDate) {
                         helpers.addResult(results, 2,
