@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Cluster services and add tasks',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:RunTask', 'ecs:StopTask', 'ecs:DeleteCluster'],
 
     run: function(cache, settings, callback){
         var results = [];

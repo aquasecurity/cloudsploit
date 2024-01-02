@@ -10,6 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',
     recommended_action: 'Update Redshift clusters encryption configuration to use KMS CMKs instead of AWS managed-keys.',
     apis: ['Redshift:describeClusters', 'KMS:listAliases', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot','redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];
