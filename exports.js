@@ -1048,6 +1048,7 @@ module.exports = {
         'amsContentKeyPolicy'           : require(__dirname + '/plugins/azure/mediaServices/amsContentKeyPolicy.js'),
 
         'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
+        'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
 
     },
     github: {
