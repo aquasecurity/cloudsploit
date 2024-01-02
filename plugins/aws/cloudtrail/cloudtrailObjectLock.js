@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Edit trail to use a bucket with object locking enabled.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock-managing.html',
     apis: ['CloudTrail:describeTrails', 'S3:getObjectLockConfiguration', 'S3:listBuckets'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

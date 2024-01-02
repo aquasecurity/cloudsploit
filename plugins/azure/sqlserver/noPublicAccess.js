@@ -48,39 +48,46 @@ module.exports = {
             }
 
             servers.data.forEach(function(server) {
-                const firewallRules = helpers.addSource(cache, source,
-                    ['firewallRules', 'listByServer', location, server.id]);
+                
+                if (server.publicNetworkAccess && server.publicNetworkAccess === 'Disabled') {
+                    helpers.addResult(results, 0, 'The SQL server has public network access disabled', location, server.id);
 
-                if (!firewallRules || firewallRules.err || !firewallRules.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, server.id);
                 } else {
-                    if (!firewallRules.data.length) {
-                        helpers.addResult(results, 0, 'No existing SQL Server Firewall Rules found', location, server.id);
+                    const firewallRules = helpers.addSource(cache, source,
+                        ['firewallRules', 'listByServer', location, server.id]);
+    
+                    if (!firewallRules || firewallRules.err || !firewallRules.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query SQL Server Firewall Rules: ' + helpers.addError(firewallRules), location, server.id);
                     } else {
-                        var publicAccess = false;
-
-                        firewallRules.data.forEach(firewallRule => {
-                            const startIpAddr = firewallRule['startIpAddress'];
-                            
-                            if (checkEndIp) {
-                                const endIpAddr = firewallRule['endIpAddress'];
-                                if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1 &&
-                                    endIpAddr && config.server_firewall_end_ip.includes(endIpAddr.toString())) {
+                        if (!firewallRules.data.length) {
+                            helpers.addResult(results, 0, 'No existing SQL Server Firewall Rules found', location, server.id);
+                        } else {
+                            var publicAccess = false;
+    
+                            firewallRules.data.forEach(firewallRule => {
+                                const startIpAddr = firewallRule['startIpAddress'];
+                                
+                                if (checkEndIp) {
+                                    const endIpAddr = firewallRule['endIpAddress'];
+                                    if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1 &&
+                                        endIpAddr && config.server_firewall_end_ip.includes(endIpAddr.toString())) {
+                                        publicAccess = true;
+                                    }
+                                } else if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) {
                                     publicAccess = true;
                                 }
-                            } else if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) {
-                                publicAccess = true;
+                            });
+    
+                            if (publicAccess) {
+                                helpers.addResult(results, 2, 'The SQL Server is open to outside traffic', location, server.id);
+                            } else {
+                                helpers.addResult(results, 0, 'The SQL server is protected from outside traffic', location, server.id);
                             }
-                        });
-
-                        if (publicAccess) {
-                            helpers.addResult(results, 2, 'The SQL Server is open to outside traffic', location, server.id);
-                        } else {
-                            helpers.addResult(results, 0, 'The SQL server is protected from outside traffic', location, server.id);
                         }
                     }
-                }
+
+                }        
             });
 
             rcb();

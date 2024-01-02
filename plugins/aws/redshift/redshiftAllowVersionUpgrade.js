@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/mgmt/redshift-mgmt.pdf',
     recommended_action: 'Modify Redshift clusters to allow version upgrade',
     apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot','redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -16,6 +16,8 @@ module.exports = {
                 'ensures that traffic between CloudFront and any backend resource is ' +
                 'encrypted in transit.'
     },
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 

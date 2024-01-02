@@ -18,6 +18,7 @@ module.exports = {
             default: 'false'
         },
     },
+    realtime_triggers: ['ec2:CreateVpcEndpointServiceConfiguration', 'ec2:ModifyVpcEndpointServiceConfiguration', 'ec2:DeleteVpcEndpointServiceConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];
