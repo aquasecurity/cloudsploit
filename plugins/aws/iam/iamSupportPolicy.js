@@ -9,6 +9,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',
     recommended_action: 'Ensure that an IAM role has permission to access support center.',
     apis: ['IAM:listPolicies'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy', 'iam:DetachRolePolicy','iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

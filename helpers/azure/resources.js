@@ -262,6 +262,9 @@ module.exports = {
         list: 'id'
     },
     devOpsAuditingSettings:{
+        list: 'id'
+    },
+    appConfigurations: {
         list:'id'
     },
     serviceBus:{
@@ -278,5 +281,8 @@ module.exports = {
     },
     afdSecurityPolicies: {
         listByProfile: 'id'
+    },
+    automationAccounts:{
+        list: 'id'
     }
 };

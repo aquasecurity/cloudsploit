@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-vpc-launching-job-flows.htmll',
     recommended_action: 'EMR clusters Available in VPC',
     apis: ['EC2:describeAccountAttributes','EMR:listClusters', 'EMR:describeCluster'],
+    realtime_triggers: ['emr:CreateCluster','emr:TerminateJobFlows', 'emr:TerminateClusters'],
 
     run: function(cache, settings, callback) {
         var results = [];
