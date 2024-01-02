@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.htmll',
     recommended_action: 'Modify ELBv2 listeners with the predefined AWS security policies containing secure ciphers.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:CreateListener', 'elasticloadbalancing:ModifyListener', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteListener'],
     
     run: function(cache, settings, callback) {
         var results = [];

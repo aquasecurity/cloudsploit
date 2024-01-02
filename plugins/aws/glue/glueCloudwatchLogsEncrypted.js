@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Glue Security Configurations to enable CloudWatch logs encryption at-rest',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/console-security-configurations.html',
     apis: ['Glue:getSecurityConfigurations', 'STS:getCallerIdentity'],
+    realtime_triggers: ['glue:CreateSecurityConfiguration', 'glue:DeleteSecurityConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];
