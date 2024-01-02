@@ -255,6 +255,12 @@ module.exports = {
         list: 'id'
     },
     devOpsAuditingSettings:{
+        list: 'id'
+    },
+    appConfigurations: {
         list:'id'
+    },
+    automationAccounts:{
+        list: 'id'
     }
 };

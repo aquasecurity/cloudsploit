@@ -22,6 +22,7 @@ module.exports = {
             default: 'awskms'
         }
     },
+    realtime_triggers: ['wisdom:CreateAssistant', 'wisdom:DeleteAssistant'],
 
     run: function(cache, settings, callback) {
         var results = [];

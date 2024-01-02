@@ -19,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['connect:CreateInstance', 'connect:AssociateInstanceStorageConfig', 'connect:UpdateInstanceStorageConfig','connect:DeleteInstance', 'connect:DisassociateInstanceStorageConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];

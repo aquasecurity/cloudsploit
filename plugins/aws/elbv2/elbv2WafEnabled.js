@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://aws.amazon.com/blogs/aws/aws-web-application-firewall-waf-for-application-load-balancers/',
     recommended_action: '1. Enter the WAF service. 2. Enter Web ACLs and filter by the region the Application Load Balancer is in. 3. If no Web ACL is found, Create a new Web ACL in the region the ALB resides and in Resource type to associate with web ACL, select the Load Balancer. ',
     apis: ['ELBv2:describeLoadBalancers', 'WAFV2:listWebACLs', 'WAFRegional:listWebACLs', 'WAFV2:listResourcesForWebACL', 'WAFRegional:listResourcesForWebACL'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'wafv2:CreateWebAcl', 'wafv2:UpdateWebAcl', 'wafregional:CreateWebAcl', 'wafregional:UpdateWebAcl', 'wafv2:DeleteWebAcl', 'wafregional:DeleteWebAcl'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

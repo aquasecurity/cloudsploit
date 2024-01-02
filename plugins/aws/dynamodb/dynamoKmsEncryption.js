@@ -29,7 +29,7 @@ module.exports = {
             required: false
         }
     },
-    realtime_triggers: ['DynamoDB:UpdateTable', 'DynamoDB:CreateTable'],
+    realtime_triggers: ['dynamodb:CreateTable','dynamodb:UpdateTable','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

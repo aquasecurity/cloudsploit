@@ -698,6 +698,10 @@ module.exports = {
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
         'redisCacheHasTags'             : require(__dirname + '/plugins/azure/redisCache/redisCacheHasTags.js'),
         'redisCachePrivateEndpoint'     : require(__dirname + '/plugins/azure/redisCache/redisCachePrivateEndpoint.js'),
+        'redisCacheManagedIdentity'     : require(__dirname + '/plugins/azure/redisCache/redisCacheManagedIdentity.js'),
+        'redisCacheDiagnosticLogs'      : require(__dirname + '/plugins/azure/redisCache/redisCacheDiagnosticLogs.js'),
+        'redisCacheScheduledUpdates'    : require(__dirname + '/plugins/azure/redisCache/redisCacheScheduledUpdates.js'),
+        'redisVersion'                  : require(__dirname + '/plugins/azure/redisCache/redisVersion.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
@@ -748,6 +752,7 @@ module.exports = {
         'vmVTPMEnabled'                 : require(__dirname + '/plugins/azure/virtualmachines/vmVTPMEnabled.js'),
         'vmSecureBootEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
+        'vmEncryptionAtHost'            : require(__dirname + '/plugins/azure/virtualmachines/vmEncryptionAtHost.js'),
 
         'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
 
@@ -824,7 +829,10 @@ module.exports = {
         'flexibleServerPrivateAccess'   : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateAccess'),
         'diagnosticLoggingEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/diagnosticLoggingEnabled.js'),
         'flexibleServerSCRAMEnabled'    : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerSCRAMEnabled.js'),
+        'flexibleServerVNetIntegrated'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerVNetIntegrated.js'),
         'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),
+        'flexibleServerPrivateDns'      : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateDns.js'),
+        'flexibleServerVersion'         : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerVersion.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsRetentionPeriod.js'),
@@ -926,10 +934,12 @@ module.exports = {
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
+        'acrManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/containerregistry/acrManagedIdentityEnabled.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
         'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
         'acrAnonymousPullAccessEnabled' : require(__dirname + '/plugins/azure/containerregistry/acrAnonymousPullAccessEnabled.js'),
+        'acrContentTrustEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrContentTrustEnabled.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
@@ -986,9 +996,12 @@ module.exports = {
         'enableDefenderForStorage'      : require(__dirname + '/plugins/azure/defender/enableDefenderForStorage.js'),
         'enableDefenderForContainers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForContainers.js'),
         'enableDefenderForSqlServers'   : require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServers.js'),
+        'enableDefenderForOSRD'         : require(__dirname + '/plugins/azure/defender/enableDefenderForOSRD.js'),
         'enableEndpointIntegration'     : require(__dirname + '/plugins/azure/defender/enableEndpointIntegration.js'),
         'enableDefenderForDNS'          : require(__dirname + '/plugins/azure/defender/enableDefenderForDNS.js'),
-        'enableDefenderForKeyVaults'     : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
+        'enableDefenderForKeyVaults'    : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
+        'enableDefenderForVMs'          : require(__dirname + '/plugins/azure/defender/enableDefenderForVMs.js'),
+        'enableDefenderForAppService'   : require(__dirname + '/plugins/azure/defender/enableDefenderForAppService.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/applicationGateway/applicationGatewayHasTags.js'),
@@ -1004,6 +1017,7 @@ module.exports = {
         'wafPolicyHasTags'              : require(__dirname + '/plugins/azure/waf/wafPolicyHasTags.js'),
 
         'recoveryVaultByokEncrypted'    : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultByokEncrypted.js'),
+        'recoveryVaultLoggingEnabled'   : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultLoggingEnabled.js'),
 
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
@@ -1026,11 +1040,14 @@ module.exports = {
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
+        'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
+        'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),
       
         'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
         'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
         'amsClassicApiDisabled'         : require(__dirname + '/plugins/azure/mediaServices/amsClassicApiDisabled.js'),
+        'amsContentKeyPolicy'           : require(__dirname + '/plugins/azure/mediaServices/amsContentKeyPolicy.js'),
 
         'scaleSetMultiAz'               : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetMultiAz.js'),
         'scaleSetAutoscaleEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAutoscaleEnabled.js'),
@@ -1040,6 +1057,20 @@ module.exports = {
         'autoscaleNotificationsEnabled' : require(__dirname + '/plugins/azure/virtualmachinescaleset/autoscaleNotificationsEnabled.js'),
         'autoOsUpgradesEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/autoOsUpgradesEnabled.js'),
         'autoInstanceRepairsEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/autoInstanceRepairsEnabled.js'),
+        'vmssTrustedLaunchEnabled'      : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssTrustedLaunchEnabled.js'),
+        'scaleSetAdAuthEnabled'         : require(__dirname + '/plugins/azure/virtualmachinescaleset/scaleSetAdAuthEnabled.js'),
+        'vmssManagedIdentityEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssManagedIdentityEnabled.js'),
+        'scalesetVTPMEnabled'           : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetVTPMEnabled.js'),
+        'scalesetSecureBootEnabled'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetSecureBootEnabled.js'),
+        'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions'),
+          
+        'appConfigManagedIdentity'      : require(__dirname + '/plugins/azure/appConfigurations/appConfigManagedIdentity.js'),
+        'appConfigurationDiagnosticLogs': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
+        'appConfigurationPublicAccess'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationPublicAccess.js'),
+
+        'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
+        'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctManagedIdentity.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
