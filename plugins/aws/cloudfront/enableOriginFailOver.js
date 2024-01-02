@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_OriginGroupFailoverCriteria.html',
     recommended_action: 'Modify CloudFront distributions and configure origin group instead of a single origin',
     apis: ['CloudFront:listDistributions'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 

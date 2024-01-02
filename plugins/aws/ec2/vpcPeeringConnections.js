@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Update VPC peering connections to allow connections to AWS Accounts, members of the same organization',
     link: 'https://docs.aws.amazon.com/vpc/latest/peering/working-with-vpc-peering.html',
     apis: ['Organizations:listAccounts', 'EC2:describeVpcPeeringConnections', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpcPeeringConnection', 'ec2:DeleteVpcPeeringConnection'],
 
     run: function(cache, settings, callback) {
         var results = [];

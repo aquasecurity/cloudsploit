@@ -24,6 +24,7 @@ module.exports = {
             default: '20',
         },
     },
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var config = {

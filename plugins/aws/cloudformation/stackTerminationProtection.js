@@ -21,7 +21,7 @@ module.exports = {
         remediate: ['cloudformation:UpdateTerminationProtection'],
         rollback: ['cloudformation:UpdateTerminationProtection']
     },
-    realtime_triggers: ['cloudformation:UpdateTerminationProtection', 'cloudformation:CreateStack'],
+    realtime_triggers: ['cloudformation:UpdateTerminationProtection', 'cloudformation:CreateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

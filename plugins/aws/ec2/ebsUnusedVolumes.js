@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Delete the unassociated EBS volume.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-deleting-volume.html',
     apis: ['EC2:describeInstances', 'EC2:describeVolumes', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVolume','ec2:DeleteVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];
