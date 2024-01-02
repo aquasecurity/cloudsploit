@@ -1,9 +1,9 @@
 var async = require('async');
-var helpers = require('../../../helpers/azure/');
+var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'No Empty Scale Sets',
-    category: 'Virtual Machines',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     description: 'Ensures that virtual machine scale sets have virtual machine instances attached.',
     more_info: 'Azure virtual machine scale sets let you create and manage a group of load balanced VMs. Scale sets with no vm instances should be deleted to save cost of unused resources',
