@@ -949,6 +949,11 @@ var postcalls = {
         }
     },
     mediaServices: {
+        listContentKeyPolicies: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/contentKeyPolicies?api-version=2023-01-01'
+        },
         get: {
             reliesOnPath: 'mediaServices.listAll',
             properties: ['id'],
