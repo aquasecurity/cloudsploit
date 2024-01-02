@@ -15,6 +15,8 @@ module.exports = {
             'If an S3 bucket backing a CloudFront distribution does not require the end ' +
             'user to access the contents through CloudFront, this policy may be violated.'
     },
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 
