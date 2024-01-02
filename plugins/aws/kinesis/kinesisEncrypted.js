@@ -36,7 +36,7 @@ module.exports = {
         remediate: ['kinesis:StartStreamEncryption'],
         rollback: ['kinesis:StopStreamEncryption']
     },
-    realtime_triggers: ['kinesis:CreateStream', 'kinesis:StopStreamEncryption'],
+    realtime_triggers: ['kinesis:CreateStream','kinesis:StartStreamEncryption','kinesis:StopStreamEncryption','kinesis:DeleteStream'],
 
     run: function(cache, settings, callback) {
         var results = [];

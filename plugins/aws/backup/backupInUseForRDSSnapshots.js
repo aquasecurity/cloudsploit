@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Enable RDS database instance snapshots to improve the reliability of your backup strategy.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html',
     apis: ['RDS:describeDBSnapshots'],
+    realtime_triggers: ['backup:CreateBackupSelection','backup:DeleteBackupSelection'],
 
     run: function(cache, settings, callback) {
         var results = [];

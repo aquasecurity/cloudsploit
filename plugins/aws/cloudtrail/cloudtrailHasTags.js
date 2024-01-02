@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify CloudTrail trails and add tags.',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_AddTags.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:listTags'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:AddTags','cloudtrail:RemoveTags','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

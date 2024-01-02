@@ -18,6 +18,7 @@ module.exports = {
             default:''
         }
     },
+    realtime_triggers: ['mq:CreateBrocker', 'mq:DeleteBrocker'],
 
     run: function(cache, settings, callback) {
         var results = [];

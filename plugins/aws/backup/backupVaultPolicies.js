@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that all Backup Vault policies are scoped to specific services and API calls.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['backup:CreateBackupVault','backup:DeleteBackupVault','backup:PutBackupVaultAccessPolicy','backup:DeleteBackupVaultAccessPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

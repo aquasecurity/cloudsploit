@@ -76,7 +76,48 @@ const describeSecurityGroups = [
             }
         ],
         "VpcId": "vpc-99de2fe4"
-    }
+    },
+    {
+        "Description": "Allows SSh access to developer",
+        "GroupName": "spec-test-sg2",
+        "IpPermissionsEgress": [{
+            "IpProtocol": "tcp",
+            "IpRanges": [
+                {
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ],
+            "Ipv6Ranges": [
+                {
+                    "CidrIpv6": "::/0"
+                }
+            ],
+            "PrefixListIds": [],
+            "UserIdGroupPairs": []
+        }],
+        "OwnerId": "12345654321",
+        "GroupId": "sg-001639e5",
+        "IpPermissions": [
+            {
+                "FromPort": 25,
+                "IpProtocol": "tcp",
+                "IpRanges": [
+                    {
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ],
+                "Ipv6Ranges": [
+                    {
+                        "CidrIpv6": "::/0"
+                    }
+                ],
+                "PrefixListIds": [],
+                "ToPort": 25,
+                "UserIdGroupPairs": []
+            }
+        ],
+        "VpcId": "vpc-99de2fe4"
+    },
 ];
 
 const describeNetworkInterfaces = [
@@ -90,7 +131,7 @@ const describeNetworkInterfaces = [
           },
           {
             "GroupName": "HTTP-Access",
-            "GroupId": "sg-02e2c70cd463dca29"
+            "GroupId": "sg-001639e564442dfec"
           },
         ],
         "InterfaceType": "interface",
@@ -261,7 +302,7 @@ describe('openAllPortsEgress', function () {
         });
 
         it('should WARN if security group is unused', function (done) {
-            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], []);
+            const cache = createCache([describeSecurityGroups[2]], [describeNetworkInterfaces[0]], []);
             openAllPortsEgress.run(cache, {ec2_skip_unused_groups: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(1);
@@ -294,6 +335,13 @@ describe('openAllPortsEgress', function () {
                 done();
             });
         });
-
+        it('should PASS if open port security group attached to the network interface has no public IP associated', function (done) {
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
+            openAllPortsEgress.run(cache, {check_network_interface:'true'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
     });
 });

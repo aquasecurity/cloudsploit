@@ -18,7 +18,8 @@ module.exports = {
             default: 'awskms',
         },
     },
-
+    realtime_triggers: ['ec2:CreateVolume', 'ec2:EnableEbsEncryptionByDefault', 'ec2:DisableEbsEncryptionByDefault', 'ec2:ModifyEbsDefaultKmsKeyId', 'ec2:DeleteVolume'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
