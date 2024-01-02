@@ -25,7 +25,7 @@ module.exports = {
         remediate: ['cloudfront:UpdateDistribution'],
         rollback: ['cloudfront:UpdateDistribution']
     },
-    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
     remediation_inputs: {
         cdnPolicyOption: {
             name: 'Viewer Protocol Policy Option',
