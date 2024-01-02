@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Go to specific environment, select Configuration, edit Load Balancer category, and enable Store logs',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html',
     apis: ['ElasticBeanstalk:describeEnvironments', 'ElasticBeanstalk:describeConfigurationSettings'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment', 'elasticbeanstalk:TerminateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

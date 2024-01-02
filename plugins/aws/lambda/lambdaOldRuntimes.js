@@ -18,6 +18,7 @@ module.exports = {
             default: 0
         }
     },
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

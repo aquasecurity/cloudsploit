@@ -10,6 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP port 80 to known IP addresses',
     apis: ['EC2:describeSecurityGroups','EC2:describeNetworkInterfaces'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress','ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',

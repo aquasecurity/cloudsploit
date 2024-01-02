@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
     recommended_action: 'Copy the snapshot to a new snapshot that is encrypted and delete the old snapshot.',
     apis: ['RDS:describeDBSnapshots'],
+    realtime_triggers: ['rds:CreateDBSnapshot', 'rds:CopyDBSnapshot', 'rds:DeleteDBSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];
