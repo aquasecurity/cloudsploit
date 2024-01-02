@@ -31,6 +31,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['iam:CreateVirtualMFADevice','iam:DeleteVirtualMFADevice'],
 
     run: function(cache, settings, callback) {
         var results = [];
