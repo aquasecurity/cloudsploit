@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify application gateways and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['applicationGateway:listAll'],
+    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

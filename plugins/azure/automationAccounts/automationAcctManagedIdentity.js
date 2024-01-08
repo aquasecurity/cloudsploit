@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify automation account and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/quickstarts/enable-managed-identity',
     apis: ['automationAccounts:list'],
+    realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete','microsoftautomation:automationaccounts:runbooks:write','microsoftautomation:automationaccounts:runbooks:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

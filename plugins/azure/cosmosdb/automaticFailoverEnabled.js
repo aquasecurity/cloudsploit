@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/high-availability',
     recommended_action: 'Modify Cosmos DB account to enable automatic failover.',
     apis: ['databaseAccounts:list'],
+    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

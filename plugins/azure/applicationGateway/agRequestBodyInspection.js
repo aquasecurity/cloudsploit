@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify application gateway WAF policy and enable request body inspection in policy settings.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/application-gateway-waf-request-size-limits#request-body-inspection',
     apis: ['wafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete','microsoftnetwork/applicationgatewaywebapplicationfirewallpolicies/write','microsoftnetwork/applicationgatewaywebapplicationfirewallpolicies/delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

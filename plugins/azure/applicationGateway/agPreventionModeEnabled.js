@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify application gateway WAF policy and enable prevention mode.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview',
     apis: ['wafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete','microsoftnetwork/applicationgatewaywebapplicationfirewallpolicies/write','microsoftnetwork/applicationgatewaywebapplicationfirewallpolicies/delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
