@@ -11,7 +11,6 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/monitor-app-configuration?tabs=portal#monitoringdata',
     apis: ['appConfigurations:list','diagnosticSettings:listByAppConfigurations'],
     realtime_triggers: ['microsoftappconfiguration:configurationstores:write','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete','microsoftappconfiguration:configurationstores:delete'],
-
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
