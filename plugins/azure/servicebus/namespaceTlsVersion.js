@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Srvice Bus namespaces are using the latest TLS version',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/transport-layer-security-enforce-minimum-version',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

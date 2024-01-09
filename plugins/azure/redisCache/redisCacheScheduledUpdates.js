@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Enable schedule updates for Redis Cache.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-administration#update-channel-and-schedule-updates',
     apis: ['redisCaches:listBySubscription', 'patchSchedules:listByRedisCache'],
-
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftcache:redis:patchschedules:write','microsoftcache:redis:patchschedules:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
