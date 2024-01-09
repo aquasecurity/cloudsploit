@@ -54,7 +54,7 @@ module.exports = {
         },
         google: {
             // OPTION 1: If using a credential JSON file, enter the path below
-            // credential_file: process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/file.json',
+            credential_file: '/home/kali/Downloads/black-terminus-410616-aedfd6369cd7.json',
             // OPTION 2: If using hard-coded credentials, enter them below
             // project: process.env.GOOGLE_PROJECT_ID || 'my-project',
             // client_email: process.env.GOOGLE_CLIENT_EMAIL || 'cloudsploit@your-project-name.iam.gserviceaccount.com',
