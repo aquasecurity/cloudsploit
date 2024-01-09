@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Azure Cache for Redis and add managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-managed-identity#enable-managed-identity',
     apis: ['redisCaches:listBySubscription'],
-    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
+
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
