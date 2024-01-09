@@ -33,8 +33,8 @@ module.exports = {
             }
 
             for (let cache of caches.data) {
-                if(!cache.id) continue;
-                
+                if (!cache.id) continue;
+
                 if (!cache.minimumTlsVersion) {
                     helpers.addResult(results, 2, 'Redis Cache is using the default TLS Version', location, cache.id);
                 } else if (cache.minimumTlsVersion && (cache.minimumTlsVersion === '1.0' || cache.minimumTlsVersion === '1.1')) {
