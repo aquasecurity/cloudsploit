@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Configure Send scan reports to email addresses of concerned data owners/stakeholders for critical SQL servers.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
     apis: ['servers:listSql', 'vulnerabilityAssessments:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete',],
 
     run: function(cache, settings, callback) {
         const results = [];

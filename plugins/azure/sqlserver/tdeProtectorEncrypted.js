@@ -18,6 +18,7 @@ module.exports = {
             default: 'byok'
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete',],
 
     run: function(cache, settings, callback) {
         const results = [];

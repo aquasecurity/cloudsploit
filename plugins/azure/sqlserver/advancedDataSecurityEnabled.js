@@ -10,7 +10,9 @@ module.exports = {
     recommended_action: 'Ensure that Advanced Data Security is enabled for all SQL Servers.',
     link: 'https://learn.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
     apis: ['servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsecurity:pricings:write', 'microsoftsql:servers:advancedthreatprotectionsettings:write', 'microsoftsql:servers:securityalertpolicies:write'],
 
+  //  "Microsoft.Sql/servers/write,   "Microsoft.Sql/servers/delete, Sql/servers/firewallRules/write, Sql/servers/advancedThreatProtectionSettings/write, .Sql/servers/sqlvulnerabilityAssessments/write  , Microsoft.Sql/servers/securityAlertPolicies/write, Microsoft.Security/pricings/write
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
