@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Ensure Security Configuration Monitoring is configured for virtual machines from the Azure Security Center.',
     link: 'https://learn.microsoft.com/en-us/azure/governance/policy/overview',
     apis: ['policyAssignments:list'],
-
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
