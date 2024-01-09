@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Edit trail to use a bucket with object locking enabled.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/object-lock-managing.html',
     apis: ['CloudTrail:describeTrails', 'S3:getObjectLockConfiguration', 'S3:listBuckets'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -40,7 +41,8 @@ module.exports = {
                 if (trail.S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) return cb();
 
                 var s3Region = helpers.defaultRegion(settings);
-                var resource = 'arn:aws:s3:::' + trail.S3BucketName;
+                var awsOrGov = helpers.defaultPartition(settings);
+                var resource = `arn:${awsOrGov}:s3:::` + trail.S3BucketName;
                 
                 var getObjectLockConfiguration = helpers.addSource(cache, source,
                     ['s3', 'getObjectLockConfiguration', s3Region, trail.S3BucketName]);

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures the latest version of Kubernetes is installed on AKS clusters',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters to the latest available version.',
-    link: 'https://docs.microsoft.com/en-us/azure/aks/aad-integration',
+    link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list', 'managedClusters:getUpgradeProfile'],
 
     run: function(cache, settings, callback) {

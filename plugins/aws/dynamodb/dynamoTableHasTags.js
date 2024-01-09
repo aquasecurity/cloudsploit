@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tagging.html',
     recommended_action: 'Modify DynamoDB table and add tags.',
     apis: ['DynamoDB:listTables', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
+    realtime_triggers: ['dynamodb:CreateTable','dynamodb:TagResource','dynamodb:UntagResource','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,7 +44,7 @@ module.exports = {
                 var resource = `arn:${awsOrGov}:dynamodb:${region}:${accountId}:table/${table}`;
                 ARNList.push(resource);
             }
-            helpers.checkTags(cache, 'DynamoDB table', ARNList, region, results);
+            helpers.checkTags(cache, 'DynamoDB table', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

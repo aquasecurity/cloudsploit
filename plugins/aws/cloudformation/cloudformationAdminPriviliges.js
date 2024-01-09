@@ -1,7 +1,7 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
+//var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
     title: 'CloudFormation Admin Priviliges',
@@ -14,6 +14,8 @@ module.exports = {
     recommended_action: 'Modify IAM role attached with AWS CloudFormation stack to provide the minimal amount of access required to perform its tasks',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy'],
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:DeleteStack','cloudformation:UpdateStack','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:DeleteRolePolicy','iam:PutRolePolicy'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -21,6 +23,8 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.cloudformation, function(region, rcb){
             var listStacks = helpers.addSource(cache, source,

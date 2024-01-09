@@ -24,6 +24,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: ['ec2:CreateSubnet', 'ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -38,6 +39,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
         async.each(regions.ec2, function(region, rcb){
@@ -62,7 +64,7 @@ module.exports = {
                     var subnetSize = helpers.cidrSize(describeSubnets.data[i].CidrBlock);
                     var consumedIPs = subnetSize - describeSubnets.data[i].AvailableIpAddressCount;
                     var percentageConsumed = Math.ceil((consumedIPs / subnetSize) * 100);
-                    var subnetArn = 'arn:aws:ec2:' + region + ':' + accountId + ':subnet/' + describeSubnets.data[i].SubnetId;
+                    var subnetArn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':subnet/' + describeSubnets.data[i].SubnetId;
 
                     var returnMsg = 'Subnet ' + describeSubnets.data[i].SubnetId
                         + ' is using ' + consumedIPs + ' of '

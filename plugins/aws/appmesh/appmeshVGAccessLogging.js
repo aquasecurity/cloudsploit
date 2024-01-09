@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-logs.html',
     recommended_action: 'To enable access logging, modify virtual gateway configuration settings and configure the file path to write access logs to.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
+    realtime_triggers: ['appmesh:CreateMesh','appmesh:DeleteMesh','appmesh:CreateVirtualGateway','appmesh:UpdateVirtualGateway','appmesh:DeleteVirtualGateway'],
+
     
     run: function(cache, settings, callback) {
         var results = [];

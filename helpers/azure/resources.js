@@ -147,6 +147,16 @@ module.exports = {
     roleDefinitions: {
         list: 'id'
     },
+    aad: {
+        listRoleAssignments: 'id',
+        listDenyAssignments: 'id'
+    },
+    groups: {
+        list: 'id'
+    },
+    servicePrincipals: {
+        list: 'id'
+    },
     securityContacts: {
         list: 'id'
     },
@@ -231,5 +241,26 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
+    },
+    syncGroups: {
+        list: 'id'
+    },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
+    transparentDataEncryption: {
+        list: 'id'
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list: 'id'
+    },
+    appConfigurations: {
+        list:'id'
+    },
+    automationAccounts:{
+        list: 'id'
     }
 };

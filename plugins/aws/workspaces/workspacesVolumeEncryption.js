@@ -22,6 +22,7 @@ module.exports = {
             default: 'awskms'
         }
     },
+    realtime_triggers: ['workspace:CreateWorkSpaces', 'workspace:TerminateWorkspaces'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -63,7 +64,9 @@ module.exports = {
 
             var listKeys = helpers.addSource(cache, source, ['kms', 'listKeys', region]);
 
-            if (!listKeys || listKeys.err || !listKeys.data) {
+            if (!listKeys) return rcb();
+
+            if ( listKeys.err || !listKeys.data) {
                 helpers.addResult(results, 3, 'Unable to query KMS keys' + helpers.addError(listKeys), region);
                 return rcb();
             }

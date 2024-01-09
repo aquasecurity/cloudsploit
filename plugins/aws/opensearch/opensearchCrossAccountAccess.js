@@ -37,6 +37,8 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
+
     run: function(cache, settings, callback) {
         var config= {
             os_whitelisted_aws_account_principals : settings.os_whitelisted_aws_account_principals || this.settings.os_whitelisted_aws_account_principals.default,
@@ -122,10 +124,10 @@ module.exports = {
                     statements.forEach(statement => {
                         if (!statement.Principal) return;
     
-                        let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId);
-                        if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
+                        let conditionalPrincipals = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId, settings);
+                        if (helpers.crossAccountPrincipal(statement.Principal, accountId, undefined , settings) ||
                             (conditionalPrincipals && conditionalPrincipals.length)) {
-                            let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                            let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
 
                             if (conditionalPrincipals && conditionalPrincipals.length) {
                                 conditionalPrincipals.forEach(conPrincipal => {

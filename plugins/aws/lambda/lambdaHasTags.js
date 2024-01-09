@@ -10,7 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-tags.html',
     recommended_action: 'Modify Lambda function configurations and  add new tags',
     apis: ['Lambda:listFunctions', 'ResourceGroupsTaggingAPI:getResources'],
-  
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -40,7 +40,7 @@ module.exports = {
                 existingLambdaARNList.push(lambdaFunc.FunctionArn);
             }
             if (existingLambdaARNList.length){
-                helpers.checkTags(cache, 'Lambda function', existingLambdaARNList, region, results);
+                helpers.checkTags(cache, 'Lambda function', existingLambdaARNList, region, results, settings);
             }
             
             rcb();

@@ -10,11 +10,13 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html',
     recommended_action: 'Modify EC2 instances and add tags.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:AddTags', 'ec2:DeleteTags', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source, ['ec2', 'describeInstances', region]);
@@ -36,7 +38,7 @@ module.exports = {
 
                 for (var instance of instances.Instances) {
                     const { Tags, InstanceId } = instance;
-                    const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
+                    const arn = `arn:${awsOrGov}:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
                     if (!Tags || !Tags.length){
                         helpers.addResult(results, 2, 'EC2 Instance does not have tags associated', region, arn);
                     } else {

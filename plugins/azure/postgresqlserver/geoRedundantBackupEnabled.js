@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'PostgreSQL servers does not support modifying geo-redundant storage configuration. ' +
         'You need to create a new server using current server\'s configuration with geo-redundant backup storage enabled ' +
         'and then delete the current PostgreSQL server',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/concepts-backup',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/concepts-backup',
     apis: ['servers:listPostgres'],
 
     run: function(cache, settings, callback) {

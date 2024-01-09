@@ -18,6 +18,7 @@ module.exports = {
             default: 'false'
         },
     },
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -73,7 +74,7 @@ module.exports = {
                             var policy = policies[p];
                             var containsIpPolicy = policy.Condition && policy.Condition.IpAddress;
 
-                            if (!containsIpPolicy && helpers.globalPrincipal(policy.Principal)) {
+                            if (!containsIpPolicy && helpers.globalPrincipal(policy.Principal, settings)) {
                                 validPolicy = false;
                             }
                         }

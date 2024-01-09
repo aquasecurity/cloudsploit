@@ -10,11 +10,14 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings.html',
     recommended_action: 'Disable the ability for clients to override Athena workgroup configuration options.',
     apis: ['Athena:listWorkGroups', 'Athena:getWorkGroup', 'STS:getCallerIdentity'],
+    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup', 'athena:DeleteWorkGroup'],
+
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -42,7 +45,7 @@ module.exports = {
                     ['athena', 'getWorkGroup', region, wg.Name]);
 
                 // arn:aws:athena:region:account-id:workgroup/workgroup-name
-                var arn = 'arn:aws:athena:' + region + ':' + accountId + ':workgroup/' + wg.Name;
+                var arn = `arn:${awsOrGov}:athena:` + region + ':' + accountId + ':workgroup/' + wg.Name;
 
                 if (!getWorkGroup || getWorkGroup.err || !getWorkGroup.data) {
                     helpers.addResult(results, 3,

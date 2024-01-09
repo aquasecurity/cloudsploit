@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-using-tags.html',
     recommended_action: 'Modify EKS Cluster and add tags.',
     apis: ['EKS:listClusters', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:TagResource', 'eks:UntagResource', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -43,7 +44,7 @@ module.exports = {
                 ARNList.push(arn);
             }
             
-            helpers.checkTags(cache,'EKS cluster', ARNList, region, results);
+            helpers.checkTags(cache,'EKS cluster', ARNList, region, results, settings);
 
             rcb();
         }, function() {

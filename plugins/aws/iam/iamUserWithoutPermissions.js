@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify IAM user and attach new permissions or delete the user.',
     apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getPolicyVersion' ,'IAM:listGroupsForUser',
         'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies'],
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AddUserToGroup','iam:RemoveUserFromGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -90,7 +91,8 @@ module.exports = {
                         return cb();
                     }
 
-                    if (listGroupPolicies.data.PolicyNames.length || listAttachedGroupPolicies.data.AttachedPolicies.length ){
+                    if ((listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length) || 
+                        (listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length)){
                         break;
                     }
                 }

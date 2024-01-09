@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html',
     recommended_action: 'Update the Lambda policy to prevent access from the public.',
     apis: ['Lambda:listFunctions', 'Lambda:getPolicy'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:AddPermission', 'lambda:RemovePermission','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -57,7 +58,7 @@ module.exports = {
                     for (var n in normalized) {
                         var statement = normalized[n];
                         if (statement.Principal) {
-                            var isGlobal = helpers.globalPrincipal(statement.Principal);
+                            var isGlobal = helpers.globalPrincipal(statement.Principal, settings);
                             if (isGlobal) {
                                 for (var s in statement.Action) {
                                     if (found.indexOf(statement.Action[s]) == -1) {

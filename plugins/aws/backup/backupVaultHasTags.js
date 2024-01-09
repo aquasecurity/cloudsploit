@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Backup Vault and add tags.', 
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault.html',
     apis: ['Backup:listBackupVaults', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['backup:CreateBackupVault','backup:DeleteBackupVault','backup:TagResource','backup:UntagResource'],
    
 
     run: function(cache, settings, callback) {
@@ -39,7 +40,7 @@ module.exports = {
                 if (!vault.BackupVaultArn) continue;
                 vaultARN.push(vault.BackupVaultArn);
             }
-            helpers.checkTags(cache, 'Backup Vault', vaultARN, region, results);
+            helpers.checkTags(cache, 'Backup Vault', vaultARN, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures HTTPS-only traffic is allowed to storage account endpoints',
     more_info: 'Storage Accounts can contain sensitive information and should only be accessed over HTTPS. Enabling the HTTPS-only flag ensures that Azure does not allow HTTP traffic to Storage Accounts.',
     recommended_action: 'Enable the HTTPS-only option for all Storage Accounts.',
-    link: 'https://docs.microsoft.com/en-us/azure/governance/policy/samples/ensure-https-storage-account',
+    link: 'https://learn.microsoft.com/en-us/azure/governance/policy/samples/ensure-https-storage-account',
     apis: ['storageAccounts:list'],
     remediation_min_version: '202006260310',
     remediation_description: 'The HTTPS-only option will be enabled for the storage account',

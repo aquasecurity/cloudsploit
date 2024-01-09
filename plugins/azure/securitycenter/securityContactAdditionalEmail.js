@@ -17,8 +17,8 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.securityContacts, (location, rcb) => {
-            
-            var securityContacts = helpers.addSource(cache, source, 
+
+            var securityContacts = helpers.addSource(cache, source,
                 ['securityContactv2', 'listAll', location]);
 
             if (!securityContacts) return rcb();
@@ -34,7 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            let additionalEmails = securityContacts.data.find(contact => contact.emails && contact.emails.split(';').length > 1);
+            let additionalEmails = securityContacts.data.find(contact => contact.emails && contact.emails.length);
 
             if (additionalEmails){
                 helpers.addResult(results, 0, 'Additional email address is configured with security contact email', location);

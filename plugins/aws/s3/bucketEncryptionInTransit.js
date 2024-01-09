@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 function statementDeniesInsecureTransport(statement, bucketResource) {
     if (!statement) return false;
     return (statement.Effect === 'Deny') &&
-        (statement.Principal === '*') &&
+        helpers.globalPrincipal(statement.Principal) &&
         (Array.isArray(statement.Action)
             ? statement.Action.find(action => action === '*' || action === 's3:*')
             : (statement.Action === '*' || statement.Action === 's3:*')) &&
@@ -38,7 +38,7 @@ module.exports = {
         remediate: ['s3:PutBucketPolicy'],
         rollback: ['s3:PutBucketPolicy ']
     },
-    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket'],
+    realtime_triggers: ['s3:putBucketPolicy', 's3:CreateBucket','s3:DeleteBucket'],
     settings: {
         s3_allow_unencrypted_static_websites: {
             name: 'S3 Allow Unencrypted Static Websites',
@@ -56,6 +56,7 @@ module.exports = {
         var allowSkipEncryption = (s3_allow_unencrypted_static_websites == 'true');
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
 
@@ -71,7 +72,7 @@ module.exports = {
         }
 
         for (let bucket of listBuckets.data) {
-            var bucketResource = `arn:aws:s3:::${bucket.Name}`;
+            var bucketResource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             if (allowSkipEncryption) {

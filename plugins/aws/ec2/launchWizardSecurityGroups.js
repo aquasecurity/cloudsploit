@@ -10,11 +10,13 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/launchwizard/latest/userguide/launch-wizard-sap-security-groups.html',
     recommended_action: 'Delete the launch wizard security group and replace it with a custom security group.',
     apis: ['EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:CreateSecurityGroup', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -35,7 +37,7 @@ module.exports = {
 
             for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
-                var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
                 if (!sg.GroupName) {
                     helpers.addResult(results, 2,

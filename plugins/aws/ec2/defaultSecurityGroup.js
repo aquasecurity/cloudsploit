@@ -17,11 +17,13 @@ module.exports = {
              'unintended traffic to cross these isolation boundaries.',
         cis2: '4.3 Ensure the default security group of every VPC restricts all traffic'
     },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -43,7 +45,7 @@ module.exports = {
             for (var s in describeSecurityGroups.data) {
                 var sg = describeSecurityGroups.data[s];
                 // arn:aws:ec2:region:account-id:security-group/security-group-id
-                var resource = 'arn:aws:ec2:' + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' + sg.OwnerId + ':security-group/' + sg.GroupId;
 
                 if (sg.GroupName === 'default') {
                     if (sg.IpPermissions.length ||

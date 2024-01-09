@@ -10,7 +10,7 @@ module.exports = {
         'by default no log categories are selected. Capturing the appropriate log categories (Administrative, Security, Alert, and Policy) ' +
         'for the activities performed within your Azure subscriptions provides proper alerting.',
     recommended_action: 'Ensure the categories Administrative, Alert, Policy, and Security are set to Enabled for all diagnostic settings.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/samples/resource-manager-diagnostic-settings',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/samples/resource-manager-diagnostic-settings',
     apis: ['diagnosticSettingsOperations:list'],
 
     run: function(cache, settings, callback) {

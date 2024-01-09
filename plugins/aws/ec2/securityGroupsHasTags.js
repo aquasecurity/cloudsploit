@@ -10,11 +10,13 @@ module.exports = {
     link: 'https://aws.amazon.com/about-aws/whats-new/2021/07/amazon-ec2-adds-resource-identifiers-tags-vpc-security-groups-rules/',
     recommended_action: 'Update Security Group and add Tags',
     apis: ['EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:CreateSecurityGroup', 'ec2:AddTags', 'ec2:DeleteTags','ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -34,7 +36,7 @@ module.exports = {
             }
 
             for (var sg of describeSecurityGroups.data) {
-                const arn = `arn:aws:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`;
+                const arn = `arn:${awsOrGov}:ec2:${region}:${sg.OwnerId}:security-group/${sg.GroupId}`;
                 if (!sg.Tags || !sg.Tags.length) {
                     helpers.addResult(results, 2, 'Security group does not have tags', region, arn);
                 } else {

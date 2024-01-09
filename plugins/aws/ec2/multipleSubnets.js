@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',
     recommended_action: 'Create at least two subnets in each VPC, utilizing one for public traffic and the other for private traffic.',
     apis: ['EC2:describeVpcs', 'EC2:describeSubnets', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:CreateSubnet', 'ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var results = [];

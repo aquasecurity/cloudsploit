@@ -11,11 +11,13 @@ module.exports = {
     recommended_action: 'Ensure that Amazon Config service is referencing an active S3 bucket in order to save configuration information.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-policy.html',
     apis: ['S3:listBuckets', 'ConfigService:describeDeliveryChannels', 'S3:headBucket'],
+    realtime_triggers: ['configservice:PutConfigurationRecorder','s3:DeleteBucket'],
   
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.configservice, function(region, rcb) {
             var describeDeliveryChannels = helpers.addSource(cache, source,
@@ -46,7 +48,7 @@ module.exports = {
                     deletedBuckets.push(record);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
-                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, 'arn:aws:s3:::' + record.s3BucketName);
+                        'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, `arn:${awsOrGov}:s3:::` + record.s3BucketName);
                     continue;
                 }
             }

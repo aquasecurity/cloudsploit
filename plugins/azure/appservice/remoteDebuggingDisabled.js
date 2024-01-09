@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure Web Apps have remote debugging disabled.',
     more_info: 'Remote debugging feature requires specific inbound ports to be opened which can increase chances of unauthorized access.',
     recommended_action: 'Remote debugging should be disabled for Azure Web Apps',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/troubleshoot-dotnet-visual-studio',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-dotnet-visual-studio',
     apis: ['webApps:list', 'webApps:listConfigurations'],
 
     run: function(cache, settings, callback) {

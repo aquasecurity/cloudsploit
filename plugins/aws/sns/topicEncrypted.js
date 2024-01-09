@@ -29,7 +29,7 @@ module.exports = {
         remediate: ['sns:SetTopicAttributes'],
         rollback: ['sns:SetTopicAttributes']
     },
-    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes', 'sns:DeleteTopic'],
     asl: {
         conditions: [
             {

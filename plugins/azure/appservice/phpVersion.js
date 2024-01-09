@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures the latest version of PHP is installed for all App Services',
     more_info: 'Installing the latest version of PHP will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of PHP for all PHP-based App Services',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/web-sites-php-configure',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/web-sites-php-configure',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestPhpVersion: {

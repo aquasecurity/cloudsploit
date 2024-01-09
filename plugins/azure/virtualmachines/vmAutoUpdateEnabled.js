@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that VM Auto Update is enabled for virtual machines',
     more_info: 'Enabling Auto Update on Azure virtual machines reduces the security risk of missing security patches.',
     recommended_action: 'Enable VM auto update on all virtual machines',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows-or-linux/maintenance-and-updates',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows-or-linux/maintenance-and-updates',
     apis: ['virtualMachines:listAll'],
     compliance: {
         pci: 'PCI requires all system components have the latest updates ' +

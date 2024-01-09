@@ -10,11 +10,13 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html',
     recommended_action: 'Launch managed NAT instances in multiple AZs.',
     apis: ['EC2:describeVpcs', 'EC2:describeNatGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNatGateway', 'ec2:DeleteNatGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -70,7 +72,7 @@ module.exports = {
 
                 if (numSubnets) {
                     // arn:aws:ec2:region:account-id:vpc/vpc-id
-                    var vpcArn = 'arn:aws:ec2:' + region +
+                    var vpcArn = `arn:${awsOrGov}:ec2:` + region +
                                  ':' + accountId + ':vpc/' + v;
 
                     if (numSubnets === 1) {

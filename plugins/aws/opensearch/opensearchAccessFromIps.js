@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -74,7 +75,7 @@ module.exports = {
 
                 for (var s in statements) {
                     var statement = statements[s];
-                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal)) {
+                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal, settings)) {
                         globalAccess = true;
                         break;
                     }

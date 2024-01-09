@@ -10,11 +10,13 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',
     recommended_action: 'Update the SSM agent on all Linux hosts to the latest version.',
     apis: ['SSM:describeInstanceInformation', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:CreateAssociation', 'ssm:UpdateAssociation', 'ssm:DeleteAssociation'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -42,7 +44,7 @@ module.exports = {
             for (var i in describeInstanceInformation.data) {
                 var info = describeInstanceInformation.data[i];
                 // arn:${Partition}:ec2:${Region}:${Account}:instance/${InstanceId}
-                var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + info.InstanceId;
+                var arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + info.InstanceId;
 
                 if (info.PlatformType && info.PlatformType == 'Linux' &&
                     info.PingStatus && info.PingStatus == 'Online') {

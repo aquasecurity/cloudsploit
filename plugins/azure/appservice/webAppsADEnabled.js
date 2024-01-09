@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure Web Apps have registration with Azure Active Directory.',
     more_info: 'Registration with Azure Active Directory (AAD) enables App Service web applications to connect to other Azure cloud services securely without the need of access credentials such as user names and passwords.',
     recommended_action: 'Enable registration with Azure Active Directory for Azure Web Apps.',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=portal%2Chttp#add-a-system-assigned-identity',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=portal%2Chttp#add-a-system-assigned-identity',
     apis: ['webApps:list'],
 
     run: function(cache, settings, callback) {

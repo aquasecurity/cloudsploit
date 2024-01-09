@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as MySQL should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP ports 4333 and 3306 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],

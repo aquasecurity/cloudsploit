@@ -16,6 +16,7 @@ module.exports = {
                 'should not be used.',
         cis1: '1.12 Ensure no root account access key exists'
     },
+    realtime_triggers: ['iam:CreateAccessKey','iam:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

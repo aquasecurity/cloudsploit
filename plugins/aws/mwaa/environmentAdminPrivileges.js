@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
-
 module.exports = {
     title: 'Environment Admin Privileges',
     category: 'MWAA',
@@ -13,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify IAM role attached with MWAA environment to provide the minimal amount of access required to perform its tasks',
     apis: ['MWAA:listEnvironments', 'MWAA:getEnvironment', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['mwaa:CreateEnvironment','mwaa:UpdateEnviroment', 'mwaa:DeleteEnvironment'],    
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,6 +21,8 @@ module.exports = {
         var defaultRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
+
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.mwaa, function(region, rcb){
             var listEnvironments = helpers.addSource(cache, source,

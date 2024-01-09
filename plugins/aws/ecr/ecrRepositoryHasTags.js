@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr-using-tags.html',
     recommended_action: 'Modify ECR repository and add tags.',
     apis: ['ECR:describeRepositories', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:TagResource', 'ecr:UntagResource', 'ecr:DeleteRepository'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,7 +38,7 @@ module.exports = {
                 if (!repo.repositoryArn) continue;
                 ecrARN.push(repo.repositoryArn);
             }
-            helpers.checkTags(cache, 'ECR repository', ecrARN, region, results);
+            helpers.checkTags(cache, 'ECR repository', ecrARN, region, results, settings);
 
             rcb();
         }, function() {

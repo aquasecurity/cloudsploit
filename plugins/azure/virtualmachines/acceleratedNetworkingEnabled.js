@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that accelerated networking is enabled on Azure virtual machines(VM).',
     more_info: 'Accelerated networking enables single root I/O virtualization (SR-IOV) to a VM, greatly improving its networking performance.',
     recommended_action: 'Enable accelerated networking in virtual machine network interfaces',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell',
     apis: ['virtualMachines:listAll', 'networkInterfaces:listAll'],
 
     run: function(cache, settings, callback) {

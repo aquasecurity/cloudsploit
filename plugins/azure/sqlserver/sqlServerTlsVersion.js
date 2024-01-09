@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures Microsoft Azure SQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure SQL server. This setting applies to all databases associated with the server.',
     recommended_action: 'Modify SQL server firewall and virtual network settings to set desired minimum TLS version.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings#minimal-tls-version',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings#minimal-tls-version',
     apis: ['servers:listSql'],
     settings: {
         sql_server_min_tls_version: {

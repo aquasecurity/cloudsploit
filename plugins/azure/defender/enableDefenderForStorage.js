@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Microsoft Defender is enabled for Storage.',
     more_info: 'Turning on Microsoft Defender for Storage enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Storage in Defender plans for the subscription.',
-    link: 'https://docs.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
     apis: ['pricings:list'],
 
     run: function(cache, settings, callback) {
@@ -33,16 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let storagePricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'storageaccounts');
-            if (storagePricing) {
-                if (storagePricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Storage Accounts', location, storagePricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location, storagePricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'storageaccounts', 'Storage Accounts', results, location);
 
             rcb();
         }, function(){

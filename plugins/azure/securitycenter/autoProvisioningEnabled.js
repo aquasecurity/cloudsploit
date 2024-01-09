@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that automatic provisioning of the monitoring agent is enabled',
     more_info: 'The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, and endpoint protection and provides alerts.',
     recommended_action: 'Ensure that the data collection settings of the subscription have Auto Provisioning set to enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection',
     apis: ['autoProvisioningSettings:list'],
 
     run: function(cache, settings, callback) {

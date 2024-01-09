@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html',
     recommended_action: 'Remove unused tables if you no longer need them.',
     apis: ['DynamoDB:listTables', 'DynamoDB:describeTable', 'STS:getCallerIdentity'],
+    realtime_triggers: ['dynamodb:CreateTable','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

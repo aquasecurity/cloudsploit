@@ -9,12 +9,14 @@ module.exports = {
     recommended_action: 'Enable object level logging for read events for each S3 bucket.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/enable-cloudtrail-logging-for-s3.html#enable-cloudtrail-events',
     apis: ['S3:listBuckets', 'CloudTrail:describeTrails', 'CloudTrail:getEventSelectors', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 'cloudtrail:CreateTrail', 'cloudtrail:PutEventSelectors', 'cloudtrail:PutInsightSelectors','s3:DeleteBucket', 'cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', defaultRegion]);
@@ -31,9 +33,13 @@ module.exports = {
             helpers.addResult(results, 0, 'No S3 buckets Founds');
             return callback(null, results, source);
         }
-
         var isall = false;
         var buckets = [];
+        var startsWithBuckets = [];
+        var endsWithBuckets = [];
+        var notStartsWithBuckets = [];
+        var notEndsWithBuckets = [];
+
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
@@ -65,7 +71,7 @@ module.exports = {
 
                             if (dataResource.Type === 'AWS::S3::Object') {
                                 if (event.ReadWriteType === 'All' || event.ReadWriteType === 'ReadOnly') {
-                                    if (dataResource.Values.includes('arn:aws:s3')) {
+                                    if (dataResource.Values.includes(`arn:${awsOrGov}:s3`)) {
                                         isall = true;
                                     } else {
                                         buckets = dataResource.Values.map((value) => value.split(':::')[1]);
@@ -90,11 +96,8 @@ module.exports = {
                         if (dataEventCategoryField && s3ObjectField) {
                             if ((readOnlyField || !writeOnlyField )&& !resourcesARNField) {
                                 isall = true; 
-                            } else {
-                                buckets = fieldSelectors
-                                    .filter((f) => f.Field === 'resources.ARN')
-                                    .map((f) => f.Equals[0].split(':::')[1]);
-                                buckets = buckets.map((name) => name.slice(0, -1));
+                            } else if (readOnlyField) {
+                                helpers.processFieldSelectors(fieldSelectors, buckets ,startsWithBuckets,notEndsWithBuckets,endsWithBuckets, notStartsWithBuckets);
                             }
                         }
                     }    
@@ -105,17 +108,18 @@ module.exports = {
         },function() {
             listBuckets.data.forEach(function(bucket){
                 var bucketLocation = helpers.getS3BucketLocation(cache, defaultRegion, bucket.Name);
+                const conditions = helpers.checkConditions(startsWithBuckets, notStartsWithBuckets, endsWithBuckets, notEndsWithBuckets, bucket.Name);
 
-                if (isall) {
-                    helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                if (isall || conditions.startsWithCondition || conditions.notStartsWithCondition || conditions.endsWithCondition || conditions.notEndsWithCondition){
+                    helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 } else if (buckets.length) {
                     if (buckets.includes(bucket.Name)) {
-                        helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        helpers.addResult(results, 0, 'Bucket has object-level logging for read events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     } else {
-                        helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                        helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                     }
                 } else if (!isall) {
-                    helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    helpers.addResult(results, 2, 'Bucket does not has object-level logging for read events', bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 }
             });
 

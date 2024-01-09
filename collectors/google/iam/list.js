@@ -20,6 +20,24 @@ module.exports = function(GoogleConfig, collection, settings, regions, call, ser
 
         let memberObj = {};
 
+        let groups = {};
+
+        if (collection['memberships'] &&
+            collection['memberships']['list'] &&
+            collection['memberships']['list']['global'] &&
+            collection['memberships']['list']['global']['data'] &&
+            collection['memberships']['list']['global']['data'].length) {
+            collection['memberships']['list']['global']['data'].forEach(membership => {
+                let user_email = membership.preferredMemberKey ? membership.preferredMemberKey.id: '';
+                let group_name = membership.parent ? membership.parent.displayName : '';
+                if (!groups[group_name]) groups[group_name] = [];
+
+                groups[group_name].push({
+                    email: user_email,
+                    roles: membership.roles
+                });
+            });
+        }
         if (collection['projects'] &&
             collection['projects']['getIamPolicy'] &&
             collection['projects']['getIamPolicy']['global'] &&
@@ -41,6 +59,16 @@ module.exports = function(GoogleConfig, collection, settings, regions, call, ser
                                 email: accountName,
                                 type: memberType
                             };
+
+                            if (memberType === 'groups') {
+                                let groupName = accountName.split('@')[0];
+                                if (groups[groupName]) {
+                                    memberObj[resource].users = groups[groupName];
+                                } else {
+                                    memberObj[resource].users = [];
+                                }
+                            }
+
                             let roleObj = {role: role};
                             if (condition) roleObj.condition = condition;
                             memberObj[resource].roles.push(roleObj);

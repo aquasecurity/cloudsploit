@@ -19,6 +19,7 @@ module.exports = {
             default: '5'
         }
     },
+    realtime_triggers: ['ssm:StartSession', 'ssm:TerminateSession'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -60,12 +61,12 @@ module.exports = {
             });
 
             for (let instance of sessionsByInstances) {
-                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:/instance/${instance.instanceId}`;
+                var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${instance.instanceId}`;
 
                 let failingSessions = '';
                 for (let session of instance.sessions) {
                     let activeSessionTimeInMins = helpers.minutesBetween(new Date(), session.StartDate);
-                    
+
                     if (sessionMaxDuration && sessionMaxDuration < activeSessionTimeInMins) {
                         failingSessions += `${session.SessionId} - ${activeSessionTimeInMins} mins\n`;
                     }

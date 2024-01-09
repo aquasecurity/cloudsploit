@@ -18,11 +18,13 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets', 'route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var config = {
             dns_allow_private_ips: settings.dns_allow_private_ips || this.settings.dns_allow_private_ips.default
@@ -89,7 +91,7 @@ module.exports = {
         }
 
         async.each(listHostedZones.data, function(zone, cb){
-            var resource = `arn:aws:route53:::${zone.Id}`;
+            var resource = `arn:${awsOrGov}:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
                 ['route53', 'listResourceRecordSets', region, zone.Id]);

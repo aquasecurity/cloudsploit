@@ -20,6 +20,10 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     let localSettings = {};
     localSettings = settings;
 
+    if (settings.govcloud) {
+        localEvent.awsOrGov = 'aws-us-gov';
+    }
+    
     localEvent.collection = {};
     localEvent.previousCollection = {};
 
@@ -413,7 +417,7 @@ module.exports = {
         var s1 = v1.split('.');
         var s2 = v2.split('.');
 
-        for (var i = 0; i < Math.max(s1.length - 1, s2.length - 1); i++) {
+        for (var i = 0; i < Math.max(s1.length , s2.length); i++) {
             var n1 = parseInt(s1[i] || 0, 10);
             var n2 = parseInt(s2[i] || 0, 10);
 
@@ -423,3 +427,4 @@ module.exports = {
         return 0;
     }
 };
+

@@ -15,6 +15,7 @@ module.exports = {
     apis_remediate: ['EKS:listClusters', 'EKS:describeCluster'],
     actions: {remediate: ['EKS:updateClusterConfig'], rollback: ['EKS:updateClusterConfig']},
     permissions: {remediate: ['eks:UpdateClusterConfig'], rollback: ['eks:UpdateClusterConfig']},
+    realtime_triggers: ['eks:CreateCluster', 'eks:updateClusterConfig', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

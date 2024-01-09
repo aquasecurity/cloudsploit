@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Determine if TCP port 3389 for RDP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as RDP should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'For each VM, open the Networking blade and verify that the Inbound Port Rules do not have a rule for RDP with a source equal to Any or Internet',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],

@@ -143,6 +143,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
             BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
         },
+    'File Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
+            InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
+            BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
+            BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
+        },
     'SQL Databases':
         {
             enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
@@ -178,6 +187,11 @@ var calls = {
             rateLimit: 3000
         }
     },
+    appConfigurations: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01'
+        }
+    },
     virtualNetworks: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
@@ -191,7 +205,7 @@ var calls = {
     },
     virtualMachines: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2019-12-01',
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachines?api-version=2023-07-01',
             paginate: 'nextLink'
         }
     },
@@ -245,7 +259,7 @@ var calls = {
     },
     redisCaches: {
         listBySubscription: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2020-06-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cache/redis?api-version=2023-08-01'
         },
         sendIntegration: serviceMap['Redis Cache']
     },
@@ -357,6 +371,11 @@ var calls = {
             graph: true,
         }
     },
+    automationAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Automation/automationAccounts?api-version=2023-11-01'
+        }
+    },
     registries: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerRegistry/registries?api-version=2023-01-01-preview'
@@ -374,7 +393,7 @@ var calls = {
     },
     virtualMachineScaleSets: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2019-12-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-09-01'
         }
     },
     bastionHosts: {
@@ -409,6 +428,9 @@ var calls = {
         },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
+        },
+        listPostgresFlexibleServer: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/flexibleServers?api-version=2022-12-01'
         }
     },
     databaseAccounts: {
@@ -446,10 +468,71 @@ var calls = {
         listEventHub: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
-    }
+    },
+    serviceBus: {
+        listNamespacesBySubscription: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
+        }
+    },
+    mediaServices:{
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
+        }
+
+    },
+    // For CIEM
+    aad: {
+        listRoleAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments?api-version=2022-04-01'
+        },
+        listDenyAssignments: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/denyAssignments?api-version=2022-04-01'
+        }
+    },
+    // For CIEM
+    groups: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/groups',
+            graph: true
+        }
+    },
+    // For CIEM
+    servicePrincipals: {
+        list: {
+            url: 'https://graph.microsoft.com/v1.0/servicePrincipals',
+            graph: true
+        }
+    },
+    classicFrontDoors: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontDoors?api-version=2019-05-01'
+        }
+    },
+    afdWafPolicies: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/frontdoorWebApplicationFirewallPolicies?api-version=2022-05-01'
+
+        }
+    },
+   
 };
 
 var postcalls = {
+    //For CIEM
+    aad: {
+        getGroupMembers: {
+            reliesOnPath: 'groups.list',
+            properties: ['id'],
+            url: 'https://graph.microsoft.com/v1.0/groups/{id}/members',
+            graph: true
+        },
+        sendIntegration: {
+            enabled: true,
+            integrationReliesOn: {
+                serviceName: ['roleDefinitions','users','groups','servicePrincipals']
+            }
+        }
+    },
     recoveryServiceVaults: {
         getRecoveryServiceVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
@@ -499,6 +582,7 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/securityAlertPolicies?api-version=2017-03-01-preview'
         }
     },
+
     advancedThreatProtectionSettings: {
         listByServer: {
             reliesOnPath: 'servers.listSql',
@@ -546,7 +630,12 @@ var postcalls = {
             reliesOnPath: 'servers.listMysqlFlexibleServer',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/configurations?api-version=2021-05-01'
-        }
+        },
+        listByPostgresServer: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/configurations?api-version=2022-12-01'
+        },
     },
     serverAdministrators: {
         list: {
@@ -718,7 +807,7 @@ var postcalls = {
         listByServer: {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/databases?api-version=2017-10-01-preview'
+            url: 'https://management.azure.com/{id}/databases?api-version=2023-02-01-preview'
         },
         sendIntegration: serviceMap['SQL Databases']
     },
@@ -751,6 +840,11 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgres',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/firewallRules?api-version=2017-12-01'
+        },
+        listByFlexibleServerPostgres: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/firewallRules?api-version=2022-12-01'
         }
     },
     outboundFirewallRules: {
@@ -869,8 +963,27 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/originGroups?api-version=2021-06-01'
+    mediaServices: {
+        listContentKeyPolicies: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/contentKeyPolicies?api-version=2023-01-01'
+        },
+        get: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-01-01'
+        }
+    },
+    afdSecurityPolicies: {
+        listByProfile: {
+            reliesOnPath: 'profiles.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
+
         }
     }
+    
 };
 
 var tertiarycalls = {
@@ -892,6 +1005,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByApplicationGateways: {
+            reliesOnPath: 'applicationGateway.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByKeyVault: {
             reliesOnPath: 'vaults.list',
             properties: ['id'],
@@ -907,11 +1025,62 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
         },
+        listByRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByVirtualNetworks: {
+            reliesOnPath: 'virtualNetworks.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByContainerRegistries: {
             reliesOnPath: 'registries.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByMediaService: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByPostgresFlexibleServers: {
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByPostgresServers: {
+            reliesOnPath: 'servers.listPostgres',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByServiceBusNamespaces: {
+            reliesOnPath: 'serviceBus.listNamespacesBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAksClusters: {
+            reliesOnPath: 'managedClusters.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAppConfigurations: {
+            reliesOnPath: 'appConfigurations.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
+        
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
@@ -936,6 +1105,48 @@ var tertiarycalls = {
 
         }
     }
+    syncGroups: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/syncGroups?api-version=2021-11-01'
+        }
+    },
+    ledgerDigestUploads: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/ledgerDigestUploads?api-version=2021-11-01'
+        }
+    },
+    transparentDataEncryption: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/transparentDataEncryption?api-version=2021-11-01'
+        }
+    },
+    dataMaskingPolicies: {
+        get: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/dataMaskingPolicies/Default?api-version=2021-11-01',
+        }
+    },
+    devOpsAuditingSettings: {
+        list: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
+        }
+    },
+    patchSchedules: {
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/patchSchedules?api-version=2023-08-01'
+        }
+    },
 };
 
 var specialcalls = {
@@ -959,10 +1170,7 @@ var specialcalls = {
             reliesOnPath: ['storageAccounts.listKeys'],
             rateLimit: 3000
         },
-        listSharesSegmentedNew: {
-            reliesOnPath: ['storageAccounts.listKeys'],
-            rateLimit: 3000
-        }
+        sendIntegration: serviceMap['File Service']
     },
     blobService: {
         listContainersSegmented: {

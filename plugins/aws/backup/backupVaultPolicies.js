@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that all Backup Vault policies are scoped to specific services and API calls.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/creating-a-vault-access-policy.html',
     apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultAccessPolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['backup:CreateBackupVault','backup:DeleteBackupVault','backup:PutBackupVaultAccessPolicy','backup:DeleteBackupVaultAccessPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -64,11 +65,11 @@ module.exports = {
                         var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
 
                         // Evaluates whether the principal is open to everyone/anonymous
-                        var principalEval = helpers.globalPrincipal(statement.Principal);
+                        var principalEval = helpers.globalPrincipal(statement.Principal, settings);
 
                         // Evaluates whether condition is scoped or global
                         let scopedCondition;
-                        if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, [], helpers.IAM_CONDITION_OPERATORS, false, accountId);
+                        if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, [], helpers.IAM_CONDITION_OPERATORS, false, accountId, settings);
 
                         if (!scopedCondition && principalEval && effectEval) {
                             if (statement.Action && typeof statement.Action === 'string') {

@@ -118,6 +118,20 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        Bedrock:{
+            listCustomModels:{
+                property: 'modelSummaries',
+                paginate: 'NextToken',
+            },
+            listModelCustomizationJobs:{
+                property: 'modelCustomizationJobSummaries"',
+                paginate: 'NextToken',
+            },
+            getModelInvocationLoggingConfiguration: {
+                property: 'loggingConfig', 
+                paginate: 'NextToken'
+            }
+        },
         CloudFormation: {
             listStacks: {
                 property: 'StackSummaries',
@@ -1250,6 +1264,20 @@ var postcalls = [
                 filterValue: 'BackupPlanId',
             }
         },
+        Bedrock:{
+            getCustomModel: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listCustomModels',
+                filterKey: 'modelIdentifier',
+                filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -1296,6 +1324,21 @@ var postcalls = [
                 reliesOnService: 'redshift',
                 reliesOnCall: 'describeClusters',
                 override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
+            },
+            getRdsReadIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true, 
             }
         },
         ConfigService: {
@@ -1387,7 +1430,12 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {

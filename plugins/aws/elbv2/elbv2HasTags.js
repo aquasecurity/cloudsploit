@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
     recommended_action: 'Modify ELBv2 and add tags.',
     apis: ['ELBv2:describeLoadBalancers', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:AddTags', 'elasticloadbalancing:RemoveTags', 'elasticloadbalancing:DeleteLoadBalancer'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -35,7 +37,7 @@ module.exports = {
             for (let lb of describeLoadBalancers.data){
                 arnList.push(lb.LoadBalancerArn);
             }
-            helpers.checkTags(cache, 'ElasticLoadbalancing', arnList, region, results);
+            helpers.checkTags(cache, 'ElasticLoadbalancing', arnList, region, results, settings);
             return rcb();
         }, function(){
             callback(null, results, source);

@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures logs are configured to be retained for 4 or more days for PostgreSQL servers',
     more_info: 'Having a long log retention policy ensures that all critical logs are stored for long enough to access and view in case of a security incident.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_retention_days setting set to 4 or more days.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
 
     run: function(cache, settings, callback) {

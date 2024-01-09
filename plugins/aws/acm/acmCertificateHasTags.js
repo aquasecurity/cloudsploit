@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/tags.html',
     recommended_action: 'Modify ACM certificate and add tags.',
     apis: ['ACM:listCertificates', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate','acm:DeleteCertificate','acm:AddTagsToCertificate', 'acm:RemoveTagsFromCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -38,7 +39,7 @@ module.exports = {
                 
                 ARNList.push(cert.CertificateArn);
             }
-            helpers.checkTags(cache, 'ACM certificate', ARNList, region, results);
+            helpers.checkTags(cache, 'ACM certificate', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);

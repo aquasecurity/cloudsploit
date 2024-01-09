@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/Tagging-Resources.html',
     recommended_action: 'Modify ElastiCache cluster and add tags.',
     apis: ['ElastiCache:describeCacheClusters', 'ResourceGroupsTaggingAPI:getResources'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:AddTagsToResource', 'elasticache:RemoveTagsToResource'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,7 +38,7 @@ module.exports = {
             for (var cluster of describeCacheClusters.data) {
                 ARNList.push(cluster.ARN);
             }
-            helpers.checkTags(cache, 'ElastiCache cluster', ARNList, region, results);
+            helpers.checkTags(cache, 'ElastiCache cluster', ARNList, region, results, settings);
             rcb();
         }, function(){
             callback(null, results, source);
