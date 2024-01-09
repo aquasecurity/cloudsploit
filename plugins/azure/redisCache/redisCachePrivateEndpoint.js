@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Cache for Redis has public network access disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-network-isolation#azure-private-link-recommended',
     apis: ['redisCaches:listBySubscription'],
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
