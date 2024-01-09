@@ -38,6 +38,7 @@ module.exports = {
 
                 frontDoorProfile = true;
                 var insecureOriginGroupNames = {};
+                
                 var originFound = false;
 
                 const afdOriginGroups = helpers.addSource(cache, source,
