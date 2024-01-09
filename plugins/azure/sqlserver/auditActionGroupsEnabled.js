@@ -15,7 +15,6 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
-    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:auditingsettings:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

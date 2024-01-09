@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Configure outbound networking restrictions to allow access only to specified Azure Storage accounts and Azure SQL logical servers.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/outbound-firewall-rule-overview?view=azuresql',
     apis: ['servers:listSql'],
-    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

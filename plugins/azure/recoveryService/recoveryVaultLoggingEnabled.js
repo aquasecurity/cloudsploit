@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Modify the Recovery Service vault and enable diagnostic logs.',
     link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-diagnostic-events?tabs=recovery-services-vaults',
     apis: ['diagnosticSettings:listByRecoveryServiceVault', 'recoveryServiceVaults:listBySubscriptionId'],
-    realtime_triggers: ['microsoftrecoverservices:valuts:write', 'microsoftrecoverservices:valuts:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

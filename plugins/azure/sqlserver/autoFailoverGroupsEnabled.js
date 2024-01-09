@@ -10,7 +10,6 @@ module.exports = {
     recommended_action: 'Ensure that auto-failover Groups are configured for Azure SQL database servers',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auto-failover-group-overview',
     apis: ['servers:listSql', 'failoverGroups:listByServer'],
-    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:failovergroups:write', 'microsoftsql:servers:failovergroups:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
