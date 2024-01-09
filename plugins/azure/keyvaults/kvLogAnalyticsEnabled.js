@@ -15,6 +15,7 @@ module.exports = {
                 'write read and delete is created for all ' +
                 'activities in the system.'
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters to the latest available version.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list', 'managedClusters:getUpgradeProfile'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
