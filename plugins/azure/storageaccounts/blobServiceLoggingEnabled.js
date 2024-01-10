@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify Blob Service and enable storage logging for "Read", "Write", and "Delete" requests.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'blobService:getProperties'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

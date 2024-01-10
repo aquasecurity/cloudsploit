@@ -16,6 +16,7 @@ module.exports = {
                 'default, along with keeping all data private ' +
                 'and secure.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftinsights:diagnosticsettings:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable dynamic data masking for SQL databases.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-dynamic-data-masking-get-started-portal',
     apis: ['servers:listSql', 'databases:listByServer', 'dataMaskingPolicies:get'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];
