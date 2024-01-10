@@ -19,6 +19,7 @@ module.exports = {
              'Security groups should be properly secured to prevent access to ' +
              'backend services.'
     },
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

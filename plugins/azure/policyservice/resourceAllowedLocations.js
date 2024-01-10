@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that all services contain policy definitions that defined allowed locations.',
     link: 'https://learn.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write', 'microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

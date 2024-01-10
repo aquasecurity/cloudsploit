@@ -18,6 +18,7 @@ module.exports = {
             regex: '^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-9][0-9]|3[0-5][0-9]|36[0-5])$'
         }
     },
+    realtime_triggers: ['microsoftinsights:extendeddiagnosticsettings:write','microsoftinsights:extendeddiagnosticsettings:delete','microsoftstorage:storageaccounts:managementpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

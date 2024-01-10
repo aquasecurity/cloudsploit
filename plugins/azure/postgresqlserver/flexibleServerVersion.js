@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Upgrade the version of PostgreSQL flexible server to the latest available version.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-supported-versions',
     apis: ['servers:listPostgresFlexibleServer'],
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete',],
 
     run: function(cache, settings, callback) {
         const results = [];
