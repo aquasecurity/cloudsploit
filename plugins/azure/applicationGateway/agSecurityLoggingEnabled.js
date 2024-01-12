@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Application Gateway and add diagnostic settings for Access and Firewall Logs.',
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-diagnostics',
     apis: ['applicationGateway:listAll', 'diagnosticSettings:listByApplicationGateways'],
-    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
+    realtime_triggers: ['microsoftnetwork:applicationgateways:write','microsoftnetwork:applicationgateways:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

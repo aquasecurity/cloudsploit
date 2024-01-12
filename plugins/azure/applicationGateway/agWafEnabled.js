@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify application gateway and enable WAF.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview',
     apis: ['applicationGateway:listAll'],
-    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
+    realtime_triggers: ['microsoftnetwork:applicationgateways:write','microsoftnetwork:applicationgateways:delete','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

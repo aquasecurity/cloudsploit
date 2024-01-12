@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Application Gateway with latest SSL policy which supports minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/application-gateway-ssl-policy-overview',
     apis: ['applicationGateway:listAll'],
-    realtime_triggers: ['microsoftnetwork:applicationGateways:write','microsoftnetwork:applicationGateways:delete'],
+    realtime_triggers: ['microsoftnetwork:applicationgateways:write','microsoftnetwork:applicationgateways:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
