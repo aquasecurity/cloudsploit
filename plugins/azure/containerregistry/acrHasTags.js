@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Container registries and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['registries:list'],
-    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete','microsoftresources:tags:write','microsoftresources:tags:delete'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
