@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify virtual networks and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['virtualNetworks:listAll'],
-    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftresources:tags:write','microsoftresources:tags:delete'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
