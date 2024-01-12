@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify affected subscription and add tags.',
     link: 'https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.management.resourcemanager.models.subscription.tags',
     apis: ['subscriptions:get'],
-    realtime_triggers: ['microsoftresource:tags:write'],
+    realtime_triggers: ['microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
