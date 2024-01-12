@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways',
     recommended_action: 'Configure subnets and network security groups instead of virtual network gateways',
     apis: ['resourceGroups:list','virtualNetworks:listAll','virtualNetworkGateways:listByResourceGroup'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftnetwork:virtualgetworkgateways:write','microsoftnetwork:virtualgetworkgateways:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

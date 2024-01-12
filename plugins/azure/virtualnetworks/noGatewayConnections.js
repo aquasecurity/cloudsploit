@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
     recommended_action: 'Delete network gateway connections',
     apis: ['resourceGroups:list', 'networkGatewayConnections:listByResourceGroup'],
+    realtime_triggers: ['microsoftnetwork:virtualgetworkgateways:write','microsoftnetwork:virtualgetworkgateways:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

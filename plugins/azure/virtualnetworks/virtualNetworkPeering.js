@@ -24,6 +24,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify WAF policies and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['wafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write','microsoftnetwork:frontdoorwebapplicationfirewallpolicies:delete','microsoftresources:tags:write','microsoftresources:tags:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
