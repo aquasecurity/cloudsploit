@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify affected resource group and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources-portal',
     apis: ['resourceGroups:list'],
-    realtime_triggers: ['microsoftresources:subscriptions:resourcegroups:write','microsoftresources:subscriptions:resourcegroups:delete','microsoftresources:tags:write','microsoftresources:tags:delete'],
+    realtime_triggers: ['microsoftresources:subscriptions:resourcegroups:write','microsoftresources:subscriptions:resourcegroups:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

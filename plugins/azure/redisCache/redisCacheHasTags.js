@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Azure Cache for Redis and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['redisCaches:listBySubscription'],
-    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftresources:tags:write','microsoftresources:tags:delete'],
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
