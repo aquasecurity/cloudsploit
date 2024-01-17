@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'SQL Server VNet Integrated',
+    title: 'SQL Server VNet rules Integrated',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that SQL servers have VNet integrated.',
+    description: 'Ensures that SQL servers have VNet rules integrated.',
     more_info: 'Configuring SQL server to operate within a Virtual Network (VNet) offers a myriad of benefits for enhanced security and operational control. By integrating with a VNet allows to proactively safeguard your server against potential security threats and unauthorized access.',
-    recommended_action: 'Ensures VNet rule is integrated for SQL  server.',
+    recommended_action: 'Ensure VNet rule is integrated for SQL  server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/vnet-service-endpoint-rule-overview?view=azuresql',
     apis: ['servers:listSql','virtualNetworkRules:listByServer'],
 
@@ -45,9 +45,9 @@ module.exports = {
                 }
 
                 if (virtualNetworkRules.data.length) {
-                    helpers.addResult(results, 0, 'SQL server has VNet integrated', location, server.id);
+                    helpers.addResult(results, 0, 'SQL server has VNet rule integrated', location, server.id);
                 } else {
-                    helpers.addResult(results, 2, 'SQL server does not have VNet integrated',location, server.id);
+                    helpers.addResult(results, 2, 'SQL server does not have VNet rule integrated',location, server.id);
                 }
             });
 

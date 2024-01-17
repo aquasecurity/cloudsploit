@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var sqlServerVNetIntegrated = require('./sqlServerVNetIntegrated');
+var sqlServerVNetIntegrated = require('./sqlServerVNetRuleIntegrated');
 
 const listSqlServers = [
     {
