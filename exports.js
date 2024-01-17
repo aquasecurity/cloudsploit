@@ -902,7 +902,7 @@ module.exports = {
         'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
         'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),        
         'auditOperationsEnabled'        : require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
-        'sqlServerVNetRuleIntegrated'       : require(__dirname + '/plugins/azure/sqlserver/sqlServerVNetRuleIntegrated.js'),
+        'sqlServerVNetRuleIntegrated'   : require(__dirname + '/plugins/azure/sqlserver/sqlServerVNetRuleIntegrated.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
