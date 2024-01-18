@@ -72,16 +72,7 @@ var collect = function(AWSConfig, settings, callback) {
 
     let runApiCalls = [];
 
-    // Override max sockets
-    var AWSEC2 = new EC2 ({  
-        AWSConfig,
-        requestHandler: new NodeHttpHandler({
-            httpsAgent: new Agent({maxSockets: 100
-            }),
-            httpAgent: new HttpAgent({maxSockets: 100
-            })
-        }),
-    });
+    var AWSEC2 = new EC2(AWSConfig);
 
     var params = {AllRegions: true};
     var excludeRegions = [];
