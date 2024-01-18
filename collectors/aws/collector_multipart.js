@@ -26,8 +26,8 @@ var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 var collectData = require(__dirname + '/../../helpers/shared.js');
 
-// Override max sockets
 const { Agent } = require('https');
+const { Agent: HttpAgent } = require("http");
 const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
 
 var CALLS_CONFIG = {
@@ -64,7 +64,7 @@ var collect = function(AWSConfig, settings, callback) {
     var AWSXRay;
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
-
+    // Override max sockets
     const customRequestHandler = new NodeHttpHandler({
         httpsAgent: new Agent({maxSockets: 100}),
         httpAgent: new HttpAgent({maxSockets: 100})
