@@ -20,12 +20,8 @@
 const {
     EC2
 } = require('@aws-sdk/client-ec2');
-const {
-    DynamoDBClient
-} = require('@aws-sdk/client-dynamodb');
 
 var async = require('async');
-//var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 var collectData = require(__dirname + '/../../helpers/shared.js');
@@ -62,6 +58,11 @@ var collect = function(AWSConfig, settings, callback) {
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
 
+    const customRequestHandler = new NodeHttpHandler({
+        httpsAgent: new Agent({maxSockets: 100}),
+        httpAgent: new HttpAgent({maxSockets: 100})
+    });
+    AWSConfig.requestHandler = customRequestHandler;
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 
