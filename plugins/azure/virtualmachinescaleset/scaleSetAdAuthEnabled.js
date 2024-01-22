@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Scale Sets Health Monitoring Enabled',
-    category: 'Virtual Machines',
+    title: 'Scale Sets AD Authentication Enabled',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that health monitoring is enabled for virtual machine scale sets.',
-    more_info: 'Scale set health monitoring feature reports on VM health from inside the scale set instance and can be configured to probe on an application endpoint and update the status of the application on that instance. That instance status is checked by Azure to determine whether an instance is eligible for upgrade operations.',
-    recommended_action: 'Enable health monitoring for virtual machine scale sets.',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension',
+    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for Virtual Machine Scale Sets.',
+    more_info: 'Enabling Azure Active Directory (AD) authentication for VM Scale Sets ensures access from one central point and simplifies access permission management. It allows conditional access by using Role-Based Access Control (RBAC) policies, and enable MFA.',
+    recommended_action: 'Enable Active Directory authentication for all Virtual Machines scale sets.',
+    link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-linux',
     apis: ['virtualMachineScaleSets:listAll'],
 
     run: function(cache, settings, callback) {
@@ -32,29 +32,31 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Virtual Machine Scale Sets found', location);
                 return rcb();
             }
-
-            async.each(virtualMachineScaleSets.data, (virtualMachineScaleSet, scb) => {
+            
+            for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
+                if (!virtualMachineScaleSet.id) continue;
+                
                 const scaleSetExtensions = virtualMachineScaleSet.virtualMachineProfile && virtualMachineScaleSet.virtualMachineProfile.extensionProfile &&
                 virtualMachineScaleSet.virtualMachineProfile.extensionProfile.extensions 
                     ? virtualMachineScaleSet.virtualMachineProfile.extensionProfile.extensions 
                     : [];
-
-                const healthMonitoring = scaleSetExtensions.length 
-                    ? scaleSetExtensions.some((extension) => (extension.name === 'healthRepairExtension' || extension.type === 'ApplicationHealthLinux')) 
+                const adAuthentication = scaleSetExtensions.length 
+                    ? scaleSetExtensions.some((extension) => (extension.properties && extension.properties.type &&
+                     (extension.properties.type.toLowerCase() === 'aadloginforwindows' || 
+                    extension.properties.type.toLowerCase() === 'aadloginforlinux' || 
+                    extension.properties.type.toLowerCase() === 'aadsshloginforlinux')
+                    )) 
                     : false;
 
-                if (healthMonitoring) {
+                if (adAuthentication) {
                     helpers.addResult(results, 0,
-                        'Virtual Machine Scale Set has health monitoring enabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Active Directory authentication enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has health monitoring disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Active Directory authentication disabled', location, virtualMachineScaleSet.id);
                 }
-
-                scb();
-            }, function() {
-                rcb();
-            });
+            }
+            rcb();
         }, function() {
             callback(null, results, source);
         });

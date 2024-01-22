@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Automatic OS Upgrades Enabled',
-    category: 'Virtual Machines',
+    title: 'Scale Sets vTPM Enabled',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensure that automatic operating system (OS) upgrades are enabled for Microsoft Azure virtual machine scale sets.',
-    more_info: 'Enabling automatic OS image upgrades on your scale set helps ease update management by safely and automatically upgrading the OS disk for all instances in the scale set.',
-    recommended_action: 'Enable automatic OS upgrades under operating system settings',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-automatic-upgrade',
+    description: 'Ensures that Virtual Trusted Platform Module (vTPM) is enabled for Virtual Machine Scale Sets.',
+    more_info: 'vTPM is TPM2.0 compliant and enhances security by validating VM boot integrity and providing a secure storage mechanism for keys and secrets. The vTPM enables attestation by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers).',
+    recommended_action: 'Modify virtual machine scale set configurations and enable vTPM',
+    link: 'https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/trusted-platform-module-overview',
     apis: ['virtualMachineScaleSets:listAll'],
 
     run: function(cache, settings, callback) {
@@ -17,7 +17,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.virtualMachineScaleSets, (location, rcb) => {
-
             const virtualMachineScaleSets = helpers.addSource(cache, source,
                 ['virtualMachineScaleSets', 'listAll', location]);
 
@@ -34,20 +33,19 @@ module.exports = {
                 return rcb();
             }
 
-            virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                if (virtualMachineScaleSet.upgradePolicy &&
-                    virtualMachineScaleSet.upgradePolicy.automaticOSUpgradePolicy &&
-                    virtualMachineScaleSet.upgradePolicy.automaticOSUpgradePolicy.enableAutomaticOSUpgrade) {
+            for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
+
+                if (virtualMachineScaleSet.virtualMachineProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.vTpmEnabled) {
                     helpers.addResult(results, 0,
-                        'Automatic OS upgrades feature is enabled for virtual machine scale set',
-                        location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has vTPM enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Automatic OS upgrades feature is not enabled for virtual machine scale set',
-                        location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has vTPM disabled', location, virtualMachineScaleSet.id);
                 }
-            });
-
+            }
             rcb();
         }, function() {
             callback(null, results, source);

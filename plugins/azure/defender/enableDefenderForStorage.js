@@ -33,16 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let storagePricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'storageaccounts');
-            if (storagePricing) {
-                if (storagePricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Storage Accounts', location, storagePricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location, storagePricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'storageaccounts', 'Storage Accounts', results, location);
 
             rcb();
         }, function(){

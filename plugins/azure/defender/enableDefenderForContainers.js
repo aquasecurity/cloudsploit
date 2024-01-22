@@ -33,16 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let containersPricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'containers');
-            if (containersPricing) {
-                if (containersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Containers', location, containersPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Containers', location, containersPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Containers', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'containers', 'Containers', results, location);
 
             rcb();
         }, function(){

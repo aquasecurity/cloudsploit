@@ -16,6 +16,7 @@ module.exports = {
                 'of EC2 instance data at rest, but volumes must be configured to use ' +
                 'encryption so their snapshots are also encrypted.'
     },
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:CopySnapshot', 'ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

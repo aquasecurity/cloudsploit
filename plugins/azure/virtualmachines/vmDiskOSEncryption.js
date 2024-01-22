@@ -39,7 +39,6 @@ module.exports = {
                 var found = false;
                 for (var i in disks.data) {
                     var disk = disks.data[i];
-                    console.log(disk);
                     if (disk.name &&
                         disk.name.length &&
                         disk.name.toLowerCase().indexOf('osdisk') > -1) {
