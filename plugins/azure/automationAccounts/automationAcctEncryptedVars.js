@@ -51,7 +51,7 @@ module.exports = {
                     if (unencryptedVariableNames.length) {
                         helpers.addResult(results, 2, `Automation account has following unencrypted variables: ${unencryptedVariableNames.join(',')}`, location, account.id);
                     } else {
-                        helpers.addResult(results, 0, `Automation account has all variables encrypted`, location, account.id);
+                        helpers.addResult(results, 0, 'Automation account has all variables encrypted', location, account.id);
                     }
                 }
             }
