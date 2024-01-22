@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    EKS
+} = require('@aws-sdk/client-eks');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var eks = new AWS.EKS(AWSConfig);
+    var eks = new EKS(AWSConfig);
     //var autoscaling = new AWS.AutoScaling(AWSConfig);
 
     async.eachLimit(collection.eks.listClusters[AWSConfig.region].data, 5, function(cluster, cb){

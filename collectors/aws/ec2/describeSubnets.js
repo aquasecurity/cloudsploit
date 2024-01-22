@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    EC2
+} = require('@aws-sdk/client-ec2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ec2 = new AWS.EC2(AWSConfig);
+    var ec2 = new EC2(AWSConfig);
 
     async.eachLimit(collection.ec2.describeVpcs[AWSConfig.region].data, 15, function(vpc, cb){
         collection.ec2.describeSubnets[AWSConfig.region][vpc.VpcId] = {};

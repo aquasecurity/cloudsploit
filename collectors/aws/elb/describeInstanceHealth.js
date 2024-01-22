@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    ElasticLoadBalancing
+} = require('@aws-sdk/client-elastic-load-balancing');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var elb = new AWS.ELB(AWSConfig);
+    var elb = new ElasticLoadBalancing(AWSConfig);
 
     async.eachLimit(collection.elb.describeLoadBalancers[AWSConfig.region].data, 15, function(lb, cb){
         collection.elb.describeInstanceHealth[AWSConfig.region][lb.DNSName] = {};

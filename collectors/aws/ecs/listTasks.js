@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    ECS
+} = require('@aws-sdk/client-ecs');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ecs = new AWS.ECS(AWSConfig);
+    var ecs = new ECS(AWSConfig);
 
     async.eachLimit(collection.ecs.listClusters[AWSConfig.region].data, 10, function(cluster, cb){
         collection.ecs.listTasks[AWSConfig.region][cluster] = {};

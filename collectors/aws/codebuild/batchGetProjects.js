@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    CodeBuild
+} = require('@aws-sdk/client-codebuild');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var codebuild = new AWS.CodeBuild(AWSConfig);
+    var codebuild = new CodeBuild(AWSConfig);
 
     async.eachLimit(collection.codebuild.listProjects[AWSConfig.region].data, 15, function(project, cb){
         collection.codebuild.batchGetProjects[AWSConfig.region][project] = {};

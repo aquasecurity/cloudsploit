@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    CloudTrail
+} = require('@aws-sdk/client-cloudtrail');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var cloudtrail = new AWS.CloudTrail(AWSConfig);
+    var cloudtrail = new CloudTrail(AWSConfig);
 
     async.eachLimit(collection.cloudtrail.describeTrails[AWSConfig.region].data, 15, function(trail, cb) {
         var params = {
