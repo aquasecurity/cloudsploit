@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify Front Door WAF policy and enable request body inspection in policy settings.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/application-gateway-waf-request-size-limits#request-body-inspection',
     apis: ['afdWafPolicies:listAll'],
-    realtime_triggers: ['microsoftnetwork:frontDoorWebApplicationFirewallPolicies:write', 'microsoftnetwork:frontDoorWebApplicationFirewallPolicies:delete'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write', 'microsoftnetwork:frontdoorwebapplicationfirewallpolicies:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
