@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Enable VNet Integration for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-vnet-integration',
     apis: ['webApps:list'],
+    realtime_triggers: ['microsoftweb:sites:write', 'microsoftweb:sites:networkconfig:delete', 'microsoftweb:sites:delete'],
+
 
     run: function(cache, settings, callback) {
         var results = [];
