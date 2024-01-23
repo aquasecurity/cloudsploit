@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs',
     apis: ['webApps:list', 'diagnosticSettings:listByAppServices'],
+    realtime_triggers: ['microsoftweb:sites:write', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete', 'microsoftweb:sites:delete'],
    
     run: function(cache, settings, callback) {
         const results = [];
