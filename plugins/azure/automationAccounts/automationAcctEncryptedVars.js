@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Delete unencrypted variables in automation account and create new encrypted variables.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/automation-secure-asset-encryption',
     apis: ['automationAccounts:list','accountVariables:listByAutomationAccounts'],
-
+    realtime_triggers: ['microsoftautomation:automationaccounts:runbooks:write','microsoftautomation:automationaccounts:runbooks:delete','microsoftautomation:automationaccounts:variables:write','microsoftautomation:automationaccounts:variables:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
