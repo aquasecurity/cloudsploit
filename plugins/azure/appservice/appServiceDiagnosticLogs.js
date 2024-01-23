@@ -37,20 +37,20 @@ module.exports = {
                 if (!webApp.id) return;
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAppServices', location, webApp.id]);
-                    if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                        helpers.addResult(results, 3, `Unable to query for App Service diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
-                            location, webApp.id);
-                        return;
-                    }
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3, `Unable to query for App Service diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
+                        location, webApp.id);
+                    return;
+                }
     
-                    var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
+                var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
     
-                    if (found) {
-                        helpers.addResult(results, 0, 'App Service has diagnostic logs enabled', location, webApp.id);
-                    } else {
-                        helpers.addResult(results, 2, 'App Service does not have diagnostic logs enabled', location, webApp.id);
-                    }        
-            })
+                if (found) {
+                    helpers.addResult(results, 0, 'App Service has diagnostic logs enabled', location, webApp.id);
+                } else {
+                    helpers.addResult(results, 2, 'App Service does not have diagnostic logs enabled', location, webApp.id);
+                }        
+            });
 
             rcb();
         }, function() {
