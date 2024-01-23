@@ -924,6 +924,7 @@ module.exports = {
         'ftpsOnlyAccessEnabled'         : require(__dirname + '/plugins/azure/appservice/ftpsOnlyAccessEnabled.js'),
         'backupRetentionPeriod'         : require(__dirname + '/plugins/azure/appservice/backupRetentionPeriod.js'),
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
+        'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
