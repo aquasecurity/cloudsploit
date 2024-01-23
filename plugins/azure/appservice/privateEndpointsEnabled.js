@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint',
     apis: ['webApps:list'],
-    realtime_triggers: ['microsoftweb:sites:write', 'microsoftweb:sites:privateEndpointConnectionProxies:write', 'microsoftweb:sites:delete'],
+    realtime_triggers: ['microsoftweb:sites:write', 'microsoftweb:sites:privateEndpointConnectionProxies:write', 'microsoftweb:sites:privateEndpointConnectionProxies:delete', 'microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
