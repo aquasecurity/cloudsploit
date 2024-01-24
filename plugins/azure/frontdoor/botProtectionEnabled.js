@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Front Door WAF policy and add bot protection rule set in managed rules.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-policy-configure-bot-protection?pivots=portal',
     apis: ['afdWafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write', 'microsoftnetwork:frontdoorwebapplicationairewallpolicies:delete'], 
 
     run: function(cache, settings, callback) {
         const results = [];
