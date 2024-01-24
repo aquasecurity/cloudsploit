@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Virtual Machine and enable secure boot.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch#secure-boot',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

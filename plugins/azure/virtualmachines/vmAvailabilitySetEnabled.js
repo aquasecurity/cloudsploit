@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Virtual Machine Availability Sets can only be configured when creating a new virtual machine. Recreate the Virtual Machine with Availability Sets enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/manage-availability',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Enable guest level diagnostics for all virtual machines',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-vm-agent',
     apis: ['virtualMachines:listAll', 'virtualMachines:get'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write','microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
