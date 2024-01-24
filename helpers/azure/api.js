@@ -514,7 +514,7 @@ var calls = {
 
         }
     },
-   
+
 };
 
 var postcalls = {
@@ -697,7 +697,8 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
-            rateLimit: 3000
+            rateLimit: 3000,
+            limit: 20000
         }
     },
     blobServices: {
@@ -978,7 +979,7 @@ var postcalls = {
 
         }
     }
-    
+
 };
 
 var tertiarycalls = {
@@ -1075,7 +1076,7 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-        
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
