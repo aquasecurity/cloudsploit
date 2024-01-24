@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that data encryption is enabled for each File Service.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption',
     apis: ['storageAccounts:list'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
