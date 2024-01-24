@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Modify SQL server to enable automatic tuning',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/automatic-tuning-overview',
     apis: ['servers:listSql', 'serverAutomaticTuning:get'],
-    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:automatuning:write'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:automatictuning:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
