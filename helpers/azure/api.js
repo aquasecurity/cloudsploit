@@ -718,7 +718,7 @@ var postcalls = {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01',
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2023-01-01',
             rateLimit: 3000
         }
     },
