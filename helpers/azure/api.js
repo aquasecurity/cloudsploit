@@ -514,7 +514,7 @@ var calls = {
 
         }
     },
-   
+
 };
 
 var postcalls = {
@@ -697,7 +697,8 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
-            rateLimit: 3000
+            rateLimit: 3000,
+            limit: 20000
         }
     },
     blobServices: {
@@ -718,7 +719,7 @@ var postcalls = {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01',
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2023-01-01',
             rateLimit: 3000
         }
     },
@@ -978,7 +979,7 @@ var postcalls = {
 
         }
     }
-    
+
 };
 
 var tertiarycalls = {
@@ -1055,11 +1056,6 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
-        listByAksClusters: {
-            reliesOnPath: 'managedClusters.list',
-            properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
-        },
         listByAppConfigurations: {
             reliesOnPath: 'appConfigurations.list',
             properties: ['id'],
@@ -1075,7 +1071,7 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-        
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
