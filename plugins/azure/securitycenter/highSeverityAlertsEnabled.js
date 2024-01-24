@@ -20,6 +20,7 @@ module.exports = {
             default: 'medium'
         }
     },
+    realtime_triggers: ['microsoftsecurity:securitycontacts:write','microsoftsecurity:securitycontacts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
