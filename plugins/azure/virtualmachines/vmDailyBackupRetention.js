@@ -18,7 +18,7 @@ module.exports = {
             default: '30'
         }
     },
-    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoverservices:valuts:write', 'microsoftrecoverservices:valuts:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

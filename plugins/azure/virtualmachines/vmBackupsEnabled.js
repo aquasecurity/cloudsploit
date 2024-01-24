@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable Azure virtual machine backups',
     link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
     apis: ['virtualMachines:listAll', 'recoveryServiceVaults:listBySubscriptionId', 'backupProtectedItems:listByVault'],
-    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoverservices:valuts:write', 'microsoftrecoverservices:valuts:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
