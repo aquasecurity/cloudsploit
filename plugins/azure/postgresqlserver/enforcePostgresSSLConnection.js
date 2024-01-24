@@ -15,7 +15,7 @@ module.exports = {
     apis_remediate: ['servers:listPostgres'],
     actions: {remediate:['servers:update'], rollback:['servers:update']},
     permissions: {remediate: ['servers:update'], rollback: ['server:update']},
-    realtime_triggers: ['microsoftdbforpostgresql:servers:write'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'PostgreSQL SSL connection should be used to ensure internal ' +

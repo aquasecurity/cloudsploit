@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensures VNet (private access) is integrated for PostgreSQL flexible server.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private',
     apis: ['servers:listPostgresFlexibleServer'],
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete',],
 
     run: function(cache, settings, callback) {
         const results = [];
