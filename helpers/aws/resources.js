@@ -1,6 +1,7 @@
 // This file contains a list of ARN paths for each API call type
 // that are used to extract ARNs for resources
 
+
 module.exports = {
     acm: {
         listCertificates: 'CertificateArn',
@@ -48,6 +49,14 @@ module.exports = {
         getBackupVaultNotifications: 'BackupVaultArn',
         describeRegionSettings: '',
         getBackupPlan: 'BackupPlanArn'
+    },
+    bedrock: {
+        listCustomModels: 'modelArn',
+        getCustomModel: 'modelArn',
+        listModelCustomizationJobs: 'jobArn',
+        getModelCustomizationJob: 'jobArn',
+        getModelInvocationLoggingConfiguration: ''
+
     },
     cloudformation: {
         describeStacks: 'StackId',
