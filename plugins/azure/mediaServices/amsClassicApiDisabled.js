@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/migrate-v-2-v-3-differences-api-access',
     recommended_action: 'Remove Azure Media Services accounts with Classic API enabled and create new accounts without enabling the Classic API.',
     apis: ['mediaServices:listAll', 'mediaServices:get'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

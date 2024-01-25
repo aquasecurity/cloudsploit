@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify Table Service and enable storage logging for "Read", "Write", and "Delete" requests.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/tables/monitor-table-storage?tabs=azure-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:getProperties'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
  
     run: function(cache, settings, callback) {
         var results = [];

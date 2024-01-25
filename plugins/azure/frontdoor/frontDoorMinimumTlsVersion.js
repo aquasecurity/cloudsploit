@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Front Door Standard and Premium are using minimum TLS version of 1.2.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/end-to-end-tls?pivots=front-door-standard-premium#supported-tls-versions',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete', 'microsoftcdn:profiles:customdomains:write', 'microsoftcdn:profiles:customdomains:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

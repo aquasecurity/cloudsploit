@@ -10,7 +10,8 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/nat-overview',
     recommended_action: 'Enable Virtual Network NAT gateway for Virtual Networks',
     apis: ['virtualNetworks:listAll', 'natGateways:listBySubscription'],
-
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftnetwork:natgateways:write','microsoftnetwork:natgateways:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

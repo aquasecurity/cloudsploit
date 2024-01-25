@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/drm-content-key-policy-concept',
     recommended_action: 'Modify Media Service account and add content key policy.',
     apis: ['mediaServices:listAll', 'mediaServices:listContentKeyPolicies'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete','microsoftmedia:mediaservices:contentkeypolicies:write','microsoftmedia:mediaservices:contentkeypolicies:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

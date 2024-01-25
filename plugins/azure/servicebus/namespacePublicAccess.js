@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Service Bus namespaces are only accessible through private endpoints.',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/private-link-service',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

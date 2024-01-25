@@ -16,6 +16,7 @@ module.exports = {
                 'including access and all actions taken. VM ' +
                 'agent is needed to provide the necessary logs.'
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

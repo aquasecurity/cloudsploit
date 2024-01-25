@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that the data collection settings of the subscription have Auto Provisioning set to enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection',
     apis: ['autoProvisioningSettings:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

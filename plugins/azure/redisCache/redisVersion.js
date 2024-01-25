@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure cache for Redis is using the latest version',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-overview#redis-versions',
     apis: ['redisCaches:listBySubscription'],
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

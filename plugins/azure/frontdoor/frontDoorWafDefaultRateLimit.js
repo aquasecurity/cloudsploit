@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify the Front Door WAF policy and add default rate limit custom rule.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-rate-limit',
     apis: ['afdWafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write', 'microsoftnetwork:frontdoorwebapplicationfirewallpolicies:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

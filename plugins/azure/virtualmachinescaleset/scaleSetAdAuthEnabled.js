@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable Active Directory authentication for all Virtual Machines scale sets.',
     link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-linux',
     apis: ['virtualMachineScaleSets:listAll'],
-
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:extensions:write', 'microsoftcompute:virtualmachinescalesets:extensions:delete'],
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

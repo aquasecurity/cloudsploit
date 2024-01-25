@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/monitor-service-bus-reference',
     recommended_action: 'Modify the namespace settings and enable diagnostic logs.',
     apis: ['serviceBus:listNamespacesBySubscription', 'diagnosticSettings:listByServiceBusNamespaces'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

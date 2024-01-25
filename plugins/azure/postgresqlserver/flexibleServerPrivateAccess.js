@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Disable public network access for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
     apis: ['servers:listPostgresFlexibleServer', 'firewallRules:listByFlexibleServerPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write', 'microsoftdbforpostgresql:flexibleservers:firewallrules:write','microsoftdbforpostgresql:flexibleservers:firewallrules:delete','microsoftdbforpostgresql:flexibleservers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
