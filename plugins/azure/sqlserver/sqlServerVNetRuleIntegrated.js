@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure VNet rule is integrated for SQL  server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/vnet-service-endpoint-rule-overview?view=azuresql',
     apis: ['servers:listSql','virtualNetworkRules:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
