@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable FTPS-only access for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

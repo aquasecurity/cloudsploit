@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that an email address is activated under send alerts in advanced data security for all SQL servers.',
     link: 'https://learn.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
     apis: ['servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:securityalertpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

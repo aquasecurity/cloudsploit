@@ -2,14 +2,15 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Automatic OS Upgrades Enabled',
-    category: 'Virtual Machines',
+    title: 'Scale Set Multi Az',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensure that automatic operating system (OS) upgrades are enabled for Microsoft Azure virtual machine scale sets.',
-    more_info: 'Enabling automatic OS image upgrades on your scale set helps ease update management by safely and automatically upgrading the OS disk for all instances in the scale set.',
-    recommended_action: 'Enable automatic OS upgrades under operating system settings',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-automatic-upgrade',
+    description: 'Ensures that Virtual Machine Scale Sets are created to be cross-AZ for high availability',
+    more_info: 'Having Virtual Machine Scale Sets in multiple zones increases durability and availability. If there is a catastrophic instance in one zone, the scale set will still be available.',
+    recommended_action: 'Multiple zones can only be created when instantiating a new Scale Set. Ensure that the Scale Set is in multiple zones when creating a new Scale Set.',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -35,16 +36,14 @@ module.exports = {
             }
 
             virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                if (virtualMachineScaleSet.upgradePolicy &&
-                    virtualMachineScaleSet.upgradePolicy.automaticOSUpgradePolicy &&
-                    virtualMachineScaleSet.upgradePolicy.automaticOSUpgradePolicy.enableAutomaticOSUpgrade) {
+                if (virtualMachineScaleSet.zones &&
+                    virtualMachineScaleSet.zones.length &&
+                    virtualMachineScaleSet.zones.length > 1) {
                     helpers.addResult(results, 0,
-                        'Automatic OS upgrades feature is enabled for virtual machine scale set',
-                        location, virtualMachineScaleSet.id);
+                        'The Virtual Machine Scale Set is in multiple zones', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Automatic OS upgrades feature is not enabled for virtual machine scale set',
-                        location, virtualMachineScaleSet.id);
+                        'The Virtual Machine Scale Set is not in multiple zones', location, virtualMachineScaleSet.id);
                 }
             });
 

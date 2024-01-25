@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify storage accounts and configure private endpoints.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints',
     apis: ['storageAccounts:list'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftnetwork:privateendpoints:write', 'microsoftstorage:storageaccounts:privateendpointconnections:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

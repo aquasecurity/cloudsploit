@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html',
     recommended_action: 'Update OpenSearch domain to set access control.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

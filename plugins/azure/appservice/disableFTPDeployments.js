@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Disable FTP deployments in the general settings for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-    
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

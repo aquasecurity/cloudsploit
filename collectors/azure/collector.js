@@ -84,7 +84,8 @@ let collect = function(AzureConfig, settings, callback) {
                     return cb(null, localData);
                 }
 
-                if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink'])) {
+                let resData = localData || data;
+                if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink']) && (!obj.limit || (obj.limit && resData && resData.value && resData.value.length < obj.limit))) {
                     obj.nextUrl = data['nextLink'] || data[obj.paginate];
                     processCall(obj, cb, localData || data);
                 } else {
@@ -97,8 +98,7 @@ let collect = function(AzureConfig, settings, callback) {
             let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
             if (obj.rateLimit) {
                 setTimeout(function() {
-                    console.log('timeout check');
-                    console.log(`url: ${localUrl} obj: ${JSON.stringify(obj)} localData: ${JSON.stringify(localData)}`);
+                    console.log(`url: ${localUrl}`);
                     makeCall(localUrl, obj, cb, localData);
                 }, obj.rateLimit);
             } else {
@@ -135,7 +135,7 @@ let collect = function(AzureConfig, settings, callback) {
                 cback();
             }
         };
-        
+
         async.series([
             // Calls - process the simple calls
             function(cb) {
@@ -205,7 +205,8 @@ let collect = function(AzureConfig, settings, callback) {
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
                                         vault: subCallObj.vault,
-                                        rateLimit: subCallObj.rateLimit
+                                        rateLimit: subCallObj.rateLimit,
+                                        limit: subCallObj.limit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
@@ -306,7 +307,8 @@ let collect = function(AzureConfig, settings, callback) {
                                         token: subCallObj.token,
                                         graph: subCallObj.graph,
                                         vault: subCallObj.vault,
-                                        rateLimit: subCallObj.rateLimit
+                                        rateLimit: subCallObj.rateLimit,
+                                        limit: subCallObj.limit
                                     };
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {

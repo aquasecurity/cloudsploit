@@ -17,6 +17,9 @@ module.exports = {
         pci: 'PCI data must be secured via least-privileged ACLs. File Service ACLs ' +
                 'enable granular permissions for data access.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write','microsoftstorage:storageaccounts:fileservices:shares:write', 'microsoftstorage:storageaccounts:delete', 'microsoftstorage:storageaccounts:fileservices:shares:delete'],
+
+    
 
     run: function(cache, settings, callback) {
         var results = [];

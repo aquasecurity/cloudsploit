@@ -2,14 +2,15 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Scale Sets Autoscale Notifications Enabled',
-    category: 'Virtual Machines',
+    title: 'Scale Sets Autoscale Enabled',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that Virtual Machine scale sets have autoscale notifications enabled.',
-    more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. Autoscale notifications should be enabled to know about the status of autoscale operation.',
-    recommended_action: 'Ensure that autoscale notifications are enabled for all Virtual Machine Scale Sets',
-    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-overview',
+    description: 'Ensures that Virtual Machine scale sets have autoscale enabled for high availability',
+    more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. This creates a highly available scale set.',
+    recommended_action: 'Ensure that autoscale is enabled for all Virtual Machine Scale Sets.',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -57,26 +58,14 @@ module.exports = {
             });
 
             virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                let autoScaleNotifications = [];
                 if (virtualMachineScaleSet.id &&
                     asMap[virtualMachineScaleSet.id.toLowerCase()] &&
-                    asMap[virtualMachineScaleSet.id.toLowerCase()].notifications &&
-                    asMap[virtualMachineScaleSet.id.toLowerCase()].notifications.length) {
-                    autoScaleNotifications = asMap[virtualMachineScaleSet.id.toLowerCase()].notifications;
-                }
-
-                let found = autoScaleNotifications.find(notification =>
-                    (notification.email && (
-                        notification.email.sendToSubscriptionAdministrator ||
-                        notification.email.sendToSubscriptionCoAdministrators ||
-                        (notification.email.customEmails && notification.email.customEmails.length))) || 
-                        (notification.webhooks && notification.webhooks.length));
-                if (found) {
+                    asMap[virtualMachineScaleSet.id.toLowerCase()].enabled) {
                     helpers.addResult(results, 0,
-                        'Virtual Machine Scale Set has autoscale notifications enabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has autoscale enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has autoscale notifications disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set does not have autoscale enabled', location, virtualMachineScaleSet.id);
                 }
             });
 

@@ -16,7 +16,7 @@ module.exports = {
     apis_remediate: ['webApps:list', 'webApps:listConfigurations'],
     actions: {remediate:['webApps:updateconfiguration'], rollback:['webApps:updateconfiguration']},
     permissions: {remediate: ['webApps:updateconfiguration'], rollback: ['webApps:updateconfiguration']},
-    realtime_triggers: ['microsoftweb:sites:config:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

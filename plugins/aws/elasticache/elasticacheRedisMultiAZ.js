@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/AutoFailover.html#AutoFailover.Enable',
     recommended_action: 'Enable Redis Multi-AZ for ElastiCache clusters',
     apis: ['ElastiCache:describeCacheClusters', 'ElastiCache:describeReplicationGroups'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:ModifyReplicationGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

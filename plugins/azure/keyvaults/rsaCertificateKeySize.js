@@ -18,6 +18,7 @@ module.exports = {
             default: '2048'
         }
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

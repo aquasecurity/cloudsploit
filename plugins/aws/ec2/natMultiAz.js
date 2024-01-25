@@ -10,6 +10,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html',
     recommended_action: 'Launch managed NAT instances in multiple AZs.',
     apis: ['EC2:describeVpcs', 'EC2:describeNatGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNatGateway', 'ec2:DeleteNatGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

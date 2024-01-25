@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enabled Azure Monitor Logs for all logging categories and archive in a Storage Account',
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs',
     apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

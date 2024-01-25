@@ -15,6 +15,7 @@ module.exports = {
                 'App Service HTTPS redirection should be used to ensure site visitors ' +
                 'are always connecting over a secure channel.',
     },
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify key vault and tags',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['vaults:list'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

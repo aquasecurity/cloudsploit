@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Delete the unassociated Elastic IP',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html',
     apis: ['EC2:describeAddresses', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:AllocateAddress','ec2:ReleaseAddress'],
     
     run: function(cache, settings, callback) {
         var results = [];
