@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Disable public network access for SQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview?view=azuresql',
     apis: ['servers:listSql','firewallRules:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
