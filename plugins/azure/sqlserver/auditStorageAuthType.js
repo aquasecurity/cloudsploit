@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure managed identity is configured as authentication type when choosing a storage account as the destination for audit logs on SQL server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-managed-identity?view=azuresql&tabs=azure-portal',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:auditingsettings:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
