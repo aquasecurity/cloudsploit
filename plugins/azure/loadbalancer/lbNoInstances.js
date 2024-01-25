@@ -10,6 +10,8 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['loadBalancers:listAll'],
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
+
 
     run: function(cache, settings, callback) {
         const results = [];

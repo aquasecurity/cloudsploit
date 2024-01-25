@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Enable Adaptive Application Controls for Virtual Machines from the Azure Security Center by ensuring AuditIfNotExists setting is used.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-adaptive-application',
     apis: ['policyAssignments:list'],
-
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

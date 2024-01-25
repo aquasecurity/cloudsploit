@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify virtual machines disks to use standard SSD disk volumes instead of premium SSD disk volumes',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disks-types',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

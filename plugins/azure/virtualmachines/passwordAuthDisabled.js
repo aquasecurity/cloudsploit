@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Disable password authentication on Azure virtual machine',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

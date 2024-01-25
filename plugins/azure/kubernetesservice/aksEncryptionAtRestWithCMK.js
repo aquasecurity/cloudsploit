@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'When creating a new Kubernetes Cluster, ensure that encryption at rest using CMK is enabled under the Node pool tab during creation.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/azure-disk-customer-managed-keys',
     apis: ['managedClusters:list'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

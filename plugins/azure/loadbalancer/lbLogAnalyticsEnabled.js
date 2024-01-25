@@ -15,6 +15,7 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

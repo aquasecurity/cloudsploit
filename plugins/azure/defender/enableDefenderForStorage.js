@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Microsoft Defender for Storage in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,16 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            let storagePricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'storageaccounts');
-            if (storagePricing) {
-                if (storagePricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Storage Accounts', location, storagePricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location, storagePricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Storage Accounts', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'storageaccounts', 'Storage Accounts', results, location);
 
             rcb();
         }, function(){

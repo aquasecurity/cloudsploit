@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that the public network access is disabled for each container registry.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-access-selected-networks',
     apis: ['registries:list'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

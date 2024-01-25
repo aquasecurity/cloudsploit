@@ -18,6 +18,7 @@ module.exports = {
                 'Secure CDN origins should be used to ensure traffic between ' +
                 'the Azure CDN and backend service is encrypted.'
     },
+    realtime_triggers: ['microsoftcdn:profiles:write','microsoftcdn:profiles:delete','microsoftcdn:profiles:endpoints:write','microsoftcdn:profiles:endpoints:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

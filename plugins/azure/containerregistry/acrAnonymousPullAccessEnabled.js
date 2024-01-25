@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Modify container registry and disable anonymous pull access.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/anonymous-pull-access',
     apis: ['registries:list'],
-
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

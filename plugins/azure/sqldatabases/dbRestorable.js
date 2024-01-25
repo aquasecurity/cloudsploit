@@ -14,6 +14,7 @@ module.exports = {
         hipaa: 'HIPAA requires backups of all user data ' +
             'and inventory to ensure future availability.'
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
