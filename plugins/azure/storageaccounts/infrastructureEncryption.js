@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Delete storage account and create new storage account with infrastructure encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/infrastructure-encryption-enable',
     apis: ['storageAccounts:list'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/launchwizard/latest/userguide/launch-wizard-sap-security-groups.html',
     recommended_action: 'Delete the launch wizard security group and replace it with a custom security group.',
     apis: ['EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:CreateSecurityGroup', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

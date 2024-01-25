@@ -16,6 +16,7 @@ module.exports = {
              'to isolate resources. Ensure default security groups to not allow ' +
              'unintended traffic to cross these isolation boundaries.'
     },
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -30,6 +30,9 @@ var tertiarycalls = apiCalls.tertiarycalls;
 
 var specialcalls = apiCalls.specialcalls;
 
+var additionalCalls = apiCalls.additionalCalls;
+
+
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
    
@@ -163,6 +166,38 @@ var collect = function(GoogleConfig, settings, callback) {
                         if (settings.identifier) {
                             async.each(services, function(serv, callB) {
                                 integrationCall(collection, settings, serv, [], [tertiarycalls], callB);
+                            }, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                services = [];
+                                cb();
+                            });
+                        } else {
+                            cb();
+                        }
+                    });
+                },
+                function(cb) {
+                    async.eachOfLimit(additionalCalls, 10, function(additionalCallObj, service, additionalCallCb) {
+                        helpers.processCall(GoogleConfig, collection, settings, regions, additionalCallObj, service, client, function() {
+                            if (settings.identifier && additionalCalls[service].sendIntegration && additionalCalls[service].sendIntegration.enabled) {
+                                if (!additionalCalls[service].sendIntegration.integrationReliesOn) {
+                                    integrationCall(collection, settings, service, [], [additionalCalls], function() {
+                                        additionalCallCb();
+                                    });
+                                } else {
+                                    services.push(service);
+                                    additionalCallCb();
+                                }
+                            } else {
+                                additionalCallCb();
+                            }
+                        });
+                    }, function() {
+                        if (settings.identifier) {
+                            async.each(services, function(serv, callB) {
+                                integrationCall(collection, settings, serv, [], [additionalCalls], callB);
                             }, function(err) {
                                 if (err) {
                                     console.log(err);

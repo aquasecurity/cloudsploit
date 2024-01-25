@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that Microsoft Azure Key Vault network firewall configuration allows trusted Microsoft services to bypass the firewall.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/network-security',
     apis: ['vaults:list'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

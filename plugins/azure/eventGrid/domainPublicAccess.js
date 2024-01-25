@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify the affected domains and disable public network access.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/configure-firewall',
     apis: ['eventGrid:listDomains'],
+    realtime_triggers: ['microsofteventgrid:domains:write', 'microsofteventgrid:domains:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

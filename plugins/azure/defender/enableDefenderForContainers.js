@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Microsoft Defender for Containers in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,16 +34,7 @@ module.exports = {
                 return rcb();
             }
 
-            let containersPricing = pricings.data.find((pricing) => pricing.name.toLowerCase() === 'containers');
-            if (containersPricing) {
-                if (containersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Containers', location, containersPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Containers', location, containersPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Containers', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'containers', 'Containers', results, location);
 
             rcb();
         }, function(){

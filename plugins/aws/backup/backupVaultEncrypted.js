@@ -18,6 +18,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['backup:CreateBackupVault','backup:DeleteBackupVault'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -17,6 +17,7 @@ module.exports = {
         hipaa: 'HIPAA requires protection of all network systems, including monitoring ' +
                 'all network traffic for malicious, inappropriate or unusual traffic.'
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write', 'microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

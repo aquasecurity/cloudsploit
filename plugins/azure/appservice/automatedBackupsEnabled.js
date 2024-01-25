@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Configure backup for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/manage-backup',
     apis: ['webApps:list', 'webApps:getBackupConfiguration'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

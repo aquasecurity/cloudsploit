@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/SetUpVPNConnections.html',
     recommended_action: 'Check if virtual private gateways have vpc associated',
     apis: ['EC2:describeVpnGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpnGateway', 'ec2:AttachVpnGateway', 'ec2:DeattachVpnGateway', 'ec2:DeleteVpnGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

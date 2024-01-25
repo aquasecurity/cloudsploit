@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Create new container registry with Premium SKU and enable CMK encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/tutorial-customer-managed-keys',
     apis: ['registries:list'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
