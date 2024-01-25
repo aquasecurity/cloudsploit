@@ -65,7 +65,7 @@ describe('vnetIntegrated', function() {
             vnetIntegrated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Web App has VNet integrated');
+                expect(results[0].message).to.include('App Service is integrated with a virtual network');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -76,7 +76,7 @@ describe('vnetIntegrated', function() {
             vnetIntegrated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Web App does not have VNet integrated');
+                expect(results[0].message).to.include('App Service is not integrated with a virtual network');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
