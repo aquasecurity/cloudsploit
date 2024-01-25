@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Enable RBAC authentication for all Azure Kubernetes Clusters',
     link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list'],
-
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

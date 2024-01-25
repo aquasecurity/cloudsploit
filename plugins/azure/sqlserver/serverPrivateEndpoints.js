@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for SQL Server',
     link: 'https://learn.microsoft.com/en-us/azure/private-link/private-link-overview',
     apis: ['servers:listSql'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftnetwork:privateendpoints:write', 'microsoftsql:servers:privateendpointconnections:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

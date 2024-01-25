@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Key Vaults are being used to store secrets.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references',
     apis: ['vaults:list', 'vaults:getKeys', 'vaults:getSecrets'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

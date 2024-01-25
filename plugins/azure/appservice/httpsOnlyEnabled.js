@@ -16,7 +16,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:write'], rollback:['webApps:write']},
     permissions: {remediate: ['webApps:write'], rollback: ['webApps:write']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
                 'App Service HTTPS redirection should be used to ensure site visitors ' +

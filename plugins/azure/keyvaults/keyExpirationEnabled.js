@@ -16,6 +16,7 @@ module.exports = {
             'the Key periodically. Key Vaults provides Key expiration capabilities that ' +
             'should be enabled.'
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

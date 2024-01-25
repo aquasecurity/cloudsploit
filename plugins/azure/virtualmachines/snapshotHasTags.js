@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify affected snapshots and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['snapshots:list'],
+    realtime_triggers: ['microsoftcompute:snapshots:write', 'microsoftcompute:snapshots:delete', 'microsoftresources:tags:write'], 
 
     run: function(cache, settings, callback) {
         var results = [];

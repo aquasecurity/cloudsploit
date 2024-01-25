@@ -10,7 +10,7 @@ module.exports = {
     recommended_action: 'Enable health monitoring for virtual machine scale sets.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-health-extension',
     apis: ['virtualMachineScaleSets:listAll'],
-
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:extensions:write', 'microsoftcompute:virtualmachinescalesets:extensions:delete'],
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify virtual machine and enable system-assigned managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify VM Disk and add tags.',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

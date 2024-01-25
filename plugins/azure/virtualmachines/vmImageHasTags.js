@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify virtual machine image and add tags',
     apis: ['images:list'],
+    realtime_triggers: ['microsoftcompute:images:write', 'microsoftcompute:images:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

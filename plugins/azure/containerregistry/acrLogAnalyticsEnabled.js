@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify container registry and enable Send to Log Analytics from diagnostic settings.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/monitor-service',
     apis: ['registries:list', 'diagnosticSettings:listByContainerRegistries'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

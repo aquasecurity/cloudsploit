@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/qs-configure-portal-windows-vmss',
     recommended_action: 'Modify VM Scale Set and enable managed identity.',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify affected database accounts and add tags.',
     apis: ['databaseAccounts:list'],
+    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:write','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:firewallrules:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

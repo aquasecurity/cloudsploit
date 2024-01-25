@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:disks:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
