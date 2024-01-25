@@ -228,7 +228,7 @@ var calls = {
     },
     disks: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2019-07-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2023-04-02'
         }
     },
     networkSecurityGroups: {
@@ -977,7 +977,14 @@ var postcalls = {
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
         }
-    }
+    },
+    diskEncryptionSet: {
+        get: {
+            reliesOnPath: 'disks.list',
+            properties: ['encryption.diskEncryptionSetId'],
+            url: 'https://management.azure.com/{encryption.diskEncryptionSetId}?api-version=2023-04-02',
+        }
+    },
     
 };
 
