@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Add access restriction rules under network settings for the scm site used by your app',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

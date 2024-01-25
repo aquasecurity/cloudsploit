@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enabled Deployment Mode feature for MQ brokers',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/active-standby-broker-deployment.html',
     apis: ['MQ:listBrokers'],
+    realtime_triggers: ['mq:CreateBrocker', 'mq:UpdateBroker', 'mq:DeleteBrocker'],
 
     run: function(cache, settings, callback) {
         var results = [];

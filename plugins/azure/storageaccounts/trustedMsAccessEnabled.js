@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'For each Storage Account, configure an exception for trusted Microsoft services.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security',
     apis: ['storageAccounts:list'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

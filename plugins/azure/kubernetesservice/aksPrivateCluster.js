@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify cluster network configuration and enable private cluster feature.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/private-clusters',
     apis: ['managedClusters:list'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

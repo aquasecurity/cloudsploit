@@ -30,6 +30,7 @@ module.exports = {
             default: 25000
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

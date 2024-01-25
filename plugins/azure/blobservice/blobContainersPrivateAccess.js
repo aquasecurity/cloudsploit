@@ -22,7 +22,7 @@ module.exports = {
     apis_remediate: ['storageAccounts:list'],
     actions: {remediate:['blobContainers:update'], rollback:['blobContainers:update']},
     permissions: {remediate: ['blobContainers:update'], rollback: ['blobContainers:update']},
-    realtime_triggers: ['microsoftstorage:storageaccounts:blobservices:containers:write'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:blobservices:containers:write','microsoftstorage:storageaccounts:blobservices:containers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

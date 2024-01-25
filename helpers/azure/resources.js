@@ -59,7 +59,11 @@ module.exports = {
         listByEndpoint: 'id',
         listByLoadBalancer: 'id',
         listByNetworkSecurityGroup: 'id',
-        listByDatabase: 'id'
+        listByServiceBusNamespaces: 'id',
+        listByPostgresFlexibleServers: 'id',
+        listByPostgresServers: 'id',
+        listByDatabase: 'id',
+        listByApplicationGateways: 'id'
     },
     diagnosticSettingsOperations: {
         list: 'id'
@@ -80,7 +84,8 @@ module.exports = {
         list: 'id'
     },
     firewallRules: {
-        listByServer: 'id'
+        listByServer: 'id',
+        listByFlexibleServerPostgres: 'id'
     },
     fileService: {
         listSharesSegmented: '',
@@ -167,7 +172,8 @@ module.exports = {
     servers: {
         listSql: 'id',
         listPostgres: 'id',
-        listMysql: 'id'
+        listMysql: 'id',
+        listPostgresFlexibleServer: 'id',
     },
     serverAdministrators: {
         list: 'id'
@@ -242,5 +248,41 @@ module.exports = {
         listAppSettings: 'id',
         getAuthSettings: '',
         getBackupConfiguration: 'id',
-    }
+    },
+    syncGroups: {
+        list: 'id'
+    },
+    ledgerDigestUploads: {
+        list: 'id'
+    },
+    transparentDataEncryption: {
+        list: 'id'
+    },
+    dataMaskingPolicies: {
+        list: 'id'
+    },
+    devOpsAuditingSettings:{
+        list: 'id'
+    },
+    appConfigurations: {
+        list: 'id'
+    },
+    serviceBus:{
+        listNamespacesBySubscription: 'id'
+    },
+    flexibleServersConfigurations:{
+        listByPostgresServer: 'id'
+    },
+    afdWafPolicies: {
+        listAll: 'id'
+    },
+    classicFrontDoors: {
+        list: 'id'
+    },
+    afdSecurityPolicies: {
+        listByProfile: 'id'
+    },
+    automationAccounts:{
+        list: 'id'
+    },
 };

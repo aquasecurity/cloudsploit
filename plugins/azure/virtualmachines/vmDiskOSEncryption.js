@@ -18,6 +18,7 @@ module.exports = {
              'Encryption should be enabled for all VM OS disks storing this ' +
              'type of data.'
     },
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html',
     recommended_action: 'Enable the private endpoint setting for all EKS clusters.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:updateClusterConfig', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

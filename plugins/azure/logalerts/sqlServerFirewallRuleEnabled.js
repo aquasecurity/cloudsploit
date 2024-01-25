@@ -17,6 +17,7 @@ module.exports = {
                 'a monitor for SQL Server firewall rules ensures the integrity of those ' +
                 'firewalls.'
     },
+    realtime_triggers: ['microsoftinsights:activitylogalerts:write', 'microsoftinsights:activitylogalerts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

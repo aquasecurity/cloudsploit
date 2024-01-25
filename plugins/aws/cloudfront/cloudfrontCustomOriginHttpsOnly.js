@@ -9,6 +9,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-cloudfront-to-custom-origin.html',
     recommended_action: 'Modify CloudFront distribution and update the Origin Protocol Policy setting to HTTPS Only.',
     apis: ['CloudFront:listDistributions'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

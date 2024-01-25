@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Azure Active Directory (AD) authentication for Azure virtual machines',
     link: 'https://learn.microsoft.com/en-us/azure/active-directory/devices/howto-vm-sign-in-azure-ad-windows',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write', 'microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
