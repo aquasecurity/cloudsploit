@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for SQL databases with the minimum required data recording settings: SQLInsights, Errors, Timeouts, Blocks, Deadlocks, Basic, InstanceAndAppAdvanced, WorkloadManagement.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/monitoring-sql-database-azure-monitor?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'diagnosticSettings:listByDatabase'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
     settings: {
         diagnostic_logs: {
             name: 'Diagnostic Logs Enabled',
