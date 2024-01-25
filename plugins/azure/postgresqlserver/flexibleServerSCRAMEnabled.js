@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify PostgreSQL flexible server to use SCRAM for password encryption instead of MD5.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-to-connect-scram',
     apis: ['servers:listPostgresFlexibleServer', 'flexibleServersConfigurations:listByPostgresServer'],   
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete','microsoftdbforpostgresql:flexibleservers:configurations:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

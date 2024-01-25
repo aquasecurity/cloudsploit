@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure Azure Active Directory admin is enabled on all SQL servers.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure',
     apis: ['servers:listSql', 'serverAzureADAdministrators:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:administrators:write', 'microsoftsql:servers:administrators:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

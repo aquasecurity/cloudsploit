@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that no Microsoft Azure user, group or application is using administrator privileges.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-guide?tabs=azure-cli',
     apis: ['vaults:list'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

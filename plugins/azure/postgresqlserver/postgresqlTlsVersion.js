@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify PostgreSQL server to use TLS version 1.2 or higher.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-tls-configurations',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

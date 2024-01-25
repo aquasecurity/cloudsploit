@@ -15,7 +15,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:write'], rollback:['webApps:write']},
     permissions: {remediate: ['webApps:write'], rollback: ['webApps:write']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
     compliance: {
         pci: 'PCI requires all web applications encrypt data ' +
             'in transit. This includes using the latest TLS ' +

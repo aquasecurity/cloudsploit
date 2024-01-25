@@ -14,6 +14,7 @@ module.exports = {
         hipaa: 'HIPAA requires that all encryption mechanisms be protected against ' +
                 'modifications or loss.'
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

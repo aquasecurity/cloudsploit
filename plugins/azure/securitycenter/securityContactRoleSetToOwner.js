@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify security contact information and enable emails for subscription owners',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications',
     apis: ['securityContactv2:listAll'],
+    realtime_triggers: ['microsoftsecurity:securitycontacts:write','microsoftsecurity:securitycontacts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

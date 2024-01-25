@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Remote debugging should be disabled for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-dotnet-visual-studio',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

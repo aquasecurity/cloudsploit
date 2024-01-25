@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify virtual machine scale set configurations and enable secure boot',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch#secure-boot',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

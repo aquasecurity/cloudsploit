@@ -23,7 +23,7 @@ module.exports = {
     apis_remediate: ['servers:listSql'],
     actions: {remediate:['servers:update'], rollback:['servers:update']},
     permissions: {remediate: ['servers:update'], rollback: ['servers:update']},
-    realtime_triggers: ['microsoftsql:servers:write'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

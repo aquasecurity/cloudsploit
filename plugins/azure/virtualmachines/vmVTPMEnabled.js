@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify virtual machine and enable vTPM.',
     link: 'https://learn.microsoft.com/en-us/azure/confidential-computing/virtual-tpms-in-azure-confidential-vm',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

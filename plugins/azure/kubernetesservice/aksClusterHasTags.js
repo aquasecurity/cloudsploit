@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify AKS clusters and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/use-tags',
     apis: ['managedClusters:list'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Migrate instances from Cloud Service to ARM.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete',],
 
     run: function(cache, settings, callback) {
         var results = [];
