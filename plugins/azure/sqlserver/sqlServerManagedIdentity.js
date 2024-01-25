@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable system or user-assigned managed identities for sql servers.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-azure-ad-user-assigned-managed-identity?view=azuresql',
     apis: ['servers:listSql'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
