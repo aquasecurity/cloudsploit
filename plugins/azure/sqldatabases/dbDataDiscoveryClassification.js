@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Implement data discovery and appropriate classifications for SQL databases',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'currentSensitivityLabels:list'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];
