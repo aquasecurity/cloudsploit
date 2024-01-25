@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that connection policy is set to "Redirect" for each SQL server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/connectivity-architecture?view=azuresql',
     apis: ['servers:listSql', 'connectionPolicies:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:connectionpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
