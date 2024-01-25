@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Front Door profile and add diagnostic settings for Access and WAF Logs.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-monitor?pivots=front-door-standard-premium',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete' , 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

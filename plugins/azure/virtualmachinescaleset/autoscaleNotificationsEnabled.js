@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that autoscale notifications are enabled for all Virtual Machine Scale Sets',
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

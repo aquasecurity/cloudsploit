@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
     link: 'https://learn.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

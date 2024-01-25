@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

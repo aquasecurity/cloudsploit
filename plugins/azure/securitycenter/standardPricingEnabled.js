@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Ensure that standard pricing is enabled in the security center.',
     link: 'https://azure.microsoft.com/en-us/pricing/details/security-center/',
     apis: ['pricings:list'],
-
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

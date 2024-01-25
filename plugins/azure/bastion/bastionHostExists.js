@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Create an Azure Bastion Host in azure account.',
     link: 'https://learn.microsoft.com/en-us/azure/bastion/bastion-overview',
     apis: ['bastionHosts:listAll'],
+    realtime_triggers: ['microsoftnetwork:bastionhosts:write','microsoftnetwork:bastionhosts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

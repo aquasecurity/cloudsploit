@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Migrate virtual machine disks to Azure managed disks',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

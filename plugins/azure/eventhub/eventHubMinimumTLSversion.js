@@ -18,6 +18,7 @@ module.exports = {
             default: '1.2'
         }
     },
+    realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

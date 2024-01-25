@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable CMK encryotion for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/concepts-data-encryption-postgresql',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

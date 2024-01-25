@@ -25,6 +25,7 @@ module.exports = {
             default: '^aquaacct([a-f0-9]){16}$'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

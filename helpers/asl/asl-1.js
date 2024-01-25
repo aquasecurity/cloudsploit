@@ -1,4 +1,4 @@
-var parse = function(obj, path) {
+var parse = function(obj, path, region, cloud, accountId, resourceId) {
     //(Array.isArray(obj)) return [obj];
     if (typeof path == 'string' && path.includes('.')) path = path.split('.');
     if (Array.isArray(path) && path.length && typeof obj === 'object') {
@@ -22,12 +22,37 @@ var parse = function(obj, path) {
         }
         if (obj[localPath] || typeof obj[localPath] === 'boolean') {
             return parse(obj[localPath], path);
-        } else {
-            return ['not set'];
-        }
+        } else return ['not set'];
     } else if (!Array.isArray(obj) && path && path.length) {
         if (obj[path]) return [obj[path]];
-        else return ['not set'];
+        else {
+            if (cloud==='aws' && path.startsWith('arn:aws')) {
+                const template_string = path;
+                const placeholders = template_string.match(/{([^{}]+)}/g);
+                let extracted_values = [];
+                if (placeholders) {
+                    extracted_values = placeholders.map(placeholder => {
+                        const key = placeholder.slice(1, -1);
+                        if (key === 'value') return [obj][0];
+                        else return obj[key];
+                    });
+                }
+                // Replace other variables
+                let converted_string = template_string
+                    .replace(/\{region\}/g, region)
+                    .replace(/\{cloudAccount\}/g, accountId)
+                    .replace(/\{resourceId\}/g, resourceId);
+                placeholders.forEach((placeholder, index) => {
+                    if (index === placeholders.length - 1) {
+                        converted_string = converted_string.replace(placeholder, extracted_values.pop());
+                    } else {
+                        converted_string = converted_string.replace(placeholder, extracted_values.shift());
+                    }
+                });
+                path = converted_string;
+                return [path];
+            } else return ['not set'];
+        }
     } else if (Array.isArray(obj)) {
         return [obj];
     } else {
@@ -375,7 +400,7 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
     return resultObj;
 };
 
-var runConditions = function(input, data, results, resourcePath, resourceName, region) {
+var runConditions = function(input, data, results, resourcePath, resourceName, region, cloud, accountId) {
     let dataToValidate;
     let newPath;
     let newData;
@@ -401,12 +426,12 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                 if (dataToValidate.length) {
                     dataToValidate.forEach(newData => {
                         condition.validated = runValidation(newData, condition, inputResultsArr);
-                        parsedResource = parse(newData, resourcePath)[0];
+                        parsedResource = parse(newData, resourcePath, region, cloud, accountId, resourceName)[0];
                         if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
                     });
                 } else {
                     condition.validated = runValidation([], condition, inputResultsArr);
-                    parsedResource = parse([], resourcePath)[0];
+                    parsedResource = parse([], resourcePath, region, cloud, accountId, resourceName)[0];
                     if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
                 }
                 // result per resource
@@ -418,13 +443,13 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                     newData.forEach(dataElm =>{
                         if (newPath) condition.property = JSON.parse(JSON.stringify(newPath));
                         condition.validated = runValidation(dataElm, condition, inputResultsArr);
-                        parsedResource = parse(dataElm, resourcePath)[0];
+                        parsedResource = parse(dataElm, resourcePath, region, cloud, accountId, resourceName)[0];
                         if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
                     });
                 } else if (newPath && !newData.length) {
                     condition.property = JSON.parse(JSON.stringify(newPath));
                     condition.validated = runValidation(newData, condition, inputResultsArr);
-                    parsedResource = parse(newData, resourcePath)[0];
+                    parsedResource = parse(newData, resourcePath,  region, cloud, accountId, resourceName)[0];
                     if (parsedResource === 'not set' || typeof parsedResource !== 'string') parsedResource = resourceName;
                 } else if (!newPath) {
                     // no path returned. means it has fully parsed and got the value.
@@ -435,7 +460,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                     }
                     condition.validated = runValidation(newData, condition, inputResultsArr);
                     condition.property = JSON.parse(JSON.stringify(newPath));
-                    parsedResource = parse(newData, resourcePath)[0];
+                    parsedResource = parse(newData, resourcePath, region, cloud, accountId, resourceName)[0];
                     if (parsedResource === 'not set' || typeof parsedResource !== 'string') parsedResource = resourceName;
                 }
             }
@@ -443,7 +468,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
             dataToValidate = parse(data, condition.property);
             if (dataToValidate.length === 1) {
                 validated = runValidation(data, condition, inputResultsArr);
-                parsedResource = parse(data, resourcePath)[0];
+                parsedResource = parse(data, resourcePath, region, cloud, accountId, resourceName)[0];
                 if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = resourceName;
             } else {
                 newPath = dataToValidate[1];
@@ -451,7 +476,7 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
                 condition.property = newPath;
                 newData.forEach(element =>{
                     condition.validated = runValidation(element, condition, inputResultsArr);
-                    parsedResource = parse(data, resourcePath)[0];
+                    parsedResource = parse(data, resourcePath, region, cloud, accountId, resourceName)[0];
                     if (typeof parsedResource !== 'string' || parsedResource === 'not set') parsedResource = null;
 
                     results.push({
@@ -468,11 +493,10 @@ var runConditions = function(input, data, results, resourcePath, resourceName, r
     compositeResult(inputResultsArr, parsedResource, region, results, logical);
 };
 
-var asl = function(source, input, resourceMap, callback) {
+var asl = function(source, input, resourceMap, cloud, accountId, callback) {
     if (!source || !input) return callback('No source or input provided');
     if (!input.apis || !input.apis[0]) return callback('No APIs provided for input');
     if (!input.conditions || !input.conditions.length) return callback('No conditions provided for input');
-
     let service = input.conditions[0].service;
     var subService = (input.conditions[0].subservice) ? input.conditions[0].subservice : null;
     let api = input.conditions[0].api;
@@ -502,8 +526,8 @@ var asl = function(source, input, resourceMap, callback) {
             });
         } else if (regionVal.data && regionVal.data.length) {
             regionVal.data.forEach(function(regionData) {
-                var resourceName = parse(regionData, resourcePath)[0];
-                runConditions(input, regionData, results, resourcePath, resourceName, region);
+                var resourceName = parse(regionData, resourcePath, region, cloud, accountId)[0];
+                runConditions(input, regionData, results, resourcePath, resourceName, region, cloud, accountId);
             });
         } else if (regionVal.data && Object.keys(regionVal.data).length) {
             runConditions(input, regionVal.data, results, resourcePath, '', region);
@@ -527,11 +551,12 @@ var asl = function(source, input, resourceMap, callback) {
                     } else {
                         if (resourceObj.data && resourceObj.data.length){
                             resourceObj.data.forEach(function(regionData) {
-                                var resourceName = parse(regionData, resourcePath)[0];
-                                runConditions(input, regionData, results, resourcePath, resourceName, region);
+                                var resourceName = parse(regionData, resourcePath, region, cloud, accountId)[0];
+                                runConditions(input, regionData, results, resourcePath, resourceName, region, cloud, accountId);
                             });
                         } else {
-                            runConditions(input, resourceObj.data, results, resourcePath, resourceName, region);
+
+                            runConditions(input, resourceObj.data, results, resourcePath, resourceName, region, cloud, accountId);
                         }
                     }
                 }

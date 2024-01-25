@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable infrastructure level encryption for all Azure Service Bus namespaces.',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/configure-customer-managed-key#enable-infrastructure-double-encryption-of-data',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

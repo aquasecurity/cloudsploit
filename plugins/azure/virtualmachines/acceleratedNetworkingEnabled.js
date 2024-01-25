@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable accelerated networking in virtual machine network interfaces',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-powershell',
     apis: ['virtualMachines:listAll', 'networkInterfaces:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftnetwork:networkinterfaces:write', 'microsoftcompute:virtualmachines:delete', 'microsoftnetwork:networkinterfaces:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

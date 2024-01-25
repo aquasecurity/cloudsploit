@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Monitor for Total Number of Subscription Owners by ensuring AuditIfNotExists setting is used for \'A maximum of 3 owners should be designated for your subscription\' from the Azure Security Center.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

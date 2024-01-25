@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Set up an Active Directory admin for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-sign-in-aad-authentication',
     apis: ['servers:listPostgres', 'serverAdministrators:list'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

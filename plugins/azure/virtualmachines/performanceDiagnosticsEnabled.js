@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Enable performance diagnostics on Azure virtual machines',
     link: 'https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/performance-diagnostics',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write','microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

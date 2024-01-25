@@ -15,7 +15,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:updateAuthSettings'], rollback:['webApps:updateAuthSettings']},
     permissions: {remediate: ['webApps:updateAuthSettings'], rollback: ['webApps:updateAuthSettings']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
     compliance: {
         hipaa: 'HIPAA requires all application access to be restricted to known users ' +
                'for auditing and security controls.',
