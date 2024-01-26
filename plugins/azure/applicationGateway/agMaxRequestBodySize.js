@@ -7,12 +7,12 @@ module.exports = {
     domain: 'Network Access Control',
     description: 'Ensures that Application Gateway WAF policy have desired request body size configured.',
     more_info: 'Application Gateway WAF policy includes a maximum request body size field, specified in kilobytes. This setting controls the overall request size limit, excluding any file uploads. Configuring an appropriate value for this field is crucial for optimizing security and performance.',
-    recommended_action: 'Modify application gateway WAF policy, enable request body inspection and set the desired request body size.',
+    recommended_action: 'Modify application gateway WAF policy and set the max body size to desired value.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/application-gateway-waf-request-size-limits',
     apis: ['wafPolicies:listAll'],
     settings: {
         max_request_body_size: {
-            name: 'Max request body size',
+            name: 'Max Request Body Size',
             description: 'The default value for request body size is 128.',
             regex: '^(12[8-9]|1[3-9]{1,2}|2000)$',
             default: '128',
