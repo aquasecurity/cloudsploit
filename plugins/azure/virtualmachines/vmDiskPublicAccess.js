@@ -7,7 +7,7 @@ module.exports = {
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that Azure virtual machine disks are not accessible publicly.',
-    more_info: 'Private endpoints restrict the export and import of managed disks and more securely access data over a private link from clients on your Azure virtual network. The private endpoint uses an IP address from the virtual network address space for your managed disks. Network traffic between clients on their virtual network and managed disks only traverses over the virtual network and a private link on the Microsoft backbone network, eliminating exposure from the public internet.',
+    more_info: 'Private endpoints safeguard against unauthorized access and cyber threats, preserving the integrity and confidentiality of your data while aligning with compliance and security best practices by restricting the export and import of managed disks and only allowing access over a private link from clients on your Azure virtual network.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-private-links-for-import-export-portal',
     recommended_action: 'Disable public access for all Azure virtual machine disks.',
     apis: ['disks:list'],
@@ -34,12 +34,13 @@ module.exports = {
             }
             for (let disk of disks.data) {
                 if (!disk.id) continue;
+
                 if (disk.networkAccessPolicy) {
                     if (disk.networkAccessPolicy.toLowerCase() === 'allowall') {
                         helpers.addResult(results, 2, 'Disk is publicly accessible', location, disk.id);
                         
                     } else if (disk.networkAccessPolicy.toLowerCase() === 'allowprivate') {
-                        helpers.addResult(results, 0, 'Disk is privately accessible using private endpoints', location, disk.id);
+                        helpers.addResult(results, 0, 'Disk is not publicly accessible', location, disk.id);
                         
                     } else {
                         helpers.addResult(results, 0, 'Disk is not publicly or privately accessible', location, disk.id);
