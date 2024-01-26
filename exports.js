@@ -1011,6 +1011,7 @@ module.exports = {
         'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
         'agRequestBodyInspection'       : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodyInspection'),
+        'agMaxRequestBodySize'          : require(__dirname + '/plugins/azure/applicationGateway/agMaxRequestBodySize.js'),
 
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
 
@@ -1562,4 +1563,3 @@ module.exports = {
         'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };
-
