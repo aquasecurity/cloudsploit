@@ -5,17 +5,26 @@ module.exports = {
     title: 'VM Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Trusted launch is selected for Azure virtual machines.',
-    more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
-    recommended_action: 'Select Trusted launch as security type for Azure virtual machines.',
+    description: 'Ensures that Azure virtual machines has desired security type configured.',
+    more_info: 'Trusted launch VMs protects against persistent and advanced attacks on Gen2 virtual machines with configurable features like secure boot and vTPM. On top of Trusted launch, Confidential VMs offers higher confidentiality and integrity guaranteed with hardware-based trusted execution environment.',
+    recommended_action: 'Set the desired security type for all Azure virtual machines',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
     apis: ['virtualMachines:listAll'],
     realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
+    settings: {
+        desired_security_type: {
+            name: 'VM Desired Security Type',
+            description: 'Desired security type i.e. "trustedlaunch" or "confidentialvm".',
+            regex: '^(trustedlaunch|confidentialvm)$',
+            default: 'trustedlaunch'
 
+        },
+    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = settings.desired_security_type || this.settings.desired_security_type.default;
 
         async.each(locations.virtualMachines, function(location, rcb) {
             var virtualMachines = helpers.addSource(cache, source,
@@ -34,10 +43,10 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.securityProfile && virtualMachine.securityProfile.securityType == 'TrustedLaunch') {
-                    helpers.addResult(results, 0, 'Trusted launch is selected as security type for virtual machine', location, virtualMachine.id);
+                if (virtualMachine.securityProfile && virtualMachine.securityProfile.securityType.toLowerCase() == config) {
+                    helpers.addResult(results, 0, `${config} is selected as security type for virtual machine`, location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Trusted launch is not selected as security type for virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, `${config} is not selected as security type for virtual machine`, location, virtualMachine.id);
                 }
                 
             });
