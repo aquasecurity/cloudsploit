@@ -1010,7 +1010,7 @@ module.exports = {
         'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
         'agRequestBodyInspection'       : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodyInspection'),
-        'agMaxRequestBodySize'          : require(__dirname + '/plugins/azure/applicationGateway/agMaxRequestBodySize.js'),
+        'agRequestBodySize'             : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodySize.js'),
 
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
 

@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var agMaxRequestBodySize = require('./agMaxRequestBodySize.js');
+var agRequestBodySize = require('./agRequestBodySize.js');
 
 const wafPolicy = [
     {
@@ -73,11 +73,11 @@ const createErrorCache = () => {
     };
 };
 
-describe('agMaxRequestBodySize', function() {
+describe('agRequestBodySize', function() {
     describe('run', function() {
         it('should give passing result if no WAF policy found', function(done) {
             const cache = createCache([]);
-            agMaxRequestBodySize.run(cache, {}, (err, results) => {
+            agRequestBodySize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing WAF policies found');
@@ -88,7 +88,7 @@ describe('agMaxRequestBodySize', function() {
 
         it('should give unknown result if Unable to query for WAF policy', function(done) {
             const cache = createErrorCache();
-            agMaxRequestBodySize.run(cache, {}, (err, results) => {
+            agRequestBodySize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for Application Gateway WAF policies');
@@ -99,7 +99,7 @@ describe('agMaxRequestBodySize', function() {
 
         it('should give passing result if Application gateway WAF policy does not have request body inspection enabled', function(done) {
             const cache = createCache([wafPolicy[2]]);
-            agMaxRequestBodySize.run(cache, {}, (err, results) => {
+            agRequestBodySize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Request Body Inspection is not enabled for WAF policy');
@@ -110,10 +110,10 @@ describe('agMaxRequestBodySize', function() {
 
         it('should give passing result if Application gateway WAF policy has max request body size of 128 - without setting', function(done) {
             const cache = createCache([wafPolicy[0]]);
-            agMaxRequestBodySize.run(cache, {}, (err, results) => {
+            agRequestBodySize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 128');
+                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 128 which is greater than or equal to 128');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -121,7 +121,7 @@ describe('agMaxRequestBodySize', function() {
 
         it('should give failing result if Application gateway WAF policy has max request body size less than 500 - with setting', function(done) {
             const cache = createCache([wafPolicy[1]]);
-            agMaxRequestBodySize.run(cache, {max_request_body_size: 500}, (err, results) => {
+            agRequestBodySize.run(cache, {max_request_body_size: 500}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 200 which is less than 500');

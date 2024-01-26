@@ -13,7 +13,7 @@ module.exports = {
     settings: {
         max_request_body_size: {
             name: 'Max Request Body Size',
-            description: 'The default value for request body size is 128.',
+            description: 'The default value for request body size is 128 KB. The setting checks for request body size and produces pass result if it is greater than or equal to the desired value.',
             regex: '^(12[8-9]|1[3-9]{1,2}|2000)$',
             default: '128',
         },
@@ -48,7 +48,7 @@ module.exports = {
                 var bodyInspection = policy.policySettings && policy.policySettings.requestBodyCheck ? policy.policySettings.requestBodyCheck : false;
                 if (bodyInspection) {
                     if (policy.policySettings && policy.policySettings.maxRequestBodySizeInKb && policy.policySettings.maxRequestBodySizeInKb >= maxRequestBodySize) {
-                        helpers.addResult(results, 0, `Application gateway WAF policy has max request body size of ${maxRequestBodySize}`, location, policy.id);
+                        helpers.addResult(results, 0, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is greater than or equal to ${maxRequestBodySize}`, location, policy.id);
                     } else {
                         helpers.addResult(results, 2, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is less than ${maxRequestBodySize}`, location, policy.id);
                     }
