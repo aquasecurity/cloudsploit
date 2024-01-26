@@ -18,6 +18,8 @@ module.exports = {
             default: '128',
         },
     },
+    realtime_triggers: ['microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
