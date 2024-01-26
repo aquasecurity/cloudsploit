@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Application Gateway Max Request Body',
+    title: 'Application Gateway Request Body Size',
     category: 'Application Gateway',
     domain: 'Network Access Control',
     description: 'Ensures that Application Gateway WAF policy have desired request body size configured.',
