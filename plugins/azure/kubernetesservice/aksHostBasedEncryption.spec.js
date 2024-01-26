@@ -49,6 +49,19 @@ const listCluster = [
                 "osType": "Linux"
             }
         ],
+    },
+    {
+        "id": "/subscriptions/12345/resourcegroups/ABSBAKS2/providers/Microsoft.ContainerService/managedClusters/absbaks2",
+        "location": "eastus",
+        'tags': {},
+        "name": "absbaks2",
+        "type": "Microsoft.ContainerService/ManagedClusters",
+        "sku": {
+            "name": "Basic",
+            "tier": "Free"
+        },
+        "agentPoolProfiles": [
+        ],
     }
 ]
 
@@ -90,7 +103,20 @@ describe('aksHostBasedEncryption', function() {
             };
             const cache = createCache(null,null);
             aksHostBasedEncryption.run(cache, {}, callback);
+        });
+
+        it('should give unknown result if unable to query node profile', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Kubernetes cluster node profile');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            };
+            const cache = createCache(null,[listCluster[2]]);
+            aksHostBasedEncryption.run(cache, {}, callback);
         })
+
 
         it('should give failing result if Kubernetes Service node pools does not have encryption at host enabled', function(done) {
             const callback = (err, results) => {
