@@ -1,7 +1,10 @@
 var async = require('async');
 var regions = require(__dirname + '/regions');
-var AWS = require('aws-sdk');
 var helpers = require('../shared.js');
+
+const requireServiceModule = (serviceName) => {
+    return require(`@aws-sdk/client-${serviceName}`);
+};
 
 function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
     if (!CREDENTIAL_DOWNLOAD_STARTED) {
@@ -526,17 +529,22 @@ function getS3BucketLocation(cache, region, bucketName) {
 function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];
-    var executor = new AWS[service](config);
+    try {
+        const executorModule = requireServiceModule(serviceName);
+        var executor = new executorModule[service](config);
 
-    var executorCb = function(err, data) {
-        if (err) {
-            return callback(err, null);
-        } else {
-            return callback(null, data);
-        }
-    };
-
-    executor[callKey](params, executorCb);
+        var executorCb = function(err, data) {
+            if (err) {
+                return callback(err, null);
+            } else {
+                return callback(null, data);
+            }
+        };
+    
+        executor[callKey](params, executorCb);
+    } catch (error) {
+        console.error('Error during dynamic import:', error);
+    }
 }
 
 function nullArray(object) {
