@@ -48,7 +48,7 @@ module.exports = {
                             helpers.addResult(results, 0, 'Disk has automatic key rotation enabled, location, disk.id);
                         
                         } else {
-                            helpers.addResult(results, 2, 'Disk auto key rotation for customer managed key is disabled', location, disk.id);
+                            helpers.addResult(results, 2, 'Disk does not have automatic key rotation enabled', location, disk.id);
                         }
                     }
                     
