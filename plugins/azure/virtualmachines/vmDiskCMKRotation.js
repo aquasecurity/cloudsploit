@@ -35,6 +35,8 @@ module.exports = {
           
 
             disks.data.forEach((disk) => {
+               if (!disk.id) return;
+               
                 if (disk.encryption && disk.encryption.type &&
                     disk.encryption.type.toLowerCase() === 'encryptionatrestwithplatformkey') {
                     helpers.addResult(results, 0, 'Disk is using platform managed key for encryption', location, disk.id);
