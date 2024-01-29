@@ -28,8 +28,24 @@ const { Agent } = require('https');
 const { Agent: HttpAgent } = require('http');
 const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
 
+const servicePackageMapping = {
+    // Add mappings for services with different package names
+    'APIGateway': 'api-gateway',
+    'AppMesh': 'app-mesh',
+    'AutoScaling': 'auto-scaling',
+    'ElasticBeanstalk': 'elastic-beanstalk',
+    'ELB': 'elastic-load-balancing',
+    'ELBv2': 'elastic-load-balancing-v2',
+    'LexModelsV2': 'lex-models-v2',
+    'S3Control': 's3-control',
+    'WAFRegional': 'waf-regional',
+        // Add more mappings as needed
+};
+
 const requireServiceModule = (serviceName) => {
-    return require(`@aws-sdk/client-${serviceName}`);
+    // Use the mapping or default to the provided service name
+    const packageName = servicePackageMapping[serviceName] || serviceName.toLowerCase();
+    return require(`@aws-sdk/client-${packageName}`);
 };
 
 var CALLS_CONFIG = {
