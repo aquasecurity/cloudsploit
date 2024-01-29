@@ -39,9 +39,9 @@ module.exports = {
             managedClusters.data.forEach(managedCluster => {
                 
                 if (managedCluster.identity && managedCluster.identity.type) {
-                    helpers.addResult(results, 0, 'The managed cluster has identities assigned', location, managedCluster.id);
+                    helpers.addResult(results, 0, 'AKS cluster has managed identity enabled', location, managedCluster.id);
                 } else {
-                    helpers.addResult(results, 2, 'The managed cluster does not have an identity assigned', location, managedCluster.id);
+                    helpers.addResult(results, 2, 'AKS cluster does not have managed identity enabled', location, managedCluster.id);
                 }
             });
 

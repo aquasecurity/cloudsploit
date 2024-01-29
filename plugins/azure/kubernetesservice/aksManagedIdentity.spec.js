@@ -71,7 +71,7 @@ describe('aksManagedIdentity', function() {
             aksManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The managed cluster does not have an identity assigned');
+                expect(results[0].message).to.include('AKS cluster does not have managed identity enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -93,7 +93,7 @@ describe('aksManagedIdentity', function() {
             aksManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The managed cluster has identities assigned');
+                expect(results[0].message).to.include('AKS cluster has managed identity enabled'');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
