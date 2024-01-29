@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
     recommended_action: 'Ensure that Azure App Configuration store has CMK encryption enabled.',
     apis: ['appConfigurations:list'],
+    realtime_triggers: ['microsoftappconfiguration:configurationstores:write','microsoftappconfiguration:configurationstores:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
