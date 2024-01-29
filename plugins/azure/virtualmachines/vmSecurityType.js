@@ -24,6 +24,7 @@ module.exports = {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var securityTypes = ['trustedlaunch', 'confidentialvm'];
         var config = settings.desired_security_type || this.settings.desired_security_type.default;
 
         async.each(locations.virtualMachines, function(location, rcb) {
@@ -43,10 +44,11 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.securityProfile && virtualMachine.securityProfile.securityType.toLowerCase() == config) {
-                    helpers.addResult(results, 0, `${config} is selected as security type for virtual machine`, location, virtualMachine.id);
+                const configuredSecuritytype = virtualMachine.securityProfile && virtualMachine.securityProfile.securityType.toLowerCase();
+                if (securityTypes.indexOf(configuredSecuritytype) >= securityTypes.indexOf(config)) {
+                    helpers.addResult(results, 0, `${configuredSecuritytype} is configured as security type for virtual machine`, location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, `${config} is not selected as security type for virtual machine`, location, virtualMachine.id);
+                    helpers.addResult(results, 2, `${config} is not configured as security type for virtual machine`, location, virtualMachine.id);
                 }
                 
             });
