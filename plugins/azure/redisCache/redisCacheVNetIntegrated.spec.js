@@ -100,7 +100,7 @@ describe('redisCacheVNetIntegrated', function() {
             redisCacheVNetIntegrated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('VNet Integration is only available for premium Redis Cache');
+                expect(results[0].message).to.include('VNet Integration is only available for premium tier Redis Caches');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
