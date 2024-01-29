@@ -78,7 +78,7 @@ describe('vmDiskAutoKeyRotationCMK', function() {
             vmDiskAutoKeyRotationCMK.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Disk is using platform managed key for encryption');
+                expect(results[0].message).to.include('Disk is encrypted using a platform managed key');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
