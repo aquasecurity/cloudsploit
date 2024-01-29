@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Ensure VNet (private access) is integrated for premium Redis Cache.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-network-isolation',
     apis: ['redisCaches:listBySubscription'],
-
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
