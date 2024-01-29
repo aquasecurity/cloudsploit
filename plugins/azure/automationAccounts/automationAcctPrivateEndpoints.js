@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     description: 'Ensure that Azure Automation accounts have private endpoints enabled.',
     more_info: 'Enabling private endpoints for Automation Account enhances security by allowing access exclusively through a private network, minimizing the risk of public internet exposure and protecting against external attacks.',
-    recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Automation Account.',
+    recommended_action: 'Ensure that private endpoints are configured properly for all Automation Accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/how-to/private-link-security',
     apis: ['automationAccounts:list', 'automationAccounts:get'],
     realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete','microsoftautomation:automationcccounts:privateendpointconnectionproxies:write', 'microsoftautomation:automationcccounts:privateendpointconnectionproxies:delete'],
@@ -46,9 +46,9 @@ module.exports = {
                 }    
 
                 if (describeAcct.data.privateEndpointConnections && describeAcct.data.privateEndpointConnections.length) {
-                    helpers.addResult(results, 0, 'Private Endpoints are configured for Automation account', location, account.id);
+                    helpers.addResult(results, 0, 'Automation Account has private endpoints configured', location, account.id);
                 } else {
-                    helpers.addResult(results, 2, 'Private Endpoints are not configured for Automation account', location, account.id);
+                    helpers.addResult(results, 2, 'Automation Account does not have private endpoints configured', location, account.id);
                 }
             }
 
