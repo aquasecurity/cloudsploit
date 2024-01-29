@@ -38,8 +38,8 @@ module.exports = {
                 var agentPoolProfiles = managedCluster.agentPoolProfiles;
 
                 if (!agentPoolProfiles || !agentPoolProfiles.length) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for Kubernetes cluster node profile', location, managedCluster.id);
+                    helpers.addResult(results, 0,
+                        'No existing node pools found', location, managedCluster.id);
                 } else {
                     var unencryptedAtHost = agentPoolProfiles.filter(profile => !profile.enableEncryptionAtHost).map(profile => profile.name);
                    

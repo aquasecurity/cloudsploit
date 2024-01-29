@@ -108,8 +108,8 @@ describe('aksHostBasedEncryption', function() {
         it('should give unknown result if unable to query node profile', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Kubernetes cluster node profile');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No existing node pools found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -122,7 +122,7 @@ describe('aksHostBasedEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('AKS Cluster following node pools: test');
+                expect(results[0].message).to.include('AKS Cluster does not have encryption at host enabled for following node pools: test ');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -135,7 +135,7 @@ describe('aksHostBasedEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('AKS Cluster node pools have encryption at host enabled');
+                expect(results[0].message).to.include('AKS Cluster has encryption at host enabled for all node pools');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
