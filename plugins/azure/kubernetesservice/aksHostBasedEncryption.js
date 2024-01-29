@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     description: 'Ensures that host-based encryption is enabled for all node pools in AKS Cluster.',
     more_info: 'Enabling host-based encryption ensures that data stored on the VM host of your AKS agent node VMs is encrypted at rest and flows encrypted to the Storage service. This capability provides an additional measure of security as the data is encrypted end-to-end.',
-    recommended_action: 'Modify AKS Cluster node pool and enabled host-based encryption.',
+    recommended_action: 'Enable host-based encryption for all node pools in your AKS clusters.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/enable-host-encryption',
     apis: ['managedClusters:list'],
     realtime_triggers: ['microsoftcontainerservice:managedclusters:write','microsoftcontainerservice:managedclusters:delete','microsoftcontainerservice:managedclusters:agentpools:write','microsoftcontainerservice:managedclusters:agentpools:delete'],
