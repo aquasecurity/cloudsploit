@@ -36,7 +36,7 @@ module.exports = {
                 if (!cache.id) continue;
 
                 if (cache.sku && cache.sku.name && cache.sku.name.toLowerCase()!='premium') {
-                    helpers.addResult(results, 0, 'VNet Integration is only available for premium Redis Cache', location, cache.id);
+                    helpers.addResult(results, 0, 'VNet Integration is only available for premium tier Redis Caches', location, cache.id);
                 } else if (cache.subnetId) {
                     helpers.addResult(results, 0, 'Redis Cache has VNet integrated', location, cache.id);
                 } else {
