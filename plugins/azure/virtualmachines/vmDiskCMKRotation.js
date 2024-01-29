@@ -3,7 +3,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'VM Disk Auto key Rotation CMK',
+    title: 'VM Disk CMK Rotation',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that auto key rotation for CMK is enabled for disk encryption.',
