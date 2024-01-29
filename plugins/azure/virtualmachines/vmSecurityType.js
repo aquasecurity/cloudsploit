@@ -8,7 +8,7 @@ module.exports = {
     description: 'Ensures that Azure virtual machines have desired security type configured.',
     more_info: 'Using advanced security features for virtual machines boost security by verifying the integrity of VMs during boot-up and safeguarding data in use. They defend against advanced threats, encrypt sensitive data, and ensure compliance with high security standards.',
     recommended_action: 'Set the desired security type for all Azure virtual machines',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
+    link: 'https://learn.microsoft.com/en-us/azure/confidential-computing',
     apis: ['virtualMachines:listAll'],
     realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
     settings: {
