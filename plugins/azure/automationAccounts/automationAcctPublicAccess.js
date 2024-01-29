@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Modify automation account and disable public access.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/how-to/private-link-security',
     apis: ['automationAccounts:list'],
+    realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete'],
+
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
