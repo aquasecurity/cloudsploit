@@ -20,7 +20,7 @@ module.exports = {
     },
     realtime_triggers: ['microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write', 'microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -55,7 +55,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
