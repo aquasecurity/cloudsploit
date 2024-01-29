@@ -45,7 +45,7 @@ module.exports = {
                         var diskEncryptionSet = helpers.addSource(cache, source, ['diskEncryptionSet', 'get', location, disk.id]);
                         
                         if (diskEncryptionSet && diskEncryptionSet.data && diskEncryptionSet.data.rotationToLatestKeyVersionEnabled) {
-                            helpers.addResult(results, 0, 'Disk auto key rotation for customer managed key is enabled', location, disk.id);
+                            helpers.addResult(results, 0, 'Disk has automatic key rotation enabled, location, disk.id);
                         
                         } else {
                             helpers.addResult(results, 2, 'Disk auto key rotation for customer managed key is disabled', location, disk.id);
