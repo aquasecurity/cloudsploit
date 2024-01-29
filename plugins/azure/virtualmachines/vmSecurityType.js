@@ -5,7 +5,7 @@ module.exports = {
     title: 'VM Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Azure virtual machines has desired security type configured.',
+    description: 'Ensures that Azure virtual machines have desired security type configured.',
     more_info: 'Trusted launch VMs protects against persistent and advanced attacks on Gen2 virtual machines with configurable features like secure boot and vTPM. On top of Trusted launch, Confidential VMs offers higher confidentiality and integrity guaranteed with hardware-based trusted execution environment.',
     recommended_action: 'Set the desired security type for all Azure virtual machines',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
