@@ -18,9 +18,9 @@ module.exports = {
             default: '128',
         },
     },
-    realtime_triggers: ['microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write','microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
-    
-    run: function(cache, settings, callback) {
+    realtime_triggers: ['microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:write', 'microsoftnetwork:applicationgatewaywebapplicationfirewallpolicies:delete'],
+
+    run: function (cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -47,21 +47,15 @@ module.exports = {
             for (let policy of wafPolicies.data) {
                 if (!policy.id) continue;
                 var maxRequestBodySize = config.max_request_body_size;
-                var bodyInspection = policy.policySettings && policy.policySettings.requestBodyCheck ? policy.policySettings.requestBodyCheck : false;
-                if (bodyInspection) {
-                    if (policy.policySettings && policy.policySettings.maxRequestBodySizeInKb && policy.policySettings.maxRequestBodySizeInKb >= maxRequestBodySize) {
-                        helpers.addResult(results, 0, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is greater than or equal to ${maxRequestBodySize}`, location, policy.id);
-                    } else {
-                        helpers.addResult(results, 2, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is less than ${maxRequestBodySize}`, location, policy.id);
-                    }
+                if (policy.policySettings && policy.policySettings.maxRequestBodySizeInKb && policy.policySettings.maxRequestBodySizeInKb >= maxRequestBodySize) {
+                    helpers.addResult(results, 0, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is greater than or equal to ${maxRequestBodySize}`, location, policy.id);
                 } else {
-                    helpers.addResult(results, 0, 'Request Body Inspection is not enabled for WAF policy', location, policy.id);
+                    helpers.addResult(results, 2, `Application gateway WAF policy has max request body size of ${policy.policySettings.maxRequestBodySizeInKb} which is less than ${maxRequestBodySize}`, location, policy.id);
                 }
-
             }
 
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
     }

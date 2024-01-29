@@ -97,17 +97,6 @@ describe('agRequestBodySize', function() {
             });
         });
 
-        it('should give passing result if Application gateway WAF policy does not have request body inspection enabled', function(done) {
-            const cache = createCache([wafPolicy[2]]);
-            agRequestBodySize.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Request Body Inspection is not enabled for WAF policy');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
         it('should give passing result if Application gateway WAF policy has max request body size of 128 - without setting', function(done) {
             const cache = createCache([wafPolicy[0]]);
             agRequestBodySize.run(cache, {}, (err, results) => {
