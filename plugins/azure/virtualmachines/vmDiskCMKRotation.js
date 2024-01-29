@@ -35,7 +35,7 @@ module.exports = {
           
 
             disks.data.forEach((disk) => {
-               if (!disk.id) return;
+                if (!disk.id) return;
                
                 if (disk.encryption && disk.encryption.type &&
                     disk.encryption.type.toLowerCase() === 'encryptionatrestwithplatformkey') {
@@ -47,7 +47,7 @@ module.exports = {
                         var diskEncryptionSet = helpers.addSource(cache, source, ['diskEncryptionSet', 'get', location, disk.id]);
                         
                         if (diskEncryptionSet && diskEncryptionSet.data && diskEncryptionSet.data.rotationToLatestKeyVersionEnabled) {
-                            helpers.addResult(results, 0, 'Disk has automatic key rotation enabled, location, disk.id);
+                            helpers.addResult(results, 0, 'Disk has automatic key rotation enabled', location, disk.id);
                         
                         } else {
                             helpers.addResult(results, 2, 'Disk does not have automatic key rotation enabled', location, disk.id);
