@@ -466,7 +466,7 @@ var calls = {
     },
     eventHub: {
         listEventHub: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2023-01-01-preview'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
         }
     },
     serviceBus: {
