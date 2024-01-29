@@ -8,7 +8,7 @@ module.exports = {
     domain: 'Compute',
     description: 'Ensures that customer-managed keys (CMK) are automatically rotated for virtual machine disks.',
     more_info: 'Automatic key rotation helps ensure your keys are secure. A disk references a key via its disk encryption set. When you enable automatic rotation for a disk encryption set, the system will automatically update all managed disks, snapshots, and images referencing the disk encryption set to use the new version of the key within one hour.',
-    recommended_action: 'Enable auto key rotation for CMK for all disks encryption.',
+    recommended_action: 'Enable automatic key rotation for all VM disk encryption sets.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption#automatic-key-rotation-of-customer-managed-keys',
     apis: ['disks:list','diskEncryptionSet:get'],
     realtime_triggers: ['microsoftcompute:disks:write','microsoftcompute:disks:delete','microsoftcompute:diskencryptionsets:write'],
