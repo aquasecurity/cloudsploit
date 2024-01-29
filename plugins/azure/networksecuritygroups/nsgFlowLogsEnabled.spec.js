@@ -128,7 +128,7 @@ describe('nsgFlowLogsEnabled', function() {
             nsgFlowLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('NGS has flow logs enabled');
+                expect(results[0].message).to.include('Network Security Group has flow logs enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -139,7 +139,7 @@ describe('nsgFlowLogsEnabled', function() {
             nsgFlowLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('NGS does not have flow logs enabled');
+                expect(results[0].message).to.include('Network Security Group does not have flow logs enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
