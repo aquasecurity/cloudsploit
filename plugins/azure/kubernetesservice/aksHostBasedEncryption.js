@@ -45,7 +45,7 @@ module.exports = {
                    
                     if (unencryptedAtHost.length) {
                         helpers.addResult(results, 2,
-                            `AKS Cluster following node pools: ${unencryptedAtHost.join(',')} does not have encryption at host enabled`, location, managedCluster.id);
+                            `AKS Cluster does not have encryption at host enabled for following node pools: ${unencryptedAtHost.join(',')} `, location, managedCluster.id);
                     } else {
                         helpers.addResult(results, 0,
                             'AKS Cluster node pools have encryption at host enabled', location, managedCluster.id);
