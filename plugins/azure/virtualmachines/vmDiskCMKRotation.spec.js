@@ -100,7 +100,7 @@ describe('vmDiskAutoKeyRotationCMK', function() {
             vmDiskAutoKeyRotationCMK.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Disk auto key rotation for customer managed key is disabled');
+                expect(results[0].message).to.include('Disk does not have automatic key rotation for enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
