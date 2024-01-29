@@ -6,8 +6,8 @@ module.exports = {
     category: 'Event Hubs',
     domain: 'Content Delivery',
     description: 'Ensures Microsoft Azure Event Hubs are not publicly accessible.',
-    more_info: 'Configuring Azure Event Hub with public access poses a security risk.To mitigate this risk, it is advisable to limit access by allowing connections only from specific IP addresses or private networks.',
-    recommended_action: 'Ensure that the public network access is disabled for each Microsoft Azure Event namespace.',
+    more_info: 'Configuring Azure Event Hubs namespace with public access poses a security risk. To mitigate this risk, it is advisable to limit access by allowing connections only from specific IP addresses or private networks.',
+    recommended_action: 'Ensure that public network access is disabled for each Event Hubs namespace.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-ip-filtering#configure-public-access-when-creating-a-namespace',
     apis: ['eventHub:listEventHub'],
     realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete', 'microsofteventhub:namespaces:networkrulesets:write'],
@@ -37,7 +37,7 @@ module.exports = {
             for (let eventHub of eventHubs.data){
                 if (!eventHub.id) continue;
 
-                if (eventHub.publicNetworkAccess.toLowerCase() === 'enabled') {
+                if (eventHub.publicNetworkAccess && eventHub.publicNetworkAccess.toLowerCase() === 'enabled') {
                     helpers.addResult(results, 2,
                         'Event Hubs namespace is publicly accessible',location, eventHub.id);
                 } else {
