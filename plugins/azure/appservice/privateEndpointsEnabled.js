@@ -6,8 +6,8 @@ module.exports = {
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that Web Apps are accessible only through private endpoints',
-    more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet and provides secure connectivity between clients on private network and app',
-    recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Web Apps',
+    more_info: 'Enabling private endpoints for Azure App Service enhances security by allowing access exclusively through a private network, minimizing the risk of public internet exposure and protecting against external attacks.',
+    recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Web Apps.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint',
     apis: ['webApps:list'],
     realtime_triggers: ['microsoftweb:sites:write', 'microsoftweb:sites:privateendpointconnectionproxies:write', 'microsoftweb:sites:privateendpointconnectionproxies:delete', 'microsoftweb:sites:delete'],
@@ -35,11 +35,11 @@ module.exports = {
 
             webApps.data.forEach(function(webApp) {
                 if (webApp && webApp.kind && webApp.kind === 'functionapp') {
-                    helpers.addResult(results, 0, 'Private Endpoints can not be configured for the function App', location, webApp.id);
+                    helpers.addResult(results, 0, 'Private Endpoints can not be configured for function apps', location, webApp.id);
                 } else if (webApp && webApp.privateLinkIdentifiers) {
-                    helpers.addResult(results, 0, 'Web App has Private Endpoints configured', location, webApp.id);
+                    helpers.addResult(results, 0, 'App Service has Private Endpoints configured', location, webApp.id);
                 } else {
-                    helpers.addResult(results, 2, 'Web App does not have Private Endpoints configured', location, webApp.id);
+                    helpers.addResult(results, 2, 'App Service does not have Private Endpoints configured', location, webApp.id);
                 }
             });
             rcb();

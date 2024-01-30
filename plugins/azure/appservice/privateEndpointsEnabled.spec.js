@@ -65,7 +65,7 @@ describe('privateEndpointsEnabled', function() {
             privateEndpointsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Web App has Private Endpoints configured');
+                expect(results[0].message).to.include('App Service has Private Endpoints configured');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -76,7 +76,7 @@ describe('privateEndpointsEnabled', function() {
             privateEndpointsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Web App does not have Private Endpoints configured');
+                expect(results[0].message).to.include('App Service does not have Private Endpoints configured');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
