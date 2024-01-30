@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Set the authorization level for all HTTP trigger functions.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-functions/security-concepts?tabs=v4#authorization-scopes-function-level',
     apis: ['webApps:list', 'functions:list'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete', 'microsoftweb:sites:functions:write', 'microsoftweb:sites:functions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
