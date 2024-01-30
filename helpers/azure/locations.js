@@ -124,5 +124,6 @@ module.exports = {
     classicFrontDoors: ['global'],
     afdWafPolicies: ['global'],
     appConfigurations: locations,
-    automationAccounts: locations    
+    automationAccounts: locations,
+    publicIpAddresses: locations,
 };
