@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Recreate VM disks with double encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption#double-encryption-at-rest',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,9 +36,9 @@ module.exports = {
                 if (!disk.id) continue;
 
                 if (disk.encryption && disk.encryption.type && disk.encryption.type.toLowerCase() === 'encryptionatrestwithplatformandcustomerkeys'){
-                    helpers.addResult(results, 0, 'VM disk is encrypted using both platform and customer managed keys', location, disk.id);
+                    helpers.addResult(results, 0, 'VM disk is double encrypted using both platform and customer managed keys', location, disk.id);
                 } else {
-                    let message  = 'VM disk is not double encrypted';
+                    let message  = 'VM disk does not have double encryption enabled';
                     if (disk.encryption && disk.encryption.type) {
                         if (disk.encryption.type.toLowerCase() === 'encryptionatrestwithcustomerkey') {
                             message = 'VM disk is encrypted using only customer managed key';

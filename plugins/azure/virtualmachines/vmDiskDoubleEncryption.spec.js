@@ -3,8 +3,8 @@ var vmDiskDoubleEncryption = require('./vmDiskDoubleEncryption');
 
 const disks = [
     {
-        'name': 'test-vm_disk1_8fa6d20523294d6d808958c906551aa5',
-        'id': '/subscriptions/123/resourceGroups/AKHTAR-RG/providers/Microsoft.Compute/disks/test-vm_disk1_8fa6d20523294d6d808958c906551aa5',
+        'name': 'test-vm_disk1_151553523',
+        'id': '/subscriptions/123/resourceGroups/AKHTAR-RG/providers/Microsoft.Compute/disks/test-vm_disk1_151553523',
         'type': 'Microsoft.Compute/disks',
         'encryption': {
             'type': 'EncryptionAtRestWithPlatformAndCustomerKeys'
@@ -12,8 +12,8 @@ const disks = [
     },
     
     {
-        'name': 'test-vm_OsDisk_1_e6b7c388f6e0463a8a626a57fce96801',
-        'id': '/subscriptions/123/resourceGroups/AKHTAR-RG/providers/Microsoft.Compute/disks/test-vm_OsDisk_1_e6b7c388f6e0463a8a626a57fce96801',
+        'name': 'test-vm_OsDisk_1_53523231',
+        'id': '/subscriptions/123/resourceGroups/AKHTAR-RG/providers/Microsoft.Compute/disks/test-vm_OsDisk_1_53523231',
         'type': 'Microsoft.Compute/disks',
         'encryption': {
             'type': 'EncryptionAtRestWithPlatformKey'
@@ -64,7 +64,7 @@ describe('vmDiskDoubleEncryption', function() {
             vmDiskDoubleEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('VM disk is encrypted using both platform and customer managed keys');
+                expect(results[0].message).to.include('VM disk is double encrypted using both platform and customer managed keys');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
