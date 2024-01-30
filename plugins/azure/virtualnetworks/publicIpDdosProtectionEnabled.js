@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Public Ip Address DDos Protection',
-    category: 'Public Ip Addresses',
+    category: 'Virtual Networks',
     domain: 'Network Access Control',
     description: 'Ensures that DDoS Ip Protection is enabled for Microsoft Azure Public Ip Addresses',
     more_info: 'Enabling DDoS IP Protection on public ip addresses mitigates potential attacks, differentiating between malicious and legitimate traffic, by interacting with the client, and blocking malicious traffic.',
