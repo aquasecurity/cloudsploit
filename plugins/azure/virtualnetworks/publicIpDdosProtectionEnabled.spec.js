@@ -60,7 +60,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Public Ip Addresses found');
+                expect(results[0].message).to.include('No existing Public IP Addresses found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -71,7 +71,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Public Ip Address does not have DDoS ip protection enabled');
+                expect(results[0].message).to.include('Public IP Address does not have IP specific DDoS protection enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -82,7 +82,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Public Ip Address does not have DDoS ip protection enabled');
+                expect(results[0].message).to.include('Public IP Address has IP specific DDoS protection enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -93,7 +93,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Public Ip Addresses:');
+                expect(results[0].message).to.include('Unable to query for Public IP Addresses:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -104,7 +104,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Public Ip Address has DDoS ip protection enabled');
+                expect(results[0].message).to.include('Public IP Address has IP specific DDoS protection enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
