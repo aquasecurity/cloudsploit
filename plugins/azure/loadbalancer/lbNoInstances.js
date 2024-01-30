@@ -10,11 +10,26 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['loadBalancers:listAll'],
+    settings: {
+        ignore_internal_loadbalancers: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'true',
+        }
+    },
+
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_loadbalancers: settings.ignore_internal_loadbalancers || this.settings.ignore_internal_loadbalancers.default
+        };
+
+        config.ignore_internal_loadbalancers = (config.ignore_internal_loadbalancers == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -36,6 +51,12 @@ module.exports = {
 
             loadBalancers.data.forEach(loadBalancer => {
                 var backendAmt = 0;
+
+                if (config.ignore_internal_loadbalancers && loadBalancer.frontendIPConfigurations
+                    && loadBalancer.frontendIPConfigurations.length && 
+                    loadBalancer.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                )  return;
                 
                 if (!loadBalancer.backendAddressPools ||
                     (loadBalancer.backendAddressPools &&

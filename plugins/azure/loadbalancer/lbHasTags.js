@@ -10,11 +10,25 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify affected load balancers and add tags.',
     apis: ['loadBalancers:listAll'],
+    settings: {
+        ignore_internal_loadbalancers: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'true',
+        }
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_loadbalancers: settings.ignore_internal_loadbalancers || this.settings.ignore_internal_loadbalancers.default
+        };
+
+        config.ignore_internal_loadbalancers = (config.ignore_internal_loadbalancers == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -36,6 +50,11 @@ module.exports = {
 
             for (let lb of loadBalancers.data) {
                 if (!lb.id) continue;
+                if (config.ignore_internal_loadbalancers && lb.frontendIPConfigurations
+                    && lb.frontendIPConfigurations.length && 
+                    lb.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                )  continue;
 
                 if (lb.tags && Object.entries(lb.tags).length > 0){
                     helpers.addResult(results, 0, 'Load Balancer has tags associated', location, lb.id);

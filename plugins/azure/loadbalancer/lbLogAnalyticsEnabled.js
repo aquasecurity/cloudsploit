@@ -15,11 +15,25 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    settings: {
+        ignore_internal_loadbalancers: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'true',
+        }
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_loadbalancers: settings.ignore_internal_loadbalancers || this.settings.ignore_internal_loadbalancers.default
+        };
+
+        config.ignore_internal_loadbalancers = (config.ignore_internal_loadbalancers == 'true');
 
         async.each(locations.loadBalancers, (location, rcb) => {
             const loadBalancers = helpers.addSource(cache, source,
@@ -39,6 +53,13 @@ module.exports = {
             }
 
             loadBalancers.data.forEach(function(loadBalancer) {
+
+                if (config.ignore_internal_loadbalancers && loadBalancer.frontendIPConfigurations
+                    && loadBalancer.frontendIPConfigurations.length && 
+                    loadBalancer.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                )  return;
+
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByLoadBalancer', location, loadBalancer.id]);
 
