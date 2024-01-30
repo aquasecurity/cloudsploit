@@ -82,7 +82,7 @@ describe('publicIpDdosProtectionEnabled', function () {
             publicIpDdosProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Public IP Address has IP specific DDoS protection enabled');
+                expect(results[0].message).to.include('Public IP Address does not have IP specific DDoS protection enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
