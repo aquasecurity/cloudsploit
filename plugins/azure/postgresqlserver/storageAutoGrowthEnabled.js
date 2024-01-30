@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify PostgreSQL servers to enable storage auto-growth feature',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-auto-grow-storage-portal',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

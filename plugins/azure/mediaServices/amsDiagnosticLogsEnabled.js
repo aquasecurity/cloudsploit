@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/monitoring/monitor-media-services',
     recommended_action: 'Modify Media Service settings and enable diagnostic logs.',
     apis: ['mediaServices:listAll', 'diagnosticSettings:listByMediaService'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

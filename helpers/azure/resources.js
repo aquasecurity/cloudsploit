@@ -265,7 +265,7 @@ module.exports = {
         list: 'id'
     },
     appConfigurations: {
-        list:'id'
+        list: 'id'
     },
     serviceBus:{
         listNamespacesBySubscription: 'id'
@@ -284,5 +284,5 @@ module.exports = {
     },
     automationAccounts:{
         list: 'id'
-    }
+    },
 };

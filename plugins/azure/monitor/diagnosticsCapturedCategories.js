@@ -12,6 +12,7 @@ module.exports = {
     recommended_action: 'Ensure the categories Administrative, Alert, Policy, and Security are set to Enabled for all diagnostic settings.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/samples/resource-manager-diagnostic-settings',
     apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

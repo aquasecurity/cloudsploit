@@ -15,6 +15,7 @@ module.exports = {
         hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
             'accidental or malicious destruction.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:blobservices:containers:write','microsoftstorage:storageaccounts:blobservices:containers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

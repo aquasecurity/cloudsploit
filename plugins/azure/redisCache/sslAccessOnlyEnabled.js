@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable SSL Access Only for Azure cache for Redis',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-management-faq#when-should-i-enable-the-non-tlsssl-port-for-connecting-to-redis',
     apis: ['redisCaches:listBySubscription'],
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

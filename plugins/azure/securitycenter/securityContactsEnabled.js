@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that email notifications are configured for the subscription from the Security Center.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
     apis: ['securityContacts:list'],
+    realtime_triggers: ['microsoftsecurity:securitycontacts:write','microsoftsecurity:securitycontacts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

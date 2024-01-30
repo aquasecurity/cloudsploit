@@ -14,6 +14,7 @@ module.exports = {
         pci: 'PCI requires all system components have the latest updates ' +
             'and patches installed within a month of release.'
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

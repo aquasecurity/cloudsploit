@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Security Solution create or update and delete events.',
     link: 'https://learn.microsoft.com/en-us/azure/security/azure-log-audit',
     apis: ['activityLogAlerts:listBySubscriptionId'],
+    realtime_triggers: ['microsoftinsights:activitylogalerts:write', 'microsoftinsights:activitylogalerts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

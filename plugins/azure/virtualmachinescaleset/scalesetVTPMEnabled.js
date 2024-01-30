@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify virtual machine scale set configurations and enable vTPM',
     link: 'https://learn.microsoft.com/en-us/windows/security/hardware-security/tpm/trusted-platform-module-overview',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

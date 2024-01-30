@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
     apis: ['servers:listSql', 'advancedThreatProtectionSettings:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsecurity:pricings:write', 'microsoftsql:servers:advancedthreatprotectionsettings:write', 'microsoftsql:servers:securityalertpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

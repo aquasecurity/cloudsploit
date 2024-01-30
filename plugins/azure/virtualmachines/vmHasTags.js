@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Modify affected virtual machine and add tags.',
     link: 'https://learn.microsoft.com/bs-latn-ba/azure/virtual-machines/tag-portal',
     apis: ['virtualMachines:listAll', 'virtualMachines:get'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
