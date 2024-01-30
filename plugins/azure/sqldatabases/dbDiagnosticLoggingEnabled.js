@@ -85,7 +85,7 @@ module.exports = {
                             helpers.addResult(results, 0, 'SQL database has diagnostic logs enabled', location, database.id);
         
                         } else {
-                            helpers.addResult(results, 2, `SQL database does not have diagnostic logs enabled ${missingConfig.length ? `for following: ${missingConfig}` : ''}`, location, database.id);
+                            helpers.addResult(results, 2, `SQL database does not have diagnostic logs enabled ${missingConfig.length ? `for following: ${missingConfig,join(','}` : ''}`, location, database.id);
                         }
                         
                     });
