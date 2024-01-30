@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     description: 'Ensures that the authorization level function is set on Azure HTTP trigger functions.',
     more_info: 'Authorization levels for HTTP-triggered functions helps establish a secure access control framework during development and provides flexibility to enhance security in production by considering alternative measures beyond basic API access keys.',
-    recommended_action: 'Set the Authorization Level of a HTTP trigger function to enum Function',
+    recommended_action: 'Set the authorization level for all HTTP trigger functions.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-functions/security-concepts?tabs=v4#authorization-scopes-function-level',
     apis: ['webApps:list', 'functions:list'],
 
