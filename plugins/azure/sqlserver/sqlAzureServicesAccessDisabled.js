@@ -60,7 +60,7 @@ module.exports = {
                     }
                 }
 
-                if (!accessToServices || server.publicNetworkAccess && server.publicNetworkAccess.toLowerCase()=='disabled') {
+                if (!accessToServices || (server.publicNetworkAccess && server.publicNetworkAccess.toLowerCase() == 'disabled')) {
                     helpers.addResult(results, 0,
                         'Access to other Azure services is disabled for SQL server', location, server.id);
                 } else {
