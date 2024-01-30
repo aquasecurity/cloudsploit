@@ -6,7 +6,7 @@ const webApps = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/test-app',
         'name': 'test-app',
         'type': 'Microsoft.Web/sites',
-        'kind': 'app,linux',
+        'kind': 'functionapp',
         'location': 'East US'
     },
     {

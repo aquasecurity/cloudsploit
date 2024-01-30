@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that diagnostic logging is enabled for Azure App Service.',
-    more_info: 'Enabling Azure App Service Diagnostics Logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues, including errors, performance bottlenecks, and security concerns.',
+    more_info: 'Enabling diagnostic logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues including errors, performance bottlenecks, and security concerns.',
     recommended_action: 'Enable diagnostic logging for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs',
     apis: ['webApps:list', 'diagnosticSettings:listByAppServices'],
@@ -36,8 +36,12 @@ module.exports = {
 
             webApps.data.forEach(webApp => {
                 if (!webApp.id) return;
+
+                if (webApp && webApp.kind && webApp.kind.startsWith('app')) return;
+
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAppServices', location, webApp.id]);
+
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, `Unable to query for App Service diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
                         location, webApp.id);
