@@ -29,7 +29,7 @@ const wafPolicy = [
         "policySettings":{
             "mode": "prevention",
             "requestBodyCheck": true,
-            "maxRequestBodySizeInKb": 200
+            "maxRequestBodySizeInKb": 800
 
         }
     },
@@ -102,18 +102,18 @@ describe('agRequestBodySize', function() {
             agRequestBodySize.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 128 which is greater than or equal to 128');
+                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 128 which is less than or equal to 128');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Application gateway WAF policy has max request body size less than 500 - with setting', function(done) {
+        it('should give failing result if Application gateway WAF policy has max request body size greater than 500 - with setting', function(done) {
             const cache = createCache([wafPolicy[1]]);
             agRequestBodySize.run(cache, {max_request_body_size: 500}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 200 which is less than 500');
+                expect(results[0].message).to.include('Application gateway WAF policy has max request body size of 800 which is greater than 500');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
