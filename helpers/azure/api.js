@@ -181,6 +181,11 @@ var calls = {
         },
         sendIntegration: serviceMap['Log Alerts']
     },
+    logAnalytics: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.OperationalInsights/workspaces?api-version=2023-09-01'
+        }
+    },
     storageAccounts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01',
