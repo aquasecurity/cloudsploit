@@ -5,7 +5,7 @@ module.exports = {
     title: 'Auditing Storage Authentication Type',
     category: 'SQL Server',
     domain: 'Databases',
-    description: 'Ensures that managed identity is configured as authentication type when storage account is chosen as the destination for audit logs on SQL server.',
+    description: 'Ensures that managed identity is configured as authentication type for SQL Server storage account audit logs for.',
     more_info: 'Enabling managed identity as authentication type enhances security when using a storage account as the destination for audit logs. Managed Identity can be a system-assigned managed identity or user-assigned managed identity.',
     recommended_action: 'Ensure managed identity is configured as authentication type when choosing a storage account as the destination for audit logs on SQL server.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-managed-identity?view=azuresql&tabs=azure-portal',
