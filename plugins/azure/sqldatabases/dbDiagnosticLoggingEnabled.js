@@ -14,9 +14,16 @@ module.exports = {
     settings: {
         sqldb_diagnostic_logs: {
             name: 'Diagnostic Logs Enabled',
-            description: 'Comma separated list of diagnostic logs/metrics that should be enabled at minimum i.e. SQLInsights, AutomaticTuning, InstanceAndAppAdvanced etc. If you have enabled allLogs, then resource produces pass result. If you only want to check if logging is enabled or not, irrespecitve of log type, then add * in setting.',
+            description: 'Comma separated list of diagnostic logs that should be enabled at minimum i.e. SQLInsights, AutomaticTuning, Errors etc. If you have enabled allLogs, then resource produces pass result. If you only want to check if logging is enabled or not, irrespecitve of log type, then add * in setting.',
             regex: '^.*$',
-            default: 'SQLInsights, Errors, Timeouts, Blocks, Deadlocks, Basic, InstanceAndAppAdvanced, WorkloadManagement'
+            default: 'SQLInsights, Errors, Timeouts, Blocks, Deadlocks'
+
+        },
+        sqldb_diagnostic_metrics: {
+            name: 'Diagnostic Metrics Enabled',
+            description: 'Comma separated list of diagnostic metrics that should be enabled at minimum i.e. Basic, InstanceAndAppAdvanced, WorkloadManagement. If you only want to check if mertics is enabled or not, irrespecitve of metric type, then add * in setting.',
+            regex: '^.*$',
+            default: 'Basic, InstanceAndAppAdvanced, WorkloadManagement'
 
         },
     },
@@ -25,7 +32,9 @@ module.exports = {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
-        var config = settings.diagnostic_logs || this.settings.diagnostic_logs.default;
+        var logsConfig = settings.sqldb_diagnostic_logs || this.settings.sqldb_diagnostic_logs.default;
+        var metricsConfig = settings.sqldb_diagnostic_metrics || this.settings.sqldb_diagnostic_metrics.default;
+
 
         async.each(locations.servers, function(location, rcb) {
             var servers = helpers.addSource(cache, source, ['servers', 'listSql', location]);
@@ -66,26 +75,42 @@ module.exports = {
                             return;
                             
                         } 
-                        var found = true;
+                        var foundLogs = true;
+                        var foundMetrics = true;
+
+                        var missingLogs = [];
+                        var missingMetrics = [];
                         var missingConfig = [];
-                        if (config == '*') {
-                            found = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length && ds.logs.some(log=>log.enabled) || ds.metrics && ds.metrics.length && ds.metrics.some(metrics=>metrics.enabled));
+
+                        if (logsConfig == '*') {
+                            foundLogs = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length && ds.logs.some(log=>log.enabled));
                         } else {
-                            config = config.replace(/\s/g, '');
-                            missingConfig = config.toLowerCase().split(',');
+                            logsConfig = logsConfig.replace(/\s/g, '');
+                            missingLogs = logsConfig.toLowerCase().split(',');
                             diagnosticSettings.data.forEach(settings => {
-                                const logs_metrics = [...settings.logs, ...settings.metrics];
-                                missingConfig = missingConfig.filter(requiredCategory =>
-                                    !logs_metrics.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                                missingLogs = missingLogs.filter(requiredCategory =>
+                                    !settings.logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
                                 );
                             });
-        
                         }
-                        if (!missingConfig.length && found) {
-                            helpers.addResult(results, 0, 'SQL database has diagnostic logs enabled', location, database.id);
+                        if (metricsConfig == '*') {
+                            foundMetrics = diagnosticSettings.data.some(ds => ds.metrics && ds.metrics.length && ds.metrics.some(metrics=>metrics.enabled));
+                        } else {
+                            metricsConfig = metricsConfig.replace(/\s/g, '');
+                            missingMetrics = metricsConfig.toLowerCase().split(',');
+                            diagnosticSettings.data.forEach(settings => {
+                                missingMetrics = missingMetrics.filter(requiredCategory =>
+                                    !settings.metrics.some(metric => (metric.category && metric.category.toLowerCase() === requiredCategory && metric.enabled))
+                                );
+                            });
+                        }
+                        missingConfig = [...missingLogs, ...missingMetrics];
+                       
+                        if (!missingConfig.length && foundLogs && foundMetrics) {
+                            helpers.addResult(results, 0, 'SQL database has diagnostic logs/metrics enabled', location, database.id);
         
                         } else {
-                            helpers.addResult(results, 2, `SQL database does not have diagnostic logs enabled ${missingConfig.length ? `for following: ${missingConfig,join(','}` : ''}`, location, database.id);
+                            helpers.addResult(results, 2, `SQL database does not have diagnostic logs/metrics enabled ${missingConfig.length ? `for following: ${missingConfig.join(',')}` : ''}`, location, database.id);
                         }
                         
                     });

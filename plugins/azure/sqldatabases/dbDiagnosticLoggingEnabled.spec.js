@@ -109,7 +109,7 @@ describe('dbDiagnosticLoggingEnabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('SQL database has diagnostic logs enabled');
+                expect(results[0].message).to.include('SQL database has diagnostic logs/metrics enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -127,7 +127,7 @@ describe('dbDiagnosticLoggingEnabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL database does not have diagnostic logs enabled');
+                expect(results[0].message).to.include('SQL database does not have diagnostic logs/metrics enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -145,7 +145,7 @@ describe('dbDiagnosticLoggingEnabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('SQL database does not have diagnostic logs enabled');
+                expect(results[0].message).to.include('SQL database does not have diagnostic logs/metrics enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
