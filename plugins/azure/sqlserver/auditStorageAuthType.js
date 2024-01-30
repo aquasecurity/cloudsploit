@@ -50,12 +50,12 @@ module.exports = {
                         if (serverAuditingEnabled) {
                             if (serverAuditingEnabled.storageAccountSubscriptionId !== '00000000-0000-0000-0000-000000000000') {
                                 if (serverAuditingEnabled.isManagedIdentityInUse) {
-                                    helpers.addResult(results, 0, 'Managed identity is configured as authentication type for audit logs storage on SQL server', location, server.id);
+                                    helpers.addResult(results, 0, 'SQL Server is using managed identity authentication for storage account audit logs', location, server.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'Managed identity is not configured as authentication type for audit logs storage on SQL server', location, server.id);
+                                    helpers.addResult(results, 2, 'SQL Server is not using managed identity authentication for storage account audit logs', location, server.id);
                                 }
                             } else {
-                                helpers.addResult(results, 0, 'Auditing is not using storage account for SQL server', location, server.id);
+                                helpers.addResult(results, 0, 'SQL Server is not using a storage account as destination for audit logs', location, server.id);
                             }
                         } else {
                             helpers.addResult(results, 0, 'Auditing is not enabled for SQL server', location, server.id);

@@ -44,7 +44,7 @@ describe('Storage Authentication Type for Audit Logs', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Auditing is not using storage account for SQL server');
+                expect(results[0].message).to.include('SQL Server is not using a storage account as destination for audit logs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -90,7 +90,7 @@ describe('Storage Authentication Type for Audit Logs', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Managed identity is configured as authentication type for audit logs storage on SQL server');
+                expect(results[0].message).to.include('SQL Server is using managed identity authentication for storage account audit logs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -136,7 +136,7 @@ describe('Storage Authentication Type for Audit Logs', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Managed identity is not configured as authentication type for audit logs storage on SQL server');
+                expect(results[0].message).to.include('SQL Server is not using managed identity authentication for storage account audit logs');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
