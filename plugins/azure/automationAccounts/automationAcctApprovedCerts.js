@@ -15,10 +15,10 @@ module.exports = {
             name: 'Approved CA Certificates',
             description: 'List of comma separated approved certificates names',
             regex: '^.*$',
-            default: 'abc'
+            default: ''
         }
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
@@ -60,11 +60,11 @@ module.exports = {
                 if (!acctCertificates.data.length) {
                     helpers.addResult(results, 0, 'No existing certificates found in Automation accounts', location);
                 } else {
-                    var unapprovedCerts = acctCertificates.data.filter(function (cert) {
-                            return !certificatesList.includes(cert.name.toLowerCase());
-                        }).map(function (cert) {
-                            return cert.name;
-                        });
+                    var unapprovedCerts = acctCertificates.data.filter(function(cert) {
+                        return !certificatesList.includes(cert.name.toLowerCase());
+                    }).map(function(cert) {
+                        return cert.name;
+                    });
                     if (unapprovedCerts && unapprovedCerts.length) {
                         helpers.addResult(results, 2, `Automation account is using following certificates which are not approved by organization: ${unapprovedCerts.length}`, location, account.id);
                     } else {
@@ -76,7 +76,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
