@@ -13,7 +13,7 @@ module.exports = {
     apis: ['storageAccounts:list', 'blobContainers:list', 'encryptionScopes:listByStorageAccounts'],
     realtime_triggers: ['microsoftstorage:storageaccounts:blobservices:containers:write', 'microsoftstorage:storageaccounts:blobservices:containers:delete'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
@@ -48,26 +48,26 @@ module.exports = {
                 } else if (!blobContainers.data.length) {
                     helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
                 } else {
-                   const encryptionScopes = helpers.addSource(
-                    cache, source, ['encryptionScopes', 'listByStorageAccounts', location, storageAccount.id]);
+                    const encryptionScopes = helpers.addSource(
+                        cache, source, ['encryptionScopes', 'listByStorageAccounts', location, storageAccount.id]);
 
                     if (!encryptionScopes || encryptionScopes.err || !encryptionScopes.data) {
                         helpers.addResult(results, 3,
                             'Unable to query encryption scopes for Storage Accounts: ' + helpers.addError(encryptionScopes),
                             location, storageAccount.id);
-                            break;
+                        break;
                     } else {
-                        var cmkEncryptionScopes = encryptionScopes.data.filter(function (scope) {
-                          return scope.keyVaultProperties && scope.keyVaultProperties.keyUri;
-                        }).map(function (scope) {
-                          return scope.name;
+                        var cmkEncryptionScopes = encryptionScopes.data.filter(function(scope) {
+                            return scope.keyVaultProperties && scope.keyVaultProperties.keyUri;
+                        }).map(function(scope) {
+                            return scope.name;
                         });
-                        var unencryptedCmkBlobs = blobContainers.data.filter(function (blob) {
+                        var unencryptedCmkBlobs = blobContainers.data.filter(function(blob) {
                             return !cmkEncryptionScopes.includes(blob.defaultEncryptionScope);
-                          }).map(function(blob){
-                            return blob.name
-                          });
-                        if(unencryptedCmkBlobs && unencryptedCmkBlobs.length){
+                        }).map(function(blob){
+                            return blob.name;
+                        });
+                        if (unencryptedCmkBlobs && unencryptedCmkBlobs.length){
                             helpers.addResult(results, 2, `Storage Account does not have CMK encryption enabled on following blob containers: ${unencryptedCmkBlobs.join(',')}`, location, storageAccount.id);
                         } else {
                             helpers.addResult(results, 0, 'Storage Account has CMK encryption enabled on all blob containers', location, storageAccount.id);
@@ -79,7 +79,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
