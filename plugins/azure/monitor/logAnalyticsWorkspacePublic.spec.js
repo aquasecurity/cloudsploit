@@ -63,7 +63,7 @@ describe('logAnalyticsWorkspacePublic', function() {
             logAnalyticsWorkspacePublic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Log Analytics Workspace is not Public');
+                expect(results[0].message).to.include('Log Analytics Workspace is not publicly accessible');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -74,7 +74,7 @@ describe('logAnalyticsWorkspacePublic', function() {
             logAnalyticsWorkspacePublic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Log Analytics Workspace is Public');
+                expect(results[0].message).to.include('Log Analytics Workspace is publicly accessible');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

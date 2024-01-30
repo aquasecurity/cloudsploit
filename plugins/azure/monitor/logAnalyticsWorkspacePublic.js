@@ -2,10 +2,10 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Log Analystics Workspace Public',
+    title: 'Log Analytics Public Workspace',
     category: 'Monitor',
     domain: 'Management and Governance',
-    description: 'Ensure Log Analytics Workspace is not Public',
+    description: 'Ensures Log Analytics Workspace is not publicly accessible.',
     more_info: 'Securing Log Analytics workspaces through private links, and disallowing public access, enhances data protection, access control, and overall security by restricting entry to authorized networks and minimizing potential external threats.',
     recommended_action: 'Configure Log Analytics workspaces with private links and deny access from public networks.' ,
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/logs/private-link-configure#configure-access-to-your-resources',
@@ -38,10 +38,10 @@ module.exports = {
 
                 if ((workspace.publicNetworkAccessForIngestion && workspace.publicNetworkAccessForIngestion.toLowerCase() === 'enabled') || (workspace.publicNetworkAccessForQuery && workspace.publicNetworkAccessForQuery.toLowerCase() === 'enabled')) {
                     helpers.addResult(results, 2,
-                        'Log Analytics Workspace is Public', location, workspace.id);
+                        'Log Analytics Workspace is publicly accessible', location, workspace.id);
                 } else {
                     helpers.addResult(results, 0,
-                        'Log Analytics Workspace is not Public', location, workspace.id);
+                        'Log Analytics Workspace is not publicly accessible', location, workspace.id);
                 }
             });
 
