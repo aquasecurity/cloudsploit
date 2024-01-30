@@ -12,7 +12,7 @@ module.exports = {
     apis: ['servers:listSql', 'databases:listByServer', 'diagnosticSettings:listByDatabase'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
     settings: {
-        diagnostic_logs: {
+        sqldb_diagnostic_logs: {
             name: 'Diagnostic Logs Enabled',
             description: 'Comma separated list of diagnostic logs/metrics that should be enabled at minimum i.e. SQLInsights, AutomaticTuning, InstanceAndAppAdvanced etc. If you have enabled allLogs, then resource produces pass result. If you only want to check if logging is enabled or not, irrespecitve of log type, then add * in setting.',
             regex: '^.*$',
