@@ -6,13 +6,13 @@ module.exports = {
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that security logging is enabled for Azure Web Apps.',
-    more_info: 'Enabling Azure Web Apps Diagnostics Logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues, including errors, performance bottlenecks, and security concerns.',
+    more_info: 'Enabling Azure Web Apps diagnostics logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues, including errors, performance bottlenecks, and security concerns.',
     recommended_action: 'Modify Web Apps and enable diagnostic settings for all logs.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-monitoring',
     apis: ['webApps:list', 'diagnosticSettings:listByAppServices'],
     settings: {
-        diagnostic_logs: {
-            name: 'Diagnostic Logs Enabled',
+        app_service_diagnostic_logs: {
+            name: 'App Service Diagnostic Logs Enabled',
             description: 'Comma separated list of diagnostic logs that should be enabled at minimum i.e. AppServiceAntivirusScanAuditLogs, AppServiceHTTPLogs etc. If you have enabled allLogs, then resource produces pass result. If you only want to check if logging is enabled or not, irrespecitve of log type, then add * in setting.',
             regex: '^.*$',
             default: 'AppServiceAntivirusScanAuditLogs, AppServiceHTTPLogs, AppServiceConsoleLogs, AppServiceAppLogs, AppServiceFileAuditLogs,AppServiceAuditLogs, AppServiceIPSecAuditLogs, AppServicePlatformLogs'
@@ -26,7 +26,7 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         var config = {
-            diagnostic_logs: settings.diagnostic_logs || this.settings.diagnostic_logs.default,
+            app_service_diagnostic_logs: settings.app_service_diagnostic_logs || this.settings.app_service_diagnostic_logs.default,
         };
 
         async.each(locations.webApps, (location, rcb) => {
@@ -48,9 +48,12 @@ module.exports = {
 
             webApps.data.forEach(webApp => {
                 if (!webApp.id) return;
+
                 if (webApp && webApp.kind && webApp.kind.startsWith('functionapp')) return;
+
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByAppServices', location, webApp.id]);
+
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, `Unable to query for App Service diagnostic settings: ${helpers.addError(diagnosticSettings)}`,
                         location, webApp.id);
@@ -58,11 +61,12 @@ module.exports = {
                 }
                 var found = true;
                 var missingLogs = [];
-                if (config.diagnostic_logs == '*') {
+                
+                if (config.app_service_diagnostic_logs == '*') {
                     found = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length);
                 } else {
-                    config.diagnostic_logs = config.diagnostic_logs.replace(/\s/g, '');
-                    missingLogs = config.diagnostic_logs.toLowerCase().split(',');
+                    config.app_service_diagnostic_logs = config.app_service_diagnostic_logs.replace(/\s/g, '');
+                    missingLogs = config.app_service_diagnostic_logs.toLowerCase().split(',');
                     diagnosticSettings.data.forEach(settings => {
                         const logs = settings.logs;
                         missingLogs = missingLogs.filter(requiredCategory =>
@@ -72,10 +76,10 @@ module.exports = {
                 }
 
                 if (!missingLogs.length && found) {
-                    helpers.addResult(results, 0, 'Web Apps has security logging enabled', location, webApp.id);
+                    helpers.addResult(results, 0, 'Web App has security logging enabled', location, webApp.id);
 
                 } else {
-                    helpers.addResult(results, 2, `Web Apps does not have security logging enabled ${missingLogs.length ? `for following: ${missingLogs}` : ''}`, location, webApp.id);
+                    helpers.addResult(results, 2, `Web App does not have security logging enabled ${missingLogs.length ? `for following: ${missingLogs}` : ''}`, location, webApp.id);
                 }
 
             });

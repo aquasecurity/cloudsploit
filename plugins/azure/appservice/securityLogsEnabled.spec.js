@@ -248,7 +248,7 @@ describe('securityLogsEnabled', function() {
             securityLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Web Apps has security logging enabled');
+                expect(results[0].message).to.include('Web App has security logging enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -259,17 +259,17 @@ describe('securityLogsEnabled', function() {
             securityLogsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Web Apps does not have security logging enabled for following: ');
+                expect(results[0].message).to.include('Web App does not have security logging enabled for following: ');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
         it('should give passing result with * setting', function(done) {
             const cache = createCache([webApps[0]], [diagnosticSettings[1]]);
-            securityLogsEnabled.run(cache, {diagnostic_logs: '*'}, (err, results) => {
+            securityLogsEnabled.run(cache, {app_service_diagnostic_logs: '*'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Web Apps has security logging enabled');
+                expect(results[0].message).to.include('Web App has security logging enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
