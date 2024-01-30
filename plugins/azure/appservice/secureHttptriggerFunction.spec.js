@@ -101,7 +101,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Http trigger function can not be configured for web app');
+                expect(results[0].message).to.include('Http triggered function can not be configured for web app');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -113,7 +113,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Function found');
+                expect(results[0].message).to.include('No existing Functions found for App Service');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -124,7 +124,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Azure Functions:');
+                expect(results[0].message).to.include('Unable to query Azure Functions for app service: ');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -135,7 +135,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Authorization Level is set to Function for HTTP trigger function');
+                expect(results[0].message).to.include('HTTP triggered function has secured authorization Level');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -146,7 +146,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Authorization Level is not set to Function for HTTP trigger function');
+                expect(results[0].message).to.include('HTTP triggered function does not have secured authorization Level');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

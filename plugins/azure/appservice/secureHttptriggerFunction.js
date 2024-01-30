@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Secure Azure Http Trigger Function',
+    title: 'Secure Azure Http Triggered Function',
     category: 'App Service',
     domain: 'Application Integration',
     description: 'Ensures that the authorization level function is set on Azure HTTP trigger functions.',
@@ -33,37 +33,40 @@ module.exports = {
             }
 
             async.each(appService.data, function(app, scb) {
-                if (app && app.kind && app.kind === 'functionapp') {
+                if (app && app.kind && app.kind.startsWith('functionapp')){
                     const functions = helpers.addSource(cache, source,
                         ['functions', 'list', location, app.id]);
     
                     if (!functions || functions.err || !functions.data) {
-                        helpers.addResult(results, 3, 'Unable to query for Azure Functions: ' + helpers.addError(functions), location);
+                        helpers.addResult(results, 3, 'Unable to query Azure Functions for app service: ' + helpers.addError(functions), location);
                         return scb();
                     }
                     if (!functions.data.length) {
-                        helpers.addResult(results, 0, 'No existing Function found', location, appService.id);
+                        helpers.addResult(results, 0, 'No existing Functions found for App Service', location, app.id);
                         return scb();
                     }
                     for (let func of functions.data) {
                         if (func && func.config && func.config.bindings && func.config.bindings.length > 0) {
-                            const firstBinding = func.config.bindings[0];
-                            if (firstBinding && firstBinding.type === 'httpTrigger') {
-                                // Check Authorization Level
-                                if (firstBinding.authLevel === 'function') {
-                                    helpers.addResult(results, 0, 'Authorization Level is set to Function for HTTP trigger function', location, func.id);
-                                } else {
-                                    helpers.addResult(results, 2, 'Authorization Level is not set to Function for HTTP trigger function', location, func.idfunc);
+                            const httpTriggerBindings = func.config.bindings.filter(binding => binding.type === 'httpTrigger');
+
+                            if (httpTriggerBindings.length > 0) {
+                                for (const httpTriggerBinding of httpTriggerBindings) {
+                                    // Check Authorization Level for each httpTrigger binding
+                                    if (httpTriggerBinding.authLevel && httpTriggerBinding.authLevel.toLowerCase() === 'function') {
+                                        helpers.addResult(results, 0, 'HTTP triggered function has secured authorization Level', location, func.id);
+                                    } else {
+                                        helpers.addResult(results, 2, 'HTTP triggered function does not have secured authorization Level', location, func.id);
+                                    }
                                 }
                             } else {
                                 // Not an HTTP trigger function
-                                helpers.addResult(results, 0, 'Function is not an HTTP trigger', location, func.id);
+                                helpers.addResult(results, 0, 'Function is not an HTTP triggered function', location, func.id);
                             }
                         }
                     }
                    
                 }  else {
-                    helpers.addResult(results, 0, 'Http trigger function can not be configured for web app', location, appService.id);
+                    helpers.addResult(results, 0, 'Http triggered function can not be configured for web app', location, appService.id);
                 }
                 scb();
             }, function() {
