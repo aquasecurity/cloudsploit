@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensure that SQL servers do not allow access to other Azure services.',
     more_info: 'To secure your SQL server, it is recommended to disable public network access or access to all Azure services. Instead, configure firewall or VNET rules to allow connections from specific network ranges or from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
-    recommended_action: 'Disable public network access for SQL database servers.',
+    recommended_action: 'Disable public access and remove "allowallwindowsazureips" firewall rule for all SQL Servers.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview?view=azuresql',
     apis: ['servers:listSql','firewallRules:listByServer'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],

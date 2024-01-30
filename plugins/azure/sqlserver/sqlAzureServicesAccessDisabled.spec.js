@@ -3,7 +3,7 @@ var sqlServerServicesAccessDisabled = require('./sqlAzureServicesAccessDisabled'
 
 const listSql = [
     {
-        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/sql-server-1",
+        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/test-rg/providers/Microsoft.Sql/servers/sql-server-1",
         "name": "sql-server-1",
         "type": "Microsoft.Sql/servers",
         "location": "East US",
@@ -13,14 +13,14 @@ const listSql = [
 
 const firewallRules = [
     {
-        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/sql-server-1/firewallRules/TestRule",
+        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/test-rg/providers/Microsoft.Sql/servers/sql-server-1/firewallRules/TestRule",
         "name": "testRule",
         "type": "Microsoft.Sql/servers/firewallRules",
         "location": "East US",
         "kind": "v12.0",
     },
     {
-        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/sql-server-1/firewallRules/AllowAllWindowsAzureIps",
+        "id": "/subscriptions/jk34n234k-dwef/resourceGroups/test-rg/providers/Microsoft.Sql/servers/sql-server-1/firewallRules/AllowAllWindowsAzureIps",
         "name": "AllowAllWindowsAzureIps",
         "type": "Microsoft.Sql/servers/firewallRules",
         "location": "East US",
