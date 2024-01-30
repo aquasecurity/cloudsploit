@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var automationAcctApprovedCertificatesOnly = require('./automationAcctApprovedCertificatesOnly.js');
+var automationAcctApprovedCerts = require('./automationAcctApprovedCerts.js');
 
 const automationAccounts = [
     {
@@ -139,11 +139,11 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('automationAcctApprovedCertificatesOnly', function () {
+describe('automationAcctApprovedCerts', function () {
     describe('run', function () {
         it('should give no result if setting is not enabled', function (done) {
             const cache = createErrorCache('noaccounts');
-            automationAcctApprovedCertificatesOnly.run(cache, {}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });
@@ -151,7 +151,7 @@ describe('automationAcctApprovedCertificatesOnly', function () {
 
         it('should give pass result if No existing automation accounts found', function (done) {
             const cache = createErrorCache('noaccounts');
-            automationAcctApprovedCertificatesOnly.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Automation accounts found');
@@ -162,7 +162,7 @@ describe('automationAcctApprovedCertificatesOnly', function () {
 
         it('should give unknown result if Unable to query automation accounts:', function (done) {
             const cache = createErrorCache('unknownaccount');
-            automationAcctApprovedCertificatesOnly.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Automation accounts:');
@@ -173,7 +173,7 @@ describe('automationAcctApprovedCertificatesOnly', function () {
 
         it('should give unknown result if Unable to query automation certs', function (done) {
             const cache = createErrorCache('certs');
-            automationAcctApprovedCertificatesOnly.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'cert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Automation accounts certificates');
@@ -184,7 +184,7 @@ describe('automationAcctApprovedCertificatesOnly', function () {
 
         it('should give passing result if automation account has approved certificates', function (done) {
             const cache = createCache([automationAccounts[0]], [certificates[0]]);
-            automationAcctApprovedCertificatesOnly.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Automation account is using certificates which are approved by organization');
@@ -195,7 +195,7 @@ describe('automationAcctApprovedCertificatesOnly', function () {
 
         it('should give failing result if automation account is using following certificates which are not approved by organization: ', function (done) {
             const cache = createCache([automationAccounts[1]], [certificates[1]]);
-            automationAcctApprovedCertificatesOnly.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
+            automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Automation account is using following certificates which are not approved by organization: ');
