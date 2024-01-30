@@ -89,7 +89,7 @@ module.exports = {
                             missingLogs = logsConfig.toLowerCase().split(',');
                             diagnosticSettings.data.forEach(settings => {
                                 missingLogs = missingLogs.filter(requiredCategory =>
-                                    !settings.logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                                    !settings.logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup && log.categoryGroup.toLowerCase() === 'alllogs' && log.enabled)
                                 );
                             });
                         }
