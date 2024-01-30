@@ -67,7 +67,7 @@ module.exports = {
                     }
                    
                 }  else {
-                    helpers.addResult(results, 0, 'Http triggered function can not be configured for web app', location, appService.id);
+                    helpers.addResult(results, 0, 'Http triggered functions can not be configured for web app', location, appService.id);
                 }
                 scb();
             }, function() {
