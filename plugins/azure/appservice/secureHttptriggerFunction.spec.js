@@ -101,7 +101,7 @@ describe('secureHttptriggerFunction', function() {
             secureHttptriggerFunction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Http triggered function can not be configured for web app');
+                expect(results[0].message).to.include('Http triggered functions can not be configured for web app');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

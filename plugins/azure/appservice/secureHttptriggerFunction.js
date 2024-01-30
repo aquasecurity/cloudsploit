@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     description: 'Ensures that the authorization level function is set on Azure HTTP trigger functions.',
     more_info: 'Authorization levels for HTTP-triggered functions helps establish a secure access control framework during development and provides flexibility to enhance security in production by considering alternative measures beyond basic API access keys.',
-    recommended_action: 'Set the authorization level for all HTTP trigger functions.',
+    recommended_action: 'Set the authorization level for all HTTP-triggered functions.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-functions/security-concepts?tabs=v4#authorization-scopes-function-level',
     apis: ['webApps:list', 'functions:list'],
     realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete', 'microsoftweb:sites:functions:write', 'microsoftweb:sites:functions:delete'],
@@ -50,7 +50,7 @@ module.exports = {
                         if (func && func.config && func.config.bindings && func.config.bindings.length > 0) {
                             const httpTriggerBindings = func.config.bindings.filter(binding => binding.type === 'httpTrigger');
 
-                            if (httpTriggerBindings.length > 0) {
+                            if (httpTriggerBindings.length) {
                                 for (const httpTriggerBinding of httpTriggerBindings) {
                                     // Check Authorization Level for each httpTrigger binding
                                     if (httpTriggerBinding.authLevel && httpTriggerBinding.authLevel.toLowerCase() === 'function') {
