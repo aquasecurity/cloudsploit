@@ -5,7 +5,7 @@ module.exports = {
     title: 'Web Apps Private Endpoints Configured',
     category: 'App Service',
     domain: 'Application Integration',
-    description: 'Ensures thatWeb Apps are accessible only through private endpoints',
+    description: 'Ensures that Web Apps are accessible only through private endpoints',
     more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet and provides secure connectivity between clients on private network and app',
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint',
