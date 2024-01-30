@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Database Diagnostic Logging Enabled',
+    title: 'SQL Database Diagnostic Logging Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures diagnostic logging is enabled for SQL databases.',
