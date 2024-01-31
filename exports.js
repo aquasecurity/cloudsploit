@@ -1477,6 +1477,8 @@ module.exports = {
         'environmentEncryption'         : require(__dirname + '/plugins/google/composer/environmentEncryption.js'),
         'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
         'webserverPublicAccess'         : require(__dirname + '/plugins/google/composer/webserverPublicAccess.js'),
+
+        'modelEncryption'               : require(__dirname + '/plugins/google/vertexai/modelEncryption.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),
