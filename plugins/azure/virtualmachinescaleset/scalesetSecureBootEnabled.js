@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Scale Set Multi Az',
-    category: 'Virtual Machines',
+    title: 'Scale Sets Secure Boot Enabled',
+    category: 'Virtual Machine Scale Set',
     domain: 'Compute',
-    description: 'Ensures that Virtual Machine Scale Sets are created to be cross-AZ for high availability',
-    more_info: 'Having Virtual Machine Scale Sets in multiple zones increases durability and availability. If there is a catastrophic instance in one zone, the scale set will still be available.',
-    recommended_action: 'Multiple zones can only be created when instantiating a new Scale Set. Ensure that the Scale Set is in multiple zones when creating a new Scale Set.',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
+    description: 'Ensures that secure boot is enabled for Virtual Machine Scale Sets.',
+    more_info: 'Secure Boot, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VMSS.',
+    recommended_action: 'Modify virtual machine scale set configurations and enable secure boot',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch#secure-boot',
     apis: ['virtualMachineScaleSets:listAll'],
 
     run: function(cache, settings, callback) {
@@ -17,7 +17,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.virtualMachineScaleSets, (location, rcb) => {
-
             const virtualMachineScaleSets = helpers.addSource(cache, source,
                 ['virtualMachineScaleSets', 'listAll', location]);
 
@@ -34,18 +33,19 @@ module.exports = {
                 return rcb();
             }
 
-            virtualMachineScaleSets.data.forEach(virtualMachineScaleSet => {
-                if (virtualMachineScaleSet.zones &&
-                    virtualMachineScaleSet.zones.length &&
-                    virtualMachineScaleSet.zones.length > 1) {
+            for (let virtualMachineScaleSet of virtualMachineScaleSets.data) {
+
+                if (virtualMachineScaleSet.virtualMachineProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings &&
+                    virtualMachineScaleSet.virtualMachineProfile.securityProfile.uefiSettings.secureBootEnabled) {
                     helpers.addResult(results, 0,
-                        'The Virtual Machine Scale Set is in multiple zones', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has secure boot enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'The Virtual Machine Scale Set is not in multiple zones', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set have secure boot disabled', location, virtualMachineScaleSet.id);
                 }
-            });
-
+            }
             rcb();
         }, function() {
             callback(null, results, source);

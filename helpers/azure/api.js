@@ -187,6 +187,11 @@ var calls = {
             rateLimit: 3000
         }
     },
+    appConfigurations: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01'
+        }
+    },
     virtualNetworks: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
@@ -364,6 +369,11 @@ var calls = {
         list: {
             url: 'https://graph.microsoft.com/v1.0/applications/',
             graph: true,
+        }
+    },
+    automationAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Automation/automationAccounts?api-version=2023-11-01'
         }
     },
     registries: {
@@ -949,6 +959,11 @@ var postcalls = {
         }
     },
     mediaServices: {
+        listContentKeyPolicies: {
+            reliesOnPath: 'mediaServices.listAll',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/contentKeyPolicies?api-version=2023-01-01'
+        },
         get: {
             reliesOnPath: 'mediaServices.listAll',
             properties: ['id'],
@@ -1005,6 +1020,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
         },
+        listByRecoveryServiceVault: {
+            reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByVirtualNetworks: {
             reliesOnPath: 'virtualNetworks.listAll',
             properties: ['id'],
@@ -1035,6 +1055,27 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByAksClusters: {
+            reliesOnPath: 'managedClusters.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAppConfigurations: {
+            reliesOnPath: 'appConfigurations.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        }
+        
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
@@ -1085,7 +1126,14 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/devOpsAuditingSettings?api-version=2021-11-01'
         }
-    }
+    },
+    patchSchedules: {
+        listByRedisCache: {
+            reliesOnPath: 'redisCaches.listBySubscription',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/patchSchedules?api-version=2023-08-01'
+        }
+    },
 };
 
 var specialcalls = {

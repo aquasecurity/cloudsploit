@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',
     recommended_action: 'Identify any failed payments for ElastiCache reserved cache nodes',
     apis: ['ElastiCache:describeReservedCacheNodes'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:PurchaseReservedCacheNodesOffering'],
 
     run: function(cache, settings, callback) {
         var results = [];

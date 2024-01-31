@@ -33,16 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            let keyVaultPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'keyvaults');
-            if (keyVaultPricing) {
-                if (keyVaultPricing.pricingTier && keyVaultPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Key Vaults', location, keyVaultPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Key Vaults', location, keyVaultPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Key Vaults', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'keyvaults', 'Key Vaults', results, location);
             rcb();
         }, function(){
             callback(null, results, source);
