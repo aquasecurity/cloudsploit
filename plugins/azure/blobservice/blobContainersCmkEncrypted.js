@@ -1,12 +1,11 @@
 var async = require('async');
-
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Blob Container CMK Encrypted',
     category: 'Blob Service',
     domain: 'Storage',
-    description: 'Ensures that all blob containers in storage account are CMK encrypted',
+    description: 'Ensures that blob containers in storage account are CMK encrypted',
     more_info: 'Azure allows you to encrypt data in your blob containers using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Configuring a customer-managed key for blob services ensures protection and control access to the key that encrypts your data. Customer-managed keys offer greater flexibility to manage access controls.',
     recommended_action: 'Ensure that all blob containers in storage account store has CMK encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/customer-managed-keys-overview',
@@ -62,17 +61,13 @@ module.exports = {
                         }).map(function(scope) {
                             return scope.name;
                         });
-                        var unencryptedCmkBlobs = blobContainers.data.filter(function(blob) {
-                            return !cmkEncryptionScopes.includes(blob.defaultEncryptionScope);
-                        }).map(function(blob){
-                            return blob.name;
+                        blobContainers.data.filter(function(blob) {
+                            if (!cmkEncryptionScopes.includes(blob.defaultEncryptionScope)) {
+                                helpers.addResult(results, 2, 'Blob container does not have CMK encryption enabled', location, blob.id);
+                            } else {
+                                helpers.addResult(results, 0, 'Blob container has CMK encryption enabled', location, blob.id);
+                            }
                         });
-                        if (unencryptedCmkBlobs && unencryptedCmkBlobs.length){
-                            helpers.addResult(results, 2, `Storage Account does not have CMK encryption enabled on following blob containers: ${unencryptedCmkBlobs.join(',')}`, location, storageAccount.id);
-                        } else {
-                            helpers.addResult(results, 0, 'Storage Account has CMK encryption enabled on all blob containers', location, storageAccount.id);
-
-                        }
                     }
 
                 }
