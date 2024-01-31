@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Enable Defender For Cosmos DB',
+    title: 'Enable Defender For Cosmos DBs',
     category: 'Defender',
     domain: 'Management and Governance',
     description: 'Ensures that Microsoft Defender is enabled for all Cosmos databases.',
     more_info: 'Turning on Microsoft Defender for Cosmos databases enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
-    recommended_action: 'Enable Microsoft Defender for Databases type "Azure Cosmos DB" in Defender plans for the subscription.',
+    recommended_action: 'Enable Microsoft Defender for Azure Cosmos DB in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-defender-for-cosmos',
     apis: ['pricings:list'],
     realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
