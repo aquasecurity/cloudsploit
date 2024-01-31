@@ -1063,8 +1063,8 @@ module.exports = {
         'vmssManagedIdentityEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssManagedIdentityEnabled.js'),
         'scalesetVTPMEnabled'           : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetVTPMEnabled.js'),
         'scalesetSecureBootEnabled'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetSecureBootEnabled.js'),
-        'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions'),
-        'vmssWindowsAntiMalwareExtension':  require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssWindowsAntiMalwareExtension'),
+        'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions.js'),
+        'vmssWindowsAntiMalwareExt'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssWindowsAntiMalwareExt.js'),
           
         'appConfigManagedIdentity'      : require(__dirname + '/plugins/azure/appConfigurations/appConfigManagedIdentity.js'),
         'appConfigurationDiagnosticLogs': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
