@@ -46,12 +46,12 @@ module.exports = {
                         (extension.properties.type === 'ApplicationHealthWindows' || extension.properties.type === 'ApplicationHealthLinux'))
                     ) : false;
 
-                const hasHTTPSProtocol = scaleSetExtensions.some((extension) => (
-                    extension.properties && extension.properties.settings && extension.properties.settings.protocol &&
-                    extension.properties.settings.protocol.toLowerCase() === 'https'
-                ));
 
                 if (healthMonitoringEnabled) {
+                    const hasHTTPSProtocol = scaleSetExtensions.some((extension) => (
+                        extension.properties && extension.properties.settings && extension.properties.settings.protocol &&
+                        extension.properties.settings.protocol.toLowerCase() === 'https'
+                    ));
                     if (hasHTTPSProtocol) {
                         helpers.addResult(results, 0,
                             'Virtual Machine Scale Set has HTTPS enabled for health monitoring extension', location, virtualMachineScaleSet.id);
