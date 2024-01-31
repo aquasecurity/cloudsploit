@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable IP Forwarding Monitoring by ensuring AuditIfNotExists setting is used for \'IP Forwarding on your virtual machine should be disabled\' from the Azure Security Center.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

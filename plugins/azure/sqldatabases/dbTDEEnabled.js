@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify SQL database and enable Transparent Data Encryption (TDE).',
     link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption?view=sql-server-ver15',
     apis: ['servers:listSql', 'databases:listByServer', 'transparentDataEncryption:list'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:transparentdataencryption:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

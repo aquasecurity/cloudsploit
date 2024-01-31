@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify the Azure Front Door profile and attach WAF policy under security policies section.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-policy-settings',
     apis: ['profiles:list', 'afdSecurityPolicies:listByProfile',],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

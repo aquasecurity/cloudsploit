@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure Vnet and private DNS zone (private access) is integrated for PostgreSQL flexible server.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-private#using-private-dns-zone',
     apis: ['servers:listPostgresFlexibleServer'],
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

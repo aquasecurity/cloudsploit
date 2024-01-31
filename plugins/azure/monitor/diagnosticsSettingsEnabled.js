@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that a Diagnostic status is enabled for all supported resources in Diagnostics Settings under Monitor.',
     link: 'https://learn.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
     apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

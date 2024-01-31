@@ -17,6 +17,7 @@ module.exports = {
              'Encryption should be enabled for all storage accounts storing this ' +
              'type of data.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

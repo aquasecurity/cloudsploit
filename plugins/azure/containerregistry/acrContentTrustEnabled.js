@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify your container registry and enable content trust.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-content-trust#enable-registry-content-trust',
     apis: ['registries:list'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

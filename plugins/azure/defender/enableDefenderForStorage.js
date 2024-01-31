@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Microsoft Defender for Storage in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

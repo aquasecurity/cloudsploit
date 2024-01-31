@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/security-azure-policy#azure-policies-private-endpoints-and-media-services',
     recommended_action: 'Modify Media Service network settings and enable private access.',
     apis: ['mediaServices:listAll'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

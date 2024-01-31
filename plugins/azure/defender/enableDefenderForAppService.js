@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Microsoft Defender for App Services in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-app-service-introduction',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

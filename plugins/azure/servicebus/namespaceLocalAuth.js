@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Service Bus namespaces have local authentication disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/disable-local-authentication',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

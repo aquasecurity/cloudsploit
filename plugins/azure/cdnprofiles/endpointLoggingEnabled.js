@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that diagnostic logging is enabled for each CDN endpoint for each CDN profile',
     link: 'https://learn.microsoft.com/en-us/azure/cdn/cdn-azure-diagnostic-logs',
     apis: ['profiles:list', 'endpoints:listByProfile', 'diagnosticSettings:listByEndpoint'],
+    realtime_triggers: ['microsoftcdn:profiles:write','microsoftcdn:profiles:delete','microsoftcdn:profiles:endpoints:write','microsoftcdn:profiles:endpoints:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

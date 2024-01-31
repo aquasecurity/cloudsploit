@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for PostgreSQL Server',
     link: 'https://learn.microsoft.com/en-us/azure/private-link/private-link-overview',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

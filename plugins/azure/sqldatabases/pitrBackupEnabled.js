@@ -18,6 +18,7 @@ module.exports = {
             regex: '^(3[0-5]|2[0-9]|1[0-9]|[1-9])$'
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write','microsoftsql:servers:databases:backupshorttermretentionpolicies:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

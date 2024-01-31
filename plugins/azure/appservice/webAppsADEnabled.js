@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable registration with Azure Active Directory for Azure Web Apps.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=portal%2Chttp#add-a-system-assigned-identity',
     apis: ['webApps:list'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

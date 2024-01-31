@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable Azure ledger for all SQL databases.',
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

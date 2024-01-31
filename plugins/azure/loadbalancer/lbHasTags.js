@@ -18,6 +18,7 @@ module.exports = {
             default: 'true',
         }
     },
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

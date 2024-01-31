@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify the Front Door classic profile and add HTTP to HTTPS redirect rule under the frontend hosts section.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/front-door-how-to-redirect-https',
     apis: ['classicFrontDoors:list'],
+    realtime_triggers: ['microsoftnetwork:frontdoors:write', 'microsoftnetwork:frontdoors:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

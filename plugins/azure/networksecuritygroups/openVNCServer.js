@@ -29,7 +29,7 @@ module.exports = {
     },
     actions: {remediate:['networkSecurityGroups:update'], rollback:['networkSecurityGroups:update']},
     permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
-    realtime_triggers: ['microsoftnetwork:networksecuritygroups:securityruleswrite'],
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
