@@ -16,7 +16,7 @@ module.exports = {
                 'are always connecting over a secure channel.',
     },
     settings: {
-        ignore_internal_loadbalancers: {
+        ignore_internal_lb_https: {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
@@ -31,10 +31,10 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         var config = {
-            ignore_internal_loadbalancers: settings.ignore_internal_loadbalancers || this.settings.ignore_internal_loadbalancers.default
+            ignore_internal_lb_https: settings.ignore_internal_lb_https || this.settings.ignore_internal_lb_https.default
         };
 
-        config.ignore_internal_loadbalancers = (config.ignore_internal_loadbalancers == 'true');
+        config.ignore_internal_lb_https = (config.ignore_internal_lb_https == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -58,7 +58,7 @@ module.exports = {
                 var notHTTPSRules = 0;
                 var isHTTPS = false;
 
-                if (config.ignore_internal_loadbalancers && loadBalancer.frontendIPConfigurations
+                if (config.ignore_internal_lb_https && loadBalancer.frontendIPConfigurations
                     && loadBalancer.frontendIPConfigurations.length && 
                     loadBalancer.frontendIPConfigurations.some(ipconfig => 
                         ipconfig.properties && ipconfig.properties.publicIPAddress)

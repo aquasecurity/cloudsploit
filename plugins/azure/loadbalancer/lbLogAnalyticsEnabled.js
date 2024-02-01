@@ -16,7 +16,7 @@ module.exports = {
             'activities in the system.'
     },
     settings: {
-        skip_Internal_loadbalancers: {
+        ignore_internal_lb_log_analystics: {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
@@ -31,10 +31,10 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         var config = {
-            skip_Internal_loadbalancers: settings.skip_Internal_loadbalancers || this.settings.skip_Internal_loadbalancers.default
+            ignore_internal_lb_log_analystics: settings.ignore_internal_lb_log_analystics || this.settings.ignore_internal_lb_log_analystics.default
         };
 
-        config.skip_Internal_loadbalancers = (config.skip_Internal_loadbalancers == 'true');
+        config.ignore_internal_lb_log_analystics = (config.ignore_internal_lb_log_analystics == 'true');
 
         async.each(locations.loadBalancers, (location, rcb) => {
             const loadBalancers = helpers.addSource(cache, source,
@@ -55,7 +55,7 @@ module.exports = {
 
             loadBalancers.data.forEach(function(loadBalancer) {
 
-                if (config.skip_Internal_loadbalancers && loadBalancer.frontendIPConfigurations
+                if (config.ignore_internal_lb_log_analystics && loadBalancer.frontendIPConfigurations
                     && loadBalancer.frontendIPConfigurations.length && 
                     loadBalancer.frontendIPConfigurations.some(ipconfig => 
                         ipconfig.properties && ipconfig.properties.publicIPAddress)

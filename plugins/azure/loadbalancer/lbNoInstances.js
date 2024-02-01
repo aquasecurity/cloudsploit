@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['loadBalancers:listAll'],
     settings: {
-        exclude_internal_lb_checks: {
+        ignore_internal_lb_instances: {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
@@ -26,10 +26,10 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         var config = {
-            exclude_internal_lb_checks: settings.exclude_internal_lb_checks || this.settings.exclude_internal_lb_checks.default
+            ignore_internal_lb_instances: settings.ignore_internal_lb_instances || this.settings.ignore_internal_lb_instances.default
         };
 
-        config.exclude_internal_lb_checks = (config.exclude_internal_lb_checks == 'true');
+        config.ignore_internal_lb_instances = (config.ignore_internal_lb_instances == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -52,7 +52,7 @@ module.exports = {
             loadBalancers.data.forEach(loadBalancer => {
                 var backendAmt = 0;
 
-                if (config.exclude_internal_lb_checks && loadBalancer.frontendIPConfigurations
+                if (config.ignore_internal_lb_instances && loadBalancer.frontendIPConfigurations
                     && loadBalancer.frontendIPConfigurations.length && 
                     loadBalancer.frontendIPConfigurations.some(ipconfig => 
                         ipconfig.properties && ipconfig.properties.publicIPAddress)

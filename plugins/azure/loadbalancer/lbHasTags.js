@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify affected load balancers and add tags.',
     apis: ['loadBalancers:listAll'],
     settings: {
-        ignore_internal_lbs: {
+        ignore_internal_lbs_tags: {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
@@ -26,10 +26,10 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         var config = {
-            ignore_internal_lbs: settings.ignore_internal_lbs || this.settings.ignore_internal_lbs.default
+            ignore_internal_lbs_tags: settings.ignore_internal_lbs_tags || this.settings.ignore_internal_lbs_tags.default
         };
 
-        config.ignore_internal_lbs = (config.ignore_internal_lbs == 'true');
+        config.ignore_internal_lbs_tags = (config.ignore_internal_lbs_tags == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -51,7 +51,7 @@ module.exports = {
 
             for (let lb of loadBalancers.data) {
                 if (!lb.id) continue;
-                if (config.ignore_internal_lbs && lb.frontendIPConfigurations
+                if (config.ignore_internal_lbs_tags && lb.frontendIPConfigurations
                     && lb.frontendIPConfigurations.length && 
                     lb.frontendIPConfigurations.some(ipconfig => 
                         ipconfig.properties && ipconfig.properties.publicIPAddress)
