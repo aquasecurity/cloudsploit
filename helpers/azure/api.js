@@ -588,6 +588,12 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2021-11-01-preview'
+        },
+        listPostgresFlexibleServer:{
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2023-06-01-preview'
+        
         }
     },
     vulnerabilityAssessments: {
