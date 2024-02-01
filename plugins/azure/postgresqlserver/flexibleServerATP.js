@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures Defender is enabled for Advanced Threat Protection on PostgreSQL flexible servers.',
     more_info: 'Enabling Defender for Cloud provides security alerts on anomalous activities, allowing you to detect potential threats and respond to them as they occur.',
-    recommended_action: 'Ensure Defender is enabled for PostgreSQL Flexible Server',
+    recommended_action: 'Ensure Defender is enabled for PostgreSQL Flexible Server.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-security#enable-enhanced-security-with-microsoft-defender-for-cloud',
     apis: ['servers:listPostgresFlexibleServer', 'advancedThreatProtectionSettings:listPostgresFlexibleServer'],
     realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete','microsoftdbforpostgresql:flexibleservers:advancedthreatprotectionsettings:write'],
