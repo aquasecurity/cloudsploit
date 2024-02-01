@@ -1003,7 +1003,7 @@ module.exports = {
         'enableDefenderForKeyVaults'    : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
         'enableDefenderForVMs'          : require(__dirname + '/plugins/azure/defender/enableDefenderForVMs.js'),
         'enableDefenderForAppService'   : require(__dirname + '/plugins/azure/defender/enableDefenderForAppService.js'),
-        'enableDefenderForARM'         : require(__dirname + '/plugins/azure/defender/enableDefenderForARM.js'),
+        'enableDefenderForARM'          : require(__dirname + '/plugins/azure/defender/enableDefenderForARM.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/applicationGateway/applicationGatewayHasTags.js'),
