@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    Kinesis
+} = require('@aws-sdk/client-kinesis');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var kinesis = new AWS.Kinesis(AWSConfig);
+    var kinesis = new Kinesis(AWSConfig);
 
     async.eachLimit(collection.kinesis.listStreams[AWSConfig.region].data, 15, function(stream, cb){
         collection.kinesis.describeStream[AWSConfig.region][stream] = {};

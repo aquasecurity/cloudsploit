@@ -34,12 +34,37 @@ const servicePackageMapping = {
     'AppMesh': 'app-mesh',
     'AutoScaling': 'auto-scaling',
     'ElasticBeanstalk': 'elastic-beanstalk',
-    'ELB': 'elastic-load-balancing',
-    'ELBv2': 'elastic-load-balancing-v2',
+    'ElasticLoadBalancing': 'elastic-load-balancing',
+    'ElasticLoadBalancingV2': 'elastic-load-balancing-v2',
+    'CognitoIdentityServiceProvider':'cognito-identity-provider',
+    'ComputeOptimizer':'compute-optimizer',
+    'ConfigService': 'config-service',
     'LexModelsV2': 'lex-models-v2',
     'S3Control': 's3-control',
     'WAFRegional': 'waf-regional',
+    'CloudWatchLogs':'cloudwatch-logs',
+    'DevOpsGuru':'devops-guru',
+    'DMS': 'database-migration-service',
+    'ElasticTranscoder': 'elastic-transcoder',
+    'ForecastService': 'forecast',
+    'KinesisVideo': 'kinesis-video',
+    'Route53': 'route-53',
+    'Route53Domains': 'route-53-domains',
+    'SecretsManager':'secrets-manager',
+    'TimestreamWrite':'timestream-write',
+    'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api'
         // Add more mappings as needed
+};
+
+const customServiceMapping = {
+    // Add custom mappings for services with different case sensitivity
+    'CodeArtifact': 'Codeartifact',
+    'CognitoIdentityServiceProvider':'CognitoIdentityProvider',
+    'DMS': 'DatabaseMigrationService'
+    // Add more custom mappings as needed
+};
+const getCorrectServiceName = (serviceName) => {
+    return customServiceMapping[serviceName] || serviceName;
 };
 
 const requireServiceModule = (serviceName) => {
@@ -120,6 +145,7 @@ var collect = function(AWSConfig, settings, callback) {
             var serviceName = service;
             var serviceLower = service.toLowerCase();
             if (!collection[serviceLower]) collection[serviceLower] = {};
+            var correctedServiceName= getCorrectServiceName(serviceName);
 
             // Loop through each of the service's functions
             async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
@@ -155,7 +181,7 @@ var collect = function(AWSConfig, settings, callback) {
                             }
                         }).length){
                         return regionCb();
-                    }
+                    }  
 
                     if (!collection[serviceLower][callKey][region]) collection[serviceLower][callKey][region] = {};
 
@@ -175,7 +201,7 @@ var collect = function(AWSConfig, settings, callback) {
                     } else {
                         try {
                             const executorModule = requireServiceModule(serviceName);
-                            const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[serviceName](LocalAWSConfig))) : new executorModule[serviceName](LocalAWSConfig);
+                            const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[correctedServiceName](LocalAWSConfig))) : new executorModule[correctedServiceName](LocalAWSConfig);
         
                             var paginating = false;
                             var executorCb = function(err, data) {
@@ -186,7 +212,7 @@ var collect = function(AWSConfig, settings, callback) {
 
                                 if (!data) return regionCb();
                                 if (callObj.property && !data[callObj.property]) return regionCb();
-                                if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
+                                if (callObj.secondProperty && !(data[callObj.secondProperty] || data[callObj.property]?.[callObj.secondProperty])) regionCb();
 
                                 var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
@@ -240,7 +266,7 @@ var collect = function(AWSConfig, settings, callback) {
                             execute();
                             // Continue your code here
                         } catch (error) {
-                            console.error('Error during dynamic import:', error);
+                            console.error('Error loading the data:', error);
                         }
                     }
                 }, function() {
@@ -255,6 +281,7 @@ var collect = function(AWSConfig, settings, callback) {
             async.eachSeries(helpers.postcalls, function(postcallObj, postcallCb) {
                 async.eachOfLimit(postcallObj, 10, function(serviceObj, service, serviceCb) {
                     var serviceName = service;
+                    var correctedServiceName= getCorrectServiceName(serviceName);
                     var serviceLower = service.toLowerCase();
                     var serviceIntegration = {
                         enabled : postcallObj && postcallObj[serviceName] && postcallObj[serviceName].sendIntegration && postcallObj[serviceName].sendIntegration.enabled ? true : false,
@@ -326,7 +353,7 @@ var collect = function(AWSConfig, settings, callback) {
                             } else {
                                 try {
                                     const executorModule = requireServiceModule(serviceName);
-                                    const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[serviceName](LocalAWSConfig))) : new executorModule[serviceName](LocalAWSConfig);
+                                    const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[correctedServiceName](LocalAWSConfig))) : new executorModule[correctedServiceName](LocalAWSConfig);
                               
                                     if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                     !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {

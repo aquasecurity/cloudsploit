@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    WAFRegional
+} = require('@aws-sdk/client-waf-regional');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var wafregional = new AWS.WAFRegional(AWSConfig);
+    var wafregional = new WAFRegional(AWSConfig);
     async.eachLimit(collection.wafregional.listWebACLs[AWSConfig.region].data, 15, function(dep, depCb){
         async.eachLimit(['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'], 1, function(thisCheck, tcCb){
             if (!collection['wafregional']['listResourcesForWebACL'][AWSConfig.region][dep['WebACLId']]) collection['wafregional']['listResourcesForWebACL'][AWSConfig.region][dep['WebACLId']] = {};

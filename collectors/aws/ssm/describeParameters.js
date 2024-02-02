@@ -1,8 +1,10 @@
-var AWS = require('aws-sdk');
+const {
+    SSM
+} = require('@aws-sdk/client-ssm');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ssm = new AWS.SSM(AWSConfig);
+    var ssm = new SSM(AWSConfig);
     collection.ssm.describeParameters[AWSConfig.region] = {};
     var params = {};
 

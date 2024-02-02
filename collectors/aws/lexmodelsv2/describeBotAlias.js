@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    LexModelsV2
+} = require('@aws-sdk/client-lex-models-v2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var lexmodelsv2 = new AWS.LexModelsV2(AWSConfig);
+    var lexmodelsv2 = new LexModelsV2(AWSConfig);
 
     if (!collection.lexmodelsv2 ||
         !collection.lexmodelsv2.listBots ||

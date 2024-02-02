@@ -1,8 +1,10 @@
-var AWS = require('aws-sdk');
+const {
+    IAM
+} = require('@aws-sdk/client-iam');
 var async = require('async');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var iam = new AWS.IAM(AWSConfig);
+    var iam = new IAM(AWSConfig);
 
     var generateCredentialReport = function(genCb) {
         iam.generateCredentialReport(function(err, data) {
