@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'SQL Server VNet rules Integrated',
+    title: 'SQL Server VNet Rules Integrated',
     category: 'SQL Server',
     domain: 'Databases',
     description: 'Ensures that SQL servers have VNet rules integrated.',
