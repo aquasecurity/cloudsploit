@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var computeGalleryRbac = require('./computeGalleryRbac');
+var computeGalleryRbac = require('./computeGalleryMachineImgRbac');
 
 const computeGalleries = [
     {
@@ -116,7 +116,7 @@ describe('computeGalleryRbac', function () {
             computeGalleryRbac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Compute Gallery does not have RBAC enabled');
+                expect(results[0].message).to.include('Compute Gallery machine images are shared with community');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -127,18 +127,18 @@ describe('computeGalleryRbac', function () {
             computeGalleryRbac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Compute Gallery does not have RBAC enabled');
+                expect(results[0].message).to.include('Compute Gallery machine images are shared with groups');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give passing result if Compute Gallery has RBAC enabled', function (done) {
+        it('should give passing result if Compute Gallery is shared using RBAC', function (done) {
             const cache = createCache([computeGalleries[0]]);
             computeGalleryRbac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Compute Gallery has RBAC enabled');
+                expect(results[0].message).to.include('Compute Gallery machine images are shared using RBAC only');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

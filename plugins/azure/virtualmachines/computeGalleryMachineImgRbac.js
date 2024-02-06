@@ -2,14 +2,15 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Compute Gallery RBAC Sharing',
+    title: 'Compute Gallery Machine Images RBAC Sharing',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that the Azure Compute Gallery is using RBAC only.',
-    more_info: 'As the Azure Compute Gallery, definition, and version are all resources, they can be shared using the built-in native Azure Roles-based Access Control (RBAC) roles. A direct shared gallery can\'t contain encrypted image versions. Community galleries can be used by anyone with an Azure subscription making the resource more vulnerable.',
+    description: 'Ensures that the Azure Compute Gallery machine images are shared using RBAC only.',
+    more_info: 'Images, definitions, and versions in Azure Compute Gallery can be shared using the built-in Azure Roles-based Access Control (RBAC) roles. Compute Galleries shared directly with subscription, tenant or community expose the resource to increased vulnerability. Directly shared galleries cannot contain encrypted image versions.',
     recommended_action: 'Ensure that all Azure Compute Galleries are using RBAC only.',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/azure-compute-gallery',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/shared-image-galleries?tabs=azure-cli#sharing',
     apis: ['computeGalleries:list'],
+    realtime_triggers: ['microsoftcompute:galleries:write', 'microsoftcompute:galleries:delete', 'microsoftcompute:galleries:share:action'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -32,14 +33,13 @@ module.exports = {
             }
 
             computeGalleries.data.forEach(gallery => {
-                if (gallery.sharingProfile && 
-                    gallery.sharingProfile.permissions && 
-                    (gallery.sharingProfile.permissions.toLowerCase() == 'community' ||
-                    gallery.sharingProfile.permissions.toLowerCase() == 'groups')) {
-                    helpers.addResult(results, 2, 'Compute Gallery does not have RBAC enabled', location, gallery.id);
+
+                if (!gallery.sharingProfile || (gallery.sharingProfile && gallery.sharingProfile.permissions && gallery.sharingProfile.permissions.toLowerCase() == 'private')) {
+                    helpers.addResult(results, 0, 'Compute Gallery machine images are shared using RBAC only', location, gallery.id);
                 } else {
-                    helpers.addResult(results, 0, 'Compute Gallery has RBAC enabled', location, gallery.id);
+                    helpers.addResult(results, 2, `Compute Gallery machine images are shared with ${gallery.sharingProfile.permissions.toLowerCase()}`, location, gallery.id);
                 }
+
             });
 
             rcb();
