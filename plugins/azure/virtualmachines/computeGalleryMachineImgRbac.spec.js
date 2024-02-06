@@ -4,12 +4,12 @@ var computeGalleryRbac = require('./computeGalleryMachineImgRbac');
 const computeGalleries = [
     {
         "name": "testgallery",
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/MEERAB-RG/providers/Microsoft.Compute/galleries/testgallery",
+        "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Compute/galleries/testgallery",
         "type": "Microsoft.Compute/galleries",
         "location": "eastus",
         "tags": {},
         "identifier": {
-            "uniqueName": "26a1a07e-06dd-4892-92c9-e4996b0fc546-TESTGALLERY"
+            "uniqueName": "12345-TESTGALLERY"
         },
         "provisioningState": "Succeeded",
         "sharingProfile": {
@@ -19,12 +19,12 @@ const computeGalleries = [
     },
     {
         "name": "testgallerymeerab",
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/MEERAB-RG/providers/Microsoft.Compute/galleries/testgallerymeerab",
+        "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Compute/galleries/testgallerymeerab",
         "type": "Microsoft.Compute/galleries",
         "location": "eastus",
         "tags": {},
         "identifier": {
-            "uniqueName": "26a1a07e-06dd-4892-92c9-e4996b0fc546-TESTGALLERYMEERAB"
+            "uniqueName": "12345-TESTGALLERYMEERAB"
         },
         "sharingProfile": {
             "permissions": "Community",
@@ -43,12 +43,12 @@ const computeGalleries = [
     },
     {
         "name": "testgallerymeerab",
-        "id": "/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/MEERAB-RG/providers/Microsoft.Compute/galleries/testgallerymeerab",
+        "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Compute/galleries/testgallerymeerab",
         "type": "Microsoft.Compute/galleries",
         "location": "eastus",
         "tags": {},
         "identifier": {
-            "uniqueName": "26a1a07e-06dd-4892-92c9-e4996b0fc546-TESTGALLERYMEERAB"
+            "uniqueName": "12345-TESTGALLERYMEERAB"
         },
         "sharingProfile": {
             "permissions": "Groups",
@@ -69,7 +69,19 @@ const computeGalleries = [
             ]
           },
         "provisioningState": "Succeeded"
-    }
+    },
+    {
+        "name": "testgallery",
+        "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Compute/galleries/testgallery",
+        "type": "Microsoft.Compute/galleries",
+        "location": "eastus",
+        "tags": {},
+        "identifier": {
+            "uniqueName": "12345-TESTGALLERY"
+        },
+        "provisioningState": "Succeeded",
+
+    },
 
 ];
 
@@ -135,6 +147,17 @@ describe('computeGalleryRbac', function () {
 
         it('should give passing result if Compute Gallery is shared using RBAC', function (done) {
             const cache = createCache([computeGalleries[0]]);
+            computeGalleryRbac.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Compute Gallery machine images are shared using RBAC only');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if Compute Gallery is shared using RBAC (no sharing profile)', function (done) {
+            const cache = createCache([computeGalleries[3]]);
             computeGalleryRbac.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
