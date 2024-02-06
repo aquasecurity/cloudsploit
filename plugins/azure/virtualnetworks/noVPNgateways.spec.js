@@ -1,6 +1,28 @@
 var expect = require('chai').expect;
 var noVPNGateways = require('./noVPNgateways');
 
+const virtualNetworks = [
+    {
+        'name': 'test-vnet',
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        'type': 'Microsoft.Network/virtualNetworks',
+        'location': 'eastus',
+        'subnets': [
+            {
+                'name': 'GatewaySubnet',
+                'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/GatewaySubnet',
+                'properties': {
+                    'ipConfigurations': [
+                        {
+                            'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworkGateways/test-gateway/ipConfigurations/default'
+                        }
+                    ],
+                }
+            }
+        ],
+    }
+];
+
 const resourceGroups = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group',
@@ -12,22 +34,21 @@ const resourceGroups = [
 
 const virtualNetworkGateways = [
     {
-        'name': 'test-vpn-gateway',
-        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworkGateways/test-vpn-gateway',
+        'name': 'test-gateway',
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworkGateways/test-gateway',
         'type': 'Microsoft.Network/virtualNetworkGateways',
-        'gatewayType': 'VPN'
-    },
-    {
-        'name': 'test-expressroute-gateway',
-        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworkGateways/test-expressroute-gateway',
-        'type': 'Microsoft.Network/virtualNetworkGateways',
-        'gatewayType': 'ExpressRoute'
+        'gatewayType':'vpn'
     }
 ];
 
-const createCache = (resourceGroups, virtualNetworkGateways) => {
+const createCache = (virtualNetworks, resourceGroups, virtualNetworkGateways) => {
+    let networks = {};
     let groups = {};
     let gateways = {};
+
+    if (virtualNetworks) {
+        networks['data'] = virtualNetworks;
+    }
 
     if (resourceGroups) {
         groups['data'] = resourceGroups;
@@ -39,6 +60,11 @@ const createCache = (resourceGroups, virtualNetworkGateways) => {
     }
 
     return {
+        virtualNetworks: {
+            listAll: {
+                'eastus': networks
+            }
+        },
         resourceGroups: {
             list: {
                 'eastus': groups
@@ -54,8 +80,30 @@ const createCache = (resourceGroups, virtualNetworkGateways) => {
 
 describe('noVPNGateways', function() {
     describe('run', function() {
-        it('should give passing result if No existing resource groups found', function(done) {
+        it('should give passing result if No existing Virtual Networks found', function(done) {
             const cache = createCache([]);
+            noVPNGateways.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No existing Virtual Networks found');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give unknown result if unable to query for Virtual Networks', function(done) {
+            const cache = createCache();
+            noVPNGateways.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Virtual Networks');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if No existing resource groups found', function(done) {
+            const cache = createCache([virtualNetworks[0]], []);
             noVPNGateways.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -66,7 +114,7 @@ describe('noVPNGateways', function() {
         });
 
         it('should give unknown result if unable to query for resource groups', function(done) {
-            const cache = createCache();
+            const cache = createCache([virtualNetworks[0]]);
             noVPNGateways.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -76,45 +124,23 @@ describe('noVPNGateways', function() {
             });
         });
 
-        it('should give passing result if No virtual network gateways found', function(done) {
-            const cache = createCache([resourceGroups[0]], []);
+        it('should give passing result if virtual network is not using VPN network gateways', function(done) {
+            const cache = createCache([virtualNetworks[0]], [resourceGroups[0]], []);
             noVPNGateways.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing virtual network gateways found');
+                expect(results[0].message).to.include('Virtual network is not using VPN network gateways');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give unknown result if unable to query for virtual network gateways', function(done) {
-            const cache = createCache([resourceGroups[0]]);
-            noVPNGateways.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for virtual Network Gateways');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give failing result if there are VPN gateways', function(done) {
-            const cache = createCache([resourceGroups[0]], [virtualNetworkGateways[0]]);
+        it('should give failing result if virtual network is using VPN network gateways', function(done) {
+            const cache = createCache([virtualNetworks[0]], [resourceGroups[0]], [virtualNetworkGateways[0]]);
             noVPNGateways.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('gateway is of VPN type');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give passing result if there are no VPN gateways', function(done) {
-            const cache = createCache([resourceGroups[0]], [virtualNetworkGateways[1]]);
-            noVPNGateways.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('gateway is not of VPN type');
+                expect(results[0].message).to.include('Virtual network is using VPN network gateways');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
