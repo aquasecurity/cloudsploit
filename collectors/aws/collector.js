@@ -34,8 +34,8 @@ const servicePackageMapping = {
     'AppMesh': 'app-mesh',
     'AutoScaling': 'auto-scaling',
     'ElasticBeanstalk': 'elastic-beanstalk',
-    'ElasticLoadBalancing': 'elastic-load-balancing',
-    'ElasticLoadBalancingV2': 'elastic-load-balancing-v2',
+    'ELB': 'elastic-load-balancing',
+    'ELBv2': 'elastic-load-balancing-v2',
     'CognitoIdentityServiceProvider':'cognito-identity-provider',
     'ComputeOptimizer':'compute-optimizer',
     'ConfigService': 'config-service',
@@ -52,7 +52,8 @@ const servicePackageMapping = {
     'Route53Domains': 'route-53-domains',
     'SecretsManager':'secrets-manager',
     'TimestreamWrite':'timestream-write',
-    'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api'
+    'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api',
+    'ServiceQuotas': 'service-quotas'
         // Add more mappings as needed
 };
 
@@ -60,7 +61,11 @@ const customServiceMapping = {
     // Add custom mappings for services with different case sensitivity
     'CodeArtifact': 'Codeartifact',
     'CognitoIdentityServiceProvider':'CognitoIdentityProvider',
-    'DMS': 'DatabaseMigrationService'
+    'DMS': 'DatabaseMigrationService',
+    'ELB':'ElasticLoadBalancing',
+    'ELBv2':'ElasticLoadBalancingV2',
+    'ForecastService':'Forecast',
+    'MQ': 'Mq'
     // Add more custom mappings as needed
 };
 const getCorrectServiceName = (serviceName) => {
@@ -266,7 +271,7 @@ var collect = function(AWSConfig, settings, callback) {
                             execute();
                             // Continue your code here
                         } catch (error) {
-                            console.error('Error loading the data:', error);
+                            console.log('Error loading the data:', error);
                         }
                     }
                 }, function() {
