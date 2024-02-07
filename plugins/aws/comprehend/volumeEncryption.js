@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Amazon Comprehend Volume Encryption',
-    category: 'Comprehend',
+    category: 'ML & AI',
     domain: 'Compute',
     description: 'Ensures the Comprehend service is using encryption for all volumes storing data at rest.',
     more_info: 'Comprehend supports using KMS keys to encrypt data at rest, which should be enabled.',
