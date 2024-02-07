@@ -11,11 +11,19 @@ module.exports = {
     recommended_action: 'Configure subnets and network security groups instead of virtual network gateways',
     apis: ['resourceGroups:list','virtualNetworks:listAll','virtualNetworkGateways:listByResourceGroup'],
     realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftnetwork:virtualnetworkgateways:write','microsoftnetwork:virtualnetworkgateways:delete'],
-
+    settings: {
+        vNet_gatewayType: {
+            name: 'Virtual Network Gateway Type',
+            description: 'Gateway type that should not be configured with virtual networks i.e. Vpn, ExpressRoute. Enter "*" if no network gateways should be used irrespective of gateway type.',
+            regex: '^.*$',
+            default: '*',
+        }
+    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var config = settings.vNet_gatewayType || this.settings.vNet_gatewayType.default;
 
         async.each(locations.virtualNetworks, function(location, rcb){
             var virtualNetworks = helpers.addSource(cache, source, 
@@ -58,7 +66,7 @@ module.exports = {
                 
                 if (virtualNetworkGateways.data.length) {
                     for (let virtualNetworkGateway of virtualNetworkGateways.data) {
-                        gatewaysList.push(virtualNetworkGateway.id);
+                        gatewaysList.push({id:virtualNetworkGateway.id, name: virtualNetworkGateway.name, gatewayType: virtualNetworkGateway.gatewayType});
                     }
                 }
             });
@@ -66,17 +74,23 @@ module.exports = {
             virtualNetworks.data.forEach(virtualNetwork => {
                 let gatewayUsed = true;
                 let subnetFound = false;
+                let restrictGateways = [];
                 if (virtualNetwork.subnets.length) {
                     for (let subnet of virtualNetwork.subnets) {
                         if (subnet.properties && subnet.properties.ipConfigurations && subnet.properties.ipConfigurations.length) {
                             let gatewayFound = false;
-                            for (let gatewayId of gatewaysList) {
-                                gatewayFound = subnet.properties.ipConfigurations.some(configuration => (configuration.id.indexOf(gatewayId) > -1));
+                            for (let gateway of gatewaysList) {
+                                if (subnet.properties.ipConfigurations.some(configuration => (configuration.id.toLowerCase().indexOf(gateway.id.toLowerCase()) > -1))) {
+                                    gatewayFound = true;
+                                    if (config.toLowerCase() ==  gateway.gatewayType.toLowerCase()) {
+                                        restrictGateways.push(gateway.name);
+                                    }
+                                }
+                               
                             }
 
                             if (gatewayFound) {
                                 subnetFound = true;
-                                break;
                             }
                         }
                     }
@@ -87,7 +101,11 @@ module.exports = {
                 if ((gatewayUsed && !subnetFound) || !gatewayUsed) {
                     helpers.addResult(results, 0, 'Virtual network is not using network gateways', location, virtualNetwork.id);
                 } else {
-                    helpers.addResult(results, 2, 'Virtual network is using network gateways', location, virtualNetwork.id);
+                    if (restrictGateways.length) {
+                        helpers.addResult(results, 2, `Virtual network is using ${config} network gateways: ${restrictGateways.join(',')}`, location, virtualNetwork.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Virtual network is using network gateways', location, virtualNetwork.id);
+                    }
                 }
             });
 
