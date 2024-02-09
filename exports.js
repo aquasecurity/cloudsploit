@@ -1071,6 +1071,7 @@ module.exports = {
 
         'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
         'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctManagedIdentity.js'),
+        'automationAcctApprovedCerts'   : require(__dirname + '/plugins/azure/automationAccounts/automationAcctApprovedCerts.js'), 
 
     },
     github: {
