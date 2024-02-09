@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/composer/docs/manage-environment-labels',
     recommended_action: 'Ensure labels are added to all cloud composer environments',
     apis: ['composer:environments'],
+    realtime_triggers: ['orchestration.airflow.service.environments.createenviroments', 'orchestration.airflow.service.environments.updateenvironment', 'orchestration.airflow.service.environments.deleteenvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -19,6 +19,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['createkeyring', 'createcryptokey'],
 
     run: function(cache, settings, callback) {
         var results = [];
