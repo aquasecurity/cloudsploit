@@ -1,4 +1,3 @@
-var AWS = require('aws-sdk');
 var {
     RDS
 } = require('@aws-sdk/client-rds');

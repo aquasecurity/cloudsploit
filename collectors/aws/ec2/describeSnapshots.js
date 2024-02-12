@@ -3,7 +3,7 @@ const {
 } = require('@aws-sdk/client-ec2');
 const {
     STS
-} = require("@aws-sdk/client-sts");
+} = require('@aws-sdk/client-sts');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 // This call must be overridden because the

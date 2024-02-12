@@ -537,7 +537,7 @@ function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];
     try {
-        const executorModule = requireServiceModule(serviceName);
+        const executorModule = requireServiceModule(service);
         var executor = new executorModule[service](config);
 
         var executorCb = function(err, data) {
@@ -1175,7 +1175,7 @@ const servicePackageMapping = {
     'TimestreamWrite':'timestream-write',
     'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api',
     'ServiceQuotas': 'service-quotas'
-        // Add more mappings as needed
+    // Add more mappings as needed
 };
 
 const customServiceMapping = {
@@ -1189,9 +1189,9 @@ const customServiceMapping = {
     'MQ': 'Mq'
     // Add more custom mappings as needed
 };
-function getCorrectServiceName (serviceName) {
+function getCorrectServiceName(serviceName) {
     return customServiceMapping[serviceName] || serviceName;
-};
+}
 
 
 module.exports = {
