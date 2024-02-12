@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'AWS Shield Advanced provides enhanced DDOS protection for all enrolled services within a subscribed account. Subscriptions should be active.',
     recommended_action: 'Enable AWS Shield Advanced for the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/ddos-overview.html#ddos-advanced',
-    apis: ['Shield:describeSubscription','Shield:describeEmergencyContactSettings','Shield:listProtections'],
+    apis: ['Shield:describeSubscription'],
     realtime_triggers: ['shield:CreateSubscription', 'sheild:UpdateSubscription', 'shield:DeleteSubscription'],
 
     run: function(cache, settings, callback) {
