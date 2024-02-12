@@ -128,6 +128,7 @@
     "@aws-sdk/client-securityhub": "^3.441.0",
     "@aws-sdk/client-ses": "^3.441.0",
     "@aws-sdk/client-shield": "^3.441.0",
+    "@aws-sdk/client-sns": "^3.441.0",
     "@aws-sdk/client-sqs": "^3.441.0",
     "@aws-sdk/client-ssm": "^3.441.0",
     "@aws-sdk/client-sts": "^3.441.0",

@@ -8,7 +8,7 @@ module.exports = {
     more_info: 'AWS Shield Advanced provides enhanced DDOS protection for all enrolled services within a subscribed account. Subscriptions should be active.',
     recommended_action: 'Enable AWS Shield Advanced for the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/ddos-overview.html#ddos-advanced',
-    apis: ['Shield:describeSubscription'],
+    apis: ['Shield:describeSubscription','Shield:describeEmergencyContactSettings','Shield:listProtections'],
     realtime_triggers: ['shield:CreateSubscription', 'sheild:UpdateSubscription', 'shield:DeleteSubscription'],
 
     run: function(cache, settings, callback) {
@@ -22,8 +22,8 @@ module.exports = {
         if (!describeSubscription) return callback(null, results, source);
 
         if (describeSubscription.err &&
-            describeSubscription.err.code &&
-            describeSubscription.err.code == 'ResourceNotFoundException') {
+            describeSubscription.err.name &&
+            describeSubscription.err.name == 'ResourceNotFoundException') {
             helpers.addResult(results, 2, 'Shield subscription is not enabled');
             return callback(null, results, source);
         }
