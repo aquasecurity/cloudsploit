@@ -166,7 +166,7 @@ var collect = function(AWSConfig, settings, callback) {
 
                             if (!data) return regionCb();
                             if (callObj.property && !data[callObj.property]) return regionCb();
-                            if (callObj.secondProperty && !(data[callObj.secondProperty] || data[callObj.property]?.[callObj.secondProperty])) regionCb();
+                            if (callObj.secondProperty && !(data[callObj.secondProperty] || (data[callObj.property] && data[callObj.property][callObj.secondProperty]))) regionCb();
 
                             var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
 
