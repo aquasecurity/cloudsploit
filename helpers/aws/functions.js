@@ -1174,7 +1174,9 @@ const servicePackageMapping = {
     'SecretsManager':'secrets-manager',
     'TimestreamWrite':'timestream-write',
     'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api',
-    'ServiceQuotas': 'service-quotas'
+    'ServiceQuotas': 'service-quotas',
+    'CustomerProfiles' : 'customer-profiles',
+    'VoiceID': 'voice-id'
     // Add more mappings as needed
 };
 
