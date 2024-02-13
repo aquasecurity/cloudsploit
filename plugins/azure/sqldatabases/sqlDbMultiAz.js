@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-high-availability#zone-redundant-configuration',
     recommended_action: 'Ensure that each SQL Database is configured to be zone redundant.',
     apis: ['servers:listSql', 'databases:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

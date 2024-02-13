@@ -634,7 +634,7 @@ var calls = {
             paginate: 'NextToken',
         },
         listModelCustomizationJobs:{
-            property: 'modelCustomizationJobSummaries"',
+            property: 'modelCustomizationJobSummaries',
             paginate: 'NextToken',
         },
         getModelInvocationLoggingConfiguration: {

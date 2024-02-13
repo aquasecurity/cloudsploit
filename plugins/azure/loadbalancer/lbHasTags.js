@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify affected load balancers and add tags.',
     apis: ['loadBalancers:listAll'],
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

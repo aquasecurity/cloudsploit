@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Recovery Service vault and enable BYOK encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/backup/encryption-at-rest-with-cmk',
     apis: ['recoveryServiceVaults:getRecoveryServiceVault', 'recoveryServiceVaults:listBySubscriptionId'],
+    realtime_triggers: ['microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

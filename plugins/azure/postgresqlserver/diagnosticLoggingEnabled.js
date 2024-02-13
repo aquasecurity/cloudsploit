@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all PostgreSQL servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/concepts-server-logs',
     apis: ['servers:listPostgres', 'diagnosticSettings:listByPostgresServers'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write', 'microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

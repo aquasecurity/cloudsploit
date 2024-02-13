@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/monitor-virtual-network',
     recommended_action: 'Modify the virtual network settings and enable diagnostic logs.',
     apis: ['virtualNetworks:listAll', 'diagnosticSettings:listByVirtualNetworks'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

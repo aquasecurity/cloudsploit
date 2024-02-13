@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify snapshots and disable public access',
     link: 'https://learn.microsoft.com/en-us/azure/backup/security-overview',
     apis: ['snapshots:list'],
+    realtime_triggers: ['microsoftcompute:snapshots:write', 'microsoftcompute:snapshots:delete'], 
 
     run: function(cache, settings, callback) {
         var results = [];

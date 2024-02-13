@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-disable-public-access?tabs=azure-portal',
     recommended_action: 'Modify App Configuration and disable public access.',
     apis: ['appConfigurations:list'],
+    realtime_triggers: ['microsoftappconfiguration:configurationstores:write','microsoftappconfiguration:configurationstores:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Enable DDoS protection for virtual networks',
     link: 'https://azure.microsoft.com/en-us/blog/azure-ddos-protection-for-virtual-networks-generally-available/',
     apis: ['virtualNetworks:listAll'],
-
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

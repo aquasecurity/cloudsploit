@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify affected snapshots and and enable customer managed key encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption',
     apis: ['snapshots:list'],
+    realtime_triggers: ['microsoftcompute:snapshots:write', 'microsoftcompute:snapshots:delete'], 
 
     run: function(cache, settings, callback) {
         var results = [];

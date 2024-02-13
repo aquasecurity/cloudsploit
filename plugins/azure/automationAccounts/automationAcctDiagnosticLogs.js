@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all Automation accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/automation-manage-send-joblogs-log-analytics#azure-automation-diagnostic-settings',
     apis: ['automationAccounts:list', 'diagnosticSettings:listByAutomationAccounts'],
+    realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
     settings: {
         diagnostic_logs: {
             name: 'Diagnostic Logs Enabled',

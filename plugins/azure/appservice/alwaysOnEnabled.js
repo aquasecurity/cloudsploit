@@ -10,7 +10,8 @@ module.exports = {
     recommended_action: 'Enable Always On feature for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/configure-common',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
