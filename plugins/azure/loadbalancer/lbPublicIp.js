@@ -2,11 +2,11 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Load Balancer Has Public IP',
+    title: 'Load Balancer Public IP',
     category: 'Load Balancer',
     domain: 'Availability',
-    description: 'Ensures that Azure Load Balancers is Public IP address associated.',
-    more_info: 'A public IP associated with a load balancer serves as an Internet-facing frontend IP configuration.The frontend is used to access resources in the backend pool. The frontend IP can be used for members of the backend pool to egress to the Internet.',
+    description: 'Ensures that Azure Load Balancers have public IPs associated.',
+    more_info: 'A public load balancer offers a dedicated IP for Internet-facing access to backend resources. This configuration facilitates efficient egress to the Internet for backend pool members through the assigned frontend IP. It ensures streamlined connectivity and reliable resource availability, simplifying scalability to meet varying demand levels.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/configure-public-ip-load-balancer#change-or-remove-public-ip-address',
     recommended_action: 'Modify load balancers and add Public IP address.',
     apis: ['loadBalancers:listAll'],

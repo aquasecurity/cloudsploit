@@ -4,30 +4,30 @@ var lbPublicIp = require('./lbPublicIp');
 const loadBalancers = [
     {
         "name": "test",
-        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/testresource/providers/Microsoft.Network/loadBalancers/test",
-        "etag": "W/\"b44d8556-daee-4b29-b12f-f6b140df6cbd\"",
+        "id": "/subscriptions/123456/resourceGroups/test/providers/Microsoft.Network/loadBalancers/test",
+        "etag": "W/\"1234\"",
         "type": "Microsoft.Network/loadBalancers",
         "location": "eastus",
         "sku": {
           "name": "Standard"
         },
         "provisioningState": "Succeeded",
-        "resourceGuid": "e88ed351-f991-4268-94f5-57334c1443af",
+        "resourceGuid": "123456",
         "frontendIPConfigurations": [
           {
             "name": "3859f556-a02d-42d9-8bd3-42301f41f8be",
-            "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/loadBalancers/kubernetes/frontendIPConfigurations/3859f556-a02d-42d9-8bd3-42301f41f8be",
-            "etag": "W/\"b44d8556-daee-4b29-b12f-f6b140df6cbd\"",
+            "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Network/loadBalancers/kubernetes/frontendIPConfigurations/3859f556-a02d-42d9-8bd3-42301f41f8be",
+            "etag": "W/\"1234\"",
             "type": "Microsoft.Network/loadBalancers/frontendIPConfigurations",
             "properties": {
               "provisioningState": "Succeeded",
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/publicIPAddresses/3859f556-a02d-42d9-8bd3-42301f41f8be"
+                "id": "/subscriptions/123456/resourceGroups/test/providers/Microsoft.Network/publicIPAddresses/3859f556-a02d-42d9-8bd3-42301f41f8be"
               },
               "inboundNatRules": [
                 {
-                  "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/loadBalancers/kubernetes/inboundNatRules/jbs"
+                  "id": "/subscriptions/123456/resourceGroups/test/providers/Microsoft.Network/loadBalancers/kubernetes/inboundNatRules/jbs"
                 }
               ],
               "outboundRules": [
@@ -42,20 +42,20 @@ const loadBalancers = [
     },
     {
         "name": "test2",
-        "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/testresource/providers/Microsoft.Network/loadBalancers/test2",
-        "etag": "W/\"b44d8556-daee-4b29-b12f-f6b140df6cbd\"",
+        "id": "/subscriptions/123456/resourceGroups/testresource/providers/Microsoft.Network/loadBalancers/test2",
+        "etag": "W/\"123456\"",
         "type": "Microsoft.Network/loadBalancers",
         "location": "eastus",
         "sku": {
           "name": "Standard"
         },
         "provisioningState": "Succeeded",
-        "resourceGuid": "e88ed351-f991-4268-94f5-57334c1443af",
+        "resourceGuid": "123456",
         "frontendIPConfigurations": [
           {
             "name": "3859f556-a02d-42d9-8bd3-42301f41f8be",
-            "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/loadBalancers/kubernetes/frontendIPConfigurations/3859f556-a02d-42d9-8bd3-42301f41f8be",
-            "etag": "W/\"b44d8556-daee-4b29-b12f-f6b140df6cbd\"",
+            "id": "/subscriptions/123456/resourceGroups/test/providers/Microsoft.Network/loadBalancers/kubernetes/frontendIPConfigurations/3859f556-a02d-42d9-8bd3-42301f41f8be",
+            "etag": "W/\"123456\"",
             "type": "Microsoft.Network/loadBalancers/frontendIPConfigurations",
             "properties": {
                 "privateIPAddress":'10.0.0.4',
