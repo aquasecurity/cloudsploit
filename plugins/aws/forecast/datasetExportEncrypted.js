@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Forecast Dataset Export Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     description: 'Ensure that AWS Forecast exports have encryption enabled before they are being saved on S3.',
     more_info: 'In AWS Forecast, you can save forecast reports on S3 in CSV format. Make sure to encrypt these export before writing them to the bucket in order to follow your organizations\'s security and compliance requirements.',

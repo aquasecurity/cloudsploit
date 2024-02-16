@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Kendra Index Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Databases',
     description: 'Ensure that the Kendra index is encrypted using desired encryption level.',
     more_info: 'Amazon Kendra encrypts your data at rest with AWS-manager keys by default. Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
