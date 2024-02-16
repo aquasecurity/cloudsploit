@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var computeGalleryRbac = require('./computeGalleryMachineImgRbac');
+var computeGalleryRbac = require('./computeGalleryRbacSharing');
 
 const computeGalleries = [
     {

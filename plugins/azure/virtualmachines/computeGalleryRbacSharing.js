@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Compute Gallery Machine Images RBAC Sharing',
+    title: 'Compute Gallery RBAC Sharing',
     category: 'Virtual Machines',
     domain: 'Compute',
     description: 'Ensures that the Azure Compute Gallery machine images are shared using RBAC only.',
