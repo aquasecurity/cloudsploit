@@ -61,7 +61,7 @@ module.exports = {
                         }).map(function(scope) {
                             return scope.name;
                         });
-                        blobContainers.data.filter(function(blob) {
+                        blobContainers.data.forEach(function(blob) {
                             if (!cmkEncryptionScopes.includes(blob.defaultEncryptionScope)) {
                                 helpers.addResult(results, 2, 'Blob container does not have CMK encryption enabled', location, blob.id);
                             } else {
