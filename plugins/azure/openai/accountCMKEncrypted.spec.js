@@ -7,8 +7,10 @@ const accounts = [
         "name": "acc1",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
-        'encryption': {
-            'keySource': 'Microsoft.Keyvault'
+        "properties": {
+            "encryption": {
+                'keySource': 'Microsoft.Keyvault'
+            }
         }
       },
       {
