@@ -285,4 +285,7 @@ module.exports = {
     automationAccounts:{
         list: 'id'
     },
+    openAI: {
+        listAccounts: 'id'
+    }
 };

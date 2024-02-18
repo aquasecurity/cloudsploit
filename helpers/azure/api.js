@@ -480,6 +480,11 @@ var calls = {
         }
 
     },
+    openAI: {
+        listAccounts: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/accounts?api-version=2023-05-01'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
