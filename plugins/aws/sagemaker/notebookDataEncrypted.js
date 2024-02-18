@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Notebook Data Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Compute',
     description: 'Ensure Notebook data is encrypted',
     more_info: 'An optional encryption key can be supplied during Notebook Instance creation.',

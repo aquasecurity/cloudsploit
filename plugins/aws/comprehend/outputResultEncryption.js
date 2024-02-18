@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Amazon Comprehend Output Result Encryption',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Compute',
     description: 'Ensures the Comprehend service is using encryption for all result output.',
     more_info: 'Comprehend supports using KMS keys to result output, which should be enabled.',

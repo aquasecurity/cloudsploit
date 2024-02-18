@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'DevOps Guru Notifications Enabled',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Availability',
     description: 'Ensures SNS topic is set up for Amazon DevOps Guru.',
     more_info: 'Amazon DevOps Guru uses an SNS topic to notify you about important DevOps Guru events.',
