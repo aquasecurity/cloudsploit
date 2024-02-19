@@ -127,5 +127,8 @@ module.exports = {
     afdWafPolicies: ['global'],
     appConfigurations: locations,
     automationAccounts: locations,
-    openAI: locations
+    openAI: locations,
+    logAnalytics: locations,
+    publicIpAddresses: locations,
+    computeGalleries: locations
 };
