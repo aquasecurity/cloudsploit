@@ -288,4 +288,10 @@ module.exports = {
     currentSensitivityLabels: {
         list: 'id'
     },
+    connectionPolicies:{
+        listByServer:'id'
+    },
+    publicIpAddresses: {
+        list: 'id'
+    }
 };
