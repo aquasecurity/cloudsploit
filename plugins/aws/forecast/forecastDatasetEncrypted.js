@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Forecast Dataset Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'High',
     description: 'Ensure that AWS Forecast datasets are using desired KMS key for data encryption.',

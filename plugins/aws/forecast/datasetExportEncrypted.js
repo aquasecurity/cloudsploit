@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Forecast Dataset Export Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'High',
     description: 'Ensure that AWS Forecast exports have encryption enabled before they are being saved on S3.',

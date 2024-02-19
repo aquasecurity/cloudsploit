@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Bedrock Model Invocation Logging Enabled',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Low',
     description: 'Ensure that Amazon Bedrock model invocation logging is enabled.',

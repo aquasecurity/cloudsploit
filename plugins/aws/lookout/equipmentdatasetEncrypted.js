@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'LookoutEquipment Dataset Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'High',
     description: 'Ensure that Amazon Lookout for Equipment datasets are encrypted using desired KMS encryption level',

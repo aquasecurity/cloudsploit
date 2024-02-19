@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Configure lifecycle rules for buckets which have versioning enabled',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/how-to-set-lifecycle-configuration-intro.html',
     apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation', 'S3:getBucketLifecycleConfiguration'],
-    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioninng', 's3:putBucketLifecycleConfiguration','s3:DeleteBucket'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning', 's3:putBucketLifecycleConfiguration','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

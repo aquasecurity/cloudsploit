@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Kendra Index Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Databases',
     severity: 'High',
     description: 'Ensure that the Kendra index is encrypted using desired encryption level.',

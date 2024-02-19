@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'LookoutMetrics Anomaly Detector Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'High',
     description: 'Ensure that Amazon LookoutMetrics Anomaly Detector is encrypted using desired KMS encryption level',

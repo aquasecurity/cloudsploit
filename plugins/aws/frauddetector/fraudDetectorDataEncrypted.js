@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Fraud Detector Data Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Application Integration',
     severity: 'High',
     description: 'Ensure that Amazon Fraud Detector has encryption enabled for data at rest with desired KMS encryption level.',

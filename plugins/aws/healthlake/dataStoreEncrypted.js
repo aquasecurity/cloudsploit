@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'HealthLake Data Store Encrypted',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'High',
     description: 'Ensure that AWS HealthLake Data Store is using desired encryption level.',

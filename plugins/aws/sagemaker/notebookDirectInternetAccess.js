@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Notebook Direct Internet Access',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensure Notebook Instance is not publicly available.',
