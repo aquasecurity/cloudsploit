@@ -164,7 +164,7 @@ var serviceMap = {
     'AI & ML': 
         {
             enabled: true, isSingleSource: true, InvAsset: 'account', InvService: 'openAI',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI', BridgeProvider: 'Azure', 
+            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure', 
             BridgeServiceName: 'openAI', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'accounts',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
