@@ -18,7 +18,7 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.applicationGateway, (location, rcb) => {
-            var appGateways = helpers.addSource(cache, source, 
+            var appGateways = helpers.addSource(cache, source,
                 ['applicationGateway', 'listAll', location]);
 
             if (!appGateways) return rcb();
@@ -31,8 +31,8 @@ module.exports = {
             if (!appGateways.data.length) {
                 helpers.addResult(results, 0, 'No existing application gateways found', location);
                 return rcb();
-            } 
-            
+            }
+
             for (let appGateway of appGateways.data) {
                 if (!appGateway.id) continue;
 
@@ -40,7 +40,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'Application Gateway has tags associated', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Application Gateway does not have tags associated', location, appGateway.id);
-                } 
+                }
 
             }
 
