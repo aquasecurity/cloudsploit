@@ -1480,6 +1480,7 @@ module.exports = {
         'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
         'webserverPublicAccess'         : require(__dirname + '/plugins/google/composer/webserverPublicAccess.js'),
 
+        'vertexAIDatasetLabels'         : require(__dirname + '/plugins/google/vertexai/vertexAIDatasetLabels.js'),
         'vertexAIDatasetEncryption'     : require(__dirname + '/plugins/google/vertexai/vertexAIDatasetEncryption.js'),
         'modelLabelsAdded'              : require(__dirname + '/plugins/google/vertexai/modelLabelsAdded.js'),
         'modelEncryption'               : require(__dirname + '/plugins/google/vertexai/modelEncryption.js'),
