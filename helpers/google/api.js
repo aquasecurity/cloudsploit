@@ -574,6 +574,19 @@ var calls = {
             pagination: true
         }
     },
+    vertexAI: {
+        listDatasets: {
+            url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/datasets',
+            location: 'region',
+            dataKey: 'datasets'
+        },
+        listModels: {
+            url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/models',
+            location: 'region',
+            dataKey: 'models'
+        }
+    },
+
     roles: {
         list: {
             url: 'https://iam.googleapis.com/v1/projects/{projectId}/roles',
