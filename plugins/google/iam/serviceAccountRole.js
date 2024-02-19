@@ -5,6 +5,7 @@ module.exports = {
     title: 'Service Account Role',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure no Service Account exists without any associated role.',
     more_info: 'Service Account acts as identity for the applications to authenticate to Google cloud platform. It is a security best practice to always have roles associated with the user managed Service Accounts.',
     link: 'https://cloud.google.com/iam/docs/service-account-permissionsw',

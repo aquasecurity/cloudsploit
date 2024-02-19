@@ -5,6 +5,7 @@ module.exports = {
     title: 'KMS Public Access',
     category: 'Cryptographic Keys',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures cryptographic keys are not publicly accessible.',
     more_info: 'To prevent exposing sensitive data and information leaks, make sure that your cryptokeys do not allow access from anonymous and public users.',
     link: 'https://cloud.google.com/kms/docs/reference/permissions-and-roles',

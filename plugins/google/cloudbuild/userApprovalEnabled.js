@@ -5,6 +5,7 @@ module.exports = {
     title: 'User Approval Enabled',
     category: 'CloudBuild',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure User Approval is enabled for all cloud build triggers.',
     more_info: 'The Approval setting ensures that build gets executed only after being approved by an user who has ‘Cloud Build Approver’ role for the project. As a security best practice, ensure user approval is enabled for all build triggers.',
     link: 'https://cloud.google.com/build/docs/securing-builds/gate-builds-on-approval',

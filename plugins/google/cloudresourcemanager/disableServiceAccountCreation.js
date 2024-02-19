@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Service Account Creation',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Disable Service Account Creation" policy is enforced at the GCP organization level.',
     more_info: 'Enforcing the "Disable Service Account Creation" policy allows you to centrally manage your service accounts and reduces the chances of compromised service accounts being used to access your GCP resources.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

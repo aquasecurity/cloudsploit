@@ -5,6 +5,7 @@ module.exports = {
     title: 'Binary Authorization Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure Binary Authorization is enabled on Kubernetes Clusters',
     more_info: 'Binary authorization ensures that only trusted and signed container images are deployed within a kubernetes cluster. This provides tighter security control for images and container deployment. As a security best practice and to adhere to compliance standards, ensure this feature is enabled on all kubernetes clusters.',
     link: 'https://cloud.google.com/binary-authorization/docs/overview',
