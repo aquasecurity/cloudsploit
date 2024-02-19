@@ -1111,7 +1111,7 @@ module.exports = {
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
         'accountHasTags'                : require(__dirname + '/plugins/azure/openai/accountHasTags.js'),
-
+        'accountPublicAccessDisabled'   : require(__dirname + '/plugins/azure/openai/accountPublicAccessDisabled.js'),
 
     },
     github: {
