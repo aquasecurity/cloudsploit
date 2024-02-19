@@ -187,9 +187,9 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
             InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
             BridgePluginCategoryName: 'AI & ML', BridgeProvider: 'Google', BridgeCall: 'listModels',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'models',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '{name}', BridgeResourceType: 'models',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
-            BridgeCollectionService: 'vertexai', DataIdentifier: 'data',
+            BridgeCollectionService: 'gcp-vertexai', DataIdentifier: 'data',
         }
 };
 var calls = {
