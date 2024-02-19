@@ -924,6 +924,7 @@ module.exports = {
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
         'remoteDebuggingDisabled'       : require(__dirname + '/plugins/azure/appservice/remoteDebuggingDisabled.js'),
         'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
+        'vnetIntegrated'                : require(__dirname + '/plugins/azure/appservice/vnetIntegrated.js'),
         'certificateExpiry'             : require(__dirname + '/plugins/azure/appservice/certificateExpiry.js'),
         'scmSiteAccessRestriction'      : require(__dirname + '/plugins/azure/appservice/scmSiteAccessRestriction.js'),
         'secureHttptriggerFunction'     : require(__dirname + '/plugins/azure/appservice/secureHttptriggerFunction.js'),
