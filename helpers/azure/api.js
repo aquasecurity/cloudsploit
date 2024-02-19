@@ -161,6 +161,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
             BridgeCollectionService: 'databases', DataIdentifier: 'data',
         },
+    'AI & ML': 
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'account', InvService: 'openAI',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure', 
+            BridgeServiceName: 'openAI', BridgePluginCategoryName: 'AI & ML',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'accounts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
+            BridgeCollectionService: 'openai', BridgeCall: 'listAccounts', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations
@@ -498,7 +507,8 @@ var calls = {
     openAI: {
         listAccounts: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/accounts?api-version=2023-05-01'
-        }
+        },
+        sendIntegration: serviceMap['AI & ML']
     },
     // For CIEM
     aad: {

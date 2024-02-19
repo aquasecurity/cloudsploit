@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/google');
 
 module.exports = {
     title: 'Vertex AI Dataset Encryption',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Machine Learning',
     description: 'Ensure that Vertex AI datasets are encrypted using desired encryption protection level.',
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your Vertex AI datasets you can use Customer-Managed Keys (CMKs).',

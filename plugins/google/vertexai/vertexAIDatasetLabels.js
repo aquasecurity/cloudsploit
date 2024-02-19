@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/google');
 
 module.exports = {
     title: 'Vertex AI Dataset Labels Added',
-    category: 'ML & AI',
+    category: 'AI & ML',
     domain: 'Machine Learning',
     description: 'Ensure that all Vertex AI datasets have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
