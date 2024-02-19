@@ -32,7 +32,7 @@ module.exports = {
             if (!networkSecurityGroups) return rcb();
 
             if (networkSecurityGroups.err || !networkSecurityGroups.data) {
-                helpers.addResult(results, 3, 
+                helpers.addResult(results, 3,
                     'Unable to query for Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
                 return rcb();
             }
