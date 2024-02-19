@@ -103,7 +103,7 @@ module.exports = {
                 } else {
                     if (config !== '*') {
                         if (restrictGateways.length) {
-                            helpers.addResult(results, 2, `Virtual network is using ${config} network gateways: ${restrictGateways.join(',')}`, location, virtualNetwork.id);
+                            helpers.addResult(results, 2, `Virtual network is using following ${config} network gateways: ${restrictGateways.join(',')}`, location, virtualNetwork.id);
                         } else {
                             helpers.addResult(results, 0, `Virtual network is not using ${config} network gateways`, location, virtualNetwork.id);
                         }
