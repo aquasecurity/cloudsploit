@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Enabled',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensures CloudTrail is enabled for all regions within an account',
     more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
     recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Secure Transport Enabled',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure AWS S3 buckets enforce SSL to secure data in transit',
     more_info: 'S3 buckets should be configured to strictly require SSL connections ' +
                'to deny unencrypted HTTP requests when dealing with sensitive data.',

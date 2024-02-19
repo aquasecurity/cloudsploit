@@ -5,6 +5,7 @@ module.exports = {
     title: 'Default VPC Exists',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Determines whether the default VPC exists.',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html',

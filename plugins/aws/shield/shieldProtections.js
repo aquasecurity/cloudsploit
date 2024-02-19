@@ -4,6 +4,7 @@ module.exports = {
     title: 'Shield Protections',
     category: 'Shield',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures AWS Shield Advanced is configured to protect account resources',
     more_info: 'Once AWS Shield Advanced is enabled, it can be applied to resources within the account including ELBs, CloudFront.',
     recommended_action: 'Enable AWS Shield Advanced on resources within the account.',

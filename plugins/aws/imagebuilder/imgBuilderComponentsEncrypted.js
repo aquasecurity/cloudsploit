@@ -5,7 +5,7 @@ module.exports = {
     title: 'Image Builder Components Encrypted',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'LOW',
+    severity: 'Medium',
     description: 'Ensure that Image Builder components are encrypted.',
     more_info: 'Build components contain software, settings, and configurations that are installed or applied during the process of building custom images. Tests are run after a custom image is built to validate functionality, security, performance, etc. Custom components are encrypted with your KMS key or a KMS key owned by Image Builder.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',

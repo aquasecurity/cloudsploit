@@ -5,6 +5,7 @@ module.exports = {
     title: 'EMR Cluster Logging',
     category: 'EMR',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure AWS Elastic MapReduce (EMR) clusters capture detailed log data to Amazon S3.',
     more_info: 'EMR cluster logging should be enabled to save log files for troubleshooting purposes.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html',

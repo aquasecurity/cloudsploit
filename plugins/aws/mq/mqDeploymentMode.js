@@ -5,6 +5,7 @@ module.exports = {
     title: 'MQ Deployment Mode',
     category: 'MQ',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensure that for high availability, your AWS MQ brokers are using the active/standby deployment mode instead of single-instance ',
     more_info: 'With the active/standby deployment mode as opposed to the single-broker mode (enabled by default), you can achieve high availability for your Amazon MQ brokers as the service provides failure proof no risk.',
     recommended_action: 'Enabled Deployment Mode feature for MQ brokers',

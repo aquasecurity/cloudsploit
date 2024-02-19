@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELB Unhealthy Instances',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS ELBs have healthy instances attached',
     more_info: 'ELBs should have healthy instances attached to ensure proper load balancing and availability. The status of the instances that are healthy should be InService.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-healthchecks.html#check-instance-health',

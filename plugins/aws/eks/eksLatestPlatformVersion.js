@@ -5,6 +5,7 @@ module.exports = {
     title: 'EKS Latest Platform Version',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensure that EKS clusters are using latest platform version.',
     more_info: 'Amazon EKS platform versions represent the capabilities of the Amazon EKS cluster control plane, such as which Kubernetes API server flags are enabled, as well as the current Kubernetes patch version.'+
     'Clusters should be kept up to date of latest platforms to ensure Kubernetes security patches are applied.',

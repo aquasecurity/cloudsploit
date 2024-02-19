@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Instance Generation',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that AWS RDS instance is not using older generation of EC2',
     more_info: 'Amazon RDS instances running on older generation EC2 instances may not have access to the latest hardware capabilities and performance improvements. It is recommended to upgrade the RDS instance to its latest generation for optimal performance and security.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'EMR Encryption At Rest',
     category: 'EMR',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures encryption at rest for local disks is enabled for EMR clusters',
     more_info: 'EMR clusters should be configured to enable encryption at rest for local disks.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html',

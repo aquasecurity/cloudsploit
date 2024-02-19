@@ -5,6 +5,7 @@ module.exports = {
     title: 'Internet Gateways In VPC',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure Internet Gateways are associated with at least one available VPC.',
     more_info: 'Internet Gateways allow communication between instances in VPC and the internet. They provide a target in VPC route tables for internet-routable traffic and also perform network address translation (NAT) for instances that have been assigned public IPv4 addresses. ' +
         'Make sure they are always associated with a VPC to meet security and compliance requirements within your organization.',

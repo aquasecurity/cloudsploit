@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unrestricted Network ACL Inbound Traffic',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that no Amazon Network ACL allows inbound/ingress traffic to remote administration ports.',
     more_info: 'Amazon Network ACL should not allow inbound/ingress traffic to remote administration ports to avoid unauthorized access at the subnet level.',
     recommended_action: 'Update Network ACL to allow inbound/ingress traffic to specific port ranges only',

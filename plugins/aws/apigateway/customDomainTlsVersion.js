@@ -5,6 +5,7 @@ module.exports = {
     title: 'Custom Domain TLS Version',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensure API Gateway custom domains are using current minimum TLS version.',
     more_info: 'A security policy is a predefined combination of minimum TLS version and cipher suite offered by Amazon API Gateway. Choose either a TLS version 1.2 or TLS version 1.0 security policy.',
     recommended_action: 'Modify API Gateway custom domain security policy and specify new TLS version.',

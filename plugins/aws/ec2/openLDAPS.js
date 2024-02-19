@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open LDAPS',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Determine if TCP port 636 for LDAP SSL is open to the public',
     more_info: 'LDAP SSL port 636 is used for Secure LDAP authentication. Allowing Inbound traffic from any IP address to TCP port 636 is vulnerable to DoS attacks. It is a best practice to block port 636 from the public internet.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',

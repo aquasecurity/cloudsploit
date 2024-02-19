@@ -6,6 +6,7 @@ module.exports = {
     title: 'Detect EC2 Classic Instances',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures AWS VPC is being used for instances instead of EC2 Classic',
     more_info: 'VPCs are the latest and more secure method of launching AWS resources. EC2 Classic should not be used.',
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Introduction.html',

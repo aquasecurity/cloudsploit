@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECR Repository Tag Immutability',
     category: 'ECR',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures ECR repository image tags cannot be overwritten',
     more_info: 'ECR repositories should be configured to prevent overwriting of image tags to avoid potentially-malicious images from being deployed to live environments.',
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html',

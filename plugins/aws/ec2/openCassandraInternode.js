@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Cassandra Internode',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Determine if TCP port 7000 for Cassandra Internode is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Cassandra Internode should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',

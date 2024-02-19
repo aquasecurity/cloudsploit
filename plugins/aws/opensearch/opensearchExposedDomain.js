@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Exposed Domain',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures OpenSearch domains are not publicly exposed to all AWS accounts',
     more_info: 'OpenSearch domains should not be publicly exposed to all AWS accounts.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html',

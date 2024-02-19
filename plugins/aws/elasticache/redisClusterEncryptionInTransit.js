@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Redis Cluster Encryption In-Transit',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that your AWS ElastiCache Redis clusters have encryption in-transit enabled.',
     more_info: 'Amazon ElastiCache in-transit encryption is an optional feature that allows you to increase the security of your data at its most vulnerable points—when it is in transit from one location to another.',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html',

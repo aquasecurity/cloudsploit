@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused WorkSpaces',
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensure that there are no unused AWS WorkSpaces instances available within your AWS account.',
     more_info: 'An AWS WorkSpaces instance is considered unused if it has 0 known user connections registered within the past 30 days. Remove these instances to avoid unnecessary billing.',
     link: 'https://aws.amazon.com/workspaces/pricing/',

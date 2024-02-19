@@ -5,6 +5,7 @@ module.exports = {
     title: 'NAT Multiple AZ',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures managed NAT instances exist in at least 2 AZs for availability purposes',
     more_info: 'Creating NAT instances in a single AZ creates a single point of failure for all systems in the VPC. All managed NAT instances should be created in multiple AZs to ensure proper failover.',
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html',

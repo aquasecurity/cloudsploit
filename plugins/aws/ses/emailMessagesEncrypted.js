@@ -5,6 +5,7 @@ module.exports = {
     title: 'SES Email Messages Encrypted',
     category: 'SES',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon SES email messages are encrypted before delivering them to specified buckets.',
     more_info: 'Amazon SES email messages should be encrypted in case they are being delivered to S3 bucket to meet regulatory compliance requirements within your organization.',
     recommended_action: 'Enable encryption for SES email messages if they are being delivered to S3 in active rule-set .',

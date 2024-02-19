@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Response Caching',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensure that response caching is enabled for your Amazon API Gateway REST APIs.',
     more_info: 'A REST API in API Gateway is a collection of resources and methods that are integrated with backend HTTP endpoints, Lambda functions, or other AWS services.You can enable API caching in Amazon API Gateway to cache your endpoint responses. ' +
         'With caching, you can reduce the number of calls made to your endpoint and also improve the latency of requests to your API.',

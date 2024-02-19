@@ -5,6 +5,7 @@ module.exports = {
     title: 'EC2 LaunchWizard Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures security groups created by the EC2 launch wizard are not used',
     more_info: 'The EC2 launch wizard frequently creates insecure security groups that are exposed publicly. These groups should not be used and custom security groups should be created instead.',
     link: 'https://docs.aws.amazon.com/launchwizard/latest/userguide/launch-wizard-sap-security-groups.html',

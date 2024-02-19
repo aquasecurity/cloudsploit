@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unrestricted Network ACL Outbound Traffic',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that no Amazon Network ACL allows outbound/egress traffic to all ports.',
     more_info: 'Amazon Network ACL should not allow outbound/egress traffic to all ports to avoid unauthorized access at the subnet level.',
     recommended_action: 'Update Network ACL to allow outbound/egress traffic to specific port ranges only',

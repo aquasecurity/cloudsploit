@@ -5,7 +5,7 @@ module.exports = {
     title: 'Image Recipe Storage Volumes Encrypted',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'MEDIUM',
+    severity: 'High',
     description: 'Ensure that Image Recipe storage ebs volumes are encrypted.',
     more_info: 'EC2 Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',

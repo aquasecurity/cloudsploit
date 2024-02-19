@@ -5,6 +5,7 @@ module.exports = {
     title: 'DevOps Guru Notifications Enabled',
     category: 'AI & ML',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures SNS topic is set up for Amazon DevOps Guru.',
     more_info: 'Amazon DevOps Guru uses an SNS topic to notify you about important DevOps Guru events.',
     recommended_action: 'Add a notification channel to DevOps Guru',

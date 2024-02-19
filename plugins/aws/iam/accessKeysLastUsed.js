@@ -5,6 +5,7 @@ module.exports = {
     title: 'Access Keys Last Used',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Detects access keys that have not been used for a period of time and that should be decommissioned',
     more_info: 'Having numerous, unused access keys extends the attack surface. Access keys should be removed if they are no longer being used.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
