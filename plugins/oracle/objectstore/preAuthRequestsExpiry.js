@@ -5,6 +5,7 @@ module.exports = {
     title: 'Pre-Authenticated Requests Expiry',
     category: 'Object Store',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that pre-authenticated requests expire within a certain time.',
     more_info: 'Pre-authenticated requests allow for users who are not in the tenancy to access buckets, having a short expiration time-frame ensures that access does not last longer than intended.',
     recommended_action: 'When creating pre-authenticated Requests, ensure the expiration date-time is limited to the minimum time possible.',

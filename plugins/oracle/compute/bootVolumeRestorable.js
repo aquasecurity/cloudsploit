@@ -5,6 +5,7 @@ module.exports = {
     title: 'Boot Volume Restorable',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures boot volumes can be restored to a recent point.',
     more_info: 'Having an active backup ensures that the boot volumes can be restored in the event of a compromised system or hardware failure.',
     recommended_action: 'Ensures boot volumes can be restored to a recent point.',

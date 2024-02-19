@@ -5,6 +5,7 @@ module.exports = {
     title: 'Route Table Changes',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure an event rule is configured for route table changes.',
     more_info: 'Monitoring changes to route tables like create, update and delete will help in identifying changes to the traffic flows.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',
