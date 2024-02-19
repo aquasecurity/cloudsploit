@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     description: 'Ensures Advanced Threat Protection is enabled on PostgreSQL flexible servers.',
     more_info: 'Enabling Advanced Threat Protection provides security alerts on anomalous activities, allowing you to detect potential threats and respond to them as they occur.',
-    recommended_action: 'Ensure Advanced Threat Protection is enabled for PostgreSQL Flexible Server.',
+    recommended_action: 'Ensure Advanced Threat Protection is enabled for all PostgreSQL Flexible Servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-security#enable-enhanced-security-with-microsoft-defender-for-cloud',
     apis: ['servers:listPostgresFlexibleServer', 'advancedThreatProtectionSettings:listPostgresFlexibleServer'],
     realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete','microsoftdbforpostgresql:flexibleservers:advancedthreatprotectionsettings:write'],
@@ -51,10 +51,10 @@ module.exports = {
                             threadProtectionSetting.state.toLowerCase() == 'enabled');
                         if (atpEnabled) {
                             helpers.addResult(results, 0,
-                                'Advanced Threat Protection for the PostgreSQL flexible server is enabled', location, server.id);
+                                'Advanced Threat Protection is enabled for PostgreSQL flexible server', location, server.id);
                         } else {
                             helpers.addResult(results, 2,
-                                'Advanced Threat Protection for the PostgreSQL flexible server is disabled', location, server.id);
+                                'Advanced Threat Protection is disabled for PostgreSQL flexible server', location, server.id);
                         }
                     }
                 }

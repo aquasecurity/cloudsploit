@@ -87,7 +87,7 @@ describe('enableATP', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Advanced Threat Protection for the PostgreSQL flexible server is disabled');
+                expect(results[0].message).to.include('Advanced Threat Protection is disabled for PostgreSQL flexible server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -104,7 +104,7 @@ describe('enableATP', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Advanced Threat Protection for the PostgreSQL flexible server is enabled');
+                expect(results[0].message).to.include('Advanced Threat Protection is enabled for PostgreSQL flexible server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
