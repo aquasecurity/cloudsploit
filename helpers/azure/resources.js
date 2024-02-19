@@ -63,7 +63,8 @@ module.exports = {
         listByPostgresFlexibleServers: 'id',
         listByPostgresServers: 'id',
         listByDatabase: 'id',
-        listByApplicationGateways: 'id'
+        listByApplicationGateways: 'id',
+        listByOpenAIAccounts: 'id'
     },
     diagnosticSettingsOperations: {
         list: 'id'
