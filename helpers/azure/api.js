@@ -181,6 +181,11 @@ var calls = {
         },
         sendIntegration: serviceMap['Log Alerts']
     },
+    logAnalytics: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.OperationalInsights/workspaces?api-version=2023-09-01'
+        }
+    },
     storageAccounts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01',
@@ -288,6 +293,11 @@ var calls = {
     policyDefinitions: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions?api-version=2019-09-01'
+        }
+    },
+    publicIpAddresses: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/publicIPAddresses?api-version=2023-06-01'
         }
     },
     webApps: {
@@ -474,6 +484,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
         }
     },
+    computeGalleries: { 
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
+        }
+    },
     mediaServices:{
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
@@ -554,6 +569,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
         }
     },
+    automationAccounts:{
+        get: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-11-01'
+        }
+    },
     backupProtectedItems: {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
@@ -588,6 +610,12 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2021-11-01-preview'
+        },
+        listPostgresFlexibleServer:{
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2023-06-01-preview'
+        
         }
     },
     vulnerabilityAssessments: {
@@ -978,7 +1006,14 @@ var postcalls = {
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
         }
-    }
+    },
+    encryptionScopes: {
+        listByStorageAccounts: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
+        }
+    },
 
 };
 
