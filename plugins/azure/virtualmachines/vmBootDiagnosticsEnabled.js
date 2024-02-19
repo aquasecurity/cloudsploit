@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable boot diagnostics for all virtual machines.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/boot-diagnostics',
     apis: ['virtualMachines:listAll'],
-    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:retrievebootdiagnosticsdata:action'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
