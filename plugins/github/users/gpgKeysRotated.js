@@ -5,6 +5,7 @@ module.exports = {
     title: 'GPG Keys Rotated',
     category: 'Users',
     types: ['user'],
+    severity: 'Low',
     description: 'Ensures GitHub GPG keys are rotated frequently.',
     more_info: 'GitHub GPG keys are used to cryptographically sign code commits and should be rotated every 180 days.',
     link: 'https://help.github.com/articles/generating-a-new-gpg-key/',

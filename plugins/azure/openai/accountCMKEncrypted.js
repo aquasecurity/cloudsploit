@@ -5,7 +5,7 @@ module.exports = {
     title: 'OpenAI Account CMK Encrypted',
     category: 'AI & ML',
     domain: 'Machine Learning',
-    severity: 'Medium',
+    severity: 'High',
     description: 'Ensures that Azure OpenAI accounts are encrypted using CMK.',
     more_info: 'Azure OpenAI allows you to encrypt your accounts using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption provides enhanced security control over data and the ability to manage and audit key access, ensuring that sensitive data processed by Azure OpenAI models remains protected.',
     recommended_action: 'Ensure that Azure OpenAI accounts have CMK encryption enabled.',

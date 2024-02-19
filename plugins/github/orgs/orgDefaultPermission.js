@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/github');
 module.exports = {
     title: 'Org Default Permission',
     types: ['org'],
+    severity: 'Medium',
     category: 'Orgs',
     description: 'Checks the default permission given to new users added to an organization.',
     more_info: 'The default permission given to new organization users should be set to none. Read permissions risk exposing private repositories, while write or admin permissions risk sensitive access to repositories for new users.',

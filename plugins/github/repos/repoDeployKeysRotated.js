@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/github');
 module.exports = {
     title: 'Repo Deploy Keys Rotated',
     types: ['org', 'user'],
+    severity: 'Low',
     category: 'Repos',
     description: 'Ensures deploy keys associated with a repository are rotated regularly.',
     more_info: 'Deploy keys can have significant access to a repository and should be rotated on a regular basis.',
