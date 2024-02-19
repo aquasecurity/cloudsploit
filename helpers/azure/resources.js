@@ -288,6 +288,9 @@ module.exports = {
     openAI: {
         listAccounts: 'id'
     },
+    currentSensitivityLabels: {
+        list: 'id'
+    },
     connectionPolicies:{
         listByServer:'id'
     },

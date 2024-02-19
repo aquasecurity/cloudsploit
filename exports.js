@@ -988,6 +988,7 @@ module.exports = {
         'dbTDEEnabled'                  : require(__dirname + '/plugins/azure/sqldatabases/dbTDEEnabled.js'),
         'dbLedgerEnabled'               : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerEnabled.js'),
         'dbEnableSecureEnclaves'        : require(__dirname + '/plugins/azure/sqldatabases/dbEnableSecureEnclaves.js'),
+        'dbDataDiscoveryClassification' : require(__dirname + '/plugins/azure/sqldatabases/dbDataDiscoveryClassification.js'),
         
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/azure/loadbalancer/lbNoInstances.js'),

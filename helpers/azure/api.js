@@ -1206,6 +1206,13 @@ var tertiarycalls = {
             url: 'https://management.azure.com/{id}/patchSchedules?api-version=2023-08-01'
         }
     },
+    currentSensitivityLabels: {
+        list: {
+            reliesOnPath: 'databases.listByServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/currentSensitivityLabels?api-version=2021-11-01'
+        }
+    },
 };
 
 var specialcalls = {
