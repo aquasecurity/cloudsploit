@@ -4,6 +4,7 @@ module.exports = {
     title: 'Access Approval Enabled',
     category: 'Security',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Access Approval is enabled for the project.',
     more_info: 'GCP Access Approval allows you to require the explicit approval of your organization whenever Google support try to access your projects. This adds an additional control and logging of who in your organization approved or denied the access requests.',
     link: 'https://cloud.google.com/cloud-provider-access-management/access-approval/docs/overview',

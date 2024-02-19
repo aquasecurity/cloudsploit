@@ -5,6 +5,7 @@ module.exports = {
     title: 'Dataproc Cluster Labels Added',
     category: 'Dataproc',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that all Dataproc clusters have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/dataproc/docs/guides/creating-managing-labels',

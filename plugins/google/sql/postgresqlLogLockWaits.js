@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Lock Waits Flag Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log_lock_waits flag enabled.',
     more_info: 'SQL instance for PostgreSQL database provides log_lock_waits flag. It is not enabled by default. Enabling it will make sure that log messages are generated whenever a session waits longer than deadlock_timeout to acquire a lock.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#config',
