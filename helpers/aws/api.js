@@ -482,8 +482,8 @@ var serviceMap = {
     'AI & ML': [
         {
             enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'bedrock',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'Bedrock Model',
-            BridgeProvider: 'aws', BridgeServiceName: 'bedrock', BridgePluginCategoryName: 'AI & ML',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'Bedrock Model',BridgeProvider: 'aws',
+            BridgeServiceName: 'bedrock', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: 'modelArn', BridgeIdTemplate: '', BridgeResourceType: 'custom-model',
             BridgeResourceNameIdentifier: 'modelName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'bedrock', BridgeCall: 'getCustomModel', DataIdentifier: 'data',
