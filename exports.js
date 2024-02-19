@@ -1109,6 +1109,9 @@ module.exports = {
         'automationAcctPublicAccess'    : require(__dirname + '/plugins/azure/automationAccounts/automationAcctPublicAccess.js'),
         'automationAcctPrivateEndpoints': require(__dirname + '/plugins/azure/automationAccounts/automationAcctPrivateEndpoints.js'),
 
+        'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
+
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

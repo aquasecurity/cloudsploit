@@ -285,6 +285,9 @@ module.exports = {
     automationAccounts:{
         list: 'id'
     },
+    openAI: {
+        listAccounts: 'id'
+    },
     currentSensitivityLabels: {
         list: 'id'
     },
