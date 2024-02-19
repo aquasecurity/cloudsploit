@@ -923,6 +923,7 @@ module.exports = {
         'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
         'certificateExpiry'             : require(__dirname + '/plugins/azure/appservice/certificateExpiry.js'),
         'scmSiteAccessRestriction'      : require(__dirname + '/plugins/azure/appservice/scmSiteAccessRestriction.js'),
+        'secureHttptriggerFunction'     : require(__dirname + '/plugins/azure/appservice/secureHttptriggerFunction.js'),
         'appServiceAccessRestriction'   : require(__dirname + '/plugins/azure/appservice/appServiceAccessRestriction.js'),
         'webAppsADEnabled'              : require(__dirname + '/plugins/azure/appservice/webAppsADEnabled.js'),
         'appInsightsEnabled'            : require(__dirname + '/plugins/azure/appservice/appInsightsEnabled.js'),
