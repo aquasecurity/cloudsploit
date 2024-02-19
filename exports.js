@@ -932,6 +932,7 @@ module.exports = {
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
+        'aksManagedIdentity'            : require(__dirname + '/plugins/azure/kubernetesservice/aksManagedIdentity.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
         'aksAgentVersion'               : require(__dirname + '/plugins/azure/kubernetesservice/aksAgentVersion.js'),
         'aksClusterHasTags'             : require(__dirname + '/plugins/azure/kubernetesservice/aksClusterHasTags.js'),
