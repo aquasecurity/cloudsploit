@@ -1479,6 +1479,7 @@ module.exports = {
         'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
         'webserverPublicAccess'         : require(__dirname + '/plugins/google/composer/webserverPublicAccess.js'),
 
+        'modelLabelsAdded'              : require(__dirname + '/plugins/google/vertexai/modelLabelsAdded.js'),
         'modelEncryption'               : require(__dirname + '/plugins/google/vertexai/modelEncryption.js'),
     },
     alibaba: {
