@@ -213,6 +213,9 @@ let collect = function(AzureConfig, settings, callback) {
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
                                         subCallObj.properties.forEach(function(propToReplace) {
+                                            if (propToReplace.includes('.')) {
+                                                regionData[propToReplace] = parseCollection(propToReplace, regionData);
+                                            }
                                             if (regionData[propToReplace]) {
                                                 var re = new RegExp(`{${propToReplace}}`, 'g');
                                                 localReq.url = subCallObj.url.replace(re, regionData[propToReplace]);
