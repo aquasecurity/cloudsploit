@@ -72,7 +72,7 @@ module.exports = {
 
                     if (!privateCidrsFound.length) {
                         helpers.addResult(results, 0,
-                            'Security group "' + group.GroupName + '" is not configured to allow traffic from any reserved private addresses',
+                            'Security group "' + group.GroupName + '" is not configured to allow inbound access from any source IP address within any reserved private addresses',
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
