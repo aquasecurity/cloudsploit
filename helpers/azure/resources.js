@@ -285,6 +285,9 @@ module.exports = {
     automationAccounts:{
         list: 'id'
     },
+    currentSensitivityLabels: {
+        list: 'id'
+    },
     connectionPolicies:{
         listByServer:'id'
     },
