@@ -1073,6 +1073,7 @@ module.exports = {
         'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctManagedIdentity.js'),
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
+        'accountHasTags'                : require(__dirname + '/plugins/azure/openai/accountHasTags.js'),
 
 
     },
