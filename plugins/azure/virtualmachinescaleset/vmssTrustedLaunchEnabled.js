@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Remove existing Virtual Machine Scale Set and create a new one with trusted launch enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

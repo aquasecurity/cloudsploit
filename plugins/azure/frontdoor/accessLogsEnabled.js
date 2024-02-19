@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that diagnostic setting for Front Door Access Log is enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-logs',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

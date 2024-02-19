@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify SQL Server and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['servers:listSql'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

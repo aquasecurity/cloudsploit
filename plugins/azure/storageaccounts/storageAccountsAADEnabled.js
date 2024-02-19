@@ -24,6 +24,7 @@ module.exports = {
             default: '^aquaacct([a-f0-9]){16}$'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
     run: function(cache, settings, callback) {
         var config = {
             storage_account_check_file_share: settings.storage_account_check_file_share || this.settings.storage_account_check_file_share.default,

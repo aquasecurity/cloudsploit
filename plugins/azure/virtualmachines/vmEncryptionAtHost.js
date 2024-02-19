@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that all Azure Virtual Machines have encryption at host enabled for disks.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption#encryption-at-host---end-to-end-encryption-for-your-vm-data',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

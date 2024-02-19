@@ -14,6 +14,7 @@ module.exports = {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
                 'Enabling encryption of log storage data helps to protect this data.',
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

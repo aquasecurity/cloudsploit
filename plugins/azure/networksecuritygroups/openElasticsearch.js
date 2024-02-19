@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 9200 or 9300 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
     
     run: function(cache, settings, callback) {
         const results = [];

@@ -16,6 +16,7 @@ module.exports = {
              'to isolate resources. Ensure default security groups to not allow ' +
              'unintended traffic to cross these isolation boundaries.'
     },
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -31,7 +32,7 @@ module.exports = {
             if (!networkSecurityGroups) return rcb();
 
             if (networkSecurityGroups.err || !networkSecurityGroups.data) {
-                helpers.addResult(results, 3, 
+                helpers.addResult(results, 3,
                     'Unable to query for Network Security Groups: ' + helpers.addError(networkSecurityGroups), location);
                 return rcb();
             }

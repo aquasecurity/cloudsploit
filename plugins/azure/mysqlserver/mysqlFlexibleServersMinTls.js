@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify MySQL flexible server tls_version parameter and set to desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-connect-tls-ssl',
     apis: ['servers:listMysqlFlexibleServer', 'flexibleServersConfigurations:listByServer'],   
+    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:configurations:write','microsoftdbformysql:flexibleservers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

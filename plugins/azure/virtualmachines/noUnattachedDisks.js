@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that there are no unattached virtual machine disk volumes',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disks-find-unattached-portal',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

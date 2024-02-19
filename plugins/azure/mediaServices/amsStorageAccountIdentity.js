@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities#media-services-managed-identity-scenarios',
     recommended_action: 'Modify Media Service storage account settings and enable managed identity.',
     apis: ['mediaServices:listAll'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable incoming client certificate SSL setting for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth#enable-client-certificates',
     apis: ['webApps:list'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

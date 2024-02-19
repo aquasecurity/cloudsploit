@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview-managed-identity',
     recommended_action: 'Modify App Configuration store and add managed identity.',
     apis: ['appConfigurations:list'],
+    realtime_triggers: ['microsoftappconfiguration:configurationstores:write','microsoftappconfiguration:configurationstores:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -17,7 +18,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.appConfigurations, function(location, rcb){
-            var appConfigurations = helpers.addSource(cache, source, 
+            var appConfigurations = helpers.addSource(cache, source,
                 ['appConfigurations', 'list', location]);
 
             if (!appConfigurations) return rcb();

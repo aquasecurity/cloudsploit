@@ -18,6 +18,7 @@ module.exports = {
             default: '30'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftstorage:storageaccounts:blobservices:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
