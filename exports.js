@@ -914,6 +914,7 @@ module.exports = {
         'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),        
         'auditOperationsEnabled'        : require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
         'sqlServerVNetRuleIntegrated'   : require(__dirname + '/plugins/azure/sqlserver/sqlServerVNetRuleIntegrated.js'),
+        'sqlAzureServicesAccessDisabled': require(__dirname + '/plugins/azure/sqlserver/sqlAzureServicesAccessDisabled.js'),
         'sqlServerManagedIdentity'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerManagedIdentity.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
