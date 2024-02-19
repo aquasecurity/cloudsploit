@@ -564,6 +564,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
         }
     },
+    automationAccounts:{
+        get: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-11-01'
+        }
+    },
     backupProtectedItems: {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
