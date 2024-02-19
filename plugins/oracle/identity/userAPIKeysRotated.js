@@ -4,6 +4,7 @@ module.exports = {
     title: 'User API Keys Rotated',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that user API keys are rotated regularly in order to reduce accidental exposures.',
     more_info: 'User API keys should be rotated frequently to avoid having them accidentally exposed.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm',

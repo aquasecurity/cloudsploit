@@ -5,6 +5,7 @@ module.exports = {
     title: 'Autoscale Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures autoscaling is enabled on instance pools.',
     more_info: 'Enabling autoscaling increases efficiency and improves cost management for resources.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm',

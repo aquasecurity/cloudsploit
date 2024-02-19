@@ -5,6 +5,7 @@ module.exports = {
     title: 'Notification Topic With Active Subscription',
     category: 'Identity',
     domain: 'Logging and Monitoring',
+    severity: 'Medium',
     description: 'Ensure that there is at least one notification topic and subscription to receive monitoring alerts.',
     more_info: 'Creating and subscribing to one or more notification topics allows administrators to be notified of any changes in the Oracle Cloud Infrastructure.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Notification/Tasks/managingtopicsandsubscriptions.htm',

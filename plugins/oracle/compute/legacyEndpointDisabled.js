@@ -5,6 +5,7 @@ module.exports = {
     title: 'Legacy Metadata Endpoint Disabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that compute instances are configured with Legacy MetaData service (IMDSv1) endpoints disabled.',
     more_info: 'For best security practices, it is recommended that the compute instances should be configured with legacy v1 endpoints (Instance Metadata Service v1) disabled, and use Instance Metadata Service v2 instead.',
     recommended_action: 'Ensure all compute instances are configured to use IMDSv2.',

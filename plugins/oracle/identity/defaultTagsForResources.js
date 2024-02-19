@@ -4,6 +4,7 @@ module.exports = {
     title: 'Default Tags For Resources',
     category: 'Logging and Monitoring',
     domain: 'Management and Governance',
+    severity: 'Low',
     description: 'Ensures default tags are used on resources.',
     more_info: 'Having default tags like "CreatedBy" on resources help determine who created the resource in case of an accident.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Tagging/Tasks/managingtagdefaults.htm',

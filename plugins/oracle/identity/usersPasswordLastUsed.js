@@ -4,6 +4,7 @@ module.exports = {
     title: 'Users Password Last Used',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Detect users that have not logged in for a period of time and should be deactivated.',
     more_info: 'Having multiple user accounts that have been inactive for a period of time can increase the risk of security attacks and breaches.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingusers.htm',
