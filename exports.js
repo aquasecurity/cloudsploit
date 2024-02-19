@@ -714,6 +714,7 @@ module.exports = {
         'virtualNetworkFlowLogs'        : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkFlowLogs.js'),
         'routeTableHasTags'             : require(__dirname + '/plugins/azure/virtualnetworks/routeTableHasTags.js'),
         'virtualNetworksLoggingEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworksLoggingEnabled.js'),
+        'publicIpDdosProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/publicIpDdosProtectionEnabled.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),

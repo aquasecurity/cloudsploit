@@ -127,5 +127,6 @@ module.exports = {
     afdWafPolicies: ['global'],
     appConfigurations: locations,
     automationAccounts: locations,
+    publicIpAddresses: locations,
     computeGalleries: locations
 };
