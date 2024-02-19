@@ -5,6 +5,7 @@ module.exports = {
     title: 'Vertex AI Dataset Encryption',
     category: 'AI & ML',
     domain: 'Machine Learning',
+    severity: 'High',
     description: 'Ensure that Vertex AI datasets are encrypted using desired encryption protection level.',
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your Vertex AI datasets you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/vertex-ai/docs/general/cmek',
