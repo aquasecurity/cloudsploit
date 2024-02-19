@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Flexible Server Diagnostic Logging',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures diagnostic logging is enabled for PostgreSQL flexible servers.',
     more_info: 'Enabling diagnostic logging for Azure Database for PostgreSQL flexible servers helps with performance monitoring, troubleshooting, and security optimization.',
     recommended_action: 'Enable diagnostic logging for all PostgreSQL servers.',

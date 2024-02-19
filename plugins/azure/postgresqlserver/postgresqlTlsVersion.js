@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Minimum TLS Version',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Microsoft Azure PostgreSQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure PostgreSQL server. This setting applies to all databases associated with the server.',
     recommended_action: 'Modify PostgreSQL server to use TLS version 1.2 or higher.',

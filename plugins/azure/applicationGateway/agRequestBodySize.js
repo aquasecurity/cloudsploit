@@ -5,6 +5,7 @@ module.exports = {
     title: 'Application Gateway Request Body Size',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensures that Application Gateway WAF policy have desired request body size configured.',
     more_info: 'Application Gateway WAF policy includes a maximum request body size field, specified in kilobytes. This setting controls the overall request size limit, excluding any file uploads. Configuring an appropriate value for this field is crucial for optimizing security and performance.',
     recommended_action: 'Modify application gateway WAF policy and set the max body size to desired value.',

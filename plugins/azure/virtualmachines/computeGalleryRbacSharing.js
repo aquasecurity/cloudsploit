@@ -5,6 +5,7 @@ module.exports = {
     title: 'Compute Gallery RBAC Sharing',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the Azure Compute Gallery machine images are shared using RBAC only.',
     more_info: 'Images, definitions, and versions in Azure Compute Gallery can be shared using the built-in Azure Roles-based Access Control (RBAC) roles. Compute Galleries shared directly with subscription, tenant or community expose the resource to increased vulnerability. Directly shared galleries cannot contain encrypted image versions.',
     recommended_action: 'Ensure that all Azure Compute Galleries are using RBAC only.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Connection Policy',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that the connection policy is set to "Redirect" for SQL server.',
     more_info: 'Redirect policy means that after the TCP session is established to Azure SQL Database, the client session is then redirected to the right database cluster with a change to the destination virtual IP from that of the Azure SQL Database gateway to that of the cluster. This establishes connections directly to the node hosting the database, leading to reduced latency and improved throughput.',
     recommended_action: 'Ensure that connection policy is set to "Redirect" for each SQL server.',

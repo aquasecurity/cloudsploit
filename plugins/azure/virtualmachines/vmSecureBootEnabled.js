@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Secure Boot Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that secure boot is enabled for Azure virtual machines (VM).',
     more_info: 'Secure Boot, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VM.',
     recommended_action: 'Modify Virtual Machine and enable secure boot.',

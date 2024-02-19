@@ -6,6 +6,7 @@ module.exports = {
     title: 'VM Disk Public Access',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that Azure virtual machine disks are not accessible publicly.',
     more_info: 'Private endpoints safeguard against unauthorized access and cyber threats, preserving the integrity and confidentiality of your data while aligning with compliance and security best practices by restricting the export and import of managed disks and only allowing access over a private link from clients on your Azure virtual network.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-private-links-for-import-export-portal',

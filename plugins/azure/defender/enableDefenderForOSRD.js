@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For Open Source Relational Databases',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for Open Source Relational Databases.',
     more_info: 'Enabling Defender for Cloud on Open Source Relational Databases allows detection of unusual database access, query patterns, and suspicious activities, enhancing overall security. This plan brings threat protections for PostgreSQL, MySQL and MariaDB Azure Databases.',
     recommended_action: 'Enable Microsoft Defender for Open Source Relational Databases in Defender plans for the subscription.',

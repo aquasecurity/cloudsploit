@@ -5,6 +5,7 @@ module.exports = {
     title: 'Namespace Infrastructure Encryption Enabled',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Azure Service Bus namespaces have infrastructure level encryption enabled.',
     more_info: 'Enabling infrastructure level encryption for Azure Service Bus namespaces allows their data to be encrypted twice, once at the service level and once at the infrastructure level, using two different encryption algorithms and two different keys and provides an extra layer of protection and security in case one of the keys is compromised.',
     recommended_action: 'Enable infrastructure level encryption for all Azure Service Bus namespaces.',

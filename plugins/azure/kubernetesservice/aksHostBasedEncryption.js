@@ -5,6 +5,7 @@ module.exports = {
     title: 'AKS Cluster Host Based Encryption',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures that host-based encryption is enabled for all node pools in AKS Cluster.',
     more_info: 'Enabling host-based encryption ensures that data stored on the VM host of your AKS agent node VMs is encrypted at rest and flows encrypted to the Storage service. This capability provides an additional measure of security as the data is encrypted end-to-end.',
     recommended_action: 'Enable host-based encryption for all node pools in your AKS clusters.',

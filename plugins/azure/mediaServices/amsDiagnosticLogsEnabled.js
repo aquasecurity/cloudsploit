@@ -5,6 +5,7 @@ module.exports = {
     title: 'Media Services Diagnostic Logs Enabled',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Media Services have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of Media Services. By enabling diagnostic logs, you can gather diagnostic data that could be useful to create notification alerts.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/monitoring/monitor-media-services',

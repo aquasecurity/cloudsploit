@@ -6,6 +6,7 @@ module.exports = {
     title: 'VM Disk Double Encryption',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM disks are encrypted at rest using both platform and customer managed keys.',
     more_info: 'Using double encryption for VM disks adds an extra layer of protection using a different encryption algorithm/mode at the infrastructure layer using platform managed encryption keys and provides an additional level of security if one of the keys is compromised.',
     recommended_action: 'Recreate VM disks with double encryption enabled.',

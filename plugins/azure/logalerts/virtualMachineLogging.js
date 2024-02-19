@@ -5,6 +5,7 @@ module.exports = {
     title: 'Virtual Machine Logging Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log alerts for the create/update and delete Virtual Machine events are enabled',
     more_info: 'Monitoring for create/update and delete Virtual Machine events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Machine create/update and delete events.',

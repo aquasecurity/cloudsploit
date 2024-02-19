@@ -5,6 +5,7 @@ module.exports = {
     title: 'Front Door Waf Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Web Application Firewall (WAF) is enabled for Azure Front Door premium and standard profiles.',
     more_info: 'WAF actively inspects incoming requests to the front door and blocks requests that are determined to be malicious based on a set of rules.',
     recommended_action: 'Modify the Azure Front Door profile and attach WAF policy under security policies section.',

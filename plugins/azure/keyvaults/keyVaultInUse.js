@@ -5,6 +5,7 @@ module.exports = {
     title: 'Key Vault In Use',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures that Key Vaults are being used to store secrets.',
     more_info: 'App secrets control access to the application and thus need to be secured externally to the app configuration, storing the secrets externally and referencing them in the configuration also enables key rotation without having to redeploy the app service.',
     recommended_action: 'Ensure that Azure Key Vaults are being used to store secrets.',

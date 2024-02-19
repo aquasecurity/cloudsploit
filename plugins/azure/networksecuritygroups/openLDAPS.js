@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open LDAPS',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if TCP port 636 for LDAP SSL is open to the public',
     more_info: 'LDAP SSL port 636 is used for Secure LDAP authentication. Allowing Inbound traffic from any IP address to TCP port 636 is vulnerable to DoS attacks. It is a best practice to block port 636 from the public internet.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

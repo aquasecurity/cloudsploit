@@ -5,6 +5,8 @@ module.exports = {
     title: 'SQL Server VNet Rules Integrated',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
+
     description: 'Ensures that SQL servers have VNet rules integrated.',
     more_info: 'Configuring SQL server to operate within a Virtual Network (VNet) offers a myriad of benefits for enhanced security and operational control. Integrating with a VNet enables proactive safeguarding of your server against potential security threats and unauthorized access.',
     recommended_action: 'Ensure VNet rule is integrated for all SQL servers.',

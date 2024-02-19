@@ -5,6 +5,7 @@ module.exports = {
     title: 'Recovery Services Vault BYOK Encrypted',
     category: 'Recovery Service Vault',
     domain: 'Backup',
+    severity: 'High',
     description: 'Ensure that Microsoft Azure Recovery Services Vaults have BYOK encryption enabled.',
     more_info: 'A customer-managed key gives you the ownership to bring your own key in Azure Key Vault. When you enable a customer-managed key, you can manage its rotations, control the access and permissions to use it, and audit its use.',
     recommended_action: 'Modify Recovery Service vault and enable BYOK encryption.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For Resource Manager',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for Resource Manager.',
     more_info: 'Turning on Microsoft Defender for Resource Manager enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Resource Manager in Defender plans for the subscription.',

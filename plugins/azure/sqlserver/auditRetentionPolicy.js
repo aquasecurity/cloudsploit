@@ -5,6 +5,7 @@ module.exports = {
     title: 'Audit Retention Policy',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Server Auditing retention policy is set to greater than 90 days',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity. Having a long retention policy ensures that all logs are kept for auditing and legal purposes.',
     recommended_action: 'Ensure that the storage account retention policy for each SQL server is set to greater than 90 days.',

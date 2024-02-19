@@ -5,6 +5,7 @@ module.exports = {
     title: 'Automation Account Public Access Disabled',
     category: 'Automation',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that Azure Automation accounts have have public access disabled.',
     more_info: 'Disabling public network access ensures that network traffic between the machines on the VNet and the Automation account traverses over the a private link, eliminating exposure from the public internet.',
     recommended_action: 'Modify automation account and disable public access.',

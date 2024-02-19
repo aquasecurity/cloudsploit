@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Configuration Encryption At Rest with CMK',
     category: 'App Configuration',
     domain: 'Developer Tools',
+    severity: 'Medium',
     description: 'Ensures that Azure App Configuration stores are encrypted with CMK.',
     more_info: 'App Configuration encrypts sensitive information at rest by default using Azure managed key. The use of customer-managed keys provides enhanced data protection by allowing you to manage your encryption keys. When managed key encryption is used, all sensitive information in App Configuration is encrypted with a user-provided Azure Key Vault key.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',

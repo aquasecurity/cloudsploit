@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Docker',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if Docker port 2375 or 2376 is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Docker should be restricted to known IP addresses.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

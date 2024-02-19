@@ -5,6 +5,7 @@ module.exports = {
     title: 'Resource Location Matches Resource Group',
     category: 'Azure Policy',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures a policy is configured to audit that deployed resource locations match their resource group locations',
     more_info: 'Using Azure Policy to monitor resource location compliance helps ensure that new resources are not launched into locations that do not match their resource group.',
     recommended_action: 'Enable the built-in Azure Policy definition: Audit resource location matches resource group location',

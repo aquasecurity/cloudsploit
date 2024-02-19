@@ -5,6 +5,7 @@ module.exports = {
     title: 'RSA Certificate Allowed Key Size',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Key Vault RSA certificates are using the allowed minimum key size.',
     more_info: 'Having the right key size for your Azure Key Vault RSA certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
     recommended_action: 'Ensure that Key Vault RSA certificates are using the allowed minimum key size.',

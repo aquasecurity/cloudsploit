@@ -5,6 +5,7 @@ module.exports = {
     title: 'VNET Flow Logs Enabled',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Virtual Network has flow logs enabled.',
     more_info: 'Enabling flow logs for Microsoft Azure Virtual Networks is essential for comprehensive network visibility, security enhancement, and optimizing resources by providing detailed insights into traffic patterns and potential threats.',
     recommended_action: 'Modify virtual networks and enable flow logs.',

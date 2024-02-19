@@ -5,6 +5,7 @@ module.exports = {
     title: 'Public IP Address DDos Protection',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that DDoS IP Protection is enabled for Microsoft Azure Public IP Addresses',
     more_info: 'Enabling DDoS IP Protection on public IP addresses mitigates potential attacks, differentiating between malicious and legitimate traffic, by interacting with the client, and blocking malicious traffic.',
     recommended_action: 'Enable IP specific DDoS protection for all public IP addresses.',
