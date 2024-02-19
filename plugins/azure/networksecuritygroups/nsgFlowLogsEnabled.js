@@ -5,6 +5,7 @@ module.exports = {
     title: 'NSG Flow Logs Enabled',
     category: 'Network Security Groups',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Azure Network Security Groups have flows log enabled.',
     more_info: 'Enabling NSG flow logs is crucial for maintaining a secure and optimized cloud environment. It provides the necessary visibility, monitoring capabilities, and data for optimizing resources by ensuring compliance, detecting intrusions, and responding effectively to network-related incidents.',
     recommended_action: 'Enable flow logs for each Network Security Group.',

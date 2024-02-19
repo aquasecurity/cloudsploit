@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Services Access Disabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that SQL servers do not allow access to other Azure services.',
     more_info: 'To secure your SQL server, it is recommended to disable public network access or access to all Azure services. Instead, configure firewall or VNET rules to allow connections from specific network ranges or from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
     recommended_action: 'Disable public access and remove "allowallwindowsazureips" firewall rule for all SQL Servers.',

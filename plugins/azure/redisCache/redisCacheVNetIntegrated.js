@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redis Cache VNet Integrated',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that premium Redis Cache has VNet integrated.',
     more_info: 'Ensuring VNet deployment for Redis Cache provides enhanced security and isolation. When VNet is combined with restricted NSG policies, it helps reducing the risk of data exfiltration.',
     recommended_action: 'Ensure VNet (private access) is integrated for premium Redis Cache.',

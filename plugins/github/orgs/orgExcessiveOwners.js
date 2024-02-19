@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/github');
 module.exports = {
     title: 'Org Excessive Owners',
     types: ['org'],
+    severity: 'Medium',
     category: 'Orgs',
     description: 'Checks whether the organization has an excessive number of owners relative to its size.',
     more_info: 'Having too many owners of a Git organization increases the risk of a serious compromise from lost credentials.',
