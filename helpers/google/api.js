@@ -186,7 +186,7 @@ var serviceMap = {
         {
             enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
             InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
-            BridgePluginCategoryName: 'AI & ML', BridgeProvider: 'Google', BridgeCall: 'listDatasets',
+            BridgePluginCategoryName: 'AI & ML', BridgeProvider: 'Google', BridgeCall: 'listModels',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'models',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'vertexai', DataIdentifier: 'data',
