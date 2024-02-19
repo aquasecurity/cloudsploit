@@ -1110,6 +1110,11 @@ var tertiarycalls = {
             reliesOnPath: 'automationAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAppServices: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
 
     },

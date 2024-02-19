@@ -928,6 +928,7 @@ module.exports = {
         'secureHttptriggerFunction'     : require(__dirname + '/plugins/azure/appservice/secureHttptriggerFunction.js'),
         'appServiceAccessRestriction'   : require(__dirname + '/plugins/azure/appservice/appServiceAccessRestriction.js'),
         'webAppsADEnabled'              : require(__dirname + '/plugins/azure/appservice/webAppsADEnabled.js'),
+        'securityLogsEnabled'           : require(__dirname + '/plugins/azure/appservice/securityLogsEnabled.js'),
         'appInsightsEnabled'            : require(__dirname + '/plugins/azure/appservice/appInsightsEnabled.js'),
         'automatedBackupsEnabled'       : require(__dirname + '/plugins/azure/appservice/automatedBackupsEnabled.js'),
         'ftpsOnlyAccessEnabled'         : require(__dirname + '/plugins/azure/appservice/ftpsOnlyAccessEnabled.js'),
