@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Delivery Failing',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures that Amazon CloudTrail trail log files are delivered to destination S3 bucket.',
     more_info: 'Amazon CloudTrail trail logs should be delivered to destination S3 bucket to be used for security audits.',
     recommended_action: 'Modify CloudTrail trail configurations so that logs are being delivered',

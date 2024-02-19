@@ -5,6 +5,7 @@ module.exports = {
     title: 'Secrets Manager Secret Rotation Enabled',
     category: 'Secrets Manager',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures AWS Secrets Manager is configured to automatically rotate the secret for a secured service or database.',
     more_info: 'Secrets Manager rotation makes access to your databases and third-party services secure by automatically rotating secrets used to access these resources.',
     recommended_action: 'Enable secret rotation for your secrets',

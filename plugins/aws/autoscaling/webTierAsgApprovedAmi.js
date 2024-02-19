@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web-Tier ASG Launch Configurations Approved AMIs',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures that Web-Tier Auto Scaling Group Launch Configurations are using approved AMIs.',
     more_info: 'Web-Tier Auto Scaling Group Launch Configurations should use approved AMIs only to launch EC2 instances within the ASG',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',

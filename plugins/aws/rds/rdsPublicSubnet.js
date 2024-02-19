@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Public Subnet',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures RDS database instances are not deployed in public subnet.',
     more_info: 'RDS instances should not be deployed in public subnets to prevent direct exposure to the internet and reduce the risk of unauthorized access.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/rds-instance-public-access-check.html',

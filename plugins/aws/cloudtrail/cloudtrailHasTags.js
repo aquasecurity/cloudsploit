@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Has Tags',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Low',
     description: 'Ensure that AWS CloudTrail trails have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify CloudTrail trails and add tags.',

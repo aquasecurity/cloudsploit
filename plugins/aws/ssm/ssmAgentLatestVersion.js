@@ -5,6 +5,7 @@ module.exports = {
     title: 'SSM Agent Latest Version',
     category: 'EC2',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures SSM agents installed on Linux hosts are running the latest version',
     more_info: 'SSM agent software provides sensitive access to servers and should be kept up-to-date.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-agent-automatic-updates.html',

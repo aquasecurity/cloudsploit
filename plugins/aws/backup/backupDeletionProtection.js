@@ -5,7 +5,7 @@ module.exports = {
     title: 'Backup Deletion Protection Enabled',
     category: 'Backup',
     domain: 'Storage',
-    severity: 'HIGH',
+    severity: 'High',
     description: 'Ensure that an Amazon Backup vault access policy is configured to prevent the deletion of AWS backups in the backup vault.',
     more_info: 'With AWS Backup, you can assign policies to backup vaults and the resources they contain. Assigning policies allows you to do things like grant access to users to create backup plans and on-demand backups, but limit their ability to delete recovery points after they are created.',
     recommended_action: 'Add a statement in Backup vault access policy which denies global access to action: backup:DeleteRecoveryPoint',

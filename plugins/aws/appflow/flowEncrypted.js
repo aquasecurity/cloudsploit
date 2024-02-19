@@ -5,6 +5,7 @@ module.exports = {
     title: 'AppFlow Flow Encrypted',
     category: 'AppFlow',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that your Amazon AppFlow flows are encrypted with desired encryption level.',
     more_info: 'Amazon AppFlow encrypts your access tokens, secret keys, and data in transit and data at rest with AWS-manager keys by default. ' +
         'Encrypt them using customer-managed keys in order to gain more granular control over encryption/decryption process.',

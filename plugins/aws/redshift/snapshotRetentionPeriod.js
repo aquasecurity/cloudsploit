@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redshift Automated Snapshot Retention Period',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that retention period is set for Amazon Redshift automated snapshots.',
     more_info: 'Amazon Redshift clusters should have retention period set for automated snapshots for data protection and to avoid unexpected failures.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-snapshots.html',

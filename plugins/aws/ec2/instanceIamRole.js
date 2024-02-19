@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance IAM Role',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EC2 instances are using an IAM role instead of hard-coded AWS credentials',
     more_info: 'IAM roles should be assigned to all instances to enable them to access AWS resources. Using an IAM role is more secure than hard-coding AWS access keys into application code.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html',

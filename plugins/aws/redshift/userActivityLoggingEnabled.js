@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redshift User Activity Logging Enabled',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that user activity logging is enabled for your Amazon Redshift clusters.',
     more_info: 'Redshift clusters associated parameter groups should have user activity logging enabled in order to log user activities performed.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing.html#db-auditing-enable-logging',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'IoT SiteWise Data Encrypted',
     category: 'IoT SiteWise',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that AWS IoT SiteWise is using desired encryption level for data at-rest.',
     more_info: 'AWS IoT SiteWise encrypts data such as your asset property values and aggregate values by default.'+
         'It is recommended to use customer managed keys in order to gain more control over data encryption/decryption process.',

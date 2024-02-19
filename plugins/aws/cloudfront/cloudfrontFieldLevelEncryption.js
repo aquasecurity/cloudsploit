@@ -4,7 +4,7 @@ module.exports = {
     title: 'CloudFront Distribution Field-Level Encryption',
     category: 'CloudFront',
     domain: 'Content Delivery',
-    severity: 'MEDIUM',
+    severity: 'Medium',
     description: 'Ensure that field-level encryption is enabled for your Amazon CloudFront web distributions.',
     more_info: 'With Amazon CloudFront, you can enforce secure end-to-end connections to origin servers by using HTTPS. Field-level encryption adds an additional layer of security that lets you protect specific data throughout system processing so that only certain applications can see it.'+
         'Field-level encryption allows you to enable users to securely upload sensitive information to web servers. ',

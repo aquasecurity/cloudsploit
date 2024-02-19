@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront WAF Enabled',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures CloudFront distributions have WAF enabled.',
     more_info: 'Enabling WAF allows control over requests to the CloudFront Distribution, allowing or denying traffic based off rules in the Web ACL',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-associating-cloudfront-distribution.html',

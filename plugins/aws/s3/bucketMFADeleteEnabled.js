@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket MFA Delete Status',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures MFA delete is enabled on S3 buckets.',
     more_info: 'Adding MFA delete adds another layer of security while changing the version state' +
         'in the event of security credentials being compromised or unauthorized' +

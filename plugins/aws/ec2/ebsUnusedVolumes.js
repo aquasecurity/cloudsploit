@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused EBS Volumes',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures EBS volumes are in use and attached to EC2 instances',
     more_info: 'EBS volumes should be deleted if the parent instance has been deleted to prevent accidental exposure of data.',
     recommended_action: 'Delete the unassociated EBS volume.',

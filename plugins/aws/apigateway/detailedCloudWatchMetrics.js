@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Detailed CloudWatch Metrics',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that API Gateway API stages have detailed CloudWatch metrics enabled.',
     more_info: 'API Gateway API stages should have detailed CloudWatch metrics enabled to monitor logs and events.',
     recommended_action: 'Add CloudWatch role ARN to API settings and enabled detailed metrics for each stage',

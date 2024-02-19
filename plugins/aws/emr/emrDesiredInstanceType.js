@@ -5,6 +5,7 @@ module.exports = {
     title: 'EMR Cluster Desired Instance Type',
     category: 'EMR',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure AWS Elastic MapReduce (EMR) clusters are using desired instance type.',
     more_info: 'EMR cluster desired instance should be enabled  to get the desired instance type.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-debugging.html',
