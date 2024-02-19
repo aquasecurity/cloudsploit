@@ -941,6 +941,7 @@ module.exports = {
         'aksEncryptionAtRestWithCMK'    : require(__dirname + '/plugins/azure/kubernetesservice/aksEncryptionAtRestWithCMK'),
         'aksPrivateCluster'             : require(__dirname + '/plugins/azure/kubernetesservice/aksPrivateCluster.js'),
         'aksDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/kubernetesservice/aksDiagnosticLogsEnabled.js'),
+        'aksHostBasedEncryption'        : require(__dirname + '/plugins/azure/kubernetesservice/aksHostBasedEncryption.js'),
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
