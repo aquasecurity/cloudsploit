@@ -113,10 +113,12 @@ let collect = function(AzureConfig, settings, callback) {
                 return accumulator;
             }, {});
 
-            settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
-                accumulator[key.toLowerCase()] = settings.previousCollection[key];
-                return accumulator;
-            }, {});
+            if (settings.previousCollection) {
+                settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+                    accumulator[key.toLowerCase()] = settings.previousCollection[key];
+                    return accumulator;
+                }, {});
+            }
 
             if (collect[service.toLowerCase()] &&
                 Object.keys(collect[service.toLowerCase()]) &&
@@ -211,6 +213,9 @@ let collect = function(AzureConfig, settings, callback) {
                                     // Check and replace properties
                                     if (subCallObj.properties && subCallObj.properties.length) {
                                         subCallObj.properties.forEach(function(propToReplace) {
+                                            if (propToReplace.includes('.')) {
+                                                regionData[propToReplace] = parseCollection(propToReplace, regionData);
+                                            }
                                             if (regionData[propToReplace]) {
                                                 var re = new RegExp(`{${propToReplace}}`, 'g');
                                                 localReq.url = subCallObj.url.replace(re, regionData[propToReplace]);
