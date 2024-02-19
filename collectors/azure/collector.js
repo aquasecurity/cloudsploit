@@ -113,10 +113,12 @@ let collect = function(AzureConfig, settings, callback) {
                 return accumulator;
             }, {});
 
-            settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
-                accumulator[key.toLowerCase()] = settings.previousCollection[key];
-                return accumulator;
-            }, {});
+            if (settings.previousCollection) {
+                settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+                    accumulator[key.toLowerCase()] = settings.previousCollection[key];
+                    return accumulator;
+                }, {});
+            }
 
             if (collect[service.toLowerCase()] &&
                 Object.keys(collect[service.toLowerCase()]) &&
