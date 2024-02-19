@@ -288,5 +288,11 @@ module.exports = {
     },
     openAI: {
         listAccounts: 'id'
+    },
+    connectionPolicies:{
+        listByServer:'id'
+    },
+    publicIpAddresses: {
+        list: 'id'
     }
 };
