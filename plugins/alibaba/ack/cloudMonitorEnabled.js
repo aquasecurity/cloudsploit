@@ -4,6 +4,7 @@ module.exports = {
     title: 'Cloud Monitor Enabled',
     category: 'ACK',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure Cloud Monitor is enabled on Kubernetes Engine clusters.',
     more_info: 'Enabling CloudMonitor installation provides system metrics (e.g., CPU, memory usage) and custom metrics for Kubernetes Engine Clusters, collected periodically by a monitor controller and sent to the CloudMonitor server.',
     link: 'https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/user-guide/monitor-basic-resources',
