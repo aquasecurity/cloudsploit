@@ -14,9 +14,9 @@ module.exports = {
     settings: {
         vNet_gatewayType: {
             name: 'Virtual Network Gateway Type',
-            description: 'Gateway type that should not be configured with virtual networks i.e. Vpn, ExpressRoute. Enter "*" if no network gateways should be used irrespective of gateway type.',
-            regex: '^.*$',
-            default: '*',
+            description: 'Gateway type that should not be configured with virtual networks i.e. Vpn, ExpressRoute.',
+            regex: '^(vpn|expressroute)$',
+            default: '',
         }
     },
     run: function(cache, settings, callback) {
@@ -101,7 +101,7 @@ module.exports = {
                 if ((gatewayUsed && !subnetFound) || !gatewayUsed) {
                     helpers.addResult(results, 0, 'Virtual network is not using network gateways', location, virtualNetwork.id);
                 } else {
-                    if (config !== '*') {
+                    if (config.toLowerCase() =='vpn'|| config.toLowerCase() =='expressroute') {
                         if (restrictGateways.length) {
                             helpers.addResult(results, 2, `Virtual network is using following ${config} network gateways: ${restrictGateways.join(',')}`, location, virtualNetwork.id);
                         } else {
