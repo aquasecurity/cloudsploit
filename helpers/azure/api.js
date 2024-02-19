@@ -474,6 +474,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
         }
     },
+    computeGalleries: { 
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
+        }
+    },
     mediaServices:{
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
@@ -978,7 +983,14 @@ var postcalls = {
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
         }
-    }
+    },
+    encryptionScopes: {
+        listByStorageAccounts: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
+        }
+    },
 
 };
 
