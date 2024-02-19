@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Translate Job Output Encrypted',
-    category: 'Translate',
+    category: 'AI & ML',
     domain: 'Compute',
     description: 'Ensure that your Amazon Translate jobs have CMK encryption enabled for output data residing on S3.',
     more_info: 'Amazon Translate encrypts your output data with AWS-manager keys by default. ' +
