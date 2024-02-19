@@ -555,6 +555,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}?api-version=2022-04-01'
         }
     },
+    accountVariables: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/variables?api-version=2023-11-01'
+        }
+    },
     availabilitySets:{
         listByResourceGroup: {
             reliesOnPath: 'resourceGroups.list',
