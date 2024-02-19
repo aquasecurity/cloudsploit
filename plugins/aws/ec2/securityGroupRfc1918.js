@@ -76,7 +76,7 @@ module.exports = {
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            'Security group "' + group.GroupName + '" is configured to allow inbound access for these reserved private addresses: ' + privateCidrsFound.join(', '), 
+                            'Security group "' + group.GroupName + '" is configured to allow inbound access from any source IP address within these reserved private addresses: ' + privateCidrsFound.join(', '),
                             region, resource);
                     }
                 }
