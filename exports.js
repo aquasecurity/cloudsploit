@@ -839,6 +839,7 @@ module.exports = {
         'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
+        'nsgFlowLogsEnabled'            : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsEnabled.js'),
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsRetentionPeriod.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/azure/networksecuritygroups/excessiveSecurityGroups.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/azure/networksecuritygroups/defaultSecurityGroup.js'),
