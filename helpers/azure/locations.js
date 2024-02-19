@@ -53,6 +53,8 @@ var locations = [
     'canadaeast',           // (Canada) Canada East
     'qatarcentral',         // (Middle East) Qatar
     'polandcentral',        // (Europe) Poland Central
+    'italynorth',           // (Europe) Italy North
+    'israelcentral',        // (Middle East) Israel Central
 ];
 
 module.exports = {
@@ -126,4 +128,5 @@ module.exports = {
     appConfigurations: locations,
     automationAccounts: locations,
     publicIpAddresses: locations,
+    computeGalleries: locations
 };
