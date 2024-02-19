@@ -978,6 +978,7 @@ module.exports = {
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'dbDataMaskingEnabled'          : require(__dirname + '/plugins/azure/sqldatabases/dbDataMaskingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
+        'dbDiagnosticLoggingEnabled'    : require(__dirname + '/plugins/azure/sqldatabases/dbDiagnosticLoggingEnabled.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
         'dbLedgerDigestStorageEnabled'  : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
         'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
