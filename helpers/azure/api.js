@@ -233,7 +233,7 @@ var calls = {
     },
     disks: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2019-07-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2023-04-02'
         }
     },
     networkSecurityGroups: {
