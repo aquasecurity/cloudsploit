@@ -1007,6 +1007,13 @@ var postcalls = {
 
         }
     },
+    diskEncryptionSet: {
+        get: {
+            reliesOnPath: 'disks.list',
+            properties: ['encryption.diskEncryptionSetId'],
+            url: 'https://management.azure.com/{encryption.diskEncryptionSetId}?api-version=2023-04-02',
+        }
+    },
     encryptionScopes: {
         listByStorageAccounts: {
             reliesOnPath: 'storageAccounts.list',
