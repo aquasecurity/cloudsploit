@@ -181,6 +181,15 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'b',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Storage',
             BridgeCollectionService: 'gcp-buckets', DataIdentifier: 'data',
+        },
+    'AI & ML':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
+            BridgePluginCategoryName: 'AI & ML', BridgeProvider: 'Google', BridgeCall: 'listDatasets',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'models',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
+            BridgeCollectionService: 'vertexai', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -584,7 +593,8 @@ var calls = {
             url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/models',
             location: 'region',
             dataKey: 'models'
-        }
+        },
+        sendIntegration: serviceMap['AI & ML']
     },
 
     roles: {
