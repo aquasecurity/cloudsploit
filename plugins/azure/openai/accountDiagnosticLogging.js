@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenAI Account Diagnostic Logging Enabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
+    severity: 'Medium',
     description: 'Ensures that diagnostic logging is enabled for Azure OpenAI accounts.',
     more_info: 'Enabling diagnostic logs for Azure OpenAI accounts is crucial for monitoring and troubleshooting. It helps in tracking usage, detecting anomalies, and understanding API interactions, thereby enhancing the operational security and efficiency of AI applications.',
     recommended_action: 'Modify the OpenAI account settings and enable diagnostic logs.',

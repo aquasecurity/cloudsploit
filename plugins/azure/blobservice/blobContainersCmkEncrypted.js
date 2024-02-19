@@ -6,6 +6,7 @@ module.exports = {
     category: 'Blob Service',
     domain: 'Storage',
     description: 'Ensures that blob containers in storage account are CMK encrypted',
+    severity: 'High',
     more_info: 'Azure allows you to encrypt data in your blob containers using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Configuring a customer-managed key for blob services ensures protection and control access to the key that encrypts your data. Customer-managed keys offer greater flexibility to manage access controls.',
     recommended_action: 'Ensure that all blob containers in storage account store has CMK encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/customer-managed-keys-overview',

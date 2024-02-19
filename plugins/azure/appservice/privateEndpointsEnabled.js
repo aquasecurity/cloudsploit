@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Private Endpoints Configured',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Web Apps are accessible only through private endpoints.',
     more_info: 'Enabling private endpoints for Azure App Service enhances security by allowing access exclusively through a private network, minimizing the risk of public internet exposure and protecting against external attacks.',
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Web Apps.',

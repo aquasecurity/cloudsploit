@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Database Rename Alert Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log alerts for the rename SQL Server Database events are enabled',
     more_info: 'Monitoring for rename SQL Server Database events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for SQL Server Database rename events.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Security Contact Additional Email',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Low',
     description: 'Ensure Additional email addresses are configured with security contact email.',
     more_info: 'Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact\'s email address to the Additional email addresses field ensures that your organization\'s Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.',
     recommended_action: 'Modify security contact information and add additional emails.',

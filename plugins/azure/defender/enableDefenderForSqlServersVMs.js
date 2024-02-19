@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For SQL Servers On Machines',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for Azure SQL Server on machines.',
     more_info: 'Turning on Microsoft Defender for SQL Server on machines enables threat detection for SQL servers on machines, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for SQL servers on machines in Defender plans for the subscription.',

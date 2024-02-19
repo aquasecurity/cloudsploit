@@ -6,6 +6,7 @@ module.exports = {
     title: 'VM Endpoint Protection',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that VM Endpoint Protection is enabled for all virtual machines',
     more_info: 'Installing endpoint protection systems provides for real-time protection capabilities that help identify and remove viruses, spyware, and other malicious software, with configurable alerts for malicious or unwanted software.',
     recommended_action: 'Install endpoint protection on all virtual machines.',

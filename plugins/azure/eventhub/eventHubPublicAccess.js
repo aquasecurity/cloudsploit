@@ -5,6 +5,7 @@ module.exports = {
     title: 'Event Hub Public Access',
     category: 'Event Hubs',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures Microsoft Azure Event Hubs are not publicly accessible.',
     more_info: 'Configuring Azure Event Hubs namespace with public access poses a security risk. To mitigate this risk, it is advisable to limit access by allowing connections only from specific IP addresses or private networks.',
     recommended_action: 'Ensure that public network access is disabled for each Event Hubs namespace.',

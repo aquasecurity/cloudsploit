@@ -5,6 +5,7 @@ module.exports = {
     title: 'Storage Account Has Tags',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensure that Azure Storage accounts have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify storage account and add tags.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Security Logging Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that security logging is enabled for Azure Web Apps.',
     more_info: 'Enabling Azure Web Apps diagnostics logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues, including errors, performance bottlenecks, and security concerns.',
     recommended_action: 'Modify Web Apps and enable diagnostic settings for all logs.',

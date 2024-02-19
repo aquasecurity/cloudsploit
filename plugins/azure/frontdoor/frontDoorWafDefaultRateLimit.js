@@ -5,6 +5,7 @@ module.exports = {
     title: 'Front Door WAF Rate limit',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensures that Front Door WAF policy has rate limit custom rule configured.',
     more_info: 'Rate limiting enables you to detect and block abnormally high levels of traffic from any socket IP address. By using Azure Web Application Firewall in Azure Front Door, you can mitigate some types of denial-of-service attacks.',
     recommended_action: 'Modify the Front Door WAF policy and add default rate limit custom rule.',

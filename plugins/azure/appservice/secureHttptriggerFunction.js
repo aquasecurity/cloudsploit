@@ -5,6 +5,7 @@ module.exports = {
     title: 'Secure Azure Http Triggered Function',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that the authorization level function is set on Azure HTTP trigger functions.',
     more_info: 'Authorization levels for HTTP-triggered functions helps establish a secure access control framework during development and provides flexibility to enhance security in production by considering alternative measures beyond basic API access keys.',
     recommended_action: 'Set the authorization level for all HTTP-triggered functions.',

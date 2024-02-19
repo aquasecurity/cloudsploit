@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For App Services',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for App Services.',
     more_info: 'Turning on Microsoft Defender for App Services enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for App Services in Defender plans for the subscription.',

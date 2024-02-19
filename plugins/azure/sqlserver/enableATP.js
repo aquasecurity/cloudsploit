@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Advanced Threat Protection Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Advanced Threat Protection is enabled on SQL Servers.',
     more_info: 'Azure Defender for SQL is a unified package for advanced SQL security capabilities.',
     recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',

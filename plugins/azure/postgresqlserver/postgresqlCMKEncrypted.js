@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Encryption At Rest with BYOK',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that Azure PostgreSQL Database Servers data is encrypted with CMK.',
     more_info: 'Data at rest encryption with BYOK ensures that your PostgreSQL server data is protected using a key that you manage. Enabling BYOK adds an extra layer of security by allowing you to control access to the encryption keys.',
     recommended_action: 'Enable CMK encryotion for PostgreSQL database servers.',

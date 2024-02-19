@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Flexible Server Advanced Threat Protection',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Advanced Threat Protection is enabled on PostgreSQL flexible servers.',
     more_info: 'Enabling Advanced Threat Protection provides security alerts on anomalous activities, allowing you to detect potential threats and respond to them as they occur.',
     recommended_action: 'Ensure Advanced Threat Protection is enabled for all PostgreSQL Flexible Servers.',

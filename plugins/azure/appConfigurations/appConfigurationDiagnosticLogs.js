@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Configuration Diagnostic Logs',
     category: 'App Configuration',
     domain: 'Developer Tools',
+    severity: 'Medium',
     description: 'Ensures that Azure App Configuration have diagnostic logs enabled.',
     more_info: 'Enabling diagnostic logging for App Configuration helps with performance monitoring, troubleshooting, and security optimization.',
     recommended_action: 'Enable diagnostic logging for all App Configurations.',

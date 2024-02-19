@@ -5,6 +5,7 @@ module.exports = {
     title: 'Automation Account Encrypted Variables',
     category: 'Automation',
     domain: 'Management and Governance',
+    severity: 'Low',
     description: 'Ensure that Azure Automation account variables have encryption enabled.',
     more_info: 'Azure Automation secures assets such as variables, credentials and certificates using various levels of encryption. Enabling encryption on automation account variables helps enhance the security and privacy of the assets storing sensitive data.',
     recommended_action: 'Delete unencrypted variables in automation account and create new encrypted variables.',

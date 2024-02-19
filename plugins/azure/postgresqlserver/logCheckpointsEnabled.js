@@ -5,6 +5,7 @@ module.exports = {
     title: 'Log Checkpoints Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures log checkpoints are enabled for PostgreSQL servers',
     more_info: 'Log checkpoints logs queries and errors that arise in the server, enabling faster detection of incidents.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_checkpoints setting enabled.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Service Diagnostic Logging Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that diagnostic logging is enabled for Azure App Service.',
     more_info: 'Enabling diagnostic logging provides a quick and easy way to view application logs, allowing users to diagnose and resolve issues including errors, performance bottlenecks, and security concerns.',
     recommended_action: 'Enable diagnostic logging for all App Services.',

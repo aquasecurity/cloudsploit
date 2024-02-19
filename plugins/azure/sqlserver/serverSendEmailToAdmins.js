@@ -5,6 +5,7 @@ module.exports = {
     title: 'Server Send Email to Admin and Owners',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Send Emails to admins and owners is enabled for SQL Servers.',
     more_info: 'Vulnerability Assessment (VA) scan reports and alerts will be sent to email addresses configured at "Send scan reports to". This may help in reducing time required for identifying risks and taking corrective measures.',
     recommended_action: 'Configure Send scan reports to email addresses of concerned data owners/stakeholders for critical SQL servers.',

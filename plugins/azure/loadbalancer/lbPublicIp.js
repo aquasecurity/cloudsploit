@@ -6,6 +6,7 @@ module.exports = {
     category: 'Load Balancer',
     domain: 'Availability',
     description: 'Ensures that Azure Load Balancers have public IPs associated.',
+    severity: 'Medium',
     more_info: 'A public load balancer offers a dedicated IP for Internet-facing access to backend resources. This configuration facilitates efficient egress to the Internet for backend pool members through the assigned frontend IP. It ensures streamlined connectivity and reliable resource availability, simplifying scalability to meet varying demand levels.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/configure-public-ip-load-balancer',
     recommended_action: 'Modify load balancers and add Public IP address.',

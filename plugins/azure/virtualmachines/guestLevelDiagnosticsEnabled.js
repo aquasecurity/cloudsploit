@@ -6,6 +6,7 @@ module.exports = {
     title: 'Guest Level Diagnostics Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the guest level diagnostics are enabled ',
     more_info: 'Guest Level Diagnostics should be enabled to collect information about VMs processing and state of VM applications.',
     recommended_action: 'Enable guest level diagnostics for all virtual machines',

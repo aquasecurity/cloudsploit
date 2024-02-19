@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenAI Account Public Access Disabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
+    severity: 'High',
     description: 'Ensures that Azure OpenAI accounts are not publicly accessible.',
     more_info: 'Making OpenAI accounts publicly accessible can expose sensitive data and AI-generated content to unauthorized users, increasing the risk of data breaches and misuse of AI resources, which could lead to significant security and privacy concerns.',
     recommended_action: 'Ensure that Azure OpenAI have public network access disabled.',

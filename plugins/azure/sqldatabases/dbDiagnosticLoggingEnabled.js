@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Database Diagnostic Logging Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures diagnostic logging is enabled for SQL databases.',
     more_info: 'Enabling diagnostic logging provides valuable insights into SQL database that helps to monitor resources for their availability, performance, and operation.',
     recommended_action: 'Enable diagnostic logging for all SQL databases.',
