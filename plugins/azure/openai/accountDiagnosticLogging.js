@@ -35,7 +35,7 @@ module.exports = {
             }
 
             for (let account of accounts.data) {
-
+                   if (!account.id) continue;
                 var diagnosticSettings = helpers.addSource(cache, source, 
                     ['diagnosticSettings', 'listByOpenAIAccounts', location, account.id]);
  
