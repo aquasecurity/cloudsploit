@@ -6,7 +6,7 @@ module.exports = {
     category: 'SQL Databases',
     domain: 'Databases',
     description: 'Ensures that data discovery and classification is implemented for SQL databases',
-    more_info: 'Data Discovery & Classification is built into Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It provides basic capabilities for discovering, classifying, labeling, and reporting the sensitive data in your databases.',
+    more_info: 'Enabling Data Discovery & Classification for Azure SQL Server databases helps identify, classify, and protect sensitive data, ensuring compliance with privacy standards and regulatory requirements. It enhances security by providing insights into data exposure risks.',
     recommended_action: 'Implement data discovery and appropriate classifications for SQL databases.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'currentSensitivityLabels:list'],
