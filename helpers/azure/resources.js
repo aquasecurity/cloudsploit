@@ -287,5 +287,8 @@ module.exports = {
     },
     connectionPolicies:{
         listByServer:'id'
+    },
+    publicIpAddresses: {
+        list: 'id'
     }
 };
