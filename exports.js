@@ -1110,7 +1110,7 @@ module.exports = {
         'automationAcctPrivateEndpoints': require(__dirname + '/plugins/azure/automationAccounts/automationAcctPrivateEndpoints.js'),
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
-
+        'accountPublicAccessDisabled'   : require(__dirname + '/plugins/azure/openai/accountPublicAccessDisabled.js'),
 
     },
     github: {
