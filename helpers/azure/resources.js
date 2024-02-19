@@ -285,6 +285,9 @@ module.exports = {
     automationAccounts:{
         list: 'id'
     },
+    connectionPolicies:{
+        listByServer:'id'
+    },
     publicIpAddresses: {
         list: 'id'
     }
