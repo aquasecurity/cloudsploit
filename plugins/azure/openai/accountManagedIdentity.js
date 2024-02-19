@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenAI Account Managed Identity Enabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
+    severity: 'Medium',
     description: 'Ensures a system or user assigned managed identity is enabled to authenticate to Azure OpenAI accounts.',
     more_info: 'Enabling managed identity for Azure OpenAI accounts automates credential management, enhancing security by avoiding hard-coded credentials and simplifying access control to Azure services.',
     recommended_action: 'Enable system or user-assigned identities for all Azure OpenAI accounts.',
