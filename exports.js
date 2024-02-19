@@ -913,6 +913,7 @@ module.exports = {
         'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
         'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),        
         'auditOperationsEnabled'        : require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
+        'serverConnectionPolicy'        : require(__dirname + '/plugins/azure/sqlserver/serverConnectionPolicy.js'),
         'auditStorageAuthType'          : require(__dirname + '/plugins/azure/sqlserver/auditStorageAuthType.js'),
         'sqlServerVNetRuleIntegrated'   : require(__dirname + '/plugins/azure/sqlserver/sqlServerVNetRuleIntegrated.js'),
         'sqlAzureServicesAccessDisabled': require(__dirname + '/plugins/azure/sqlserver/sqlAzureServicesAccessDisabled.js'),

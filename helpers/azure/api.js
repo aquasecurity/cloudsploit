@@ -1019,6 +1019,14 @@ var postcalls = {
 
         }
     },
+    connectionPolicies: {
+        listByServer: {
+            reliesOnPath: 'servers.listSql',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/connectionPolicies?api-version=2021-05-01-preview'
+
+        }
+    },
     diskEncryptionSet: {
         get: {
             reliesOnPath: 'disks.list',
@@ -1033,7 +1041,6 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
         }
     },
-
 };
 
 var tertiarycalls = {
