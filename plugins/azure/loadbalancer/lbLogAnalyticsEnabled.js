@@ -15,12 +15,26 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    settings: {
+        ignore_internal_lb_log_analystics: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'true',
+        }
+    },
     realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_lb_log_analystics: settings.ignore_internal_lb_log_analystics || this.settings.ignore_internal_lb_log_analystics.default
+        };
+
+        config.ignore_internal_lb_log_analystics = (config.ignore_internal_lb_log_analystics == 'true');
 
         async.each(locations.loadBalancers, (location, rcb) => {
             const loadBalancers = helpers.addSource(cache, source,
@@ -40,6 +54,13 @@ module.exports = {
             }
 
             loadBalancers.data.forEach(function(loadBalancer) {
+
+                if (config.ignore_internal_lb_log_analystics && loadBalancer.frontendIPConfigurations
+                    && loadBalancer.frontendIPConfigurations.length && 
+                    loadBalancer.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                )  return;
+
                 const diagnosticSettings = helpers.addSource(cache, source,
                     ['diagnosticSettings', 'listByLoadBalancer', location, loadBalancer.id]);
 
