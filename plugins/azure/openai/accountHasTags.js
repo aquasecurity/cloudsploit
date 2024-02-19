@@ -25,7 +25,7 @@ module.exports = {
 
 
             if (accounts.err || !accounts.data) {
-                helpers.addResult(results, 3, 'Unable to query OpenAI Accounts: ' + helpers.addError(accounts), location);
+                helpers.addResult(results, 3, 'Unable to query OpenAI accounts: ' + helpers.addError(accounts), location);
                 return rcb();
             }
 
