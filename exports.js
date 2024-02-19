@@ -1007,6 +1007,7 @@ module.exports = {
         'enableDefenderForKeyVaults'    : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
         'enableDefenderForVMs'          : require(__dirname + '/plugins/azure/defender/enableDefenderForVMs.js'),
         'enableDefenderForAppService'   : require(__dirname + '/plugins/azure/defender/enableDefenderForAppService.js'),
+        'enableDefenderForCSPM'         : require(__dirname + '/plugins/azure/defender/enableDefenderForCSPM.js'),
         'enableDefenderForARM'          : require(__dirname + '/plugins/azure/defender/enableDefenderForARM.js'),
         'enableDefenderForAPIs'         : require(__dirname + '/plugins/azure/defender/enableDefenderForAPIs.js'),
         'enableDefenderForCosmosDB'     : require(__dirname + '/plugins/azure/defender/enableDefenderForCosmosDB.js'),
