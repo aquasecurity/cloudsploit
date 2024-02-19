@@ -181,6 +181,11 @@ var calls = {
         },
         sendIntegration: serviceMap['Log Alerts']
     },
+    logAnalytics: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.OperationalInsights/workspaces?api-version=2023-09-01'
+        }
+    },
     storageAccounts: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageAccounts?api-version=2019-06-01',
@@ -228,7 +233,7 @@ var calls = {
     },
     disks: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2019-07-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/disks?api-version=2023-04-02'
         }
     },
     networkSecurityGroups: {
@@ -288,6 +293,11 @@ var calls = {
     policyDefinitions: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions?api-version=2019-09-01'
+        }
+    },
+    publicIpAddresses: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/publicIPAddresses?api-version=2023-06-01'
         }
     },
     webApps: {
@@ -474,6 +484,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ServiceBus/namespaces?api-version=2022-10-01-preview'
         }
     },
+    computeGalleries: { 
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
+        }
+    },
     mediaServices:{
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Media/mediaservices?api-version=2023-01-01'
@@ -514,7 +529,7 @@ var calls = {
 
         }
     },
-   
+
 };
 
 var postcalls = {
@@ -561,6 +576,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
         }
     },
+    automationAccounts:{
+        get: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-11-01'
+        }
+    },
     backupProtectedItems: {
         listByVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
@@ -595,6 +617,12 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2021-11-01-preview'
+        },
+        listPostgresFlexibleServer:{
+            reliesOnPath: 'servers.listPostgresFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/advancedThreatProtectionSettings?api-version=2023-06-01-preview'
+        
         }
     },
     vulnerabilityAssessments: {
@@ -704,7 +732,8 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
-            rateLimit: 3000
+            rateLimit: 3000,
+            limit: 20000
         }
     },
     blobServices: {
@@ -725,7 +754,7 @@ var postcalls = {
         list: {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2019-06-01',
+            url: 'https://management.azure.com/{id}/fileServices/default/shares?api-version=2023-01-01',
             rateLimit: 3000
         }
     },
@@ -984,8 +1013,22 @@ var postcalls = {
             url: 'https://management.azure.com/subscriptions/{id}/securityPolicies?api-version=2023-05-01'
 
         }
-    }
-    
+    },
+    diskEncryptionSet: {
+        get: {
+            reliesOnPath: 'disks.list',
+            properties: ['encryption.diskEncryptionSetId'],
+            url: 'https://management.azure.com/{encryption.diskEncryptionSetId}?api-version=2023-04-02',
+        }
+    },
+    encryptionScopes: {
+        listByStorageAccounts: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
+        }
+    },
+
 };
 
 var tertiarycalls = {
@@ -1025,7 +1068,7 @@ var tertiarycalls = {
         listByNetworkSecurityGroup: {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2017-05-01-preview'
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
         listByRecoveryServiceVault: {
             reliesOnPath: 'recoveryServiceVaults.listBySubscriptionId',
@@ -1081,8 +1124,13 @@ var tertiarycalls = {
             reliesOnPath: 'automationAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByAppServices: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-        
+
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {

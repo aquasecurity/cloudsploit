@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable the built-in Azure Policy definition: Audit resource location matches resource group location',
     link: 'https://learn.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write', 'microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         // console.log(JSON.stringify(cache, null, 2));

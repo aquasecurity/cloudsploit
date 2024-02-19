@@ -15,6 +15,7 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete','microsoft.dbforpostgresql:servers:configurations:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

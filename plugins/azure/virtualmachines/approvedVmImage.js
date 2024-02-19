@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that VM is launched using managed VM image',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/create-vm-generalized-managed',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

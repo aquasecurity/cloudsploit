@@ -18,6 +18,7 @@ module.exports = {
             regex: '[0-9.]{2,5}'
         }
     },
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const config = {

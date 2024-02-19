@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that autoscale is enabled for all Virtual Machine Scale Sets.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

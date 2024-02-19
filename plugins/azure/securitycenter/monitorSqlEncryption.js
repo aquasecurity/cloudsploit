@@ -14,6 +14,7 @@ module.exports = {
         hipaa: 'HIPAA requires data to be encrypted at rest. Enabling SQL encryption ' +
                 'monitoring ensures this configuration is not modified undetected.'
     },
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
