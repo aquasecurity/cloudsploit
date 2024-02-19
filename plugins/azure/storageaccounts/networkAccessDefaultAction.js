@@ -30,7 +30,7 @@ module.exports = {
     apis_remediate: ['storageAccounts:list'],
     actions: {remediate:['storageAccounts:update'], rollback:['storageAccounts:update']},
     permissions: {remediate: ['storageAccounts:update'], rollback: ['storageAccounts:update']},
-    realtime_triggers: ['microsoftstorage:storageaccounts:write'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

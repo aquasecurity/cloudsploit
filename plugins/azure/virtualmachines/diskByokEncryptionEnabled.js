@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that virtual machine disks are created using BYOK encryption',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

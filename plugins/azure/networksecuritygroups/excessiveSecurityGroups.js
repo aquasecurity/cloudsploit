@@ -24,6 +24,7 @@ module.exports = {
             default: 30
         }
     },
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

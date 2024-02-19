@@ -18,6 +18,7 @@ module.exports = {
             default: 'ConnectedClientList'
         },
     },
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

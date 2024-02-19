@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Delete virtual machine scale sets that have no virtual machine instances',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview',
     apis: ['virtualMachineScaleSets:listAll', 'virtualMachineScaleSetVMs:list'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:delete:action'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that recurring scans feature is set to Enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-vulnerability-assessment',
     apis: ['servers:listSql', 'vulnerabilityAssessments:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:sqlvulnerabilityassessments:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

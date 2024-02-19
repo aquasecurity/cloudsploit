@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Delete remove unattached disks or enable BYOK encryption for them.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Modify Front Door WAF policy and enable prevention mode.',
     link: 'https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/afds-overview',
     apis: ['afdWafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write', 'microsoftnetwork:frontdoorwebapplicationfirewallpolicies:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

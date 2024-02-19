@@ -10,6 +10,8 @@ module.exports = {
     recommended_action: 'Enable the option to capture Microsoft support operations and write them to a selected Storage account, Log Analytics workspace, or Event Hub.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-microsoft-support-operations?view=azuresql',
     apis: ['servers:listSql', 'devOpsAuditingSettings:list'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:devopsauditingsettings:write'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

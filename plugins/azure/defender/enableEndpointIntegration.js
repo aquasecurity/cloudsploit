@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Enable "Allow Microsoft Defender for Endpoint to access my data setting" in Defender environment settings.',
     link: 'https://learn.microsoft.com/en-in/azure/defender-for-cloud/integration-defender-for-endpoint?tabs=windows',
     apis: ['securityCenter:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

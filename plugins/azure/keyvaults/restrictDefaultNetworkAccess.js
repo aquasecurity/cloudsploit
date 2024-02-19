@@ -10,6 +10,7 @@ module.exports = {
     recommended_action: 'Ensure that Microsoft Azure Key Vaults can only be accessed by specific Virtual Networks.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints',
     apis: ['vaults:list'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
