@@ -5,11 +5,13 @@ module.exports = {
     title: 'Namespace Encryption At Rest with CMK',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Azure Service Bus namespaces are encrypted with CMK.',
     more_info: 'Azure Service Bus allows you to encrypt data in your namespaces using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault.',
     recommended_action: 'Ensure that Azure Service Bus namespaces have CMK encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/configure-customer-managed-key',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

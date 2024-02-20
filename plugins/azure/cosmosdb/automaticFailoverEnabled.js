@@ -5,12 +5,14 @@ module.exports = {
     title: 'Automatic Failover Enabled',
     category: 'Cosmos DB',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that the Automatic Failover feature is enabled for Microsoft Azure Cosmos DB accounts.',
     more_info: 'It is strongly recommended to configure the Azure Cosmos DB accounts used for production workloads to enable automatic failover. ' +
         'Automatic failover allows Azure Cosmos DB to automatically failover to the Azure cloud region with the highest failover priority when the source region become unavailable.',
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/high-availability',
     recommended_action: 'Modify Cosmos DB account to enable automatic failover.',
     apis: ['databaseAccounts:list'],
+    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

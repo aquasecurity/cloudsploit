@@ -5,12 +5,14 @@ module.exports = {
     title: 'Redis Cache Scheduled Updates',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that Azure Cache for Redis has scheduled updates enabled.',
     more_info: 'Enabling schedule updates allows you to choose a maintenance window for your cache instance. A maintenance window allows you to control the day(s) and time(s) of a week during which the VM(s) hosting your cache can be updated. Azure Cache for Redis will make a best effort to start and finish updating Redis server software within the specified time window you define.',
     recommended_action: 'Enable schedule updates for Redis Cache.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-administration#update-channel-and-schedule-updates',
     apis: ['redisCaches:listBySubscription', 'patchSchedules:listByRedisCache'],
-
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftcache:redis:patchschedules:write','microsoftcache:redis:patchschedules:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

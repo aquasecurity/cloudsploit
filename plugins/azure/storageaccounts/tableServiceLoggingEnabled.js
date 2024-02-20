@@ -6,11 +6,13 @@ module.exports = {
     title: 'Storage Account Table Service Logging Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Storage Table service logging is enabled for "Read", "Write", and "Delete" requests.',
     more_info: 'Azure Storage Table Service logs contain detailed information about successful and failed requests made to your storage tables for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Table service within your Microsoft Azure account.',
     recommended_action: 'Modify Table Service and enable storage logging for "Read", "Write", and "Delete" requests.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/tables/monitor-table-storage?tabs=azure-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:getProperties'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
  
     run: function(cache, settings, callback) {
         var results = [];

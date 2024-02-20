@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Trace Flag Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that 3625 (trace flag) database flag is disabled for SQL Server instances.',
     more_info: ' The 3625 (trace flag) limits the amount of information returned to users who are not system admins, by masking the parameters of some error messages using ******, preventing the disclosure of sensitive information, hence this is recommended to set this flag globally to off to prevent the flag having been left on, or turned on by bad actors.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',

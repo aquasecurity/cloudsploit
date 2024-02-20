@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open HTTP',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determines if TCP port 80 for HTTP is open to the public',
     more_info: 'While some ports are required to be open to the public to function properly, more sensitive services such as HTTP should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',

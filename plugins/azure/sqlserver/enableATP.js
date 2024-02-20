@@ -5,11 +5,13 @@ module.exports = {
     title: 'SQL Server Advanced Threat Protection Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Advanced Threat Protection is enabled on SQL Servers.',
     more_info: 'Azure Defender for SQL is a unified package for advanced SQL security capabilities.',
     recommended_action: 'Ensure that ThreatDetectionState is set to Enabled',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql',
     apis: ['servers:listSql', 'advancedThreatProtectionSettings:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsecurity:pricings:write', 'microsoftsql:servers:advancedthreatprotectionsettings:write', 'microsoftsql:servers:securityalertpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

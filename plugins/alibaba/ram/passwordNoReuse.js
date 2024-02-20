@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password No Reuse',
     category: 'RAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that RAM password security settings are set to prevent reusing desired number of previous passwords.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',

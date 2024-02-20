@@ -6,11 +6,13 @@ module.exports = {
     title: 'Storage Account Blob Service Logging Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Storage Blob service logging is enabled for "Read", "Write", and "Delete" requests.',
     more_info: 'Azure Storage Blob logs contain detailed information about successful and failed requests made to your storage blobs for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Blob service within your Microsoft Azure account.',
     recommended_action: 'Modify Blob Service and enable storage logging for "Read", "Write", and "Delete" requests.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'blobService:getProperties'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Subnet Multi AD',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Detects subnets that are not regional',
     more_info: 'Creating a regional subnet ensures a highly available system. Regional subnets span across multiple availability domains increasing the availability and durability of the resources launched within it.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/managingVCNs.htm',

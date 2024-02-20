@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Server Has Tags',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that Azure PostgreSQL servers have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify PostgreSQL servers and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cross VPC Public Private Communication',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures communication between public and private VPC tiers is not enabled',
     more_info: 'Communication between the public tier of one VPC and the private tier of other VPCs should never be allowed. Instead, VPC peerings with proper NACLs and gateways should be used',
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html',

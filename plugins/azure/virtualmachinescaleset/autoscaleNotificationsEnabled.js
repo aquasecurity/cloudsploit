@@ -5,11 +5,13 @@ module.exports = {
     title: 'Scale Sets Autoscale Notifications Enabled',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Virtual Machine scale sets have autoscale notifications enabled.',
     more_info: 'Autoscale automatically creates new instances when certain metrics are surpassed, or can destroy instances that are being underutilized. Autoscale notifications should be enabled to know about the status of autoscale operation.',
     recommended_action: 'Ensure that autoscale notifications are enabled for all Virtual Machine Scale Sets',
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll', 'autoscaleSettings:listBySubscription'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

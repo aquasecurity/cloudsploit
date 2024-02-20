@@ -5,11 +5,13 @@ module.exports = {
     title: 'Redis Cache Has Tags',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that Azure Cache for Redis have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify Azure Cache for Redis and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['redisCaches:listBySubscription'],
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

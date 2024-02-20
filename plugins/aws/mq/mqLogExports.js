@@ -5,6 +5,7 @@ module.exports = {
     title: 'MQ Log Exports Enabled',
     category: 'MQ',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon MQ brokers have the Log Exports feature enabled.',
     more_info: 'Amazon MQ has a feature of AWS CloudWatch Logs, a service of storing, accessing and monitoring your log files from different sources within your AWS account.',
     recommended_action: 'Enable Log Exports feature for MQ brokers',

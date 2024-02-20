@@ -5,6 +5,7 @@ module.exports = {
     title: 'NSG Log Analytics Enabled',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures Network Security Group logs are sent to the Log Analytics workspace',
     more_info: 'Enabling Log Analytics for Network Security Groups ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Enable sending of logs to Log Analytics for each Network Security Group resource in the Azure Monitor.',
@@ -18,6 +19,7 @@ module.exports = {
             'These include malicious attempts to access services within the ' +
             'infrastructure.'
     },
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

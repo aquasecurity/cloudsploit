@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Instance Has Tags',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that AWS RDS instance have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Tagging.html',

@@ -5,12 +5,14 @@ module.exports = {
     title: 'Cosmos DB Public Access Disabled',
     category: 'Cosmos DB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that Microsoft Azure Cosmos DB accounts are configured to deny public access.',
     more_info: 'Microsoft Azure Cosmos DB accounts should not be accessible from internet and only be accessed from within a VNET.',
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall',
     recommended_action: 'Modify firewall and the virtual network configuration for your Cosmos DB accounts to provide access to selected networks.',
     apis: ['databaseAccounts:list'],
-
+    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:write'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

@@ -6,6 +6,7 @@ module.exports = {
     title: 'File Service All Access ACL',
     category: 'File Service',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures file shares do not allow full write, delete, or read ACL permissions',
     more_info: 'File shares can be configured to allow to read, write, or delete permissions from a share. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all file shares and ensure the share ACL is configured with least privileges.',
@@ -17,6 +18,9 @@ module.exports = {
         pci: 'PCI data must be secured via least-privileged ACLs. File Service ACLs ' +
                 'enable granular permissions for data access.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write','microsoftstorage:storageaccounts:fileservices:shares:write', 'microsoftstorage:storageaccounts:delete', 'microsoftstorage:storageaccounts:fileservices:shares:delete'],
+
+    
 
     run: function(cache, settings, callback) {
         var results = [];

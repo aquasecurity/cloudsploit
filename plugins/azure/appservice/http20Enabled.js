@@ -5,6 +5,7 @@ module.exports = {
     title: 'HTTP 2.0 Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures the latest HTTP version is enabled for App Services',
     more_info: 'Enabling HTTP2.0 ensures that the App Service has the latest technology which improves server performance',
     recommended_action: 'Enable HTTP 2.0 support in the general settings for all App Services',
@@ -15,7 +16,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:updateConfiguration'], rollback:['webApps:updateConfiguration']},
     permissions: {remediate: ['webApps:updateConfiguration'], rollback: ['webApps:updateConfiguration']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

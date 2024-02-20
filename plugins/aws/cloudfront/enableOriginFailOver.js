@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront Enable Origin Failover',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Origin Failover feature is enabled for your CloudFront distributions in order to improve the availability of the content delivered to your end users.',
     more_info: ' With Origin Failover capability, you can setup two origins for your CloudFront web distributions primary and secondary. In the event of primary origin failure, ' +
                'your content is automatically served from the secondary origin, maintaining the distribution high reliability. ',

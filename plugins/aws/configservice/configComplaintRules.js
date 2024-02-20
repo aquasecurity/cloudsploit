@@ -5,7 +5,7 @@ module.exports = {
     title: 'AWS Config Complaint Rules',
     category: 'ConfigService',
     domain: 'Management and Governance',
-    severity: 'MEDIUM',
+    severity: 'Medium',
     description: 'Ensures that all the evaluation results returned from the Amazon Config rules created within your AWS account are compliant.',
     more_info: 'AWS Config provides AWS managed rules, which are predefined customizable rules that AWS Config uses to evaluate whether your AWS resources comply with common best practices.',
     recommended_action: 'Enable the AWS Config Service rules for compliance checks and close security gaps.',

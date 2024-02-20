@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Kibana',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if TCP port 5601 for Kibana is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Kibana should be restricted to known IP addresses.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
@@ -29,6 +30,7 @@ module.exports = {
     },
     actions: {remediate:['networkSecurityGroups:update'], rollback:['networkSecurityGroups:update']},
     permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

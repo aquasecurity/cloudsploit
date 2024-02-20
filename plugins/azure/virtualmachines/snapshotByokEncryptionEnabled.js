@@ -5,11 +5,13 @@ module.exports = {
     title: 'VM Disk Snapshot BYOK Encryption Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Azure virtual machine disk snapshot have BYOK (Customer-Managed Key) encryption enabled.',
     more_info: 'Encrypting virtual machine disk snapshot helps protect and safeguard your data to meet organizational security and compliance commitments.',
     recommended_action: 'Modify affected snapshots and and enable customer managed key encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption',
     apis: ['snapshots:list'],
+    realtime_triggers: ['microsoftcompute:snapshots:write', 'microsoftcompute:snapshots:delete'], 
 
     run: function(cache, settings, callback) {
         var results = [];

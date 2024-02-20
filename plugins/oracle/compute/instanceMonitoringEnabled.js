@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Monitoring Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures monitoring is enabled for instances.',
     more_info: 'Enabling instance monitoring allows for metrics to be collected on the instance. Following security best practices. ',
     recommended_action: 'When creating a new instance, ensure monitoring is enabled under advanced settings.',

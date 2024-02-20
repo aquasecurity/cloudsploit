@@ -4,6 +4,7 @@ module.exports = {
     title: 'Kubernetes Web Dashboard Disabled',
     category: 'ACK',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure that Kubernetes cluster web UI/Dashboard is not enabled.',
     more_info: 'The Kubernetes Web UI (Dashboard) is backed by a highly privileged Kubernetes Service Account. It is recommended to use ACK User Console instead of Dashboard to avoid any privileged escalation via compromise the dashboard.',
     link: 'https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/',

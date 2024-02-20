@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Transparent Data Encryption Enabled',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that RDS instances have Transparent Data Encryption enabled.',
     more_info: 'TDE should be enabled to protect against the threat of malicious activities. Real-time encryption and decryption of the database,' +  
         'associated backups, and log files is performed at rest without requiring any change to the application.',

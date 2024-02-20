@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Contained Database Authentication Flag Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that contained database authentication flag is disabled for SQL Server instances.',
     more_info: 'The Contained Database Authentication allows user to connect to the database without authenticating at the Database Engine level by moving the authentication boundary from the Database Engine level to the database level, hence it is recommended to disable this flag.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',

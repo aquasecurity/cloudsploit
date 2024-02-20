@@ -5,11 +5,13 @@ module.exports = {
     title: 'Media Services Classic API Disabled',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure that Microsoft Azure Media Services do not have the Classic API enabled.',
     more_info: 'Disabling the Classic API for Azure Media Services is recommended to utilize modern APIs and features. Enabling classic features can enable the use of classic V2 APIs but might disable advanced security features like managed identities.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/migrate-v-2-v-3-differences-api-access',
     recommended_action: 'Remove Azure Media Services accounts with Classic API enabled and create new accounts without enabling the Classic API.',
     apis: ['mediaServices:listAll', 'mediaServices:get'],
+    realtime_triggers: ['microsoftmedia:mediaservices:write', 'microsoftmedia:mediaservices:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

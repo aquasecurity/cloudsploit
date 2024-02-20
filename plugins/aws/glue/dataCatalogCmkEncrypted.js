@@ -5,6 +5,7 @@ module.exports = {
     title: 'AWS Glue Data Catalog CMK Encrypted',
     category: 'Glue',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS Glue has data catalog encryption enabled with KMS Customer Master Key (CMK).',
     more_info: 'AWS Glue should have data catalog encryption enabled with KMS Customer Master Key (CMK) instead of AWS-managed Key in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Modify Glue data catalog to use CMK instead of AWS-managed Key to encrypt Metadata',

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Email Account Admins Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that email account admins is enabled in advanced data security for SQL servers.',
     more_info: 'Enabling email account admins in advanced data security on all SQL servers ensures that monitored data for unusual activity, vulnerabilities, and threats get sent to the account admins and subscription owners.',
     recommended_action: 'Ensure that also send email notification to admins and subscription owners is enabled in advanced threat protections for all SQL servers.',
     link: 'https://learn.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
     apis: ['servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:securityalertpolicies:write', 'microsoftsql:servers:advancedthreatprotectionsettings:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

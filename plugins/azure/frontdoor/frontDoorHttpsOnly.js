@@ -5,11 +5,13 @@ module.exports = {
     title: 'Front Door HTTPS only',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures HTTPS Only is enabled for Front Door classic profile, redirecting all HTTP traffic to HTTPS.',
     more_info: 'By using the HTTPS only protocol, you ensure that your sensitive data is delivered securely via TLS/SSL encryption.',
     recommended_action: 'Modify the Front Door classic profile and add HTTP to HTTPS redirect rule under the frontend hosts section.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/front-door-how-to-redirect-https',
     apis: ['classicFrontDoors:list'],
+    realtime_triggers: ['microsoftnetwork:frontdoors:write', 'microsoftnetwork:frontdoors:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

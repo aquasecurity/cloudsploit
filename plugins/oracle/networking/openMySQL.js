@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open MySQL',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 4333 or 3306 for MySQL is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the ' +
         'public to function properly, more sensitive services such as MySQL should be ' +

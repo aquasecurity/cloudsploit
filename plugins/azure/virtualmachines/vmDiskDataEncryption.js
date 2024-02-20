@@ -6,6 +6,7 @@ module.exports = {
     title: 'VM Data Disk Encryption',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Data Disk Encryption is enabled for virtual machines',
     more_info: 'Encrypting VM Data Disks (non-boot volume) ensures that its entire contents are fully unrecoverable without a key, protecting the volume from unwarranted reads',
     recommended_action: 'Enable VM Data Disk Encryption on all virtual machines',
@@ -18,6 +19,7 @@ module.exports = {
              'Encryption should be enabled for all VM disks storing this ' +
              'type of data.'
     },
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Glacier Vault Public Access',
     category: 'Glacier',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that S3 Glacier Vault public access block is enabled for the account.',
     more_info: 'Blocking S3 Glacier Vault public access at the account level ensures objects are not accidentally exposed.',
     recommended_action: 'Add access policy for the S3 Glacier Vault to block public access for the AWS account.',

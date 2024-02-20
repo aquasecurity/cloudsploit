@@ -5,12 +5,13 @@ module.exports = {
     title: 'Scale Sets AD Authentication Enabled',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Azure Active Directory (AD) authentication is enabled for Virtual Machine Scale Sets.',
     more_info: 'Enabling Azure Active Directory (AD) authentication for VM Scale Sets ensures access from one central point and simplifies access permission management. It allows conditional access by using Role-Based Access Control (RBAC) policies, and enable MFA.',
     recommended_action: 'Enable Active Directory authentication for all Virtual Machines scale sets.',
     link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-linux',
     apis: ['virtualMachineScaleSets:listAll'],
-
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:extensions:write', 'microsoftcompute:virtualmachinescalesets:extensions:delete'],
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

@@ -5,11 +5,13 @@ module.exports = {
     title: 'SQL DB Multiple AZ',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Database instances are created to be cross-AZ for high availability',
     more_info: 'Creating SQL Database instances in a single availability zone creates a single point of failure for all systems relying on that database. All SQL Database instances should be created in multiple availability zones to ensure proper failover.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-high-availability#zone-redundant-configuration',
     recommended_action: 'Ensure that each SQL Database is configured to be zone redundant.',
     apis: ['servers:listSql', 'databases:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

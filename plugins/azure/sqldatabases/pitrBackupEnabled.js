@@ -5,6 +5,7 @@ module.exports = {
     title: 'Point in Time Restore Backup Retention',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure SQL databases have a sufficient Point in Time Restore (PITR) backup retention period configured',
     more_info: 'Point-in-time restore is a self-service capability, which enables you to restore a database from backups to any point within the retention period. Point-in-time restore is useful in recovery scenarios, such as incidents caused by errors, incorrectly loaded data, or deletion of crucial data.',
     recommended_action: 'Ensure that an optimal backup retention period is set for Azure SQL databases.',
@@ -18,6 +19,7 @@ module.exports = {
             regex: '^(3[0-5]|2[0-9]|1[0-9]|[1-9])$'
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write','microsoftsql:servers:databases:backupshorttermretentionpolicies:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'TLS Version Check',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that all web apps are using the latest version of TLS',
     more_info: 'App Services currently allows web apps to use TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app TLS connections.',
     recommended_action: 'Set the minimum TLS version to 1.2 for all App Services.',
@@ -15,7 +16,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:write'], rollback:['webApps:write']},
     permissions: {remediate: ['webApps:write'], rollback: ['webApps:write']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
     compliance: {
         pci: 'PCI requires all web applications encrypt data ' +
             'in transit. This includes using the latest TLS ' +

@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail S3 Bucket',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensure that AWS CloudTrail trail uses the designated Amazon S3 bucket.',
     more_info: 'Ensure that your Amazon CloudTrail trail is configured to use the appropriated S3 bucket in order to meet regulatory compliance requirements within your organization.',
     recommended_action: 'Modify ClouTrail trails to configure designated S3 bucket',

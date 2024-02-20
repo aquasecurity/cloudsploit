@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open CIFS',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if UDP port 445 for CIFS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be ' +
         'open to the public to function properly, more sensitive services such ' +

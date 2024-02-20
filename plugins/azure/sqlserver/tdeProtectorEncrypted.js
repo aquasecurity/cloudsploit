@@ -5,6 +5,7 @@ module.exports = {
     title: 'TDE Protector Encrypted',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL Server TDE protector is encrypted with BYOK (Bring Your Own Key)',
     more_info: 'Enabling BYOK in the TDE protector allows for greater control and transparency, as well as increasing security by having full control of the encryption keys.',
     recommended_action: 'Ensure that a BYOK key is set for the Transparent Data Encryption of each SQL Server.',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'byok'
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsodtsql:servers:encryptionprotector:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

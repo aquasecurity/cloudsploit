@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Public Access',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures that SQL Servers do not allow public access',
     more_info: 'Unless there is a specific business requirement, SQL Server instances should not have a public endpoint and should only be accessed from within a VNET.',
     recommended_action: 'Ensure that the firewall of each SQL Server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:firewallrules:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

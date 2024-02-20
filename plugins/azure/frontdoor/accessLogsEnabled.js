@@ -5,11 +5,13 @@ module.exports = {
     title: 'Front Door Access Logs Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Front Door Access Log is enabled.',
     more_info: 'Azure Front Door captures several types of logs. Access logs can be used to identify slow requests, determine error rates, and understand how Front Door\'s caching behavior is working for your solution.',
     recommended_action: 'Ensure that diagnostic setting for Front Door Access Log is enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-logs',
     apis: ['profiles:list', 'diagnosticSettings:listByAzureFrontDoor'],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

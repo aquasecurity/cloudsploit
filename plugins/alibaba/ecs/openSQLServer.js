@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open SQL Server',
     category: 'ECS',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that security groups does not have TCP port 1433 or UDP port 1434 for SQL Server open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as SQL Server should be restricted to known IP addresses.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',

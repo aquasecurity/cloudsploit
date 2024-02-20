@@ -5,6 +5,7 @@ module.exports = {
     title: 'Table Service All Access ACL',
     category: 'Table Service',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures tables do not allow full write, delete, or read ACL permissions',
     more_info: 'Table Service tables can be configured to allow to read, write or delete on objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all tables and ensure the ACL is configured with least privileges.',
@@ -16,6 +17,7 @@ module.exports = {
         pci: 'PCI data must be secured via least-privileged ACLs. Table Service ACLs ' +
                 'enable granular permissions for data access.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

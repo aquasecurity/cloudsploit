@@ -5,11 +5,13 @@ module.exports = {
     title: 'ACR CMK Encryption',
     category: 'Container Registry',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensure that Microsoft Azure Container registries have CMK encryption enabled.',
     more_info: 'A customer-managed key gives you the ownership to bring your own key in Azure Key Vault. When you enable a customer-managed key, you can manage its rotations, control the access and permissions to use it, and audit its use.',
     recommended_action: 'Create new container registry with Premium SKU and enable CMK encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/tutorial-customer-managed-keys',
     apis: ['registries:list'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

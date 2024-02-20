@@ -5,11 +5,13 @@ module.exports = {
     title: 'Event Grid Domain Public Access',
     category: 'Event Grid',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Azure Event Grid domains are not publicly accessible.',
     more_info: 'By default, domains are accessible from internet as long as the request comes with valid authentication and authorization exposing sensitive information. By disabling public access, Event Grid domains can be configured to use private endpoint.',
     recommended_action: 'Modify the affected domains and disable public network access.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/configure-firewall',
     apis: ['eventGrid:listDomains'],
+    realtime_triggers: ['microsofteventgrid:domains:write', 'microsofteventgrid:domains:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

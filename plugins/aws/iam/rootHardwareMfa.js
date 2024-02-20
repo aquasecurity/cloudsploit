@@ -4,6 +4,7 @@ module.exports = {
     title: 'Root Hardware MFA',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures the root account is using a hardware MFA device',
     more_info: 'The root account should use a hardware MFA device for added security, rather than a virtual device which could be more easily compromised.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_physical.html',

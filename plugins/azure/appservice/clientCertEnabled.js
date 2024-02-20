@@ -5,11 +5,13 @@ module.exports = {
     title: 'Client Certificates Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures Client Certificates are enabled for App Services, only allowing clients with valid certificates to reach the app',
     more_info: 'Enabling Client Certificates will block all clients that do not have a valid certificate from accessing the app.',
     recommended_action: 'Enable incoming client certificate SSL setting for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth#enable-client-certificates',
     apis: ['webApps:list'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

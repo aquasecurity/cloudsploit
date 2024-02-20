@@ -5,6 +5,7 @@ module.exports = {
     title: 'Virtual Private Gateway In VPC',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure Virtual Private Gateways are associated with at least one VPC.',
     more_info: 'Virtual Private Gateways allow communication between cloud infrastructure and the remote customer network. They help in establishing VPN connection between VPC and the customer gateway. ' +
         'Make sure virtual private gateways are always associated with a VPC to meet security and regulatory compliance requirements within your organization.',

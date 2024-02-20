@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Internal Web',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Determine if TCP port 8080 for internal web is open to the public',
     more_info: 'Internal web port 8080 is used for web applications and proxy services. Allowing Inbound traffic from any IP address to TCP port 8080 is vulnerable to exploits like backdoor trojan attacks. It is a best practice to block port 8080 from the public internet.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',

@@ -5,11 +5,13 @@ module.exports = {
     title: 'VM Image Has Tags',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that Microsoft Azure virtual machine images have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify virtual machine image and add tags',
     apis: ['images:list'],
+    realtime_triggers: ['microsoftcompute:images:write', 'microsoftcompute:images:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

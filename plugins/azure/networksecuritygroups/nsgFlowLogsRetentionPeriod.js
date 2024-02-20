@@ -5,6 +5,7 @@ module.exports = {
     title: 'NSG Flow Logs Retention Period',
     category: 'Network Security Groups',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Azure Network Security Groups (NSGs) have a sufficient flow log retention period',
     more_info: 'A flow log data retention period of 90 days or more, allows you to collect the necessary amount of logging data required to check for anomalies and provide details about any potential security breach.',
     recommended_action: 'Modify NSG flow logs and set desired value in days for retention period',
@@ -18,6 +19,7 @@ module.exports = {
             regex: '^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-9][0-9]|3[0-5][0-9]|36[0-5])$'
         }
     },
+    realtime_triggers: ['microsoftinsights:extendeddiagnosticsettings:write','microsoftinsights:extendeddiagnosticsettings:delete','microsoftstorage:storageaccounts:managementpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

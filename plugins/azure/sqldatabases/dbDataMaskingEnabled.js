@@ -5,11 +5,13 @@ module.exports = {
     title: 'SQL Databases Data Masking Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures dynamic data masking is enabled for all SQL databases.',
     more_info: 'Dynamic data masking helps prevent unauthorized access to sensitive data by enabling customers to specify how much sensitive data to reveal with minimal effect on the application layer. DDM can be configured on designated database fields to hide sensitive data in the result sets of queries.',
     recommended_action: 'Enable dynamic data masking for SQL databases.',
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-dynamic-data-masking-get-started-portal',
     apis: ['servers:listSql', 'databases:listByServer', 'dataMaskingPolicies:get'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

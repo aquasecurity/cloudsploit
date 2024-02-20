@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELBv2 HTTPS Only',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures ELBs are configured to only accept' +
         ' connections on HTTPS ports.',
     more_info: 'For maximum security, ELBs can be configured to only'+

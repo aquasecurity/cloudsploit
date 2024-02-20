@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Mesh VG Health Check Policies',
     category: 'App Mesh',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Amazon App Mesh virtual gateways use health check policies to monitor the availability of virtual nodes.',
     more_info: 'Health check policies in App Mesh are essential to maintain application availability and reliability by monitoring the health of associated virtual nodes.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/virtual_gateway_health_checks.html',

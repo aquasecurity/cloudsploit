@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Server Private Endpoints Configured',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures that PostgreSQL Servers are accessible only through private endpoints',
     more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service such as Azure SQL Server into your VNet.',
     recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for PostgreSQL Server',
     link: 'https://learn.microsoft.com/en-us/azure/private-link/private-link-overview',
     apis: ['servers:listPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

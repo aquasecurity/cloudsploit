@@ -4,6 +4,7 @@ module.exports = {
     title: 'Root MFA Enabled',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures a multi-factor authentication device is enabled for the root account',
     more_info: 'The root account should have an MFA device setup to enable two-factor authentication.',
     link: 'http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html',

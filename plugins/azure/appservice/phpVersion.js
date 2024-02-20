@@ -5,6 +5,7 @@ module.exports = {
     title: 'PHP Version',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures the latest version of PHP is installed for all App Services',
     more_info: 'Installing the latest version of PHP will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of PHP for all PHP-based App Services',
@@ -18,6 +19,8 @@ module.exports = {
             regex: '[0-9.]{2,5}'
         }
     },
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
+
     run: function(cache, settings, callback) {
         const config = {
             latestPhpVersion: settings.latestPhpVersion || this.settings.latestPhpVersion.default

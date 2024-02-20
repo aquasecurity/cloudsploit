@@ -5,6 +5,7 @@ module.exports = {
     title: 'Storage Accounts Minimum TLS Version',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures Microsoft Azure Storage Accounts are using the latest TLS version 1.2 to enforce stricter security measure.',
     more_info: 'Azure Storage accounts permit clients to send and receive data with the oldest version of TLS, TLS 1.0, and above. ' +
         'To enforce stricter security measures, you can configure your storage account to require that clients send and receive data with a newer version of TLS.',
@@ -24,7 +25,7 @@ module.exports = {
     apis_remediate: ['storageAccounts:list'],
     actions: {remediate:['storageAccounts:update'], rollback:['storageAccounts:update']},
     permissions: {remediate: ['storageAccounts:update'], rollback: ['storageAccounts:update']},
-    realtime_triggers: ['microsoftstorage:storageaccounts:write'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

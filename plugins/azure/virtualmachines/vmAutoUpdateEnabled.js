@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Auto Update Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM Auto Update is enabled for virtual machines',
     more_info: 'Enabling Auto Update on Azure virtual machines reduces the security risk of missing security patches.',
     recommended_action: 'Enable VM auto update on all virtual machines',
@@ -14,6 +15,7 @@ module.exports = {
         pci: 'PCI requires all system components have the latest updates ' +
             'and patches installed within a month of release.'
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

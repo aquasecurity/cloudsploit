@@ -5,11 +5,13 @@ module.exports = {
     title: 'Storage Account Private Endpoints',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that Azure Storage accounts are accessible only through private endpoints.',
     more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service such as Azure Storage Accounts into your VNet.',
     recommended_action: 'Modify storage accounts and configure private endpoints.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints',
     apis: ['storageAccounts:list'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftnetwork:privateendpoints:write', 'microsoftstorage:storageaccounts:privateendpointconnections:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

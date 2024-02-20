@@ -5,11 +5,13 @@ module.exports = {
     title: 'MySQL Flexible Server Minimum TLS Version',
     category: 'MySQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure TLS version on MySQL flexible servers is set to the default value.',
     more_info: 'TLS connectivity helps to provide a new layer of security by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against "man in the middle" attacks by encrypting the data stream between the server and application.',
     recommended_action: 'Modify MySQL flexible server tls_version parameter and set to desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-connect-tls-ssl',
     apis: ['servers:listMysqlFlexibleServer', 'flexibleServersConfigurations:listByServer'],   
+    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:configurations:write','microsoftdbformysql:flexibleservers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

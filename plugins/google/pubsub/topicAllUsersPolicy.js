@@ -5,6 +5,7 @@ module.exports = {
     title: 'Topic All Users Policy',
     category: 'Pub/Sub',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure Pub/Sub Topics are not anonymously or publicly accessible',
     more_info: 'Cloud IAM policy governs the access permissions to pub/sub topics. Granting anonymous or public access to pub/sub topics is risky if you are storing any sensitive messages. As a best practice, limit the access to specific authenticated users or groups or service accounts.',
     link: 'https://cloud.google.com/pubsub/docs/access-control',

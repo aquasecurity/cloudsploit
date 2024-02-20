@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Topic Policies',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures SNS topics do not allow global send or subscribe.',
     more_info: 'SNS policies should not be configured to allow any AWS user to subscribe or send messages. This could result in data leakage or financial DDoS.',
     recommended_action: 'Adjust the topic policy to only allow authorized AWS users in known accounts to subscribe.',

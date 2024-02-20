@@ -5,11 +5,13 @@ module.exports = {
     title: 'Enable Defender For Virtual Machines',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for all virtual machines.',
     more_info: 'Turning on Microsoft Defender for Virtual Machines enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Servers in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

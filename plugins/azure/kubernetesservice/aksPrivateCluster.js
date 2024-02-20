@@ -5,11 +5,13 @@ module.exports = {
     title: 'AKS Cluster Private',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensures that Azure Kubernetes clusters are private.',
     more_info: 'In a private cluster, the control plane or API server has internal IP addresses that are defined in the RFC1918 - Address Allocation for Private Internet document. By using a private cluster, you can ensure network traffic between your API server and your node pools remains on the private network only.',
     recommended_action: 'Modify cluster network configuration and enable private cluster feature.',
     link: 'https://learn.microsoft.com/en-us/azure/aks/private-clusters',
     apis: ['managedClusters:list'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

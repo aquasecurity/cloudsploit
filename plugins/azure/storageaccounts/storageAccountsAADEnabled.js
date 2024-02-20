@@ -5,6 +5,7 @@ module.exports = {
     title: 'Storage Accounts AAD Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that identity-based Directory Service for Azure File Authentication is enabled for all Azure Files',
     more_info: 'Enabling identity-based Authentication ensures that only the authorized Active Directory members can access or connect to the file shares, enforcing granular access control.',
     recommended_action: 'Ensure that identity-based Directory Service for Azure File Authentication is enabled for all Azure File Shares.',
@@ -24,6 +25,7 @@ module.exports = {
             default: '^aquaacct([a-f0-9]){16}$'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
     run: function(cache, settings, callback) {
         var config = {
             storage_account_check_file_share: settings.storage_account_check_file_share || this.settings.storage_account_check_file_share.default,

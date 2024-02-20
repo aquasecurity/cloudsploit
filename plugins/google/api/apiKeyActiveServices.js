@@ -4,6 +4,7 @@ module.exports = {
     title: 'API Key Active Services Only',
     category: 'API',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensure API Keys only exist for active services.',
     more_info: 'API Keys should only be used for services in cases where other authentication methods are unavailable. Keys are insecure because they can be viewed publicly, such as from within a browser, or they can be accessed on a device where the key resides. It is recommended to use standard authentication flow to avoid risks associated with API Keys.',
     link: 'https://cloud.google.com/docs/authentication/api-keys',

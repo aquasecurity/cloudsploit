@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Management Events',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudTrail trails are configured to log management events.',
     more_info: 'AWS CloudTrail trails should be configured to log management events to record management operations that are performed on resources in your AWS account.',
     recommended_action: 'Update CloudTrail to enable management events logging',

@@ -7,6 +7,7 @@ module.exports = {
     title: 'High Severity Alerts Enabled',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that high severity alerts are enabled and properly configured.',
     more_info: 'Enabling high severity alerts ensures that microsoft alerts for potential security issues are sent and allows for quick mitigation of the associated risks.',
     recommended_action: 'Enable email alert notification and configure its severity level.',
@@ -20,6 +21,7 @@ module.exports = {
             default: 'medium'
         }
     },
+    realtime_triggers: ['microsoftsecurity:securitycontacts:write','microsoftsecurity:securitycontacts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

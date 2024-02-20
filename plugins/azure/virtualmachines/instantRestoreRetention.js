@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Instant Restore Backup Retention Period',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM instant restore backup retention policy is configured to retain backups for the desired number of days.',
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs. These backups should be retained for a specific amount of time to recover destroyed VM.',
     recommended_action: 'Configure virtual machine instant restore backup retention policy to retain backups for desired number of days',
@@ -18,6 +19,7 @@ module.exports = {
             default: '5'
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

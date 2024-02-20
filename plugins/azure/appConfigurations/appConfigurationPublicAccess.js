@@ -5,11 +5,13 @@ module.exports = {
     title: 'App Configurations Public Access',
     category: 'App Configuration',
     domain: 'Developer Tools',
+    severity: 'High',
     description: 'Ensures that Azure App Configurations have public access disabled.',
     more_info: 'Disabling public network access improves security by ensuring that the app configuration isn\'t exposed on the public internet. Limit exposure of your resources by creating private endpoints instead.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-disable-public-access?tabs=azure-portal',
     recommended_action: 'Modify App Configuration and disable public access.',
     apis: ['appConfigurations:list'],
+    realtime_triggers: ['microsoftappconfiguration:configurationstores:write','microsoftappconfiguration:configurationstores:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -17,7 +19,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.appConfigurations, function(location, rcb){
-            var appConfigurations = helpers.addSource(cache, source, 
+            var appConfigurations = helpers.addSource(cache, source,
                 ['appConfigurations', 'list', location]);
 
             if (!appConfigurations) return rcb();

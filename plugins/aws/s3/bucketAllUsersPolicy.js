@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket All Users Policy',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Critical',
     description: 'Ensures S3 bucket policies do not allow global write, delete, or read permissions',
     more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     recommended_action: 'Remove wildcard principals from the bucket policy statements.',

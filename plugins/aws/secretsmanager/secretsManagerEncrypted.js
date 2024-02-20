@@ -5,6 +5,7 @@ module.exports = {
     title: 'Secrets Manager Encrypted Secrets',
     category: 'Secrets Manager',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures Secrets Manager Secrets are encrypted',
     more_info: 'Secrets Manager Secrets should be encrypted. This allows their values to be used by approved systems, while restricting access to other users of the account.',
     recommended_action: 'Encrypt Secrets Manager Secrets',

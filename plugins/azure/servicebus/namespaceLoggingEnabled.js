@@ -5,11 +5,13 @@ module.exports = {
     title: 'Namespace Logging Enabled',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Azure Service Bus namespaces have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of Service Bus namespaces. By enabling diagnostic logs, you can enhance visibility, easily monitor and troubleshoot and optimize messaging performance.',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/monitor-service-bus-reference',
     recommended_action: 'Modify the namespace settings and enable diagnostic logs.',
     apis: ['serviceBus:listNamespacesBySubscription', 'diagnosticSettings:listByServiceBusNamespaces'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

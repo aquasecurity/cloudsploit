@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redshift Nodes Count',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that each AWS region has not reached the limit set for the number of Redshift cluster nodes.',
     more_info: 'The number of provisioned Amazon Redshift cluster nodes must be less than the provided nodes limit to avoid reaching the limit and exceeding the set budget.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-clusters.html#working-with-clusters-overview',

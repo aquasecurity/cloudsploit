@@ -5,12 +5,14 @@ module.exports = {
     title: 'KeyVault Trusted Services Enabled',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that "Allow trusted Microsoft services to bypass this firewall" feature is enabled for Azure Key Vault network firewall configuration.',
     more_info: 'Enabling network firewall rules for your Key Vaults will block access to incoming requests for data, including from other Azure services. ' +
         'To allow certain Azure cloud services access your vault resources, you need to add an exception so that the trusted cloud services can bypass the firewall rules.',
     recommended_action: 'Ensure that Microsoft Azure Key Vault network firewall configuration allows trusted Microsoft services to bypass the firewall.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/network-security',
     apis: ['vaults:list'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

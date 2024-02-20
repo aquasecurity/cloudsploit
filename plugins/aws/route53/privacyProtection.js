@@ -4,6 +4,7 @@ module.exports = {
     title: 'Domain Privacy Protection',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure that Privacy Protection feature is enabled for your Amazon Route 53 domains.',
     more_info: 'Enabling the Privacy Protection feature protects against receiving spams and sharing contact information in response of WHOIS queries.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-privacy-protection.html',

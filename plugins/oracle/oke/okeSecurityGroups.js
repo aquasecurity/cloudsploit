@@ -5,6 +5,7 @@ module.exports = {
     title: 'OKE Security Groups',
     category: 'OKE',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the OKE clusters only allows inbound traffic on port 443.',
     more_info: 'The OKE clusters only requires port 443 access. Security groups for the clusters should not add additional port access.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Security/Reference/oke_security.htm',

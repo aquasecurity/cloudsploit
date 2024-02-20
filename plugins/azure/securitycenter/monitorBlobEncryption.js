@@ -5,11 +5,13 @@ module.exports = {
     title: 'Monitor Blob Encryption',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Blob Storage Encryption monitoring is enabled',
     more_info: 'When this setting is enabled, Security Center audits blob encryption in all storage accounts to enhance data at rest protection.',
     recommended_action: 'Enable Adaptive Application Controls for Storage Accounts from the Azure Security Center by ensuring AuditIfNotExists setting is used for blob encryption.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policies',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

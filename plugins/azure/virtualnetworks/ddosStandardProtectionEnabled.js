@@ -5,12 +5,14 @@ module.exports = {
     title: 'DDoS Standard Protection Enabled',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that DDoS Standard Protection is enabled for Microsoft Azure Virtual Networks',
     more_info: 'DDoS Protection Standard offers enhanced Distributed Denial-of-Service (DDoS) mitigation capabilities via adaptive tuning, attack alert notifications, and telemetry to protect against the impacts of large DDoS attacks for all the protected resources available within your Azure Virtual Networks.',
     recommended_action: 'Enable DDoS protection for virtual networks',
     link: 'https://azure.microsoft.com/en-us/blog/azure-ddos-protection-for-virtual-networks-generally-available/',
     apis: ['virtualNetworks:listAll'],
-
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

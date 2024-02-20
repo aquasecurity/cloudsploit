@@ -5,6 +5,7 @@ module.exports = {
     title: 'Overlapping Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if EC2 instances have security groups that share the same rules',
     more_info: 'Overlapping security group rules make managing EC2 instance access much more difficult. ' +
                'If a rule is removed from one security group, the access may still remain in another, ' +
