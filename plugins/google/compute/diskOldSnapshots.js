@@ -18,6 +18,7 @@ module.exports = {
             default: '30',
         },
     },
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

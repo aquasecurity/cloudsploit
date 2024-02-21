@@ -10,6 +10,7 @@ module.exports = {
     more_info: 'Compute Engine lets you export detailed reports that provide information about the lifetime and usage of your Compute Engine resources to a Google Cloud Storage bucket using the usage export feature.',
     recommended_action: 'Ensure that Enable Usage Export setting is configured for your GCP project.',
     apis: ['projects:get'],
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

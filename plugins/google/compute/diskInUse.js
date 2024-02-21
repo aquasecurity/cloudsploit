@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/disks',
     recommended_action: 'Delete unused Compute disks.',
     apis: ['disks:aggregatedList'],
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/disks/scheduled-snapshots',
     recommended_action: 'Ensure that all compute disks have a snapshot schedule attached.',
     apis: ['disks:aggregatedList'],
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete', 'compute.disk.addresourcepolicies', 'compute.disk.removeresourcepolicies'],
     
     run: function(cache, settings, callback) {
         var results = [];

@@ -20,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

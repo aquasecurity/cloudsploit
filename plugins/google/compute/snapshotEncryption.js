@@ -20,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

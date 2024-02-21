@@ -18,6 +18,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete','compute.images.insert', 'compute.images.delete' ],
 
     run: function(cache, settings, callback) {
         var results = [];

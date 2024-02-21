@@ -19,6 +19,7 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['compute.instancetemplates.insert', 'compute.instancetemplates.delete'],
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

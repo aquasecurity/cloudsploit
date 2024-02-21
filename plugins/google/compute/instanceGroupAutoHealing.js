@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/instance-groups/autohealing-instances-in-migs',
     recommended_action: 'Ensure autohealing is enabled for all instance groups.',
     apis: ['instanceGroupManagers:list'],
+    realtime_triggers: ['compute.instancegroups.insert', 'compute.instancegroups.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
