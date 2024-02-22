@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/using-bucket-labels',
     recommended_action: 'Ensure labels are added to all storage buckets.',
     apis: ['buckets:list'],
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];
