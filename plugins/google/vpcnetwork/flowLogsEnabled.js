@@ -18,6 +18,7 @@ module.exports = {
         pci: 'PCI requires logging of all network access to environments containing ' +
             'cardholder data. Enable VPC flow logs to log these network requests.'
     },
+    realtime_triggers: ['compute.subnetworks.insert', 'compute.subnetworks.patch','compute.subnetworks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

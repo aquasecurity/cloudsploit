@@ -19,7 +19,7 @@ module.exports = {
             default: 'tcp:80'
         },
     },
-
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];
