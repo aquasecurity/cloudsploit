@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECS Cluster Service Active Tasks',
     category: 'ECS',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure ECS clusters have services with running tasks.',
     more_info: 'A task is the instantiation of a task definition within a cluster. Amazon ECS service instantiates and maintains the specified number of tasks simultaneously in a cluster. As a best practice, ensure you always have running tasks in a cluster.',
     recommended_action: 'Modify Cluster services and add tasks',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Pipeline Artifacts Encrypted',
     category: 'CodePipeline',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that AWS CodePipeline is using desired encryption level to encrypt pipeline artifacts being stored in S3.',
     more_info: 'CodePipeline creates an S3 artifact bucket and default AWS managed key when you create a pipeline.'+
     'By default, these artifacts are encrypted using default AWS-managed S3 key. Use customer-managed key for encryption in order to to gain more granular control over encryption/decryption process.',

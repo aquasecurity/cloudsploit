@@ -4,6 +4,7 @@ module.exports = {
     title: 'Public Disk Images',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that your disk images are not being shared publicly.',
     more_info: 'To avoid exposing sensitive information, make sure that your virtual machine disk images are not being publicly shared with all other GCP accounts.',
     link: 'https://cloud.google.com/compute/docs/images',

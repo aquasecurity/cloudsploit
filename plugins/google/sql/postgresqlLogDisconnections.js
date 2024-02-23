@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Disconnections Flag Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log disconnections flag enabled.',
     more_info: 'SQL instance for PostgreSQL databases provides log_disconnections flag. It is used to log every attempt to connect to the DB server. It is not enabled by default. Enabling it will make sure to log anyone who disconnects from the instance.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',

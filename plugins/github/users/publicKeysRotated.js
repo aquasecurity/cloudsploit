@@ -5,6 +5,7 @@ module.exports = {
     title: 'Public Keys Rotated',
     category: 'Users',
     types: ['user'],
+    severity: 'Low',
     description: 'Ensures GitHub user keys are rotated frequently.',
     more_info: 'GitHub keys provide full access to repositories within an account and should be rotated every 180 days.',
     link: 'https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/',

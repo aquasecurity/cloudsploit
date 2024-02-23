@@ -5,6 +5,7 @@ module.exports = {
     title: 'Elastic IP Limit',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if the number of allocated EIPs is close to the AWS per-account limit',
     more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     recommended_action: 'Contact AWS support to increase the number of EIPs available',

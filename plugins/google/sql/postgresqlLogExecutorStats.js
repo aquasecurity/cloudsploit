@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Executor Stats Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log_executor_stats flag set to "off".',
     more_info: 'To avoid any performance issues caused by an increased volume of logs, it is recommended that the "log_executor_stats" flag is set to off.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',

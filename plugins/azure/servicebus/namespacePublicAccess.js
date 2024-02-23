@@ -5,6 +5,7 @@ module.exports = {
     title: 'Namespace Public Access',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures that Azure Service Bus namespaces are not publicly accessible.',
     more_info: 'Using private endpoints for Azure Service Bus namespace improve security by enabling private network access, encrypting communication, and enhancing performance. They seamlessly integrate with virtual networks, ensuring compliance and suitability for hybrid cloud scenarios.',
     recommended_action: 'Ensure that Azure Service Bus namespaces are only accessible through private endpoints.',

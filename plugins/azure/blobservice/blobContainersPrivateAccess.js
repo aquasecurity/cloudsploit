@@ -5,6 +5,7 @@ module.exports = {
     title: 'Blob Container Private Access',
     category: 'Blob Service',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures that all blob containers do not have anonymous public access set',
     more_info: 'Blob containers set with public access enables anonymous users to read blobs within a publicly accessible container without authentication. All blob containers should have private access configured.',
     recommended_action: 'Ensure each blob container is configured to restrict anonymous access',

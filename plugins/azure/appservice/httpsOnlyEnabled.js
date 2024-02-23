@@ -6,6 +6,7 @@ module.exports = {
     title: 'HTTPS Only Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures HTTPS Only is enabled for App Services, redirecting all HTTP traffic to HTTPS',
     more_info: 'Enabling HTTPS Only traffic will redirect all non-secure HTTP requests to HTTPS. HTTPS uses the SSL/TLS protocol to provide a secure connection.',
     recommended_action: 'Enable HTTPS Only support SSL settings for all App Services',

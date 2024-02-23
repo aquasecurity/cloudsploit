@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELBv2 Deprecated SSL Policies',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Elbv2 listeners are configured to use the latest predefined security policies.',
     more_info: 'Insecure or deprecated security policies can expose the client and the load balancer to various vulnerabilities.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html',

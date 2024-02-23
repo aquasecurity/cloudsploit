@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open RPC',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 135 for RPC is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be ' +
         'open to the public to function properly, more sensitive services such ' +

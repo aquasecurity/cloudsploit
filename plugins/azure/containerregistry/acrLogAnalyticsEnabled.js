@@ -5,6 +5,7 @@ module.exports = {
     title: 'ACR Log Analytics Enabled',
     category: 'Container Registry',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure that Azure container registry logs are sent to the Log Analytics workspace.',
     more_info: 'Enabling Log Analytics for Azure container registry ensures that logs are shipped to a central repository that can be queried and audited.',
     recommended_action: 'Modify container registry and enable Send to Log Analytics from diagnostic settings.',

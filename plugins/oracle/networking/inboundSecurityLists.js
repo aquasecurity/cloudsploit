@@ -5,6 +5,7 @@ module.exports = {
     title: 'VCN Inbound Security List',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensure all security lists have ingress rules configured.',
     more_info: 'To control network access to your instancesx, it is recommended that Virtual Cloud Networks (VCN) security lists are configured with ingress rules which provide stateful and stateless firewall capability.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Concepts/securityrules.htm',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'VCN Multiple Subnets',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that VCNs have multiple networks to provide a layered architecture',
     more_info: 'A single network within a VCN increases the risk of a broader blast radius in the event of a compromise.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/managingVCNs.htm',

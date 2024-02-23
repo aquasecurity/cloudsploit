@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Lifecycle Configuration',
     category: 'OSS',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that OSS buckets have lifecycle configuration enabled to automatically transition bucket objects.',
     more_info: 'Enabling lifecycle policies for OSS buckets enables automatic transition of data from one storage class to another.',
     recommended_action: 'Modify OSS buckets to enable lifecycle policies.',

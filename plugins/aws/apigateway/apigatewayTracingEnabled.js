@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Tracing Enabled',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures that Amazon API Gateway API stages have tracing enabled for AWS X-Ray.',
     more_info: 'API Gateway API stages should have tracing enabled to send traces to AWS X-Ray for enhanced distributed tracing.',
     recommended_action: 'Enable tracing on API Gateway API stages',

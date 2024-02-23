@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Backup Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have automated backups enabled.',
     more_info: 'Protect your Azure App Services web applications against accidental deletion and/or corruption, you can configure application backups to create restorable copies of your app content.',
     recommended_action: 'Configure backup for Azure Web Apps',

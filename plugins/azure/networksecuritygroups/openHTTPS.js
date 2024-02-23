@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open HTTPS',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 443 for HTTPS is open to the public',
     more_info: 'Network security groups should be periodically evaluated for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity and restricted wherever they are not explicitly required and narrowly configured.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

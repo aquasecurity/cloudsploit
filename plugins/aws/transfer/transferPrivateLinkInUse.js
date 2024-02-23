@@ -5,6 +5,7 @@ module.exports = {
     title: 'PrivateLink in Use for Transfer for SFTP Server Endpoints',
     category: 'Transfer',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that AWS Transfer for SFTP server endpoints are configured to use VPC endpoints powered by AWS PrivateLink.',
     more_info: 'PrivateLink provides secure and private connectivity between VPCs and other AWS resources using a dedicated network.',
     link: 'https://docs.aws.amazon.com/transfer/latest/userguide/update-endpoint-type-vpc.html',

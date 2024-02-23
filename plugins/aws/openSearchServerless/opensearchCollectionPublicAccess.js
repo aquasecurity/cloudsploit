@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Collection Public Access',
     category: 'OpenSearch',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensures that OpenSearch Serverless collections are not publicly accessible.',
     more_info: 'OpenSearch Serverless collections should be not be publicly accessible to prevent unauthorized actions.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-network.html',

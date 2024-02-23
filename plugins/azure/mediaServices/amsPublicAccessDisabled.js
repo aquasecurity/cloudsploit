@@ -5,6 +5,7 @@ module.exports = {
     title: 'Media Services Public Access Disabled',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Media Services have public access disabled.',
     more_info: 'Disabling public network access improves security by ensuring that Media Services resources are not exposed on the public internet.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/security-azure-policy#azure-policies-private-endpoints-and-media-services',

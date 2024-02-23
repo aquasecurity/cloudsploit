@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Cross Account Access',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures SQS policies disallow cross-account access',
     more_info: 'SQS policies should be carefully restricted to prevent publishing or reading from the queue from unexpected sources. Queue policies can be used to limit these privileges.',
     recommended_action: 'Update the SQS policy to prevent access from external accounts.',

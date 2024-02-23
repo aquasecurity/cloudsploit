@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Planner Stats Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log_planner_stats flag set to "off".',
     more_info: 'Logging planner performance statistics can lead to an increased amount of logs and can impact performance. It is recommended that the "log_planner_stats" flag is set to off to avoid performance issues caused by excessive logging.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',

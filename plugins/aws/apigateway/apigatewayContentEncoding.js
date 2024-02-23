@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Content Encoding',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that Amazon API Gateway APIs have content encoding enabled.',
     more_info: 'API Gateway API should have content encoding enabled to enable compression of response payload.',
     recommended_action: 'Enable content encoding and set minimum compression size of API Gateway API response',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'API Key API Restriction',
     category: 'API',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure there are no unrestricted API keys available within your GCP project.',
     more_info: 'To reduce the risk of attacks, Google Cloud API keys should be restricted to only call the APIs needed by your application.',
     link: 'https://cloud.google.com/docs/authentication/api-keys#adding-api-restrictions',

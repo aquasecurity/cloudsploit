@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cluster Least Privilege',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures Kubernetes clusters using default service account are using minimal service account access scopes',
     more_info: 'As a best practice, Kubernetes clusters should not be created with default service account. But if they are, ' +
         'Kubernetes default service account should be limited to minimal access scopes necessary to operate the clusters.',

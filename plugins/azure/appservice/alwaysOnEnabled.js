@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Always On Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have Always On feature enabled.',
     more_info: 'Always On feature keeps the app loaded even when there\'s no traffic. It\'s required for continuous WebJobs or for WebJobs that are triggered using a CRON expression.',
     recommended_action: 'Enable Always On feature for Azure Web Apps',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache idle Cluster Status',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Identify ElastiCache clusters having CPU utilization below defined threshold within last 24 hours (idle clusters).',
     more_info: 'Idle Amazon ElastiCache cache cluster nodes represent a good candidate to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://aws.amazon.com/elasticache/features/',

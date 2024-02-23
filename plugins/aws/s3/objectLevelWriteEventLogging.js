@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Object Write Logging',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensure that Object-level logging for write events is enabled for S3 bucket.',
     more_info: 'Enabling Object-level S3 event logging significantly enhances security, especially for sensitive data.',
     recommended_action: 'Enable object level logging for Write events for each S3 bucket.',

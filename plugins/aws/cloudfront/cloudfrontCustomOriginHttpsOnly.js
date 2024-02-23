@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront Custom Origin HTTPS Only',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures CloudFront Distribution Custom Origin is HTTPS Only.',
     more_info: 'When you create a distribution, you specify the origin where CloudFront sends requests for the files. You can use several different kinds of origins with CloudFront.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-cloudfront-to-custom-origin.html',

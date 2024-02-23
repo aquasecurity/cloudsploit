@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cloud Function All Users Policy',
     category: 'Cloud Functions',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensure cloud functions are not anonymously or publicly accessible.',
     more_info: 'Using Cloud Identity and Access Management (IAM), you can control access to the cloud functions. As a security best practice, ensure the access is not allowed to "allUsers" or "allAuthentictaedUsers" to avoid data leaks and other security risks.',
     link: 'https://cloud.google.com/functions/docs/concepts/iam',

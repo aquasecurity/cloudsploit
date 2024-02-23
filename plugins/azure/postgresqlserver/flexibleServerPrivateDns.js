@@ -5,6 +5,7 @@ module.exports = {
     title: 'Private DNS Zone Integrated',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that PostgreSQL flexible servers have private DNS zone integrated.',
     more_info: 'Integrating Private DNS Zones with PostgreSQL flexible servers enhances DNS service reliability and security within your Azure virtual network, ensuring seamless DNS resolution and streamlined domain management.',
     recommended_action: 'Ensure Vnet and private DNS zone (private access) is integrated for PostgreSQL flexible server.',

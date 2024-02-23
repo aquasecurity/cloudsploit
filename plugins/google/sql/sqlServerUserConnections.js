@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server User Connections Flag',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that user connections database flag for Cloud SQL Server Instances is set to desired value.',
     more_info: 'The user connection flag represents the maximum number of simultaneous connections that are allowed on an SQL Server instance. By default, it is set to 0 which means maximum connections are allowed. If the user connections flag is set to a limiting value, SQL Server will not allow any connections above the limit. If the connections are at the limit and will drop any new requests causing potential data loss or outages.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',

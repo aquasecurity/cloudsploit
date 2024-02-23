@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Access From IP Addresses',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure only whitelisted IP addresses can access Amazon OpenSearch domains.',
     more_info: 'OpenSearch domains should only be accessible only from whitelisted IP addresses to avoid unauthorized access.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html#ac-types-ip',

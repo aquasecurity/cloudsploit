@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Backup Retention Period',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have recommended backup retention period.',
     more_info: 'Retaining application backups for a longer period of time will allow you to handle your app data restoration process more efficiently.',
     recommended_action: 'Configure backup retention period for Azure Web Apps',

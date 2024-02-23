@@ -5,6 +5,7 @@ module.exports = {
     title: 'Default VPC Exists',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensures that your Google Cloud Project does not a default network.',
     more_info: 'The default network has a preconfigured network configuration and automatically generates some insecure firewall rules which do not get audit logged and cannot be configured to enable firewall rule logging. Moreover, the subnets in default network use the same predefined range of IP addresses which makes it impossible to use Cloud VPN or VPC Network Peering with the default network.',
     link: 'https://cloud.google.com/vpc/docs/vpc',

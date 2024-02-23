@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket CMK Encryption',
     category: 'Object Store',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that Oracle Object Store buckets have encryption enabled using desired protection level.',
     more_info: 'By default, all object store buckets are encrypted using an Oracle-managed master encryption key. To have better control over how your object store buckets are encrypted, you can use Customer-Managed Keys (CMKs).',
     recommended_action: 'Ensure that all object store buckets have desired encryption level.',

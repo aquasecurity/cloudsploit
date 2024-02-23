@@ -5,6 +5,7 @@ module.exports = {
     title: 'OSS Bucket Private',
     category: 'OSS',
     domain: 'Storage',
+    severity: 'Critical',
     description: 'Ensure that OSS bucket is not publicly accessible.',
     more_info: 'When you allow public-access on an OSS bucket, all Internet users can access the objects in the bucket ' +
         'and write data to the bucket. This may cause unexpected access to the data in your bucket, and cause an increase in your fees. ' +

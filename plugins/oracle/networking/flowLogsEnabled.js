@@ -5,6 +5,7 @@ module.exports = {
     title: 'Flow Logs Enabled',
     category: 'Networking',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures VCN flow logs are enabled for traffic logging.',
     more_info: 'VCN flow logs allow you to monitor traffic flowing within your virtual network and can help in detecting anomalous traffic.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/vcn_flow_logs.htm',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Error Verbosity',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure SQL instances for PostgreSQL type have log error verbosity flag set to default or stricter.',
     more_info: 'SQL instance for PostgreSQL databases provides log_error_verbosity flag to control the verbosity/details of the messages logged. if this flag is not set correctly too many or too few statements can be logged which can cause problems while troubleshooting.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',

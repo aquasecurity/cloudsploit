@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redis Version',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that Azure Cache for Redis is using the latest redis version.',
     more_info: 'Using the latest Redis Version ensures access to the latest features, improvements, and security patches, enhancing performance and reducing vulnerabilities.',
     recommended_action: 'Ensure that Azure cache for Redis is using the latest version',

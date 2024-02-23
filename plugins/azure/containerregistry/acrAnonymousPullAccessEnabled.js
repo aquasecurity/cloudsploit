@@ -5,6 +5,7 @@ module.exports = {
     title: 'ACR Anonymous Pull Access Enabled',
     category: 'Container Registry',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensure that anonymous pull access is not enabled for Azure container registries.',
     more_info: 'Anonymous pull access makes all registry content publicly available for read actions which can cause security risks and lead to unauthorized access to registry.',
     recommended_action: 'Modify container registry and disable anonymous pull access.',

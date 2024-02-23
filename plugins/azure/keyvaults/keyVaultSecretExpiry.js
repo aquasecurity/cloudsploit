@@ -5,6 +5,7 @@ module.exports = {
     title: 'Key Vault Secret Expiry',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Proactively check for Key Vault secrets expiry date and rotate them before expiry date is reached.',
     more_info: 'After the expiry date has reached for Key Vault secret, it cannot be used for storing sensitive and confidential data such as passwords and database connection strings anymore.',
     recommended_action: 'Ensure that Key Vault secrets are rotated before they get expired.',

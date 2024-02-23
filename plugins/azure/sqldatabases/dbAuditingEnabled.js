@@ -5,6 +5,7 @@ module.exports = {
     title: 'Database Auditing Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Database Auditing is enabled',
     more_info: 'Enabling SQL Database Auditing ensures that all database activities are being logged properly, including potential malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL database.',

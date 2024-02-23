@@ -5,6 +5,7 @@ module.exports = {
     title: 'Media Services Managed Identity Enabled',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Media Service accounts have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities',

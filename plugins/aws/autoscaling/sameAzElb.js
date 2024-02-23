@@ -5,6 +5,7 @@ module.exports = {
     title: 'AutoScaling ELB Same Availability Zone',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures all autoscaling groups with attached ELBs are operating in the same availability zone.',
     more_info: 'To work properly and prevent orphaned instances, ELBs must be created in the same availability zones as the backend instances in the autoscaling group.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-availability-zone.html',

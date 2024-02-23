@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Cluster Status',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that OpenSearch clusters are healthy, i.e status is green.',
     more_info: 'Unhealthy Amazon OpenSearch clusters with the status set to "Red" is crucial for availability of OpenSearch applications.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cloudwatch-alarms.html',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'ACK Private Cluster Enabled',
     category: 'ACK',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure that Kubernetes clusters are created with private cluster enabled.',
     more_info: 'Private cluster restricts access to the Kubernetes API server from the public internet, making it more secure. In a private cluster, the API Server Public Network Endpoint is not exposed to the internet. This reduces the risk of unauthorised access and helps protect sensitive data and workloads. It is recommended to have Private Cluster enabled for better security.',
     link: 'https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/user-guide/control-public-access-to-the-api-server-of-a-cluster',

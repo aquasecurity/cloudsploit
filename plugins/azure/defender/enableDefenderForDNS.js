@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For DNS',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender for DNS is enabled.',
     more_info: 'Turning on Microsoft Defender for DNS enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for DNS in Defender plans for the subscription.',

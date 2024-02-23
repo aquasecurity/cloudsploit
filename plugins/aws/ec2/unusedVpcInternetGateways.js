@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused VPC Internet Gateways',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that unused VPC Internet Gateways and Egress-Only Internet Gateways are removed.',
     more_info: 'Unused VPC Internet Gateways and Egress-Only Internet Gateways must be removed to avoid reaching the internet gateway limit.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html',

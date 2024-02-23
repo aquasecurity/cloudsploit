@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server Send Scan Reports',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Send Scan Reports is enabled for SQL Servers.',
     more_info: 'Vulnerability Assessment (VA) scan reports and alerts will be sent to email ids configured at Send scan reports to. This may help in reducing time required for identifying risks and taking corrective measures.',
     recommended_action: 'Configure Send scan reports to with email ids of concerned data owners/stakeholders for a critical SQL servers.',

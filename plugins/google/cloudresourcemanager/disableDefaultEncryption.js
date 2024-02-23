@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Default Encryption Creation',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Restrict Default Google-Managed Encryption for Cloud SQL Instances" is enforced on the GCP organization level.',
     more_info: 'Google-managed encryption keys for Cloud SQL database instances to enforce the use of Customer-Managed Keys (CMKs) in order to have complete control over database encryption/decryption process.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

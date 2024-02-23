@@ -5,6 +5,7 @@ module.exports = {
     title: 'Firewall Logging Metadata',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure that VPC Network firewall logging is configured to exclude logging metadata in order to reduce the size of the log files.',
     more_info: 'You can significantly reduce the size of your log files and optimize storage costs by not including metadata. By default, metadata is included in firewall rule log files.',
     link: 'https://cloud.google.com/vpc/docs/firewall-rules-logging',

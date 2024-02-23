@@ -5,6 +5,7 @@ module.exports = {
     title: 'Connect Instance Exported Reports Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Connect instances have encryption enabled for exported reports being saved on S3.',
     more_info: 'You can configure Amazon Connect instance to save exported reports on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',

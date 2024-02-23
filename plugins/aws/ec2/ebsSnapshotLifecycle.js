@@ -5,6 +5,7 @@ module.exports = {
     title: 'Automate EBS Snapshot Lifecycle',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure DLM is used to automate EBS volume snapshots management.',
     more_info: 'Amazon Data Lifecycle Manager (DLM) service enables you to manage the lifecycle of EBS volume snapshots.\
             Using DLM helps in enforcing regular backup schedule, retaining backups, deleting outdated EBS snapshots',

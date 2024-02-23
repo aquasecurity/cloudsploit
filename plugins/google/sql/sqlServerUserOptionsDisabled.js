@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL Server User Options Flag Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure user options database flag for Cloud SQL Server instances is not configured.',
     more_info: 'A list of default query processing options is established for the duration of the work session for a user. The user options flag, if set, the users can change the defaults by using the SET statement so it is recommended to have this flag disabled.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',

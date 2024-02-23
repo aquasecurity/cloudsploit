@@ -5,6 +5,7 @@ module.exports = {
     title: 'S3 GuardDuty Enabled',
     category: 'GuardDuty',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures GuardDuty is enabled for S3 buckets' ,
     more_info: 'Enabling GuardDuty S3 protection helps to detect and prevent unauthorized access to your S3 buckets.',
     recommended_action: 'Enable GuardDuty S3 protection for all AWS accounts.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'MySQL Latest Version',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that MySQL database servers are using the latest major version of MySQL database.',
     more_info: 'To make use of the latest database features and benefit from enhanced performance and security, make sure that your MySQL database instances are using the latest major version of MySQL.',
     link: 'https://cloud.google.com/sql/docs/mysql/db-versions',

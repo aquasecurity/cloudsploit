@@ -5,6 +5,7 @@ module.exports = {
     title: 'Group Inline Policies',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures that groups do not have any inline policies',
     more_info: 'Managed Policies are recommended over inline policies.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html',

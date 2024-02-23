@@ -5,6 +5,7 @@ module.exports = {
     title: 'VCN Changes',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure an event rule is configured for VCN changes.',
     more_info: 'Monitoring changes to VCNs will help in identifying changes to the security posture.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',
