@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies',
     recommended_action: 'Ensure that all Kubernetes clusters have pod security policy enabled.',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

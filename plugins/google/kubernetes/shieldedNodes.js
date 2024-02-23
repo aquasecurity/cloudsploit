@@ -10,7 +10,8 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes',
     recommended_action: 'Ensure that shielded nodes setting is enabled in your GKE cluster',
     apis: ['kubernetes:list'],
-   
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster','container.clustermanager.updatecluster','container.clustermanager.updatenodepool','container.clustermanager.createnodepool','container.clustermanager.deletenodepool'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

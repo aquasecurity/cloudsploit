@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster',
     recommended_action: 'Disable basic authentication on all clusters',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster','container.clustermanager.updatecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

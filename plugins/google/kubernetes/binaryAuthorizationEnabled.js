@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/binary-authorization/docs/overview',
     recommended_action: 'Ensure binary authorization is enabled for all Kubernetes clusters',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster','container.clustermanager.updatecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

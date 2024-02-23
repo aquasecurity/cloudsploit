@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Ensure that all Kubernetes clusters are created with minimal access scope.',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

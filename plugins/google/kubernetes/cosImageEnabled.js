@@ -10,7 +10,8 @@ module.exports = {
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Enable Container-Optimized OS on all Kubernetes cluster nodes',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster','container.clustermanager.updatecluster','container.clustermanager.updatenodepool','container.clustermanager.createnodepool','container.clustermanager.deletenodepool'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

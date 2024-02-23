@@ -19,6 +19,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster','container.clustermanager.updatecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

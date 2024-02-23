@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#integrity_monitoring',
     recommended_action: 'Enable Integrity Monitoring feature for your cluster nodes',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
