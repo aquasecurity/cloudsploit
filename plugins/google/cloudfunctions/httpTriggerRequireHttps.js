@@ -16,7 +16,7 @@ module.exports = {
     apis_remediate: ['functions:list', 'projects:get'],
     actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
     permissions: {remediate: ['cloudfunctions.functions.update'], rollback: ['cloudfunctions.functions.create	']},
-    realtime_triggers: ['google.cloud.functions.v1.CloudFunctionsService.UpdateFunction', 'google.cloud.functions.v1.CloudFunctionsService.CreateFunction'],
+    realtime_triggers: ['cloud.functions.CloudFunctionsService.UpdateFunction','cloud.functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_authn_methods',
     recommended_action: 'Ensure no kubernetes clusters are using client certificates for authentication',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

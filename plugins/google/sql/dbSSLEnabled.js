@@ -18,6 +18,7 @@ module.exports = {
             'Database SSL should be used to ensure SQL databases ' +
             'are always connecting through secure encryption.',
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

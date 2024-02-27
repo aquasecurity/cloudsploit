@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair',
     recommended_action: 'Ensure that automatic node repair is enabled on all node pools in Kubernetes clusters',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

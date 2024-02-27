@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/label-instance',
     recommended_action: 'Ensure labels are added for all SQL databases.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

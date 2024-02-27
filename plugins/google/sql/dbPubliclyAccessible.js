@@ -21,6 +21,7 @@ module.exports = {
             'Ensure SQL instances are not accessible from the Internet ' +
             'and use proper jump box access mechanisms.'
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

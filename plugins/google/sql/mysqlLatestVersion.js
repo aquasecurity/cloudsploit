@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/db-versions',
     recommended_action: 'Ensure that all your MySQL database instances are using the latest MYSQL database version.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

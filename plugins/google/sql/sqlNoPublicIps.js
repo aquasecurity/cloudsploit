@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/configure-private-ip',
     recommended_action: 'Make sure that SQL databases IP addresses setting does not have IP address of PRIMARY type',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

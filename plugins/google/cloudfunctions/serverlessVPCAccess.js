@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/networking/connecting-vpc#create-connector',
     recommended_action: 'Ensure all cloud functions are using serverless VPC connectors.',
     apis: ['functions:list'],
+    realtime_triggers: ['cloud.functions.CloudFunctionsService.UpdateFunction','cloud.functions.CloudFunctionsService.CreateFunction','cloud.functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

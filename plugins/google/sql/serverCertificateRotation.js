@@ -20,6 +20,7 @@ module.exports = {
             default: '30'
         }
     },
+    realtime_triggers:['cloudsql.instances.rotateServerCa'],
 
     run: function(cache, settings, callback) {
         var results = [];
