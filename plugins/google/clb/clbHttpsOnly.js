@@ -19,6 +19,7 @@ module.exports = {
             'load balancer HTTPS redirection should be used to ensure site visitors ' +
             'are always connecting over a secure channel.',
     },
+    realtime_triggers: ['compute.backendServices.patch','compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/load-balancing/docs/load-balancing-overview',
     recommended_action: 'This security misconfiguration is covered by GCP. No action is necessary.',
     apis: ['backendServices:list'],
+    realtime_triggers: ['compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/cdn/docs/quickstart',
     recommended_action: 'Enable Cloud CDN on all load balancers from the network services console.',
     apis: ['backendServices:list'],
+    realtime_triggers: ['compute.backendServices.patch','compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
