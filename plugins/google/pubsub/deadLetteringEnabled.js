@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/pubsub/docs/dead-letter-topics',
     recommended_action: 'Ensure that dead letter topics are configured for all your Google Cloud Pub/Sub subscriptions.',
     apis: ['subscriptions:list'],
+    realtime_triggers:['pubsub.Subscriber.CreateSubscription','pubsub.Subscriber.UpdateSubscription','pubsub.Subscriber.DeleteSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];

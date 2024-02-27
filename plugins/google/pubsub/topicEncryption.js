@@ -27,6 +27,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers:['pubsub.Publisher.DeleteTopic','pubsub.Publisher.CreateTopic'],
 
     run: function(cache, settings, callback) {
         var results = [];
