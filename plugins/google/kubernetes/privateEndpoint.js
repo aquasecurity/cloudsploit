@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters',
     recommended_action: 'Enable the private endpoint setting for all GKE clusters when creating the cluster.',
     apis: ['kubernetes:list'],
-    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
     
     run: function(cache, settings, callback) {
         var results = [];

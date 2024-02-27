@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters',
     recommended_action: 'Ensure that all Kubernetes clusters have private cluster enabled.',
     apis: ['kubernetes:list'],
-    realtime_triggers: ['container.clustermanager.createcluster','container.clustermanager.deletecluster'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
