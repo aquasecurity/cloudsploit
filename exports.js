@@ -958,12 +958,14 @@ module.exports = {
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
+        'acrTrustedServiceEnabled'      : require(__dirname + '/plugins/azure/containerregistry/acrTrustedServiceEnabled.js'),
         'acrManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/containerregistry/acrManagedIdentityEnabled.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
         'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
         'acrAnonymousPullAccessEnabled' : require(__dirname + '/plugins/azure/containerregistry/acrAnonymousPullAccessEnabled.js'),
         'acrContentTrustEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrContentTrustEnabled.js'),
+        'acrServiceAccessDisabled'      : require(__dirname + '/plugins/azure/containerregistry/acrServiceAccessDisabled.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
