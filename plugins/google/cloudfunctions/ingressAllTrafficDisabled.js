@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/securing/authenticating',
     recommended_action: 'Ensure that your Google Cloud functions do not allow external traffic from the internet.',
     apis: ['functions:list'],
-    realtime_triggers: ['cloud.functions.CloudFunctionsService.UpdateFunction','cloud.functions.CloudFunctionsService.CreateFunction','cloud.functions.CloudFunctionsService.DeleteFunction'],
+    realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction', 'functions.CloudFunctionsService.CreateFunction', 'functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
