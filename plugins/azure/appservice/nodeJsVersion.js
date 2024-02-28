@@ -69,7 +69,7 @@ module.exports = {
                         webConfigs.data[0].linuxFxVersion.indexOf('NODE') > -1 &&
                         webConfigs.data[0].linuxFxVersion.indexOf('|') > -1) {
                         found = true;
-                        console.log(webConfigs.data[0].linuxFxVersion);    
+ 
                         var nodeVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
                         var isLatestVersion = helpers.compareVersions(nodeVersion, config.latestNodeJsVersion);
 
