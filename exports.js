@@ -965,7 +965,6 @@ module.exports = {
         'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
         'acrAnonymousPullAccessEnabled' : require(__dirname + '/plugins/azure/containerregistry/acrAnonymousPullAccessEnabled.js'),
         'acrContentTrustEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrContentTrustEnabled.js'),
-        'acrServiceAccessDisabled'      : require(__dirname + '/plugins/azure/containerregistry/acrServiceAccessDisabled.js'),
 
         'endpointLoggingEnabled'        : require(__dirname + '/plugins/azure/cdnprofiles/endpointLoggingEnabled.js'),
         'detectInsecureCustomOrigin'    : require(__dirname + '/plugins/azure/cdnprofiles/detectInsecureCustomOrigin.js'),
