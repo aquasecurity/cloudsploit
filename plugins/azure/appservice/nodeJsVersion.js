@@ -16,7 +16,7 @@ module.exports = {
             name: 'Latest NodeJs Version',
             default: '20-lts',
             description: 'The latest NodeJs version supported by Azure App Service.',
-            regex: '[0-9.]{1,2}-lts'
+            regex: '[0-9.]{1,2}'
         }
     },
     realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
