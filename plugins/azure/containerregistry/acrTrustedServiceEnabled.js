@@ -6,7 +6,7 @@ module.exports = {
     category: 'Container Registry',
     domain: 'Containers',
     severity: 'Medium',
-    description: 'Ensure that "Allow trusted Microsoft services to bypass this firewall" feature is enabled for Azure Container registry network firewall configuration.',
+    description: 'Ensure that "Allow trusted Microsoft services to access this container registry" feature is enabled for Azure Container registry network firewall configuration.',
     more_info: 'Enabling network firewall rules for container registry will block access to incoming requests for data, including from other Azure services. To allow certain Azure cloud services access your vault resources, add an exception so that the trusted cloud services can bypass the firewall rules.',
     recommended_action: 'Ensure thatAzure Container registry network firewall configuration allows trusted Microsoft services to bypass the firewall.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/allow-access-trusted-services',
