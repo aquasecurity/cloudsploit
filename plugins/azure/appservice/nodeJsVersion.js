@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'NodeJs Version',
+    title: 'Node.js Version',
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Low',
