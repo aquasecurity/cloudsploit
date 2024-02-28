@@ -961,6 +961,7 @@ module.exports = {
         'acrManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/containerregistry/acrManagedIdentityEnabled.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
+        'acrPrivateEndpoints'           : require(__dirname + '/plugins/azure/containerregistry/acrPrivateEndpoints.js'),
         'acrLogAnalyticsEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrLogAnalyticsEnabled.js'),
         'acrAnonymousPullAccessEnabled' : require(__dirname + '/plugins/azure/containerregistry/acrAnonymousPullAccessEnabled.js'),
         'acrContentTrustEnabled'        : require(__dirname + '/plugins/azure/containerregistry/acrContentTrustEnabled.js'),
