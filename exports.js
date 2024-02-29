@@ -944,6 +944,7 @@ module.exports = {
         'backupRetentionPeriod'         : require(__dirname + '/plugins/azure/appservice/backupRetentionPeriod.js'),
         'privateEndpointsEnabled'       : require(__dirname + '/plugins/azure/appservice/privateEndpointsEnabled.js'),
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
+        'corsEnabled'                   : require(__dirname + '/plugins/azure/appservice/corsEnabled.js'),
         'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
