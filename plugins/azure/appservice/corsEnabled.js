@@ -53,7 +53,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'App Service does not have CORS (Access Control Allow Credentials) enabled', location, webApp.id);
                 }
-            };
+            }
 
             rcb();
         }, function() {
