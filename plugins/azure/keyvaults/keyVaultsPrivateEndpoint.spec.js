@@ -119,7 +119,7 @@ describe('keyVaultsPrivateEndpoint', function() {
             privateEndpoint.run(createCache(null, [listVaults[1]]), {}, callback);
         });
 
-        it('should give failing result if if private endpoints are not enabled', function(done) {
+        it('should give failing result if private endpoints are not enabled for key vault', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
