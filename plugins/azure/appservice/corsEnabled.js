@@ -1,6 +1,5 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure/');
-const { config } = require('aws-sdk');
 
 module.exports = {
     title: 'CORS Access Control Allow Credential Enable',
