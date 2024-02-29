@@ -6,16 +6,16 @@ module.exports = {
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Low',
-    description: 'Ensures the latest version of NodeJs is installed for all App Services',
-    more_info: 'Installing the latest version of NodeJs will reduce the security risk of missing security patches.',
-    recommended_action: 'Select the latest version of NodeJs for all NodeJs-based App Services',
+    description: 'Ensures the latest version of Node.js is installed for all App Services',
+    more_info: 'Installing the latest version of Node.js will reduce the security risk of missing security patches.',
+    recommended_action: 'Select the latest version of Node.js for all Node.js-based App Services',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/configure-language-nodejs',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestNodeJsVersion: {
-            name: 'Latest NodeJs Version',
+            name: 'Latest Node.js Version',
             default: '20-lts',
-            description: 'The latest NodeJs version supported by Azure App Service.',
+            description: 'The latest Node.js version supported by Azure App Service.',
             regex: '[0-9.]{1,2}'
         }
     },
@@ -75,17 +75,17 @@ module.exports = {
 
                         if (isLatestVersion === -1) {
                             helpers.addResult(results, 2,
-                                `The NodeJs version (${nodeVersion}) is not the latest version`, location, webApp.id, custom);
+                                `The Node.js version (${nodeVersion}) is not the latest version`, location, webApp.id, custom);
                         } else {
                             helpers.addResult(results, 0,
-                                `The NodeJs version (${nodeVersion}) is the latest version`, location, webApp.id, custom);
+                                `The Node.js version (${nodeVersion}) is the latest version`, location, webApp.id, custom);
                         }
                     }
                 }
             });
 
             if (!found) {
-                helpers.addResult(results, 0, 'No App Services with NodeJs found', location);
+                helpers.addResult(results, 0, 'No App Services with Node.js found', location);
             }
 
             rcb();
