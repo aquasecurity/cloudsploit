@@ -46,7 +46,7 @@ module.exports = {
                     continue;
                 } 
                 
-                if(!webhooks.data.length) {
+                if (!webhooks.data.length) {
                     helpers.addResult(results, 3, 'No existing webhooks for Automation account found', location, account.id);
                     continue;
                 }
