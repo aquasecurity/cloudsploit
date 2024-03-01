@@ -20,7 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
-    realtime_triggers: ['orchestration.airflow.service.environments.createenviroments', 'orchestration.airflow.service.environments.deleteenvironment'],
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];
