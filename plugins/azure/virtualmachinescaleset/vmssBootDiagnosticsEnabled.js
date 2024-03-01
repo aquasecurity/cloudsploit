@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Low',
     description: 'Ensures that boot diagnostics is enabled for Virtual Machine Scale Set.',
     more_info: 'Boot diagnostics provide logs from the host running the virtual machine scale set by capturing the serial console output and screenshots of the virtual machine scale set. Enable boot diagnostics to support troubleshooting for your virtual machines.',
-    recommended_action: 'EEnable boot diagnostics for virtual machine scale set.',
+    recommended_action: 'Enable boot diagnostics for virtual machine scale set.',
     link: 'https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/boot-diagnostics',
     apis: ['virtualMachineScaleSets:listAll'],
     realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
