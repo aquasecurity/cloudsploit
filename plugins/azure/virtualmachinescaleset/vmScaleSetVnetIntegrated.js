@@ -13,7 +13,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking',
     recommended_action: 'Modify VM scale set and configure a VNet.',
     apis: ['vmScaleSet:listAll'],
-    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete','microsoftnetwork:virtualnetworks:subnets:write','microsoftnetwork:virtualnetworks:subnets:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,7 +37,7 @@ module.exports = {
             for (let set of vmScaleSets.data) {
                 if (!set.id) continue;
                 let networkInterfaceConfigs = set.virtualMachineProfile.networkProfile.networkInterfaceConfigurations[0];
-                if (networkInterfaceConfigs && networkInterfaceConfigs.properties && networkInterfaceConfigs.properties.ipConfigurations[0] && networkInterfaceConfigs.properties.ipConfigurations[0].properties.subnet && networkInterfaceConfigs.properties.ipConfigurations[0].properties.subnet.id){
+                if (networkInterfaceConfigs && networkInterfaceConfigs.properties && networkInterfaceConfigs.properties.ipConfigurations[0] && networkInterfaceConfigs.properties.ipConfigurations[0].properties.subnet && networkInterfaceConfigs.properties.ipConfigurations[0].properties.subnet.id) {
                     helpers.addResult(results, 0, 'VM scale set has VNet Integrated', location, set.id);
                 } else {
                     helpers.addResult(results, 2, 'VM scale set does not have VNet Integrated', location, set.id);
