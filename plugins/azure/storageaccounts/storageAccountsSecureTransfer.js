@@ -6,7 +6,7 @@ module.exports = {
     category: 'Storage Accounts',
     domain: 'Storage',
     severity: 'Medium',
-    description: 'Ensure that all data transferred between clients and your Azure Storage account is encrypted using the HTTPS protocol.',
+    description: 'Ensure that storage account has secure transfer is enabled.',
     more_info: 'The storage account provides a unique namespace for your Azure Storage data that is accessible from anywhere in the world over HTTP/HTTPS. All data stored within your Azure Storage account is secure, scalable, durable, and highly available.',
     recommended_action: 'Modify storage account and enable secure transfer.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer',
