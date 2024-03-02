@@ -33,12 +33,12 @@ const createCache = (automationAccounts,err) => {
     }
 };
 
-describe('automationAcctPublicAccess', function () {
+describe('automationAcctHasTags', function () {
     describe('run', function () {
 
         it('should give pass result if No existing automation accounts found', function (done) {
             const cache = createCache([]);
-            automationAcctPublicAccess.run(cache, {}, (err, results) => {
+            automationAcctHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Automation accounts found');
@@ -49,7 +49,7 @@ describe('automationAcctPublicAccess', function () {
 
         it('should give unknown result if Unable to query automation accounts:', function (done) {
             const cache = createCache(null, 'Error');
-            automationAcctPublicAccess.run(cache, {}, (err, results) => {
+            automationAcctHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Automation accounts:');
@@ -60,7 +60,7 @@ describe('automationAcctPublicAccess', function () {
 
         it('should give passing result if Automation account has tags associated', function (done) {
             const cache = createCache([automationAccounts[0]]);
-            automationAcctPublicAccess.run(cache, {}, (err, results) => {
+            automationAcctHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Automation account has tags associated');
@@ -71,7 +71,7 @@ describe('automationAcctPublicAccess', function () {
 
         it('should give failing result if Automation account does not have tags associated', function (done) {
             const cache = createCache([automationAccounts[1]]);
-            automationAcctPublicAccess.run(cache, {}, (err, results) => {
+            automationAcctHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Automation account does not have tags associated');
