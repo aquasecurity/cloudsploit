@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/legacy',
     recommended_action: 'Ensure that there are no legacy networks in the GCP Project.',
     apis: ['networks:list'],
+    compliance: {
+        cis1: '3.2 Ensure Legacy Networks Do Not Exist for Older Projects'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

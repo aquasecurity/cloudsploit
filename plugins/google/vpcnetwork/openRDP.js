@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP port 3389 to known IP addresses.',
     apis: ['firewalls:list'],
+    compliance: {
+        cis2: '3.7 Ensure That RDP Access Is Restricted From the Internet'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

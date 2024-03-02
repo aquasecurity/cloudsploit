@@ -11,7 +11,10 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/using-routes',
     recommended_action: 'IP forwarding settings can only be chosen when creating a new instance. Delete the affected instances and redeploy with IP forwarding disabled.',
     apis: ['compute:list'],
-    
+    compliance: {
+        cis1: '4.6 Ensure That IP Forwarding Is Not Enabled on Instances'
+    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

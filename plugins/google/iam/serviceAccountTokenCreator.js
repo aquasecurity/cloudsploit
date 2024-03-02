@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM user have Service Account Token Creator Role at GCP project level.',
     apis: ['projects:getIamPolicy'],
+    compliance: {
+        cis1: '1.6 Ensure That IAM Users Are Not Assigned the Service Account User or Service Account Token Creator Roles at Project Level'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

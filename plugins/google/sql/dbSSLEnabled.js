@@ -17,6 +17,7 @@ module.exports = {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'Database SSL should be used to ensure SQL databases ' +
             'are always connecting through secure encryption.',
+        cis1: '6.4 Ensure That the Cloud SQL Database Instance Requires All Incoming Connections To Use SSL'
     },
 
     run: function(cache, settings, callback) {

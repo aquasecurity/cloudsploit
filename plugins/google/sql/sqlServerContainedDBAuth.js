@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that all SQL Server database instances have contained database authentication flag disabled.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.3.7 Ensure that the Contained Database Authentication database flag for Cloud SQL on the SQL Server instance is set to Off'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

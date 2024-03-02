@@ -13,7 +13,8 @@ module.exports = {
     apis: ['metrics:list', 'alertPolicies:list', 'networkRoutes:list'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +
-            'including access and all actions taken.'
+            'including access and all actions taken.',
+        cis1: '2.8 Ensure That the Log Metric Filter and Alerts Exist for VPC Network Route Changes'
     },
 
     run: function(cache, settings, callback) {

@@ -20,6 +20,9 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    compliance: {
+        cis2: '7.2 Ensure That All BigQuery Tables Are Encrypted With CustomerManaged Encryption Key (CMEK)'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

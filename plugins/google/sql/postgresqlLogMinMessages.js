@@ -19,6 +19,9 @@ module.exports = {
             default: 'warning'
         }
     },
+    compliance: {
+        cis1: '6.2.6 Ensure That the Log_min_messages Database Flag for Cloud SQL PostgreSQL Instance Is Set to at least Warning'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

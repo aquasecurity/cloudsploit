@@ -16,7 +16,8 @@ module.exports = {
             'in which cardholder data is present. Project ownership logging ' +
             'helps audit all elevation of privileges and new account changes.',
         hipaa: 'HIPAA requires the logging of all activity ' +
-            'including access and all actions taken.'
+            'including access and all actions taken.',
+        cis1: '2.6 Ensure That the Log Metric Filter and Alerts Exist for Custom Role Changes'
     },
 
     run: function(cache, settings, callback) {

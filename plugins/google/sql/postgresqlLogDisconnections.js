@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log disconnections flag is enabled for all PostgreSQL instances.',
     apis: ['sql:list'],
+    compliance: {
+        cis1: '6.2.3 Ensure That the Log_disconnections Database Flag for Cloud SQL PostgreSQL Instance Is Set to On'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

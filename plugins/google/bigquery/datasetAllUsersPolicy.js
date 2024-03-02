@@ -11,6 +11,9 @@ module.exports = {
     link: 'https://cloud.google.com/bigquery/docs/dataset-access-controls',
     recommended_action: 'Ensure that each dataset is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['datasets:list', 'datasets:get', 'projects:get'],
+    compliance: {
+        cis1: '7.1 Ensure That BigQuery Datasets Are Not Anonymously or Publicly Accessible'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

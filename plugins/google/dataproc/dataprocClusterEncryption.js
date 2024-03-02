@@ -20,6 +20,9 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    compliance: {
+        cis2: '1.17 Ensure that Dataproc Cluster is encrypted using CustomerManaged Encryption Key'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];

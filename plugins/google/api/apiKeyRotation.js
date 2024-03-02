@@ -24,6 +24,9 @@ module.exports = {
             default: '90'
         }
     },
+    compliance: {
+        cis1: '1.15 Ensure API Keys Are Rotated Every 90 Days'
+    },
 
     run: function(cache, settings, callback) {
         var results = [];
