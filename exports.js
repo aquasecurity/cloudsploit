@@ -1059,6 +1059,8 @@ module.exports = {
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
+        'frontDoorSecureOrigin'         :  require(__dirname + '/plugins/azure/frontdoor/frontDoorSecureOrigins.js')
+
 
         'amsStorageAccountIdentity'     : require(__dirname + '/plugins/azure/mediaServices/amsStorageAccountIdentity.js'),
         'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
