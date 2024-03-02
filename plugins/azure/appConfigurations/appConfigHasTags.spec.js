@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var appConfigurationPublicAccess = require('./appConfigurationPublicAccess.js');
+var appConfigHasTags = require('./appConfigHasTags.js');
 
 const appConfigurations = [
     {
@@ -29,12 +29,12 @@ const createCache = (appConfigurations,err) => {
     }
 };
 
-describe('appConfigurationPublicAccess', function () {
+describe('appConfigHasTags', function () {
     describe('run', function () {
 
         it('should give pass result if No existing app configurations found', function (done) {
             const cache = createCache([]);
-            appConfigurationPublicAccess.run(cache, {}, (err, results) => {
+            appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing App Configurations found');
@@ -45,7 +45,7 @@ describe('appConfigurationPublicAccess', function () {
 
         it('should give unknown result if Unable to query app configurations:', function (done) {
             const cache = createCache(null, 'Error');
-            appConfigurationPublicAccess.run(cache, {}, (err, results) => {
+            appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query App Configuration:');
@@ -56,7 +56,7 @@ describe('appConfigurationPublicAccess', function () {
 
         it('should give passing result if App Configuration has tags associated', function (done) {
             const cache = createCache([appConfigurations[1]]);
-            appConfigurationPublicAccess.run(cache, {}, (err, results) => {
+            appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('App Configuration has tags associated');
@@ -67,7 +67,7 @@ describe('appConfigurationPublicAccess', function () {
 
         it('should give failing result if App Configuration does not have tags associated', function (done) {
             const cache = createCache([appConfigurations[0]]);
-            appConfigurationPublicAccess.run(cache, {}, (err, results) => {
+            appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('App Configuration does not have tags associated');
