@@ -7,12 +7,16 @@ const appConfigurations = [
         "location": "eastus",
         "provisioningState": "Succeeded",
         "tags": { "key": "value" },
+        "id": "/subscriptions/123/resourceGroups/meerab-rg/providers/Microsoft.AppConfiguration/configurationStores/meerab-test-rg",
+
     },
     {
         "type": "Microsoft.AppConfiguration/configurationStores",
         "location": "eastus",
         "provisioningState": "Succeeded",
         "tags": {},
+        "id": "/subscriptions/123/resourceGroups/meerab-rg/providers/Microsoft.AppConfiguration/configurationStores/meerab-test-rg",
+
     }
 ];
 
@@ -55,7 +59,7 @@ describe('appConfigHasTags', function () {
         });
 
         it('should give passing result if App Configuration has tags associated', function (done) {
-            const cache = createCache([appConfigurations[1]]);
+            const cache = createCache([appConfigurations[0]]);
             appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -66,7 +70,7 @@ describe('appConfigHasTags', function () {
         });
 
         it('should give failing result if App Configuration does not have tags associated', function (done) {
-            const cache = createCache([appConfigurations[0]]);
+            const cache = createCache([appConfigurations[1]]);
             appConfigHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
