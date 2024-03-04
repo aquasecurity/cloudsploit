@@ -60,7 +60,7 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('codestar has tags')
+                expect(results[0].message).to.include('CodeStar has tags')
                 done();
             });
         });
@@ -71,7 +71,7 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('codestar does not have any tags')
+                expect(results[0].message).to.include('CodeStar does not have any tags')
                 done();
             });
         });
