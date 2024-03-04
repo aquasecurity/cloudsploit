@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var servicebusHasTags = require('./servicebusHasTags.js');
+var namespaceHasTags = require('./namespaceHasTags.js');
 
 const namespaces = [
     {
@@ -34,12 +34,12 @@ const createCache = (namespaces, err) => {
     };
 };
 
-describe('servicebusHasTags', function () {
+describe('namespaceHasTags', function () {
     describe('run', function () {
 
         it('should give a passing result if no Service Bus namespaces are found', function (done) {
             const cache = createCache([], null);
-            servicebusHasTags.run(cache, {}, (err, results) => {
+            namespaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Service Bus namespaces found');
@@ -50,7 +50,7 @@ describe('servicebusHasTags', function () {
 
         it('should give unknown result if unable to query for Service Bus namespaces', function (done) {
             const cache = createCache(null, ['error']);
-            servicebusHasTags.run(cache, {}, (err, results) => {
+            namespaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Service Bus namespaces');
@@ -62,7 +62,7 @@ describe('servicebusHasTags', function () {
     
         it('should give passing result if Service Bus namespace has tags', function (done) {
             const cache = createCache([namespaces[1]], null);
-            servicebusHasTags.run(cache, {}, (err, results) => {
+            namespaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Service Bus Namespace has tags');
@@ -73,7 +73,7 @@ describe('servicebusHasTags', function () {
 
         it('should give failing result if Service Bus namespace does not have tags', function (done) {
             const cache = createCache([namespaces[0]], null);
-            servicebusHasTags.run(cache, {}, (err, results) => {
+            namespaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Service Bus Namespace does not have tags');

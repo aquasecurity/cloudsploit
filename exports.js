@@ -1073,7 +1073,7 @@ module.exports = {
         'namespaceEncryptionAtRest'     : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
-        'servicebusHasTags'            : require(__dirname + '/plugins/azure/servicebus/servicebusHasTags.js'),
+        'namespaceHasTags'              : require(__dirname + '/plugins/azure/servicebus/namespaceHasTags.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
         'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
         'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),

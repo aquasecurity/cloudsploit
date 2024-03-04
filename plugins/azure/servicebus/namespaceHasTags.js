@@ -6,12 +6,12 @@ module.exports = {
     category: 'Service Bus',
     domain: 'Application Integration',
     severity: 'Low',
-    description: 'Ensure that Azure Service Bus namespaces have tags.',
-    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage',
-    recommended_action: 'Modify namespace and add tags',
+    description: 'Ensure that Azure Service Bus namespaces have tags associated.',
+    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    recommended_action: 'Modify Service Bus namespace and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['serviceBus:listNamespacesBySubscription'],
-    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
