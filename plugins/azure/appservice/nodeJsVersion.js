@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Low',
     description: 'Ensures the latest version of Node.js is installed for all App Services',
     more_info: 'Installing the latest version of Node.js will reduce the security risk of missing security patches.',
-    recommended_action: 'Select the latest version of Node for all Node.js based App Services',
+    recommended_action: 'Select the latest version of Node for all Node.js based App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/configure-language-nodejs',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
