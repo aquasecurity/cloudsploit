@@ -32,10 +32,12 @@ module.exports = {
                 helpers.addResult(results, 0, 'No CodeStar projects found', region);
                 return rcb();
             }
+
             const arnList = [];
             for (let project of listProjects.data){
                 arnList.push(project.projectArn);
             }
+
             helpers.checkTags(cache, 'codestar', arnList, region, results, settings);
             return rcb();
 
