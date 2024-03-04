@@ -14,7 +14,7 @@ module.exports = {
     settings: {
         latestNodeJsVersion: {
             name: 'Latest Node.js Version',
-            default: '20-lts',
+            default: '20',
             description: 'The latest Node.js version supported by Azure App Service.',
             regex: '[0-9.]{1,2}'
         }
@@ -69,8 +69,8 @@ module.exports = {
                         webConfigs.data[0].linuxFxVersion.indexOf('NODE') > -1 &&
                         webConfigs.data[0].linuxFxVersion.indexOf('|') > -1) {
                         found = true;
- 
-                        var nodeVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
+                        var linuxFxVersion = webConfigs.data[0].linuxFxVersion;
+                        var nodeVersion = linuxFxVersion.substr(linuxFxVersion.indexOf('|') + 1).replace('-lts', '');
                         var isLatestVersion = helpers.compareVersions(nodeVersion, config.latestNodeJsVersion);
 
                         if (isLatestVersion === -1) {
@@ -79,6 +79,19 @@ module.exports = {
                         } else {
                             helpers.addResult(results, 0,
                                 `The Node.js version (${nodeVersion}) is the latest version`, location, webApp.id, custom);
+                        }
+                    } else if (webConfigs.data[0] && webConfigs.data[0].nodeVersion) {
+                        found = true;
+
+                        var nodeJsVersion =  webConfigs.data[0].nodeVersion.replace(/~/g, '');
+                        isLatestVersion = helpers.compareVersions(nodeJsVersion, config.latestNodeJsVersion);
+
+                        if (isLatestVersion === -1) {
+                            helpers.addResult(results, 2,
+                                `The Node.js version (${nodeJsVersion}) is not the latest version`, location, webApp.id, custom);
+                        } else {
+                            helpers.addResult(results, 0,
+                                `The Node.js version (${nodeJsVersion}) is the latest version`, location, webApp.id, custom);
                         }
                     }
                 }
