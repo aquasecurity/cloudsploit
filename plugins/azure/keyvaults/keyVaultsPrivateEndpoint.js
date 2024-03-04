@@ -6,9 +6,9 @@ module.exports = {
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
-    description: 'Ensure that Azure Key vaults have private endpoints enabled.',
-    more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. The private endpoint uses a private IP address from your VNet, effectively bringing the service into your VNet.',
-    recommended_action: 'Add private endpoint to Key vault',
+    description: 'Ensure that Azure Key vaults have private endpoints configured.',
+    more_info: 'Configuring private link ensures connection of virtual networks to Azure services without a public IP address at the source or destination. Private endpoints minimize the risk of public internet exposure and protect against external attacks.',
+    recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Key Vaults.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service',
     apis: ['vaults:list'],
     realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete','microsoftnetwork:privatednszones:virtualnetworklinks:write','microsoftkeyvault:vaults:privateendpointconnections:delete'],
@@ -35,11 +35,10 @@ module.exports = {
             }
 
             for (let vault of vaults.data) {
-                let publicEndpoint = vault.privateEndpointConnections;
-                if (publicEndpoint && publicEndpoint[0].id) {
-                    helpers.addResult(results, 0, 'Key Vault private endpoint is enabled', location, vault.id);
+                if (vault.privateEndpointConnections && vault.privateEndpointConnections.length ) {
+                    helpers.addResult(results, 0, 'Key Vault has private endpoints configured', location, vault.id);
                 } else {
-                    helpers.addResult(results, 2, 'Key Vault private endpoint is not enabled', location, vault.id);
+                    helpers.addResult(results, 2, 'Key Vault does not have private endpoints configured', location, vault.id);
                 }
             } 
             rcb();
