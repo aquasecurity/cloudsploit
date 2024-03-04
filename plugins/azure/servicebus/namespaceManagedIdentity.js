@@ -6,9 +6,9 @@ module.exports = {
     category: 'Service Bus',
     domain: 'Application Integration',
     severity: 'Medium',
-    description: 'Ensures a system or user assigned managed identity is enabled to authenticate to Azure Service Bus namespace.',
-    more_info: 'Maintaining cloud connection credentials in code is a security risk. Credentials should never appear on developer workstations and should not be checked into source control. Managed identities for Azure resources provides Azure services with a managed identity in Azure AD which can be used to authenticate to any service that supports Azure AD authentication, without having to include any credentials in code.',
-    recommended_action: 'Enable system or user-assigned identities for all Azure Service Bus namespaces.',
+    description: 'Ensure that Azure Service Bus namespaces have managed identity enabled.',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    recommended_action: 'Modify Service Bus namespace and enable managed identity..',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-managed-service-identity',
     apis: ['serviceBus:listNamespacesBySubscription'],
     realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
@@ -41,7 +41,7 @@ module.exports = {
                 } else if (namespace.identity && namespace.identity.type) {
                     helpers.addResult(results, 0, 'Service bus namespace has managed identity enabled', location, namespace.id);
                 } else {
-                    helpers.addResult(results, 2, 'Service bus namespace does not have identities assigned', location, namespace.id);
+                    helpers.addResult(results, 2, 'Service bus namespace does not have managed identity enabled', location, namespace.id);
                 }
             }
 
