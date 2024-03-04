@@ -46,7 +46,7 @@ module.exports = {
                     return;
                 }
 
-                if (config.data[0] && configs.data[0].cors && configs.data[0].cors.supportedCredentials) {
+                if (configs.data[0] && configs.data[0].cors && configs.data[0].cors.supportedCredentials) {
                     helpers.addResult(results, 0,
                         'App Service has Access Control Allow Credentials enabled with CORS', location, webApp.id);
                 } else {
