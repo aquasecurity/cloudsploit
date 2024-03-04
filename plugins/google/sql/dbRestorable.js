@@ -16,7 +16,8 @@ module.exports = {
              'compromised services, be tested frequently. RDS restorable time ' +
              'indicates the last known time to which the instance can be restored.'
     },
-
+    realtime_triggers:['cloudsql.backupRuns.delete','cloudsql.backupRuns.create'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

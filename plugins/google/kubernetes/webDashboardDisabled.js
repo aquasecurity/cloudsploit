@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards',
     recommended_action: 'Ensure that no Kubernetes clusters have the web dashboard enabled',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster','container.ClusterManager.DeleteCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

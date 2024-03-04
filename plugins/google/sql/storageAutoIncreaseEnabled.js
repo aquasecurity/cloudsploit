@@ -12,6 +12,8 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings?authuser=1#automatic-storage-increase-2ndgen',
     recommended_action: 'Edit Cloud SQL instances and enable automatic storage increases feature under storage',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
+
     settings: {
         sql_storage_auto_increase_limit: {
             name: 'SQL Storage Auto Increase Limit',

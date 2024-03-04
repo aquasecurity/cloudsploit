@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/concepts/iam',
     recommended_action: 'Ensure that each cloud function is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['functions:list', 'functions:getIamPolicy'],
+    realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction', 'functions.CloudFunctionsService.CreateFunction', 'functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

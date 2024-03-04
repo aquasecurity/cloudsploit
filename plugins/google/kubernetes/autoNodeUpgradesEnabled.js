@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades',
     recommended_action: 'Ensure that automatic node upgrades are enabled on all node pools in Kubernetes clusters',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateNodePool','container.ClusterManager.DeleteNodePool'],
 
     run: function(cache, settings, callback) {
         var results = [];

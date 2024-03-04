@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/db-versions',
     recommended_action: 'Ensure that all your PostgreSQL database instances are using the latest PostgreSQL database version.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

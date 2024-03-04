@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Ensure that no Kubernetes cluster nodes are using the default service account',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
