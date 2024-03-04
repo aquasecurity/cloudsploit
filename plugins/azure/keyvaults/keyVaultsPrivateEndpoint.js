@@ -8,7 +8,7 @@ module.exports = {
     severity: 'High',
     description: 'Ensure that Azure Key vaults have private endpoints configured.',
     more_info: 'Configuring private link ensures connection of virtual networks to Azure services without a public IP address at the source or destination. Private endpoints minimize the risk of public internet exposure and protect against external attacks.',
-    recommended_action: 'Ensure that Private Endpoints are configured properly and Public Network Access is disabled for Key Vaults.',
+    recommended_action: 'Ensure that private endpoints are configured properly and public network access is disabled for Key Vaults.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service',
     apis: ['vaults:list'],
     realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete','microsoftnetwork:privatednszones:virtualnetworklinks:write','microsoftkeyvault:vaults:privateendpointconnections:delete'],
@@ -35,6 +35,8 @@ module.exports = {
             }
 
             for (let vault of vaults.data) {
+                if (!vault.id) continue;
+
                 if (vault.privateEndpointConnections && vault.privateEndpointConnections.length ) {
                     helpers.addResult(results, 0, 'Key Vault has private endpoints configured', location, vault.id);
                 } else {
