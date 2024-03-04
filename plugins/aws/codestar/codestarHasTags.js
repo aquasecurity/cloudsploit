@@ -38,7 +38,7 @@ module.exports = {
                 arnList.push(project.projectArn);
             }
 
-            helpers.checkTags(cache, 'codestar', arnList, region, results, settings);
+            helpers.checkTags(cache, 'CodeStar', arnList, region, results, settings);
             return rcb();
 
         }, function(){
