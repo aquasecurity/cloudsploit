@@ -20,7 +20,8 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
-
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

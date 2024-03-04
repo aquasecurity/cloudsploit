@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/composer/docs/concepts/private-ip',
     recommended_action: 'Ensure that all composer environments have private airflow web servers',
     apis: ['composer:environments'],
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.UpdateEnvironment', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

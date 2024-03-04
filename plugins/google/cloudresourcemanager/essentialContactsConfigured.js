@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/resource-manager/docs/managing-notification-contacts',
     recommended_action: 'Ensure Essential Contacts is configured for organization.',
     apis: ['organizations:list', 'organizations:essentialContacts'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that all SQL Server database instances have remote access flag set to disabled.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

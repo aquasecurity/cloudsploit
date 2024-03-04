@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/firewall-rules-logging',
     recommended_action: 'Ensure that metadata is not included in firewall rule log files.',
     apis: ['networks:list', 'firewalls:list'],
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.networks.insert' , 'compute.networks.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -16,6 +16,7 @@ module.exports = {
             'any required service. This includes using secured technologies ' +
             'such as Private Google Access.'
     },
+    realtime_triggers: ['compute.subnetworks.insert','compute.subnetworks.delete', 'compute.subnetworks.setPrivateIpGoogleAccess'],
 
     run: function(cache, settings, callback) {
         var results = [];

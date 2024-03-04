@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy',
     recommended_action: 'Enable network policy on all Kubernetes clusters.',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster','container.ClusterManager.UpdateCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

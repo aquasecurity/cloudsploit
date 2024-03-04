@@ -19,6 +19,7 @@ module.exports = {
             default: 'false',
         }
     },
+    realtime_triggers: ['compute.instancegroups.insert', 'compute.instancegroups.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

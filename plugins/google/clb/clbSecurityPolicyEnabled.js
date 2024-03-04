@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/armor/docs/security-policy-concepts',
     recommended_action: 'Ensure all load balancers have an attached Cloud Armor security policy.',
     apis: ['backendServices:list'],
+    realtime_triggers: ['compute.backendServices.patch','compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

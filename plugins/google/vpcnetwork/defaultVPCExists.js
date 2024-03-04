@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Delete the default network and create a new network with a different name.',
     apis: ['networks:list'],
+    realtime_triggers: ['compute.networks.insert' , 'compute.networks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

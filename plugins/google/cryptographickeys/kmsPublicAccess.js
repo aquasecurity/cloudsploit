@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/kms/docs/reference/permissions-and-roles',
     recommended_action: 'Ensure that your cryptographic keys are not accessible by allUsers or allAuthenticatedUsers.',
     apis: ['keyRings:list', 'cryptoKeys:list', 'cryptoKeys:getIamPolicy'],
+    realtime_triggers: ['CreateKeyRing', 'CreateCryptoKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

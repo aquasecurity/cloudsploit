@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/instances/preemptible',
     recommended_action: 'Ensure that your Google Compute Engine VM instances are not preemptible.',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

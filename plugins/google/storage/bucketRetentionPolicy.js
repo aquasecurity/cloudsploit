@@ -19,6 +19,7 @@ module.exports = {
             default: '0'
         }
     },
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];
