@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Access Control Allow Credential Enable',
+    title: 'Access Control Allow Credential Enabled',
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Medium',
