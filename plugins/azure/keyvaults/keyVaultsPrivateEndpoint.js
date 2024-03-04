@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Vault Private Endpoint',
+    title: 'Key Vaults Private Endpoint',
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
