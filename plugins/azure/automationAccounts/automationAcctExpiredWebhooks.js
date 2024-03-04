@@ -52,7 +52,7 @@ module.exports = {
                 }
                 var today = new Date();
                 webhooks.data.forEach(function(webhook) { 
-                  var expiryTime = new Date(Date.parse(webhook.expiryTime));
+                    var expiryTime = new Date(Date.parse(webhook.expiryTime));
 
                     if (expiryTime < today) {
                         helpers.addResult(results, 2, 'Automation account webhook has expired', location, webhook.id);
