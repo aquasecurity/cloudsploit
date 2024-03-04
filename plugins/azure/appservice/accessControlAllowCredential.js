@@ -9,7 +9,7 @@ module.exports = {
     description: 'Esures that App Service has Access Control Allow Credentials enabled with CORS',
     more_info: 'Enabling Access-Control-Allow-Credentials with CORS (Cross-Origin Resource Sharing) ensures secure access to resources across different domains, allowing the secure exchange of sensitive information such as cookies or authorization headers.',
     recommended_action: 'Enable Access Control Allow Credentials for all App Services.',
-    link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api',
+    link: 'https://learn.microsoft.com/en-us/azure/container-apps/cors',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
