@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'API Server Authorized IP Ranges',
+    title: 'AKS API Server Authorized IP Ranges',
     category: 'Kubernetes Service',
     domain: 'Containers',
     severity: 'Low',
