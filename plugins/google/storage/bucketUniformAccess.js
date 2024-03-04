@@ -16,7 +16,7 @@ module.exports = {
     apis_remediate: ['buckets:list'],
     actions: {remediate:['storage.buckets.update'], rollback:['storage.buckets.update']},
     permissions: {remediate: ['storage.buckets.setIamPolicy', 'storage.buckets.update'], rollback: ['storage.buckets.setIamPolicy','storage.buckets.update']},
-    realtime_triggers: ['storage.buckets.update', 'storage.buckets.create'],
+    realtime_triggers: ['storage.buckets.update', 'storage.buckets.create','storage.buckets.delete'],
   
     run: function(cache, settings, callback) {
         var results = [];

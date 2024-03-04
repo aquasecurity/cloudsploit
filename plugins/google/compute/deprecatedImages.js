@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',
     recommended_action: 'Ensure that no compute instances are created from deprecated images.',
     apis: ['compute:list', 'disks:list', 'images:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete','compute.disks.insert','compute.disks.delete', 'compute.images.insert', 'compute.images.delete', 'compute.images.deprecate'],
 
     run: function(cache, settings, callback) {
         var results = [];

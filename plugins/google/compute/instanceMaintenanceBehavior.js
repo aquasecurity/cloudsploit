@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options',
     recommended_action: 'Ensure that your Google Compute Engine VM instances are configured to use live migration.',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setSheduling'],
 
     run: function(cache, settings, callback) {
         var results = [];

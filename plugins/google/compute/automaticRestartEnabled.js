@@ -16,7 +16,7 @@ module.exports = {
     apis_remediate: ['compute:list', 'projects:get'],
     actions: {remediate:['compute.instances.setScheduling'], rollback:['compute.instances.setScheduling']},
     permissions: {remediate: ['compute.instances.setScheduling'], rollback: ['compute.instances.setScheduling']},
-    realtime_triggers: ['compute.instances.setScheduling', 'compute.instances.insert'],
+    realtime_triggers: ['compute.instances.setScheduling', 'compute.instances.insert', 'compute.instances.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

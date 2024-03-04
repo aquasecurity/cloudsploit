@@ -17,6 +17,7 @@ module.exports = {
             'only enabling necessary services as required for the function ' +
             'of the system'
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setServiceAccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

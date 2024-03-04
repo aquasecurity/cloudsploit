@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/dns/docs/monitoring',
     recommended_action: 'Create Cloud DNS Server Policy with logging enabled for VPC Networks',
     apis: ['networks:list', 'policies:list'],
+    realtime_triggers: ['compute.networks.insert' , 'compute.networks.delete', 'dns.policies.create', 'dns.policies.patch', 'compute.networks.patch', 'dns.policies.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

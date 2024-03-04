@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/disks',
     recommended_action: 'Ensure that auto-delete is disabled for all disks associated with your VM instances.',
     apis: ['disks:list', 'compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setDiskAutoDelete'],
 
     run: function(cache, settings, callback) {
         var results = [];
