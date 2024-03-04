@@ -43,7 +43,7 @@ module.exports = {
 
                 if (!configs || configs.err || !configs.data || !configs.data.length) {
                     helpers.addResult(results, 3, 'Unable to query for Web App Configs: ' + helpers.addError(configs), location, webApp.id);
-                    return;
+                    continue;
                 }
 
                 if (configs.data[0] && configs.data[0].cors && configs.data[0].cors.supportedCredentials) {
