@@ -15,6 +15,7 @@ module.exports = {
     apis_remediate: ['organizations:list', 'organizations:listOrgPolicies'],
     actions: {remediate:['SetOrgPolicy'], rollback:['SetOrgPolicy']},
     permissions: {remediate: ['orgpolicy.policy.set'], rollback: ['orgpolicy.policy.set']},
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

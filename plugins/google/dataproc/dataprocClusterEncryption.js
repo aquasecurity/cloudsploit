@@ -20,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['dataproc.ClusterController.CreateCluster', 'dataprocClusterController.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

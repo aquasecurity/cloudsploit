@@ -19,6 +19,7 @@ module.exports = {
             default: false
         }
     },
+    realtime_triggers: ['deploymentmanager.deployments.create', 'deploymentmanager.deployments.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
