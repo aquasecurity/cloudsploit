@@ -60,6 +60,7 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('codestar has tags')
                 done();
             });
         });
@@ -70,6 +71,7 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('codestar does not have any tags')
                 done();
             });
         });
@@ -80,16 +82,18 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No CodeStar projects found')
                 done();
             });
         });
 
         it('should UNKNOWN if unable to query CodeStar project', function (done) {
-            const cache = createCache(listProjects, null, null, { message: 'Unable to query CodeStar project' });
+            const cache = createCache(null, null);
             codestarHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query CodeStar projects: ')
                 done();
             });
         });
@@ -100,6 +104,7 @@ describe('codestarHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query all resources')
                 done();
             });
         });
