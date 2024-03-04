@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify Bastion host and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['bastionHosts:listAll'],
-    realtime_triggers: ['microsoftnetwork:bastionhosts:write','microsoftnetwork:bastionhosts:delete'],
+    realtime_triggers: ['microsoftnetwork:bastionhosts:write','microsoftnetwork:bastionhosts:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];
