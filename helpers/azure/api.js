@@ -570,6 +570,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}?api-version=2022-04-01'
         }
     },
+    webhooks: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/webhooks?api-version=2015-10-31'
+        }
+    },
     accountVariables: {
         listByAutomationAccounts: {
             reliesOnPath: 'automationAccounts.list',
