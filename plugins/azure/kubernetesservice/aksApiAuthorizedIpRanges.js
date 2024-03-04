@@ -38,7 +38,7 @@ module.exports = {
             for (let cluster of managedClusters.data) {
                 if (!cluster.id) continue;
 
-                if (cluster.apiServerAccessProfile && cluster.apiServerAccessProfile.authorizedIPRanges){
+                if (cluster.apiServerAccessProfile && cluster.apiServerAccessProfile.authorizedIPRanges && cluster.apiServerAccessProfile.authorizedIPRanges.length){
                     helpers.addResult(results, 0, 'AKS cluster has authorized IP ranges configured for secure access to API server', location, cluster.id);
                 } else {
                     helpers.addResult(results, 2, 'AKS cluster does not have authorized IP ranges configured for secure access to API server', location, cluster.id);
