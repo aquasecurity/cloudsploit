@@ -47,7 +47,7 @@ module.exports = {
                 } 
                 
                 if (!webhooks.data.length) {
-                    helpers.addResult(results, 3, 'No existing webhooks for Automation account found', location, account.id);
+                    helpers.addResult(results, 3, 'No existing webhooks found for Automation account', location, account.id);
                     continue;
                 }
                 var today = new Date();
