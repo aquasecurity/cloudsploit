@@ -46,7 +46,7 @@ module.exports = {
                         'Virtual Machine Scale Set has boot diagnostics enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has boot diagnostics disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set does not have boot diagnostics enabled', location, virtualMachineScaleSet.id);
                 }
             }
             rcb();

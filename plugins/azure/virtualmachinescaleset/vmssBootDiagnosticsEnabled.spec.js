@@ -103,7 +103,7 @@ describe('vmssBootDiagnosticsEnabled', function() {
             vmssBootDiagnosticsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Virtual Machine Scale Set has boot diagnostics disabled');
+                expect(results[0].message).to.include('Virtual Machine Scale Set does not have boot diagnostics enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
             });
