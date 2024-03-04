@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that CodeStar projects are not using undesired repository providers.',
     more_info: 'CodeStar should use only allowed repository providers in order to follow your organizations\'s security and compliance requirements.',
     link: 'https://docs.aws.amazon.com/codestar/latest/userguide/getting-started.html#getting-started-create',
-    recommended_action: 'Ensure disallowed repository providers are not being used for CodeStar projects',
+    recommended_action: 'Ensure diallowed repository providers are not being used for CodeStar projects',
     apis: ['CodeStar:listProjects', 'CodeStar:describeProject'],
     settings: {
         codestar_disallowed_repo_providers: {
