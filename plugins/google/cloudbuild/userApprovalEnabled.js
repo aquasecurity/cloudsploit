@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/build/docs/securing-builds/gate-builds-on-approval',
     recommended_action: 'Ensure all cloud build triggers have user approval enabled.',
     apis: ['cloudbuild:triggers'],
-
+    realtime_triggers: ['devtools.cloudbuild.CloudBuild.CreateBuildTrigger','devtools.cloudbuild.CloudBuild.UpdateBuildTrigger','devtools.cloudbuild.CloudBuild.DeleteBuildTrigger'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
