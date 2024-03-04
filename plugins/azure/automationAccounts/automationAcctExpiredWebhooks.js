@@ -42,7 +42,7 @@ module.exports = {
                     ['webhooks', 'listByAutomationAccounts', location, account.id]);
 
                 if (!webhooks || webhooks.err || !webhooks.data ) {
-                    helpers.addResult(results, 3, 'Unable to query for Automation account webhooks: ' + helpers.addError(webhooks), location);
+                    helpers.addResult(results, 3, 'Unable to query for Automation account webhooks: ' + helpers.addError(webhooks), location, account.id);
                     continue;
                 } 
                 
