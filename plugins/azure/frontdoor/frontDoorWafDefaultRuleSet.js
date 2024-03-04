@@ -65,7 +65,7 @@ module.exports = {
                 helpers.addResult(results, 0, 'No existing Front Door WAF policies found', location);
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
