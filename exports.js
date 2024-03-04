@@ -1078,6 +1078,7 @@ module.exports = {
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
         'namespaceManagedIdentity'      : require(__dirname + '/plugins/azure/servicebus/namespaceManagedIdentity.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
+        'namespaceHasTags'              : require(__dirname + '/plugins/azure/servicebus/namespaceHasTags.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
         'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
         'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),
