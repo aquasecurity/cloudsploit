@@ -39,7 +39,7 @@ module.exports = {
                 if (namespace.sku && namespace.sku.tier && namespace.sku.tier.toLowerCase() !== 'premium') {
                     helpers.addResult(results, 0, 'Service Bus Namespace is not a premium namespace', location, namespace.id);
                 } else if (namespace.identity && namespace.identity.type) {
-                    helpers.addResult(results, 0, 'Service bus namespace has identities assigned', location, namespace.id);
+                    helpers.addResult(results, 0, 'Service bus namespace has managed identity enabled', location, namespace.id);
                 } else {
                     helpers.addResult(results, 2, 'Service bus namespace does not have identities assigned', location, namespace.id);
                 }
