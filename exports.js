@@ -1067,8 +1067,6 @@ module.exports = {
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
-
-        'amsStorageAccountIdentity'     : require(__dirname + '/plugins/azure/mediaServices/amsStorageAccountIdentity.js'),
         'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
         'frontDoorWafDefaultRateLimit'  : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRateLimit.js'),
         'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js'),
@@ -1077,6 +1075,7 @@ module.exports = {
         'frontDoorWafEnabled'           : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafEnabled.js'),
         'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
+        'frontDoorWafDefaultRuleSet'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRuleSet.js'),
 
         'namespaceEncryptionAtRest'     : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
@@ -1087,6 +1086,7 @@ module.exports = {
         'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
         'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),
       
+        'amsStorageAccountIdentity'     : require(__dirname + '/plugins/azure/mediaServices/amsStorageAccountIdentity.js'),
         'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
         'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
