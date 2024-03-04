@@ -6,10 +6,10 @@ module.exports = {
     category: 'Automation',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensure that Azure Automation webhooks are deleted after they have expired',
+    description: 'Ensure that Azure Automation webhooks are deleted after they have expired.',
     more_info: 'Expired webhooks increase the risk of unauthorized access, compromising security. Setting a validity period aligns with corporate policies, minimizing the potential for misuse and enhancing overall security.',
-    recommended_action: 'Delete the expired webhook and then re-create it',
-    link: 'https://learn.microsoft.com/en-us/azure/automation/automation-webhooks?tabs=portal',
+    recommended_action: 'Delete the expired webhook and re-create it.',
+    link: 'https://learn.microsoft.com/en-us/azure/automation/automation-webhooks',
     apis: ['automationAccounts:list', 'webhooks:listByAutomationAccounts'],
     realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:webhooks:write', 'microsoftautomation:automationaccounts:webhooks:delete'],
 
@@ -51,14 +51,12 @@ module.exports = {
                     continue;
                 }
                 var today = new Date();
-                var expiryTime ;
                 webhooks.data.forEach(function(webhook) { 
-                    expiryTime = new Date(Date.parse(webhook.expiryTime));
+                  var expiryTime = new Date(Date.parse(webhook.expiryTime));
 
                     if (expiryTime < today) {
                         helpers.addResult(results, 2, 'Automation account webhook has expired', location, webhook.id);
                     } else {
-
                         helpers.addResult(results, 0, 'Automation account webhook is valid', location, webhook.id);
                     }
                 });
