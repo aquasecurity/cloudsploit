@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/cloud-provider-access-management/access-approval/docs/overview',
     recommended_action: 'Enable Access Approval for the GCP project.',
     apis: ['accessApproval:settings'],
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

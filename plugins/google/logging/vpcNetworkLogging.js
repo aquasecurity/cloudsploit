@@ -18,6 +18,7 @@ module.exports = {
         hipaa: 'HIPAA requires the logging of all activity ' +
             'including access and all actions taken.'
     },
+    realtime_triggers: ['logging.MetricsServiceV2.CreateLogMetric', 'logging.MetricsServiceV2.DeleteLogMetric', 'compute.networks.insert', 'compute.networks.delete' ],
 
     run: function(cache, settings, callback) {
         var results = [];

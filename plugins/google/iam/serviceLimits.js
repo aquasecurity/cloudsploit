@@ -25,6 +25,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete'],
 
     run: function(cache, settings, callback) {
         var config = {

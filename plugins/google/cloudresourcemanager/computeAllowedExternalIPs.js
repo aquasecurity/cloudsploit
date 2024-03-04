@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Define Allowed External IPs for VM Instances" constraint is enforced to allow you to define the VM instances that are allowed to use external IP addresses.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

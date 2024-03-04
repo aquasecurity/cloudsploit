@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no service accounts have both the KMS admin role and any of CryptoKey roles attached.',
     apis: ['projects:getIamPolicy'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

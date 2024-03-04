@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/security',
     recommended_action: 'Enable Hadoop secure mode for all Dataproc clusters.',
     apis: ['dataproc:list'],
+    realtime_triggers: ['dataproc.ClusterController.CreateCluster', 'dataprocClusterController.DeleteCluster', 'dataproc.ClusterController.UpdateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

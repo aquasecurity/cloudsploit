@@ -19,6 +19,7 @@ module.exports = {
             default: '20'
         }
     },
+    realtime_triggers: ['spanner.admin.instance.InstanceAdmin.CreateInstance', 'spanner.admin.instance.InstanceAdmin.UpdateInstance', 'spanner.admin.instance.InstanceAdmin.DeleteInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -20,6 +20,7 @@ module.exports = {
             default: '6'
         }
     },
+    realtime_triggers: ['dataflow.jobs.create', 'dataflow.jobs.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
