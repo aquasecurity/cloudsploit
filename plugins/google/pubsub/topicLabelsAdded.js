@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/pubsub/docs/labels',
     recommended_action: 'Ensure labels are added to all Pub/Sub topics.',
     apis: ['topics:list'],
+    realtime_triggers:['pubsub.Publisher.DeleteTopic','pubsub.Publisher.CreateTopic','pubsub.Publisher.UpdateTopic'],
 
     run: function(cache, settings, callback) {
         var results = [];
