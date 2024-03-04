@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/instances/preventing-accidental-vm-deletion',
     recommended_action: 'Modify VM instances to enable deletion protection',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setDeletionProtection'],
 
     run: function(cache, settings, callback) {
         var results = [];

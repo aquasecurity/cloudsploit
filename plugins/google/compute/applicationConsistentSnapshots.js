@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/disks/snapshot-best-practices#prepare_for_consistency',
     recommended_action: 'Ensure that all disk snapshot schedules are application consistent.',
     apis: ['resourcePolicies:list'],
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

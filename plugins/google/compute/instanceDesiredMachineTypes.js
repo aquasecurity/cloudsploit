@@ -19,6 +19,8 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMachineType'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

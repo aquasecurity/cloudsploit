@@ -17,6 +17,7 @@ module.exports = {
             'only enabling necessary services as required for the function ' +
             'of the system'
     },
+    realtime_triggers: ['compute.networks.insert' , 'compute.networks.delete', 'compute.instances.insert', 'compute.instances.delete', 'compute.instances.updateNetworkInterface'],
 
     run: function(cache, settings, callback) {
         var results = [];

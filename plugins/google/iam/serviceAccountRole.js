@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/service-account-permissionsw',
     recommended_action: 'Ensure that no service accounts exists without an associated role.',
     apis: ['projects:getIamPolicy', 'serviceAccounts:list'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy', 'iam.admin.CreateServiceAccount' , 'iam.admin.DeleteServiceAccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/logging/docs/export/',
     recommended_action: 'Ensure a log sink is configured properly with an empty filter and a destination.',
     apis: ['sinks:list', 'buckets:list'],
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'logging.ConfigServiceV2.CreateSink' , 'logging.ConfigServiceV2.DeleteSink', 'logging.ConfigServiceV2.UpdateSink'],
 
     run: function(cache, settings, callback) {
         var results = [];

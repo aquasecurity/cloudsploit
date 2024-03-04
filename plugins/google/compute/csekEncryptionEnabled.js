@@ -17,6 +17,7 @@ module.exports = {
             'Encryption should be enabled for all disks storing this ' +
             'type of data.'
     },
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

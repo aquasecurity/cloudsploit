@@ -235,6 +235,7 @@ module.exports = {
             default: 100
         }
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete'],
 
     run: function(cache, settings, callback) {
         var config = {

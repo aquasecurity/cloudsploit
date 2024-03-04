@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/configuring',
     recommended_action: 'Ensure labels are added to all Cloud Functions.',
     apis: ['functions:list'],
-
+    realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction', 'functions.CloudFunctionsService.CreateFunction', 'functions.CloudFunctionsService.DeleteFunction'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

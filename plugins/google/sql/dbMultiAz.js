@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances have a DB replica enabled in a secondary AZ.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

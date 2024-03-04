@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/dns/docs/zones',
     recommended_action: 'Ensure labels are added for all managed zones in the cloud DNS service.',
     apis: ['managedZones:list'],
+    realtime_triggers : ['dns.managedZones.create, dns.managedZones.delete', 'dns.managedZones.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

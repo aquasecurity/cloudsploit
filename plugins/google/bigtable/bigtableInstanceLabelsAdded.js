@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/bigtable/docs/creating-managing-labels',
     recommended_action: 'Ensure labels are added to all BigTable instances.',
     apis: ['bigtable:list'],
-
+    realtime_triggers: ['bigtable.admin.BigtableInstanceAdmin.PartialUpdateInstance','bigtable.admin.BigtableInstanceAdmin.CreateInstance','bigtable.admin.BigtableInstanceAdmin.DeleteInstance'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

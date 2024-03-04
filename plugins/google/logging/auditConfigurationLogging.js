@@ -17,6 +17,7 @@ module.exports = {
         pci: 'PCI has a strict requirement to log all account activity ' +
              'within environments containing cardholder data.',
     },
+    realtime_triggers: ['logging.MetricsServiceV2.CreateLogMetric', 'logging.MetricsServiceV2.DeleteLogMetric'],
 
     run: function(cache, settings, callback) {
         var results = [];

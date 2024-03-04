@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that local infile flag is disabled for all MySQL instances.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

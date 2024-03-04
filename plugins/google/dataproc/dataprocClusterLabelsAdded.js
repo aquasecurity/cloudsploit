@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/dataproc/docs/guides/creating-managing-labels',
     recommended_action: 'Ensure labels are added to all Dataproc clusters.',
     apis: ['dataproc:list'],
+    realtime_triggers: ['dataproc.ClusterController.CreateCluster', 'dataprocClusterController.DeleteCluster', 'dataproc.ClusterController.UpdateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

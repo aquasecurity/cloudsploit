@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://cloud.google.com/build/docs/automating-builds/create-manage-triggers',
     recommended_action: 'Ensure all cloudbuild triggers have comment control enabled.',
     apis: ['cloudbuild:triggers'],
-
+    realtime_triggers: ['devtools.cloudbuild.CloudBuild.CreateBuildTrigger','devtools.cloudbuild.CloudBuild.UpdateBuildTrigger','devtools.cloudbuild.CloudBuild.DeleteBuildTrigger'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
