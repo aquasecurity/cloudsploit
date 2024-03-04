@@ -117,12 +117,12 @@ describe('agHttpsListenerOnly', function() {
             });
         });
 
-        it('should give passing result if Application Gateway is not using any non-https listener', function(done) {
+        it('should give passing result if Application Gateway is using https listeners only', function(done) {
             const cache = createCache([appGateway[1]]);
             agHttpsListenerOnly.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Application Gateway is not using any non-https listener');
+                expect(results[0].message).to.include('Application Gateway is using https listeners only');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

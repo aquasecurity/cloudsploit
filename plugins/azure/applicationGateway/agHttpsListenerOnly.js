@@ -6,8 +6,8 @@ module.exports = {
     category: 'Application Gateway',
     domain: 'Network Access Control',
     severity: 'Medium',
-    description: 'Ensures that Application Gateway is not configured to use any non-HTTPS listener.',
-    more_info: 'Using HTTPS listeners ensures the encryption of all traffic between the client and the application, providing an additional layer of security reducing risk of security attacks and breaches.',
+    description: 'Ensures that Application Gateway is configured to use HTTPS liteners only.',
+    more_info: 'Using non-HTTPS listeners leaves the traffic between the client and the application unencrypted. Using HTTPS listeners instead providing an additional layer of security by ensuring encryption, reducing risk of security attacks and breaches.',
     recommended_action: 'Remove all non-HTTPS listeners from application gateway and replace them with https listeners.',
     link: 'https://learn.microsoft.com/en-us/azure/application-gateway/configuration-listeners#protocol',
     apis: ['applicationGateway:listAll'],
@@ -36,16 +36,19 @@ module.exports = {
 
             for (let appGateway of appGateways.data) {
                 if (!appGateway.id) continue;
+
                 if (appGateway.httpListeners && appGateway.httpListeners.length) {
-                     var httpListeners = appGateway.httpListeners.filter(listener => listener.protocol && listener.protocol.toLowerCase() != 'https').map(listener => listener.name)
+                    var httpListeners = appGateway.httpListeners
+                        .filter(listener => listener.protocol && listener.protocol.toLowerCase() !== 'https')
+                        .map(listener => listener.name);
+
+                    if (httpListeners && httpListeners.length) {
+                        helpers.addResult(results, 2, `Application Gateway is using following non-https listeners: ${httpListeners.join(',')}`, location, appGateway.id);
+                    } else {
+                        helpers.addResult(results, 0, 'Application Gateway is using https listeners only', location, appGateway.id);
+                    }
                 }
-               
-                    .map(listener => listener.name) : [];
-                if (httpListeners && httpListeners.length) {
-                    helpers.addResult(results, 2, `Application Gateway is using following non-https listeners: ${httpListeners.join(',')}`, location, appGateway.id);
-                } else {
-                    helpers.addResult(results, 0, 'Application Gateway is not using any non-https listener', location, appGateway.id);
-                }
+
             }
 
             rcb();
