@@ -20,7 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
-    realtime_triggers:['cloud.bigquery.DatasetService.InsertDataset','datasetservice.delete','cloud.bigquery.DatasetService.DeleteDataset','datasetservice.insert'],
+    realtime_triggers:['bigquery.DatasetService.InsertDataset','datasetservice.delete','bigquery.DatasetService.DeleteDataset','datasetservice.insert'],
 
     run: function(cache, settings, callback) {
         var results = [];

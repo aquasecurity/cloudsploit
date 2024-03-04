@@ -20,7 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
-    realtime_triggers: ['cloud.bigquery.TableService.InsertTable','tableservice.insert','tableservice.delete','cloud.bigquery.TableService.DeleteTable'],
+    realtime_triggers: ['bigquery.TableService.InsertTable','tableservice.insert','tableservice.delete','bigquery.TableService.DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/bigquery/docs/adding-labels',
     recommended_action: 'Ensure labels are added to all BigQuery datasets.',
     apis: ['datasets:list'],
-    realtime_triggers:['cloud.bigquery.DatasetService.InsertDataset','datasetservice.update','cloud.bigquery.DatasetService.UpdateDataset','datasetservice.delete','cloud.bigquery.DatasetService.DeleteDataset','datasetservice.insert'],
+    realtime_triggers:['bigquery.DatasetService.InsertDataset','datasetservice.update','bigquery.DatasetService.UpdateDataset','datasetservice.delete','bigquery.DatasetService.DeleteDataset','datasetservice.insert'],
 
     run: function(cache, settings, callback) {
         var results = [];
