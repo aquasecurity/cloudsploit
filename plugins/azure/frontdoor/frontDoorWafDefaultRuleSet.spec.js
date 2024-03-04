@@ -118,7 +118,7 @@ describe('frontDoorWafDefaultRuleSet', function () {
             frontDoorWafDefaultRuleSet.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Front Door WAF policy does not have latest default rule set configured');
+                expect(results[0].message).to.include('Front Door WAF policy have default rule set configured with version less than');
                 expect(results[0].region).to.equal('global');
                 done();
             });
