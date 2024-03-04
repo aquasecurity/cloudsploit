@@ -1013,6 +1013,7 @@ module.exports = {
         'restrictDefaultNetworkAccess'  : require(__dirname + '/plugins/azure/keyvaults/restrictDefaultNetworkAccess.js'),
         'trustedServicesEnabled'        : require(__dirname + '/plugins/azure/keyvaults/trustedServicesEnabled.js'),
         'keyVaultHasTags'               : require(__dirname + '/plugins/azure/keyvaults/keyVaultHasTags.js'),
+        'keyVaultsPrivateEndpoint'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultsPrivateEndpoint.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/keyvaults/kvLogAnalyticsEnabled.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
