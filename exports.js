@@ -764,6 +764,7 @@ module.exports = {
         'computeGalleryRbacSharing'     : require(__dirname + '/plugins/azure/virtualmachines/computeGalleryRbacSharing.js'),
 
         'bastionHostExists'             : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
+        'bastionHostHasTags'            : require(__dirname + '/plugins/azure/bastion/bastionHostHasTags.js'),
 
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
         'logAnalyticsWorkspacePublic'   : require(__dirname + '/plugins/azure/monitor/logAnalyticsWorkspacePublic.js'),
