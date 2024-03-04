@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var corsEnabled = require('./corsEnabled');
+var accessControlAllowCredential = require('./accessControlAllowCredential');
 
 const webApps = [
     {
@@ -81,11 +81,11 @@ const createErrorCache = (key) => {
     }
 };
 
-describe('corsEnabled', function() {
+describe('accessControlAllowCredential', function() {
     describe('run', function() {
         it('should give passing result if no app service found', function(done) {
             const cache = createCache([], []);
-            corsEnabled.run(cache, {}, (err, results) => {
+            accessControlAllowCredential.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing App Services found');
@@ -96,7 +96,7 @@ describe('corsEnabled', function() {
 
         it('should give unknown result if unable to query for app service', function(done) {
             const cache = createErrorCache('webApp');
-            corsEnabled.run(cache, {}, (err, results) => {
+            accessControlAllowCredential.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query App Service: ');
@@ -105,23 +105,23 @@ describe('corsEnabled', function() {
             });
         });
 
-        it('should give passing result if app has CORS (Access Control Allow Credentials) enabled', function(done) {
+        it('should give passing result if app has Access Control Allow Credentials enabled', function(done) {
             const cache = createCache([webApps[0]], [configurations[0]]);
-            corsEnabled.run(cache, {}, (err, results) => {
+            accessControlAllowCredential.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('App Service Has CORS (Access Control Allow Credentials) enabled');
+                expect(results[0].message).to.include('App Service has Access Control Allow Credentials enabled with CORS');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if app service does not have CORS (Access Control Allow Credentials) enabled', function(done) {
+        it('should give failing result if app service does not have Access Control Allow Credentials enabled', function(done) {
             const cache = createCache([webApps[0]], [configurations[1]]);
-            corsEnabled.run(cache, {}, (err, results) => {
+            accessControlAllowCredential.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('App Service does not have CORS (Access Control Allow Credentials) enabled');
+                expect(results[0].message).to.include('App Service does not have Access Control Allow Credentials enabled with CORS');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

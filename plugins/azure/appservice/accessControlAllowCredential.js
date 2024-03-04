@@ -1,13 +1,13 @@
 const async = require('async');
-const helpers = require('../../../helpers/azure/');
+const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'CORS Access Control Allow Credential Enable',
+    title: 'Access Control Allow Credential Enable',
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Medium',
-    description: 'Esures that App Service has CORS (Access Control Allow Credentials) enabled',
-    more_info: 'Enabling CORS (Cross-Origin Resource Sharing) with Access-Control-Allow-Credentials ensures secure access to resources across different domains. This is crucial for handling credentials like cookies, authorization headers, or TLS client certificates in frontend JavaScript code.',
+    description: 'Esures that App Service has Access Control Allow Credentials enabled with CORS',
+    more_info: 'Enabling Access-Control-Allow-Credentials with  CORS (Cross-Origin Resource Sharing)ensures secure access to resources across different domains. This is crucial for handling credentials like cookies, authorization headers, or TLS client certificates in frontend JavaScript code.',
     recommended_action: 'Enable Access Control Allow Credentials for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-rest-api',
     apis: ['webApps:list', 'webApps:listConfigurations'],
@@ -48,10 +48,10 @@ module.exports = {
 
                 if (configs.data[0].cors && configs.data[0].cors.supportedCredentials) {
                     helpers.addResult(results, 0,
-                        'App Service Has CORS (Access Control Allow Credentials) enabled', location, webApp.id);
+                        'App Service has Access Control Allow Credentials enabled with CORS', location, webApp.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'App Service does not have CORS (Access Control Allow Credentials) enabled', location, webApp.id);
+                        'App Service does not have Access Control Allow Credentials enabled with CORS', location, webApp.id);
                 }
             }
 
