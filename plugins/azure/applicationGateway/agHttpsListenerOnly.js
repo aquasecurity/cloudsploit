@@ -36,7 +36,10 @@ module.exports = {
 
             for (let appGateway of appGateways.data) {
                 if (!appGateway.id) continue;
-                var httpListeners = appGateway.httpListeners ? appGateway.httpListeners.filter(listener => listener.protocol && listener.protocol.toLowerCase() != 'https')
+                if (appGateway.httpListeners && appGateway.httpListeners.length) {
+                     var httpListeners = appGateway.httpListeners.filter(listener => listener.protocol && listener.protocol.toLowerCase() != 'https').map(listener => listener.name)
+                }
+               
                     .map(listener => listener.name) : [];
                 if (httpListeners && httpListeners.length) {
                     helpers.addResult(results, 2, `Application Gateway is using following non-https listeners: ${httpListeners.join(',')}`, location, appGateway.id);
