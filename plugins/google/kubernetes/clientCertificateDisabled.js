@@ -5,11 +5,13 @@ module.exports = {
     title: 'Client Certificate Disabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensure client certificate authentication to Kubernetes clusters is disabled.',
     more_info: 'In authentication using client certificates, the client presents a certificate signed by cluster root certificate authority which is only base64 encoded and not encrypted. The client certificate authentication method is considered legacy and cause potential security risks. It is recommended to use the default GKE OAuth method for authentication.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_authn_methods',
     recommended_action: 'Ensure no kubernetes clusters are using client certificates for authentication',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

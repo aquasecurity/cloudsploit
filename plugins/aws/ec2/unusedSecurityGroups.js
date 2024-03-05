@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Identify and remove unused EC2 security groups.',
     more_info: 'Keeping the number of security groups to a minimum makes the management easier and helps to avoid reaching the service limit.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',

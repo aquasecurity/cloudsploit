@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Cluster In VPC',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that your ElastiCache clusters are provisioned within the AWS VPC platform.',
     more_info: 'Creating Amazon ElastiCache clusters inside Amazon VPC can bring multiple advantages such as better networking infrastructure and flexible control over access security .',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/VPCs.EC.html',

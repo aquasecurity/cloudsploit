@@ -5,6 +5,7 @@ module.exports = {
     title: 'Audit Logging Enabled',
     category: 'Logging',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that default audit logging is enabled on the organization or project.',
     more_info: 'The default audit logs should be configured to log all admin activities and write and read access to data for all services. In addition, no exempted members should be added to the logs to ensure proper delivery of all audit logs.',
     link: 'https://cloud.google.com/logging/docs/audit/',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy', 'compute.projects.insert', 'compute.projects.delete, SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

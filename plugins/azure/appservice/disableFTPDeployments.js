@@ -5,12 +5,13 @@ module.exports = {
     title: 'Disable FTP Deployments',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that FTP deployments are disabled for App Services.',
     more_info: 'Disabling FTP deployments ensures that the encrypted traffic between the web application server and the FTP client cannot be decrypted by malicious actors.',
     recommended_action: 'Disable FTP deployments in the general settings for all App Services.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
     apis: ['webApps:list', 'webApps:listConfigurations'],
-    
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

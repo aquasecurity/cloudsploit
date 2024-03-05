@@ -48,7 +48,7 @@ var calls = [
                 property: 'collectionSummaries'
             },
             listNetworkSecurityPolicies: {
-                override: true, 
+                override: true,
             },
             listEncryptionSecurityPolicies:{
                 override: true,
@@ -128,7 +128,7 @@ var calls = [
                 paginate: 'NextToken',
             },
             getModelInvocationLoggingConfiguration: {
-                property: 'loggingConfig', 
+                property: 'loggingConfig',
                 paginate: 'NextToken'
             }
         },
@@ -169,7 +169,10 @@ var calls = [
         },
         CloudTrail: {
             describeTrails: {
-                property: 'trailList'
+                property: 'trailList',
+                params: {
+                    includeShadowTrails: false
+                }
             }
         },
         CloudWatch: {
@@ -397,7 +400,6 @@ var calls = [
                             Values: [
                                 'pending',
                                 'running',
-                                'shutting-down',
                                 'stopping',
                                 'stopped'
                             ]
@@ -1328,17 +1330,17 @@ var postcalls = [
             getRdsMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             },
             getRdsWriteIOPSMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             },
             getRdsReadIOPSMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             }
         },
         ConfigService: {
@@ -2357,12 +2359,12 @@ var postcalls = [
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
-                override: true,   
+                override: true,
             },
             getEncryptionSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listEncryptionSecurityPolicies',
-                override: true,   
+                override: true,
             }
         }
     },

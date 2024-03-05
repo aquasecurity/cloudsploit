@@ -4,6 +4,7 @@ module.exports = {
     title: 'RAM Administrator Policies',
     category: 'RAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensure that RAM policies which allow administrator access ("*:*") are not attached to RAM users, groups or roles.',
     more_info: 'RAM policies represent permissions that can be granted to users, groups, or roles. It is recommended and considered a standard security advice to grant least privilege. ' +
         'Determine what users need to do and then create policies with permissions only fits those tasks, instead of allowing full administrative privileges',

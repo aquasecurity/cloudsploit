@@ -22,9 +22,6 @@ const loadBalancers = [
             "properties": {
               "provisioningState": "Succeeded",
               "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/publicIPAddresses/3859f556-a02d-42d9-8bd3-42301f41f8be"
-              },
               "inboundNatRules": [
                 {
                   "id": "/subscriptions/dce7d0ad-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/MC_Ali-Resource-Group_test-ali_eastus/providers/Microsoft.Network/loadBalancers/kubernetes/inboundNatRules/jbs"

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Deprecated Images',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Compute instances are not created from deprecated images.',
     more_info: 'Deprecated Compute Disk Images should not be used to create VM instances.',
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',
     recommended_action: 'Ensure that no compute instances are created from deprecated images.',
     apis: ['compute:list', 'disks:list', 'images:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete','compute.disks.insert','compute.disks.delete', 'compute.images.insert', 'compute.images.delete', 'compute.images.deprecate'],
 
     run: function(cache, settings, callback) {
         var results = [];

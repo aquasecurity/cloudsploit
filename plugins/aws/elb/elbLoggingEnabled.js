@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELB Logging Enabled',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures load balancers have request logging enabled.',
     more_info: 'Logging requests to ELB endpoints is a helpful way ' + 
                 'of detecting and investigating potential attacks, ' + 

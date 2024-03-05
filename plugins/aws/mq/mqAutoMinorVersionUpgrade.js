@@ -5,6 +5,7 @@ module.exports = {
     title: 'MQ Auto Minor Version Upgrade',
     category: 'MQ',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon MQ brokers have the Auto Minor Version Upgrade feature enabled.',
     more_info: 'As AWS MQ deprecates minor engine version periodically and provides new versions for upgrade, it is highly recommended that Auto Minor Version Upgrade feature is enabled to apply latest upgrades.',
     recommended_action: 'Enabled Auto Minor Version Upgrade feature for MQ brokers',

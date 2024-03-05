@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redshift Unused Reserved Nodes',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures that Amazon Redshift Reserved Nodes are being utilized.',
     more_info: 'Amazon Redshift reserved nodes must be utilized to avoid unnecessary billing.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/purchase-reserved-node-instance.html',

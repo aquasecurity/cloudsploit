@@ -6,6 +6,7 @@ module.exports = {
     title: 'VM Agent Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the VM Agent is enabled for virtual machines',
     more_info: 'The VM agent must be enabled on Azure virtual machines in order to enable Azure Security Center for data collection.',
     recommended_action: 'Enable the VM agent for all virtual machines.',
@@ -16,6 +17,7 @@ module.exports = {
                 'including access and all actions taken. VM ' +
                 'agent is needed to provide the necessary logs.'
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

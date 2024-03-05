@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'LookoutMetrics Anomaly Detector Encrypted',
-    category: 'LookoutMetrics',
+    category: 'AI & ML',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon LookoutMetrics Anomaly Detector is encrypted using desired KMS encryption level',
     more_info: 'Amazon Lookout for Metrics encrypts your data at rest with your choice of an encryption key. If you do not specify an encryption key, your data is encrypted with AWS owned key by default. ' +
         'So use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',

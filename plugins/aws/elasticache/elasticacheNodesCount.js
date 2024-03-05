@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Nodes Count',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that the number of ElastiCache cluster cache nodes has not reached the limit quota established by your organization.',
     more_info: 'Defining limits for the maximum number of ElastiCache cluster nodes that can be created within your AWS account will help you to better manage your ElastiCache compute resources and prevent unexpected charges on your AWS bill.',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/CacheNodes.html',

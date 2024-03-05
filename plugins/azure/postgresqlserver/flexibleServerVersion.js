@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Flexible Server Version',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure PostgreSQL flexible servers is using the latest server version.',
     more_info: 'Using the latest version of PostgreSQL for flexible servers will give access to new software features, resolve reported bugs through security patches, and improve compatibility with other applications and services.',
     recommended_action: 'Upgrade the version of PostgreSQL flexible server to the latest available version.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-supported-versions',
     apis: ['servers:listPostgresFlexibleServer'],
+    realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete',],
 
     run: function(cache, settings, callback) {
         const results = [];

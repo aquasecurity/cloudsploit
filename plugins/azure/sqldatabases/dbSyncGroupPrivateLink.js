@@ -5,11 +5,13 @@ module.exports = {
     title: 'Database Private Link Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL Database sync groups are configured to use private link.',
     more_info: 'Private link feature allows you to choose a service managed private endpoint to establish a secure connection between the sync service and your member/hub databases during the data synchronization process. A service managed private endpoint is a private IP address within a specific virtual network and subnet.',
     recommended_action: 'Configure SQL Database sync groups to use private link and mandate manual approval for private endpoint connections.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/sql-data-sync-data-sql-server-sql-database?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'syncGroups:list'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:syncgroups:write', 'microsoftsql:servers:databases:delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

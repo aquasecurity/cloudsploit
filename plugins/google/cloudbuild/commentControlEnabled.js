@@ -5,12 +5,14 @@ module.exports = {
     title: 'Comment Control Enabled',
     category: 'CloudBuild',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure Comment Control is enabled for all cloud build triggers.',
     more_info: 'Comment control is a configuration which determines if the build will be automatically executed by Github Pull requests trigger. As a security best practice, enable the comment control to ensure that builds are not executed automatically by pull request created by any contributor, and only gets executed when the owner or collaborator comments /gcbrun on the pull request.',
     link: 'https://cloud.google.com/build/docs/automating-builds/create-manage-triggers',
     recommended_action: 'Ensure all cloudbuild triggers have comment control enabled.',
     apis: ['cloudbuild:triggers'],
-
+    realtime_triggers: ['devtools.cloudbuild.CloudBuild.CreateBuildTrigger','devtools.cloudbuild.CloudBuild.UpdateBuildTrigger','devtools.cloudbuild.CloudBuild.DeleteBuildTrigger'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -4,6 +4,7 @@ module.exports = {
     title: 'User Auth Token Rotated',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that user auth tokens are rotated regularly in order to reduce accidental exposures.',
     more_info: 'User auth tokens should be rotated frequently to avoid having them accidentally exposed.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcredentials.htm',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Topic HTTP Protocol Restriction',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures SNS topics do not allow HTTP protocol.',
     more_info: 'SNS topics should be configured to restrict access to the HTTP protocol to prevent unauthorized send or subscribe operations.',
     recommended_action: 'Adjust the topic policy to only allow authorized AWS users in known accounts to send or subscribe via the HTTP protocol.',

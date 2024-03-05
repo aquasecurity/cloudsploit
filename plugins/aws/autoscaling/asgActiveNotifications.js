@@ -5,6 +5,7 @@ module.exports = {
     title: 'Auto Scaling Notifications Active',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures auto scaling groups have notifications active.',
     more_info: 'Notifications can be sent to an SNS endpoint when scaling actions occur, which should be set to ensure all scaling activity is recorded.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/ASGettingNotifications.html',

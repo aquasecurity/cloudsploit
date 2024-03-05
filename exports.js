@@ -592,6 +592,7 @@ module.exports = {
         'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
+        'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
 
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
@@ -689,6 +690,7 @@ module.exports = {
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
+        'blobContainersCmkEncrypted'    : require(__dirname + '/plugins/azure/blobservice/blobContainersCmkEncrypted.js'),
 
         'fileServiceAllAccessAcl'       : require(__dirname + '/plugins/azure/fileservice/fileServiceAllAccessAcl.js'),
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
@@ -702,6 +704,7 @@ module.exports = {
         'redisCacheDiagnosticLogs'      : require(__dirname + '/plugins/azure/redisCache/redisCacheDiagnosticLogs.js'),
         'redisCacheScheduledUpdates'    : require(__dirname + '/plugins/azure/redisCache/redisCacheScheduledUpdates.js'),
         'redisVersion'                  : require(__dirname + '/plugins/azure/redisCache/redisVersion.js'),
+        'redisCacheVNetIntegrated'      : require(__dirname + '/plugins/azure/redisCache/redisCacheVNetIntegrated.js'),
 
         'multipleSubnets'               : require(__dirname + '/plugins/azure/virtualnetworks/multipleSubnets.js'),
         'ddosStandardProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/ddosStandardProtectionEnabled.js'),
@@ -710,8 +713,10 @@ module.exports = {
         'noGatewayConnections'          : require(__dirname + '/plugins/azure/virtualnetworks/noGatewayConnections.js'),
         'managedNatGateway'             : require(__dirname + '/plugins/azure/virtualnetworks/managedNatGateway.js'),
         'virtualNetworkHasTags'         : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkHasTags.js'),
+        'virtualNetworkFlowLogs'        : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworkFlowLogs.js'),
         'routeTableHasTags'             : require(__dirname + '/plugins/azure/virtualnetworks/routeTableHasTags.js'),
         'virtualNetworksLoggingEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/virtualNetworksLoggingEnabled.js'),
+        'publicIpDdosProtectionEnabled' : require(__dirname + '/plugins/azure/virtualnetworks/publicIpDdosProtectionEnabled.js'),
 
         'vmInstanceLimit'               : require(__dirname + '/plugins/azure/virtualmachines/vmInstanceLimit.js'),
         'classicInstances'              : require(__dirname + '/plugins/azure/virtualmachines/classicInstances.js'),
@@ -752,11 +757,18 @@ module.exports = {
         'vmVTPMEnabled'                 : require(__dirname + '/plugins/azure/virtualmachines/vmVTPMEnabled.js'),
         'vmSecureBootEnabled'           : require(__dirname + '/plugins/azure/virtualmachines/vmSecureBootEnabled.js'),
         'vmDiskDeleteConfig'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDeleteConfig.js'),
+        'vmDiskDoubleEncryption'        : require(__dirname + '/plugins/azure/virtualmachines/vmDiskDoubleEncryption.js'),
         'vmEncryptionAtHost'            : require(__dirname + '/plugins/azure/virtualmachines/vmEncryptionAtHost.js'),
+        'vmDiskCMKRotation'             : require(__dirname + '/plugins/azure/virtualmachines/vmDiskCMKRotation.js'),
+        'vmDiskPublicAccess'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskPublicAccess.js'),
+        'computeGalleryRbacSharing'     : require(__dirname + '/plugins/azure/virtualmachines/computeGalleryRbacSharing.js'),
 
-        'bastionHostExists'              : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
+        'bastionHostExists'             : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
+        'bastionHostDiagnosticLogs'     : require(__dirname + '/plugins/azure/bastion/bastionHostDiagnosticLogs.js'),
+        'bastionHostHasTags'            : require(__dirname + '/plugins/azure/bastion/bastionHostHasTags.js'),
 
         'logProfileArchiveData'         : require(__dirname + '/plugins/azure/monitor/logProfileArchiveData.js'),
+        'logAnalyticsWorkspacePublic'   : require(__dirname + '/plugins/azure/monitor/logAnalyticsWorkspacePublic.js'),
         'monitorLogsEnabled'            : require(__dirname + '/plugins/azure/monitor/monitorLogsEnabled.js'),
         'diagnosticsCapturedCategories' : require(__dirname + '/plugins/azure/monitor/diagnosticsCapturedCategories.js'),
         'diagnosticsSettingsEnabled'    : require(__dirname + '/plugins/azure/monitor/diagnosticsSettingsEnabled.js'),
@@ -833,8 +845,10 @@ module.exports = {
         'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),
         'flexibleServerPrivateDns'      : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateDns.js'),
         'flexibleServerVersion'         : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerVersion.js'),
+        'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
+        'nsgFlowLogsEnabled'            : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsEnabled.js'),
         'nsgFlowLogsRetentionPeriod'    : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsRetentionPeriod.js'),
         'excessiveSecurityGroups'       : require(__dirname + '/plugins/azure/networksecuritygroups/excessiveSecurityGroups.js'),
         'defaultSecurityGroup'          : require(__dirname + '/plugins/azure/networksecuritygroups/defaultSecurityGroup.js'),
@@ -902,6 +916,11 @@ module.exports = {
         'sqlServerHasTags'              : require(__dirname + '/plugins/azure/sqlserver/sqlServerHasTags.js'),
         'restrictOutboundNetworking'    : require(__dirname + '/plugins/azure/sqlserver/restrictOutboundNetworking.js'),        
         'auditOperationsEnabled'        : require(__dirname + '/plugins/azure/sqlserver/auditOperationsEnabled.js'),
+        'serverConnectionPolicy'        : require(__dirname + '/plugins/azure/sqlserver/serverConnectionPolicy.js'),
+        'auditStorageAuthType'          : require(__dirname + '/plugins/azure/sqlserver/auditStorageAuthType.js'),
+        'sqlServerVNetRuleIntegrated'   : require(__dirname + '/plugins/azure/sqlserver/sqlServerVNetRuleIntegrated.js'),
+        'sqlAzureServicesAccessDisabled': require(__dirname + '/plugins/azure/sqlserver/sqlAzureServicesAccessDisabled.js'),
+        'sqlServerManagedIdentity'      : require(__dirname + '/plugins/azure/sqlserver/sqlServerManagedIdentity.js'),
 
         'javaVersion'                   : require(__dirname + '/plugins/azure/appservice/javaVersion.js'),
         'phpVersion'                    : require(__dirname + '/plugins/azure/appservice/phpVersion.js'),
@@ -915,26 +934,36 @@ module.exports = {
         'tlsVersionCheck'               : require(__dirname + '/plugins/azure/appservice/tlsVersionCheck.js'),
         'remoteDebuggingDisabled'       : require(__dirname + '/plugins/azure/appservice/remoteDebuggingDisabled.js'),
         'alwaysOnEnabled'               : require(__dirname + '/plugins/azure/appservice/alwaysOnEnabled.js'),
+        'vnetIntegrated'                : require(__dirname + '/plugins/azure/appservice/vnetIntegrated.js'),
         'certificateExpiry'             : require(__dirname + '/plugins/azure/appservice/certificateExpiry.js'),
         'scmSiteAccessRestriction'      : require(__dirname + '/plugins/azure/appservice/scmSiteAccessRestriction.js'),
+        'secureHttptriggerFunction'     : require(__dirname + '/plugins/azure/appservice/secureHttptriggerFunction.js'),
         'appServiceAccessRestriction'   : require(__dirname + '/plugins/azure/appservice/appServiceAccessRestriction.js'),
         'webAppsADEnabled'              : require(__dirname + '/plugins/azure/appservice/webAppsADEnabled.js'),
+        'securityLogsEnabled'           : require(__dirname + '/plugins/azure/appservice/securityLogsEnabled.js'),
         'appInsightsEnabled'            : require(__dirname + '/plugins/azure/appservice/appInsightsEnabled.js'),
         'automatedBackupsEnabled'       : require(__dirname + '/plugins/azure/appservice/automatedBackupsEnabled.js'),
         'ftpsOnlyAccessEnabled'         : require(__dirname + '/plugins/azure/appservice/ftpsOnlyAccessEnabled.js'),
         'backupRetentionPeriod'         : require(__dirname + '/plugins/azure/appservice/backupRetentionPeriod.js'),
+        'privateEndpointsEnabled'       : require(__dirname + '/plugins/azure/appservice/privateEndpointsEnabled.js'),
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
+        'accessControlAllowCredential'  : require(__dirname + '/plugins/azure/appservice/accessControlAllowCredential.js'),
+        'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
+        'aksManagedIdentity'            : require(__dirname + '/plugins/azure/kubernetesservice/aksManagedIdentity.js'),
         'aksLatestVersion'              : require(__dirname + '/plugins/azure/kubernetesservice/aksLatestVersion.js'),
         'aksAgentVersion'               : require(__dirname + '/plugins/azure/kubernetesservice/aksAgentVersion.js'),
         'aksClusterHasTags'             : require(__dirname + '/plugins/azure/kubernetesservice/aksClusterHasTags.js'),
         'aksEncryptionAtRestWithCMK'    : require(__dirname + '/plugins/azure/kubernetesservice/aksEncryptionAtRestWithCMK'),
         'aksPrivateCluster'             : require(__dirname + '/plugins/azure/kubernetesservice/aksPrivateCluster.js'),
         'aksDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/kubernetesservice/aksDiagnosticLogsEnabled.js'),
+        'aksHostBasedEncryption'        : require(__dirname + '/plugins/azure/kubernetesservice/aksHostBasedEncryption.js'),
+        'aksApiAuthorizedIpRanges'      : require(__dirname + '/plugins/azure/kubernetesservice/aksApiAuthorizedIpRanges.js'),
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
+        'acrTrustedServiceEnabled'      : require(__dirname + '/plugins/azure/containerregistry/acrTrustedServiceEnabled.js'),
         'acrManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/containerregistry/acrManagedIdentityEnabled.js'),
         'acrPublicAccess'               : require(__dirname + '/plugins/azure/containerregistry/acrPublicAccess.js'),
         'acrCMKEncryption'              : require(__dirname + '/plugins/azure/containerregistry/acrCMKEncryption.js'),
@@ -957,6 +986,7 @@ module.exports = {
         'dbAuditingEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/dbAuditingEnabled.js'),
         'dbDataMaskingEnabled'          : require(__dirname + '/plugins/azure/sqldatabases/dbDataMaskingEnabled.js'),
         'sqlDbMultiAz'                  : require(__dirname + '/plugins/azure/sqldatabases/sqlDbMultiAz.js'),
+        'dbDiagnosticLoggingEnabled'    : require(__dirname + '/plugins/azure/sqldatabases/dbDiagnosticLoggingEnabled.js'),
         'dbRestorable'                  : require(__dirname + '/plugins/azure/sqldatabases/dbRestorable.js'),
         'dbLedgerDigestStorageEnabled'  : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerDigestStorageEnabled.js'),
         'pitrBackupEnabled'             : require(__dirname + '/plugins/azure/sqldatabases/pitrBackupEnabled.js'),
@@ -964,10 +994,12 @@ module.exports = {
         'dbTDEEnabled'                  : require(__dirname + '/plugins/azure/sqldatabases/dbTDEEnabled.js'),
         'dbLedgerEnabled'               : require(__dirname + '/plugins/azure/sqldatabases/dbLedgerEnabled.js'),
         'dbEnableSecureEnclaves'        : require(__dirname + '/plugins/azure/sqldatabases/dbEnableSecureEnclaves.js'),
+        'dbDataDiscoveryClassification' : require(__dirname + '/plugins/azure/sqldatabases/dbDataDiscoveryClassification.js'),
         
         'lbHttpsOnly'                   : require(__dirname + '/plugins/azure/loadbalancer/lbHttpsOnly.js'),
         'lbNoInstances'                 : require(__dirname + '/plugins/azure/loadbalancer/lbNoInstances.js'),
         'lbHasTags'                     : require(__dirname + '/plugins/azure/loadbalancer/lbHasTags.js'),
+        'lbPublicIp'                    : require(__dirname + '/plugins/azure/loadbalancer/lbPublicIp.js'),
         'lbLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/loadbalancer/lbLogAnalyticsEnabled.js'),
 
         'kvRecoveryEnabled'             : require(__dirname + '/plugins/azure/keyvaults/kvRecoveryEnabled.js'),
@@ -985,6 +1017,7 @@ module.exports = {
         'restrictDefaultNetworkAccess'  : require(__dirname + '/plugins/azure/keyvaults/restrictDefaultNetworkAccess.js'),
         'trustedServicesEnabled'        : require(__dirname + '/plugins/azure/keyvaults/trustedServicesEnabled.js'),
         'keyVaultHasTags'               : require(__dirname + '/plugins/azure/keyvaults/keyVaultHasTags.js'),
+        'keyVaultsPrivateEndpoint'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultsPrivateEndpoint.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/keyvaults/kvLogAnalyticsEnabled.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
@@ -1003,6 +1036,11 @@ module.exports = {
         'enableDefenderForKeyVaults'    : require(__dirname + '/plugins/azure/defender/enableDefenderForKeyVaults.js'),
         'enableDefenderForVMs'          : require(__dirname + '/plugins/azure/defender/enableDefenderForVMs.js'),
         'enableDefenderForAppService'   : require(__dirname + '/plugins/azure/defender/enableDefenderForAppService.js'),
+        'enableDefenderForCSPM'         : require(__dirname + '/plugins/azure/defender/enableDefenderForCSPM.js'),
+        'enableDefenderForARM'          : require(__dirname + '/plugins/azure/defender/enableDefenderForARM.js'),
+        'enableDefenderForAPIs'         : require(__dirname + '/plugins/azure/defender/enableDefenderForAPIs.js'),
+        'enableDefenderForCosmosDB'     : require(__dirname + '/plugins/azure/defender/enableDefenderForCosmosDB.js'),
+        'enableDefenderForSqlServersVMs': require(__dirname + '/plugins/azure/defender/enableDefenderForSqlServersVMs.js'),
 
         'agWafEnabled'                  : require(__dirname + '/plugins/azure/applicationGateway/agWafEnabled'),
         'applicationGatewayHasTags'     : require(__dirname + '/plugins/azure/applicationGateway/applicationGatewayHasTags.js'),
@@ -1010,6 +1048,8 @@ module.exports = {
         'agSslPolicy'                   : require(__dirname + '/plugins/azure/applicationGateway/agSslPolicy'),
         'agPreventionModeEnabled'       : require(__dirname + '/plugins/azure/applicationGateway/agPreventionModeEnabled.js'),        
         'agRequestBodyInspection'       : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodyInspection'),
+        'agRequestBodySize'             : require(__dirname + '/plugins/azure/applicationGateway/agRequestBodySize.js'),
+        'agHttpsListenerOnly'           : require(__dirname + '/plugins/azure/applicationGateway/agHttpsListenerOnly.js'),
 
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
 
@@ -1023,11 +1063,10 @@ module.exports = {
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
 
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
+        'eventHubPublicAccess'          : require(__dirname + '/plugins/azure/eventhub/eventHubPublicAccess.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
         'frontDoorMinimumTlsVersion'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorMinimumTlsVersion.js'),
-
-        'amsStorageAccountIdentity'     : require(__dirname + '/plugins/azure/mediaServices/amsStorageAccountIdentity.js'),
         'afdSecurityLoggingEnabled'     : require(__dirname + '/plugins/azure/frontdoor/afdSecurityLoggingEnabled.js'),
         'frontDoorWafDefaultRateLimit'  : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRateLimit.js'),
         'frontDoorAzureManagedDomain'   : require(__dirname + '/plugins/azure/frontdoor/frontDoorAzureManagedDomain.js'),
@@ -1036,14 +1075,18 @@ module.exports = {
         'frontDoorWafEnabled'           : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafEnabled.js'),
         'frontDoorHttpsOnly'            : require(__dirname + '/plugins/azure/frontdoor/frontDoorHttpsOnly.js'),
         'botProtectionEnabled'          : require(__dirname + '/plugins/azure/frontdoor/botProtectionEnabled.js'),
+        'frontDoorWafDefaultRuleSet'    : require(__dirname + '/plugins/azure/frontdoor/frontDoorWafDefaultRuleSet.js'),
 
         'namespaceEncryptionAtRest'     : require(__dirname + '/plugins/azure/servicebus/namespaceEncryptionAtRest.js'),
         'namespaceTlsVersion'           : require(__dirname + '/plugins/azure/servicebus/namespaceTlsVersion.js'),
+        'namespaceManagedIdentity'      : require(__dirname + '/plugins/azure/servicebus/namespaceManagedIdentity.js'),
         'namespaceLocalAuth'            : require(__dirname + '/plugins/azure/servicebus/namespaceLocalAuth.js'),
+        'namespaceHasTags'              : require(__dirname + '/plugins/azure/servicebus/namespaceHasTags.js'),
         'namespaceLoggingEnabled'       : require(__dirname + '/plugins/azure/servicebus/namespaceLoggingEnabled.js'),
         'namespacePublicAccess'         : require(__dirname + '/plugins/azure/servicebus/namespacePublicAccess.js'),
         'namespaceInfraEncryption'      : require(__dirname + '/plugins/azure/servicebus/namespaceInfraEncryption.js'),
       
+        'amsStorageAccountIdentity'     : require(__dirname + '/plugins/azure/mediaServices/amsStorageAccountIdentity.js'),
         'amsDiagnosticLogsEnabled'      : require(__dirname + '/plugins/azure/mediaServices/amsDiagnosticLogsEnabled.js'),
         'amsPublicAccessDisabled'       : require(__dirname + '/plugins/azure/mediaServices/amsPublicAccessDisabled.js'),
         'amsManagedIdentityEnabled'     : require(__dirname + '/plugins/azure/mediaServices/amsManagedIdentityEnabled.js'),
@@ -1065,13 +1108,30 @@ module.exports = {
         'scalesetSecureBootEnabled'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/scalesetSecureBootEnabled.js'),
         'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions.js'),
         'vmssWindowsAntiMalwareExt'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssWindowsAntiMalwareExt.js'),
+        'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions'),
+        'vmssBootDiagnosticsEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssBootDiagnosticsEnabled'),
           
         'appConfigManagedIdentity'      : require(__dirname + '/plugins/azure/appConfigurations/appConfigManagedIdentity.js'),
         'appConfigurationDiagnosticLogs': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
         'appConfigurationPublicAccess'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationPublicAccess.js'),
+        'appConfigurationCmkEncrypted'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationCmkEncrypted.js'),
+        'appConfigHasTags'              : require(__dirname + '/plugins/azure/appConfigurations/appConfigHasTags.js'),
 
         'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
         'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctManagedIdentity.js'),
+        'automationAcctEncryptedVars'   : require(__dirname + '/plugins/azure/automationAccounts/automationAcctEncryptedVars.js'),
+        'automationAcctPublicAccess'    : require(__dirname + '/plugins/azure/automationAccounts/automationAcctPublicAccess.js'),
+        'automationAcctExpiredWebhooks' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctExpiredWebhooks.js'),
+        'automationAcctPrivateEndpoints': require(__dirname + '/plugins/azure/automationAccounts/automationAcctPrivateEndpoints.js'),
+        'automationAcctHasTags'         : require(__dirname + '/plugins/azure/automationAccounts/automationAcctHasTags.js'),
+        'validSourceControls'           : require(__dirname + '/plugins/azure/automationAccounts/validSourceControls.js'),
+
+
+        'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
+        'accountManagedIdentity'        : require(__dirname + '/plugins/azure/openai/accountManagedIdentity.js'),
+        'accountDiagnosticLogging'      : require(__dirname + '/plugins/azure/openai/accountDiagnosticLogging.js'),
+        'accountHasTags'                : require(__dirname + '/plugins/azure/openai/accountHasTags.js'),
+        'accountPublicAccessDisabled'   : require(__dirname + '/plugins/azure/openai/accountPublicAccessDisabled.js'),
 
     },
     github: {
@@ -1478,6 +1538,11 @@ module.exports = {
         'environmentEncryption'         : require(__dirname + '/plugins/google/composer/environmentEncryption.js'),
         'envDefaultServiceAccount'      : require(__dirname + '/plugins/google/composer/envDefaultServiceAccount.js'),
         'webserverPublicAccess'         : require(__dirname + '/plugins/google/composer/webserverPublicAccess.js'),
+
+        'vertexAIDatasetLabels'         : require(__dirname + '/plugins/google/vertexai/vertexAIDatasetLabels.js'),
+        'vertexAIDatasetEncryption'     : require(__dirname + '/plugins/google/vertexai/vertexAIDatasetEncryption.js'),
+        'modelLabelsAdded'              : require(__dirname + '/plugins/google/vertexai/modelLabelsAdded.js'),
+        'modelEncryption'               : require(__dirname + '/plugins/google/vertexai/modelEncryption.js'),
     },
     alibaba: {
         'passwordMinLength'             : require(__dirname + '/plugins/alibaba/ram/passwordMinLength.js'),

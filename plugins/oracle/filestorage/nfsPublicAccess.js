@@ -5,6 +5,7 @@ module.exports = {
     title: 'NFS Public Access',
     category: 'File Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that all file systems do not have public access.',
     more_info: 'All network file systems should be configured to only allow access from trusted sources.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/File/Tasks/exportoptions.htm',

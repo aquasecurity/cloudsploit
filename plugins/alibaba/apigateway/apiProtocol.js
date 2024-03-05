@@ -4,6 +4,7 @@ module.exports = {
     title: 'API Protocol',
     category: 'APIGateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensure that API Gateway APIs have protocol set to HTTPS.',
     more_info: 'HTTPS protocol should be implemented for APIs to ensure encryption of data in transit.',
     link: 'https://www.alibabacloud.com/help/doc-detail/29478.htm',

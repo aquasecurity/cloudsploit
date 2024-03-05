@@ -5,11 +5,13 @@ module.exports = {
     title: 'CLB Logging Enabled',
     category: 'CLB',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that logging is enabled for all HTTP(s) load balancers',
     more_info: 'Enabling logging on a HTTP(s) Load Balancer will show all network traffic and its destination which can be used to assess its performance, usage, configuration and in troubleshooting any problems.',
     link: 'https://cloud.google.com/load-balancing/docs/https/https-logging-monitoring',
     recommended_action: 'Enable logging for all HTTP(s) load balancers from the network services console.',
     apis: ['backendServices:list'],
+    realtime_triggers: ['compute.backendServices.patch','compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

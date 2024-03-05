@@ -5,6 +5,7 @@ module.exports = {
     title: 'Authentication Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures Authentication is enabled for App Services, redirecting unauthenticated users to the login page.',
     more_info: 'Enabling authentication will redirect all unauthenticated requests to the login page. It also handles authentication of users with specific providers (Azure Active Directory, Facebook, Google, Microsoft Account, and Twitter).',
     recommended_action: 'Enable App Service Authentication for all App Services.',
@@ -15,7 +16,7 @@ module.exports = {
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:updateAuthSettings'], rollback:['webApps:updateAuthSettings']},
     permissions: {remediate: ['webApps:updateAuthSettings'], rollback: ['webApps:updateAuthSettings']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
     compliance: {
         hipaa: 'HIPAA requires all application access to be restricted to known users ' +
                'for auditing and security controls.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Network Gateway Changes',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure an event rule is configured for network gateway changes.',
     more_info: 'Monitoring changes to Network Gateways like create, update and delete will help in identifying changes to the security posture.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',

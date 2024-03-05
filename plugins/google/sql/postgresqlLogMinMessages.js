@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Min Messages',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log min messages flag set to Warning or stricter.',
     more_info: 'SQL instance for PostgreSQL databases provides log_min_messages flag. It is used to define the minimum message severity level that is considered as an error statement.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'warning'
         }
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

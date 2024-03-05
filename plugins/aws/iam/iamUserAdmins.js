@@ -6,6 +6,7 @@ module.exports = {
     title: 'IAM User Admins',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures the number of IAM admins in the account are minimized',
     more_info: 'While at least two IAM admin users should be configured, the total number of admins should be kept to a minimum.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html',

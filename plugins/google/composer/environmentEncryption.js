@@ -5,6 +5,7 @@ module.exports = {
     title: 'Environment Encryption',
     category: 'Cloud Composer',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure Composer environments have encryption enabled using desired protection level.',
     more_info: 'Within a Composer environment, data is encrypted by default using Google-managed encryption keys. To adhere to security compliance standards and have more control over the keys and encryption process, ensure the environment is encrypted with desired encryption level.',
     link: 'https://cloud.google.com/composer/docs/cmek',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

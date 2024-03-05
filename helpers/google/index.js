@@ -287,6 +287,8 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             resultItems = setData(collectionItems, data.data[callObj.dataKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
         } else if (data.data.clusters && ['kubernetes', 'dataproc'].includes(service)) {
             resultItems = setData(collectionItems, data.data['clusters'], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
+        } else if (callObj.dataKey && data.data && data.data.length && service == 'vertexAI') {
+            resultItems = setData(collectionItems, data.data[0][callObj.dataKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
         } else if (callObj.dataFilterKey && data.data[callObj.dataFilterKey]) {
             resultItems = setData(collectionItems, data.data[callObj.dataFilterKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
         } else if (data.data[service]) {
@@ -328,7 +330,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
         if (callObj.location && callObj.location == 'zone') {
             url = url.replace('{locationId}', callObj.params.zone);
         } else if (callObj.location && callObj.location == 'region') {
-            url = url.replace('{locationId}', callObj.params.region);
+            url = url.replace(/{locationId}/g, callObj.params.region);
         }
 
         makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams, dataKey: callObj.dataKey, body: callObj.body});

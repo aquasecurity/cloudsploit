@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open VNC Server',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Determine if TCP port 5900 for VNC Server is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as VNC Server should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',

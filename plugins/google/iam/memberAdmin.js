@@ -5,11 +5,13 @@ module.exports = {
     title: 'Member Admin',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that IAM members do not use primitive roles such as owner, editor or viewer.',
     more_info: 'For best security practices, use only predefined IAM roles and do not use primitive roles to prevent any unauthorized access to your resources.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has a primitive role.',
     apis: ['projects:getIamPolicy'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Bigtable Admin',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that there are no IAM Users with Bigtable Administrator role at the project level.',
     more_info: 'The pre-defined role "Bigtable Administrator" grants full permission over Bigtable resources and its data. As a best practice, avoid giving access to this role at the project level; instead, grant specific Bigtable related permissions to IAM members.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has the pre-defined Bigtable Administrator role.',
     apis: ['projects:getIamPolicy'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

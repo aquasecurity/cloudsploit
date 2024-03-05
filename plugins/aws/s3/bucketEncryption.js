@@ -5,6 +5,7 @@ module.exports = {
     title: 'S3 Bucket Encryption',
     category: 'S3',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures object encryption is enabled on S3 buckets',
     more_info: 'S3 object encryption provides fully-managed encryption of all objects uploaded to an S3 bucket.',
     recommended_action: 'Enable CMK KMS-based encryption for all S3 buckets.',

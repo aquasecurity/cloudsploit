@@ -5,6 +5,7 @@ module.exports = {
     title: 'Dataproc Cluster Encryption',
     category: 'Dataproc',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that Dataproc clusters have encryption enabled using desired protection level.',
     more_info: 'By default, all dataproc clusters are encrypted using Google-managed keys. To have better control over how your dataproc clusters are encrypted, you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/customer-managed-encryption',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['dataproc.ClusterController.CreateCluster', 'dataprocClusterController.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

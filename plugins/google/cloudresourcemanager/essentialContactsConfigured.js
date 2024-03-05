@@ -4,11 +4,13 @@ module.exports = {
     title: 'Essential Contacts Configured',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure Essential Contacts is configured to designate email addresses for Google Cloud services to notify of important technical or security information.',
     more_info: 'Many Google Cloud services, such as Cloud Billing, send out notifications to share important information with Google Cloud users. By default, these notifications are sent to members with certain Identity and Access Management (IAM) roles. With Essential Contacts, you can customize who receives notifications by providing your own list of contacts.',
     link: 'https://cloud.google.com/resource-manager/docs/managing-notification-contacts',
     recommended_action: 'Ensure Essential Contacts is configured for organization.',
     apis: ['organizations:list', 'organizations:essentialContacts'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

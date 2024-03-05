@@ -5,6 +5,7 @@ module.exports = {
     title: 'EC2 CPU Alarm Threshold Exceeded',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure EC2 instances do not exceed the alarm threshold for CPU utilization.',
     more_info: 'Excessive CPU utilization can indicate performance issues or the need for capacity optimization.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html#ec2-cloudwatch-metrics',

@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Notebook Data Encrypted',
-    category: 'SageMaker',
+    category: 'AI & ML',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure Notebook data is encrypted',
     more_info: 'An optional encryption key can be supplied during Notebook Instance creation.',
     recommended_action: 'An existing KMS key should be supplied during Notebook Instance creation.',

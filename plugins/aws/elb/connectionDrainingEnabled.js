@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELB Connection Draining Enabled',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that AWS ELBs have connection draining enabled.',
     more_info: 'Connection draining should be used to ensure that a Classic Load Balancer stops sending requests to instances that are de-registering or unhealthy, while keeping the existing connections open.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/config-conn-drain.html',

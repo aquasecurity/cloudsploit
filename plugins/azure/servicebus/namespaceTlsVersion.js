@@ -5,11 +5,13 @@ module.exports = {
     title: 'Namespace Minimum TLS Version',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Service Bus namespace is using the latest TLS version.',
     more_info: 'TLS versions 1.0 and 1.1 are known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses. So there\'s an industry-wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
     recommended_action: 'Ensure that Azure Srvice Bus namespaces are using the latest TLS version',
     link: 'https://learn.microsoft.com/en-us/azure/service-bus-messaging/transport-layer-security-enforce-minimum-version',
     apis: ['serviceBus:listNamespacesBySubscription'],
+    realtime_triggers: ['microsoftservicebus:namespaces:write','microsoftservicebus:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

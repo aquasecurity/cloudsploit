@@ -5,12 +5,14 @@ module.exports = {
     title: 'Redis Cache Private Endpoint',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures that Azure Cache for Redis is only accessible through private endpoints.',
     more_info: 'Enabling a private endpoint for Azure Cache for Redis enhances security by isolating the cache from the public internet and providing controlled access within a private network.',
     recommended_action: 'Ensure that Azure Cache for Redis has public network access disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-network-isolation#azure-private-link-recommended',
     apis: ['redisCaches:listBySubscription'],
-
+    realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
+    
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

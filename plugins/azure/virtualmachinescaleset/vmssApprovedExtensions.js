@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Scale Set Approved Extensions',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that approved Virtual Machine Scale Set extensions are installed.',
     more_info: 'Extensions are small applications that provide post-deployment configuration and automation on Azure VMs. Extensions installed should be approved by the organization to meet the organizational security requirements.',
     recommended_action: 'Uninstall unapproved virtual machine scale set extensions',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:extensions:write', 'microsoftcompute:virtualmachinescalesets:extensions:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

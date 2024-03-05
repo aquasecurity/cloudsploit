@@ -5,11 +5,13 @@ module.exports = {
     title: 'Scale Set Multi Az',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that Virtual Machine Scale Sets are created to be cross-AZ for high availability',
     more_info: 'Having Virtual Machine Scale Sets in multiple zones increases durability and availability. If there is a catastrophic instance in one zone, the scale set will still be available.',
     recommended_action: 'Multiple zones can only be created when instantiating a new Scale Set. Ensure that the Scale Set is in multiple zones when creating a new Scale Set.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-overview',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELBv2 Deletion Protection',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures ELBv2 load balancers are configured with deletion protection.',
     more_info: 'ELBv2 load balancers should be configured with deletion protection to prevent accidental' + 
                 'deletion of live resources in production environments.',

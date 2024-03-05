@@ -5,11 +5,13 @@ module.exports = {
     title: 'WAF Policy Has Tags',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensure that each Microsoft Azure WAF Policy has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify WAF policies and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['wafPolicies:listAll'],
+    realtime_triggers: ['microsoftnetwork:frontdoorwebapplicationfirewallpolicies:write','microsoftnetwork:frontdoorwebapplicationfirewallpolicies:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

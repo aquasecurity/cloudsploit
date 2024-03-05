@@ -5,6 +5,7 @@ module.exports = {
     title: 'OS Login 2FA Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that Virtual Machines instances have OS logic feature enabled and configured with Two-Factor Authentication.',
     more_info: 'Enable OS login Two-Factor Authentication (2FA) to add an additional security layer to your VM instances. The risk of your VM instances getting attcked is reduced significantly if 2FA is enabled.',
     link: 'https://cloud.google.com/compute/docs/oslogin/setup-two-factor-authentication',
@@ -15,6 +16,7 @@ module.exports = {
             'any required service. This includes using secured technologies ' +
             'such as SSH.'
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMetadata'],
 
     run: function(cache, settings, callback) {
         var results = [];

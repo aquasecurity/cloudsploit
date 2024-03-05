@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Service Account Key Upload',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Disable Service Account Key Upload" policy is enforced at the GCP organization level.',
     more_info: 'User-managed keys can impose a security risk if they are not handled correctly. To minimize the risk, enable user-managed keys in only specific locations.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
@@ -14,6 +15,7 @@ module.exports = {
     apis_remediate: ['organizations:list', 'organizations:listOrgPolicies'],
     actions: {remediate:['SetOrgPolicy'], rollback:['SetOrgPolicy']},
     permissions: {remediate: ['orgpolicy.policy.set'], rollback: ['orgpolicy.policy.set']},
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

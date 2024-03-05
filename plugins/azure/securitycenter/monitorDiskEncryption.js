@@ -5,6 +5,7 @@ module.exports = {
     title: 'Monitor Disk Encryption',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Disk Encryption monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center audits disk encryption in all virtual machines to enhance data at rest protection.',
     recommended_action: 'Enable Adaptive Application Controls for Disk Encryption from the Azure Security Center by ensuring AuditIfNotExists setting is used for virtual machines.',
@@ -14,6 +15,7 @@ module.exports = {
         hipaa: 'HIPAA requires data to be encrypted at rest. Enabling disk encryption ' +
                 'monitoring ensures this configuration is not modified undetected.'
     },
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

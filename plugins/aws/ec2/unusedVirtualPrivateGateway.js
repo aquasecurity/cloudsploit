@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused Virtual Private Gateway',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that unused Virtual Private Gateways (VGWs) are removed.',
     more_info: 'Unused VGWs should be remove to follow best practices and to avoid reaching the service limit.',
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/delete-vpn.html',

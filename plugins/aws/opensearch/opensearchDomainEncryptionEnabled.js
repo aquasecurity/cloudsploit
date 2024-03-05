@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Encryption Enabled',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS OpenSearch domains have encryption enabled.',
     more_info: 'OpenSearch domains should be encrypted to ensure that data is secured.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html',

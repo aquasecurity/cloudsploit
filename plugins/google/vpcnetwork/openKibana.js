@@ -5,11 +5,13 @@ module.exports = {
     title: 'Open Kibana',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determines if TCP port 5601 for Kibana is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Kibana should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP port 5601 to known IP addresses.',
     apis: ['firewalls:list'],
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'DB Multiple AZ',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL instances have a failover replica to be cross-AZ for high availability',
     more_info: 'Creating SQL instances in with a single AZ creates a single point of failure for all systems relying on that database. All SQL instances should be created in multiple AZs to ensure proper failover.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances have a DB replica enabled in a secondary AZ.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

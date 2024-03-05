@@ -6,11 +6,13 @@ module.exports = {
     title: 'VM Disk Has Tags',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that Azure virtual machine disks have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     recommended_action: 'Modify VM Disk and add tags.',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Front Door Azure Managed DNS',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Front Door standard and premium profile custom domains are configured to use Azure Managed DNS',
     more_info: 'DNS domains in Azure DNS are hosted on the Azure global network of DNS name servers. This system uses Anycast networking so that each DNS query is answered by the closest available DNS server. Azure DNS provides fast performance and high availability for your domain.',
     recommended_action: 'Ensure that Non-Azure validated domains for Front Door profiles are using Azure Managed DNS.',
     link: 'https://learn.microsoft.com/en-us/azure/frontdoor/standard-premium/how-to-configure-https-custom-domain?tabs=powershell#azure-front-door-managed-certificates-for-non-azure-pre-validated-domains',
     apis: ['profiles:list', 'customDomain:listByFrontDoorProfiles'],
+    realtime_triggers: ['microsoftcdn:profiles:write', 'microsoftcdn:profiles:delete', 'microsoftcdn:profiles:customdomains:write', 'microsoftcdn:profiles:customdomains:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

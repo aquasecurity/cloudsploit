@@ -5,11 +5,13 @@ module.exports = {
     title: 'ACR Has Tags',
     category: 'Container Registry',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensure that Microsoft Azure Container registries have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify Container registries and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['registries:list'],
+    realtime_triggers: ['microsoftcontainerregistry:registries:write','microsoftcontainerregistry:registries:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

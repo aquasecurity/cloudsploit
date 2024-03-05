@@ -4,11 +4,13 @@ module.exports = {
     title: 'Restrict Shared VPC Subnetworks',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Restrict Shared VPC Subnetworks" is enforced on the GCP organization level.',
     more_info: 'Enforcing the "Restrict Shared VPC Subnetworks" constraint allows you to define which VPC Shared Subnetworks your resources can use within your GCP organization.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Restrict Shared VPC Subnetworks" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

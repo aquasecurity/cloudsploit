@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Mesh VG Access Logging',
     category: 'App Mesh',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that your Amazon App Mesh virtual gateways have access logging enabled.',
     more_info: 'Enabling access logging feature for App Mesh virtual gateways lets you track application mesh user access, helps you meet compliance regulations, and gives insight into security audits and investigations. ',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/envoy-logs.html',

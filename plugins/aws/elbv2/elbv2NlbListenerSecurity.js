@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELBv2 NLB Listener Security',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS Network Load Balancers have secured listener configured.',
     more_info: 'AWS Network Load Balancer should have TLS protocol listener configured to terminate TLS traffic.',
     link: 'https://docs.amazonaws.cn/en_us/elasticloadbalancing/latest/network/create-tls-listener.html',
