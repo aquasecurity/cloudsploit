@@ -5,11 +5,13 @@ module.exports = {
     title: 'Pub/Sub Admin',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that there are no IAM Users with Pub/Sub Administrator role at the project level.',
     more_info: 'The pre-defined role "Pub/Sub Admin" grants full access over Pub/Sub topics, subscriptions, and snapshots. As a best practice, avoid granting access to Pub/Sub Admin roles at the project level; instead, grant specific Pub/Sub permissions to IAM members.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has the pre-defined Pub/Sub Administrator role.',
     apis: ['projects:getIamPolicy'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

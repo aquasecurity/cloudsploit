@@ -25,6 +25,7 @@ module.exports = {
     title: 'IAM User Unauthorized to Edit',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures AWS IAM users that are not authorized to edit IAM access policies are decommissioned.',
     more_info: 'Only authorized IAM users should have permission to edit IAM access policies to prevent any unauthorized requests.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_controlling.html',

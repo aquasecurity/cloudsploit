@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Has Tags',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensure that AWS S3 Bucket have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify S3 buckets and add tags.',

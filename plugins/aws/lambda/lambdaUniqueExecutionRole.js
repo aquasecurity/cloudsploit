@@ -5,6 +5,7 @@ module.exports = {
     title: 'Lambda Unique Execution Role',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensure that AWS Lambda functions do not share the same execution role.',
     more_info: 'An execution role grants required permission to Lambda function to access AWS services and resources. It is recommended to associate the unique IAM role for each Lambda function to follow the principle of least privilege access.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html',

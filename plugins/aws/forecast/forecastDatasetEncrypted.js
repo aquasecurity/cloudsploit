@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Forecast Dataset Encrypted',
-    category: 'Forecast',
+    category: 'AI & ML',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that AWS Forecast datasets are using desired KMS key for data encryption.',
     more_info: 'Datasets contain the data used to train a predictor. You create one or more Amazon Forecast datasets and import your training data into them. ' +
                'Make sure to enable encryption for these datasets using customer-managed keys (CMKs) in order to gain more granular control over encryption/decryption process.',

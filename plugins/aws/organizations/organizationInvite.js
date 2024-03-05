@@ -4,6 +4,7 @@ module.exports = {
     title: 'Organization Invite',
     category: 'Organizations',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure all Organization invites are accepted',
     more_info: 'AWS Organizations invites should be accepted or rejected quickly so that member accounts can take advantage of all Organization features.',
     recommended_action: 'Enable all AWS Organizations features',

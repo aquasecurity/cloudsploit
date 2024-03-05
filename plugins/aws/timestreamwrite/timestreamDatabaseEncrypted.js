@@ -5,6 +5,7 @@ module.exports = {
     title: 'Timestream Database Encrypted',
     category: 'Timestream',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS Timestream databases are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Timestream encryption at rest provides enhanced security by encrypting all your data at rest using encryption keys. ' +
         'This functionality helps reduce the operational burden and complexity involved in protecting sensitive data. ' +

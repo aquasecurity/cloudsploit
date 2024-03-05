@@ -5,6 +5,7 @@ module.exports = {
     title: 'Private Access Enabled',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures Private Google Access is enabled for all Subnets',
     more_info: 'Private Google Access allows VM instances on a subnet to reach Google APIs and services without an IP address. This creates a more secure network for the internal communication.',
     link: 'https://cloud.google.com/vpc/docs/configure-private-google-access',
@@ -15,6 +16,7 @@ module.exports = {
             'any required service. This includes using secured technologies ' +
             'such as Private Google Access.'
     },
+    realtime_triggers: ['compute.subnetworks.insert','compute.subnetworks.delete', 'compute.subnetworks.setPrivateIpGoogleAccess'],
 
     run: function(cache, settings, callback) {
         var results = [];

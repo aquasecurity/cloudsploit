@@ -5,6 +5,7 @@ module.exports = {
     title: 'AKS Cluster Diagnostic Logs',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures that Azure Kubernetes clusters have diagnostic logs enabled.',
     more_info: 'Enabling diagnostic logging for AKS clusters helps with performance monitoring, troubleshooting, and security optimization.',
     recommended_action: 'Enable diagnostic logging for all AKS clusters.',

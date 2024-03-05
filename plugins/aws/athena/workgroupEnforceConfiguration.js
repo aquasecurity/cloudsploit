@@ -5,6 +5,7 @@ module.exports = {
     title: 'Workgroup Enforce Configuration',
     category: 'Athena',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Athena workgroups do not allow clients to override configuration options.',
     more_info: 'Athena workgroups support the ability for clients to override configuration options, including encryption requirements. This setting should be disabled to enforce encryption mandates.',
     link: 'https://docs.aws.amazon.com/athena/latest/ug/workgroups-settings.html',

@@ -5,12 +5,14 @@ module.exports = {
     title: 'PostgreSQL Log Checkpoints Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that log_checkpoints flag is enabled for PostgreSQL instances.',
     more_info: 'When log_checkpoints flag is enabled, instance checkpoints and restart points are logged in the server log.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags#setting_a_database_flag',
     recommended_action: 'Ensure that all PostgreSQL database instances have log_checkpoints flag and it value is set to on.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

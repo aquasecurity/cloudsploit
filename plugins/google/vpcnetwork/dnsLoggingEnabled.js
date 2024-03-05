@@ -5,11 +5,13 @@ module.exports = {
     title: 'VPC DNS Logging Enabled',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure that All VPC Network has DNS logging enabled.',
     more_info: 'Cloud DNS logging records the queries coming from Compute Engine VMs, GKE containers, or other GCP resources provisioned within the VPC to Stackdriver.',
     link: 'https://cloud.google.com/dns/docs/monitoring',
     recommended_action: 'Create Cloud DNS Server Policy with logging enabled for VPC Networks',
     apis: ['networks:list', 'policies:list'],
+    realtime_triggers: ['compute.networks.insert' , 'compute.networks.delete', 'dns.policies.create', 'dns.policies.patch', 'compute.networks.patch', 'dns.policies.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

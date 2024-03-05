@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront Distribution Origins TLS Version',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures CloudFront Distribution custom origin TLS version is not deprecated.',
     more_info: 'The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS where possible.',
     link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html',

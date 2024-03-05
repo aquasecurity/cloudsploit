@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Diagnostic Logging Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures diagnostic logging is enabled for PostgreSQL servers.',
     more_info: 'Enabling diagnostic logging for Azure Database for PostgreSQL servers helps with performance monitoring, troubleshooting, and security optimization.',
     recommended_action: 'Enable diagnostic logging for all PostgreSQL servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/single-server/concepts-server-logs',
     apis: ['servers:listPostgres', 'diagnosticSettings:listByPostgresServers'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write', 'microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

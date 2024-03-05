@@ -5,11 +5,13 @@ module.exports = {
     title: 'Recovery Services Vault Logging Enabled',
     category: 'Recovery Service Vault',
     domain: 'Backup',
+    severity: 'Medium',
     description: 'Ensure that Azure Recovery Services Vaults have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of the Recovery Services Vault. By enabling diagnostic logs, you can monitor and analysis the insights which can be used for alerting and reporting.',
     recommended_action: 'Modify the Recovery Service vault and enable diagnostic logs.',
     link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-diagnostic-events?tabs=recovery-services-vaults',
     apis: ['diagnosticSettings:listByRecoveryServiceVault', 'recoveryServiceVaults:listBySubscriptionId'],
+    realtime_triggers: ['microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

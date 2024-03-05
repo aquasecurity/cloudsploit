@@ -5,6 +5,7 @@ module.exports = {
     title: 'App-Tier ELB Security Policy',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that AWS App-Tier ELBs are using the latest predefined security policies.',
     more_info: 'AWS App-Tier ELBs should use the latest predefined security policies to secure the connection between client and ELB.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html',

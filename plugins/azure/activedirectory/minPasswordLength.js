@@ -5,6 +5,7 @@ module.exports = {
     title: 'Minimum Password Length',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures that all Azure passwords require a minimum length',
     more_info: 'Azure handles most password policy settings, including the minimum password length, defaulted to 8 characters.',
     link: 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',

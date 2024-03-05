@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unassociated Elastic IP Addresses',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures all EIPs are allocated to a resource to avoid accidental usage or reuse and to save costs',
     more_info: 'EIPs should be deleted if they are not in use to avoid extra charges.',
     recommended_action: 'Delete the unassociated Elastic IP',

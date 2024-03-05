@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open All Ports',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determines if all ports are open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, services should be restricted to known IP addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
@@ -19,6 +20,7 @@ module.exports = {
             'Firewalls should be properly secured to prevent access to ' +
             'backend services.'
     },
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

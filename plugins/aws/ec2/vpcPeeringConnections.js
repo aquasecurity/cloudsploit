@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cross Organization VPC Peering Connections',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VPC peering communication is only between AWS accounts, members of the same AWS Organization.',
     more_info: 'VPC peering communication should be only between AWS accounts to keep organization resources private and isolated.',
     recommended_action: 'Update VPC peering connections to allow connections to AWS Accounts, members of the same organization',

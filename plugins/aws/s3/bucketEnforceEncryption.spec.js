@@ -38,7 +38,7 @@ describe('bucketEnforceEncryption', function () {
             const cache = createCache({
                 code: 'NoSuchBucketPolicy'
             });
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, {s3_enforce_encryption_require_cmk:'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('No bucket policy found')
@@ -49,7 +49,7 @@ describe('bucketEnforceEncryption', function () {
 
         it('should UNKNOWN if bucket policy has no data', function (done) {
             const cache = createCache();
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, {s3_enforce_encryption_require_cmk: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Error querying for bucket policy')
@@ -64,7 +64,7 @@ describe('bucketEnforceEncryption', function () {
                     Statement: []
                 })
             });
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, {s3_enforce_encryption_require_cmk: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket policy does not contain any statements')
@@ -102,7 +102,7 @@ describe('bucketEnforceEncryption', function () {
                     ]
                 })
             });
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, { s3_enforce_encryption_require_cmk: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket policy requires encryption on object uploads')
@@ -122,7 +122,7 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "AES256"
+                                      "s3:x-amz-server-side-encryption": "aws:kms"
                                 }
                             }
                        },
@@ -140,7 +140,7 @@ describe('bucketEnforceEncryption', function () {
                     ]
                 })
             });
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, {s3_enforce_encryption_require_cmk:'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket policy requires encryption on object uploads')
@@ -178,7 +178,7 @@ describe('bucketEnforceEncryption', function () {
                     ]
                 })
             });
-            bucketEnforceEncryption.run(cache, {}, (err, results) => {
+            bucketEnforceEncryption.run(cache, {s3_enforce_encryption_require_cmk: 'true'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Bucket is missing required encryption enforcement policies')

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Project Artifacts Encrypted',
     category: 'CodeBuild',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that your AWS CodeBuild project artifacts are encrypted with desired encryption level.',
     more_info: 'AWS CodeBuild encrypts artifacts such as a cache, logs, exported raw test report data files, and build results '+
         'by default using AWS managed keys. Use customer-managed key instead, in order to to gain more granular control over encryption/decryption process.',

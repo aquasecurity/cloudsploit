@@ -5,6 +5,7 @@ module.exports = {
     title: 'Redshift Parameter Group SSL Required',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures AWS Redshift non-default parameter group associated with Redshift cluster require SSL connection.',
     more_info: 'Redshift parameter group associated with Redshift cluster should be configured to require SSL to secure data in transit.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-ssl-support.html',

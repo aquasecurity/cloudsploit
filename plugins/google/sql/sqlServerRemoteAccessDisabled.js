@@ -5,12 +5,14 @@ module.exports = {
     title: 'SQL Server Remote Access Flag Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that remote access flag is disabled for SQL Server instances.',
     more_info: ' The Remote Access option controls the execution of local stored procedures on remote servers or remote stored procedures on local server. Remote access functionality can be abused to launch a Denial-of-Service (DoS) attack on remote servers by off-loading query processing to a target, hence this should be disabled.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that all SQL Server database instances have remote access flag set to disabled.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

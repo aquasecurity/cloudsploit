@@ -5,11 +5,13 @@ module.exports = {
     title: 'Environment Default Service Account',
     category: 'Cloud Composer',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure Composer environment is not using the default compute engine service account',
     more_info: 'The Composer environment node VMs uses a service account to deploy different pods like Airflow workers and schedulers.By default it uses the compute engine service account which has the editor role on the project. This allows the VM node to have read and write permissions on most of the GCP services. To prevent privilege escalation, it is recommended to create a new service account with limited permissions for your VM instead of using the default one.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Make sure that composer environments are not using default service account',
     apis: ['composer:environments', 'projects:get'],
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

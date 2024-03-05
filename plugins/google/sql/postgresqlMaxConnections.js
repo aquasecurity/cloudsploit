@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Max Connections',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that max_connections is configured with optimal value for PostgreSQL instances.',
     more_info: 'An optimal value should be set for max_connections (maximum number of client connections) to meet the database workload requirements. ' +
         'If this no value is set for max_connections flag, instance assumes default value which is calculated per instance memory size.',
@@ -26,6 +27,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

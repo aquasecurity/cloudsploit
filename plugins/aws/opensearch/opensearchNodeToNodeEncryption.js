@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Node To Node Encryption',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures OpenSearch domain traffic is encrypted in transit between nodes',
     more_info: 'OpenSearch domains should use node-to-node encryption to ensure data in transit remains encrypted using TLS 1.2.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ntn.html',

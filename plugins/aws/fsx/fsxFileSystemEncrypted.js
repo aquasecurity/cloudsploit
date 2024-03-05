@@ -5,6 +5,7 @@ module.exports = {
     title: 'FSx File System Encrypted',
     category: 'FSx',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that Amazon FSx for Windows File Server file systems are encrypted using desired KMS encryption level.',
     more_info: 'If your organization is subject to corporate or regulatory policies that require encryption of data and metadata at rest, AWS recommends creating encrypted file systems.',
     recommended_action: 'Enable encryption for file systems created under Amazon FSx for Windows File Server',

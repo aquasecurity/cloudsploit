@@ -5,11 +5,13 @@ module.exports = {
     title: 'DB Automated Backups',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures automated backups are enabled for SQL instances',
     more_info: 'Google provides a simple method of backing up SQL instances at a regular interval. This should be enabled to provide an option for restoring data in the event of a database compromise or hardware failure.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
     recommended_action: 'Ensure that all database instances are configured with automatic backups enabled.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

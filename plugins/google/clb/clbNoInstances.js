@@ -5,11 +5,13 @@ module.exports = {
     title: 'CLB No Instances',
     category: 'CLB',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Detects CLBs that have no backend instances attached',
     more_info: 'GCP does not allow for Load Balancers to be configured without backend instances attached.',
     link: 'https://cloud.google.com/load-balancing/docs/load-balancing-overview',
     recommended_action: 'This security misconfiguration is covered by GCP. No action is necessary.',
     apis: ['backendServices:list'],
+    realtime_triggers: ['compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

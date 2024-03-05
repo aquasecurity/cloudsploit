@@ -5,6 +5,7 @@ module.exports = {
     title: 'LB HTTPS Only',
     category: 'Load Balancer',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures load balancers are configured to only accept connections on HTTPS ports',
     more_info: 'For maximum security, load balancers can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
@@ -15,11 +16,26 @@ module.exports = {
                 'App Service HTTPS redirection should be used to ensure site visitors ' +
                 'are always connecting over a secure channel.',
     },
+    settings: {
+        ignore_internal_lb_https: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'true',
+        }
+    },
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_lb_https: settings.ignore_internal_lb_https || this.settings.ignore_internal_lb_https.default
+        };
+
+        config.ignore_internal_lb_https = (config.ignore_internal_lb_https == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -42,6 +58,12 @@ module.exports = {
             loadBalancers.data.forEach(loadBalancer => {
                 var notHTTPSRules = 0;
                 var isHTTPS = false;
+
+                if (config.ignore_internal_lb_https && loadBalancer.frontendIPConfigurations
+                    && loadBalancer.frontendIPConfigurations.length && 
+                    loadBalancer.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                )  return;
 
                 if (loadBalancer.inboundNatRules &&
                     loadBalancer.inboundNatRules.length > 0) {

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Encrypted AMI',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EBS-backed AMIs are configured to use encryption',
     more_info: 'AMIs with unencrypted data volumes can be used to launch unencrypted instances that place data at risk.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIEncryption.html',

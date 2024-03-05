@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open RFC 1918',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures EC2 security groups are configured to deny inbound traffic from RFC-1918 CIDRs',
     more_info: 'RFC-1918 IP addresses are considered reserved private addresses and should not be used in security groups.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html',
@@ -72,11 +73,11 @@ module.exports = {
 
                     if (!privateCidrsFound.length) {
                         helpers.addResult(results, 0,
-                            'Security group "' + group.GroupName + '" is not configured to allow traffic from any reserved private addresses',
+                            'Security group "' + group.GroupName + '" is not configured to allow inbound access from any source IP address within any reserved private addresses',
                             region, resource);
                     } else {
                         helpers.addResult(results, 2,
-                            'Security group "' + group.GroupName + '" is configured to allow inbound access for these reserved private addresses: ' + privateCidrsFound.join(', '), 
+                            'Security group "' + group.GroupName + '" is configured to allow inbound access from any source IP address within these reserved private addresses: ' + privateCidrsFound.join(', '),
                             region, resource);
                     }
                 }

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Delete Expired Deployments',
     category: 'Deployment Manager',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Cloud Deployment Manager deployment are deleted after desired number of days from their creation time.',
     more_info: 'Cloud Deployment Manager deployments should be deleted after desired time period from their creation time as determined by your governance rules.',
     link: 'https://cloud.google.com/deployment-manager/docs/deployments/deleting-deployments',
@@ -18,6 +19,7 @@ module.exports = {
             default: false
         }
     },
+    realtime_triggers: ['deploymentmanager.deployments.create', 'deploymentmanager.deployments.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Automation Account Diagnostic Logs',
     category: 'Automation',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that diagnostic logging is enabled for Azure Automation account.',
     more_info: 'Azure Automation can send runbook job status and job streams to get insights, alert emails and correlate jobs across automation accounts. It also allows you to get the audit logs related to Automation accounts, runbooks, and other asset create, modify and delete operations.',
     recommended_action: 'Enable diagnostic logging for all Automation accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/automation-manage-send-joblogs-log-analytics#azure-automation-diagnostic-settings',
     apis: ['automationAccounts:list', 'diagnosticSettings:listByAutomationAccounts'],
+    realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
     settings: {
         diagnostic_logs: {
             name: 'Diagnostic Logs Enabled',

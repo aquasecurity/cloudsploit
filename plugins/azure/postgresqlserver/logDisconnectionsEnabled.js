@@ -5,6 +5,7 @@ module.exports = {
     title: 'Log Disconnections Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures disconnection logs are enabled for PostgreSQL servers',
     more_info: 'Disconnection logs ensure all attempted and successful disconnections from the server are logged.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_disconnections setting enabled.',
@@ -15,6 +16,7 @@ module.exports = {
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete','microsoft.dbforpostgresql:servers:configurations:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

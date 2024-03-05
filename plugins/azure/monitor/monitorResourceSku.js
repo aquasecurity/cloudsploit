@@ -5,6 +5,7 @@ module.exports = {
     title: 'Monitor Resource SKU',
     category: 'Resources',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that basic or consumption SKUs are not used on artifacts that need to be monitored.',
     more_info: 'Azure Monitor provides monitoring capabilities for resources and applications in Azure. Basic and Consumption SKUs provide limited monitoring capabilities compared to higher SKUs.',
     link: 'https://learn.microsoft.com/en-us/azure/search/search-sku-tier',

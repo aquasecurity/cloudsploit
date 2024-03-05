@@ -5,11 +5,13 @@ module.exports = {
     title: 'SQL Server External Scripts Flag Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that external scripts enabled flag is disabled for SQL Server instances.',
     more_info: 'external scripts enabled allows scripts external to SQL such as files located in an R library to be executed, which could adversely affect the security of the system.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that all SQL Server database instances have external scripts enabled flag set to disabled.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

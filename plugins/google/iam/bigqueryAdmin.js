@@ -5,11 +5,13 @@ module.exports = {
     title: 'BigQuery Admin',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that there are no IAM Users with BigQuery Admin, BigQuery Data Owner or BigQuery Data Editor role at the project level.',
     more_info: 'The pre-defined roles like "BigQuery Admin" or "BigQuery Data Owner" or "BigQuery Data Editor" grant full permissions over Big Query resources and its data. As a best practice, avoid granting access to these roles at the project level; instead, grant specific Big Query related permissions to IAM members.',
     link: 'https://cloud.google.com/iam/docs/overview',
     recommended_action: 'Ensure that no IAM member has the pre-defined BigQuery Admin, BigQuery Data Owner or BigQuery Data Editor roles.',
     apis: ['projects:getIamPolicy'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

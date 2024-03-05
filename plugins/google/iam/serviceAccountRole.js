@@ -5,11 +5,13 @@ module.exports = {
     title: 'Service Account Role',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure no Service Account exists without any associated role.',
     more_info: 'Service Account acts as identity for the applications to authenticate to Google cloud platform. It is a security best practice to always have roles associated with the user managed Service Accounts.',
     link: 'https://cloud.google.com/iam/docs/service-account-permissionsw',
     recommended_action: 'Ensure that no service accounts exists without an associated role.',
     apis: ['projects:getIamPolicy', 'serviceAccounts:list'],
+    realtime_triggers: ['iam.IAMPolicy.SetIamPolicy', 'iam.admin.CreateServiceAccount' , 'iam.admin.DeleteServiceAccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

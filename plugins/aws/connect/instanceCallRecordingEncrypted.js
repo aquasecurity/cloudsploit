@@ -5,6 +5,7 @@ module.exports = {
     title: 'Connect Instance Call Recording Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Connect instances have encryption enabled for call recordings being saved on S3.',
     more_info: 'You can configure Amazon Connect instance to save recordings for incoming call to be saved on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',

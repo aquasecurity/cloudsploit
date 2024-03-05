@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Log Parser Stats Disabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log_parser_stats flag set to "off".',
     more_info: 'Logging parser performance stats can substantially raise the volume of logs and result in performance overhead. To prevent any performance issues caused by excessive logging, it is recommended that the "log_parser_stats" flag is set to off.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log_parser_stats flag is disabled for all PostgreSQL instances.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

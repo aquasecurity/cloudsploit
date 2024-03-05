@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open All Ports Protocols',
     category: 'ECS',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that ECS security groups do not have all ports or protocols open to the public',
     more_info: 'Security groups should be created on a per-service basis and avoid allowing all ports or protocols.',
     link: 'https://partners-intl.aliyun.com/help/doc-detail/51170.htm',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Workload Identity Cluster Creation',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Disable Workload Identity Cluster Creation" policy is enforced at the GCP organization level.',
     more_info: 'To have a better control over service account access, make sure that GKE clusters have Workload Identity feature disabled at the time of creation.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
@@ -14,6 +15,7 @@ module.exports = {
     apis_remediate: ['organizations:list', 'organizations:listOrgPolicies'],
     actions: {remediate:['SetOrgPolicy'], rollback:['SetOrgPolicy']},
     permissions: {remediate: ['orgpolicy.policy.set'], rollback: ['orgpolicy.policy.set']},
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

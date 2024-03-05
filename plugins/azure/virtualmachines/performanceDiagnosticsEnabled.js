@@ -6,11 +6,13 @@ module.exports = {
     title: 'Virtual Machine Performance Diagnostics Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that performance diagnostics is enabled on virtual machines.',
     more_info: 'The performance diagnostics tool helps in troubleshooting performance issues that can affect a Windows or Linux virtual machine (VM).',
     recommended_action: 'Enable performance diagnostics on Azure virtual machines',
     link: 'https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/performance-diagnostics',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write','microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'OKE Private Endpoint',
     category: 'OKE',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the private endpoint setting is enabled for OKE clusters.',
     more_info: 'OKE private endpoints can be used to route all traffic between the Kubernetes worker and control plane nodes over a private VCN endpoint rather than across the public internet.',
     recommended_action: 'Enable the private endpoint setting for all OKE clusters.',

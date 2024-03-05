@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Log Hostname Flag Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log hostname flag enabled.',
     more_info: 'SQL instance for PostgreSQL databases provides log_hostname flag. It controls the logging of hostnames in addition to the IP addresses logged which helps in incident response efforts particularly in an environment that utilized dynamic IP addresses.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
     recommended_action: 'Ensure that log hostname flag is enabled for all PostgreSQL instances.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Web Apps Backup Retention Period',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have recommended backup retention period.',
     more_info: 'Retaining application backups for a longer period of time will allow you to handle your app data restoration process more efficiently.',
     recommended_action: 'Configure backup retention period for Azure Web Apps',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/manage-backup',
     apis: ['webApps:list', 'webApps:getBackupConfiguration'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
     settings: {
         webapps_backup_retention_period: {
             name: 'Backup retention period in days',

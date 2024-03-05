@@ -5,6 +5,7 @@ module.exports = {
     title: 'Diagnostics Captured Categories',
     category: 'Monitor',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Diagnostics Settings is configured to log activities for all appropriate categories.',
     more_info: 'Monitor diagnostic setting in Azure controls how the diagnostic logs are exported. When a diagnostic setting is created, ' +
         'by default no log categories are selected. Capturing the appropriate log categories (Administrative, Security, Alert, and Policy) ' +
@@ -12,6 +13,7 @@ module.exports = {
     recommended_action: 'Ensure the categories Administrative, Alert, Policy, and Security are set to Enabled for all diagnostic settings.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/samples/resource-manager-diagnostic-settings',
     apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

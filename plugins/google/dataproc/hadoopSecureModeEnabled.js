@@ -5,11 +5,13 @@ module.exports = {
     title: 'Hadoop Secure Mode Enabled',
     category: 'Dataproc',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that all Dataproc clusters have hadoop secure mode enabled.',
     more_info: 'Enabling Hadoop secure mode will allow multi-tenancy with security features like isolation, encryption, and user authentication within the cluster. It also enforces all Hadoop services and users to be authenticated via Kerberos Key distribution.',
     link: 'https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/security',
     recommended_action: 'Enable Hadoop secure mode for all Dataproc clusters.',
     apis: ['dataproc:list'],
+    realtime_triggers: ['dataproc.ClusterController.CreateCluster', 'dataprocClusterController.DeleteCluster', 'dataproc.ClusterController.UpdateCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

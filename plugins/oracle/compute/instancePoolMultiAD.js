@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Pool Multiple AD',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures instance pools are launched in multiple availability domains.',
     more_info: 'Launching instance pools in multiple availability domains follows best practices by creating highly available resources.',
     recommended_action: 'When launching instance pools, Add multiple availability domains.',

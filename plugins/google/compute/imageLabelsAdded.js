@@ -4,11 +4,13 @@ module.exports = {
     title: 'Image Labels Added',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that all VM disk images have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/compute/docs/labeling-resources',
     recommended_action: 'Ensure labels are added to all disk images.',
     apis: ['images:list'],
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete', 'compute.images.setLabels' ],
     
     run: function(cache, settings, callback) {
         var results = [];

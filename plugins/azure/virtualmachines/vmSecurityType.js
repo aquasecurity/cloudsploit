@@ -5,16 +5,28 @@ module.exports = {
     title: 'VM Security Type',
     category: 'Virtual Machines',
     domain: 'Compute',
-    description: 'Ensures that Trusted launch is selected for Azure virtual machines.',
-    more_info: 'Trusted launch protects against advanced and persistent attack techniques. Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.',
-    recommended_action: 'Select Trusted launch as security type for Azure virtual machines.',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/trusted-launch-portal?tabs=portal%2Cportal3%2Cportal2',
+    severity: 'Low',
+    description: 'Ensures that Azure virtual machines have desired security type configured.',
+    more_info: 'Using advanced security features for virtual machines boost security by verifying the integrity of VMs during boot-up and safeguarding data in use. They defend against advanced threats, encrypt sensitive data, and ensure compliance with high security standards.',
+    recommended_action: 'Set the desired security type for all Azure virtual machines',
+    link: 'https://learn.microsoft.com/en-us/azure/confidential-computing',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
+    settings: {
+        desired_security_type: {
+            name: 'VM Desired Security Type',
+            description: 'Desired security type i.e. "trustedlaunch" or "confidentialvm".',
+            regex: '^(trustedlaunch|confidentialvm)$',
+            default: 'trustedlaunch'
 
+        },
+    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var securityTypes = ['trustedlaunch', 'confidentialvm'];
+        var config = settings.desired_security_type || this.settings.desired_security_type.default;
 
         async.each(locations.virtualMachines, function(location, rcb) {
             var virtualMachines = helpers.addSource(cache, source,
@@ -33,10 +45,11 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                if (virtualMachine.securityProfile && virtualMachine.securityProfile.securityType == 'TrustedLaunch') {
-                    helpers.addResult(results, 0, 'Trusted launch is selected as security type for virtual machine', location, virtualMachine.id);
+                const configuredSecuritytype = virtualMachine.securityProfile && virtualMachine.securityProfile.securityType.toLowerCase();
+                if (securityTypes.indexOf(configuredSecuritytype) >= securityTypes.indexOf(config)) {
+                    helpers.addResult(results, 0, `${configuredSecuritytype} is configured as security type for virtual machine`, location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Trusted launch is not selected as security type for virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, `${config} is not configured as security type for virtual machine`, location, virtualMachine.id);
                 }
                 
             });

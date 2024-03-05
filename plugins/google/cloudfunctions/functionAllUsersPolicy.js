@@ -5,11 +5,13 @@ module.exports = {
     title: 'Cloud Function All Users Policy',
     category: 'Cloud Functions',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensure cloud functions are not anonymously or publicly accessible.',
     more_info: 'Using Cloud Identity and Access Management (IAM), you can control access to the cloud functions. As a security best practice, ensure the access is not allowed to "allUsers" or "allAuthentictaedUsers" to avoid data leaks and other security risks.',
     link: 'https://cloud.google.com/functions/docs/concepts/iam',
     recommended_action: 'Ensure that each cloud function is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['functions:list', 'functions:getIamPolicy'],
+    realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction', 'functions.CloudFunctionsService.CreateFunction', 'functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

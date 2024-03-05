@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Server Services Access Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that PostgreSQL servers do not allow access to other Azure services.',
     more_info: 'To secure your PostgreSQL server, it is recommended to disable public network access. Instead, configure firewall rules to allow connections from specific network ranges or utilize VNET rules for access from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
     recommended_action: 'Disable public network access for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
     apis: ['servers:listPostgres', 'firewallRules:listByServerPostgres'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write', 'microsoftdbforpostgresql:servers:firewallrules:write','microsoftdbforpostgresql:servers:firewallrules:delete','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

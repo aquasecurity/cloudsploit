@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail File Validation',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures CloudTrail file validation is enabled for all regions within an account',
     more_info: 'CloudTrail file validation is essentially a hash of the file which can be used to ensure its integrity in the case of an account compromise.',
     recommended_action: 'Enable CloudTrail file validation for all regions',

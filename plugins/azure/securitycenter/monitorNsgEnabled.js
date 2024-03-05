@@ -5,11 +5,13 @@ module.exports = {
     title: 'Monitor NSG Enabled',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Network Security Groups monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will audit the Network Security Groups that are enabled on the VM for permissive rules.',
     recommended_action: 'Ensure Network Security Group monitoring is configured from the Azure Security Center.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

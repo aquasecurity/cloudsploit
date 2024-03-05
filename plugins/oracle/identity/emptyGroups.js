@@ -5,6 +5,7 @@ module.exports = {
     title: 'Empty Groups',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures all groups have at least one member.',
     more_info: 'While having empty groups does not present a direct security risk, it does broaden the management landscape which could potentially introduce risks in the future.',
     link: 'https://docs.oracle.com/cd/E10391_01/doc.910/e10360/usergroups.htm',

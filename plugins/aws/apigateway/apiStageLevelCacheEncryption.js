@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Stage-Level Cache Encryption',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensure that your Amazon API Gateway REST APIs are configured to encrypt API cached responses.',
     more_info: 'It is strongly recommended to enforce encryption for API cached responses in order to protect your data from unauthorized access.',
     recommended_action: 'Modify API Gateway API stages to enable encryption on cache data',

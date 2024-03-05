@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECR Repository Encrypted',
     category: 'ECR',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensure that the images in ECR repository are encrypted using desired encryption level.',
     more_info: 'By default, Amazon ECR uses server-side encryption with Amazon S3-managed encryption keys which encrypts your data at rest using an AES-256 encryption algorithm. ' +
     'Use customer-managed keys instead, in order to gain more granular control over encryption/decryption process.',

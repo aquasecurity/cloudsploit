@@ -5,11 +5,13 @@ module.exports = {
     title: 'Automatic OS Upgrades Enabled',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that automatic operating system (OS) upgrades are enabled for Microsoft Azure virtual machine scale sets.',
     more_info: 'Enabling automatic OS image upgrades on your scale set helps ease update management by safely and automatically upgrading the OS disk for all instances in the scale set.',
     recommended_action: 'Enable automatic OS upgrades under operating system settings',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-automatic-upgrade',
     apis: ['virtualMachineScaleSets:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

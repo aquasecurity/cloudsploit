@@ -51,6 +51,7 @@ module.exports = {
     title: 'S3 Bucket Encryption Enforcement',
     category: 'S3',
     domain: 'Storage',
+    severity: 'High',
     description: 'All statements in all S3 bucket policies must have a condition that requires encryption at a certain level',
     more_info: 'S3 buckets support numerous types of encryption, including AES-256, KMS using a default key, KMS with a CMK, or via HSM-based key.',
     recommended_action: 'Configure a bucket policy to enforce encryption.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Topic CMK Encryption',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures Amazon SNS topics are encrypted with KMS Customer Master Keys (CMKs).',
     more_info: 'AWS SNS topics should be  encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys' +
                'in order to have a more granular control over the SNS data-at-rest encryption and decryption process.',

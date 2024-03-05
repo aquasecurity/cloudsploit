@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Encryption Enabled',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure SQS queues are encrypted using keys of desired encryption level',
     more_info: 'Messages sent to SQS queues can be encrypted using KMS server-side encryption. Existing queues can be modified to add encryption with minimal overhead.'+
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',

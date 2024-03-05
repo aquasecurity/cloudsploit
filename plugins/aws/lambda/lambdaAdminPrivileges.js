@@ -5,6 +5,7 @@ module.exports = {
     title: 'Lambda Admin Privileges',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensures no Lambda function available in your AWS account has admin privileges.',
     more_info: 'AWS Lambda Function should have most-restrictive IAM permissions for Lambda security best practices.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-permissions.html',

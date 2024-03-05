@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password Requires Uppercase',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy requires at least one uppercase character.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpasswordrules.htm',
