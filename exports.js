@@ -1110,6 +1110,7 @@ module.exports = {
         'vmssApprovedExtensions'        : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssApprovedExtensions'),
         'healthMonitoringExtensionHttps': require(__dirname + '/plugins/azure/virtualmachinescaleset/healthMonitoringExtensionHttps.js'),
         'vmssBootDiagnosticsEnabled'    : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssBootDiagnosticsEnabled'),
+        'vmssWindowsAntiMalwareExt'     : require(__dirname + '/plugins/azure/virtualmachinescaleset/vmssWindowsAntiMalwareExt'),
           
         'appConfigManagedIdentity'      : require(__dirname + '/plugins/azure/appConfigurations/appConfigManagedIdentity.js'),
         'appConfigurationDiagnosticLogs': require(__dirname + '/plugins/azure/appConfigurations/appConfigurationDiagnosticLogs.js'),
