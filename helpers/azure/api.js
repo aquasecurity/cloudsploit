@@ -412,7 +412,7 @@ var calls = {
     },
     virtualMachineScaleSets: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-09-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-07-01'
         }
     },
     bastionHosts: {
