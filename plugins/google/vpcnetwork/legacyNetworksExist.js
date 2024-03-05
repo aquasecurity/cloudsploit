@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/legacy',
     recommended_action: 'Ensure that there are no legacy networks in the GCP Project.',
     apis: ['networks:list'],
+    realtime_triggers: ['compute.networks.insert', 'compute.networks.delete', 'compute.networks.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

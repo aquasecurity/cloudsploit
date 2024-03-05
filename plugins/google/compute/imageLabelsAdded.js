@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/labeling-resources',
     recommended_action: 'Ensure labels are added to all disk images.',
     apis: ['images:list'],
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete', 'compute.images.setLabels' ],
     
     run: function(cache, settings, callback) {
         var results = [];

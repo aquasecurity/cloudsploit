@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
     recommended_action: 'Ensure all user service account keys are being managed by Google.',
     apis: ['serviceAccounts:list','keys:list'],
+    realtime_triggers: ['iam.admin.CreateServiceAccountKey', 'iam.admin.CreateServiceAccount','iam.admin.DeleteServiceAccountKey', 'iam.admin.DeleteServiceAccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

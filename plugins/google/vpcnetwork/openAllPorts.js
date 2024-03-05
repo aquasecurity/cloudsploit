@@ -20,6 +20,7 @@ module.exports = {
             'Firewalls should be properly secured to prevent access to ' +
             'backend services.'
     },
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

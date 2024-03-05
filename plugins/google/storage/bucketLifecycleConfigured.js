@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/storage/docs/managing-lifecycles',
     recommended_action: 'Modify storage buckets and configure lifecycle rules.',
     apis: ['buckets:list'],
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

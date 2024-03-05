@@ -27,7 +27,8 @@ module.exports = {
              'IAM roles handle rotation automatically, access keys need to be manually ' +
              'rotated.'
     },
-
+    realtime_triggers: ['iam.admin.CreateServiceAccountKey', 'iam.admin.CreateServiceAccount','iam.admin.DeleteServiceAccountKey', 'iam.admin.DeleteServiceAccount'],
+ 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

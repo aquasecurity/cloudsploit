@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/autoscaler/',
     recommended_action: 'Ensure autoscaling is enabled for all instance groups.',
     apis: ['instanceGroups:aggregatedList', 'autoscalers:aggregatedList','kubernetes:list'],
+    realtime_triggers: ['compute.instancegroups.insert', 'compute.instancegroups.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

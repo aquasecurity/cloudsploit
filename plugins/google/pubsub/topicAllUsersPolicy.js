@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/pubsub/docs/access-control',
     recommended_action: 'Ensure that each pub/sub topic is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['topics:list','topics:getIamPolicy'],
+    realtime_triggers:['iam.IAMPolicy.SetIamPolicy','pubsub.Subscriber.CreateSubscription','pubsub.Subscriber.DeleteSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];

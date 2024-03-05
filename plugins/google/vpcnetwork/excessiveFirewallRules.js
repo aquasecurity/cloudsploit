@@ -31,6 +31,7 @@ module.exports = {
             default: 30
         }
     },
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete'],
 
     run: function(cache, settings, callback) {
         var config = {

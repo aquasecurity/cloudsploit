@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
     apis: ['networks:list'],
+    realtime_triggers: ['compute.networks.insert', 'compute.networks.delete', 'compute.subnetworks.insert', 'compute.subnetworks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

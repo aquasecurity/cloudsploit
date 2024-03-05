@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/labeling-resources',
     recommended_action: 'Ensure labels are added to all VM instances.',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setLabels'],
 
     run: function(cache, settings, callback) {
         var results = [];

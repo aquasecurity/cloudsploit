@@ -20,7 +20,8 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
-
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

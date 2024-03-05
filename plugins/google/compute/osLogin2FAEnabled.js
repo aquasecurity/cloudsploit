@@ -16,6 +16,7 @@ module.exports = {
             'any required service. This includes using secured technologies ' +
             'such as SSH.'
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMetadata'],
 
     run: function(cache, settings, callback) {
         var results = [];

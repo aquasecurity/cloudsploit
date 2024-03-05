@@ -27,6 +27,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

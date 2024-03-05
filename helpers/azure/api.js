@@ -412,7 +412,7 @@ var calls = {
     },
     virtualMachineScaleSets: {
         listAll: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-09-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-07-01'
         }
     },
     bastionHosts: {
@@ -570,6 +570,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}?api-version=2022-04-01'
         }
     },
+    webhooks: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/webhooks?api-version=2015-10-31'
+        }
+    },
     accountVariables: {
         listByAutomationAccounts: {
             reliesOnPath: 'automationAccounts.list',
@@ -589,6 +596,13 @@ var postcalls = {
             reliesOnPath: 'databaseAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/Microsoft.Security/advancedThreatProtectionSettings/current?api-version=2017-08-01-preview'
+        }
+    },
+    sourceControls: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/sourceControls?api-version=2023-11-01'
         }
     },
     automationAccounts:{
@@ -1159,6 +1173,11 @@ var tertiarycalls = {
         },
         listByAppServices: {
             reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByBastionHosts: {
+            reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }

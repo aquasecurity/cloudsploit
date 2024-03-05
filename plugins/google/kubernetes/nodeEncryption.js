@@ -20,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['container.ClusterManager.CreateNodePool','container.ClusterManager.DeleteNodePool'],
 
     run: function(cache, settings, callback) {
         var results = [];

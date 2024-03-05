@@ -10,6 +10,7 @@ module.exports = {
     link: 'https://cloud.google.com/compute/docs/images',
     recommended_action: 'Ensure that your VM disk images are not accessible by allUsers or allAuthenticatedUsers.',
     apis: ['images:list', 'images:getIamPolicy'],
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

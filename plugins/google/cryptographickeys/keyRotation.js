@@ -21,6 +21,7 @@ module.exports = {
             'users or systems accessing HIPAA-compliant environments.',
 
     },
+    realtime_triggers: ['CreateKeyRing', 'CreateCryptoKey', 'UpdateCryptoKey'],
 
     run: function(cache, settings, callback) {
         var results = [];
