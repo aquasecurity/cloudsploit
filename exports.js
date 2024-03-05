@@ -927,6 +927,7 @@ module.exports = {
         'pythonVersion'                 : require(__dirname + '/plugins/azure/appservice/pythonVersion.js'),
         'clientCertEnabled'             : require(__dirname + '/plugins/azure/appservice/clientCertEnabled.js'),
         'netFrameworkVersion'           : require(__dirname + '/plugins/azure/appservice/netFrameworkVersion.js'),
+        'nodeJsVersion'                 : require(__dirname + '/plugins/azure/appservice/nodeJsVersion.js'),
         'authEnabled'                   : require(__dirname + '/plugins/azure/appservice/authEnabled.js'),
         'identityEnabled'               : require(__dirname + '/plugins/azure/appservice/identityEnabled.js'),
         'http20Enabled'                 : require(__dirname + '/plugins/azure/appservice/http20Enabled.js'),
