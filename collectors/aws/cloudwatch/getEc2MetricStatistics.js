@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    CloudWatch
+} = require('@aws-sdk/client-cloudwatch');
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var cloudwatch = new AWS.CloudWatch(AWSConfig);
+    var cloudwatch = new CloudWatch(AWSConfig);
 
     async.eachLimit(collection.ec2.describeInstances[AWSConfig.region].data, 10, function(reservation, cb) {
         reservation.Instances.forEach(instance => {

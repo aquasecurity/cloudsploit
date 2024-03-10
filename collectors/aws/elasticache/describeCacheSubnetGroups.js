@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    ElastiCache
+} = require('@aws-sdk/client-elasticache');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var elasticache = new AWS.ElastiCache(AWSConfig);
+    var elasticache = new ElastiCache(AWSConfig);
 
     async.eachLimit(collection.elasticache.describeCacheClusters[AWSConfig.region].data, 15, function(cluster, cb){
         collection.elasticache.describeCacheSubnetGroups[AWSConfig.region][cluster.CacheSubnetGroupName] = {};

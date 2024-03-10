@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    AppMesh
+} = require('@aws-sdk/client-app-mesh');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var appmesh = new AWS.AppMesh(AWSConfig);
+    var appmesh = new AppMesh(AWSConfig);
 
     if (!collection.appmesh ||
         !collection.appmesh.listMeshes ||
