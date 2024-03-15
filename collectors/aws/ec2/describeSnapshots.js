@@ -1,4 +1,9 @@
-var AWS = require('aws-sdk');
+const {
+    EC2
+} = require('@aws-sdk/client-ec2');
+const {
+    STS
+} = require('@aws-sdk/client-sts');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 // This call must be overridden because the
@@ -6,8 +11,8 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 // available, including public ones
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ec2 = new AWS.EC2(AWSConfig);
-    var sts = new AWS.STS(AWSConfig);
+    var ec2 = new EC2(AWSConfig);
+    var sts = new STS(AWSConfig);
 
     helpers.makeCustomCollectorCall(sts, 'getCallerIdentity', {}, retries, null, null, null, function(stsErr, stsData) {
         if (stsErr || !stsData.Account) {

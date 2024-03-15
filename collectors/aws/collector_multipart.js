@@ -16,16 +16,17 @@
  - callback: Function to call when the collection is complete
  *********************/
 
-var AWS = require('aws-sdk');
+const {
+    EC2
+} = require('@aws-sdk/client-ec2');
 var async = require('async');
-var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 var collectData = require(__dirname + '/../../helpers/shared.js');
 
-// Override max sockets
-var agent = new https.Agent({maxSockets: 100});
-AWS.config.update({httpOptions: {agent: agent}});
+const { Agent } = require('https');
+const { Agent: HttpAgent } = require('http');
+const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
 
 var CALLS_CONFIG = {
     TOTAL_PARTS: 14,
@@ -62,6 +63,21 @@ var collect = function(AWSConfig, settings, callback) {
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
 
+    // Override max sockets
+    AWSConfig.customUserAgent = `CustomAgent/${process.version}`;
+
+    const customHttpClient = new NodeHttpHandler({
+        httpsAgent: new Agent({maxSockets: 100}),
+        httpAgent: new HttpAgent({maxSockets: 100})
+    });
+     
+    AWSConfig.httpClient = {
+        handle: async(request, options) => {
+            return customHttpClient.handle(request, options);
+        },
+    };
+   
+
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 
@@ -80,7 +96,7 @@ var collect = function(AWSConfig, settings, callback) {
 
     let runApiCalls = [];
 
-    var AWSEC2 = new AWS.EC2(AWSConfig);
+    var AWSEC2 = new EC2(AWSConfig);
     var params = {AllRegions: true};
     var excludeRegions = [];
     var timeoutCheck;
@@ -112,6 +128,7 @@ var collect = function(AWSConfig, settings, callback) {
             var serviceName = service;
             var serviceLower = service.toLowerCase();
             if (!collection[serviceLower]) collection[serviceLower] = {};
+            const correctedServiceName = helpers.getCorrectServiceName(serviceName);
 
             // Loop through each of the service's functions
             async.eachOfLimit(call, 15, function(callObj, callKey, callCb) {
@@ -165,26 +182,27 @@ var collect = function(AWSConfig, settings, callback) {
                             }
                         });
                     } else {
-                        var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                  
+                        const executorModule = helpers.requireServiceModule(serviceName);
+                        const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[correctedServiceName](LocalAWSConfig))) : new executorModule[correctedServiceName](LocalAWSConfig);
                         var paginating = false;
                         var executorCb = function(err, data) {
                             if (err) {
                                 collection[serviceLower][callKey][region].err = err;
                                 helpers.logError(serviceLower, callKey, region, err, errors, apiCallErrors, apiCallTypeErrors, totalApiCallErrors, errorSummary, errorTypeSummary, debugMode);
                             }
-
+    
                             if (!data) return regionCb();
                             if (callObj.property && !data[callObj.property]) return regionCb();
-                            if (callObj.secondProperty && !data[callObj.secondProperty]) return regionCb();
-
+                            if (callObj.secondProperty && !(data[callObj.secondProperty] || (data[callObj.property] && data[callObj.property][callObj.secondProperty]))) regionCb();    
                             var dataToAdd = callObj.secondProperty ? data[callObj.property][callObj.secondProperty] : data[callObj.property] ? data[callObj.property] : data;
-
+    
                             if (paginating) {
                                 collection[serviceLower][callKey][region].data = collection[serviceLower][callKey][region].data.concat(dataToAdd);
                             } else {
                                 collection[serviceLower][callKey][region].data = dataToAdd;
                             }
-
+    
                             // If a "paginate" property is set, e.g. NextToken
                             var nextToken = callObj.paginate;
                             if (settings.paginate && nextToken && data[nextToken]) {
@@ -192,66 +210,41 @@ var collect = function(AWSConfig, settings, callback) {
                                 var paginateProp = callObj.paginateReqProp ? callObj.paginateReqProp : nextToken;
                                 return execute([paginateProp, data[nextToken]]);
                             }
-
+    
                             regionCb();
                         };
-
+    
                         function execute(nextTokens) { // eslint-disable-line no-inner-declarations
                             // Each region needs its own local copy of callObj.params
                             // so that the injection of the NextToken doesn't break other calls
                             var localParams = JSON.parse(JSON.stringify(callObj.params || {}));
                             if (nextTokens) localParams[nextTokens[0]] = nextTokens[1];
-                            if (callObj.params || nextTokens) {
-                                async.retry({
-                                    times: apiRetryAttempts,
-                                    interval: function(retryCount){
-                                        let retryExponential = 3;
-                                        let retryLeveler = 3;
-                                        let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                        let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                        let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+                            async.retry({
+                                times: apiRetryAttempts,
+                                interval: function(retryCount){
+                                    let retryExponential = 3;
+                                    let retryLeveler = 3;
+                                    let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+                                    let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+                                    let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
 
-                                        console.log(`Trying ${callKey} again in: ${retry_seconds / 1000} seconds`);
-                                        retries.push({seconds: Math.round(retry_seconds/1000)});
-                                        return retry_seconds;
-                                    },
-                                    errorFilter: function(err) {
-                                        return helpers.collectRateError(err, rateError);
-                                    }
-                                }, function(cb) {
-                                    executor[callKey](localParams, function(err, data) {
-                                        return cb(err, data);
-                                    });
-                                }, function(err, data){
-                                    executorCb(err, data);
+                                    console.log(`Trying ${callKey} again in: ${retry_seconds / 1000} seconds`);
+                                    retries.push({seconds: Math.round(retry_seconds/1000)});
+                                    return retry_seconds;
+                                },
+                                errorFilter: function(err) {
+                                    return helpers.collectRateError(err, rateError);
+                                }
+                            }, function(cb) {
+                                executor[callKey](localParams, function(err, data) {
+                                    return cb(err, data);
                                 });
-                            } else {
-                                async.retry({
-                                    times: apiRetryAttempts,
-                                    interval: function(retryCount){
-                                        let retryExponential = 3;
-                                        let retryLeveler = 3;
-                                        let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
-                                        let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
-                                        let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
-
-                                        console.log(`Trying ${callKey} again in: ${retry_seconds / 1000} seconds`);
-                                        retries.push({seconds: Math.round(retry_seconds/1000)});
-                                        return retry_seconds;
-                                    },
-                                    errorFilter: function(err) {
-                                        return helpers.collectRateError(err, rateError);
-                                    }
-                                }, function(cb) {
-                                    executor[callKey](function(err, data) {
-                                        return cb(err, data);
-                                    });
-                                }, function(err, data){
-                                    executorCb(err, data);
-                                });
-                            }
+                            }, function(err, data){
+                                executorCb(err, data);
+                            });
+                                    
                         }
-                        execute();
+                        execute();          
                     }
                 }, function() {
                     helpers.debugApiCalls(callKey, serviceName, debugMode, true);
@@ -276,6 +269,7 @@ var collect = function(AWSConfig, settings, callback) {
             async.eachOfLimit(helpers.postcallsMultipart[callsPart], 10, function(serviceObj, service, serviceCb) {
                 var serviceName = service;
                 var serviceLower = service.toLowerCase();
+                var correctedServiceName= helpers.getCorrectServiceName(serviceName);
                 var sendIntegration = helpers.postcallsMultipart[callsPart] && helpers.postcallsMultipart[callsPart][serviceName] && helpers.postcallsMultipart[callsPart][serviceName].sendIntegration ? helpers.postcallsMultipart[callsPart][serviceName].sendIntegration : false;
                 var serviceIntegration = {
                     enabled : sendIntegration && sendIntegration.enabled ? true : false,
@@ -345,8 +339,8 @@ var collect = function(AWSConfig, settings, callback) {
                                 }
                             });
                         } else {
-                            var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
-
+                            const executorModule = helpers.requireServiceModule(serviceName);
+                            const executor = debugMode ? (AWSXRay.captureAWSv3Client(new executorModule[correctedServiceName](LocalAWSConfig))) : new executorModule[correctedServiceName](LocalAWSConfig);
                             if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                 !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {
                                 return regionCb();
@@ -400,7 +394,7 @@ var collect = function(AWSConfig, settings, callback) {
                                 });
                             }, function() {
                                 regionCb();
-                            });
+                            });        
                         }
                     }, function() {
                         helpers.debugApiCalls(callKey, serviceName, debugMode, true);

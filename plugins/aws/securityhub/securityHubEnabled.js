@@ -23,7 +23,7 @@ module.exports = {
 
             if (!describeHub) return rcb();
 
-            if (describeHub.err && describeHub.err.code === 'InvalidAccessException'){
+            if (describeHub.err && describeHub.err.name === 'InvalidAccessException'){
                 helpers.addResult(results, 2, 'Security Hub is not enabled', region);
             } else if (describeHub.err || !describeHub.data) {
                 helpers.addResult(results, 3, `Unable to query for Security Hub: ${helpers.addError(describeHub)}`, region);

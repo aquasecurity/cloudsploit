@@ -62,7 +62,7 @@ describe('optimizerRecommendationsEnabled', function () {
         });
 
         it('should FAIL if Compute Optimizer is not enabled', function (done) {
-            const cache = createCache(null, {  message: 'Aws account is not registered for recommendation.', code: 'OptInRequiredException' });
+            const cache = createCache(null, {  message: 'Aws account is not registered for recommendation.', name: 'OptInRequiredException' });
             optimizerRecommendationsEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

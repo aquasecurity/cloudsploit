@@ -1,7 +1,17 @@
 var async = require('async');
 var regions = require(__dirname + '/regions');
-var AWS = require('aws-sdk');
 var helpers = require('../shared.js');
+
+function requireServiceModule(serviceName) {
+    try {
+        // Use the mapping or default to the provided service name
+        const packageName = servicePackageMapping[serviceName] || serviceName.toLowerCase();
+        return require(`@aws-sdk/client-${packageName}`);
+    } catch (error) {
+        console.log(`Module not found for service: ${serviceName}`);
+        return null; // Returning null to handle the case where the module is not found
+    }
+}
 
 function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
     if (!CREDENTIAL_DOWNLOAD_STARTED) {
@@ -526,17 +536,22 @@ function getS3BucketLocation(cache, region, bucketName) {
 function remediatePlugin(config, call, params, callback) {
     var service = call.split(':')[0];
     var callKey = call.split(':')[1];
-    var executor = new AWS[service](config);
+    try {
+        const executorModule = requireServiceModule(service);
+        var executor = new executorModule[service](config);
 
-    var executorCb = function(err, data) {
-        if (err) {
-            return callback(err, null);
-        } else {
-            return callback(null, data);
-        }
-    };
-
-    executor[callKey](params, executorCb);
+        var executorCb = function(err, data) {
+            if (err) {
+                return callback(err, null);
+            } else {
+                return callback(null, data);
+            }
+        };
+    
+        executor[callKey](params, executorCb);
+    } catch (error) {
+        console.error('Error during dynamic import:', error);
+    }
 }
 
 function nullArray(object) {
@@ -1136,6 +1151,53 @@ var checkTags = function(cache, resourceName, resourceList, region, results, set
     });
 };
 
+const servicePackageMapping = {
+    // Add mappings for services with different package names
+    'APIGateway': 'api-gateway',
+    'AppMesh': 'app-mesh',
+    'AutoScaling': 'auto-scaling',
+    'ElasticBeanstalk': 'elastic-beanstalk',
+    'ELB': 'elastic-load-balancing',
+    'ELBv2': 'elastic-load-balancing-v2',
+    'CognitoIdentityServiceProvider':'cognito-identity-provider',
+    'ComputeOptimizer':'compute-optimizer',
+    'ConfigService': 'config-service',
+    'LexModelsV2': 'lex-models-v2',
+    'S3Control': 's3-control',
+    'WAFRegional': 'waf-regional',
+    'CloudWatchLogs':'cloudwatch-logs',
+    'DevOpsGuru':'devops-guru',
+    'DMS': 'database-migration-service',
+    'ElasticTranscoder': 'elastic-transcoder',
+    'ForecastService': 'forecast',
+    'KinesisVideo': 'kinesis-video',
+    'Route53': 'route-53',
+    'Route53Domains': 'route-53-domains',
+    'SecretsManager':'secrets-manager',
+    'TimestreamWrite':'timestream-write',
+    'ResourceGroupsTaggingAPI': 'resource-groups-tagging-api',
+    'ServiceQuotas': 'service-quotas',
+    'CustomerProfiles' : 'customer-profiles',
+    'VoiceID': 'voice-id'
+    // Add more mappings as needed
+};
+
+const customServiceMapping = {
+    // Add custom mappings for services with different case sensitivity
+    'CodeArtifact': 'Codeartifact',
+    'CognitoIdentityServiceProvider':'CognitoIdentityProvider',
+    'DMS': 'DatabaseMigrationService',
+    'ELB':'ElasticLoadBalancing',
+    'ELBv2':'ElasticLoadBalancingV2',
+    'ForecastService':'Forecast',
+    'MQ': 'Mq'
+    // Add more custom mappings as needed
+};
+function getCorrectServiceName(serviceName) {
+    return customServiceMapping[serviceName] || serviceName;
+}
+
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -1173,4 +1235,6 @@ module.exports = {
     checkConditions: checkConditions,
     processFieldSelectors: processFieldSelectors,
     checkNetworkInterface: checkNetworkInterface,
+    getCorrectServiceName: getCorrectServiceName,
+    requireServiceModule: requireServiceModule,
 };

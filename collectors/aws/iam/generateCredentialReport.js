@@ -1,22 +1,36 @@
-var AWS = require('aws-sdk');
+const {
+    IAM,GenerateCredentialReportCommand, GetCredentialReportCommand 
+} = require('@aws-sdk/client-iam');
 var async = require('async');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var iam = new AWS.IAM(AWSConfig);
+    var iam = new IAM(AWSConfig);
 
-    var generateCredentialReport = function(genCb) {
-        iam.generateCredentialReport(function(err, data) {
-            if ((err && err.code && err.code == 'ReportInProgress') || (data && data.State)) return genCb();
-            if (err || !data || !data.State) return genCb(err || 'Unable to generate credential report');
-            genCb();
-        });
+    const generateCredentialReport = function(genCb) {
+        iam.send(new GenerateCredentialReportCommand({}))
+            .then((data) => {
+                if (data && data.State) {
+                    return genCb();
+                }
+                return genCb(data.State || 'Unable to generate credential report');
+            })
+            .catch((err) => {
+                if (err.name === 'ReportInProgressException') {
+                    return genCb();
+                }
+                return genCb(err);
+            });
     };
-
-    var getCredentialReport = function(pingCb) {
-        iam.getCredentialReport(function(err, data) {
-            if (err || !data || !data.Content) return pingCb('Waiting for credential report');
-            pingCb(null, data);
-        });
+    const getCredentialReport = function(pingCb) {
+        const command = new GetCredentialReportCommand({});
+        iam.send(command)
+            .then((data) => {
+                if (data && data.Content) {
+                    return pingCb(null, data);
+                }
+                return pingCb('Waiting for credential report');
+            })
+            .catch((err) => pingCb(err));
     };
 
     async.retry({times: 10, interval: 5000}, generateCredentialReport, function(genErr){
@@ -32,7 +46,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             }
             
             try {
-                var csvContent = reportData.Content.toString();
+                const csvContent = String.fromCharCode(...reportData.Content.toString('utf-8').split(',').map(Number));
                 var csvRows = csvContent.split('\n');
             } catch (e) {
                 collection.iam.generateCredentialReport[AWSConfig.region].err = 'Error converting credential CSV to string: ' + e;

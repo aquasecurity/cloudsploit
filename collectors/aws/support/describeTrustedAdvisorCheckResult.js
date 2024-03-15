@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    Support
+} = require('@aws-sdk/client-support');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var support = new AWS.Support(AWSConfig);
+    var support = new Support(AWSConfig);
 
     async.eachLimit(collection.support.describeTrustedAdvisorChecks[AWSConfig.region].data, 15, function(check, cb) {
         collection.support.describeTrustedAdvisorChecks[AWSConfig.region][check] = {};

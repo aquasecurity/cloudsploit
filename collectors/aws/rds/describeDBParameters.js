@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+var {
+    RDS
+} = require('@aws-sdk/client-rds');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var rds = new AWS.RDS(AWSConfig);
+    var rds = new RDS(AWSConfig);
     async.eachLimit(collection.rds.describeDBParameterGroups[AWSConfig.region].data, 15, function(group, cb) {
         collection.rds.describeDBParameters[AWSConfig.region][group.DBParameterGroupName] = {};
         var params = {
