@@ -18,13 +18,18 @@
 
 var AWS = require('aws-sdk');
 var async = require('async');
-var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 var collectData = require(__dirname + '/../../helpers/shared.js');
+var  proxy = require('proxy-agent');
+
+// Configure proxy from environment variables if exists
+// Envs: http_proxy, https_proxy, no_proxy
+var agent = new proxy.ProxyAgent();
 
 // Override max sockets
-var agent = new https.Agent({maxSockets: 100});
+agent.maxFreeSockets = 100
+
 AWS.config.update({httpOptions: {agent: agent}});
 
 var CALLS_CONFIG = {
