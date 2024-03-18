@@ -41,9 +41,9 @@
   "dependencies": {
     "@alicloud/pop-core": "^1.7.10",
     "@azure/data-tables": "^13.2.2",
+    "@azure/storage-blob": "^12.14.0",
     "@azure/storage-file-share": "^12.14.0",
     "@azure/storage-queue": "^12.13.0",
-    "@azure/storage-blob": "^12.14.0",
     "@octokit/app": "^3.0.0",
     "@octokit/request": "^3.0.3",
     "@octokit/rest": "^16.3.2",
@@ -57,6 +57,7 @@
     "google-auth-library": "^8.1.1",
     "minimatch": "^3.0.4",
     "ms-rest-azure": "^2.6.0",
+    "proxy-agent": "^6.4.0",
     "tty-table": "^4.1.3"
   },
   "devDependencies": {
