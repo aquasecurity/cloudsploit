@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that AWS Lambda functions enhanced monitoring is enabled.',
     more_info: 'Enhanced monitoring Amazon Lambda functions with Amazon CloudWatch Lambda Insights help you to monitor, troubleshoot, and optimize your functions.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-insights.html',
-    recommended_action: 'Modify Lambda function configurations and  add new tags',
+    recommended_action: 'Modify Lambda function configurations and enable enhanced monitoring.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunction'],
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
@@ -39,8 +39,13 @@ module.exports = {
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionName;
                 var functionInfo = helpers.addSource(cache, source, ['lambda', 'getFunction', region, resource]);
-            }
+                if (functionInfo && functionInfo.data && functionInfo.data.Configuration && functionInfo.data.Configuration.Layers && functionInfo.data.Configuration.Layers[0].Arn) {
+                    helpers.addResult(results, 0, 'Lambda functions has enhanced monitoring enabled', region, resource);
+                } else {
+                    helpers.addResult(results, 2, 'Lambda functions does not have enhanced monitoring enabled', region, resource);
 
+                }
+            }
             
             rcb();
         }, function(){

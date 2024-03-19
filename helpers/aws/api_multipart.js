@@ -1977,7 +1977,6 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
-                rateLimit: 100, // it's not documented but experimentially 10/second works.
             },
             listTags: {
                 reliesOnService: 'lambda',
