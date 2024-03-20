@@ -2621,6 +2621,12 @@ var postcalls = [
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
             },
+            listFunctionUrlConfigs : { 
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             sendIntegration: {
                 enabled: true
             }
