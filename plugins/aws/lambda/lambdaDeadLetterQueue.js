@@ -38,14 +38,15 @@ module.exports = {
             for (var lambdaFunc of listFunctions.data) {
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionName;
+                
                 var functionConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionConfiguration', region, resource]);
-            } 
-            if (functionConfig && functionConfig.data && functionConfig.data.DeadLetterConfig && functionConfig.data.DeadLetterConfig.TargetArn) {
-                helpers.addResult(results, 0, 'Lambda function has Dead Letter Queue configured', region, resource);
-            } else {
-                helpers.addResult(results, 2, 'Lambda function does not have Dead Letter Queue configured', region, resource);
+         
+                if (functionConfig && functionConfig.data && functionConfig.data.DeadLetterConfig && functionConfig.data.DeadLetterConfig.TargetArn) {
+                    helpers.addResult(results, 0, 'Lambda function has Dead Letter Queue configured', region, resource);
+                } else {
+                    helpers.addResult(results, 2, 'Lambda function does not have Dead Letter Queue configured', region, resource);
+                }
             }
-            
             rcb();
         }, function(){
             callback(null, results, source);
