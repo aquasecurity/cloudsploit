@@ -75,6 +75,7 @@ module.exports = {
         'cloudfrontTlsDeprecatedProtocols' : require(__dirname + '/plugins/aws/cloudfront/cloudfrontTlsDeprecatedProtocols.js'),
 
         'volumeEncryption'              : require(__dirname + '/plugins/aws/comprehend/volumeEncryption.js'),
+        'flywheelInVpc'                 : require(__dirname + '/plugins/aws/comprehend/flywheelInVpc.js'),
         'outputResultEncryption'        : require(__dirname + '/plugins/aws/comprehend/outputResultEncryption.js'),
 
         'plainTextParameters'           : require(__dirname + '/plugins/aws/cloudformation/plainTextParameters.js'),

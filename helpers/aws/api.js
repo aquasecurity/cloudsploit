@@ -829,6 +829,10 @@ var calls = {
             params: {
                 MaxResults: 100
             }
+        },
+        listFlywheels:{
+            property: 'FlywheelSummaryList',
+            paginate: 'nextToken'
         }
     },
     Connect: {
@@ -1745,9 +1749,6 @@ var postcalls = [
         DocDB: {
             sendIntegration: serviceMap['DocumentDB']
         },
-        Comprehend: {
-            sendIntegration: serviceMap['AI & ML'][1]
-        },
         Translate: {
             sendIntegration: serviceMap['AI & ML'][3]
         },
@@ -1975,6 +1976,15 @@ var postcalls = [
                 filterValue: 'TrailARN'
             },
             sendIntegration: serviceMap['CloudTrail']
+        },
+        Comprehend: {
+            describeFlywheel: {
+                reliesOnService: 'comprehend',
+                reliesOnCall: 'listFlywheels',
+                filterKey: 'FlywheelArn',
+                filterValue: 'FlywheelArn'
+            },
+            sendIntegration: serviceMap['AI & ML'][1]
         },
         Imagebuilder: {
             getContainerRecipe: {
