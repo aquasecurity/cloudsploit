@@ -11,6 +11,7 @@ module.exports = {
     recommended_action: 'Update the Amazon Comprehend Flywheel and configure VPC',
     link: 'https://docs.aws.amazon.com/comprehend/latest/dg/usingVPC.html',
     apis: ['Comprehend:listFlywheels', 'Comprehend:describeFlywheel'],
+    realtime_triggers: ['comprehend:CreateFlywheel','comprehend:UpdateFlywheel','comprehend:DeleteFlywheel'],
 
     run: function(cache, settings, callback) {
         var results = [];
