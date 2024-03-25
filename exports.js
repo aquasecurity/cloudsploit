@@ -1135,6 +1135,8 @@ module.exports = {
         'accountPublicAccessDisabled'   : require(__dirname + '/plugins/azure/openai/accountPublicAccessDisabled.js'),
 
         'WorkspaceInfraEncryption'      : require(__dirname + '/plugins/azure/databricks/workspaceDbfsInfraEncryption.js'),
+        'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
+
 
 
     },
