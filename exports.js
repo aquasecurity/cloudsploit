@@ -427,6 +427,7 @@ module.exports = {
 
         'domainAutoRenew'               : require(__dirname + '/plugins/aws/route53/domainAutoRenew.js'),
         'domainExpiry'                  : require(__dirname + '/plugins/aws/route53/domainExpiry.js'),
+        'route53InUse'                  : require(__dirname + '/plugins/aws/route53/route53InUse.js'),
         'domainTransferLock'            : require(__dirname + '/plugins/aws/route53/domainTransferLock.js'),
         'danglingDnsRecords'            : require(__dirname + '/plugins/aws/route53/danglingDnsRecords.js'),
         'privacyProtection'             : require(__dirname + '/plugins/aws/route53/privacyProtection.js'),
