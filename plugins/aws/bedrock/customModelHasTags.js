@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/bedrock/latest/userguide/tagging.html',
     recommended_action: 'Modify Bedrock Custom model and add tags.',
     apis: ['Bedrock:listCustomModels','ResourceGroupsTaggingAPI:getResources'],
-    realtime_triggers: ['bedrock:TagResource','bedrock:UntagResource'],
+    realtime_triggers: ['bedrock:TagResource','bedrock:UntagResource', 'bedrock:DeleteCustomModel'],
 
     run: function(cache, settings, callback) {
         var results = [];
