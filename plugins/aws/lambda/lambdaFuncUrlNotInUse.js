@@ -5,11 +5,11 @@ module.exports = {
     title: 'Lambda Function URL Not in Use',
     category: 'Lambda',
     domain: 'Serverless',
-    severity: 'Low',
+    severity: 'Medium',
     description: 'Ensure that AWS Lambda functions are not configured with function URLs for HTTP(S) endpoints.',
     more_info: 'A function URL creates a direct HTTP(S) endpoint to your function and this may pose a security risk depending on the security configuration and intention of the function.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html',
-    recommended_action: 'Modify Lambda function configurations and delete function url',
+    recommended_action: 'Modify Lambda function configurations and delete function url.',
     apis: ['Lambda:listFunctions','Lambda:listFunctionUrlConfigs'],
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
@@ -39,7 +39,9 @@ module.exports = {
                 var resource = lambdaFunc.FunctionName;
                 var urlConfigs = helpers.addSource(cache, source, ['lambda', 'listFunctionUrlConfigs', region, resource]);
                 
-                if (urlConfigs && urlConfigs.data && urlConfigs.data.FunctionUrlConfigs && urlConfigs.data.FunctionUrlConfigs.length){
+                if (urlConfigs && urlConfigs.data &&
+                    urlConfigs.data.FunctionUrlConfigs && 
+                    urlConfigs.data.FunctionUrlConfigs.length){
                     helpers.addResult(results, 2, 'Lambda function Url is configured', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'Lambda function Url is not configured', region, resource);
