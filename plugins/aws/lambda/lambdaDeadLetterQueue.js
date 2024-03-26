@@ -6,10 +6,10 @@ module.exports = {
     category: 'Lambda',
     domain: 'Serverless',
     severity: 'Low',
-    description: 'Ensure that AWS Lambda functions are configured to use a Dead Letter Queue',
-    more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
+    description: 'Ensure that AWS Lambda functions are configured to use a Dead Letter Queue.',
+    more_info: 'Dead Letter Queues (DLQs) for your Amazon Lambda functions can make your serverless application more resilient by capturing and storing unprocessed events from asynchronous invocations for further analysis or reprocessing.',
     link: 'https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-deadletterqueue.html',
-    recommended_action: 'Modify Lambda function configurations and  enable dead letter queue',
+    recommended_action: 'Modify Lambda function configurations and enable dead letter queue',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionConfiguration'],
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
