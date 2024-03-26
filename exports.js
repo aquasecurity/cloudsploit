@@ -54,6 +54,7 @@ module.exports = {
 
         'customModelInVpc'              :require(__dirname + '/plugins/aws/bedrock/customModelInVpc.js'),
         'privateCustomModel'            :require(__dirname + '/plugins/aws/bedrock/privateCustomModel.js'),
+        'customModelHasTags'            :require(__dirname + '/plugins/aws/bedrock/customModelHasTags.js'),
         'modelInvocationLoggingEnabled' :require(__dirname + '/plugins/aws/bedrock/modelInvocationLoggingEnabled.js'),
         'customModelEncrypted'          :require(__dirname + '/plugins/aws/bedrock/customModelEncryptionEnabled.js'),
 
