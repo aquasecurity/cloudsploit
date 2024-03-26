@@ -39,7 +39,10 @@ module.exports = {
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionName;
                 var functionInfo = helpers.addSource(cache, source, ['lambda', 'getFunction', region, resource]);
-                if (functionInfo && functionInfo.data && functionInfo.data.Configuration && functionInfo.data.Configuration.Layers && functionInfo.data.Configuration.Layers[0].Arn) {
+                
+                if (functionInfo && functionInfo.data && functionInfo.data.Configuration && 
+                    functionInfo.data.Configuration.Layers && 
+                    functionInfo.data.Configuration.Layers[0].Arn) {
                     helpers.addResult(results, 0, 'Lambda functions has enhanced monitoring enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Lambda function does not have enhanced monitoring enabled', region, resource);
