@@ -6,10 +6,10 @@ module.exports = {
     category: 'CloudFormation',
     domain: 'Application Integration',
     severity: 'Medium',
-    description: 'Ensures that a deletion policy is used for Amazon CloudFormation stacks',
-    more_info: 'AWS CloudFormation stack should not be in drifted state to ensure that stack template is aligned with the resources.',
+    description: 'Ensures that a deletion policy is used for Amazon CloudFormation stacks.',
+    more_info: 'AWS Cloudformation stacks should have a deletion policy, implemented with the DeletionPolicy attribute in order preserve or backup AWS resources when the stacks are deleted.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html',
-    recommended_action: 'Resolve CloudFormation stack drift by importing drifted resource back to the stack.',
+    recommended_action: 'Enable Deletion Policy attribute in the AWS Cloudformation stack.',
     apis: ['CloudFormation:listStacks', 'CloudFormation:getTemplate'],
     realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
     
@@ -39,6 +39,7 @@ module.exports = {
                 var resource = stack.StackName;
                 var templates = helpers.addSource(cache, source,
                     ['cloudformation', 'getTemplate', region, resource]);
+
                 if (templates && templates.data && templates.data.TemplateBody) {
                     var deletionPolicy = templates.data.TemplateBody.includes('DeletionPolicy');
                     
