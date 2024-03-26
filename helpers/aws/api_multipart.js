@@ -1984,6 +1984,12 @@ var postcalls = [
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
             },
+            getFunctionCodeSigningConfig : {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             sendIntegration: {
                 enabled: true
             }
