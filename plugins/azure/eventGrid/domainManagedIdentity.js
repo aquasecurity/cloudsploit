@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Event Grid Domain Public Access',
+    title: 'Event Grid Domain Managed Identity',
     category: 'Event Grid',
     domain: 'Management and Governance',
     severity: 'Medium',
