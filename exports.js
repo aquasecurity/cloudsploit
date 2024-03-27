@@ -1022,6 +1022,7 @@ module.exports = {
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/keyvaults/kvLogAnalyticsEnabled.js'),
 
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
+        'cosmosdbDiagnosticLogs'        : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbDiagnosticLogs.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
         'cosmosdbHasTags'               : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbHasTags.js'),
