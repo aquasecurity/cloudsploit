@@ -303,6 +303,7 @@ module.exports = {
         'opensearchClusterStatus'       : require(__dirname + '/plugins/aws/opensearch/opensearchClusterStatus.js'),
         'opensearchAccessFromIps'       : require(__dirname + '/plugins/aws/opensearch/opensearchAccessFromIps.js'),
         'opensearchCrossAccountAccess'  : require(__dirname + '/plugins/aws/opensearch/opensearchCrossAccountAccess'),
+        'opensearchEnableAuditLogs'     : require(__dirname + '/plugins/aws/opensearch/opensearchEnableAuditLogs'),
         'opensearchDedicatedMasterEnabled' : require(__dirname + '/plugins/aws/opensearch/opensearchDedicatedMasterEnabled.js'),
         'opensearchDesiredInstanceTypes': require(__dirname + '/plugins/aws/opensearch/opensearchDesiredInstanceTypes.js'),
         'opensearchDomainEncryptionEnabled': require(__dirname + '/plugins/aws/opensearch/opensearchDomainEncryptionEnabled.js'),
