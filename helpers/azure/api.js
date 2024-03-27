@@ -510,6 +510,11 @@ var calls = {
         },
         sendIntegration: serviceMap['AI & ML']
     },
+    databricks: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Databricks/workspaces?api-version=2023-02-01'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -1180,8 +1185,12 @@ var tertiarycalls = {
             reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByDatabricksWorkspace: {
+            reliesOnPath: 'databricks.listWorkspaces',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
