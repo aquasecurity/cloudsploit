@@ -697,6 +697,7 @@ module.exports = {
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),  
         
         'containerAppManagedIdentity'   : require(__dirname + '/plugins/azure/containerapps/containerAppManagedIdentity.js'),
+        'containerAppHttpsOnly'         : require(__dirname + '/plugins/azure/containerapps/containerAppHttpsOnly.js'),
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
