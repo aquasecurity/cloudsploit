@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensures that Azure Databricks workspace has diagnostic logs enabled.',
     more_info: 'Enabling diagnostics logs for Azure Databricks workspace helps to monitor detailed usage patterns in your account, access and query your account\'s audit logs, and identifying potential security threats, providing essential insights for effective management and security of your environment.',
-    recommended_action: 'Enable that Azure Databricks workspace has diagnostic logs enabled.',
+    recommended_action: 'Ensure that Azure Databricks workspace has diagnostic logs enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/databricks/administration-guide/account-settings/audit-logs',
     apis: ['databricks:listWorkspaces','diagnosticSettings:listByDatabricksWorkspace'],
     realtime_triggers: ['microsoftdatabricks:workspaces:write','microsoftdatabricks:workspaces:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
