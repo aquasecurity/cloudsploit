@@ -201,6 +201,11 @@ var calls = {
             rateLimit: 3000
         }
     },
+    containerApps:{
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.App/containerApps?api-version=2023-05-01'
+        }
+    },
     appConfigurations: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01'
