@@ -11,7 +11,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/managed-identity-based-authentication',
     recommended_action: 'Enable system or user-assigned identities for all Azure Cosmos DB accounts.',
     apis: ['databaseAccounts:list'],
-    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:write'],
+    realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:delete'],
     
     run: function(cache, settings, callback) {
         const results = [];
