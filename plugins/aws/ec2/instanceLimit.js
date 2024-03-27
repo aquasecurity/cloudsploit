@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
     recommended_action: 'Contact AWS support to increase the number of instances available',
-    apis: ['EC2:describeAccountAttributes', 'EC2:describeInstances'],
+    apis: ['EC2:describeInstances'],
     settings: {
         instance_limit_percentage_fail: {
             name: 'Instance Limit Percentage Fail',
@@ -23,6 +23,12 @@ module.exports = {
             description: 'Return a warning result when utilized instances equals or exceeds this percentage',
             regex: '^(100|[1-9][0-9]?)$',
             default: 75
+        },
+        max_instances_limit: {
+            name: 'Maximum Instances Limit',
+            description: 'Return a warning result when utilized instances equals or exceeds this value',
+            regex: '^(100|[1-9][0-9]?)$',
+            default: 20
         }
     },
     realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances'],
@@ -30,7 +36,8 @@ module.exports = {
     run: function(cache, settings, callback) {
         var config = {
             instance_limit_percentage_fail: settings.instance_limit_percentage_fail || this.settings.instance_limit_percentage_fail.default,
-            instance_limit_percentage_warn: settings.instance_limit_percentage_warn || this.settings.instance_limit_percentage_warn.default
+            instance_limit_percentage_warn: settings.instance_limit_percentage_warn || this.settings.instance_limit_percentage_warn.default,
+            max_instances_limit: settings.max_instances_limit || this.settings.max_instances_limit.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -40,28 +47,6 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         async.each(regions.ec2, function(region, rcb){
-            var describeAccountAttributes = helpers.addSource(cache, source,
-                ['ec2', 'describeAccountAttributes', region]);
-
-            if (!describeAccountAttributes) return rcb();
-
-            if (describeAccountAttributes.err || !describeAccountAttributes.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for account limits: ' + helpers.addError(describeAccountAttributes), region);
-                return rcb();
-            }
-
-            var limits = {
-                'max-instances': 20
-            };
-
-            // Loop through response to assign custom limits
-            for (var i in describeAccountAttributes.data) {
-                if (limits[describeAccountAttributes.data[i].AttributeName]) {
-                    limits[describeAccountAttributes.data[i].AttributeName] = describeAccountAttributes.data[i].AttributeValues[0].AttributeValue;
-                }
-            }
-
             var describeInstances = helpers.addSource(cache, source,
                 ['ec2', 'describeInstances', region]);
 
@@ -88,8 +73,8 @@ module.exports = {
                 }
             }
 
-            var percentage = Math.ceil((ec2Instances / limits['max-instances'])*100);
-            var returnMsg = 'Account contains ' + ec2Instances + ' of ' + limits['max-instances'] + ' (' + percentage + '%) available instances';
+            var percentage = Math.ceil((ec2Instances / config.max_instances_limit)*100);
+            var returnMsg = 'Account contains ' + ec2Instances + ' of ' + config.max_instances_limit + ' (' + percentage + '%) available instances';
 
             if (percentage >= config.instance_limit_percentage_fail) {
                 helpers.addResult(results, 2, returnMsg, region, null, custom);
