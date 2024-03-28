@@ -42,6 +42,12 @@ module.exports = {
                 
                 var codeSigningConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionCodeSigningConfig', region,lambdaFunc.FunctionName]);
 
+                if (!codeSigningConfig || codeSigningConfig.err || !codeSigningConfig.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to query for Lambda function Code Signing Config: ${helpers.addError(codeSigningConfig)}`, region, resource);
+                    return rcb();
+                }
+
                 if (codeSigningConfig && codeSigningConfig.data && codeSigningConfig.data.CodeSigningConfigArn) {
                     helpers.addResult(results, 0, ' Lambda Function has code signing config enabled ', region,resource);
                 } else {

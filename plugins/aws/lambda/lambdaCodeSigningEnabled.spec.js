@@ -88,6 +88,14 @@ describe('lambdaCodeSigningEnabled', function () {
                 done();
             });
         });
+        it('should UNKNOWN if unable to list Lambda functions code signing config', function (done) {
+            const cache = createCache(listFunctions, null);
+            lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
 
         it('should PASS if no Lambda functions found', function (done) {
             const cache = createNullCache();
