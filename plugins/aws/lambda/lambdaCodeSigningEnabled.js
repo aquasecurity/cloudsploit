@@ -38,7 +38,7 @@ module.exports = {
             for (var lambdaFunc of listFunctions.data) {
 
                 if (!lambdaFunc.FunctionName) continue;
-                var resource = lambdaFunc.FunctionName;
+                var resource = lambdaFunc.FunctionArn;
                 
                 var codeSigningConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionCodeSigningConfig', region, resource]);
 
