@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Lambda Function URL Not in Use',
+    title: 'Lambda Function URL Not In Use',
     category: 'Lambda',
     domain: 'Serverless',
     severity: 'Medium',
