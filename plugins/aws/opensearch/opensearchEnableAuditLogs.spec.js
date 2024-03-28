@@ -90,6 +90,7 @@ describe('opensearchEnableAuditLogs', function () {
             opensearchEnableAuditLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.include('us-east-1')
                 done();
             });
         });
@@ -99,6 +100,7 @@ describe('opensearchEnableAuditLogs', function () {
             opensearchEnableAuditLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.include('us-east-1')
                 done();
             });
         });
@@ -109,6 +111,7 @@ describe('opensearchEnableAuditLogs', function () {
             opensearchEnableAuditLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.include('us-east-1')
                 done();
             });
         });
@@ -118,6 +121,7 @@ describe('opensearchEnableAuditLogs', function () {
             opensearchEnableAuditLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.include('us-east-1')
                 done();
             });
         });

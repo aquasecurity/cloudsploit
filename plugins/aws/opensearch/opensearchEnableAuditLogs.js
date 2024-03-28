@@ -10,13 +10,16 @@ module.exports = {
     more_info: 'The Audit Logs feature allows you to log all user activity on your Amazon OpenSearch domains (clusters), including failed login attempts, and which users accessed certain indices, documents, or fields. ',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html',
     recommended_action: 'Modify Opensearch domain and enable audit logs.',
-    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
     realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.es, function(region, rcb) {
             var listDomainNames = helpers.addSource(cache, source,
@@ -37,7 +40,8 @@ module.exports = {
             }
 
             listDomainNames.data.forEach(function(domain){
-            const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
+                const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
+                
                 var describeDomain = helpers.addSource(cache, source,
                     ['opensearch', 'describeDomain', region, domain.DomainName]);
 
