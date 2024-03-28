@@ -16,6 +16,7 @@ module.exports = {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
 
