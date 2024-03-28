@@ -45,7 +45,7 @@ module.exports = {
 
                 if (workspace.State === 'UNHEALTHY') {
                     helpers.addResult(results, 2,
-                        'The workspace is not operational', region, resource);
+                        'The workspace is in healthy state', region, resource);
                 } else {
                     helpers.addResult(results, 0,
                         'WorkSpace is operational', region, resource);
