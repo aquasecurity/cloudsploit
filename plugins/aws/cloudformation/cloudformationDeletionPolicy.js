@@ -6,7 +6,7 @@ module.exports = {
     category: 'CloudFormation',
     domain: 'Application Integration',
     severity: 'Medium',
-    description: 'Ensures that a deletion policy is used for Amazon CloudFormation stacks.',
+    description: 'Ensures that deletion policy is used for Amazon CloudFormation stacks.',
     more_info: 'AWS Cloudformation stacks should have a deletion policy, implemented with the DeletionPolicy attribute in order preserve or backup AWS resources when the stacks are deleted.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html',
     recommended_action: 'Enable deletion policy attribute in the AWS Cloudformation stack.',
