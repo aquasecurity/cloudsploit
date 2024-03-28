@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Serverless',
     severity: 'Medium',
     description: 'Ensure that AWS Lambda functions enhanced monitoring is enabled.',
-    more_info: 'Enhanced monitoring using Amazon CloudWatch Lambda Insights help you to monitor, troubleshoot, and optimize your functions.',
+    more_info: 'Amazon CloudWatch Lambda Insights is a monitoring and troubleshooting service for serverless applications running on Amazon Lambda. The service collects, aggregates, and summarizes system-level metrics including CPU, memory, disk, and network usage. It helps you to monitor, troubleshoot, and optimize your functions.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-insights.html',
     recommended_action: 'Modify Lambda function configurations and enable enhanced monitoring.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunction'],
@@ -36,12 +36,22 @@ module.exports = {
             }
 
             for (var lambdaFunc of listFunctions.data) {
-                if (!lambdaFunc.FunctionName) continue;
-                var resource = lambdaFunc.FunctionName;
-                var functionInfo = helpers.addSource(cache, source, ['lambda', 'getFunction', region, resource]);
+
+                if (!lambdaFunc.FunctionArn) continue;
+                var resource = lambdaFunc.FunctionArn;
+
+                var functionInfo = helpers.addSource(cache, source, ['lambda', 'getFunction', region, lambdaFunc.FunctionName]);
+
+                if (!functionInfo || functionInfo.err || !functionInfo.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to query for Lambda function Information: ${helpers.addError(functionInfo)}`, region,resource);
+                    return rcb();
+                }
                 
-                if (functionInfo && functionInfo.data && functionInfo.data.Configuration && 
+                if (functionInfo && functionInfo.data && 
+                    functionInfo.data.Configuration && 
                     functionInfo.data.Configuration.Layers && 
+                    functionInfo.data.Configuration.Layers[0] &&
                     functionInfo.data.Configuration.Layers[0].Arn) {
                     helpers.addResult(results, 0, 'Lambda functions has enhanced monitoring enabled', region, resource);
                 } else {
