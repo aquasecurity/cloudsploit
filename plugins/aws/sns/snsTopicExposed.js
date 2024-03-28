@@ -8,7 +8,7 @@ module.exports = {
     domain: 'Application Integration',
     severity: 'High',
     description: 'Ensures SNS topics are not publicly accessible.',
-    more_info: 'Allowing anonymous users to have access to your Amazon SNS topics can lead to unauthorized actions such as intercepting and receiving/publishing messages without permission.',
+    more_info: 'Allowing anonymous users to have access to your Amazon SNS topics can lead to unauthorized actions such as intercepting and receiving/publishing messages without permission. To avoid data leakage and unexpected costs , limit access to SNS topics by implementing the right permissions.',
     recommended_action: 'Identify any publicly accessible Amazon SNS topics and update their permissions in order to protect against attackers and unauthorized personnel.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-security-best-practices.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
