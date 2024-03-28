@@ -1622,7 +1622,6 @@ module.exports = {
         'logServiceEnabled'             : require(__dirname + '/plugins/alibaba/ack/logServiceEnabled.js'),
         'cloudMonitorEnabled'           : require(__dirname + '/plugins/alibaba/ack/cloudMonitorEnabled.js'),
 
-
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),

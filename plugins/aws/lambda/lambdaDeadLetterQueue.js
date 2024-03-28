@@ -36,17 +36,27 @@ module.exports = {
             }
 
             for (var lambdaFunc of listFunctions.data) {
-                if (!lambdaFunc.FunctionName) continue;
-                var resource = lambdaFunc.FunctionName;
+
+                if (!lambdaFunc.FunctionArn) continue;
+                var resource = lambdaFunc.FunctionArn;
                 
-                var functionConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionConfiguration', region, resource]);
+                var functionConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionConfiguration', region, lambdaFunc.FunctionName]);
+
+                if (!functionConfig || functionConfig.err || !functionConfig.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to query for Lambda function Config: ${helpers.addError(functionConfig)}`, region, resource);
+                    return rcb();
+                }
          
-                if (functionConfig && functionConfig.data && functionConfig.data.DeadLetterConfig && functionConfig.data.DeadLetterConfig.TargetArn) {
-                    helpers.addResult(results, 0, 'Lambda function has Dead Letter Queue configured', region, resource);
+                if (functionConfig && functionConfig.data && 
+                    functionConfig.data.DeadLetterConfig && 
+                    functionConfig.data.DeadLetterConfig.TargetArn) {
+                    helpers.addResult(results, 0, 'Lambda function has dead letter queue configured', region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'Lambda function does not have Dead Letter Queue configured', region, resource);
+                    helpers.addResult(results, 2, 'Lambda function does not have dead letter queue configured', region, resource);
                 }
             }
+
             rcb();
         }, function(){
             callback(null, results, source);

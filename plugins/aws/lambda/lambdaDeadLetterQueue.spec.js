@@ -67,7 +67,7 @@ describe('Lambda Dead Letter Queue', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Lambda function has Dead Letter Queue configured');
+                expect(results[0].message).to.include('Lambda function has dead letter queue configured');
                 done();
             };
 
@@ -96,7 +96,7 @@ describe('Lambda Dead Letter Queue', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Lambda function does not have Dead Letter Queue configured');
+                expect(results[0].message).to.include('Lambda function does not have dead letter queue configured');
                 done();
             };
 
