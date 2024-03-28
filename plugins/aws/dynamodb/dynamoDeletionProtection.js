@@ -52,7 +52,7 @@ module.exports = {
                     continue;
                 }
 
-                if (describeTable.data && describeTable.data.Table && describeTable.data.Table.DeletionProtectionEnabled) {
+                if (describeTable.data.Table && describeTable.data.Table.DeletionProtectionEnabled) {
                     helpers.addResult(results, 0,
                         `DynamoDB table "${table}" has deletion protection enabled`,
                         region, resource);
