@@ -47,8 +47,8 @@ module.exports = {
                         location, account.id);
                     continue;
                 }
+                
                 var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
-
                 if (found) {
                     helpers.addResult(results, 0, 'Cosmos DB account has diagnostic logs enabled', location, account.id);
 
