@@ -40,7 +40,7 @@ module.exports = {
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
                 
-                var codeSigningConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionCodeSigningConfig', region, resource]);
+                var codeSigningConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionCodeSigningConfig', region,lambdaFunc.FunctionName]);
 
                 if (codeSigningConfig && codeSigningConfig.data && codeSigningConfig.data.CodeSigningConfigArn) {
                     helpers.addResult(results, 0, 'Code signing config is enabled for Lambda Function', region,resource);
