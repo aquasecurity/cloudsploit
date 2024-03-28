@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures that diagnostic logging is enabled for Azure Cosmos DB accounts.',
     more_info: 'Enabling diagnostic logging for Cosmos DB accounts is crucial to collect resource logs, which provide detailed data about resource operations. It provide valuable insights into resource activity, assisting in monitoring, diagnosing issues, and optimizing the performance of Azure resources.',
     recommended_action: 'Enable diagnostic logging for all Azure Cosmos DB accounts.',
-    link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-resource-logs?tabs=azure-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-resource-logs',
     apis: ['databaseAccounts:list', 'diagnosticSettings:listBydatabaseAccounts'],
     realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
