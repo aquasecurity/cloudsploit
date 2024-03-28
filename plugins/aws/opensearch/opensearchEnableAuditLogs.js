@@ -58,7 +58,7 @@ module.exports = {
                             'Audit Logs feature is enabled for OpenSearch domain', region, domain.DomainName);
                     } else {
                         helpers.addResult(results, 2,
-                            'Audit Logs feature is not enabled for OpenSearch domain', region, domain.DomainName);
+                            'Audit Logs feature is not enabled for OpenSearch domain', region, resource);
                     }
                 }
             });
