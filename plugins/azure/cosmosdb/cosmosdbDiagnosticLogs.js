@@ -19,7 +19,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
         
         async.each(locations.databaseAccounts, (location, rcb) => {
-
             var databaseAccounts = helpers.addSource(cache, source,
                 ['databaseAccounts', 'list', location]);
 
