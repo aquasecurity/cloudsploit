@@ -2621,7 +2621,7 @@ var postcalls = [
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
             },
-            listFunctionUrlConfigs : { 
+            listFunctionUrlConfigs: { 
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
