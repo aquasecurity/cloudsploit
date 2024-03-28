@@ -37,6 +37,7 @@ module.exports = {
             }
 
             listDomainNames.data.forEach(function(domain){
+            const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 var describeDomain = helpers.addSource(cache, source,
                     ['opensearch', 'describeDomain', region, domain.DomainName]);
 
