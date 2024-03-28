@@ -6,7 +6,7 @@ module.exports = {
     category: 'DynamoDB',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures that your Amazon DynamoDB tables have Deletion Protection feature enabled.',
+    description: 'Ensures that DynamoDB tables have deletion protection feature enabled.',
     more_info: 'Enabling the Deletion Protection safety feature ensures that Amazon DynamoDB tables cannot be accidentally deleted, thereby safeguarding your data and preventing any deletions via the AWS Management Console by users. ',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-deletion-protection.html',
     recommended_action: 'Modify DynamoDB table and enable deletion protection.',
