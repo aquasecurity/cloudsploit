@@ -36,6 +36,7 @@ module.exports = {
 
             for (var stack of listStacks.data) {
                 if (!stack.StackId) return;
+                
                 var resource = stack.StackName;
                 var templates = helpers.addSource(cache, source,
                     ['cloudformation', 'getTemplate', region, resource]);
