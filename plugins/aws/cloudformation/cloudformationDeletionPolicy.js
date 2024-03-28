@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'CloudFormation Deletion Policy in Use',
+    title: 'CloudFormation Deletion Policy In Use',
     category: 'CloudFormation',
     domain: 'Application Integration',
     severity: 'Medium',
