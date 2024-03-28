@@ -78,7 +78,7 @@ describe('dynamoDeletionProtection', function () {
             dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].region).to.include('us-east-1')
+                expect(results[0].region).to.include('us-east-1');
                 expect(results[0].message).to.include('DynamoDB table "test-table" has deletion protection enabled');
                 done();
             });
@@ -89,6 +89,7 @@ describe('dynamoDeletionProtection', function () {
             dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.include('us-east-1')
                 expect(results[0].message).to.include('DynamoDB table "test-table" does not have deletion protection enabled');
                 done();
             });
@@ -121,6 +122,7 @@ describe('dynamoDeletionProtection', function () {
             dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.include('us-east-1')
                 expect(results[0].message).to.include('Unable to describe DynamoDB table');
                 done();
             });
