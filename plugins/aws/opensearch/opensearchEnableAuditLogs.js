@@ -39,6 +39,7 @@ module.exports = {
             listDomainNames.data.forEach(function(domain){
                 var describeDomain = helpers.addSource(cache, source,
                     ['opensearch', 'describeDomain', region, domain.DomainName]);
+
                 if (!describeDomain ||
                     describeDomain.err ||
                     !describeDomain.data ||
