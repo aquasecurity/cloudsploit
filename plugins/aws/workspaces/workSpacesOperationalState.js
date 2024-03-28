@@ -25,9 +25,7 @@ module.exports = {
         async.each(regions.workspaces, function(region, rcb){
             var listWorkspaces = helpers.addSource(cache, source, ['workspaces', 'describeWorkspaces', region]);
 
-            if (!listWorkspaces) {
-                return rcb();
-            }
+            if (!listWorkspaces)  return rcb();
 
             if (!listWorkspaces || listWorkspaces.err || !listWorkspaces.data) {
                 helpers.addResult(results, 3,
