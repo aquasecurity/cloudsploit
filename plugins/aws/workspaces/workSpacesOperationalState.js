@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'WorkSpaces Operational State',
+    title: 'WorkSpaces Healthy Instances',
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
     severity: 'Medium',
