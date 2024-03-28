@@ -6,7 +6,7 @@ module.exports = {
     domain: 'Content Delivery',
     severity: 'Low',
     description: 'Ensure that AWS Route 53 Domain Name System (DNS) service is used within your AWS account.',
-    more_info: 'AWS Route 53 allows you to create and manage DNS hosted zones for all your domain names registered with AWS or with other domain registrars.',
+    more_info: 'AWS Route 53 simplifies DNS management, ensuring reliable and efficient routing for end users to your website through globally-dispersed DNS servers, enhancing accessibility and performance.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html',
     recommended_action: 'Register your domain using Route53 DNS service.',
     apis: ['Route53:listHostedZones'],
