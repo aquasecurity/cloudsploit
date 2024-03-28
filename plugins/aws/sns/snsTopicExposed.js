@@ -8,7 +8,7 @@ module.exports = {
     domain: 'Application Integration',
     severity: 'High',
     description: 'Ensures SNS topics are not publicly accessible.',
-    more_info: 'Allowing anonymous users to have access to your Amazon SNS topics can lead to unauthorized actions such as intercepting and receiving/publishing messages without permission. To avoid data leakage and unexpected costs , limit access to SNS topics by implementing the right permissions.',
+    more_info: 'Allowing anonymous users to have access to your Amazon SNS topics can lead to unauthorized actions such as intercepting and receiving/publishing messages without permission. To avoid data leakage and unexpected costs, limit access to SNS topics by implementing the right permissions.',
     recommended_action: 'Identify any publicly accessible Amazon SNS topics and update their permissions in order to protect against attackers and unauthorized personnel.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-security-best-practices.html',
     apis: ['SNS:listTopics', 'SNS:getTopicAttributes'],
@@ -42,10 +42,7 @@ module.exports = {
                 var getTopicAttributes = helpers.addSource(cache, source,
                     ['sns', 'getTopicAttributes', region, topic.TopicArn]);
 
-                if (!getTopicAttributes ||
-                    (!getTopicAttributes.err && !getTopicAttributes.data)) return;
-
-                if (getTopicAttributes.err || !getTopicAttributes.data) {
+                if (!getTopicAttributes || getTopicAttributes.err || !getTopicAttributes.data) {
                     helpers.addResult(results, 3,
                         'Unable to query SNS topic for policy: ' + helpers.addError(getTopicAttributes),
                         region, topic.TopicArn);
@@ -78,7 +75,7 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'The SNS topic is publicly exposed.', region, topic.TopicArn);
                 } else {
-                    helpers.addResult(results, 0, 'The SNS topic is not exposed.', region, topic.TopicArn);
+                    helpers.addResult(results, 0, 'The SNS topic is not publicly exposed.', region, topic.TopicArn);
                 }
                 
             });
