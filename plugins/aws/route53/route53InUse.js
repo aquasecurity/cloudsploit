@@ -28,7 +28,6 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        
         if (!listHostedZones.data.length) {
             helpers.addResult(results, 2, 'Route53 DNS service is not in use', region);
         } else {
