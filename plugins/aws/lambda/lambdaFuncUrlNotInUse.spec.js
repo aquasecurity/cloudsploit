@@ -106,5 +106,25 @@ describe('Lambda Function URL Not in Use', function () {
 
             lambdaFunctionURLNotInUse.run(cache, {}, callback);
         });
+
+        it('should return unknown result if unable to list the lambda function url config', function (done) {
+            const lambdaData = [
+                {
+                    "FunctionName": "test-lambda",
+                    "FunctionArn": "arn:aws:lambda:us-east-1:000011112222:function:test-lambda"
+                }
+            ];
+
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Lambda function URL Configs');
+                done();
+            };
+
+            const cache = createCache(lambdaData, null);
+
+            lambdaFunctionURLNotInUse.run(cache, {}, callback);
+        });
     });
 });

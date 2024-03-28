@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Serverless',
     severity: 'Medium',
     description: 'Ensure that AWS Lambda functions are not configured with function URLs for HTTP(S) endpoints.',
-    more_info: 'A function URL creates a direct HTTP(S) endpoint to your function and this may pose a security risk depending on the security configuration and intention of the function.',
+    more_info: 'A function URL is a dedicated HTTP(S) endpoint created for your Amazon Lambda function. You can use a function URL to invoke your Lambda function. But it can lead to some security risks depending on the security configuration and intention of the function.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html',
     recommended_action: 'Modify Lambda function configurations and delete function url.',
     apis: ['Lambda:listFunctions','Lambda:listFunctionUrlConfigs'],
@@ -34,10 +34,19 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Lambda functions found', region);
                 return rcb();
             }
+
             for (var lambdaFunc of listFunctions.data) {
-                if (!lambdaFunc.FunctionName) continue;
-                var resource = lambdaFunc.FunctionName;
-                var urlConfigs = helpers.addSource(cache, source, ['lambda', 'listFunctionUrlConfigs', region, resource]);
+
+                if (!lambdaFunc.FunctionArn) continue;
+                var resource = lambdaFunc.FunctionArn;
+
+                var urlConfigs = helpers.addSource(cache, source, ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
+
+                if (!urlConfigs || urlConfigs.err || !urlConfigs.data) {
+                    helpers.addResult(results, 3,
+                        `Unable to query for Lambda function URL Configs: ${helpers.addError(urlConfigs)}`, region, resource);
+                    return rcb();
+                }
                 
                 if (urlConfigs && urlConfigs.data &&
                     urlConfigs.data.FunctionUrlConfigs && 
