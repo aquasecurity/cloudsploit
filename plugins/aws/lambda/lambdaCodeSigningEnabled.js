@@ -36,6 +36,7 @@ module.exports = {
             }
 
             for (var lambdaFunc of listFunctions.data) {
+
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionName;
                 
