@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Enabling diagnostic logs for Cosmos DB accounts is crucial to collect resource logs, which provide detailed data about resource operations. It helps to gain valuable insights into resource activity, assisting in monitoring, diagnosing issues, and optimizing the performance of Azure resources.',
     recommended_action: 'Enable diagnostic logging for all Azure Cosmos DB accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-resource-logs',
-    apis: ['databaseAccounts:list', 'diagnosticSettings:listBydatabaseAccounts'],
+    apis: ['databaseAccounts:list', 'diagnosticSettings:listByDatabaseAccounts'],
     realtime_triggers: ['microsoftdocumentdb:databaseaccounts:write','microsoftdocumentdb:databaseaccounts:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
@@ -40,7 +40,7 @@ module.exports = {
                 if (!account.id) continue;
 
                 var diagnosticSettings = helpers.addSource(cache, source,
-                    ['diagnosticSettings', 'listBydatabaseAccounts', location, account.id]);
+                    ['diagnosticSettings', 'listByDatabaseAccounts', location, account.id]);
 
                 if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
                     helpers.addResult(results, 3, `Unable to query Cosmos DB account diagnostic settings: ${helpers.addError(diagnosticSettings)}`,

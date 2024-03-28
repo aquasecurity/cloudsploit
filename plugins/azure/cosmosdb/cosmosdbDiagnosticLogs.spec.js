@@ -19,7 +19,6 @@ const databaseAccounts = [
         "EnabledApiTypes": "Sql",
         "disableKeyBasedMetadataWriteAccess": false,
         "enableAnalyticalStorage": false,
-        "instanceId": "5f3e6edc-33c6-4a47-81aa-108af12d4fba",
         "createMode": "Default",
         "databaseAccountOfferType": "Standard",
     },
@@ -41,7 +40,6 @@ const databaseAccounts = [
         "EnabledApiTypes": "Cassandra",
         "disableKeyBasedMetadataWriteAccess": false,
         "enableAnalyticalStorage": false,
-        "instanceId": "5f3e6edc-33c6-4a47-81aa-108af12d4fba",
         "createMode": "Default",
         "databaseAccountOfferType": "Standard"
     }
@@ -91,7 +89,7 @@ const createCache = (accounts, ds) => {
             }
         },
         diagnosticSettings: {
-            listBydatabaseAccounts: {
+            listByDatabaseAccounts: {
                 'eastus': { 
                     [id]: { 
                         data: ds 
