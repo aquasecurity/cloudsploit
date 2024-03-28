@@ -6,11 +6,11 @@ module.exports = {
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensure that the AWS WorkSpaces instances are healthy.',
+    description: 'Ensures that the AWS WorkSpaces instances are healthy.',
     more_info: 'The AWS WorkSpaces service periodically sends status requests to the WorkSpaces instances. An instance is pronounced unhealthy when it fails to respond to these HealthCheck requests.',
     recommended_action: 'Troubleshoot the workspace when state is unhealthy.',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/workspace-maintenance.html',
-    apis: ['WorkSpaces:describeWorkspaces'],
+    apis: ['WorkSpaces:describeWorkspaces','STS:getCallerIdentity'],
     realtime_triggers: ['workspaces:CreateWorkspaces','workspaces:DeleteWorkspaces'],
 
     run: function(cache, settings, callback) {
