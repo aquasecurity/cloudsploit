@@ -55,7 +55,7 @@ module.exports = {
                         describeDomain.data.DomainStatus.LogPublishingOptions.AUDIT_LOGS &&
                         describeDomain.data.DomainStatus.LogPublishingOptions.AUDIT_LOGS.Enabled) {
                         helpers.addResult(results, 0,
-                            'Audit Logs feature is enabled for OpenSearch domain', region, domain.DomainName);
+                            'Audit Logs feature is enabled for OpenSearch domain', region, resource);
                     } else {
                         helpers.addResult(results, 2,
                             'Audit Logs feature is not enabled for OpenSearch domain', region, resource);
