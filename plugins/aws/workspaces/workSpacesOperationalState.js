@@ -48,7 +48,7 @@ module.exports = {
                         'The workspace is in healthy state', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'WorkSpace is operational', region, resource);
+                        'WorkSpace is not in healthy state', region, resource);
                 }
             });
 
