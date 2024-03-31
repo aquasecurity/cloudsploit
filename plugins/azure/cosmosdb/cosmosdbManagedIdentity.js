@@ -6,7 +6,7 @@ module.exports = {
     category: 'Cosmos DB',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that Azure Cosmos DB account has managed identity enabled.',
+    description: 'Ensures that Azure Cosmos DB accounts have managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/managed-identity-based-authentication',
     recommended_action: 'Enable system or user-assigned identities for all Azure Cosmos DB accounts.',
