@@ -37,6 +37,7 @@ module.exports = {
 
             const arnList = [];
             for (let model of listCustomModels.data){
+                if (!model.modelArn) continue;
                 arnList.push(model.modelArn);
             }
 
