@@ -457,7 +457,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'elasticBeanstalk', InvService: 'elasticBeanstalk',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'elasticbeanstalk',
             BridgeProvider: 'aws', BridgeServiceName: 'elasticbeanstalk', BridgePluginCategoryName: 'ElasticBeanstalk',
-            BridgeArnIdentifier: 'PlatformArn', BridgeIdTemplate: '', BridgeResourceType: 'elasticbeanstalk',
+            BridgeArnIdentifier: 'EnvironmentArn', BridgeIdTemplate: '', BridgeResourceType: 'environment',
             BridgeResourceNameIdentifier: 'EnvironmentName', BridgeExecutionService: 'ElasticBeanstalk',
             BridgeCollectionService: 'elasticbeanstalk', BridgeCall: 'describeEnvironments', DataIdentifier: 'data',
         },
@@ -497,12 +497,12 @@ var serviceMap = {
             BridgeCollectionService: 'comprehend', BridgeCall: 'listEntitiesDetectionJobs', DataIdentifier: 'data',
         },
         {
-            enabled: true, isSingleSource: true, InvAsset: 'forecastDataset', InvService: 'forecast',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'Forecast Dataset',
+            enabled: true, isSingleSource: true, InvAsset: 'exportJobs', InvService: 'forecast',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'Forecast ExportJob',
             BridgeProvider: 'aws', BridgeServiceName: 'forecastservice', BridgePluginCategoryName: 'AI & ML',
-            BridgeArnIdentifier: 'DatasetArn', BridgeIdTemplate: '', BridgeResourceType: 'dataset',
-            BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
-            BridgeCollectionService: 'forecastservice', BridgeCall: 'listDatasets', DataIdentifier: 'data',
+            BridgeArnIdentifier: 'ForecastExportJobArn', BridgeIdTemplate: '', BridgeResourceType: 'forecast-export-job',
+            BridgeResourceNameIdentifier: 'ForecastExportJobName', BridgeExecutionService: 'AI & ML',
+            BridgeCollectionService: 'forecastservice', BridgeCall: 'listForecastExportJobs', DataIdentifier: 'data',
         },
         {
             enabled: true, isSingleSource: true, InvAsset: 'translateJobs', InvService: 'translate',
@@ -549,7 +549,7 @@ var serviceMap = {
             InvResourceCategory: 'ai&ml', InvResourceType: 'Lookout Equipment',
             BridgeProvider: 'aws', BridgeServiceName: 'lookoutequipment', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: 'DatasetArn', BridgeIdTemplate: '',
-            BridgeResourceType: 'dataset', BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
+            BridgeResourceType: 'lookoutequipment', BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'lookoutequipment', BridgeCall: 'listDatasets', DataIdentifier: 'data',
         },
         {
@@ -564,7 +564,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'sageMaker',
             InvResourceCategory: 'ai&ml', InvResourceType: 'Sagemaker Instance',
             BridgeProvider: 'aws', BridgeServiceName: 'sagemaker', BridgePluginCategoryName: 'AI & ML',
-            BridgeArnIdentifier: 'NotebookInstanceArn', BridgeIdTemplate: '', BridgeResourceType: 'notebook-instance',
+            BridgeArnIdentifier: 'NotebookInstanceArn', BridgeIdTemplate: '', BridgeResourceType: 'sagemaker',
             BridgeResourceNameIdentifier: 'NotebookInstanceName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'sagemaker', BridgeCall: 'describeNotebookInstance', DataIdentifier: 'data',
         },
@@ -719,10 +719,7 @@ var calls = {
     },
     CloudTrail: {
         describeTrails: {
-            property: 'trailList',
-            params: {
-                includeShadowTrails: false
-            }
+            property: 'trailList'
         }
     },
     CloudWatch: {
@@ -1761,6 +1758,12 @@ var postcalls = [
             sendIntegration: serviceMap['Timestream']
         },
         EFS: {
+            describeFileSystemPolicy: {
+                reliesOnService: 'EFS',
+                reliesOnCall: 'describeFileSystems',
+                filterKey: 'FileSystemId',
+                filterValue: 'FileSystemId'
+            },
             sendIntegration: serviceMap['EFS']
         },
         EventBridge: {
@@ -1770,6 +1773,12 @@ var postcalls = [
             sendIntegration: serviceMap['CloudWatchLogs']
         },
         CodeArtifact: {
+            getDomainPermissionsPolicy: {
+                reliesOnService: 'codeartifact',
+                reliesOnCall: 'listDomains',
+                filterKey: 'domain',
+                filterValue: 'name'
+            },
             sendIntegration: serviceMap['CodeArtifact']
         },
         ComputeOptimizer: {
@@ -2069,6 +2078,12 @@ var postcalls = [
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
                 override: true
+            },
+            getResourcePolicy: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'batchGetProjects',
+                filterKey: 'resourceArn',
+                filterValue: 'arn'
             },
             sendIntegration: serviceMap['CodeBuild']
         },
@@ -2561,6 +2576,12 @@ var postcalls = [
                 reliesOnCall: 'listStreams',
                 override: true
             },
+            getResourcePolicy: {
+                reliesOnService: 'kinesis',
+                reliesOnCall: 'describeStream',
+                filterKey: 'ResourceARN',
+                filterValue: 'StreamARN'
+            },
             sendIntegration: serviceMap['Kinesis']
         },
         Firehose: {
@@ -2663,6 +2684,12 @@ var postcalls = [
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
                 filterValue: 'botId'
+            },
+            describeResourcePolicy: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'describeBotAlias',
+                filterKey: 'resourceArn',
+                filterValue: 'botAliasId'
             }
         },
         QLDB: {
@@ -2777,6 +2804,12 @@ var postcalls = [
         },
         SecretsManager: {
             describeSecret: {
+                reliesOnService: 'secretsmanager',
+                reliesOnCall: 'listSecrets',
+                filterKey: 'SecretId',
+                filterValue: 'ARN',
+            },
+            getResourcePolicy: {
                 reliesOnService: 'secretsmanager',
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',
