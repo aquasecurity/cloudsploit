@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that Container Apps have external network access disabled.',
     more_info: 'Disabling external network access for Container Apps ensures that inbound communication is restricted to callers within the apps environment, enhancing security by minimizing exposure to external threats. This helps safeguard sensitive data and prevents unauthorized access to the app resources.',
     recommended_action: 'Modify all Container Apps and disable external network access.',
-    link: 'https://learn.microsoft.com/en-us/azure/container-apps/ingress-how-to?pivots=azure-cli#ingress-settings',
+    link: 'https://learn.microsoft.com/en-us/azure/container-apps/ingress-overview',
     apis: ['containerApps:list'],
     realtime_triggers: ['microsoftapp:containerapps:write', 'microsoftapp:containerapps:delete'],
 
@@ -37,7 +37,7 @@ module.exports = {
             }
 
             for (let container of containerApps.data) {
-                if(!container.id) continue;
+                if (!container.id) continue;
 
                 if (container.configuration && container.configuration.ingress && container.configuration.ingress.external) {
                     helpers.addResult(results, 2,
