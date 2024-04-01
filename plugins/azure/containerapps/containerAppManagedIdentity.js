@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Containe Apps Managed Identity',
+    title: 'Container Apps Managed Identity',
     category: 'Container Apps',
     domain: 'Containers',
     severity: 'Medium',
     description: 'Ensure that Azure Container Apps has managed identity enabled.',
-    more_info: 'Enabling managed identity for Azure Container Apps automates credential management, enhancing security by avoiding hard-coded credentials and simplifying access control to Azure services.',
-    recommended_action: 'Enable system or user-assigned identities for all Azure Container Apps.',
-    link: 'https://learn.microsoft.com/en-us/azure/container-apps/managed-identity?tabs=portal%2Cdotnet',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    recommended_action: 'Modify Container apps and add managed identity.',
+    link: 'https://learn.microsoft.com/en-us/azure/container-apps/managed-identity',
     apis: ['containerApps:list'],
     realtime_triggers: ['microsoftapp:containerapps:write', 'microsoftapp:containerapps:delete'],
 
@@ -37,6 +37,8 @@ module.exports = {
             }
 
             for (let container of containerApps.data) {
+                if (!container.id) continue; 
+
                 if (container.identity && container.identity.type && 
                     (container.identity.type.toLowerCase() === 'systemassigned' || container.identity.type.toLowerCase() === 'userassigned')) {
                     helpers.addResult(results, 0,
