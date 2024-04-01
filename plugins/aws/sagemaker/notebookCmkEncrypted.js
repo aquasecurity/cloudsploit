@@ -75,7 +75,7 @@ module.exports = {
                     helpers.addResult(
                         results, 3, 'Unable to query for Notebook Instance: ' +
                         helpers.addError(describeInstance), region); 
-                        continue;
+                    continue;
                 }
 
                 if (describeInstance.data.KmsKeyId) {
@@ -90,7 +90,7 @@ module.exports = {
                         helpers.addResult(results, 3,
                             `Unable to query KMS key: ${helpers.addError(describeKey)}`,
                             region, kmsKeyId);
-                            continue ;
+                        continue ;
                     }
 
                     currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
