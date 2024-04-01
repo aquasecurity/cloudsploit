@@ -37,6 +37,7 @@ module.exports = {
             }
 
             for (let container of containerApps.data) {
+                  if (!container.id) continue;
                 if (container.configuration && container.configuration.ingress && container.configuration.ingress.allowInsecure) {
                     helpers.addResult(results, 2,
                         'Container app is not configured with HTTPS only traffic', location, container.id);
