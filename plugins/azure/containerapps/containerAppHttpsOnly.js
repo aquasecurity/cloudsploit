@@ -6,10 +6,10 @@ module.exports = {
     category: 'Container Apps',
     domain: 'Containers',
     severity: 'Medium',
-    description: 'Ensures Container Apps are only accessible over HTTPS.',
-    more_info: 'Using HTTPS guarantees that server/service authentication is established and shields data during transmission from potential network eavesdropping. Disabling allowInsecure triggers automatic redirection of HTTP requests to secure HTTPS connections, ensuring container apps are securely accessed.',
-    recommended_action: 'Modify Container app and disable allowInsecure setting in Ingress',
-    link: 'https://learn.microsoft.com/en-us/azure/container-apps/ingress-how-to?pivots=azure-cli#ingress-settings',
+    description: 'Ensures that Container Apps are only accessible over HTTPS.',
+    more_info: 'Enabling ingress feature for container app redirects the non-secure HTTP requests to HTTPS ensuring that container apps are securely accessed. This allows server authentication and protects data in transit from potential security threats.',
+    recommended_action: 'Enable HTTPS only by disabling allowInsecure feature for all Container apps.',
+    link: 'https://learn.microsoft.com/en-us/azure/container-apps/ingress-overview',
     apis: ['containerApps:list'],
     realtime_triggers: ['microsoftapp:containerapps:write', 'microsoftapp:containerapps:delete'],
 
@@ -37,13 +37,13 @@ module.exports = {
             }
 
             for (let container of containerApps.data) {
-                if (container.configuration.ingress && container.configuration.ingress.allowInsecure) {
+                if (container.configuration && container.configuration.ingress && container.configuration.ingress.allowInsecure) {
                     helpers.addResult(results, 2,
-                        'Container app is not only accessible over HTTPS', location, container.id);
+                        'Container app is not configured with HTTPS only traffic', location, container.id);
                     
                 } else {
                     helpers.addResult(results, 0,
-                        'Container app is only accessible over HTTPS', location, container.id);
+                        'Container app is only accessible over HTTPS only traffic', location, container.id);
                 }
             }
 
