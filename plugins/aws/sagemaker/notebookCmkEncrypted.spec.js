@@ -167,6 +167,7 @@ describe('notebookCmkEncrypted', function() {
             notebookCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -176,6 +177,7 @@ describe('notebookCmkEncrypted', function() {
             notebookCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
@@ -185,7 +187,8 @@ describe('notebookCmkEncrypted', function() {
             notebookCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No Notebook Instances Found');
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No Notebook Instances found');
                 done();
             });
         });
@@ -195,11 +198,21 @@ describe('notebookCmkEncrypted', function() {
             notebookCmkEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for Notebook Instances: ');
                 done();
             });
         });
-
+        it('should UNKNOWN if unable to list KMS keys', function (done) {
+            const cache = createCache([listNotebookInstances[0]],describeNotebookInstance[0], listKeys, { message: "Unable to list KMS keys" });
+            notebookCmkEncrypted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query KMS key:');
+                done();
+            });
+        });
         
     });
 });
