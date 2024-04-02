@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures that Azure Event Grid domain has diagnostic logs enabled.',
-    more_info: 'Enabling diagnostics logs for Event Grid Domains helps to allow and capture failures and detailed information about events, their sources, and the health of the Event Grid service.This helps identifying potential security threats, providing essential insights for effective management and security of your environment.',
+    more_info: 'Enabling diagnostics logs for Event Grid domains helps to capture failures and detailed information about events, their sources, and the health of the Event Grid service.This helps identifying potential security threats, providing essential insights for effective management and security of your environment.',
     recommended_action: 'Enable diagnostic logs for all the Event Grid domains.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/enable-diagnostic-logs-topic',
     apis: ['eventGrid:listDomains','diagnosticSettings:listByEventGridDomains'],
