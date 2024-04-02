@@ -44,7 +44,7 @@ module.exports = {
                     
                 } else {
                     helpers.addResult(results, 0,
-                        'Container app is only accessible over HTTPS only traffic', location, container.id);
+                        'Container app is configured with HTTPS only traffic', location, container.id);
                 }
             }
 
