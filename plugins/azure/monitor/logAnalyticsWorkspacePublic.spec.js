@@ -40,7 +40,7 @@ describe('logAnalyticsWorkspacePublic', function() {
             const cache = createCache([]);
             logAnalyticsWorkspacePublic.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Log Analytics Workspaces found');
                 expect(results[0].region).to.equal('eastus');
                 done();
