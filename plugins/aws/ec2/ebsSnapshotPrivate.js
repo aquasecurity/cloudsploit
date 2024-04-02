@@ -5,6 +5,7 @@ module.exports = {
     title: 'EBS Volume Snapshot Public',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EBS volume snapshots are private',
     more_info: 'EBS volumes often contain sensitive data from running EC2 instances and should be set to private so they cannot be accidentally shared with other accounts.',
     recommended_action: 'Ensure that each EBS snapshot has its permissions set to private.',
@@ -19,7 +20,9 @@ module.exports = {
         async.each(regions.support, function(region, rcb) {
             var describeTrustedAdvisorChecks = helpers.addSource(cache, source, ['support', 'describeTrustedAdvisorChecks', region]);
 
-            if (!describeTrustedAdvisorChecks || describeTrustedAdvisorChecks.err || !describeTrustedAdvisorChecks.data) {
+            if (!describeTrustedAdvisorChecks) return rcb();
+
+            if (describeTrustedAdvisorChecks.err || !describeTrustedAdvisorChecks.data) {
                 var errMsg = helpers.addError(describeTrustedAdvisorChecks);
                 if (errMsg === 'AWS Premium Support Subscription is required to use this service.') {
                     errMsg = 'Please activate AWS Premium Support';

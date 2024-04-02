@@ -5,11 +5,13 @@ module.exports = {
     title: 'Network ACL has Tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that Amazon Network ACLs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify Network ACL and add tags.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     apis: ['EC2:describeNetworkAcls', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:AddTags', 'ec2:DeleteTags', 'ec2:DeleteNetworkAcl'],
 
     run: function(cache, settings, callback) {
         var results = [];

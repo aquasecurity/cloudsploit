@@ -11,6 +11,7 @@ module.exports = {
     apigateway: regions,
     athena: regions,
     backup: regions,
+    bedrock: [],
     cloudfront: [],
     autoscaling: regions,
     iam: regions,

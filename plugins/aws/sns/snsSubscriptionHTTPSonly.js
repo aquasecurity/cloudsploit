@@ -5,11 +5,13 @@ module.exports = {
     title: 'SNS Subscription HTTPS Only',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Amazon SNS subscriptions are configured to use HTTPS protocol',
     more_info: 'Amazon Simple Notification Service (Amazon SNS) is a managed service that provides message delivery from publishers to subscribers. It is important to verify that SNS subscriptions are configured to use the HTTPS protocol.',
     recommended_action: 'Create a new SNS subscription using HTTPS protocol.',
     link: 'https://docs.aws.amazon.com/sns/latest/dg/sns-http-https-endpoint-as-subscriber.html',
     apis: ['SNS:listSubscriptions'],
+    realtime_triggers: ['sns:Subscribe', 'sns:Unsubscribe'],
 
     run: function(cache, settings, callback) {
         var results = [];

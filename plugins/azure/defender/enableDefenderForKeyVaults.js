@@ -5,11 +5,13 @@ module.exports = {
     title: 'Enable Defender For Key Vaults',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender for Key Vaults is enabled.',
     more_info: 'Turning on Microsoft Defender for Key Vaults enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Key Vaults in Defender plans for the subscription.',
     link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/enable-enhanced-security',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,16 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            let keyVaultPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'keyvaults');
-            if (keyVaultPricing) {
-                if (keyVaultPricing.pricingTier && keyVaultPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for Key Vaults', location, keyVaultPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for Key Vaults', location, keyVaultPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for Key Vaults', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'keyvaults', 'Key Vaults', results, location);
             rcb();
         }, function(){
             callback(null, results, source);

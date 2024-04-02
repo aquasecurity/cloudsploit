@@ -5,11 +5,14 @@ module.exports = {
     title: 'ELB Has Tags',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure that ELBs have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_AddTags.html',
     recommended_action: 'Modify ELB and add tags.',
     apis: ['ELB:describeLoadBalancers', 'ResourceGroupsTaggingAPI:getResources', 'STS:getCallerIdentity'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:AddTags', 'elasticloadbalancing:RemoveTags', 'elasticloadbalancing:DeleteLoadBalancer'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -4,6 +4,7 @@ module.exports = {
     title: 'GuardDuty No Active Findings',
     category: 'GuardDuty',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that GurardDuty active/current findings does not exist in your AWS account.',
     more_info: 'Amazon GuardDuty is a threat detection service that continuously monitors your AWS accounts and workloads for malicious activity and delivers detailed security findings for visibility and remediation. ' +
         'These findings should be acted upon and archived after they have been remediated in order to follow security best practices. ' +
@@ -20,6 +21,7 @@ module.exports = {
             default: '48'
         }
     },
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:ArchiveFindings', 'guardduty:DeleteDetector'],
 
     run: function(cache, settings, callback) {
         const results = [];

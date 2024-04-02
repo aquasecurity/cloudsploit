@@ -4,11 +4,13 @@ module.exports = {
     title: 'IAM Support Policy',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that an IAM role, group or user exists with specific permissions to access support center.',
     more_info: 'AWS provides a support center that can be used for incident notification and response, as well as technical support and customer services. An IAM Role should be present to allow authorized users to manage incidents with AWS Support.',
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',
     recommended_action: 'Ensure that an IAM role has permission to access support center.',
     apis: ['IAM:listPolicies'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy', 'iam:DetachRolePolicy','iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

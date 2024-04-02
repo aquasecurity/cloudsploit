@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Limit',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if the number of EC2 instances is close to the AWS per-account limit',
     more_info: 'AWS limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html#using-instance-addressing-limit',
@@ -24,6 +25,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var config = {

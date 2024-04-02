@@ -307,5 +307,14 @@ describe('openRPC', function () {
             });
         });
 
+        it('should PASS if open port security group attached to the network interface has no public IP associated', function (done) {
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
+            openRPC.run(cache, {check_network_interface:'true'}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
     });
 });

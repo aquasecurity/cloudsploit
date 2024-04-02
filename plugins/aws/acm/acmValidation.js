@@ -5,12 +5,14 @@ module.exports = {
     title: 'ACM Certificate Validation',
     category: 'ACM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'ACM certificates should be configured to use DNS validation.',
     more_info: 'With DNS validation, ACM will automatically renew certificates before they expire, as long as the DNS CNAME record is in place.',
     link: 'https://aws.amazon.com/blogs/security/easier-certificate-validation-using-dns-with-aws-certificate-manager/',
     cs_link: 'https://cloudsploit.com/remediations/aws/acm/acm-certificate-validation',
     recommended_action: 'Configure ACM managed certificates to use DNS validation.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
+    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate','acm:DeleteCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

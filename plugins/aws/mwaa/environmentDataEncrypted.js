@@ -5,6 +5,7 @@ module.exports = {
     title: 'Environment Data Encrypted',
     category: 'MWAA',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that AWS MWAA environment data is encrypted',
     more_info: 'Amazon MWAA encrypts data saved to persistent media with AWS-manager keys by default. ' +
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['mwaa:CreateEnvironment', 'mwaa:DeleteEnvironment'], 
 
     run: function(cache, settings, callback) {
         var results = [];

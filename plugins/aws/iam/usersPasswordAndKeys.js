@@ -5,6 +5,7 @@ module.exports = {
     title: 'Users Password And Keys',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Detects whether users with a console password are also using access keys',
     more_info: 'Access keys should only be assigned to machine users and should not be used for accounts that have console password access.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: '^.*$'
         }
     },
+    realtime_triggers: ['iam:CreateLoginProfile','iam:DeleteLoginProfile','iam:CreateAccessKey','iam:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var results = [];

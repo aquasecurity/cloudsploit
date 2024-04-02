@@ -5,6 +5,7 @@ module.exports = {
     title: 'Key Vault Key Expiry',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Proactively check for Key Vault keys expiry date and rotate them before expiry date is reached.',
     more_info: 'After expiry date has reached for Key Vault key, it cannot be used for cryptographic operations anymore.',
     recommended_action: 'Ensure that Key Vault keys are rotated before they get expired.',
@@ -18,6 +19,7 @@ module.exports = {
             default: '30'
         }
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

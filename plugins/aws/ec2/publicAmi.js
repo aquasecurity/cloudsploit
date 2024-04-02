@@ -5,11 +5,14 @@ module.exports = {
     title: 'Public AMI',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Checks for publicly shared AMIs',
     more_info: 'Accidentally sharing AMIs allows any AWS user to launch an EC2 instance using the image as a base. This can potentially expose sensitive information stored on the host.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/sharingamis-intro.html',
     recommended_action: 'Convert the public AMI a private image.',
     apis: ['EC2:describeImages'],
+    realtime_triggers: ['ec2:CreateImage', 'ec2:ResetImageAttribute', 'ec2:ModifyImageAttribute', 'ec2:DeregisterImage'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

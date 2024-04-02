@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Access Logging',
     category: 'S3',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures CloudTrail logging bucket has access logging enabled to detect tampering of log files',
     more_info: 'CloudTrail buckets should utilize access logging for an additional layer of auditing. If the log files are deleted or modified in any way, the additional access logs can help determine who made the changes.',
     recommended_action: 'Enable access logging on the CloudTrail bucket from the S3 console',
@@ -26,6 +27,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:UpdateTrail','s3:PutBucketLogging','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -52,7 +54,7 @@ module.exports = {
 
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
-
+            
             if (!describeTrails) return rcb();
 
             if (describeTrails.err || !describeTrails.data) {

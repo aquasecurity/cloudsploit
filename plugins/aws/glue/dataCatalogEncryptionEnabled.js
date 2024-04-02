@@ -5,6 +5,7 @@ module.exports = {
     title: 'AWS Glue Data Catalog Encryption Enabled',
     category: 'Glue',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS Glue Data Catalogs has encryption at-rest enabled.',
     more_info: 'Encryption should be enabled for metadata objects stored in your AWS Glue Data Catalog to secure sensitive data.',
     recommended_action: 'Modify Glue data catalog settings and enable metadata encryption',

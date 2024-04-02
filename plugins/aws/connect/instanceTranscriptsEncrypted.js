@@ -5,6 +5,7 @@ module.exports = {
     title: 'Connect Instance Chat Transcripts Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Connect instances have encryption enabled for chat transcripts being saved on S3.',
     more_info: 'You can configure Amazon Connect instance to save transcripts for chats to be saved on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['connect:CreateInstance', 'connect:AssociateInstanceStorageConfig', 'connect:UpdateInstanceStorageConfig','connect:DeleteInstance', 'connect:DisassociateInstanceStorageConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];

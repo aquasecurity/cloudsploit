@@ -5,6 +5,7 @@ module.exports = {
     title: 'Idp Group Mapping Changes',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure an event rule is configured for Idp Group Mapping changes.',
     more_info: 'Monitoring changes to Identity Provider Group Mappings like create, update and delete will help in identifying changes to the security posture.',
     link: 'https://docs.oracle.com/en-us/iaas/Content/Events/Task/managingrules.htm',

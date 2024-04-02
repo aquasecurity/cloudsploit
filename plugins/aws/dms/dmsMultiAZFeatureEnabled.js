@@ -5,11 +5,13 @@ module.exports = {
     title: 'DMS Multi-AZ Feature Enabled',
     category: 'DMS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that your Amazon Database Migration Service (DMS) replication instances are using Multi-AZ deployment configurations.',
     more_info: 'AWS Database Migration Service (AWS DMS) helps you migrate databases to AWS quickly and securely. In a Multi-AZ deployment, AWS DMS automatically provisions and maintains a synchronous standby replica of the replication instance in a different Availability Zone.',
     recommended_action: 'Enable Multi-AZ deployment feature in order to get high availability and failover support',
     link: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.html',
     apis: ['DMS:describeReplicationInstances'],
+    realtime_triggers: ['dms:CreateReplicationInstance','dms:ModifyReplicationInstance','dms:DeleteReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

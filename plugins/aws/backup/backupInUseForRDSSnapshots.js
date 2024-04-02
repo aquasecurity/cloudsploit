@@ -5,12 +5,13 @@ module.exports = {
     title: 'Backup In Use For RDS Snapshots',
     category: 'Backup',
     domain: 'Storage',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that Amazon Backup is integrated with Amazon Relational Database Service in order to manage RDS database instance snapshots',
     more_info: 'Amazon RDS creates and saves automated backups of your DB instance during the backup window of your DB instance. With Amazon Backup, you can centrally configure backup policies and rules, and monitor backup activity for AWS RDS database instances.',
     recommended_action: 'Enable RDS database instance snapshots to improve the reliability of your backup strategy.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html',
     apis: ['RDS:describeDBSnapshots'],
+    realtime_triggers: ['backup:CreateBackupSelection','backup:DeleteBackupSelection'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Workgroup Encrypted',
     category: 'Athena',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures Athena workgroups are configured to encrypt all data at rest.',
     more_info: 'Athena workgroups support full server-side encryption for all data at rest which should be enabled.',
     link: 'https://docs.aws.amazon.com/athena/latest/ug/encryption.html',
@@ -21,7 +22,7 @@ module.exports = {
         remediate: ['athena:UpdateWorkGroup'],
         rollback: ['athena:UpdateWorkGroup']
     },
-    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup'],
+    realtime_triggers: ['athena:CreateWorkGroup', 'athena:UpdateWorkGroup', 'athena:DeleteWorkGroup'],
     remediation_inputs: {
         encryptionOption: {
             name: '(Mandatory) Encryption method',

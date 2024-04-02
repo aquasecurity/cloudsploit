@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Audio Logs Encrypted',
-    category: 'Lex',
+    category: 'AI & ML',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Lex audio logs are encrypted using desired KMS encryption level',
     more_info: 'For audio logs you use default encryption on your S3 bucket or specify an AWS KMS key to encrypt your audio objects. Even if your S3 bucket uses default encryption you can still specify a different AWS KMS key to encrypt your audio objects for enhanced security.',
     link: 'https://docs.aws.amazon.com/lex/latest/dg/conversation-logs-encrypting.html',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['lexmodelsV2:CreateBotAlias', 'lexmodelsV2:UpdateBotAlias', 'lexmodelsV2:DeleteBotAlias'],
 
     run: function(cache, settings, callback) {
         var results = [];

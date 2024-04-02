@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Public Access Block',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures S3 public access block is enabled on all buckets or for AWS account',
     more_info: 'Blocking S3 public access at the account level or bucket-level ensures objects are not accidentally exposed.',
     recommended_action: 'Enable the S3 public access block on all S3 buckets or for AWS account.',
@@ -23,6 +24,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutPublicAccessBlock','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {

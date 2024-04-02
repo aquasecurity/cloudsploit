@@ -5,11 +5,14 @@ module.exports = {
     title: 'API Gateway Tracing Enabled',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures that Amazon API Gateway API stages have tracing enabled for AWS X-Ray.',
     more_info: 'API Gateway API stages should have tracing enabled to send traces to AWS X-Ray for enhanced distributed tracing.',
     recommended_action: 'Enable tracing on API Gateway API stages',
     link: 'https://docs.aws.amazon.com/xray/latest/devguide/xray-services-apigateway.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:DeleteRestApi','apigateway:CreateStage','apigateway:UpdateStage','apigateway:DeleteStage'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

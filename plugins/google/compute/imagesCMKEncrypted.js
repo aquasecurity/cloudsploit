@@ -5,6 +5,7 @@ module.exports = {
     title: 'Images CMK Encrypted',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure Compute Images are encrypted using Customer Managed or Supplied Keys',
     more_info: 'Compute Images are encrypted by default using the Google-managed encryption keys. However, for highly sensitive images and more control over the encryption and decryption process, use either customer-managed keys or customer-supplied keys for encryption.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
@@ -19,7 +20,8 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
-
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

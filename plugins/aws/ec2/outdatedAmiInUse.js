@@ -5,12 +5,14 @@ module.exports = {
     title: 'Outdated Amazon Machine Images',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that deprecated Amazon Machine Images are not in use.',
     more_info: 'Deprecated Amazon Machine Images should not be used to make an instance.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-deprecate.html',
     recommended_action: 'Delete the instances using deprecated AMIs',
     apis: ['EC2:describeImages', 'EC2:describeInstances', 'AutoScaling:describeLaunchConfigurations',
         'EC2:describeLaunchTemplates', 'EC2:describeLaunchTemplateVersions','STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         const results = [];

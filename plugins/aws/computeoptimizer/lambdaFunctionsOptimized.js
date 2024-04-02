@@ -5,11 +5,13 @@ module.exports = {
     title: 'Lambda Function Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Compute Optimizer does not have active recommendation summaries for unoptimized Lambda Functions.',
     more_info: 'AWS Compute Optimizer generates memory size recommendations for AWS Lambda functions. A Lambda function is considered optimized when Compute Optimizer determines that its configured memory or CPU power (which is proportional to the configured memory) is correctly provisioned to run your workload.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-lambda-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for Lambda functions.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
+    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus','lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

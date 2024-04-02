@@ -5,6 +5,7 @@ module.exports = {
     title: 'Environment Template Encrypted',
     category: 'Proton',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS Proton environment template is encrypted with desired level.',
     more_info: 'AWS Proton encrypts sensitive data in your template bundles at rest in the S3 bucket where you store your template bundles using AWS-managed keys. Use customer-managed keys (CMKs) in order to meet regulatory compliance requirements within your organization.',
     recommended_action: 'Create Proton environment template with customer-manager keys (CMKs)',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['proton:CreateEnviromentTemplate', 'proton:DeleteEnviromentTemplate'], 
 
     run: function(cache, settings, callback) {
         var results = [];

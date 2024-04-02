@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudFormation Stack Termination Protection Enabled',
     category: 'CloudFormation',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudFormation stacks have termination protection enabled.',
     more_info: 'AWS CloudFormation stacks should have termination protection enabled to avoid accidental stack deletion.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-protect-stacks.html',
@@ -21,7 +22,7 @@ module.exports = {
         remediate: ['cloudformation:UpdateTerminationProtection'],
         rollback: ['cloudformation:UpdateTerminationProtection']
     },
-    realtime_triggers: ['cloudformation:UpdateTerminationProtection', 'cloudformation:CreateStack'],
+    realtime_triggers: ['cloudformation:UpdateTerminationProtection', 'cloudformation:CreateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

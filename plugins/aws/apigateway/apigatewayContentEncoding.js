@@ -5,11 +5,14 @@ module.exports = {
     title: 'API Gateway Content Encoding',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that Amazon API Gateway APIs have content encoding enabled.',
     more_info: 'API Gateway API should have content encoding enabled to enable compression of response payload.',
     recommended_action: 'Enable content encoding and set minimum compression size of API Gateway API response',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-gzip-compression-decompression.html',
     apis: ['APIGateway:getRestApis'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:UpdateRestApi','apigateway:DeleteRestApi'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

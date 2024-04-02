@@ -5,11 +5,13 @@ module.exports = {
     title: 'EMR Cluster Has Tags',
     category: 'EMR',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that EMR clusters have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-tags-add-new.html',
     recommended_action: 'Modify EMR cluster and add tags.',
     apis: ['EMR:listClusters', 'EMR:describeCluster'],
+    realtime_triggers: ['emr:CreateCluster', 'emr:AddTags', 'emr:RemoveTags', 'emr:TerminateClusters'],
 
     run: function(cache, settings, callback) {
         var results = [];

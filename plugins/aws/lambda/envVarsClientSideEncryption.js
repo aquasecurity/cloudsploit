@@ -5,6 +5,7 @@ module.exports = {
     title: 'Lambda Environment Variables Client Side Encryption',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensure that all sensitive AWS Lambda environment variable values are client side encrypted.',
     more_info: 'AWS Lambda lets you encrypt environment variable values prior to sending them to Lambda. ' +
         'Environment variables are often used to store sensitive information such as passwords. Such variable valuesshould be ' +
@@ -20,6 +21,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['lambda:CreateFunction', 'lambda:UpdateFunctionConfiguration', 'lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

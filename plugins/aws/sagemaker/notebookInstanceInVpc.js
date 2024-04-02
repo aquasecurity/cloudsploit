@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Notebook instance in VPC',
-    category: 'SageMaker',
+    category: 'AI & ML',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Amazon SageMaker Notebook instances are launched within a VPC.',
     more_info: 'Launching instances can bring multiple advantages such as better networking infrastructure, much more flexible control over access security. Also it makes it possible to access VPC-only resources such as EFS file systems.',
     recommended_action: 'Migrate Notebook instances to exist within a VPC',
@@ -18,6 +19,7 @@ module.exports = {
             'segmentation criteria for PCI. Ensure all instances are launched ' +
             'within a VPC to comply with isolation requirements.'
     },
+    realtime_triggers: ['sagemaker:CreateNotebookInstance','sagemaker:DeleteNotebookInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Overlapping Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if EC2 instances have security groups that share the same rules',
     more_info: 'Overlapping security group rules make managing EC2 instance access much more difficult. ' +
                'If a rule is removed from one security group, the access may still remain in another, ' +
@@ -13,6 +14,7 @@ module.exports = {
     recommended_action: 'Structure security groups to provide a single category of access and do not ' +
                         'duplicate rules across groups used by the same instances.',
     apis: ['EC2:describeInstances', 'EC2:describeSecurityGroups'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:ModifyInstanceAttribute', 'ec2:ModifySecurityGroupRules', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];

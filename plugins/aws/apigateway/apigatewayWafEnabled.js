@@ -5,11 +5,14 @@ module.exports = {
     title: 'API Gateway WAF Enabled',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that API Gateway APIs are associated with a Web Application Firewall.',
     more_info: 'API Gateway APIs should be associated with a Web Application Firewall to ensure API security.',
     recommended_action: 'Associate API Gateway API with Web Application Firewall',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-aws-waf.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:DeleteRestApi','apigateway:CreateStage','apigateway:DeleteStage','wafregional:AssociateWebACL'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

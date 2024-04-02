@@ -5,12 +5,14 @@ module.exports = {
     title: 'S3 GuardDuty Enabled',
     category: 'GuardDuty',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures GuardDuty is enabled for S3 buckets' ,
     more_info: 'Enabling GuardDuty S3 protection helps to detect and prevent unauthorized access to your S3 buckets.',
     recommended_action: 'Enable GuardDuty S3 protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/s3-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
-
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:UpdateDetector', 'guardduty:DeleteDetector'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

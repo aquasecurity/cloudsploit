@@ -5,11 +5,13 @@ module.exports = {
     title: 'Topic All Users Policy',
     category: 'Pub/Sub',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure Pub/Sub Topics are not anonymously or publicly accessible',
     more_info: 'Cloud IAM policy governs the access permissions to pub/sub topics. Granting anonymous or public access to pub/sub topics is risky if you are storing any sensitive messages. As a best practice, limit the access to specific authenticated users or groups or service accounts.',
     link: 'https://cloud.google.com/pubsub/docs/access-control',
     recommended_action: 'Ensure that each pub/sub topic is configured so that no member is set to allUsers or allAuthenticatedUsers.',
     apis: ['topics:list','topics:getIamPolicy'],
+    realtime_triggers:['iam.IAMPolicy.SetIamPolicy','pubsub.Subscriber.CreateSubscription','pubsub.Subscriber.DeleteSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];

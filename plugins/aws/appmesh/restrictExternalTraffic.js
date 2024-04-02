@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Mesh Restrict External Traffic',
     category: 'App Mesh',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Amazon App Mesh virtual nodes have egress only access to other defined resources available within the service mesh.',
     more_info: 'Amazon App Mesh gives you controls to choose whether or not to allow App Mesh services to communicate with outside world. ' +
         'If you choose to deny external traffic, the proxies will not forward traffic to external services not defined in the mesh. ' +
@@ -12,6 +13,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/security.html',
     recommended_action: 'Deny all traffic to the external services',
     apis: ['AppMesh:listMeshes', 'AppMesh:describeMesh'],
+    realtime_triggers: ['appmesh:CreateMesh','appmesh:DeleteMesh','appmesh:UpdateMesh'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,12 +5,14 @@ module.exports = {
     title: 'Access Analyzer Active Findings',
     category: 'IAM',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that IAM Access analyzer findings are reviewed and resolved by taking all necessary actions.',
     more_info: 'IAM Access Analyzer helps you evaluate access permissions across your AWS cloud environment and gives insights into intended access to your resources. It can monitor the access policies associated with S3 buckets, KMS keys, SQS queues, IAM roles and Lambda functions for permissions changes. ' +
         'You can view IAM Access Analyzer findings at any time. Work through all of the findings in your account until you have zero active findings.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-work-with-findings.html',
     recommended_action: 'Investigate into active findings in your account and do the needful until you have zero active findings.',
     apis: ['AccessAnalyzer:listAnalyzers', 'AccessAnalyzer:listFindings'],
+    realtime_triggers: ['accessanalyzer:CreateAnalyzer','accessanalyzer:DeleteAnalyzer','accessanalyzer:CreateArchiveRule','accessanalyzer:StartResourceScan'],
 
     run: function(cache, settings, callback) {
         var results = [];

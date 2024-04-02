@@ -4,6 +4,7 @@ module.exports = {
     title: 'IAM User Account In Use',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that IAM user accounts are not being actively used.',
     more_info: 'IAM users, roles, and groups should not be used for day-to-day account management.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html',
@@ -17,6 +18,7 @@ module.exports = {
             default: '15'
         }
     },
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser'],
 
     run: function(cache, settings, callback) {
         const config = {

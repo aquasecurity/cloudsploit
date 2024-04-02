@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Domain Cross Account access',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Critical',
     description: 'Ensures that only trusted accounts have access to OpenSearch domains.',
     more_info: 'Allowing unrestricted access of OpenSearch clusters will cause data leaks and data loss. This can be prevented by restricting access only to the trusted entities by implementing the appropriate access policies.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cross-cluster-search.html',
@@ -37,6 +38,8 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['opensearch:CreateDomain','opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
+
     run: function(cache, settings, callback) {
         var config= {
             os_whitelisted_aws_account_principals : settings.os_whitelisted_aws_account_principals || this.settings.os_whitelisted_aws_account_principals.default,

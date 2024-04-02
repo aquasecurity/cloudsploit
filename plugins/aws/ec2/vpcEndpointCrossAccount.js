@@ -5,6 +5,7 @@ module.exports = {
     title: 'VPC Endpoint Cross Account Access',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Amazon VPC endpoints do not allow unknown cross account access.',
     more_info: 'VPC endpoints should not allow unknown cross account access to avoid any unsigned requests made to the services inside VPC.',
     recommended_action: 'Update VPC endpoint access policy in order to remove untrusted cross account access',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['ec2:CreateVpcEndpoint', 'ec2:ModifyVpcEndpoint', 'ec2:DeleteVpcEndpoint'],
 
     run: function(cache, settings, callback) {
         var results = [];

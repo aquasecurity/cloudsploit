@@ -5,16 +5,32 @@ module.exports = {
     title: 'LB No Instances',
     category: 'Load Balancer',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Detects load balancers that have no backend instances attached',
     more_info: 'All load balancers should have backend server resources. Those without any are consuming costs without providing any functionality. Additionally, old load balancers with no instances pose a security concern if new instances are accidentally attached.',
     link: 'https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
     recommended_action: 'Delete old load balancers that no longer have backend resources.',
     apis: ['loadBalancers:listAll'],
+    settings: {
+        ignore_internal_lb_instances: {
+            name: 'Ignore Internal Load Balancers',
+            description: 'When set to true, skips checking internal load balancers',
+            regex: '^(true|false)$',
+            default: 'false',
+        }
+    },
+    realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        var config = {
+            ignore_internal_lb_instances: settings.ignore_internal_lb_instances || this.settings.ignore_internal_lb_instances.default
+        };
+
+        config.ignore_internal_lb_instances = (config.ignore_internal_lb_instances == 'true');
 
         async.each(locations.loadBalancers, function(location, rcb) {
 
@@ -36,6 +52,12 @@ module.exports = {
 
             loadBalancers.data.forEach(loadBalancer => {
                 var backendAmt = 0;
+
+                if (config.ignore_internal_lb_instances && loadBalancer.frontendIPConfigurations
+                    && loadBalancer.frontendIPConfigurations.length && 
+                    loadBalancer.frontendIPConfigurations.some(ipconfig => 
+                        ipconfig.properties && ipconfig.properties.privateIPAddress)
+                )  return;
                 
                 if (!loadBalancer.backendAddressPools ||
                     (loadBalancer.backendAddressPools &&

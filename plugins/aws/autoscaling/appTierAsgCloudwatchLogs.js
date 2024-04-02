@@ -5,6 +5,7 @@ module.exports = {
     title: 'App-Tier Auto Scaling Group CloudWatch Logs Enabled',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that App-Tier Auto Scaling Groups are using CloudWatch logs agent.',
     more_info: 'EC2 instance available within app-tier Auto Scaling Group (ASG) should use an AWS CloudWatch Logs agent to monitor, store and access log files.',
     link: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html',
@@ -32,6 +33,8 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:createLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

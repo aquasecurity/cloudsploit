@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html',
     recommended_action: 'Enable TLS encryption within the cluster for all MSK clusters',
     apis: ['Kafka:listClusters'],
+    realtime_triggers: ['kafka:CreateCluster','kafka:UpdateClusterConfiguration','kafka:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

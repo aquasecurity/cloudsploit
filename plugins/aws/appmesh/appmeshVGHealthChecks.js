@@ -5,11 +5,13 @@ module.exports = {
     title: 'App Mesh VG Health Check Policies',
     category: 'App Mesh',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Amazon App Mesh virtual gateways use health check policies to monitor the availability of virtual nodes.',
     more_info: 'Health check policies in App Mesh are essential to maintain application availability and reliability by monitoring the health of associated virtual nodes.',
     link: 'https://docs.aws.amazon.com/app-mesh/latest/userguide/virtual_gateway_health_checks.html',
     recommended_action: 'Configure health check policies for the virtual gateway listeners in your App Mesh, specifying values for healthy threshold, health check interval, health check protocol, timeout period, and unhealthy threshold.',
     apis: ['AppMesh:listMeshes', 'AppMesh:listVirtualGateways', 'AppMesh:describeVirtualGateway'],
+    realtime_triggers: ['appmesh:CreateMesh','appmesh:DeleteMesh','appmesh:CreateVirtualGateway','appmesh:UpdateVirtualGateway','appmesh:DeleteVirtualGateway'],
    
     run: function(cache, settings, callback) {
         var results = [];

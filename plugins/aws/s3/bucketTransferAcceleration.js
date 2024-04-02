@@ -4,11 +4,13 @@ module.exports = {
     title: 'S3 Transfer Acceleration Enabled',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that S3 buckets have transfer acceleration enabled to increase the speed of data transfers.',
     more_info: 'S3 buckets should have transfer acceleration enabled to increase the speed of data transfers in and out of Amazon S3 using AWS edge network.',
     recommended_action: 'Modify S3 bucket to enable transfer acceleration.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html',
     apis: ['S3:listBuckets', 'S3:getBucketAccelerateConfiguration', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketAccelerateConfiguration','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

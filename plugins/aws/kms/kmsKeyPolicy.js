@@ -4,6 +4,7 @@ module.exports = {
     title: 'KMS Key Policy',
     category: 'KMS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Validates the KMS key policy to ensure least-privilege access.',
     more_info: 'KMS key policies should be designed to limit the number of users who can perform encrypt and decrypt operations. Each application should use its own key to avoid over exposure.',
     recommended_action: 'Modify the KMS key policy to remove any wildcards and limit the number of users and roles that can perform encrypt and decrypt operations using the key.',
@@ -57,6 +58,7 @@ module.exports = {
             default: 'false'
         },
     },
+    realtime_triggers: ['kms:CreateKey','kms:PutKeyPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

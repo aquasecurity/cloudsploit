@@ -5,6 +5,7 @@ module.exports = {
     title: 'File Systems CMK Encryption',
     category: 'File Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that OCI File Storage file systems have encryption enabled using desired protection level.',
     more_info: 'By default, OCI File Storage file systems are encrypted using an Oracle-managed master encryption key. To have better control over the encryption process, you can use Customer-Managed Keys (CMKs).',
     recommended_action: 'Ensure all file systems have desired encryption level.',

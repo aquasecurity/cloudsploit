@@ -5,6 +5,7 @@ module.exports = {
     title: 'EFS Encryption Enabled',
     category: 'EFS',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures that EFS volumes are encrypted at rest',
     more_info: 'EFS offers data at rest encryption using keys managed through AWS Key Management Service (KMS).',
     link: 'https://aws.amazon.com/blogs/aws/new-encryption-at-rest-for-amazon-elastic-file-system-efs/',
@@ -18,6 +19,7 @@ module.exports = {
             'encryption should be enabled for all volumes storing this type ' +
             'of data.'
     },
+    realtime_triggers: ['efs:CreateFileSystem','efs:DeleteFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

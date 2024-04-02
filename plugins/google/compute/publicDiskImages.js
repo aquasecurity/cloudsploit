@@ -4,11 +4,13 @@ module.exports = {
     title: 'Public Disk Images',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that your disk images are not being shared publicly.',
     more_info: 'To avoid exposing sensitive information, make sure that your virtual machine disk images are not being publicly shared with all other GCP accounts.',
     link: 'https://cloud.google.com/compute/docs/images',
     recommended_action: 'Ensure that your VM disk images are not accessible by allUsers or allAuthenticatedUsers.',
     apis: ['images:list', 'images:getIamPolicy'],
+    realtime_triggers: ['compute.images.insert', 'compute.images.delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

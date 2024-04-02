@@ -4,11 +4,13 @@ module.exports = {
     title: 'Restrict Load Balancer Creation',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Restrict Load Balancer Creation for Types" is enforced on the GCP organization level.',
     more_info: 'Enforcing the "Restrict Load Balancer Creation for Types" constraint allows you to control which type of load balancers can be created within your organization.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Restrict Load Balancer Creation for Types" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Redis Cluster Encryption At-Rest',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that your Amazon ElastiCache Redis clusters are encrypted to increase data security.',
     more_info: 'Amazon ElastiCache provides an optional feature to encrypt your data saved to persistent media. ' +
         'Enable this feature and use customer-managed keys In order to protect it from unauthorized access and fulfill compliance requirements within your organization.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:CreateReplicationGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

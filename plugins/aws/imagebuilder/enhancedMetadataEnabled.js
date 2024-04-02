@@ -5,12 +5,13 @@ module.exports = {
     title: 'Enhanced Metadata Collection Enabled',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that enhanced metadata collection is enabled for image pipelines.',
     more_info: 'EC2 Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/start-build-image-pipeline.html',
     recommended_action: 'Enable enhanced metadata collection for image pipeline.',
     apis: ['Imagebuilder:listImagePipelines'],
+    realtime_triggers: ['imagebuilder:CreateImagePipeline','imagebuilder:UpdateImagePipeline','imagebuilder:DeleteImagePipeline'],
     
     run: function(cache, settings, callback) {
         var results = [];

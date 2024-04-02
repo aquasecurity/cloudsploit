@@ -4,11 +4,13 @@ module.exports = {
     title: 'Cross-Account Access External ID and MFA',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that either MFA or external IDs are used to access AWS roles.',
     more_info: 'IAM roles should be configured to require either a shared external ID or use an MFA device when assuming the role.',
     link: 'https://aws.amazon.com/blogs/aws/mfa-protection-for-cross-account-access/',
     recommended_action: 'Update the IAM role to either require MFA or use an external ID.',
     apis: ['IAM:listRoles', 'STS:getCallerIdentity'],
+    realtime_triggers: ['iam:CreateRole','iam:UpdateAssumeRolePolicy','iam:DeleteRole'],
 
     run: function(cache, settings, callback) {
         var results = [];

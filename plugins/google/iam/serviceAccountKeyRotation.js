@@ -5,6 +5,7 @@ module.exports = {
     title: 'Service Account Key Rotation',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that service account keys are rotated within desired number of days.',
     more_info: 'Service account keys should be rotated so older keys that that might have been lost or compromised cannot be used to access Google services.',
     link: 'https://cloud.google.com/iam/docs/creating-managing-service-account-keys',
@@ -26,7 +27,8 @@ module.exports = {
              'IAM roles handle rotation automatically, access keys need to be manually ' +
              'rotated.'
     },
-
+    realtime_triggers: ['iam.admin.CreateServiceAccountKey', 'iam.admin.CreateServiceAccount','iam.admin.DeleteServiceAccountKey', 'iam.admin.DeleteServiceAccount'],
+ 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

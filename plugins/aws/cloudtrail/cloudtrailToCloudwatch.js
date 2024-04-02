@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail To CloudWatch',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures CloudTrail logs are being properly delivered to CloudWatch',
     more_info: 'Sending CloudTrail logs to CloudWatch enables easy integration with AWS CloudWatch alerts, as well as an additional backup log storage location.',
     recommended_action: 'Enable CloudTrail CloudWatch integration for all regions',
@@ -13,6 +14,7 @@ module.exports = {
     compliance: {
         cis1: '2.4 Ensure CloudTrail trails are integrated with CloudWatch Logs'
     },
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:UpdateTrail','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Java Version',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures the latest version of Java is installed for all App Services',
     more_info: 'Installing the latest version of Java will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of Java for all Java-based App Services',
@@ -18,6 +19,7 @@ module.exports = {
             regex: '[0-9.]{2,5}'
         }
     },
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const config = {
@@ -48,6 +50,7 @@ module.exports = {
             }
             let found = false;
             for (let webApp of webApps.data) {
+                found = false;
                 const webConfigs = helpers.addSource(
                     cache, source, ['webApps', 'listConfigurations', location, webApp.id]);
                 if (!webConfigs || webConfigs.err || !webConfigs.data || !webConfigs.data.length) {
@@ -73,8 +76,9 @@ module.exports = {
                     if (appConfig.linuxFxVersion &&
                     (appConfig.linuxFxVersion.toLowerCase().indexOf('java') > -1)){
                         found = true;
-                        let version = appConfig.linuxFxVersion;
-                        currentVersion = appConfig.linuxFxVersion.substring(version.indexOf('|')+1, version.lastIndexOf('-'));
+                        const versionPattern =/java\|(\d+)(?:-([\w\d]+))?/i;
+                        const match = appConfig.linuxFxVersion.match(versionPattern);
+                        currentVersion = match ? match[1] : '';
                         if (currentVersion && currentVersion != '' && parseFloat(currentVersion) >= parseFloat(config.latestJavaVersion)){
                             versionAvailable = true;
                         }

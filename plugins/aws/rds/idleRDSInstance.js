@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Idle Instance Status',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure there are no RDS instances with CPU utilization below all of the defined thresholds within last 7 days.',
     more_info: 'Idle Amazon RDS instance is a prime candidate for reducing monthly AWS expenses and preventing unnecessary usage charges from accumulating.',
     link: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/amazon-rds-monitoring-alerting/db-instance-cloudwatch-metrics.html',
@@ -30,6 +31,7 @@ module.exports = {
             default: '20'
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance','rds:DeleteDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3'], 
 
     run: function(cache, settings, callback) {
         var results = [];

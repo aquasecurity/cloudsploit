@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch HTTPS Only',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures OpenSearch domains are configured to enforce HTTPS connections',
     more_info: 'OpenSearch domains should be configured to enforce HTTPS connections for all clients to ensure encryption of data in transit.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/createupdatedomains.html',
@@ -29,7 +30,7 @@ module.exports = {
         remediate: ['opensearch:UpdateDomainConfig'],
         rollback: ['opensearch:UpdateDomainConfig']
     },
-    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

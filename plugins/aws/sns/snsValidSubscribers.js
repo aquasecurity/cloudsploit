@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Valid Subscribers',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon SNS subscriptions are valid and there are no unwanted subscribers.',
     more_info: 'Amazon Simple Notification Service (Amazon SNS) is a managed service that provides message delivery from publishers to subscribers. So check for appropriate subscribers in order to improve access security to your SNS topics. ',
     recommended_action: 'Check for unwanted SNS subscriptions periodically',
@@ -18,6 +19,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['sns:Subscribe', 'sns:Unsubscribe'],
 
     run: function(cache, settings, callback) {
         var results = [];

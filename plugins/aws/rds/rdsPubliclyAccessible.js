@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Publicly Accessible',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Critical',
     description: 'Ensures RDS instances are not launched into the public cloud',
     more_info: 'Unless there is a specific business requirement, RDS instances should not have a public endpoint and should be accessed from within a VPC only.',
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html',
@@ -20,6 +21,7 @@ module.exports = {
              'Ensure RDS instances are not accessible from the Internet ' +
              'and use proper jump box access mechanisms.'
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

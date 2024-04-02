@@ -5,6 +5,7 @@ module.exports = {
     title: 'Lambda VPC Config',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensures Lambda functions are created in a VPC.',
     more_info: 'Lambda functions should be created in an AWS VPC to avoid exposure to the Internet and to enable communication with VPC resources through NACLs and security groups.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/vpc.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'Aqua-CSPM-Token-Rotator-Function,-CreateCSPMKeyFunction-,-TriggerDiscoveryFunction-,-GenerateVolumeScanningEx-,-GenerateCSPMExternalIdFu-'
         }
     },
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

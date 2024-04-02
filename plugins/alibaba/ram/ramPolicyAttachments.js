@@ -4,6 +4,7 @@ module.exports = {
     title: 'RAM Policy Attachments',
     category: 'RAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that RAM policies are not attached to RAM users and are only attached to groups and roles.',
     more_info: 'Assigning RAM policies at the group or role level reduces the complexity of access management which in-turn can reduce the possibility of accidental access to users.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116815.htm',

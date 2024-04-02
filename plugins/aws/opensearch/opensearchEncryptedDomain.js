@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Encrypted Domain',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures OpenSearch domains are encrypted with KMS',
     more_info: 'OpenSearch domains should be encrypted to ensure data at rest is secured.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html',
@@ -29,7 +30,7 @@ module.exports = {
         remediate: ['opensearch:UpdateDomainConfig'],
         rollback: ['opensearch:UpdateDomainConfig']
     },
-    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

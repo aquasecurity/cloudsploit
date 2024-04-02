@@ -5,11 +5,13 @@ module.exports = {
     title: 'Secret Has Tags',
     category: 'Secrets Manager',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensure that AWS Secrets Manager secrets have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Update Secrets and add tags.',
     apis: ['SecretsManager:listSecrets'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/managing-secrets_tagging.html',
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:TagResource', 'secretesmanager:UntagResource', 'secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

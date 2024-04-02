@@ -11,6 +11,7 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/msk/latest/developerguide/public-access.html',
     recommended_action: 'Check for public access feature within the cluster for all MSK clusters',
     apis: ['Kafka:listClusters'],
+    realtime_triggers: ['kafka:CreateCluster', 'kafka:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

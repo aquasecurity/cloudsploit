@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudFormation Plaintext Parameters',
     category: 'CloudFormation',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures CloudFormation parameters that reference sensitive values are configured to use NoEcho.',
     more_info: 'CloudFormation supports the NoEcho property for sensitive values, which should be used to ensure secrets are not exposed in the CloudFormation UI and APIs.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'secret,password,privatekey'
         }
     },
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

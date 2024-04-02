@@ -5,11 +5,13 @@ module.exports = {
     title: 'VPC Has Tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that AWS VPC have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/amazon-vpc-resources-support-tag-on-create/',
     recommended_action: 'Modify VPCs and add new tags',
     apis: ['EC2:describeVpcs'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:AddTags', 'ec2:DeleteTags', 'ec2:DeleteVpc'],
 
     run: function(cache, settings, callback) {
         var results = [];

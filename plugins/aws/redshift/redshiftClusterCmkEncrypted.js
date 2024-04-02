@@ -5,11 +5,13 @@ module.exports = {
     title: 'Redshift Cluster CMK Encryption',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures Redshift clusters are encrypted using KMS customer master keys (CMKs)',
     more_info: 'KMS CMKs should be used to encrypt redshift clusters in order to have full control over data encryption and decryption.',
     link: 'http://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',
     recommended_action: 'Update Redshift clusters encryption configuration to use KMS CMKs instead of AWS managed-keys.',
     apis: ['Redshift:describeClusters', 'KMS:listAliases', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot','redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

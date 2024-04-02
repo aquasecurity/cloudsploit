@@ -5,6 +5,7 @@ module.exports = {
     title: 'DB Private Subnet Only',
     category: 'Database',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that all database systems are in private subnets only.',
     more_info: 'Database systems in private subnets ensure that access to the database can ' +
         'only be from within the internal architecture, following security best practices.',

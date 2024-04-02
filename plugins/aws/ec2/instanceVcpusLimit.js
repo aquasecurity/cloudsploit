@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance vCPU On-Demand Based Limits',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if the number of EC2 On-Demand instances is close to the regional vCPU based limit.',
     more_info: 'AWS limits accounts to certain numbers of resources per region. Exceeding those limits could prevent resources from launching.',
     link: 'https://aws.amazon.com/ec2/faqs/#EC2_On-Demand_Instance_limits',
@@ -24,6 +25,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: ['ec2:RunInstances', 'ec2:TerminateInstances', 'servicequotas:RequestServiceQuotaIncrease'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Public Access',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that SQS queues are not publicly accessible',
     more_info: 'SQS queues should be not be publicly accessible to prevent unauthorized actions.',
     recommended_action: 'Update the SQS queue policy to prevent public access.',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:AddPermission', 'sqs:RemovePermission', 'sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];

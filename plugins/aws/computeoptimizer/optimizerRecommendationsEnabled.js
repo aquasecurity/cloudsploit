@@ -5,11 +5,13 @@ module.exports = {
     title: 'Compute Optimizer Recommendations Enabled',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
+    severity: 'Low',
     description: 'Ensure that Compute Optimizer is enabled for your AWS account.',
     more_info: 'AWS Compute Optimizer is a service that analyzes the configuration and utilization metrics of your AWS resources. It reports whether your resources are optimal, and generates optimization recommendations to reduce the cost and improve the performance of your workloads.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html',
     recommended_action: 'Enable Compute Optimizer Opt In options for current of all AWS account in your organization.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
+    realtime_triggers: ['computeoptimizer:UpdateEnrollmentStatus'],
 
     run: function(cache, settings, callback) {
         var results = [];

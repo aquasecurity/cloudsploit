@@ -1,6 +1,7 @@
 // This file contains a list of ARN paths for each API call type
 // that are used to extract ARNs for resources
 
+
 module.exports = {
     acm: {
         listCertificates: 'CertificateArn',
@@ -11,9 +12,10 @@ module.exports = {
         listFindings: ''
     },
     apigateway: {
-        getRestApis: 'name',
-        getStages: '',
-        getClientCertificate: ''
+        getRestApis: 'arn:aws:apigateway:{region}::/restapis/{id}',
+        getStages: 'arn:aws:apigateway:{region}::/restapis/{resourceId}/stages/{stageName}',
+        getClientCertificate: 'arn:aws:apigateway:{region}::/clientcertificates/{clientCertificateId}',
+        getDomainNames: 'arn:aws:apigateway:{region}::/domainnames/{domainName}',
     },
     appflow: {
         listFlows: 'flowArn',
@@ -31,7 +33,7 @@ module.exports = {
     },
     athena:{
         getWorkGroup: 'WorkGroup.Name',
-        listWorkGroups: 'Name'
+        listWorkGroups: 'arn:aws:athena:{region}:{cloudAccount}:workgroup/{Name}'
     },
     auditmanager: {
         getSettings: '',
@@ -48,6 +50,14 @@ module.exports = {
         getBackupVaultNotifications: 'BackupVaultArn',
         describeRegionSettings: '',
         getBackupPlan: 'BackupPlanArn'
+    },
+    bedrock: {
+        listCustomModels: 'modelArn',
+        getCustomModel: 'modelArn',
+        listModelCustomizationJobs: 'jobArn',
+        getModelCustomizationJob: 'jobArn',
+        getModelInvocationLoggingConfiguration: ''
+
     },
     cloudformation: {
         describeStacks: 'StackId',
@@ -70,17 +80,17 @@ module.exports = {
     cloudwatchlogs: {
         describeLogGroups: 'arn',
         describeConfigurationRecorders: 'roleARN',
-        describeMetricFilters: ''
+        describeMetricFilters: 'arn:aws:logs:{region}:{cloudAccount}:log-group:{logGroupName}'
     },
     codeartifact: {
         listDomains: 'arn',
     },
     codebuild: {
         listProjects: '',
-        batchGetProjects: '',
+        batchGetProjects: 'arn',
     },
     codepipeline: {
-        listPipelines: '',
+        listPipelines: 'arn:aws:codepipeline:{region}:{cloudAccount}:{name}',
         getPipeline: 'pipeline.roleArn',
     },
     codestar: {
@@ -88,28 +98,28 @@ module.exports = {
         describeProject: 'arn'
     },
     cognitoidentityserviceprovider: {
-        listUserPools: '',
+        listUserPools: 'arn:aws:cognito-idp:{region}:{cloudAccount}:userpool/{Id}',
         describeUserPool: 'Arn',
 
     },
     comprehend: {
-        listEntitiesDetectionJobs: 'JobName',
-        listDominantLanguageDetectionJobs: 'JobName',
-        listTopicsDetectionJobs: 'JobName',
-        listDocumentClassificationJobs: 'JobName',
-        listKeyPhrasesDetectionJobs: 'JobName',
-        listSentimentDetectionJobs: 'JobName'
+        listEntitiesDetectionJobs: 'JobId',
+        listDominantLanguageDetectionJobs: 'JobId',
+        listTopicsDetectionJobs: 'JobId',
+        listDocumentClassificationJobs: 'JobId',
+        listKeyPhrasesDetectionJobs: 'JobId',
+        listSentimentDetectionJobs: 'JobId'
     },
     computeoptimizer: {
-        getRecommendationSummaries: '',
+        getRecommendationSummaries: 'recommendationResourceType',
     },
     configservice: {
         describeConfigurationRecorderStatus: 'name',
         describeConfigRules: 'ConfigRuleArn',
         getComplianceDetailsByConfigRule: '',
-        describeConfigurationRecorders: '',
-        describeDeliveryChannels: '',
-        getDiscoveredResourceCounts: ''
+        describeConfigurationRecorders: 'name',
+        describeDeliveryChannels: 'name',
+        getDiscoveredResourceCounts: 'resourceType'
     },
     connect: {
         listInstances: 'Arn',
@@ -120,7 +130,7 @@ module.exports = {
         listInstanceChatTranscriptStorageConfigs: '',
     },
     customerprofiles: {
-        listDomains: '',
+        listDomains: 'arn:aws:profile:{region}:{cloudAccount}:domain/{DomainName}',
         getDomain: '',
     },
     dms: {
@@ -130,17 +140,17 @@ module.exports = {
         describeDBClusters: 'DBClusterArn'
     },
     devopsguru: {
-        listNotificationChannels: ''
+        listNotificationChannels: 'Id'
     },
     dax: {
         describeClusters: 'ClusterArn'
     },
     dlm: {
         getLifecyclePolicies: 'PolicyId',
-        getLifecyclePolicy: '',
+        getLifecyclePolicy: 'PolicyArn',
     },
     dynamodb: {
-        listTables: '',
+        listTables: 'arn:aws:dynamodb:{region}:{cloudAccount}:table/{value}',
         listBackups: '',
         describeTable: 'Table.TableArn',
         describeContinuousBackups: '',
@@ -148,30 +158,30 @@ module.exports = {
     ec2: {
         describeAccountAttributes: 'AttributeName',
         describeAddresses: '',
-        describeEgressOnlyInternetGateways: '',
-        describeFlowLogs: '',
-        describeImages: '',
-        describeInstances: 'InstanceId',
-        describeInternetGateways: 'InternetGatewayId',
-        describeNatGateways: '',
-        describeNetworkAcls: 'NetworkAclId',
-        describeNetworkInterfaces: 'NetworkInterfaceId',
+        describeEgressOnlyInternetGateways: 'arn:aws:vpc:{region}:{cloudAccount}:egress-only-internet-gateway/{EgressOnlyInternetGatewayId}',
+        describeFlowLogs: 'arn:aws:ec2:{region}:{cloudAccount}:flow-log/{FlowLogId}',
+        describeImages: 'arn:aws:ec2:{region}:{cloudAccount}:image/${ImageId}',
+        describeInstances: 'arn:aws:ec2:{region}:{cloudAccount}:instance/{InstanceId}',
+        describeInternetGateways: 'arn:aws:vpc:{region}:{cloudAccount}:internet-gateway/{InternetGatewayId}',
+        describeNatGateways: 'arn:aws:ec2:{region}:{cloudAccount}:natgateway/{NatGatewayId}',
+        describeNetworkAcls: '`arn:aws:ec2:{region}:{cloudAccount}:network-acl/{NetworkAclId}',
+        describeNetworkInterfaces: 'arn:aws:ec2:{region}:{cloudAccount}:network-interface/{NetworkInterfaceId}',
         describeRouteTables: 'RouteTableId',
-        describeSecurityGroups: 'GroupId',
+        describeSecurityGroups: 'arn:aws:ec2:{region}:{OwnerId}:security-group/{GroupId}',
         describeSnapshotAttribute: '',
-        describeSnapshots: '',
+        describeSnapshots: 'arn:aws:ec2:{region}:{OwnerId}:snapshot/{SnapshotId}',
         describeSubnets: 'SubnetArn',
         describeTags: 'ResourceId',
-        describeVolumes: 'VolumeId',
-        describeVpcEndpointServices: 'ServiceId',
-        describeVpcEndpoints: '',
-        describeVpcPeeringConnections: '',
-        describeVpcs: 'VpcId',
-        describeVpnConnections: '',
-        describeVpnGateways: '',
+        describeVolumes: 'arn:aws:ec2:{region}:{cloudAccount}:volume/{VolumeId}',
+        describeVpcEndpointServices: 'arn:aws:ec2:{region}:{Owner}:vpc-endpoint-service/{ServiceId}',
+        describeVpcEndpoints: 'arn:aws:ec2:{region}:{cloudAccount}:vpc-endpoint/{VpcEndpointId}',
+        describeVpcPeeringConnections: 'arn:aws:ec2:{region}:{cloudAccount}:vpc-peering-connection/{VpcPeeringConnectionId}',
+        describeVpcs: 'arn:aws:ec2:{region}:{cloudAccount}:vpc/{VpcId}',
+        describeVpnConnections: 'arn:aws:ec2:{region}:{cloudAccount}:vpn-connection/{VpnConnectionId}',
+        describeVpnGateways: 'arn:aws:vpc:{region}:{cloudAccount}:vpn-gateway/{VpnGatewayId}',
         getEbsDefaultKmsKeyId: '',
         getEbsEncryptionByDefault: '',
-        describeLaunchTemplates: '',
+        describeLaunchTemplates: 'LaunchTemplateId',
         describeLaunchTemplateVersions: ''
     },
     ecr: {
@@ -192,13 +202,13 @@ module.exports = {
     },
     elasticache: {
         describeCacheClusters: 'ARN',
-        describeReplicationGroups: '',
+        describeReplicationGroups: 'ReplicationGroupId',
         describeReservedCacheNodes: 'ReservationARN',
     },
     elb: {
         describeLoadBalancerAttributes: '',
-        describeLoadBalancerPolicies: '',
-        describeLoadBalancers: '',
+        describeLoadBalancerPolicies: 'PolicyDescriptions.PolicyName',
+        describeLoadBalancers: 'arn:aws:elasticloadbalancing:{region}:{cloudAccount}:loadbalancer/{LoadBalancerName}',
         describeTags: '',
     },
     elbv2: {
@@ -206,18 +216,18 @@ module.exports = {
         describeLoadBalancerAttributes: '',
         describeTargetGroups: 'TargetGroupArn',
         describeTargetGroupAttributes: '',
-        describeListeners: '',
+        describeListeners: 'ListenerArn',
         describeTargetHealth: ''
     },
     emr: {
         describeCluster: 'Cluster.ClusterArn',
         listClusters: 'ClusterArn',
         listInstanceGroups: '',
-        describeSecurityConfiguration: ''
+        describeSecurityConfiguration: 'Name'
     },
     es:{
         describeElasticsearchDomain: 'DomainStatus.ARN',
-        listDomainNames: 'DomainName',
+        listDomainNames: 'arn:aws:es:{region}:{cloudAccount}:domain/{DomainName}',
     },
     elasticbeanstalk: {
         describeConfigurationSettings: 'PlatformArn',
@@ -252,22 +262,22 @@ module.exports = {
     },
     glue: {
         getDataCatalogEncryptionSettings: '',
-        getSecurityConfigurations: '',
+        getSecurityConfigurations: 'arn:aws:glue:{region}:{cloudAccount}:/securityConfiguration/{Name}',
     },
     glacier: {
-        listVaults: ''
+        listVaults: 'VaultARN'
     },
     databrew: {
         listJobs: 'ResourceArn',
     },
     guardduty: {
-        listDetectors: '',
-        getDetector: '',
+        listDetectors: 'arn:aws:guardduty:{region}:{cloudAccount}:detector/{value}',
+        getDetector: 'detectorId',
         getMasterAccount: '',
         listFindings: '',
-        getFindings: '',
-        listPublishingDestinations: '',
-        describePublishingDestination: '',
+        getFindings: 'Findings.Id',
+        listPublishingDestinations: 'arn:aws:guardduty:{region}:{cloudAccount}:detector/{}/publishingDestination/{DestinationId}',
+        describePublishingDestination: 'DestinationId',
     },
     healthlake: {
         listFHIRDatastores: 'DatastoreArn'
@@ -315,13 +325,13 @@ module.exports = {
         describeDefaultEncryptionConfiguration: 'kmsKeyArn'
     },
     kendra: {
-        listIndices: '',
-        describeIndex: '',
+        listIndices: 'arn:aws:kendra:{region}:{cloudAccount}:index/{Name}',
+        describeIndex: 'Id',
 
     },
     kinesis: {
         describeStream: 'StreamDescription.StreamARN',
-        listStreams: '',
+        listStreams: 'arn:aws:kinesis:{region}:{cloudAccount}:stream/{value}',
     },
     kinesisvideo: {
         listStreams: 'StreamARN'
@@ -329,7 +339,7 @@ module.exports = {
     kms: {
         listKeys: 'KeyArn',
         describeKey: 'KeyMetadata.Arn',
-        listAliases: '',
+        listAliases: 'AliasArn',
         listResourceTags: '',
         listGrants: '',
         getKeyPolicy: '',
@@ -341,14 +351,14 @@ module.exports = {
         listTags: '',
     },
     lexmodelsv2: {
-        listBots: '',
-        listBotAliases: '',
+        listBots: 'arn:aws:lex:{region}:{cloudAccount}:bot/{botId}',
+        listBotAliases: 'arn:aws:lex:{region}:{cloudAccount}:bot/{botAliasId}',
         describeBotAlias: '',
     },
     location: {
-        listGeofenceCollections: '',
+        listGeofenceCollections: 'arn:aws:geo:{region}:{cloudAccount}:geofence-collection/{CollectionName}',
         describeGeofenceCollection: 'CollectionArn',
-        listTrackers: '',
+        listTrackers: 'arn:aws:geo:{region}:{cloudAccount}:tracker/{TrackerName}',
         describeTracker: 'TrackerArn'
     },
     lookoutmetrics: {
@@ -380,7 +390,7 @@ module.exports = {
         listClusters: 'ClusterArn',
     },
     mwaa: {
-        listEnvironments: '',
+        listEnvironments: 'arn:aws:airflow:{region}:{cloudAccount}:environment/{value}',
         getEnvironment: 'Environment.Arn',
     },
     neptune: {
@@ -388,16 +398,16 @@ module.exports = {
 
     },
     organizations: {
-        describeOrganization: 'Arn',
+        describeOrganization: 'MasterAccountArn',
         listHandshakesForAccount: 'Arn',
-        listAccounts: ''
+        listAccounts: 'Arn'
     },
     proton: {
         listEnvironmentTemplates: 'arn',
         getEnvironmentTemplate: 'environmentTemplate.arn',
     },
     qldb: {
-        listLedgers: '',
+        listLedgers: 'arn:aws:qldb:{region}:{cloudAccount}:ledger/{Name}',
         describeLedger: 'Arn',
     },
     rds: {
@@ -409,23 +419,23 @@ module.exports = {
         describeDBSnapshots: 'DBSnapshotArn',
     },
     redshift: {
-        describeClusterParameterGroups: '',
+        describeClusterParameterGroups: 'ParameterGroupName',
         describeClusterParameters: '',
-        describeClusters: '',
+        describeClusters: 'arn:aws:redshift:{region}:{cloudAccount}:cluster:{ClusterIdentifier}',
         describeLoggingStatus: '',
-        describeReservedNodes: '',
+        describeReservedNodes: 'arn:aws:redshift:{region}:{cloudAccount}:reserved-node:{ReservedNodeId}',
         
     },
     route53: {
-        listHostedZones: '',
+        listHostedZones: 'arn:aws:route53:::{Id}',
         listResourceRecordSets: '',
     },
     route53domains: {
-        listDomains: '',
+        listDomains: 'DomainName',
         getDomainDetail: '',
     },
     s3: {
-        listBuckets: 'name',
+        listBuckets: 'arn:aws:s3:::{Name}',
         listObjects: '',
         getBucketAcl: '',
         getBucketLocation: '',
@@ -454,14 +464,14 @@ module.exports = {
     },
     sqs: {
         getQueueAttributes: 'Attributes.QueueArn',
-        listQueues: ''
+        listQueues: 'arn:aws:sqs:{region}:{cloudAccount}:{queueName}'
     },
     ssm: {
         describeInstanceInformation: 'InstanceId',
         describeParameters: 'Name',
-        listAssociations: '',
+        listAssociations: 'AssociationId',
         getServiceSetting: 'ARN',
-        describeSessions: ''
+        describeSessions: 'arn:aws:ec2:{region}:{cloudAccount}:/instance/{Target}'
     },
     sagemaker: {
         describeNotebookInstance: 'NotebookInstanceArn',
@@ -474,22 +484,22 @@ module.exports = {
     },
     support: {
         describeTrustedAdvisorCheckResult: '',
-        describeTrustedAdvisorChecks: '',
+        describeTrustedAdvisorChecks: 'id',
     },
     timestreamwrite: {
         listDatabases: 'Arn',
     },
     translate: {
-        listTextTranslationJobs: ''
+        listTextTranslationJobs: 'arn:aws:translate:{region}:{cloudAccount}:job/{JobName}'
     },
     transfer: {
         listServers: 'Arn'
     },
     waf: {
-        listWebACLs: ''
+        listWebACLs: 'Arn'
     },
     wisdom: {
-        listAssistants: ''
+        listAssistants: 'assistantArn'
     },
     wafRegional: {
         listResourcesForWebACL: '',
@@ -500,9 +510,9 @@ module.exports = {
         listWebACLs: 'ARN'
     },
     workspaces: {
-        describeIpGroups: '',
-        describeWorkspaceDirectories: '',
-        describeWorkspaces: '',
+        describeIpGroups: 'groupId',
+        describeWorkspaceDirectories: 'DirectoryId',
+        describeWorkspaces: 'arn:aws:workspaces:{region}:{cloudAccount}:workspace/{WorkspaceId}',
         describeWorkspacesConnectionStatus: ''
     },
     xray: {

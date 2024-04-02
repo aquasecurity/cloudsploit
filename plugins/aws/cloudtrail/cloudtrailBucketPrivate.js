@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Private',
     category: 'S3',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
     recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
@@ -22,6 +23,8 @@ module.exports = {
         }
 
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:UpdateTrail','s3:PutBucketPublicAccessBlock','s3:PutBucketAcl','s3:DeleteBucket'],
+
     run: function(cache, settings, callback) {
         var config = {
             whitelist_ct_private_buckets: settings.whitelist_ct_private_buckets ||  this.settings.whitelist_ct_private_buckets.default

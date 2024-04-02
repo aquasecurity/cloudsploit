@@ -5,11 +5,13 @@ module.exports = {
     title: 'GuardDuty is Enabled',
     category: 'GuardDuty',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures GuardDuty is enabled',
     more_info: 'GuardDuty provides threat intelligence by analyzing several AWS data sources for security risks and should be enabled in all accounts.',
     recommended_action: 'Enable GuardDuty for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:DeleteDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Logging',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures S3 bucket logging is enabled for S3 buckets',
     more_info: 'S3 bucket logging helps maintain an audit trail of \
                 access that can be used in the event of a security \
@@ -31,6 +32,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['s3:CreateBucket','s3:PutBucketLogging','s3:DeleteBucket'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

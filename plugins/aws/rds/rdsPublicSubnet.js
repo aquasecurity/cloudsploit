@@ -5,11 +5,13 @@ module.exports = {
     title: 'RDS Public Subnet',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures RDS database instances are not deployed in public subnet.',
     more_info: 'RDS instances should not be deployed in public subnets to prevent direct exposure to the internet and reduce the risk of unauthorized access.',
     link: 'https://docs.aws.amazon.com/config/latest/developerguide/rds-instance-public-access-check.html',
     recommended_action: 'Replace the subnet groups of rds instance with the private subnets.',
     apis: ['RDS:describeDBInstances', 'EC2:describeRouteTables', 'EC2:describeSubnets'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,12 +4,14 @@ module.exports = {
     title: 'S3 Versioned Buckets Lifecycle Configuration',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensure that S3 buckets having versioning enabled also have lifecycle policy configured for non-current objects.',
     more_info: 'When object versioning is enabled on a bucket, every modification/update to an object results in a new version of the object that will be stored indefinitely. ' +
         'Enable a lifecycle policy, so that non-current object versions are removed or transitioned in a predictable manner.',
     recommended_action: 'Configure lifecycle rules for buckets which have versioning enabled',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/how-to-set-lifecycle-configuration-intro.html',
     apis: ['S3:listBuckets', 'S3:getBucketVersioning', 'S3:getBucketLocation', 'S3:getBucketLifecycleConfiguration'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning', 's3:putBucketLifecycleConfiguration','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

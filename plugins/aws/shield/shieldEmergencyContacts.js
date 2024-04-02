@@ -4,11 +4,13 @@ module.exports = {
     title: 'Shield Emergency Contacts',
     category: 'Shield',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures AWS Shield emergency contacts are configured',
     more_info: 'AWS Shield Emergency contacts should be configured so that AWS can contact an account representative in the event of a DDOS event.',
     recommended_action: 'Configure emergency contacts within AWS Shield for the account.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/ddos-edit-drt.html',
     apis: ['Shield:describeEmergencyContactSettings'],
+    realtime_triggers: ['shield:CreateSubscription','shield:UpdateEmergencyContactSettings','shield:DeleteSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];

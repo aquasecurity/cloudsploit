@@ -4,6 +4,7 @@ module.exports = {
     title: 'Maximum Password Age',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy requires passwords to be reset every 180 days',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -58,6 +59,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
+
     run: function(cache, settings, callback) {
         var config = {
             max_password_age_fail: settings.max_password_age_fail || this.settings.max_password_age_fail.default,

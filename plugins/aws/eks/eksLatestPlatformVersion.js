@@ -5,12 +5,14 @@ module.exports = {
     title: 'EKS Latest Platform Version',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensure that EKS clusters are using latest platform version.',
     more_info: 'Amazon EKS platform versions represent the capabilities of the Amazon EKS cluster control plane, such as which Kubernetes API server flags are enabled, as well as the current Kubernetes patch version.'+
     'Clusters should be kept up to date of latest platforms to ensure Kubernetes security patches are applied.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/platform-versions.html',
     recommended_action: 'Check for the version on all EKS clusters to be the latest platform version.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:UpdateClusterVersion', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

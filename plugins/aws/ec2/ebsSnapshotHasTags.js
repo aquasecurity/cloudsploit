@@ -5,11 +5,13 @@ module.exports = {
     title: 'EBS Snapshot Has Tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that EBS snapshots have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://aws.amazon.com/blogs/compute/tag-amazon-ebs-snapshots-on-creation-and-implement-stronger-security-policies/',
     recommended_action: 'Modify EBS snapshots and add tags.',
     apis: ['EC2:describeSnapshots'],
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:AddTags', 'ec2:DeleteTags','ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

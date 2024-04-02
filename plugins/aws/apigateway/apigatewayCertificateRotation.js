@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Certificate Rotation',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures that Amazon API Gateway APIs have certificates with expiration date more than the rotation limit.',
     more_info: 'API Gateway APIs should have certificates with long term expiry date to avoid API insecurity after certificate expiration.',
     recommended_action: 'Rotate the certificate attached to API Gateway API',
@@ -18,6 +19,7 @@ module.exports = {
             default: '30',
         }
     },
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:DeleteRestApi','apigateway:ImportRestApi','apigateway:CreateStage','apigateway:DeleteStage','apigateway:GenerateClientCertificate','apigateway:DeleteClientCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

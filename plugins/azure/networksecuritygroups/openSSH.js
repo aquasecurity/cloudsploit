@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open SSH',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 22 for SSH is open to the public',
     more_info: 'In order to deny ssh access to your virtual machines, you have to set your inbound security rules of Network Security Group to exclude ssh access to your Virtual Machine',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
@@ -29,6 +30,7 @@ module.exports = {
     },
     actions: {remediate:['networkSecurityGroups:update'], rollback:['networkSecurityGroups:update']},
     permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

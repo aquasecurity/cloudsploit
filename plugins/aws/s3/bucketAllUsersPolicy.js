@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket All Users Policy',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Critical',
     description: 'Ensures S3 bucket policies do not allow global write, delete, or read permissions',
     more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     recommended_action: 'Remove wildcard principals from the bucket policy statements.',
@@ -25,7 +26,7 @@ module.exports = {
         remediate: ['s3:DeleteBucketPolicy'],
         rollback: ['s3:PutBucketPolicy']
     },
-    realtime_triggers: [],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketPolicy', 's3:DeleteBucketPolicy','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

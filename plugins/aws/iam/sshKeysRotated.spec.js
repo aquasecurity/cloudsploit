@@ -155,6 +155,7 @@ describe('sshKeysRotated', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for SSH Keys:');
+                expect(results[0].region).to.equal('global');
                 done();
             });
         });       

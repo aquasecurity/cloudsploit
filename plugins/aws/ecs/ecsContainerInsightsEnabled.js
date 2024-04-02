@@ -5,11 +5,13 @@ module.exports = {
     title: 'Container Insights Enabled',
     category: 'ECS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensure that ECS clusters have CloudWatch Container Insights feature enabled.',
     more_info: 'CloudWatch Container Insights provides monitoring and troubleshooting solution for containerized applications and microservices that collects, aggregates and summarizes resource utilization such as CPU, memory, disk, and network.',
     recommended_action: 'Enabled container insights feature for ECS clusters.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-container-insights.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:UpdateClusterSettings', 'ecs:DeleteCluster'],
 
     run: function(cache, settings, callback){
         var results = [];

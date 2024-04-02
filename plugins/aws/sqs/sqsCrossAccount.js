@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Cross Account Access',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures SQS policies disallow cross-account access',
     more_info: 'SQS policies should be carefully restricted to prevent publishing or reading from the queue from unexpected sources. Queue policies can be used to limit these privileges.',
     recommended_action: 'Update the SQS policy to prevent access from external accounts.',
@@ -35,6 +36,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes','sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web-Tier Auto Scaling Group Associated ELB',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures that Web-Tier Auto Scaling Group has an associated Elastic Load Balancer',
     more_info: 'Web-Tier Auto Scaling groups should have an ELB associated to distribute incoming traffic across EC2 instances.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',
@@ -18,6 +19,8 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:AttachLoadBalancers','autoscaling:DetachLoadBalancers'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

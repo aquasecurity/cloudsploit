@@ -5,7 +5,7 @@ module.exports = {
     title: 'AWS Services In Use',
     category: 'ConfigService',
     domain: 'Management and Governance',
-    severity: 'MEDIUM',
+    severity: 'Medium',
     description: 'Ensures that only permitted services are being used in you AWS cloud account.',
     more_info: 'Use only permitted AWS services in your cloud account in order to meet security and compliance requirements within your organization.',
     recommended_action: 'Delete resources from unpermitted services within your AWS cloud account.',
@@ -25,6 +25,7 @@ module.exports = {
             default:''
         },
     },
+    realtime_triggers: ['configservice:PutConfigurationRecorder','configservice:StartConfigurationRecorder','configservice:StopConfigurationRecorder'],
 
     run: function(cache, settings, callback) {
         var results = [];

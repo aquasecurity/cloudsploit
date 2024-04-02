@@ -5,6 +5,7 @@ module.exports = {
     title: 'DMS Encryption Enabled',
     category: 'DMS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures DMS encryption is enabled using a CMK',
     more_info: 'Data sent through the data migration service is encrypted using KMS. Encryption is enabled by default, but it is recommended to use customer managed keys.',
     recommended_action: 'Enable encryption using KMS CMKs for all DMS replication instances.',
@@ -29,6 +30,7 @@ module.exports = {
             default: false
         }
     },
+    realtime_triggers: ['dms:CreateReplicationInstance','dms:DeleteReplicationInstance'],
 
     run: function(cache, settings, callback) {
         var config = {

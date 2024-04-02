@@ -5,11 +5,13 @@ module.exports = {
     title: 'DynamoDB Table Backup Exists',
     category: 'DynamoDB',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Amazon DynamoDB tables are using on-demand backups.',
     more_info: 'With AWS Backup, you can configure backup policies and monitor activity for your AWS resources and on-premises workloads in one place. Using DynamoDB with AWS Backup, you can copy your on-demand backups across AWS accounts and regions, add cost allocation tags to on-demand backups, and transition on-demand backups to cold storage for lower costs.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/BackupRestore.html',
     recommended_action: 'Create on-demand backups for DynamoDB tables.',
     apis: ['DynamoDB:listTables', 'DynamoDB:listBackups', 'STS:getCallerIdentity'],
+    realtime_triggers: ['dynamodb:CreateTable','backup:StartBackupJob','backup:DeleteRecoveryPoint','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Workspaces IP Access Control',
     category: 'Workspaces',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures enforced IP Access Control on Workspaces',
     more_info: 'Checking the existence of IP Access control on Workspaces and ensuring that no Workspaces are open',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-ip-access-control-groups.html',
     recommended_action: 'Enable proper IP Access Controls for all workspaces',
     apis: ['WorkSpaces:describeWorkspaces', 'WorkSpaces:describeWorkspaceDirectories', 'WorkSpaces:describeIpGroups', 'STS:getCallerIdentity'],
+    realtime_triggers: ['workspaces:CreateWorkspaces', 'workspaces:ModifyWorkspaceAccessProperties', 'workspace:TerminateWorkspaces'],
 
     run: function(cache, settings, callback) {
         var results = [];

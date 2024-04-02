@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password Requires Numbers',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy requires the use of numbers',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -27,6 +28,7 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.8 Ensure IAM password policy require at least one number'
     },
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

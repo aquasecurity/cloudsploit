@@ -4,6 +4,7 @@ module.exports = {
     title: 'ACK Log Service Enabled',
     category: 'ACK',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure that Kubernetes Engine Clusters are configured to enable Log service.',
     more_info: 'Log Service allows you to collect, consume, and analyse logs from your containerised applications. By enabling Log Service on Kubernetes Engine Clusters, you can easily access and monitor log data from your containers, aiding in troubleshooting, analysis, and system monitoring.',
     link: 'https://www.alibabacloud.com/help/en/ack/ack-managed-and-ack-dedicated/user-guide/collect-log-data-from-containers-by-using-log-service',

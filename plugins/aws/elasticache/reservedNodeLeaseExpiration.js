@@ -5,11 +5,13 @@ module.exports = {
     title: 'ElastiCache Reserved Cache Node Lease Expiration',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that your AWS ElastiCache Reserved Cache Nodes are renewed before expiration in order to get a significant discount.',
     more_info: 'Reserved Cache Nodes can optimize your Amazon ElastiCache costs based on your expected usage. Since RCNs are not renewed automatically, purchasing another reserved ElastiCache nodes before expiration will guarantee their billing at a discounted hourly rate.',
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',
     recommended_action: 'Enable ElastiCache reserved cache nodes expiration days alert',
     apis: ['ElastiCache:describeReservedCacheNodes'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:PurchaseReservedCacheNodesOffering'],
 
     run: function(cache, settings, callback) {
         var results = [];

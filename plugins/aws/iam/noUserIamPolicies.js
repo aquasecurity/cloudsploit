@@ -5,6 +5,7 @@ module.exports = {
     title: 'No User IAM Policies',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures IAM policies are not connected directly to IAM users',
     more_info: 'To reduce management complexity, IAM permissions should only be assigned to roles and groups. Users can then be added to those groups. Policies should not be applied directly to a user.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions',
@@ -13,6 +14,7 @@ module.exports = {
     compliance: {
         cis1: '1.16 Ensure IAM policies are attached only to groups or roles'
     },
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

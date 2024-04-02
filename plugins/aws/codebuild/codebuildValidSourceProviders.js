@@ -5,6 +5,7 @@ module.exports = {
     title: 'CodeBuild Valid Source Providers',
     category: 'CodeBuild',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that CodeBuild projects are using only valid source providers.',
     more_info: 'CodeBuild should use only desired source providers in order to follow your organizations\'s security and compliance requirements.',
     link: 'https://docs.aws.amazon.com/codebuild/latest/APIReference/API_ProjectSource.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['codebuild:CreateProject', 'codebuild:UpdateProject','codebuild:DeleteProject'],
 
     run: function(cache, settings, callback) {
         var results = [];

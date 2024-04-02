@@ -5,11 +5,13 @@ module.exports = {
     title: 'DynamoDB Accelerator Cluster Encryption',
     category: 'DynamoDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures DynamoDB Cluster Accelerator DAX clusters have encryption enabled.',
     more_info: 'DynamoDB Clusters Accelerator DAX clusters should have encryption at rest enabled to secure data from unauthorized access.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAXEncryptionAtRest.html',
     recommended_action: 'Enable encryption for DAX cluster.',
     apis: ['DAX:describeClusters'],
+    realtime_triggers: ['dax:CreateCluster','dax:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

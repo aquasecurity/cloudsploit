@@ -5,11 +5,13 @@ module.exports = {
     title: 'OpenSearch IAM Authentication',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures OpenSearch domains require IAM Authentication',
     more_info: 'OpenSearch domains can allow access without IAM authentication by having a policy that does not specify the principal or has a wildcard principal',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html',
     recommended_action: 'Configure the OpenSearch domain to have an access policy without a global principal or no principal',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

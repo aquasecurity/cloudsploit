@@ -5,6 +5,7 @@ module.exports = {
     title: 'Geofence Collection Data Encrypted',
     category: 'Location',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Amazon Location geoference collection data is encrypted using desired KMS encryption level.',
     more_info: 'Amazon Location Service provides encryption by default to protect sensitive customer data at rest using AWS owned encryption keys. ' +
         'It is recommended to use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['location:CreateGeofenceCollection', 'location:DeleteGeofenceCollection'],
 
     run: function(cache, settings, callback) {
         var results = [];

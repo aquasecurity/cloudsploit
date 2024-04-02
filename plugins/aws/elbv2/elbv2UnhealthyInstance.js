@@ -5,12 +5,14 @@ module.exports = {
     title: 'ELBv2 Unhealthy Instances',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that ELBv2 have healthy instances attached',
     more_info: 'ELBs should have healthy instances to ensure proper load balancing and availability. ' +
         'Unhealthy instances can result in degraded performance or service disruptions.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html',
     recommended_action: 'Investigate and resolve the health issues with the instances attached to the ELB.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyTargetGroups', 'elasticloadbalancing:RegisterTarget', 'elasticloadbalancing:DeregisterTargets', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteTargetGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

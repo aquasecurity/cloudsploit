@@ -5,6 +5,7 @@ module.exports = {
     title: 'Route53 Dangling DNS Records',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS Route53 DNS records are not pointing to invalid/deleted EIPs.',
     more_info: 'AWS Route53 DNS records should not point to invalid/deleted EIPs to prevent malicious activities.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-aws-resources.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets', 'route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];

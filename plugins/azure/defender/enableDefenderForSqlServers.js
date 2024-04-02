@@ -5,11 +5,13 @@ module.exports = {
     title: 'Enable Defender For SQL Servers',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for Azure SQL Server Databases.',
     more_info: 'Turning on Microsoft Defender for Azure SQL Server Databases enables threat detection for Azure SQL database servers, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.',
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list'],
+    realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,17 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            let sqlServersPricing = pricings.data.find((pricing) => pricing.name && pricing.name.toLowerCase() === 'sqlservers');
-
-            if (sqlServersPricing) {
-                if (sqlServersPricing.pricingTier.toLowerCase() === 'standard') {
-                    helpers.addResult(results, 0, 'Azure Defender is enabled for SQL Server Databases', location, sqlServersPricing.id);
-                } else {
-                    helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location, sqlServersPricing.id);
-                }
-            } else {
-                helpers.addResult(results, 2, 'Azure Defender is not enabled for SQL Server Databases', location);
-            }
+            helpers.checkMicrosoftDefender(pricings, 'sqlservers', 'SQL Server Databases', results, location);
 
             rcb();
         }, function(){

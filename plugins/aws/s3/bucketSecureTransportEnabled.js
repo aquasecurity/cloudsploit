@@ -4,12 +4,14 @@ module.exports = {
     title: 'S3 Secure Transport Enabled',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure AWS S3 buckets enforce SSL to secure data in transit',
     more_info: 'S3 buckets should be configured to strictly require SSL connections ' +
                'to deny unencrypted HTTP requests when dealing with sensitive data.',
     recommended_action: 'Update S3 bucket policy to enforse SSL to secure data in transit.',
     link: 'https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-policy-for-config-rule/',
     apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketPolicy', 's3:DeleteBucketPolicy','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];

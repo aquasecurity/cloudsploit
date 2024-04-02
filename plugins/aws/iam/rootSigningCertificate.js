@@ -4,6 +4,7 @@ module.exports = {
     title: 'Root Account Active Signing Certificates',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures the root user is not using x509 signing certificates',
     more_info: 'AWS supports using x509 signing certificates for API access, but these should not be attached to the root user, which has full access to the account.',
     link: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview-security-processes/x.509-certificates.html',
@@ -15,6 +16,7 @@ module.exports = {
                 'since it is not tied to a specific user. The root signing keys ' +
                 'should not be used.'
     },
+    realtime_triggers: ['iam:DeleteSigningCertificate','iam:UploadSigningCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

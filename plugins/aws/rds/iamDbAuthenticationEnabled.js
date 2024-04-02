@@ -5,11 +5,13 @@ module.exports = {
     title: 'RDS IAM Database Authentication Enabled',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures IAM Database Authentication is enabled for RDS database instances to manage database access',
     more_info: 'AWS Identity and Access Management (IAM) can be used to authenticate to your RDS DB instances.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth.html',
     recommended_action: 'Modify the PostgreSQL and MySQL type RDS instances to enable IAM database authentication.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3', 'rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];

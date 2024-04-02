@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Versioning',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures object versioning is enabled on S3 buckets',
     more_info: 'Object versioning can help protect against the overwriting of \
                 objects or data loss in the event of a compromise.',
@@ -23,7 +24,7 @@ module.exports = {
         remediate: ['s3:PutBucketVersioning'],
         rollback: ['s3:PutBucketVersioning']
     },
-    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersioning','s3:DeleteBucket'],
     asl: {
         conditions: [
             {

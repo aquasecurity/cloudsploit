@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Enabled',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensures CloudTrail is enabled for all regions within an account',
     more_info: 'CloudTrail should be enabled for all regions in order to detect suspicious activity in regions that are not typically used.',
     recommended_action: 'Enable CloudTrail for all regions and ensure that at least one region monitors global service events',
@@ -19,6 +20,8 @@ module.exports = {
             'within environments containing cardholder data.',
         cis1: '2.1 Ensure CloudTrail is enabled in all regions'
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:StartLogging','cloudtrail:StopLogging','cloudtrail:DeleteTrail'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

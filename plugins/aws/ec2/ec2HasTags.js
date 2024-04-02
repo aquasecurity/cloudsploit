@@ -5,11 +5,13 @@ module.exports = {
     title: 'EC2 has Tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that AWS EC2 Instances have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html',
     recommended_action: 'Modify EC2 instances and add tags.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:AddTags', 'ec2:DeleteTags', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];

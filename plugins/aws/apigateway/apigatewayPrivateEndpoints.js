@@ -5,11 +5,13 @@ module.exports = {
     title: 'API Gateway Private Endpoints',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures that Amazon API Gateway APIs are only accessible through private endpoints.',
     more_info: 'API Gateway APIs should be only accessible through private endpoints to ensure API security.',
     recommended_action: 'Set API Gateway API endpoint configuration to private',
     link: 'https://aws.amazon.com/blogs/compute/introducing-amazon-api-gateway-private-endpoints',
     apis: ['APIGateway:getRestApis'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:ImportRestApi','apigateway:UpdateRestApi','apigateway:DeleteRestApi'],
 
     run: function(cache, settings, callback) {
         var results = [];

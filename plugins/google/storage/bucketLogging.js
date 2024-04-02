@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Logging',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures object logging is enabled on storage buckets',
     more_info: 'Storage bucket logging helps maintain an audit trail of access that can be used in the event of a security incident.',
     link: 'https://cloud.google.com/storage/docs/access-logs',
@@ -14,6 +15,7 @@ module.exports = {
         hipaa: 'HIPAA requires the logging of all activity ' +
             'including access and all actions taken.'
     },
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

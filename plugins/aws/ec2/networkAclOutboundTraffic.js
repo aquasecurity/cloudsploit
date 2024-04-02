@@ -5,11 +5,13 @@ module.exports = {
     title: 'Unrestricted Network ACL Outbound Traffic',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that no Amazon Network ACL allows outbound/egress traffic to all ports.',
     more_info: 'Amazon Network ACL should not allow outbound/egress traffic to all ports to avoid unauthorized access at the subnet level.',
     recommended_action: 'Update Network ACL to allow outbound/egress traffic to specific port ranges only',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     apis: ['EC2:describeNetworkAcls', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNetworkAcl', 'ec2:ReplaceNetworkAclEntry', 'ec2:DeleteNetworkAcl'],
 
     run: function(cache, settings, callback) {
         var results = [];

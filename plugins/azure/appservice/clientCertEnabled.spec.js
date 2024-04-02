@@ -10,7 +10,18 @@ const webApps = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1',
         'name': 'app1',
-        'clientCertEnabled': false
+        'clientCertEnabled': false,
+        'siteConfig': {
+            'http20Enabled': false
+        }
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1',
+        'name': 'app1',
+        'clientCertEnabled': false,
+        'siteConfig': {
+            'http20Enabled': true
+        }
     }
 ];
 
@@ -77,6 +88,17 @@ describe('clientCertEnabled', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('The App Service does not have Client Certificates enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if app service have http20 enabled', function(done) {
+            const cache = createCache([webApps[2]]);
+            clientCertEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('The App Service has Client Certificates enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Virtual Networks Logging Enabled',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure that Microsoft Virtual Networks have diagnostic logs enabled.',
     more_info: 'Diagnostic logs provide valuable insights into the operation and health of Virtual Networks. By enabling diagnostic logs, you can monitor network traffic, troubleshoot connectivity issues, and gain visibility into network performance.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/monitor-virtual-network',
     recommended_action: 'Modify the virtual network settings and enable diagnostic logs.',
     apis: ['virtualNetworks:listAll', 'diagnosticSettings:listByVirtualNetworks'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

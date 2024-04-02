@@ -4,11 +4,13 @@ module.exports = {
     title: 'Root Hardware MFA',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures the root account is using a hardware MFA device',
     more_info: 'The root account should use a hardware MFA device for added security, rather than a virtual device which could be more easily compromised.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_physical.html',
     recommended_action: 'Enable a hardware MFA device for the root account and disable any virtual devices',
     apis: ['IAM:listVirtualMFADevices', 'IAM:getAccountSummary'],
+    realtime_triggers: ['iam:CreateVirtualMFADevice','iam:DeleteVirtualMFADevice'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -28,7 +30,6 @@ module.exports = {
 
         var listVirtualMFADevices = helpers.addSource(cache, source,
             ['iam', 'listVirtualMFADevices', region]);
-
         if (!listVirtualMFADevices ||
             listVirtualMFADevices.err ||
             !listVirtualMFADevices.data) {

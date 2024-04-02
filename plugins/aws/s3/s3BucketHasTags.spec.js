@@ -2,12 +2,22 @@ var expect = require('chai').expect;
 var s3BucketHasTags = require('./s3BucketHasTags');
 
 const createCache = (bucketData, bucketDataErr, rgData, rgDataErr) => {
+    var bucketName = (bucketData && bucketData.length) ? bucketData[0].Name : null;
     return {
         s3: {
             listBuckets: {
                 'us-east-1': {
                     err: bucketDataErr,
                     data: bucketData
+                }
+            },
+            getBucketLocation: {
+                'us-east-1': {
+                    [bucketName]: {
+                        data: {
+                            LocationConstraint: 'us-east-1'
+                        }
+                    }
                 }
             }
         },
@@ -50,9 +60,9 @@ describe('s3BucketHasTags', function () {
 
         it('should give unknown result if unable to query resource group tagging api', function (done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(2);
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Resource Group Tagging');
+                expect(results[0].message).to.include('Unable to query all resources from group tagging api:');
                 done();
             };
             const cache = createCache([{

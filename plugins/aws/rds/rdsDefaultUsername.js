@@ -5,11 +5,13 @@ module.exports = {
     title: 'RDS Instance Default Master Username',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures RDS instance does not have a default master username',
     more_info: 'By default, RDS uses the default master username which has the maximum permissions for your instance. RDS instances should be configured to use unique username to ensure security.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateDBInstance.html',
     recommended_action: 'Create a new RDS instance with the desired username, and migrate the database to the new instance.',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'],  
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -6,6 +6,7 @@ module.exports = {
     title: 'IAM Role Policies',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures IAM role policies are properly scoped with specific permissions',
     more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -82,6 +83,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

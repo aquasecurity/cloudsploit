@@ -5,6 +5,7 @@ module.exports = {
     title: 'Event Hubs Minimum TLS Version',
     category: 'Event Hubs',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures Microsoft Azure Event Hubs namespaces do not allow outdated TLS certificate versions.',
     more_info: 'To enforce stricter security measures, you can configure your Event Hubs namespace to require that clients send and receive data with a newer version of TLS.',
     recommended_action: 'Modify Event Hubs namespaces to set the desired minimum TLS version.',
@@ -18,6 +19,7 @@ module.exports = {
             default: '1.2'
         }
     },
+    realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

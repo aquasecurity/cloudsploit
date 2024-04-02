@@ -5,11 +5,13 @@ module.exports = {
     title: 'Unused Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Identify and remove unused EC2 security groups.',
     more_info: 'Keeping the number of security groups to a minimum makes the management easier and helps to avoid reaching the service limit.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
     recommended_action: 'Remove security groups that are not being used.',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:DeleteSecurityGroup','ec2:RunInstances','ec2:ModifyInstanceAttribute', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];

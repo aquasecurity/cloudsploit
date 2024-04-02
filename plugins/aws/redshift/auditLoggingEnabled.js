@@ -5,11 +5,13 @@ module.exports = {
     title: 'Redshift Cluster Audit Logging Enabled',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure audit logging is enabled for Redshift clusters for security and troubleshooting purposes.',
     more_info: 'Redshift clusters should be configured to enable audit logging to log cluster usage information.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing-console.html',
     recommended_action: 'Modify Redshift clusters to enable audit logging',
     apis: ['Redshift:describeClusters', 'Redshift:describeLoggingStatus', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:EditLogging', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

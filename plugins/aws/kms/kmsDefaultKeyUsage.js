@@ -5,6 +5,7 @@ module.exports = {
     title: 'KMS Default Key Usage',
     category: 'KMS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Checks AWS services to ensure the default KMS key is not being used',
     more_info: 'It is recommended not to use the default key to avoid encrypting disparate sets of data with the same key. Each application should have its own customer-managed KMS key',
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html',
@@ -20,6 +21,7 @@ module.exports = {
              'passwords, it is still strongly encouraged to use a ' +
              'customer-provided CMK rather than the default KMS key.'
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','ec2:CreateVolume','ec2:DeleteVolume','elastictranscoder:UpdatePipeline','elastictranscoder:CreatePipeline','elastictranscoder:DeletePipeline','rds:CreateDBInstance','rds:ModifyDBInstance','rds:DeleteDBInstance','redshift:CreateCluster','redshift:ModifyCluster','redshift:DeleteCluster','s3:CreateBucket','s3:DeleteBucket','s3:PutBucketEncryption','ses:CreateReceiptRule','ses:DeleteReceiptRule','ses:UpdateReceiptRule','workspaces:CreateWorkspaces','workspaces:TerminateWorkspaces','lambda:UpdateFunctionConfiguration','lambda:CreateFunction','lambda:DeleteFunction','cloudwatchlogs:CreateLogGroup','cloudwatchlogs:DeleteLogGroup','cloudwatchlogs:AssociateKmsKey','efs:CreateFileSystem',':efs:DeleteFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];

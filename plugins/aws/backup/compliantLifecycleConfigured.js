@@ -5,11 +5,13 @@ module.exports = {
     title: 'AWS Backup Compliant Lifecycle Configured',
     category: 'Backup',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that a compliant lifecycle configuration is enabled for your Amazon Backup plans in order to meet compliance requirements when it comes to security and cost optimization.',
     more_info: 'The AWS Backup lifecycle configuration contains an array of transition objects specifying how long in days before a recovery point transitions to cold storage or is deleted.',
     recommended_action: 'Enable compliant lifecycle configuration for your Amazon Backup plans',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/API_Lifecycle.html',
     apis: ['Backup:listBackupPlans', 'Backup:getBackupPlan'],
+    realtime_triggers: ['backup:CreateBackupPlan','backup:UpdateBackupPlan','backup:DeleteBackupPlan'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Block Volume CMK Encryption',
     category: 'Block Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that block volumes have encryption enabled using desired protection level.',
     more_info: 'By default, block volumes are encrypted using an Oracle-managed master encryption key. To have better control over the encryption process, you can use Customer-Managed Keys (CMKs).',
     recommended_action: 'Ensure all block volumes have desired encryption level.',

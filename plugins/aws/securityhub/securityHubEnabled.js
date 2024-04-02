@@ -5,11 +5,13 @@ module.exports = {
     title: 'Security Hub Enabled',
     category: 'SecurityHub',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that AWS Security Hub is enabled.',
     more_info: 'AWS Security Hub provides a comprehensive view of your security posture across your AWS accounts. It aggregates, organises, and prioritises security findings from various AWS services.',
     link: 'https://aws.amazon.com/security-hub/',
     recommended_action: 'Enable AWS Security Hub for enhanced security monitoring and compliance.',
     apis: ['SecurityHub:describeHub'],
+    realtime_triggers: ['securityhub:EnableSecurityHub', 'securityhub:DisableSecurityHub'],
    
     run: function(cache, settings, callback) {
         var results = [];

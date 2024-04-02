@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Model Data Encrypted',
-    category: 'Lookout',
+    category: 'AI & ML',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that Lookout for Vision model data is encrypted using desired KMS encryption level',
     more_info: 'By default, trained models and manifest files are encrypted in Amazon S3 using server-side encryption with KMS keys stored in AWS Key Management Service (SSE-KMS). ' +
         'You can also use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['lookoutvision:CreateModel', 'lookoutvision:DeleteModel'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -57,7 +59,7 @@ module.exports = {
                     'Unable to list KMS keys: ' + helpers.addError(listKeys), region);
                 return rcb();
             }
-    
+
             for (let project of listProjects.data){
                 if (!project.ProjectName) continue;
 
@@ -101,7 +103,7 @@ module.exports = {
                         let keyId = kmsKey.split('/')[1] ? kmsKey.split('/')[1] : kmsKey;
 
                         let describeKey = helpers.addSource(cache, source,
-                            ['kms', 'describeKey', region, keyId]);  
+                            ['kms', 'describeKey', region, keyId]);
 
                         if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
                             helpers.addResult(results, 3,

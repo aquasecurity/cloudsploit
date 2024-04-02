@@ -5,6 +5,7 @@ module.exports = {
     title: 'Access Keys Rotated',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures access keys are not older than 180 days in order to reduce accidental exposures',
     more_info: 'Access keys should be rotated frequently to avoid having them accidentally exposed.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
@@ -33,6 +34,7 @@ module.exports = {
             default: 90
         }
     },
+    realtime_triggers: ['iam:CreateAccessKey','iam:DeleteAccessKey'],
 
     run: function(cache, settings, callback) {
         var config = {

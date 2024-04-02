@@ -5,11 +5,13 @@ module.exports = {
     title: 'Environment Persistent Logs',
     category: 'ElasticBeanstalk',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that AWS Elastic Beanstalk environment logs are retained and saved on S3.',
     more_info: 'Elastic Beanstalk environment logs should be retained in order to keep the logging data for future audits, historical purposes or to track and analyze the EB application environment behavior for a long period of time.',
     recommended_action: 'Go to specific environment, select Configuration, edit Software category, and enable Log streaming',
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html',
     apis: ['ElasticBeanstalk:describeEnvironments', 'ElasticBeanstalk:describeConfigurationSettings'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment', 'elasticbeanstalk:TerminateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

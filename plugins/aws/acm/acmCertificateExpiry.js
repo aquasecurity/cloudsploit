@@ -5,6 +5,7 @@ module.exports = {
     title: 'ACM Certificate Expiry',
     category: 'ACM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Detect upcoming expiration of ACM certificates',
     more_info: 'Certificates that have expired will trigger warnings in all major browsers. AWS will attempt to automatically renew the certificate but may be unable to do so if email or DNS validation cannot be confirmed.',
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html',
@@ -27,6 +28,7 @@ module.exports = {
             default: 30
         }
     },
+    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate','acm:DeleteCertificate'],
 
     run: function(cache, settings, callback) {
         var config = {

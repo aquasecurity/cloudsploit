@@ -5,12 +5,14 @@ module.exports = {
     title: 'COS Image Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensures all Kubernetes cluster nodes have Container-Optimized OS enabled',
     more_info: 'Container-Optimized OS is optimized to enhance node security. It is backed by a team at Google that can quickly patch it.',
     link: 'https://cloud.google.com/container-optimized-os/',
     recommended_action: 'Enable Container-Optimized OS on all Kubernetes cluster nodes',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster','container.ClusterManager.DeleteCluster','container.ClusterManager.UpdateCluster','container.ClusterManager.UpdateNodePool', 'container.ClusterManager.CreateNodePool','container.ClusterManager.DeleteNodePool'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Unassociated Elastic IP Addresses',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures all EIPs are allocated to a resource to avoid accidental usage or reuse and to save costs',
     more_info: 'EIPs should be deleted if they are not in use to avoid extra charges.',
     recommended_action: 'Delete the unassociated Elastic IP',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html',
     apis: ['EC2:describeAddresses', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:AllocateAddress','ec2:ReleaseAddress'],
     
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Log Statement',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for PostgreSQL type have log statement flag set to desired value.',
     more_info: 'SQL instance for PostgreSQL databases provides log_statement flag which can be set to align with your organization security and logging policies facilitates later auditing and review of database activities. Not having it set to the appropriate value can cause too many or too few statements to be logged.',
     link: 'https://cloud.google.com/sql/docs/postgres/flags',
@@ -18,7 +19,8 @@ module.exports = {
             default: 'ddl'
         }
     },
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

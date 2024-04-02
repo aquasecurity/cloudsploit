@@ -48,7 +48,7 @@ var calls = [
                 property: 'collectionSummaries'
             },
             listNetworkSecurityPolicies: {
-                override: true, 
+                override: true,
             },
             listEncryptionSecurityPolicies:{
                 override: true,
@@ -115,6 +115,20 @@ var calls = [
             },
             listBackupPlans: {
                 property: 'BackupPlansList',
+                paginate: 'NextToken'
+            }
+        },
+        Bedrock:{
+            listCustomModels:{
+                property: 'modelSummaries',
+                paginate: 'NextToken',
+            },
+            listModelCustomizationJobs:{
+                property: 'modelCustomizationJobSummaries"',
+                paginate: 'NextToken',
+            },
+            getModelInvocationLoggingConfiguration: {
+                property: 'loggingConfig',
                 paginate: 'NextToken'
             }
         },
@@ -383,7 +397,6 @@ var calls = [
                             Values: [
                                 'pending',
                                 'running',
-                                'shutting-down',
                                 'stopping',
                                 'stopped'
                             ]
@@ -1250,6 +1263,20 @@ var postcalls = [
                 filterValue: 'BackupPlanId',
             }
         },
+        Bedrock:{
+            getCustomModel: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listCustomModels',
+                filterKey: 'modelIdentifier',
+                filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -1300,17 +1327,17 @@ var postcalls = [
             getRdsMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             },
             getRdsWriteIOPSMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             },
             getRdsReadIOPSMetricStatistics: {
                 reliesOnService: 'rds',
                 reliesOnCall: 'describeDBInstances',
-                override: true, 
+                override: true,
             }
         },
         ConfigService: {
@@ -2329,12 +2356,12 @@ var postcalls = [
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
-                override: true,   
+                override: true,
             },
             getEncryptionSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listEncryptionSecurityPolicies',
-                override: true,   
+                override: true,
             }
         }
     },

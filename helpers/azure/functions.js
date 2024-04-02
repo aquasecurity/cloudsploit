@@ -200,7 +200,7 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
         policyAssignmentStatus =  defualtPolicyAssignments[param]
     }
 
-    if (!policyAssignmentStatus.length) {
+    if (!policyAssignmentStatus || !policyAssignmentStatus.length) {
         addResult(results, 0,
             text + ' is no supported', location, policyAssignment.id);
     } else if (policyAssignmentStatus == 'AuditIfNotExists' || policyAssignmentStatus == 'Audit') {
@@ -354,6 +354,20 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
             }
         }
     });
+}
+
+function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
+   
+    let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
+    if (pricingData) {
+        if (pricingData.pricingTier.toLowerCase() === 'standard') {
+           addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
+        } else {
+           addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location, pricingData.id);
+        }
+    } else {
+       addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location);
+    }
 }
 
 function processCall(config, method, body, baseUrl, resource, callback) {
@@ -702,5 +716,6 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
-    remediateOpenPortsHelper: remediateOpenPortsHelper
+    remediateOpenPortsHelper: remediateOpenPortsHelper,
+    checkMicrosoftDefender: checkMicrosoftDefender
 };

@@ -12,7 +12,6 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     var allDkimAttributes = [];
     var processIdentityChunk = function(chunkIndex) {
         if (chunkIndex >= identityChunks.length) {
-            allDkimAttributes =  allDkimAttributes.flatMap(obj => Object.values(obj));
             collection.ses.getIdentityDkimAttributes[AWSConfig.region].data = {
                 DkimAttributes: allDkimAttributes
             };
@@ -30,9 +29,11 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 if (err) {
                     collection.ses.getIdentityDkimAttributes[AWSConfig.region].err = err;
                 } else if (data && data.DkimAttributes) {
-                    allDkimAttributes = allDkimAttributes.concat(data.DkimAttributes);
+                    allDkimAttributes = {
+                        ...allDkimAttributes,
+                        ...data.DkimAttributes
+                    };
                 }
-
                 processIdentityChunk(chunkIndex + 1);
             });
         }, 1000);
@@ -40,7 +41,6 @@ module.exports = function(AWSConfig, collection, retries, callback) {
 
     processIdentityChunk(0);
 };
-
 function chunkArray(arr, chunkSize) {
     var result = [];
     for (var i = 0; i < arr.length; i += chunkSize) {

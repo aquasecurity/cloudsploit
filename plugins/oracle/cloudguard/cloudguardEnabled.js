@@ -4,6 +4,7 @@ module.exports = {
     title: 'Cloud Guard Enabled',
     category: 'Cloud Guard',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure Cloud Guard is enabled in the root compartment of the tenancy.',
     more_info: 'Cloud Guard detects misconfigured resources and insecure activity within a tenancy and provides security administrators with the visibility to resolve these issues. Upon detection, Cloud Guard can suggest, assist, or take corrective actions to mitigate these issues.',
     recommended_action: 'Cloud Guard should be enabled in the root compartment of your tenancy.',

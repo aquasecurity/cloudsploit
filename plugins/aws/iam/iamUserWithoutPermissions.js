@@ -5,12 +5,14 @@ module.exports = {
     title: 'IAM User Without Permissions',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that no IAM user exists without any permissions.',
     more_info: 'IAM users are created to perform any Console, CLI or API based operations on AWS cloud accounts. They are associated with policies that grant them permissions to perform required operations. An IAM user without any permission is a security risk, it is recommended to either add required permissions or delete them to adhere to compliance standards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html',
     recommended_action: 'Modify IAM user and attach new permissions or delete the user.',
     apis: ['IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getPolicyVersion' ,'IAM:listGroupsForUser',
         'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies'],
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AddUserToGroup','iam:RemoveUserFromGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -90,7 +92,8 @@ module.exports = {
                         return cb();
                     }
 
-                    if (listGroupPolicies.data.PolicyNames.length || listAttachedGroupPolicies.data.AttachedPolicies.length ){
+                    if ((listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length) || 
+                        (listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length)){
                         break;
                     }
                 }

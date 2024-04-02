@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Cross Account Access',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures SNS policies disallow cross-account access',
     more_info: 'SNS topic policies should be carefully restricted to to subscribe or send messages. Topic policies can be used to limit these privileges.',
     recommended_action: 'Update the SNS policy to prevent access from external accounts.',
@@ -30,6 +31,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner,sns:Endpoint'
         },
     },
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes', 'sns:DeleteTopic'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Default Security Group',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure the default security groups block all traffic by default',
     more_info: 'The default security group is often used for resources launched without a defined security group. For this reason, the default rules should be to block all traffic to prevent an accidental exposure.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
@@ -17,6 +18,7 @@ module.exports = {
              'unintended traffic to cross these isolation boundaries.',
         cis2: '4.3 Ensure the default security group of every VPC restricts all traffic'
     },
+    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

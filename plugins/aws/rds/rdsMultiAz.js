@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Multiple AZ',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that RDS instances are created to be cross-AZ for high availability.',
     more_info: 'Creating RDS instances in a single AZ creates a single point of failure for all systems relying on that database. All RDS instances should be created in multiple AZs to ensure proper failover.',
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS CPU Alarm Threshold Exceeded',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure RDS instances do not exceed the alarm threshold for CPU utilization.',
     more_info: 'High CPU usage may suggest that the databases on these servers lack sufficient hardware resources to operate at their best. Enhancing the performance of overburdened RDS instances by upgrading them can directly enhance the well-being and performance of the databases.',
     link: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/amazon-rds-monitoring-alerting/db-instance-cloudwatch-metrics.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: '90'
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var results = [];
