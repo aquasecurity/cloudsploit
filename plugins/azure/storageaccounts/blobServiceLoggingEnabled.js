@@ -11,7 +11,7 @@ module.exports = {
     more_info: 'Azure Storage Blob logs contain detailed information about successful and failed requests made to your storage blobs for read, write and delete operations. This information can be used to monitor individual requests and to diagnose issues with the Storage Blob service within your Microsoft Azure account.',
     recommended_action: 'Modify Blob Service and enable storage logging for "Read", "Write", and "Delete" requests.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'blobService:getProperties'],
+    apis: ['storageAccounts:list', 'diagnosticSettings:listByBlobServices'],
     realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
@@ -35,23 +35,33 @@ module.exports = {
                 helpers.addResult(results, 0, 'No storage accounts found', location);
                 return rcb();
             }
-            
-            for (let storageAccount of storageAccounts.data) {
-                var blobServiceProperties = helpers.addSource(cache, source,
-                    ['blobService', 'getProperties', location, storageAccount.id]);
 
-                if (!blobServiceProperties || blobServiceProperties.err || !blobServiceProperties.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for storage account blob service properties: ' + helpers.addError(blobServiceProperties), location, storageAccount.id);
-                    continue;
-                } 
-                if (blobServiceProperties.data.blobAnalyticsLogging && blobServiceProperties.data.blobAnalyticsLogging.deleteProperty &&
-                blobServiceProperties.data.blobAnalyticsLogging.read && blobServiceProperties.data.blobAnalyticsLogging.write) {
-                    helpers.addResult(results, 0, 'Storage Account has logging enabled for blob service read, write and delete requests', location, storageAccount.id);
+            for (let storageAccount of storageAccounts.data) {
+                if (!storageAccount.id) continue;
+                const diagnosticSettings = helpers.addSource(cache, source,
+                    ['diagnosticSettings', 'listByBlobServices', location, storageAccount.id]);
+
+
+                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                    helpers.addResult(results, 3, 'Unable to query Storage Account diagnostics settings: ' + helpers.addError(diagnosticSettings), location, storageAccount.id);
                 } else {
-                    helpers.addResult(results, 2, 
-                        'Storage Account does not have logging enabled for blob service read, write or delete requests', location, storageAccount.id);
+                    //First consider that all the logs are missing then remove the ones that are present
+                    var missingLogs = ['StorageRead', 'StorageWrite','StorageDelete'];
+
+                    diagnosticSettings.data.forEach(settings => {
+                        const logs = settings.logs;
+                        missingLogs = missingLogs.filter(requiredCategory =>
+                            !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                        );
+                    });
+
+                    if (missingLogs.length) {
+                        helpers.addResult(results, 2, `Storage Account does not have logging enabled for blob service. Missing Logs ${missingLogs}`, location, storageAccount.id);
+                    } else {
+                        helpers.addResult(results, 0, 'Storage Account has logging enabled for blob service read, write and delete requests', location, storageAccount.id);
+                    }
                 }
+
             }
 
             rcb();

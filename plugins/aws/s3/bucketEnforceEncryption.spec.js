@@ -84,11 +84,11 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "aws:kms"
+                                    "s3:x-amz-server-side-encryption": "aws:kms"
                                 }
                             }
-                       },
-                       {
+                        },
+                        {
                             "Effect": "Deny",
                             "Principal": "*",
                             "Action": "s3:PutObject",
@@ -98,7 +98,7 @@ describe('bucketEnforceEncryption', function () {
                                     "s3:x-amz-server-side-encryption": true
                                 }
                             }
-                       }
+                        }
                     ]
                 })
             });
@@ -122,11 +122,11 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "aws:kms"
+                                    "s3:x-amz-server-side-encryption": "aws:kms"
                                 }
                             }
-                       },
-                       {
+                        },
+                        {
                             "Effect": "Deny",
                             "Principal": "*",
                             "Action": "s3:PutObject",
@@ -136,7 +136,7 @@ describe('bucketEnforceEncryption', function () {
                                     "s3:x-amz-server-side-encryption": true
                                 }
                             }
-                       }
+                        }
                     ]
                 })
             });
@@ -160,11 +160,11 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "AES256"
+                                    "s3:x-amz-server-side-encryption": "AES256"
                                 }
                             }
-                       },
-                       {
+                        },
+                        {
                             "Effect": "Deny",
                             "Principal": "*",
                             "Action": "s3:PutObject",
@@ -174,7 +174,7 @@ describe('bucketEnforceEncryption', function () {
                                     "s3:x-amz-server-side-encryption": false
                                 }
                             }
-                       }
+                        }
                     ]
                 })
             });
@@ -198,11 +198,11 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "AES256"
+                                    "s3:x-amz-server-side-encryption": "AES256"
                                 }
                             }
-                       },
-                       {
+                        },
+                        {
                             "Effect": "Deny",
                             "Principal": "*",
                             "Action": "s3:PutObject",
@@ -212,7 +212,7 @@ describe('bucketEnforceEncryption', function () {
                                     "s3:x-amz-server-side-encryption": true
                                 }
                             }
-                       }
+                        }
                     ]
                 })
             });
@@ -238,11 +238,11 @@ describe('bucketEnforceEncryption', function () {
                             "Resource": "arn:aws:s3:::mybucket/*",
                             "Condition": {
                                 "StringNotEquals": {
-                                      "s3:x-amz-server-side-encryption": "aws:kms"
+                                    "s3:x-amz-server-side-encryption": "aws:kms"
                                 }
                             }
-                       },
-                       {
+                        },
+                        {
                             "Effect": "Deny",
                             "Principal": "*",
                             "Action": "s3:PutObject",
@@ -252,7 +252,7 @@ describe('bucketEnforceEncryption', function () {
                                     "s3:x-amz-server-side-encryption": true
                                 }
                             }
-                       }
+                        }
                     ]
                 })
             });

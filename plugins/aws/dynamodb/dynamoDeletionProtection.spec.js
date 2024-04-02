@@ -1,19 +1,19 @@
 var expect = require('chai').expect;
-const dynamoUnusedTable = require('./dynamoUnusedTable');
+const dynamoDeletionProtection = require('./dynamoDeletionProtection');
 
 const listTables = [
-    "akd-03"
+    "test-table"
 ];
 
 const describeTable = [
     {
         "Table": {
-            "ItemCount": 0
+            "DeletionProtectionEnabled": false
         }
     },
     {
         "Table": {
-            "ItemCount": 1
+            "DeletionProtectionEnabled": true
         }
     },
 ];
@@ -33,14 +33,7 @@ const createCache = (table, details) => {
                     },
                 },
             },
-        },
-        sts: {
-            getCallerIdentity: {
-                'us-east-1': {
-                    data: '1111222222222'
-                }
-            }
-         }
+        }
     };
 };
 
@@ -78,33 +71,36 @@ const createNullCache = () => {
     };
 };
 
-describe('dynamoUnusedTable', function () {
+describe('dynamoDeletionProtection', function () {
     describe('run', function () {
-        it('should PASS if DynamoDB table is being used', function (done) {
+        it('should PASS if DynamoDB table has deletion protection enabled', function (done) {
             const cache = createCache(listTables, describeTable[1]);
-            dynamoUnusedTable.run(cache, {}, (err, results) => {
+            dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('DynamoDB table "akd-03" is being used');
+                expect(results[0].region).to.include('us-east-1');
+                expect(results[0].message).to.include('DynamoDB table "test-table" has deletion protection enabled');
                 done();
             });
         });
 
-        it('should FAIL if DynamoDB table is not used', function (done) {
+        it('should FAIL if DynamoDB table does not have deletion protection enabled', function (done) {
             const cache = createCache(listTables, describeTable[0]);
-            dynamoUnusedTable.run(cache, {}, (err, results) => {
+            dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('DynamoDB table "akd-03" is empty');
+                expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('DynamoDB table "test-table" does not have deletion protection enabled');
                 done();
             });
         });
 
         it('should PASS if No DynamoDB tables found', function (done) {
             const cache = createCache([], describeTable[1]);
-            dynamoUnusedTable.run(cache, {}, (err, results) => {
+            dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.include('us-east-1')
                 expect(results[0].message).to.include('No DynamoDB tables found');
                 done();
             });
@@ -112,8 +108,9 @@ describe('dynamoUnusedTable', function () {
 
         it('should UNKNOWN if unable to list DynamoDB tables', function (done) {
             const cache = createErrorCache();
-            dynamoUnusedTable.run(cache, {}, (err, results) => {
+            dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.include('us-east-1')
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for DynamoDB tables');
                 done();
@@ -122,9 +119,10 @@ describe('dynamoUnusedTable', function () {
 
         it('should UNKNOWN if unable to describe DynamoDB table', function (done) {
             const cache = createCache(listTables);
-            dynamoUnusedTable.run(cache, {}, (err, results) => {
+            dynamoDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.include('us-east-1')
                 expect(results[0].message).to.include('Unable to describe DynamoDB table');
                 done();
             });

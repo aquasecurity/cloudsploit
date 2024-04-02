@@ -17,10 +17,9 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
         async.each(locations.wafPolicies, (location, rcb) => {
-            
-            var wafPolicies = helpers.addSource(cache, source, 
+
+            var wafPolicies = helpers.addSource(cache, source,
                 ['wafPolicies', 'listAll', location]);
 
             if (!wafPolicies) return rcb();
@@ -32,7 +31,7 @@ module.exports = {
             if (!wafPolicies.data.length) {
                 helpers.addResult(results, 0, 'No existing WAF policies found', location);
                 return rcb();
-            } 
+            }
 
             for (let policy of wafPolicies.data) {
                 if (!policy.id) continue;
@@ -41,7 +40,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'Prevention mode enabled for application gateway WAF policy', location, policy.id);
                 } else {
                     helpers.addResult(results, 2, 'Prevention mode not enabled for application gateway WAF policy', location, policy.id);
-                } 
+                }
             }
 
             rcb();
