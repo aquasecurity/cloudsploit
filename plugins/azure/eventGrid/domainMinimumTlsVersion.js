@@ -54,11 +54,11 @@ module.exports = {
                 
                 if (domain.minimumTlsVersionAllowed && parseFloat(domain.minimumTlsVersionAllowed) >= desiredVersion) {
                     helpers.addResult(results, 0,
-                        `Event Grid domain is using TLS version ${domain.minimumTlsVersionAllowed}`,
+                        `Event Grid domain is using TLS version ${domain.minimumTlsVersionAllowed} which is equal to or higher than desired TLS version ${config.event_grid_domain_min_tls_version}`,
                         location, domain.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Event Grid domain is using TLS version ${domain.minimumTlsVersionAllowed} instead of version ${config.event_grid_domain_min_tls_version}`,
+                        `Event Grid domain is using TLS version ${domain.minimumTlsVersionAllowed} which is less than desired TLS version ${config.event_grid_domain_min_tls_version}`,
                         location, domain.id);
                 }
             }
