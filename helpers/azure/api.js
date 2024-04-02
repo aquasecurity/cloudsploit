@@ -1122,6 +1122,11 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByDatabaseAccounts: {
+            reliesOnPath: 'databaseAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByNetworkSecurityGroup: {
             reliesOnPath: 'networkSecurityGroups.listAll',
             properties: ['id'],
