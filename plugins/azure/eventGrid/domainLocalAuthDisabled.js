@@ -5,7 +5,7 @@ module.exports = {
     title: 'Event Grid Domain Local Authentication Disabled',
     category: 'Event Grid',
     domain: 'Management and Governance',
-    severity: 'Medium',
+    severity: 'Low',
     description: 'Ensures that local authentication is disabled for Event Grid domains.',
     more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication (shared access policies) for Azure Event Grid.',
     recommended_action: 'Ensure that Event Grid domains have local authentication disabled.',
