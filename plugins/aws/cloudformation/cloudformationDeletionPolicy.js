@@ -47,6 +47,7 @@ module.exports = {
                 }
 
                 if (template.data.TemplateBody) {
+                    // eslint-disable-next-line no-useless-escape
                     var deletionPolicy = template.data.TemplateBody.includes('DeletionPolicy\":\"Retain');
                     
                     if (deletionPolicy) {
