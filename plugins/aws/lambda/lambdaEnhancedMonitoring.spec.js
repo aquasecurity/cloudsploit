@@ -16,7 +16,7 @@ const createCache = (lambdaData,functionInfoData) => {
     };
 };
 
-describe('Lambda Enable Enhanced Monitoring', function () {
+describe('Lambda Enhanced Monitoring Enabled', function () {
     describe('run', function () {
         it('should return unknown result if unable to list the lambda functions', function (done) {
             const callback = (err, results) => {
@@ -130,7 +130,7 @@ describe('Lambda Enable Enhanced Monitoring', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for Lambda function Information');
+                expect(results[0].message).to.include('Unable to get Lambda function details:');
                 done();
             };
 

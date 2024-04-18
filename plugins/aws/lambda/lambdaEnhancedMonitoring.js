@@ -6,9 +6,9 @@ module.exports = {
     category: 'Lambda',
     domain: 'Serverless',
     severity: 'Medium',
-    description: 'Ensure that AWS Lambda functions enhanced monitoring is enabled.',
-    more_info: 'Amazon CloudWatch Lambda Insights is a monitoring and troubleshooting service for serverless applications running on Amazon Lambda. The service collects, aggregates, and summarizes system-level metrics including CPU, memory, disk, and network usage. It helps you to monitor, troubleshoot, and optimize your functions.',
-    link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-insights.html',
+    description: 'Ensure that AWS Lambda functions have enhanced monitoring enabled.',
+    more_info: 'Enabling enhanced monitoring on lambda functions adds lambda insights extension as a layer to your functions, which helps to collect, aggregate, and summarizes system-level metrics including CPU, memory, disk, and network usage. It helps you to monitor, troubleshoot, and optimize your functions.',
+    link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-insights.html#monitoring-insights-enabling-console',
     recommended_action: 'Modify Lambda function configurations and enable enhanced monitoring.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunction'],
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
@@ -45,7 +45,7 @@ module.exports = {
 
                 if (!functionInfo || functionInfo.err || !functionInfo.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for Lambda function Information: ${helpers.addError(functionInfo)}`, region,resource);
+                        `Unable to get Lambda function details: ${helpers.addError(functionInfo)}`, region, resource);
                     continue;
                 }
                 
