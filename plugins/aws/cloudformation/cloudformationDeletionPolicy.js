@@ -51,7 +51,7 @@ module.exports = {
                     
                     if (deletionPolicy) {
                         helpers.addResult(results, 0,
-                            'Deletion Policy is used for CloudFormation stack ',
+                            'Deletion Policy is used for CloudFormation stack',
                             region, resource);
                     } else {
                         helpers.addResult(results, 2, 'Deletion Policy is not used for CloudFormation stack ',
