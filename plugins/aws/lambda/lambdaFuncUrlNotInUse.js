@@ -37,7 +37,7 @@ module.exports = {
 
             for (var lambdaFunc of listFunctions.data) {
 
-                if (!lambdaFunc.FunctionArn) continue;
+                if (!lambdaFunc.FunctionArn || !lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
 
                 var urlConfigs = helpers.addSource(cache, source, ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
