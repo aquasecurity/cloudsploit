@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'OpenSearch Enable Audit Logs',
+    title: 'OpenSearch Audit Logs Enabled',
     category: 'OpenSearch',
     domain: 'Databases',
     severity: 'Medium',
