@@ -66,7 +66,9 @@ describe('lambdaCodeSigningEnabled', function () {
             const cache = createCache(listFunctions, codeSigningEnabledResponse);
             lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.equal('us-east-1')
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Lambda function has code signing config enabled')
                 done();
             });
         });
@@ -75,7 +77,9 @@ describe('lambdaCodeSigningEnabled', function () {
             const cache = createCache(listFunctions, codeSigningDisabledResponse);
             lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.equal('us-east-1')
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Lambda Function does not have code signing config enabled')
                 done();
             });
         });
@@ -84,7 +88,9 @@ describe('lambdaCodeSigningEnabled', function () {
             const cache = createErrorCache();
             lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.equal('us-east-1')
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Lambda functions')
                 done();
             });
         });
@@ -92,7 +98,9 @@ describe('lambdaCodeSigningEnabled', function () {
             const cache = createCache(listFunctions, null);
             lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.equal('us-east-1')
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Lambda function code signing config')
                 done();
             });
         });
@@ -101,7 +109,9 @@ describe('lambdaCodeSigningEnabled', function () {
             const cache = createNullCache();
             lambdaCodeSigningEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
+                expect(results[0].region).to.equal('us-east-1')
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No Lambda functions found')
                 done();
             });
         });

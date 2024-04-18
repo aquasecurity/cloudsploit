@@ -37,16 +37,16 @@ module.exports = {
 
             for (var lambdaFunc of listFunctions.data) {
 
-                if (!lambdaFunc.FunctionName) continue;
+                if (!lambdaFunc.FunctionArn || !lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
                 
                 var codeSigningConfig = helpers.addSource(cache, source, 
-                      ['lambda', 'getFunctionCodeSigningConfig', region, lambdaFunc.FunctionName]);
+                    ['lambda', 'getFunctionCodeSigningConfig', region, lambdaFunc.FunctionName]);
 
                 if (!codeSigningConfig || codeSigningConfig.err || !codeSigningConfig.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for Lambda function code signing config: ${helpers.addError(codeSigningConfig)}`, region, resource);
-                    return rcb();
+                    continue;
                 }
 
                 if (codeSigningConfig && codeSigningConfig.data && codeSigningConfig.data.CodeSigningConfigArn) {
