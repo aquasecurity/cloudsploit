@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures the Audit Logs feature is enabled for all the Amazon OpenSearch domains.',
-    more_info: 'The Audit Logs feature allows you to log all user activity on your Amazon OpenSearch domains (clusters), including failed login attempts, and which users accessed certain indices, documents, or fields. ',
+    more_info: 'The Audit Logs feature allows you to keep track of all user activity on your Amazon OpenSearch domains (clusters), including failed login attempts, and which users accessed certain indices, documents, or fields  and API requests, enhancing security and compliance monitoring. ',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/audit-logs.html',
     recommended_action: 'Modify Opensearch domain and enable audit logs.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
