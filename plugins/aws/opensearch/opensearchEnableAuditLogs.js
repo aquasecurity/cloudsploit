@@ -63,7 +63,7 @@ module.exports = {
                         helpers.addResult(results, 2,
                             'Audit Logs feature is not enabled for OpenSearch domain', region, resource);
                     }
-                }
+         
             });
 
             rcb();
