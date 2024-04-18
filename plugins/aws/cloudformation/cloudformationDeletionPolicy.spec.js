@@ -28,6 +28,7 @@ describe('CloudFormation Deletion Policy in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for CloudFormation stacks');
                 done();
             };
@@ -37,10 +38,33 @@ describe('CloudFormation Deletion Policy in Use', function () {
             cloudFormationDeletionPolicy.run(cache, {}, callback);
         });
 
-        it('should return passing result if no CloudFormation stacks found in region', function (done) {
+        it('should return passing result if unable to list CloudFormation stacks information', function (done) {
+            const stacks = [
+                {
+                    "StackId": "arn:aws:cloudformation:us-east-1:111122223333:stack/AKD/081ed430-3733-11eb-a560-12e26def3eab",
+                    "StackName": "AKD",
+                    "CreationTime": "2020-12-05T19:49:48.498000+00:00",
+                    "StackStatus": "CREATE_COMPLETE",
+                }
+            ];
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query CloudFormation stack template');
+                done();
+            };
+
+            const cache = createCache(stacks, []);
+
+            cloudFormationDeletionPolicy.run(cache, {}, callback);
+        });
+
+        it('should return unknown result if no CloudFormation stacks found in region', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No CloudFormation stacks found');
                 done();
             };
@@ -76,7 +100,8 @@ describe('CloudFormation Deletion Policy in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Deletion Policy is used for CloudFormation stack ');
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Deletion Policy is used for CloudFormation stack');
                 done();
             };
 
@@ -111,7 +136,8 @@ describe('CloudFormation Deletion Policy in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Deletion Policy is not used for CloudFormation stack ');
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Deletion Policy is not used for CloudFormation stack');
                 done();
             };
 
@@ -122,3 +148,4 @@ describe('CloudFormation Deletion Policy in Use', function () {
 
     });
 });
+

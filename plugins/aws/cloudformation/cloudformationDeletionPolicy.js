@@ -38,16 +38,16 @@ module.exports = {
                 if (!stack.StackName) continue;
                 
                 var resource = stack.StackName;
-                var templates = helpers.addSource(cache, source,
+                var template = helpers.addSource(cache, source,
                     ['cloudformation', 'getTemplate', region, resource]);
                 
-                if (!templates || templates.err || !templates.data) {
-                    helpers.addResult(results, 3, `Unable to query CloudFormation stack template: ${helpers.addError(templates)}`, region, resource);
-                    return rcb();
+                if (!template || template.err || !template.data) {
+                    helpers.addResult(results, 3, `Unable to query CloudFormation stack template: ${helpers.addError(template)}`, region, resource);
+                    continue;
                 }
 
-                if (templates.data.TemplateBody) {
-                    var deletionPolicy = templates.data.TemplateBody.includes('DeletionPolicy');
+                if (template.data.TemplateBody) {
+                    var deletionPolicy = template.data.TemplateBody.includes('DeletionPolicy\":\"Retain');
                     
                     if (deletionPolicy) {
                         helpers.addResult(results, 0,
@@ -66,3 +66,4 @@ module.exports = {
         });
     }
 };
+
