@@ -52,7 +52,7 @@ module.exports = {
                 if (codeSigningConfig && codeSigningConfig.data && codeSigningConfig.data.CodeSigningConfigArn) {
                     helpers.addResult(results, 0, 'Lambda function has code signing config enabled', region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'Lambda Function does not have code signing config enabled', region,resource);
+                    helpers.addResult(results, 2, 'Lambda Function does not have code signing config enabled', region, resource);
                 }
             }
             
