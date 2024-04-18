@@ -39,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            listDomainNames.data.forEach(function(domain){
+            listDomainNames.data.forEach(function(domain) {
                 const resource = `arn:${awsOrGov}:es:${region}:${accountId}:domain/${domain.DomainName}`;
                 
                 var describeDomain = helpers.addSource(cache, source,
@@ -50,9 +50,9 @@ module.exports = {
                     !describeDomain.data ||
                     !describeDomain.data.DomainStatus) {
                     helpers.addResult(
-                        results, 3,
-                        'Unable to query for OpenSearch domain config: ' + helpers.addError(describeDomain), region);
-                        return;
+                        results, 3, 'Unable to query for OpenSearch domain config: ' + 
+                        helpers.addError(describeDomain), region);
+                    return;
                 } else {
                     if (describeDomain.data.DomainStatus.LogPublishingOptions &&
                         describeDomain.data.DomainStatus.LogPublishingOptions.AUDIT_LOGS &&
@@ -63,7 +63,7 @@ module.exports = {
                         helpers.addResult(results, 2,
                             'Audit Logs feature is not enabled for OpenSearch domain', region, resource);
                     }
-         
+                }
             });
 
             rcb();

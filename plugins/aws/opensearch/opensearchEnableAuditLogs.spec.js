@@ -91,6 +91,7 @@ describe('opensearchEnableAuditLogs', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('Audit Logs feature is not enabled for OpenSearch domain')
                 done();
             });
         });
@@ -101,6 +102,7 @@ describe('opensearchEnableAuditLogs', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('Audit Logs feature is enabled for OpenSearch domain')
                 done();
             });
         });
@@ -112,6 +114,7 @@ describe('opensearchEnableAuditLogs', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('No OpenSearch domains found')
                 done();
             });
         });
@@ -122,14 +125,18 @@ describe('opensearchEnableAuditLogs', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains')
                 done();
             });
         });
 
-        it('should not return any results if unable to query for domain names', function (done) {
-            const cache = createNullCache();
+        it('should UNKNOWN if unable to query for describing domain names', function (done) {
+            const cache = createCache(null,domainNames[1]);
             opensearchEnableAuditLogs.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('Unable to query for OpenSearch domains')
                 done();
             });
         });
