@@ -35,7 +35,7 @@ module.exports = {
             }
 
             for (var stack of listStacks.data) {
-                if (!stack.StackId) return;
+                if (!stack.StackName) continue;
                 
                 var resource = stack.StackName;
                 var templates = helpers.addSource(cache, source,
