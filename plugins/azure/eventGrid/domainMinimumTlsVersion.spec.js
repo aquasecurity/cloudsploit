@@ -64,7 +64,7 @@ describe("domainMinimumTlsVersion", function () {
         domainMinimumTlsVersion.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(0);
-            expect(results[0].message).to.include("Event Grid domain is using TLS version 1.2 which is equal to or higher");
+            expect(results[0].message).to.include("Event Grid domain is using latest TLS version: 1.2");
             expect(results[0].region).to.equal("eastus");
             done();
         });
@@ -75,21 +75,11 @@ describe("domainMinimumTlsVersion", function () {
         domainMinimumTlsVersion.run(cache, {}, (err, results) => {
             expect(results.length).to.equal(1);
             expect(results[0].status).to.equal(2);
-            expect(results[0].message).to.include("Event Grid domain is using TLS version 1.1 which is less than desired TLS version");
+            expect(results[0].message).to.include("Event Grid domain is not using latest TLS version");
             expect(results[0].region).to.equal("eastus");
             done();
         });
     });
 
-    it("should give passing result if event grid domain is using desired tls version with setting value set to 1.1", function (done) {
-        const cache = createCache([domains[1]]);
-        domainMinimumTlsVersion.run(cache, {event_grid_domain_min_tls_version: 1.1}, (err, results) => {
-            expect(results.length).to.equal(1);
-            expect(results[0].status).to.equal(0);
-            expect(results[0].message).to.include("Event Grid domain is using TLS version 1.1 which is equal to or higher than desired TLS version");
-            expect(results[0].region).to.equal("eastus");
-            done();
-        });
-    });
   });
 });
