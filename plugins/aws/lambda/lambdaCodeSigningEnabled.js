@@ -40,7 +40,8 @@ module.exports = {
                 if (!lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
                 
-                var codeSigningConfig = helpers.addSource(cache, source, ['lambda', 'getFunctionCodeSigningConfig', region,lambdaFunc.FunctionName]);
+                var codeSigningConfig = helpers.addSource(cache, source, 
+                      ['lambda', 'getFunctionCodeSigningConfig', region, lambdaFunc.FunctionName]);
 
                 if (!codeSigningConfig || codeSigningConfig.err || !codeSigningConfig.data) {
                     helpers.addResult(results, 3,
