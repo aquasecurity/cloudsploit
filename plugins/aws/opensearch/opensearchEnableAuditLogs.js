@@ -52,6 +52,7 @@ module.exports = {
                     helpers.addResult(
                         results, 3,
                         'Unable to query for OpenSearch domain config: ' + helpers.addError(describeDomain), region);
+                        return;
                 } else {
                     if (describeDomain.data.DomainStatus.LogPublishingOptions &&
                         describeDomain.data.DomainStatus.LogPublishingOptions.AUDIT_LOGS &&
