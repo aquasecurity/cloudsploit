@@ -53,12 +53,12 @@ module.exports = {
 
                 if (acctCertificates.err || !acctCertificates.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query Automation accounts certificates: ' + helpers.addError(acctCertificates), location);
+                        'Unable to query Automation accounts certificates: ' + helpers.addError(acctCertificates), location, account.id);
                     continue;
                 }
 
                 if (!acctCertificates.data.length) {
-                    helpers.addResult(results, 0, 'No existing certificates found in Automation accounts', location);
+                    helpers.addResult(results, 0, 'No existing certificates found in Automation accounts', location, account.id);
                 } else {
                     var unapprovedCerts = acctCertificates.data.filter(function(cert) {
                         return !certificatesList.includes(cert.name.toLowerCase());
@@ -66,7 +66,7 @@ module.exports = {
                         return cert.name;
                     });
                     if (unapprovedCerts && unapprovedCerts.length) {
-                        helpers.addResult(results, 2, `Automation account is using following certificates which are not approved by organization: ${unapprovedCerts.length}`, location, account.id);
+                        helpers.addResult(results, 2, `Automation account is using following certificates which are not approved by organization: ${unapprovedCerts.join(',')}`, location, account.id);
                     } else {
                         helpers.addResult(results, 0, 'Automation account is using certificates which are approved by organization', location, account.id);
                     }
