@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Lambda Enable Enhanced Monitoring',
+    title: 'Lambda Enhanced Monitoring Enabled',
     category: 'Lambda',
     domain: 'Serverless',
     severity: 'Medium',
@@ -37,18 +37,19 @@ module.exports = {
 
             for (var lambdaFunc of listFunctions.data) {
 
-                if (!lambdaFunc.FunctionArn) continue;
+                if (!lambdaFunc.FunctionArn || !lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
 
-                var functionInfo = helpers.addSource(cache, source, ['lambda', 'getFunction', region, lambdaFunc.FunctionName]);
+                var functionInfo = helpers.addSource(cache, source, 
+                    ['lambda', 'getFunction', region, lambdaFunc.FunctionName]);
 
                 if (!functionInfo || functionInfo.err || !functionInfo.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for Lambda function Information: ${helpers.addError(functionInfo)}`, region,resource);
-                    return rcb();
+                    continue;
                 }
                 
-                if (functionInfo && functionInfo.data && 
+                if (functionInfo.data && 
                     functionInfo.data.Configuration && 
                     functionInfo.data.Configuration.Layers && 
                     functionInfo.data.Configuration.Layers[0] &&
