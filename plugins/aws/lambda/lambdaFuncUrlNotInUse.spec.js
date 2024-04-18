@@ -21,6 +21,7 @@ describe('Lambda Function URL Not in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for Lambda functions');
                 done();
             };
@@ -34,6 +35,7 @@ describe('Lambda Function URL Not in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No Lambda functions found');
                 done();
             };
@@ -65,6 +67,7 @@ describe('Lambda Function URL Not in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Lambda function Url is not configured');
                 done();
             };
@@ -98,6 +101,7 @@ describe('Lambda Function URL Not in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Lambda function Url is configured');
                 done();
             };
@@ -118,7 +122,8 @@ describe('Lambda Function URL Not in Use', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Lambda function URL Configs');
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for Lambda function URL configs: Unable to obtain data');
                 done();
             };
 

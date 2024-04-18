@@ -41,7 +41,7 @@ module.exports = {
                 var resource = lambdaFunc.FunctionArn;
 
                 var urlConfigs = helpers.addSource(cache, source,
-                 ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
+                    ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
 
                 if (!urlConfigs || urlConfigs.err || !urlConfigs.data) {
                     helpers.addResult(results, 3,
