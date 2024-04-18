@@ -40,7 +40,8 @@ module.exports = {
                 if (!lambdaFunc.FunctionArn || !lambdaFunc.FunctionName) continue;
                 var resource = lambdaFunc.FunctionArn;
 
-                var urlConfigs = helpers.addSource(cache, source, ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
+                var urlConfigs = helpers.addSource(cache, source,
+                 ['lambda', 'listFunctionUrlConfigs', region, lambdaFunc.FunctionName]);
 
                 if (!urlConfigs || urlConfigs.err || !urlConfigs.data) {
                     helpers.addResult(results, 3,
