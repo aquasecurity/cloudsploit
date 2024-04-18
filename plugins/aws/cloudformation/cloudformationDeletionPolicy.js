@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     severity: 'Medium',
     description: 'Ensures that deletion policy is used for Amazon CloudFormation stacks.',
-    more_info: 'CloudFormation deletes the resource and all its content during stack deletion. With the DeletionPolicy attribute you can preserve, backup a resource when its stack is deleted. A DeletionPolicy attribute can be applied to each cloudformation stack.',
+    more_info: 'DeletionPolicy attribute allows to preserve and backup a resource when its stack is deleted. By default, AWS CloudFormation deletes the resource and all its content if a resource has no DeletionPolicy attribute in a template.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html',
     recommended_action: 'Enable deletion policy attribute in the AWS Cloudformation stack.',
     apis: ['CloudFormation:listStacks', 'CloudFormation:getTemplate'],
