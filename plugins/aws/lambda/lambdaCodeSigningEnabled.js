@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Serverless',
     severity: 'Medium',
     description: 'Ensure that AWS Lambda functions are configured to use the Code Signing feature.',
-    more_info: 'Code Signing ensures that the function code has been signed by an approved (trusted) source, has not been altered since signing, and that the code signature has not expired or been revoked.',
+    more_info: 'Code signing for AWS Lambda helps to ensure that only trusted code runs in Lambda functions. When you enable code signing for a function, Lambda checks every code deployment and verifies that the code package is signed by a trusted source.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-codesigning.html',
     recommended_action: 'Modify Lambda function configurations and enable code signing',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionCodeSigningConfig'],
