@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Serverless',
     severity: 'Low',
     description: 'Ensure that AWS Lambda functions are configured to use a Dead Letter Queue.',
-    more_info: 'Configuring Dead Letter Queues (DLQs) with lambda functions helps to store discarded events and isolate messages that can\'t be processed correctly. It helps to configure an alarm for any messages moved to a dead-letter queue. They are essential in preserving failed events,debugging and determining why their processing didn\'t succeed. ',
+    more_info: 'Configuring Dead Letter Queues (DLQs) with lambda functions helps to store discarded events and isolate messages that can\'t be processed correctly. It helps to configure an alarm for any messages moved to a dead-letter queue. They are essential in preserving failed events,debugging and determining why their processing didn\'t succeed.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html#invocation-dlq',
     recommended_action: 'Modify Lambda function configurations and enable dead letter queue.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionConfiguration'],
