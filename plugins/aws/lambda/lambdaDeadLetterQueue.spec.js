@@ -21,6 +21,7 @@ describe('Lambda Dead Letter Queue', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Unable to query for Lambda functions');
                 done();
             };
@@ -30,10 +31,31 @@ describe('Lambda Dead Letter Queue', function () {
             lambdaDeadLetterQueue.run(cache, {}, callback);
         });
 
+        it('should return unknown result if unable to list the lambda function config', function (done) {
+            const lambdaData = [
+                {
+                    "FunctionName": "test-lambda",
+                    "FunctionArn": "arn:aws:lambda:us-east-1:000011112222:function:test-lambda"
+                }
+            ];
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query for Lambda function config');
+                done();
+            };
+
+            const cache = createCache(lambdaData, {});
+
+            lambdaDeadLetterQueue.run(cache, {}, callback);
+        });
+
         it('should return passing result if no lambda function found in region', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('No Lambda functions found');
                 done();
             };
@@ -67,6 +89,7 @@ describe('Lambda Dead Letter Queue', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Lambda function has dead letter queue configured');
                 done();
             };
@@ -96,6 +119,7 @@ describe('Lambda Dead Letter Queue', function () {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Lambda function does not have dead letter queue configured');
                 done();
             };
