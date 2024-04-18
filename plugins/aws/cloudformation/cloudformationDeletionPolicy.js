@@ -46,7 +46,7 @@ module.exports = {
                     return rcb();
                 }
 
-                if (templates && templates.data && templates.data.TemplateBody) {
+                if (templates.data.TemplateBody) {
                     var deletionPolicy = templates.data.TemplateBody.includes('DeletionPolicy');
                     
                     if (deletionPolicy) {
