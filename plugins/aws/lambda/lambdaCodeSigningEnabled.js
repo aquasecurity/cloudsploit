@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that AWS Lambda functions are configured to use the Code Signing feature.',
     more_info: 'Code signing for AWS Lambda helps to ensure that only trusted code runs in Lambda functions. When you enable code signing for a function, Lambda checks every code deployment and verifies that the code package is signed by a trusted source.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-codesigning.html',
-    recommended_action: 'Modify Lambda function configurations and enable code signing',
+    recommended_action: 'Modify Lambda function configurations and enable code signing.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionCodeSigningConfig'],
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
