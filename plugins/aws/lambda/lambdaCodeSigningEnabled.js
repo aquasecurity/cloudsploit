@@ -45,7 +45,7 @@ module.exports = {
 
                 if (!codeSigningConfig || codeSigningConfig.err || !codeSigningConfig.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for Lambda function Code Signing Config: ${helpers.addError(codeSigningConfig)}`, region, resource);
+                        `Unable to query for Lambda function code signing config: ${helpers.addError(codeSigningConfig)}`, region, resource);
                     return rcb();
                 }
 
