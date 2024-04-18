@@ -6,8 +6,8 @@ module.exports = {
     category: 'Lambda',
     domain: 'Serverless',
     severity: 'Medium',
-    description: 'Ensure that AWS Lambda functions are configured to use the Code Signing feature.',
-    more_info: 'Code signing for AWS Lambda helps to ensure that only trusted code runs in Lambda functions. When you enable code signing for a function, Lambda checks every code deployment and verifies that the code package is signed by a trusted source.',
+    description: 'Ensure that AWS Lambda functions are configured to use the code signing feature.',
+    more_info: 'Code signing for AWS Lambda helps to ensure that only trusted code runs in Lambda functions. Enabling code signing feature ensures that lambda checks every code deployment and verifies that the code package is signed by a trusted source.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-codesigning.html',
     recommended_action: 'Modify Lambda function configurations and enable code signing.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionCodeSigningConfig'],
@@ -49,10 +49,10 @@ module.exports = {
                     continue;
                 }
 
-                if (codeSigningConfig && codeSigningConfig.data && codeSigningConfig.data.CodeSigningConfigArn) {
-                    helpers.addResult(results, 0, 'Lambda function has code signing config enabled', region, resource);
+                if (codeSigningConfig.data.CodeSigningConfigArn) {
+                    helpers.addResult(results, 0, 'Lambda function has code signing feature enabled', region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'Lambda Function does not have code signing config enabled', region, resource);
+                    helpers.addResult(results, 2, 'Lambda function does not have code signing feature enabled', region, resource);
                 }
             }
             
