@@ -48,8 +48,7 @@ module.exports = {
                     continue;
                 }
                 
-                if (urlConfigs && urlConfigs.data &&
-                    urlConfigs.data.FunctionUrlConfigs && 
+                if (urlConfigs.data.FunctionUrlConfigs && 
                     urlConfigs.data.FunctionUrlConfigs.length){
                     helpers.addResult(results, 2, 'Lambda function Url is configured', region, resource);
                 } else {
