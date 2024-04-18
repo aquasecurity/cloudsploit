@@ -45,7 +45,7 @@ module.exports = {
                 if (!urlConfigs || urlConfigs.err || !urlConfigs.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for Lambda function URL Configs: ${helpers.addError(urlConfigs)}`, region, resource);
-                    return rcb();
+                    continue;
                 }
                 
                 if (urlConfigs && urlConfigs.data &&
