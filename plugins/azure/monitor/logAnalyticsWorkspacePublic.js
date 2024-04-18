@@ -31,7 +31,7 @@ module.exports = {
             }
 
             if (!logAnalytics.data.length) {
-                helpers.addResult(results, 2, 'No existing Log Analytics Workspaces found', location);
+                helpers.addResult(results, 0, 'No existing Log Analytics Workspaces found', location);
                 return rcb();
             }
 

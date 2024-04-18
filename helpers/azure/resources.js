@@ -297,5 +297,8 @@ module.exports = {
     },
     publicIpAddresses: {
         list: 'id'
+    },
+    containerApps: {
+        list: 'id'
     }
 };
