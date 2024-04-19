@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Compute',
     severity: 'Low',
     description: 'Ensure that an Amazon Comprehend Flywheel is configured with a VPC.',
-    more_info: 'When the Comprehend flywheel is configured within a VPC, it establishes a secure environment that prevents unauthorized internet access to your data stored in job containers, minimizing the risk of data breaches and ensuring compliance with security standards.',
-    recommended_action: 'Update the Amazon Comprehend Flywheel and configure VPC',
+    more_info: 'Configuring Amazon Comprehend flywheel within a VPC, establishes a secure environment that prevents unauthorized access to your data stored in job containers, minimizing the risk of internet exposure, data breaches and ensuring compliance with security standards.',
+    recommended_action: 'Update Comprehend Flywheel and configure it within VPC.',
     link: 'https://docs.aws.amazon.com/comprehend/latest/dg/usingVPC.html',
     apis: ['Comprehend:listFlywheels', 'Comprehend:describeFlywheel'],
     realtime_triggers: ['comprehend:CreateFlywheel','comprehend:UpdateFlywheel','comprehend:DeleteFlywheel'],
@@ -26,16 +26,17 @@ module.exports = {
 
             if (listFlywheels.err || !listFlywheels.data) {
                 helpers.addResult(results, 3,
-                    `Unable to query for Comprehend flywheel list: ${helpers.addError(listFlywheels)}`, region);
+                    `Unable to query for Comprehend flywheels: ${helpers.addError(listFlywheels)}`, region);
                 return rcb();
             }
 
             if (!listFlywheels.data.length) {
-                helpers.addResult(results, 0, 'No Comprehend flywheel found', region);
+                helpers.addResult(results, 0, 'No existing Comprehend flywheels found', region);
                 return rcb();
             }
 
-            for (let flywheel of listFlywheels.data){
+            for (let flywheel of listFlywheels.data) {
+                if (!flywheel.FlywheelArn) continue;
               
                 let resource = flywheel.FlywheelArn;
 
@@ -43,7 +44,7 @@ module.exports = {
                     ['comprehend', 'describeFlywheel', region, flywheel.FlywheelArn]);
 
                 if (!describeFlywheel || describeFlywheel.err || !describeFlywheel.data || !describeFlywheel.data.FlywheelProperties) {
-                    helpers.addResult(results, 3, `Unable to describe Comprehend flywheel : ${helpers.addError(describeFlywheel)}`, region, resource);
+                    helpers.addResult(results, 3, `Unable to describe Comprehend flywheel: ${helpers.addError(describeFlywheel)}`, region, resource);
                     continue;
                 }
 

@@ -97,6 +97,7 @@ describe('flywheelInVpc', function () {
             flywheelInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Comprehend flywheel is configured within a VPC');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -107,6 +108,7 @@ describe('flywheelInVpc', function () {
             flywheelInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Comprehend flywheel is not configured within a VPC');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -117,6 +119,7 @@ describe('flywheelInVpc', function () {
             flywheelInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No existing Comprehend flywheels found');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -127,6 +130,7 @@ describe('flywheelInVpc', function () {
             flywheelInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Comprehend flywheels:');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
