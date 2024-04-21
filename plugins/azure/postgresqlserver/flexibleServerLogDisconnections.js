@@ -51,7 +51,7 @@ module.exports = {
                     return (config.name == 'log_disconnections');
                 });
         
-                if (configuration && configuration[0].value && configuration[0].value.toLowerCase() == 'on') {
+                if (configuration && configuration[0] && configuration[0].value && configuration[0].value.toLowerCase() == 'on') {
                     helpers.addResult(results, 0, 'PostgreSQL flexible server has log disconnections setting enabled', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2, 'PostgreSQL flexible server does not have log disconnections setting enabled', location, flexibleServer.id);
