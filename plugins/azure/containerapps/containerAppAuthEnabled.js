@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     severity: 'Low',
     description: 'Ensures that built-in authentication is enabled for Container Apps.',
-    more_info: 'Enabling built-in authentication for Container Apps enhances security by preventing unauthorized access, ensuring that only authenticated users can interact with the app by providing out-of-the-box authentication with federated identity providers.',
+    more_info: 'Enabling built-in authentication for Container Apps enhances security by preventing unauthorized access, ensuring that only authenticated users can interact with the app by providing authentication with federated identity providers.',
     recommended_action: 'Modify Container Apps and enable built-in authentication feature.',
     link: 'https://learn.microsoft.com/en-us/azure/container-apps/authentication',
     apis: ['containerApps:list', 'containerApps:getAuthSettings'],
