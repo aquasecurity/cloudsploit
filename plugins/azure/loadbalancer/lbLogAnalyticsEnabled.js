@@ -21,7 +21,7 @@ module.exports = {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'false',
         }
     },
     realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
@@ -59,7 +59,7 @@ module.exports = {
                 if (config.ignore_internal_lb_log_analystics && loadBalancer.frontendIPConfigurations
                     && loadBalancer.frontendIPConfigurations.length && 
                     loadBalancer.frontendIPConfigurations.some(ipconfig => 
-                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                        ipconfig.properties && ipconfig.properties.privateIPAddress)
                 )  return;
 
                 const diagnosticSettings = helpers.addSource(cache, source,

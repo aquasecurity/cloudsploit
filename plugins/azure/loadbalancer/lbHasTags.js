@@ -16,7 +16,7 @@ module.exports = {
             name: 'Ignore Internal Load Balancers',
             description: 'When set to true, skips checking internal load balancers',
             regex: '^(true|false)$',
-            default: 'true',
+            default: 'false',
         }
     },
     realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete', 'microsoftresources:tags:write'],
@@ -55,7 +55,7 @@ module.exports = {
                 if (config.ignore_internal_lbs_tags && lb.frontendIPConfigurations
                     && lb.frontendIPConfigurations.length && 
                     lb.frontendIPConfigurations.some(ipconfig => 
-                        ipconfig.properties && ipconfig.properties.publicIPAddress)
+                        ipconfig.properties && ipconfig.properties.privateIPAddress)
                 )  continue;
 
                 if (lb.tags && Object.entries(lb.tags).length > 0){
