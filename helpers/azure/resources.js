@@ -300,5 +300,8 @@ module.exports = {
     },
     databricks: {
         listWorkspaces: 'id'
+    },
+    containerApps: {
+        list: 'id'
     }
 };
