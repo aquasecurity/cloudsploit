@@ -15,7 +15,7 @@ module.exports = {
         app_tier_tag_key: {
             name: 'App-Tier Tag Key',
             description: 'Tag key to indicate App-Tier Key Vault keys',
-            regex: '^.*$s',
+            regex: '^.*$',
             default: ''
         }
     },

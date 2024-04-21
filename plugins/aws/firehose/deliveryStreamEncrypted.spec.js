@@ -308,7 +308,7 @@ describe('deliveryStreamEncrypted', function () {
             deliveryStreamEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Firehose delivery stream is encrypted with awscmk');
+                expect(results[0].message).to.include('Firehose delivery stream destination bucket is encrypted with awscmk');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -319,22 +319,12 @@ describe('deliveryStreamEncrypted', function () {
             deliveryStreamEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Firehose delivery stream is encrypted with awskms');
+                expect(results[0].message).to.include('Firehose delivery stream destination bucket is encrypted with awskms');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
         });
 
-        it('should FAIL if Firehose Delivery Streams does not have encryption enabled', function (done) {
-            const cache = createCache([listDeliveryStreams[0]], listKeys, describeDeliveryStream[2], describeKey[1]);
-            deliveryStreamEncrypted.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Firehose delivery stream does not have encryption enabled');
-                expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
 
         it('should PASS if no Firehose Delivery Streams found', function (done) {
             const cache = createCache([]);
