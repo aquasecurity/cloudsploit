@@ -10,7 +10,7 @@ const servers = [
 
 const configurations = [
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+        "id": "/subscriptions/12345/resourceGroups/tests/providers/Microsoft.DBforPostgreSQL/servers/test1/configurations/log_checkpoints",
         "name": "log_disconnections",
         "type": "Microsoft.DBforPostgreSQL/servers/configurations",
         "value": "on",
@@ -26,7 +26,7 @@ const configurations = [
     },
 
     {
-        "id": "/subscriptions/ade0e01e-f9cd-49d3-bba7-d5a5362a3414/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.DBforPostgreSQL/servers/gioservertest1/configurations/log_checkpoints",
+        "id": "/subscriptions/12345/resourceGroups/Default/providers/Microsoft.DBforPostgreSQL/servers/giost1/configurations/log_checkpoints",
         "name": "log_disconnections",
         "type": "Microsoft.DBforPostgreSQL/servers/configurations",
         "value": "off",
