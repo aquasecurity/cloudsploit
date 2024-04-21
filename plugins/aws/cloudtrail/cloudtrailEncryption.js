@@ -56,7 +56,7 @@ module.exports = {
                 helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
             } else if (describeTrails.data[0]) {
                 for (var t in describeTrails.data) {
-                    if (describeTrails.data[t].S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET || (describeTrails.data[t].HomeRegion && describeTrails.data[t].HomeRegion.toLowerCase() !== region)) continue;
+                    if (describeTrails.data[t].S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) continue;
                     if (!describeTrails.data[t].KmsKeyId) {
                         helpers.addResult(results, 2, 'CloudTrail encryption is not enabled',
                             region, describeTrails.data[t].TrailARN);
