@@ -51,7 +51,7 @@ module.exports = {
                     return (config.name == 'connection_throttle.enable');
                 });
         
-                if (configuration && configuration[0].value && configuration[0].value.toLowerCase() == 'on') {
+                if (configuration && configuration[0] && configuration[0].value && configuration[0].value.toLowerCase() == 'on') {
                     helpers.addResult(results, 0, 'PostgreSQL flexible server has connection throttling enabled', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2, 'PostgreSQL flexible server does not have connection throttling enabled', location, flexibleServer.id);
