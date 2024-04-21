@@ -5,6 +5,7 @@ module.exports = {
     title: 'Application Gateway Request Body Inspection',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that request body inspection is enabled for Application Gateway WAF policy.',
     more_info: 'Application Gateway WAF policy with disabled request body inspection doesn\'t evaluate the contents of an HTTP message\'s body. Enabling it allows us to inspect properties that may not be evaluated in the HTTP headers, cookies, or URI.',
     recommended_action: 'Modify application gateway WAF policy and enable request body inspection in policy settings.',

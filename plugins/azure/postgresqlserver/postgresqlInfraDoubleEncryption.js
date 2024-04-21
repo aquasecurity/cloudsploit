@@ -5,6 +5,7 @@ module.exports = {
     title: 'PostgreSQL Infrastructure Double Encryption',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Infrastructure double encryption is enabled for PostgreSQL Database Servers.',
     more_info: 'Double Encryption adds layer of encryption is implemented at the hardware level before the storage or network level. Information will be encrypted before it is even accessed, preventing both interception of data in motion if the network layer encryption is broken and data at rest in system resources such as memory or processor cache.',
     recommended_action: 'Enable Infrastructure double encryotion for PostgreSQL database servers.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Application Gateway Security Logging Enabled',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that Application Gateway Access and Firewall logs are enabled.',
     more_info: 'Application Gateway access logs helps to analyze important information including the caller\'s IP, requested URL, response latency, return code, and bytes in and out. Web application firewall (WAF) logs can be used to detect potential attacks, and false positive detections that might indicate legitimate requests that the WAF blocked.',
     recommended_action: 'Modify Application Gateway and add diagnostic settings for Access and Firewall Logs.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Application Gateway WAF Prevention Mode Enabled',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure that WAF policy for Microsoft Azure Application gateway is set to Prevention mode.',
     more_info: 'Azure Web Application Firewall (WAF) on Azure Application Gateway provides centralized protection of your web applications from common exploits and vulnerabilities. Web applications are increasingly targeted by malicious attacks that exploit commonly known vulnerabilities.',
     recommended_action: 'Modify application gateway WAF policy and enable prevention mode.',
@@ -16,10 +17,9 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
         async.each(locations.wafPolicies, (location, rcb) => {
-            
-            var wafPolicies = helpers.addSource(cache, source, 
+
+            var wafPolicies = helpers.addSource(cache, source,
                 ['wafPolicies', 'listAll', location]);
 
             if (!wafPolicies) return rcb();
@@ -31,7 +31,7 @@ module.exports = {
             if (!wafPolicies.data.length) {
                 helpers.addResult(results, 0, 'No existing WAF policies found', location);
                 return rcb();
-            } 
+            }
 
             for (let policy of wafPolicies.data) {
                 if (!policy.id) continue;
@@ -40,7 +40,7 @@ module.exports = {
                     helpers.addResult(results, 0, 'Prevention mode enabled for application gateway WAF policy', location, policy.id);
                 } else {
                     helpers.addResult(results, 2, 'Prevention mode not enabled for application gateway WAF policy', location, policy.id);
-                } 
+                }
             }
 
             rcb();

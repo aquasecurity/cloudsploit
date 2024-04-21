@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web Apps Active Directory Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have registration with Azure Active Directory.',
     more_info: 'Registration with Azure Active Directory (AAD) enables App Service web applications to connect to other Azure cloud services securely without the need of access credentials such as user names and passwords.',
     recommended_action: 'Enable registration with Azure Active Directory for Azure Web Apps.',

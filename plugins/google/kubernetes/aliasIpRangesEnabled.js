@@ -5,11 +5,13 @@ module.exports = {
     title: 'Alias IP Ranges Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures all Kubernetes clusters have alias IP ranges enabled',
     more_info: 'Alias IP ranges allow users to assign ranges of internal IP addresses as alias to a network interface.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure that Kubernetes clusters have alias IP ranges enabled.',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

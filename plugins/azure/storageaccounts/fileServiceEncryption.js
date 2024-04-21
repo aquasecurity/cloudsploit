@@ -5,6 +5,7 @@ module.exports = {
     title: 'File Service Encryption',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures data encryption is enabled for File Services',
     more_info: 'File Service encryption protects your data at rest. Azure Storage encrypts your data and automatically decrypts it for you as you access it.',
     recommended_action: 'Ensure that data encryption is enabled for each File Service.',

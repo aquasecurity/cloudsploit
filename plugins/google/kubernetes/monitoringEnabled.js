@@ -5,12 +5,14 @@ module.exports = {
     title: 'Monitoring Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures all Kubernetes clusters have monitoring enabled',
     more_info: 'Kubernetes supports monitoring through Stackdriver.',
     link: 'https://cloud.google.com/monitoring/kubernetes-engine/',
     recommended_action: 'Ensure monitoring is enabled on all Kubernetes clusters.',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster','container.ClusterManager.UpdateCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

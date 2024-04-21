@@ -944,7 +944,9 @@ function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
 
     routeTables.forEach(routeTable => {
         if (routeTable.RouteTableId && routeTable.Routes &&
-            routeTable.Routes.every(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+            routeTable.Routes.every(route => !route.GatewayId || !route.GatewayId.startsWith('igw-'))) {
+            privateRouteTables.push(routeTable.RouteTableId);
+        }
     });
 
     subnets.forEach(subnet => {

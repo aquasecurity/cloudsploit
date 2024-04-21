@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Service SCM Site Access Restriction',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Azure App Services restrict access to the SCM site that\'s used by your app.',
     more_info: 'In addition to being able to control access to your app, you can restrict access to the SCM site that\'s used by your app. ' +
         'The SCM site is both the web deploy endpoint and the Kudu console.',

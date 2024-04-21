@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Snapshot Publicly Accessible',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that Amazon RDS database snapshots are not publicly exposed.',
     more_info: 'If an RDS snapshot is exposed to the public, any AWS account can copy the snapshot and create a new database instance from it. ' +
         'It is a best practice to ensure RDS snapshots are not exposed to the public to avoid any accidental leak of sensitive information.',

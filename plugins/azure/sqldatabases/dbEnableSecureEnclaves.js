@@ -5,6 +5,7 @@ module.exports = {
     title: 'Database Secure Enclaves Encryption Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure secure enclaves encryption is enabled for SQL databases.',
     more_info: 'Secure enclaves encryption protects the data by encrypting it on the client side and never allowing the data or the corresponding cryptographic keys to appear in plaintext inside the Database Engine. As a result, the functionality on encrypted columns inside the database is severely restricted.',
     recommended_action: 'Enable secure enclaves encryption for all SQL databases.',

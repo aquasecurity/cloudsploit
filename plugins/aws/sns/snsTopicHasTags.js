@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Topic Has Tags',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensure that Amazon SNS topics have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify SNS topic and add tags.',

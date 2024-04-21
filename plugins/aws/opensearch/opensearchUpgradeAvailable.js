@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Upgrade Available',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures OpenSearch domains are running the latest service software',
     more_info: 'OpenSearch domains should be configured to run the latest service software which often contains security updates.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/version-migration.html',

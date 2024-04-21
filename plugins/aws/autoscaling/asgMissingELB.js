@@ -5,6 +5,7 @@ module.exports = {
     title: 'Auto Scaling Group Missing ELB',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures all Auto Scaling groups are referencing active load balancers.',
     more_info: 'Each Auto Scaling group with a load balancer configured should reference an active ELB.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/attach-load-balancer-asg.html',

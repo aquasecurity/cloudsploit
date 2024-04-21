@@ -4,11 +4,13 @@ module.exports = {
     title: 'Disk MultiAz',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that Compute disks have regional disk replication feature enabled for high availability.',
     more_info: 'Enabling regional disk replication will allow you to force attach a regional persistent disk to another VM instance in a different zone in the same region in case of a zonal outage.',
     link: 'https://cloud.google.com/compute/docs/disks/high-availability-regional-persistent-disk',
     recommended_action: 'Ensure that all Google compute disks have replica zones configured.',
     apis: ['disks:aggregatedList'],
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

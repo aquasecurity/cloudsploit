@@ -5,6 +5,7 @@ module.exports = {
     title: 'VPC Firewall Rule Logging',
     category: 'Logging',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that logging and log alerts exist for firewall rule changes',
     more_info: 'Project Ownership is the highest level of privilege on a project, any changes in firewall rule should be heavily monitored to prevent unauthorized changes.',
     link: 'https://cloud.google.com/logging/docs/logs-based-metrics/',
@@ -14,6 +15,7 @@ module.exports = {
         hipaa: 'HIPAA requires the logging of all activity ' +
             'including access and all actions taken.'
     },
+    realtime_triggers: ['logging.MetricsServiceV2.CreateLogMetric', 'logging.MetricsServiceV2.DeleteLogMetric', 'compute.firewalls.insert', 'compute.firewalls.delete' ],
 
     run: function(cache, settings, callback) {
         var results = [];

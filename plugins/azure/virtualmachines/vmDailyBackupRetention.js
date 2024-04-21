@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Daily Backup Retention Period',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM daily backup retention policy is configured to retain backups for the desired number of days.',
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs. These backups should be retained for a specific amount of time to recover destroyed VM.',
     recommended_action: 'Configure virtual machine daily backup retention policy to retain backups for desired number of days',

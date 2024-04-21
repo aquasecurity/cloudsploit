@@ -6,6 +6,7 @@ module.exports = {
     title: 'Premium SSD Disabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that the Azure virtual machines are configured to use standard SSD disk volumes instead of premium SSD disk volumes for managed disks.',
     more_info: 'Azure standard SSD disks store data on solid state drives (SSDs), like Azure\'s existing premium storage disks. Standard SSD disks are a cost-effective storage option optimized for workloads that need consistent performance at lower IOPS levels.',
     recommended_action: 'Modify virtual machines disks to use standard SSD disk volumes instead of premium SSD disk volumes',

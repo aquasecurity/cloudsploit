@@ -5,6 +5,7 @@ module.exports = {
     title: 'MQ Broker Public Accessibility',
     category: 'MQ',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon MQ brokers are not publicly accessible.',
     more_info: 'Public Amazon MQ brokers can be accessed directly, outside of a Virtual Private Cloud (VPC), therefore every machine on the internet can reach your brokers through their public endpoints and this can increase the opportunity for malicious activity.',
     recommended_action: 'Review and update the security group settings to restrict public access to Amazon MQ brokers.',

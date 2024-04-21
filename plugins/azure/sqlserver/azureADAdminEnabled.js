@@ -5,6 +5,7 @@ module.exports = {
     title: 'Azure Active Directory Admin Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Active Directory admin is enabled on all SQL servers.',
     more_info: 'Enabling Active Directory admin allows users to manage account admins in a central location, allowing key rotation and permission management to be managed in one location for all servers and databases.',
     recommended_action: 'Ensure Azure Active Directory admin is enabled on all SQL servers.',

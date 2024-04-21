@@ -4,6 +4,7 @@ module.exports = {
     title: 'Certificate Expiry',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Detect upcoming expiration of certificates used with ELBs',
     more_info: 'Certificates that have expired will trigger warnings in all major browsers',
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-update-ssl-cert.html',

@@ -7,7 +7,7 @@ module.exports = {
     title: 'CloudFormation Admin Priviliges',
     category: 'CloudFormation',
     domain: 'Application Integration',
-    severity: 'MEDIUM',
+    severity: 'Medium',
     description: 'Ensures no AWS CloudFormation stacks available in your AWS account has admin privileges.',
     more_info: 'A service role is an AWS Identity and Access Management (IAM) role that allows AWS CloudFormation to make calls to resources in a stack on your behalf. You can specify an IAM role that allows AWS CloudFormation to create, update, or delete your stack resources',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html',

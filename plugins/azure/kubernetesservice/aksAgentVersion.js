@@ -6,6 +6,7 @@ module.exports = {
     title: 'Kubernetes Version For Agent Pools',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the kubernetes version is same across the node pools with the cluster.',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Node pools should be at per with the cluster kubernetes version.',
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters node pool to the same version as the cluster.',

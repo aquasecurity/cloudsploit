@@ -5,6 +5,7 @@ module.exports = {
     title: 'VPN Tunnel State',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that each AWS Virtual Private Network (VPN) connection has all tunnels up.',
     more_info: 'AWS Virtual Private Network (VPN) should have tunnels up to ensure network traffic flow over Virtual Private Network.',
     link: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNTunnels.html',

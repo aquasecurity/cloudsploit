@@ -5,6 +5,7 @@ module.exports = {
     title: 'OKE Secrets Encrypted',
     category: 'OKE',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the OKE secret objects have encryption enabled using desired protection level.',
     more_info: 'By default, Kubernetes secret objects are encrypted using an Oracle-managed master encryption key. To have better control over the encryption process, you can use Customer-Managed Keys (CMKs).',
     recommended_action: 'Ensure all OKE clusters have desired encryption level for secret objects.',

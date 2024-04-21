@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enable Defender For Containers',
     category: 'Defender',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensures that Microsoft Defender is enabled for all containers.',
     more_info: 'Turning on Microsoft Defender for Containers enables threat detection, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.',
     recommended_action: 'Enable Microsoft Defender for Containers in Defender plans for the subscription.',

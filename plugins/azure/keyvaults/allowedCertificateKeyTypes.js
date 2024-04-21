@@ -5,6 +5,7 @@ module.exports = {
     title: 'Allowed Certificates Key Types',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Key Vault SSL certificates are using the allowed key types.',
     more_info: 'Having the right key type set for your Azure Key Vault SSL certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
     recommended_action: 'Ensure that Key Vault SSL certificates are using the allowed key types.',

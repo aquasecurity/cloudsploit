@@ -5,6 +5,7 @@ module.exports = {
     title: 'Storage Bucket Retention Policy',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures bucket retention policy is set and locked to prevent deleting or updating of bucket objects or retention policy.',
     more_info: 'Configuring retention policy for bucket prevents accidental deletion as well as modification of bucket objects. This retention policy should also be locked to prevent policy deletion.',
     link: 'https://cloud.google.com/storage/docs/bucket-lock?_ga=2.221806616.-1645770163.1613190642',
@@ -18,6 +19,7 @@ module.exports = {
             default: '0'
         }
     },
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

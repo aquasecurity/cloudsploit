@@ -5,6 +5,7 @@ module.exports = {
     title: 'Spanner Instance Node Count',
     category: 'Spanner',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure than node count for Spanner instances is not above allowed count.',
     more_info: 'The number of provisioned Cloud Spanner instance nodes must be under desired limit to avoid reaching the limit and exceeding the set budget.',
     link: 'https://cloud.google.com/spanner/docs/instances',
@@ -18,6 +19,7 @@ module.exports = {
             default: '20'
         }
     },
+    realtime_triggers: ['spanner.admin.instance.InstanceAdmin.CreateInstance', 'spanner.admin.instance.InstanceAdmin.UpdateInstance', 'spanner.admin.instance.InstanceAdmin.DeleteInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

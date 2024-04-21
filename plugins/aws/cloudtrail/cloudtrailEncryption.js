@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Encryption',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensures CloudTrail encryption at rest is enabled for logs',
     more_info: 'CloudTrail log files contain sensitive information about an account and should be encrypted at rest for additional protection.',
     recommended_action: 'Enable CloudTrail log encryption through the CloudTrail console or API',

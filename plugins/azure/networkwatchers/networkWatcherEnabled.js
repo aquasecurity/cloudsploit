@@ -5,6 +5,7 @@ module.exports = {
     title: 'Network Watcher Enabled',
     category: 'Network Watcher',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures Network Watcher is enabled in all locations',
     more_info: 'Network Watcher helps locate, diagnose, and gain insights into Azure networks. Enabling Network Watcher in all locations ensures that no resources are being used in locations that are not authorized.',
     recommended_action: 'Enable the Network Watcher service in all locations.',

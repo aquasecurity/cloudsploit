@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open SSH',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 22 for SSH is open to the public',
     more_info: 'In order to deny ssh access to your virtual machines, you have to set your inbound security rules of Network Security Group to exclude ssh access to your Virtual Machine',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

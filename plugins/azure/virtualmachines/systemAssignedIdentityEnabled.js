@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM System-Assigned Identity Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that virtual machines have system-assigned managed identities enabled.',
     more_info: 'System-assigned managed identities for Azure VMs allow authentication to other services without the need to manage and store credentials in code.',
     recommended_action: 'Modify virtual machine and enable system-assigned managed identity.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Azure AD App Organizational Directory Access',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that Azure Active Directory applications are accessible to accounts in organisational directory only.',
     more_info: 'AAD provides different types of account access. By using single-tenant authentication, the impact gets limited to the application’s tenant i.e. all users from the same tenant could connect to the application and save app from unauthorised access.',
     link: 'https://learn.microsoft.com/en-us/azure/active-directory/develop/single-and-multi-tenant-apps',

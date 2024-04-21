@@ -5,12 +5,14 @@ module.exports = {
     title: 'Instance Public Access Disabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that compute instances are not configured to allow public access.',
     more_info: 'Compute Instances should always be configured behind load balancers instead of having public IP addresses ' +
         'in order to minimize the instance\'s exposure to the internet.',
     link: 'https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address',
     recommended_action: 'Modify compute instances and set External IP to None for network interface',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.updateNetworkInterface'],
 
     run: function(cache, settings, callback) {
         var results = [];

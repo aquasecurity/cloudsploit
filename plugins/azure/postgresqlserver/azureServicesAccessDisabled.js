@@ -2,9 +2,10 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Server Services Access Disabled',
+    title: 'PostgreSQL Server Services Network Access Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that PostgreSQL servers do not allow access to other Azure services.',
     more_info: 'To secure your PostgreSQL server, it is recommended to disable public network access. Instead, configure firewall rules to allow connections from specific network ranges or utilize VNET rules for access from designated virtual networks. This helps prevent unauthorized access from Azure services outside your subscription.',
     recommended_action: 'Disable public network access for PostgreSQL database servers.',

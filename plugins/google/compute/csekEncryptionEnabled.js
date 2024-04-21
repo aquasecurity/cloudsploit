@@ -4,6 +4,7 @@ module.exports = {
     title: 'CSEK Encryption Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures Customer Supplied Encryption Key Encryption is enabled on disks',
     more_info: 'Google encrypts all disks at rest by default. By using CSEK only the users with the key can access the disk. Anyone else, including Google, cannot access the disk data.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
@@ -16,6 +17,7 @@ module.exports = {
             'Encryption should be enabled for all disks storing this ' +
             'type of data.'
     },
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

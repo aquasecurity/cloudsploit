@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Instance Generation',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that all ElastiCache clusters provisioned within your AWS account are using the latest generation of instances',
     more_info: 'Using the latest generation of Amazon ElastiCache instances instances will benefit clusters for higher hardware performance, ' +
         'better support for latest Memcached and Redis in-memory engines versions and lower costs.',

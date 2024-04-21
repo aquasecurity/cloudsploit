@@ -5,6 +5,7 @@ module.exports = {
     title: 'WorkSpaces Desired Bundle Type',
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that AWS WorkSpaces bundles are of desired types.',
     more_info: 'A bundle in AWS WorkSpaces defines the hardware and software for AWS WorkSpaces. You can create a WorkSpaces instance using a predefined or custom bundle. Setting a limit to the types that can be used will help you control billing and address internal compliance requirements.',
     recommended_action: 'Ensure that WorkSpaces instances are using desired bundle types',

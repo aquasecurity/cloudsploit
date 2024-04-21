@@ -5,6 +5,7 @@ module.exports = {
     title: 'Application Gateway SSL Policy',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that Application Gateway is using minimum TLS version of TLSv1_2.',
     more_info: 'Transport Layer Security (TLS), previously known as Secure Sockets Layer (SSL), is the standard security technology for establishing an encrypted link between a web server and a browser. This link ensures that all data passed between the web server and browsers remain private and encrypted.',
     recommended_action: 'Modify Application Gateway with latest SSL policy which supports minimum TLS version.',

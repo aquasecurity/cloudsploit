@@ -4,6 +4,7 @@ module.exports = {
     title: 'Audit Manager Data Encrypted',
     category: 'Audit Manager',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that all data in Audit Manager is encrypted with desired encryption level.',
     more_info: 'All resource in AWS Audit Manager such as assessments, controls, frameworks, evidence are encrypted under a customer managed key or an AWS owned key, depending on your selected settings. ' +
         'If you don’t provide a customer managed key, AWS Audit Manager uses an AWS owned key to encrypt your content. ' +

@@ -5,12 +5,14 @@ module.exports = {
     title: 'MySQL Slow Query Log Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that MySQL instances have slow query log flag enabled.',
     more_info: 'MySQL instance flag that helps find inefficient or time-consuming SQL queries for MySQL databases.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that slow query log flag is enabled for all MySQL instances.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

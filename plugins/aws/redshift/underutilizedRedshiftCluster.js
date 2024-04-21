@@ -5,6 +5,7 @@ module.exports = {
     title: 'Underutilized Redshift Cluster Check',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure Redshift clusters are not underutilized',
     more_info: 'Underutilized clusters are good candidates to reduce your monthly AWS costs and avoid accumulating unnecessary usage charges.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/metrics-listing.html#redshift-metrics',

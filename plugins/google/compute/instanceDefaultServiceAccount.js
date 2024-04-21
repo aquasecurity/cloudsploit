@@ -5,11 +5,13 @@ module.exports = {
     title: 'Instance Default Service Account',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that compute instances are not configured to use the default service account.',
     more_info: 'Default service account has the editor role permissions. Due to security reasons it should not be used for any instance.',
     link: 'https://cloud.google.com/compute/docs/access/service-accounts',
     recommended_action: 'Make sure that compute instances are not using default service account',
     apis: ['compute:list', 'projects:get'],
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete', 'compute.instances.insert', 'compute.instances.delete', 'compute.instances.setservicezccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

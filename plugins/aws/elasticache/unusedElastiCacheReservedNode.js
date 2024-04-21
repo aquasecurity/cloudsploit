@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused ElastiCache Reserved Cache Nodes',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that all your AWS ElastiCache reserved nodes have corresponding cache nodes running within the same account of an AWS Organization.',
     more_info: 'Creating cache nodes for your unused reserved cache clusters will prevent your investment having a negative return. When an Amazon ElastiCache RCN is not in use the investment made is not properly exploited.',
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',

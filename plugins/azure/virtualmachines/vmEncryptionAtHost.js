@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Encryption At Host',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that encryption at host is enabled for Azure Virtual Machine disks.',
     more_info: 'The data for temporary disk and OS/data disk caches is stored on the VM host. Enabling encryption at host for Azure Virtual Machine disks allows the data to be end-to-end encrypted, ensuring compliance and bolstering overall security with Azure Disk Encryption.',
     recommended_action: 'Ensure that all Azure Virtual Machines have encryption at host enabled for disks.',

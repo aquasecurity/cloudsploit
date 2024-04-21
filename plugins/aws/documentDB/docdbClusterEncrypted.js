@@ -5,6 +5,7 @@ module.exports = {
     title: 'DocumentDB Cluster Encrypted',
     category: 'DocumentDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that data at-rest in encrypted in AWS DocumentDB clusters using desired encryption level.',
     more_info: 'Amazon DocumentDB integrates with AWS KMS and uses a method known as envelope encryption to protect your data. ' +
         'This gives you an extra layer of data security and help meet security compliance and regulations within your organization.',

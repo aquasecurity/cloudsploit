@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Public Service Domain',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures OpenSearch domains are created with private VPC endpoint options',
     more_info: 'OpenSearch domains can either be created with a public endpoint or with a VPC configuration that enables internal VPC communication. Domains should be created without a public endpoint to prevent potential public access to the domain.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/os-vpc.html',

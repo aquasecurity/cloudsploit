@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cosmos DB Has Tags',
     category: 'Cosmos DB',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that Azure Cosmos DB database accounts have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',

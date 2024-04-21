@@ -5,6 +5,7 @@ module.exports = {
     title: 'EBS Volumes Recent Snapshots',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that EBS volume has had a snapshot within the last 7 days',
     more_info: 'EBS volumes without recent snapshots may be at risk of data loss or recovery issues.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html',

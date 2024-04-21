@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Disks Deletion Config',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure the option to automatically delete disks is enabled when the associated VM is terminated.',
     more_info: 'Disks persist independently from VMs. Enabling this option ensures that all disks associated with a VM are deleted automatically when the VM is terminated, enhancing security.',
     recommended_action: 'Configure VMs to automatically delete disks when the VM is terminated.',

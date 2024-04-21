@@ -5,6 +5,7 @@ module.exports = {
     title: 'Namespace Local Authentication Disabled',
     category: 'Service Bus',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures local authentication is disabled for Service Bus namespaces.',
     more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication (shared access policies) in Azure Service Bus namespaces.',
     recommended_action: 'Ensure that Azure Service Bus namespaces have local authentication disabled.',

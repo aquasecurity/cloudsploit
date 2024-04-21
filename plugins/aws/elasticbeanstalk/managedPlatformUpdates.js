@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElasticBeanstalk Managed Platform Updates',
     category: 'ElasticBeanstalk',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures ElasticBeanstalk applications are configured to use managed updates.',
     more_info: 'Environments for an application should be configured to allow platform managed updates.',
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environment-platform-update-managed.html',

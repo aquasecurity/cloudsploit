@@ -5,11 +5,13 @@ module.exports = {
     title: 'Open LDAP',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determines if TCP or UDP port 389 for LDAP is open to the public',
     more_info: 'Allowing Inbound traffic from external IPv4 addresses to LDAP ports can lead to attacks like DoS, Brute Force, Smurf, and reconnaissance. It is a best practice to restrict the Inbound traffic from specific addresses.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict TCP and UDP port 389 to known IP addresses.',
     apis: ['firewalls:list'],
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

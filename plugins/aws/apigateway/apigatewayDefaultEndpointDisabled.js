@@ -5,6 +5,7 @@ module.exports = {
     title: 'API Gateway Default Endpoint Disabled',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensure default execute-api endpoint is disabled for your API Gateway.',
     more_info: 'By default, clients can invoke your API by using the execute-api endpoint that API Gateway generates for your API. To ensure that clients can access your API only by using a custom domain name, disable the default execute-api endpoint.',
     recommended_action: 'Modify API Gateway to disable default execute-api endpoint.',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'Enable All Organization Features',
     category: 'Organizations',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures all Organization features are enabled',
     more_info: 'All AWS Organizations should be enabled to take advantage of all shared security controls and policies across all member accounts.',
     recommended_action: 'Enable all AWS Organizations features.',

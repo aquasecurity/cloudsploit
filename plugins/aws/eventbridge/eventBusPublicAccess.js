@@ -5,7 +5,7 @@ module.exports = {
     title: 'Event Bus Public Access',
     category: 'EventBridge',
     domain: 'Management and Governance',
-    severity: 'HIGH',
+    severity: 'High',
     description: 'Ensure that EventBridge event bus is configured to prevent exposure to public access.',
     more_info: 'The default event bus in your Amazon account only allows events from one account. You can grant additional permissions to an event bus by attaching a resource-based policy to it.',
     link: 'https://docs.amazonaws.cn/en_us/eventbridge/latest/userguide/eb-event-bus-perms.html',

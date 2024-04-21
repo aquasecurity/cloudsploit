@@ -5,6 +5,7 @@ module.exports = {
     title: 'Minimum TLS Version',
     category: 'Redis Cache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Azure Cache for Redis is using the latest TLS version.',
     more_info: 'TLS versions 1.0 and 1.1 are known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses.So there\'s an industry- wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
     recommended_action: 'Ensure that Azure cache for Redis is using the latest TLS version',

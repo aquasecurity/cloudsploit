@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Custom Model In VPC',
-    category: 'Amazon Bedrock',
+    category: 'AI & ML',
     domain: 'Machine Learning',
+    severity: 'Low',
     description: 'Ensure that an Amazon Bedrock custom model is configured with a VPC.',
     more_info: 'When the custom model is configured within a VPC, it establishes a secure environment that prevents unauthorized internet access to your training data, enhancing the overall security and confidentiality of your model.',
     recommended_action: 'Create the custom model with VPC configuration',

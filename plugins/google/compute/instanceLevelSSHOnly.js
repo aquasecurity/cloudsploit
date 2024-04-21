@@ -5,11 +5,13 @@ module.exports = {
     title: 'Instance Level SSH Only',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that instances are not configured to allow project-wide SSH keys',
     more_info: 'To support the principle of least privilege and prevent potential privilege escalation it is recommended that instances are not give access to project-wide SSH keys through instance metadata.',
     link: 'https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys',
     recommended_action: 'Ensure project-wide SSH keys are blocked for all instances.',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMetadata'],
 
     run: function(cache, settings, callback) {
         var results = [];

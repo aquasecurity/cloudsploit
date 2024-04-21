@@ -4,6 +4,7 @@ module.exports = {
     title: 'KMS Duplicate Grants',
     category: 'KMS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that AWS KMS keys does not have duplicate grants to adhere to AWS security best practices.',
     more_info: 'Duplicate grants have the same key ARN, API actions, grantee principal, encryption context, and name. ' +
         'If you retire or revoke the original grant but leave the duplicates, the leftover duplicate grants constitute unintended escalations of privilege.',

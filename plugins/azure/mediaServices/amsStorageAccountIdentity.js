@@ -5,6 +5,7 @@ module.exports = {
     title: 'Media Services Storage Account Managed Identity',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Media Service accounts have managed identity enabled for Storage Account authentication.',
     more_info: 'Enabling managed identity for storage authentication allows secure access to Azure Storage without explicit credentials, enhancing security and simplifying access management for Azure Media Services.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/concept-managed-identities#media-services-managed-identity-scenarios',

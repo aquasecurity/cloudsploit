@@ -5,6 +5,7 @@ module.exports = {
     title: 'App Service Access Restriction',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Azure App Services have access restriction configured to control network access to your app.',
     more_info: 'By setting up access restrictions, you can define a priority-ordered allow/deny list that controls network access to your app. ' + 
         'The list can include IP addresses or Azure Virtual Network subnets. When there are one or more entries, an implicit deny all exists at the end of the list.',

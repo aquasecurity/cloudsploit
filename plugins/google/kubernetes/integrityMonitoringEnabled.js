@@ -5,11 +5,13 @@ module.exports = {
     title: 'Integrity Monitoring Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures all Kubernetes shielded cluster node have integrity monitoring enabled',
     more_info: 'Integrity Monitoring feature automatically monitors the integrity of your cluster nodes.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes#integrity_monitoring',
     recommended_action: 'Enable Integrity Monitoring feature for your cluster nodes',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

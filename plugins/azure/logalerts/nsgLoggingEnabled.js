@@ -5,6 +5,7 @@ module.exports = {
     title: 'Network Security Groups Logging Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log alerts for the create or update and delete Network Security Group events are enabled',
     more_info: 'Monitoring for create or update and delete Network Security Group events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Network Security Group create or update and delete events.',

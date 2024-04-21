@@ -5,12 +5,14 @@ module.exports = {
     title: 'Specific Source Branch',
     category: 'CloudBuild',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure cloud build triggers are configured with specific source branch.',
     more_info: 'When creating cloud build triggers with Push or Pull repository events, ensure you specify the specific source branch within the repository. The regular expression .* will trigger this build for changes on any branch.',
     link: 'https://cloud.google.com/build/docs/automating-builds/create-manage-triggers',
     recommended_action: 'Ensure all cloud build triggers with Push or Pull events have a source branch specified.',
     apis: ['cloudbuild:triggers'],
-
+    realtime_triggers: ['devtools.cloudbuild.CloudBuild.CreateBuildTrigger','devtools.cloudbuild.CloudBuild.UpdateBuildTrigger','devtools.cloudbuild.CloudBuild.DeleteBuildTrigger'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

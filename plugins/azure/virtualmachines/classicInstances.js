@@ -5,6 +5,7 @@ module.exports = {
     title: 'Classic Instances',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures Azure Resource Manager is being used for instances instead of Cloud Services (VM Classic)',
     more_info: 'ARM is the latest and most secure method of launching Azure resources. VM Classic should not be used.',
     recommended_action: 'Migrate instances from Cloud Service to ARM.',

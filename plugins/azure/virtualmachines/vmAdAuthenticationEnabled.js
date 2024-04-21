@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Active Directory (AD) Authentication Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Azure Active Directory (AD) authentication is enabled for virtual machines.',
     more_info: 'Organizations can now improve the security of virtual machines (VMs) in Azure by integrating with Azure Active Directory (AD) authentication. Enabling Azure Active Directory (AD) authentication for Azure virtual machines (VMs) ensures access to VMs from one central point and simplifies access permission management.',
     recommended_action: 'Enable Azure Active Directory (AD) authentication for Azure virtual machines',

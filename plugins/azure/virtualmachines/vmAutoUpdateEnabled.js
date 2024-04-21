@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Auto Update Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM Auto Update is enabled for virtual machines',
     more_info: 'Enabling Auto Update on Azure virtual machines reduces the security risk of missing security patches.',
     recommended_action: 'Enable VM auto update on all virtual machines',

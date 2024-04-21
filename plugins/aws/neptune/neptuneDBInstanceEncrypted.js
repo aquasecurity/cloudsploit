@@ -5,6 +5,7 @@ module.exports = {
     title: 'Neptune Database Instance Encrypted',
     category: 'Neptune',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that your AWS Neptune database instances are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Neptune encrypted instances provide an additional layer of data protection by helping to secure your data from unauthorized access to the underlying storage. ' +
         'You can use Neptune encryption to increase data protection of your applications that are deployed in the cloud. ' +

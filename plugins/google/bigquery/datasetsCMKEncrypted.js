@@ -5,6 +5,7 @@ module.exports = {
     title: 'Datasets CMK Encrypted',
     category: 'BigQuery',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that BigQuery datasets are encrypted using desired encryption protection level.',
     more_info: 'By default Google encrypts all datasets using Google-managed encryption keys. To have more control over the encryption process of your BigQuery datasets you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/bigquery/docs/customer-managed-encryption',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers:['bigquery.DatasetService.InsertDataset','bigquery.DatasetService.DeleteDataset'],
 
     run: function(cache, settings, callback) {
         var results = [];

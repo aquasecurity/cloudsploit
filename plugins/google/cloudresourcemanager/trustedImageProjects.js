@@ -5,11 +5,13 @@ module.exports = {
     title: 'Trusted Image Projects',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Define Trusted Image Projects" constraint policy is enforces at the GCP organization level.',
     more_info: 'Enforcing the "Define Trusted Image Projects" allows you to restrict disk image access and ensure that your project members can only create boot disks from trusted images.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Define Trusted Image Projects" constraint is enforced at the organization level.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

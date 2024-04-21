@@ -6,6 +6,7 @@ module.exports = {
     title: 'Manage Key Access and Permissions',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures that no Microsoft Azure user, group or application has administrator privileges to the Key Vaults.',
     more_info: 'A principal such as a user, group or application should have access to execute only specific operations for Azure Key Vault keys, secrets or certificates as a security best practice.',
     recommended_action: 'Ensure that no Microsoft Azure user, group or application is using administrator privileges.',

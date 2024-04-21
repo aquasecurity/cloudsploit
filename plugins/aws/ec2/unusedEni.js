@@ -5,6 +5,7 @@ module.exports = {
     title: 'Unused Elastic Network Interfaces',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that unused AWS Elastic Network Interfaces (ENIs) are removed.',
     more_info: 'Unused AWS ENIs should be removed to follow best practices and to avoid reaching the service limit.',
     recommended_action: 'Delete the unused AWS Elastic Network Interfaces',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password Requires Symbols',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy requires the use of symbols',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',

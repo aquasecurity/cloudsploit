@@ -5,11 +5,13 @@ module.exports = {
     title: 'Environment Labels Added',
     category: 'Cloud Composer',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensures all Composer environments have labels added',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/composer/docs/manage-environment-labels',
     recommended_action: 'Ensure labels are added to all cloud composer environments',
     apis: ['composer:environments'],
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.UpdateEnvironment', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

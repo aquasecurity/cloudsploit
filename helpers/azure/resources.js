@@ -63,7 +63,8 @@ module.exports = {
         listByPostgresFlexibleServers: 'id',
         listByPostgresServers: 'id',
         listByDatabase: 'id',
-        listByApplicationGateways: 'id'
+        listByApplicationGateways: 'id',
+        listByOpenAIAccounts: 'id'
     },
     diagnosticSettingsOperations: {
         list: 'id'
@@ -285,4 +286,19 @@ module.exports = {
     automationAccounts:{
         list: 'id'
     },
+    openAI: {
+        listAccounts: 'id'
+    },
+    currentSensitivityLabels: {
+        list: 'id'
+    },
+    connectionPolicies:{
+        listByServer:'id'
+    },
+    publicIpAddresses: {
+        list: 'id'
+    },
+    containerApps: {
+        list: 'id'
+    }
 };

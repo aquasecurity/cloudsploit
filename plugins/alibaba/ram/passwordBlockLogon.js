@@ -4,6 +4,7 @@ module.exports = {
     title: 'Password Block Logon',
     category: 'RAM',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensure that RAM password security settings require logon to be blocked after maximum of 5 incorrect login attempts.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',

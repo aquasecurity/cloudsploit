@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch IAM Authentication',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures OpenSearch domains require IAM Authentication',
     more_info: 'OpenSearch domains can allow access without IAM authentication by having a policy that does not specify the principal or has a wildcard principal',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html',

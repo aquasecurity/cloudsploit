@@ -5,11 +5,13 @@ module.exports = {
     title: 'Automatic Node Upgrades Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures all Kubernetes cluster nodes have automatic upgrades enabled',
     more_info: 'Enabling automatic upgrades on nodes ensures that each node stays current with the latest version of the master branch, also ensuring that the latest security patches are installed to provide the most secure environment.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades',
     recommended_action: 'Ensure that automatic node upgrades are enabled on all node pools in Kubernetes clusters',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateNodePool','container.ClusterManager.DeleteNodePool'],
 
     run: function(cache, settings, callback) {
         var results = [];

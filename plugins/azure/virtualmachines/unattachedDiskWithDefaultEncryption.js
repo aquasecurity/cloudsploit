@@ -6,6 +6,7 @@ module.exports = {
     title: 'Unattached Disk Volumes with Default Encryption',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that no default encrypted Azure virtual machine disks are in unattached state.',
     more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments. Having unattached disks with default encryption type can lead to data leakage.',
     recommended_action: 'Delete remove unattached disks or enable BYOK encryption for them.',
