@@ -698,8 +698,12 @@ module.exports = {
         'tableServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/tableservice/tableServiceAllAccessAcl.js'),
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),  
         
+        'externalNetworkAccess'         : require(__dirname + '/plugins/azure/containerapps/externalNetworkAccess.js'),
+        
         'containerAppManagedIdentity'   : require(__dirname + '/plugins/azure/containerapps/containerAppManagedIdentity.js'),
         'containerAppAuthEnabled'       : require(__dirname + '/plugins/azure/containerapps/containerAppAuthEnabled.js'),
+        'containerAppHttpsOnly'         : require(__dirname + '/plugins/azure/containerapps/containerAppHttpsOnly.js'),
+
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
         'sslAccessOnlyEnabled'          : require(__dirname + '/plugins/azure/redisCache/sslAccessOnlyEnabled.js'),
