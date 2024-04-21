@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures that connection throttling is enabled for PostgreSQL flexible servers.',
-    more_info: 'Enabling connection_throttle.enable for PostgreSQL flexible servers mitigates the risk of brute-force attacks by temporarily blocking IP addresses with multiple failed login attempts, enhancing security and server stability.',
+    more_info: 'Enabling connection_throttle parameter for PostgreSQL flexible servers mitigates the risk of brute-force attacks by temporarily blocking IP addresses with multiple failed login attempts, enhancing security and server stability.',
     recommended_action: 'Ensures that server parameters for each PostgreSQL flexible server have connection_throttle setting enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-to-configure-server-parameters-using-portal',
     apis: ['servers:listPostgresFlexibleServer', 'flexibleServersConfigurations:listByPostgresServer'],
