@@ -7,9 +7,9 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures GuardDuty protection is enabled for RDS instances.' ,
-    more_info: 'GuardDuty RDS Protection analyzes RDS login activity to identify access threats, offering enhanced security without additional infrastructure. It enables proactive threat detection, automated alerting, and flexible configuration for AWS accounts.',
+    more_info: 'Enabling GuardDuty RDS Protection helps analyze RDS login activity to identify access threats, offering enhanced security. It enables proactive threat detection, automated alerting, and flexible configuration for AWS accounts.',
     recommended_action: 'Enable GuardDuty RDS protection for all AWS accounts.',
-    link: 'https://docs.aws.amazon.com/guardduty/latest/ug/rds-protection.html?icmpid=docs_gd_help_panel',
+    link: 'https://docs.aws.amazon.com/guardduty/latest/ug/rds-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
     realtime_triggers: ['guardduty:CreateDetector', 'guardduty:UpdateDetector', 'guardduty:DeleteDetector'],
     
@@ -50,7 +50,7 @@ module.exports = {
                 }
 
                 var detector = getDetector.data;
-                var resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
+                var resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detector.detectorId}`;
                 var rdsLoginEventsFeature = detector.Features.find(feature => feature.Name === 'RDS_LOGIN_EVENTS');
 
                 if (rdsLoginEventsFeature) {
