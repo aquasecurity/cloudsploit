@@ -51,7 +51,7 @@ module.exports = {
 
                 var detector = getDetector.data;
                 var resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detector.detectorId}`;
-                var rdsLoginEventsFeature = detector.Features.find(feature => feature.Name === 'RDS_LOGIN_EVENTS');
+                var rdsLoginEventsFeature = detector.Features? detector.Features.find(feature => feature.Name == 'RDS_LOGIN_EVENTS') : 'false';
 
                 if (rdsLoginEventsFeature) {
                     var status = rdsLoginEventsFeature.Status;
