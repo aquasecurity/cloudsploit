@@ -48,7 +48,7 @@ module.exports = {
                     continue;
                 }
 
-                if (describeFlywheel.data.FlywheelProperties.DataSecurityConfig &&  describeFlywheel.data.FlywheelProperties.DataSecurityConfig.VpcConfig) {
+                if (describeFlywheel.data.FlywheelProperties.DataSecurityConfig && describeFlywheel.data.FlywheelProperties.DataSecurityConfig.VpcConfig) {
                     helpers.addResult(results, 0,
                         'Comprehend flywheel is configured within a VPC', region, resource);
                 } else {
