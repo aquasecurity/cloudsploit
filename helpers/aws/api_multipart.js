@@ -169,10 +169,7 @@ var calls = [
         },
         CloudTrail: {
             describeTrails: {
-                property: 'trailList',
-                params: {
-                    includeShadowTrails: false
-                }
+                property: 'trailList'
             }
         },
         CloudWatch: {

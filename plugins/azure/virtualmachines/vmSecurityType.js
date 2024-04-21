@@ -21,6 +21,7 @@ module.exports = {
 
         },
     },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -45,13 +46,12 @@ module.exports = {
             }
 
             virtualMachines.data.forEach(virtualMachine => {
-                const configuredSecuritytype = virtualMachine.securityProfile && virtualMachine.securityProfile.securityType.toLowerCase();
-                if (securityTypes.indexOf(configuredSecuritytype) >= securityTypes.indexOf(config)) {
-                    helpers.addResult(results, 0, `${configuredSecuritytype} is configured as security type for virtual machine`, location, virtualMachine.id);
+                const configuredSecurityType = virtualMachine.securityProfile && virtualMachine.securityProfile.securityType ? virtualMachine.securityProfile.securityType.toLowerCase() : '';
+                if (securityTypes.indexOf(configuredSecurityType) >= securityTypes.indexOf(config)) {
+                    helpers.addResult(results, 0, `${configuredSecurityType} is configured as security type for virtual machine`, location, virtualMachine.id);
                 } else {
                     helpers.addResult(results, 2, `${config} is not configured as security type for virtual machine`, location, virtualMachine.id);
                 }
-                
             });
 
             rcb();
