@@ -10,7 +10,7 @@ const servers = [
 
 const configurations = [
     {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/meerab-rg/providers/Microsoft.DBforPostgreSQL/flexibleServers/testfs/configurations/password_encryption',
+        id: '/subscriptions/22345/resourceGroups/test2/providers/Microsoft.DBforPostgreSQL/flexibleServers/testfs/configurations/password_encryption',
         name: 'connection_throttle.enable',
         type: 'Microsoft.DBforPostgreSQL/flexibleServers/configurations',
         value: 'ON',
@@ -25,7 +25,7 @@ const configurations = [
     },
 
     {
-        id: '/subscriptions/26a1a07e-06dd-4892-92c9-e4996b0fc546/resourceGroups/meerab-rg/providers/Microsoft.DBforPostgreSQL/flexibleServers/testfs/configurations/password_encryption',
+        id: '/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.DBforPostgreSQL/flexibleServers/testfs/configurations/password_encryption',
         name: 'connection_throttle.enable',
         type: 'Microsoft.DBforPostgreSQL/flexibleServers/configurations',
         value: 'OFF',

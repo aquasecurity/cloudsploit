@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Postgresql FLexible Server Connection Throttling Enabled',
+    title: 'PostgreSQL FLexible Server Connection Throttling Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures connection throttling is enabled for Postgresql flexible servers',
+    description: 'Ensures that connection throttling is enabled for PostgreSQL flexible servers.',
     more_info: 'Enabling connection_throttle.enable for PostgreSQL flexible servers mitigates the risk of brute-force attacks by temporarily blocking IP addresses with multiple failed login attempts, enhancing security and server stability.',
-    recommended_action: 'Ensure the server parameters for each Postgresql flexible server have the connection_throttle.enable setting enabled.',
+    recommended_action: 'Ensures that server parameters for each PostgreSQL flexible server have connection_throttle setting enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-to-configure-server-parameters-using-portal',
     apis: ['servers:listPostgresFlexibleServer', 'flexibleServersConfigurations:listByPostgresServer'],
     realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write','microsoftdbforpostgresql:flexibleservers:delete','microsoftdbforpostgresql:flexibleservers:configurations:write'],
@@ -21,6 +21,7 @@ module.exports = {
         async.each(locations.servers, (location, rcb) => {
             const servers = helpers.addSource(cache, source,
                 ['servers', 'listPostgresFlexibleServer', location]);
+
             if (!servers) return rcb();
 
             if (servers.err || !servers.data) {
@@ -35,12 +36,14 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
+                if (!flexibleServer.id) continue;
+
                 const configurations = helpers.addSource(cache, source,
                     ['flexibleServersConfigurations', 'listByPostgresServer', location, flexibleServer.id]);
         
                 if (!configurations || configurations.err || !configurations.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for configuration' + helpers.addError(configurations), location, flexibleServer.id);
+                        'Unable to query for PostgreSQL flexible server configurations: ' + helpers.addError(configurations), location, flexibleServer.id);
                     continue;
                 }
                 
