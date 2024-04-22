@@ -53,10 +53,12 @@ module.exports = {
                 helpers.addResult(results, 0, 'No service account keys found', region);
                 return rcb();
             }
+            var userManagedKeyFound = false;
 
             keys.data.forEach(key => {
                 if (key.keyType &&
                     key.keyType === 'USER_MANAGED') {
+                    userManagedKeyFound = true;
                     var validAfterTime = key.validAfterTime.split('T')[0];
 
                     var timeFromCreation = new Date().getTime() - new Date(validAfterTime).getTime();
@@ -70,6 +72,10 @@ module.exports = {
                     }
                 }
             });
+
+            if (!userManagedKeyFound) {
+                helpers.addResult(results, 0, 'No user managed service account keys found', region);
+            }
 
             rcb();
         }, function(){

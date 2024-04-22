@@ -1,18 +1,6 @@
 var expect = require('chai').expect;
 const instanceLimit = require('./instanceLimit');
 
-const describeAccountAttributes = [
-    [
-        {
-            "AttributeName": "max-instances",
-            "AttributeValues": [
-                {
-                    "AttributeValue": "5"
-                }
-            ]
-        },
-    ]
-];
 
 const describeInstances = [
     {
@@ -27,19 +15,18 @@ const describeInstances = [
                     "Arn": "arn:aws:iam::111122223333:instance-profile/aws-elasticbeanstalk-ec2-role",
                     "Id": "AIPAYE32SRU5VWPEXDHQE"
                 },
+                "State": {
+                    "Code": 80,
+                    "Name": "running"
+                },
             },
         ],
     },
 ];
 
-const createCache = (attributes, instances) => {
+const createCache = (instances) => {
     return {
         ec2:{
-            describeAccountAttributes: {
-                'us-east-1': {
-                    data: attributes
-                },
-            },
             describeInstances: {
                 'us-east-1': {
                     data: instances
@@ -52,13 +39,6 @@ const createCache = (attributes, instances) => {
 const createErrorCache = () => {
     return {
         ec2:{
-            describeAccountAttributes: {
-                'us-east-1': {
-                    err: {
-                        message: 'error describing account attributes'
-                    },
-                },
-            },
             describeInstances: {
                 'us-east-1': {
                     err: {
@@ -75,10 +55,7 @@ const createNullCache = () => {
         ec2:{
             describeAccountAttributes: {
                 'us-east-1': null,
-            },
-            describeInstances: {
-                'us-east-1': null,
-            },
+            }
         },
     };
 };
@@ -87,7 +64,7 @@ const createNullCache = () => {
 describe('instanceLimit', function () {
     describe('run', function () {
         it('should PASS if account contains instances less than the defined warn percentage', function (done) {
-            const cache = createCache(describeAccountAttributes[0],[describeInstances[0]]);
+            const cache = createCache([describeInstances[0]]);
             instanceLimit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -96,8 +73,8 @@ describe('instanceLimit', function () {
         });
 
         it('should WARN if account contains instances within the defined warn percentage', function (done) {
-            const cache = createCache(describeAccountAttributes[0],[describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0]]);
-            instanceLimit.run(cache, {}, (err, results) => {
+            const cache = createCache([describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0]]);
+            instanceLimit.run(cache, {max_instance_count : 5}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(1);
                 done();
@@ -105,8 +82,8 @@ describe('instanceLimit', function () {
         });
 
         it('should FAIL if elastic ip usage is more than the defined fail percentage', function (done) {
-            const cache = createCache(describeAccountAttributes[0],[describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0]]);
-            instanceLimit.run(cache, {}, (err, results) => {
+            const cache = createCache([describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0],describeInstances[0]]);
+            instanceLimit.run(cache, {max_instance_count : 2}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -114,7 +91,7 @@ describe('instanceLimit', function () {
         });
 
         it('should PASS if no instances found', function (done) {
-            const cache = createCache(describeAccountAttributes[0], []);
+            const cache = createCache([]);
             instanceLimit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -122,7 +99,7 @@ describe('instanceLimit', function () {
             });
         });
 
-        it('should FAIL if unable to describe account attributes', function (done) {
+        it('should FAIL if unable to describe instances', function (done) {
             const cache = createErrorCache();
             instanceLimit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -130,23 +107,5 @@ describe('instanceLimit', function () {
                 done();
             });
         });
-
-        it('should FAIL if unable to describe instances', function (done) {
-            const cache = createCache([]);
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                done();
-            });
-        });
-
-        it('should not return anything if describe account attributes response not found', function (done) {
-            const cache = createNullCache();
-            instanceLimit.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
     });
 });
