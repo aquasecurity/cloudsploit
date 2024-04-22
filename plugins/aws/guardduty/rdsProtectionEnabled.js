@@ -56,7 +56,7 @@ module.exports = {
                 if (rdsLoginEventsFeature) {
                     helpers.addResult(results, 0, 'GuardDuty RDS protection is enabled' , region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'GuardDuty RDS protection is disabled ' ,region, resource);
+                    helpers.addResult(results, 2, 'GuardDuty RDS protection is disabled ' , region, resource);
                 }
                  
             });
