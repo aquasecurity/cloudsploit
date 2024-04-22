@@ -36,6 +36,12 @@ module.exports = {
 
             if (!listCustomModels) return rcb();
 
+            if (listCustomModels.err && listCustomModels.err.message.includes('Unknown operation')) {
+                helpers.addResult(results, 0,
+                    'Custom model service is not available in this region', region);
+                return rcb();
+            }
+
             if (listCustomModels.err || !listCustomModels.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for Bedrock custom model list: ${helpers.addError(listCustomModels)}`, region);
