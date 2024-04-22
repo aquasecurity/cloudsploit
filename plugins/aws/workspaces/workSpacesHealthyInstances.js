@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Identity and Access Management',
     severity: 'Medium',
     description: 'Ensures that the AWS WorkSpace have healthy instances.',
-    more_info: 'Amazon WorkSpace should have healthy and running instances to ensure proper connection. The WorkSpace is marked as Unhealthy if  response isn’t received from the WorkSpace in a timely manner.',
+    more_info: 'Amazon WorkSpace should have healthy and running instances to ensure proper connection. The WorkSpace is marked as Unhealthy if response isn’t received from the WorkSpace in a timely manner. When the WorkSpaces instance’s status is unhealthy, it fails to respond to the HealthCheck requests.',
     recommended_action: 'Troubleshoot and resolve the unhealthy workspace issues.',
     link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/cloudwatch-dashboard.html',
     apis: ['WorkSpaces:describeWorkspaces','STS:getCallerIdentity'],
