@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Databricks Workspace DBFS Infrastructure Encryption',
+    title: 'Databricks Workspace Managed Services CMK Encrypted',
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensures that DBFS root storage for Databricks premium workspace has infrastructure encryption enabled.',
-    more_info: 'Enabling infrastructure level encryption for Azure Databricks workspace DBFS root storage allows data in storage account to be encrypted twice, once at the service level and once at the infrastructure level, using two different encryption algorithms and two different keys and provides an extra layer of protection and security in case one of the keys is compromised.',
-    recommended_action: 'Enable infrastructure level encryption for all Databricks premium workspace DBFS root storage.',
-    link: 'https://learn.microsoft.com/en-us/azure/databricks/security/keys/#--enable-double-encryption-for-dbfs',
+    description: 'Ensures that Databricks premium workspace managed services are encrypted with CMK.',
+    more_info: 'Azure Databricks allows you to encrypt data in your workspace using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault',
+    recommended_action: 'Ensure that Databricks workspace managed services has CMK encryption enabled.',
+    link: 'https://learn.microsoft.com/en-us/azure/databricks/security/keys/cmk-managed-disks-azure',
     apis: ['databricks:listWorkspaces'],
     realtime_triggers: ['microsoftdatabricks:workspaces:write','microsoftdatabricks:workspaces:delete'],
 
@@ -38,10 +38,10 @@ module.exports = {
 
                 if (workspace.sku && workspace.sku.name && workspace.sku.name.toLowerCase()!='premium') {
                     helpers.addResult(results, 0, 'Databricks workspace is not a premium workspace', location, workspace.id);
-                } else if (workspace.parameters && workspace.parameters.requireInfrastructureEncryption && workspace.parameters.requireInfrastructureEncryption.value) {
-                    helpers.addResult(results, 0, 'DBFS root storage for databricks workspace has infrastructure level encryption enabled', location, workspace.id);
+                } else if (workspace.encryption && workspace.encryption.entities && workspace.encryption.entities.managedServices) {
+                    helpers.addResult(results, 0, 'Databricks workspace managed services has CMK encryption enabled', location, workspace.id);
                 }  else {
-                    helpers.addResult(results, 2, 'DBFS root storage for databricks workspace does not have infrastructure level encryption enabled', location, workspace.id);
+                    helpers.addResult(results, 2, 'Databricks workspace managed services does not have CMK encryption enabled', location, workspace.id);
                 }
             }
 
