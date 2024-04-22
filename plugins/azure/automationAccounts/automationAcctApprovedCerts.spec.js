@@ -187,7 +187,7 @@ describe('automationAcctApprovedCerts', function () {
             automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Automation account is using certificates which are approved by organization');
+                expect(results[0].message).to.include('Automation account is using approved certificates only');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -198,7 +198,7 @@ describe('automationAcctApprovedCerts', function () {
             automationAcctApprovedCerts.run(cache, {ca_approved_certificates: 'testCert, appCert'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Automation account is using following certificates which are not approved by organization: testCert2');
+                expect(results[0].message).to.include('Automation account is using following unapproved certificates: testCert2');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
