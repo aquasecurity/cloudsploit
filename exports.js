@@ -497,6 +497,7 @@ module.exports = {
         'lambdaOldRuntimes'             : require(__dirname + '/plugins/aws/lambda/lambdaOldRuntimes.js'),
         'lambdaVpcConfig'               : require(__dirname + '/plugins/aws/lambda/lambdaVpcConfig.js'),
         'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),
+        'lambdaCodeSigningEnabled'      : require(__dirname + '/plugins/aws/lambda/lambdaCodeSigningEnabled.js'),
         'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
         'lambdaTracingEnabled'          : require(__dirname + '/plugins/aws/lambda/lambdaTracingEnabled.js'),
         'lambdaHasTags'                 : require(__dirname + '/plugins/aws/lambda/lambdaHasTags.js'),
@@ -1647,7 +1648,6 @@ module.exports = {
         'networkPolicyEnabled'          : require(__dirname + '/plugins/alibaba/ack/networkPolicyEnabled.js'),
         'logServiceEnabled'             : require(__dirname + '/plugins/alibaba/ack/logServiceEnabled.js'),
         'cloudMonitorEnabled'           : require(__dirname + '/plugins/alibaba/ack/cloudMonitorEnabled.js'),
-
 
         'securityCenterEdition'         : require(__dirname + '/plugins/alibaba/securitycenter/securityCenterEdition.js'),
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
