@@ -515,6 +515,11 @@ var calls = {
         },
         sendIntegration: serviceMap['AI & ML']
     },
+    databricks: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Databricks/workspaces?api-version=2023-02-01'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -679,6 +684,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
         }
     },
+    certificates: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/certificates?api-version=2023-11-01'
+        }
+    },  
     flowLogs: {
         list: {
             reliesOnPath: 'networkWatchers.listAll',
@@ -838,6 +850,13 @@ var postcalls = {
             post: true
         }
     },
+    containerApps: {
+        getAuthSettings : {
+            reliesOnPath: 'containerApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/authConfigs?api-version=2023-05-01',
+        }
+    }, 
     endpoints: {
         listByProfile: {
             reliesOnPath: 'profiles.list',
@@ -1207,12 +1226,16 @@ var tertiarycalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         },
+        listByDatabricksWorkspace: {
+            reliesOnPath: 'databricks.listWorkspaces',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
         listByEventGridDomains: {
             reliesOnPath: 'eventGrid.listDomains',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
