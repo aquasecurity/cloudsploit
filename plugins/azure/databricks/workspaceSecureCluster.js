@@ -6,7 +6,7 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensures that Azure Databricks Workspace has Secure cluster connectivity enabled.',
+    description: 'Ensures that Azure Databricks Workspace has secure cluster connectivity enabled.',
     more_info: 'Enabling the No Public IP feature on Azure Databricks workspace secures cluster connectivity by ensuring that virtual networks have no open ports and compute resources are without public IP addresses. This approach enhances security by reducing the attack surface and simplifying network configuration.',
     recommended_action: 'Ensure that Databricks workspace has secure cluster connectivity enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/databricks/security/network/classic/secure-cluster-connectivity',

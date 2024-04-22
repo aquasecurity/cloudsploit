@@ -112,7 +112,7 @@ describe('databricksWorkspaceInfraEncryption', function () {
             databricksWorkspaceInfraEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Databricks workspace DBFS root has infrastructure level encryption enabled');
+                expect(results[0].message).to.include('DBFS root for databricks workspace has infrastructure level encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -123,7 +123,7 @@ describe('databricksWorkspaceInfraEncryption', function () {
             databricksWorkspaceInfraEncryption.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Databricks workspace DBFS root does not have infrastructure level encryption enabled');
+                expect(results[0].message).to.include('DBFS root for databricks workspace does not have infrastructure level encryption enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
