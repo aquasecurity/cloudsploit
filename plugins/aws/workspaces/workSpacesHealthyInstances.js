@@ -6,10 +6,10 @@ module.exports = {
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensures that the AWS WorkSpaces instances are healthy.',
-    more_info: 'The AWS WorkSpaces service periodically sends status requests to the WorkSpaces instances. An instance is pronounced unhealthy when it fails to respond to these HealthCheck requests.',
+    description: 'Ensures that the AWS WorkSpaces instance are healthy.',
+    more_info: 'WorkSpace should have healthy and running instances to ensure proper connection. The WorkSpace is marked as Unhealthy if  response isn’t received from the WorkSpace in a timely manner.',
     recommended_action: 'Troubleshoot the workspace when state is unhealthy.',
-    link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/workspace-maintenance.html',
+    link: 'https://docs.aws.amazon.com/workspaces/latest/adminguide/cloudwatch-dashboard.html',
     apis: ['WorkSpaces:describeWorkspaces','STS:getCallerIdentity'],
     realtime_triggers: ['workspaces:CreateWorkspaces','workspaces:DeleteWorkspaces'],
 
@@ -45,10 +45,10 @@ module.exports = {
 
                 if (workspace.State === 'UNHEALTHY') {
                     helpers.addResult(results, 2,
-                        'The workspace is in healthy state', region, resource);
+                        'Workspace instance is not in healthy state', region, resource);
                 } else {
                     helpers.addResult(results, 0,
-                        'WorkSpace is not in healthy state', region, resource);
+                        'WorkSpace instance is in healthy state', region, resource);
                 }
             });
 

@@ -60,6 +60,7 @@ describe('workSpacesHealthyInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('No WorkSpaces instances found')
                 done();
             });
         });
@@ -70,6 +71,7 @@ describe('workSpacesHealthyInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.include('us-east-1')
+                expect(results[0].message).to.include('Unable to list Workspaces')
                 done();
             });
         });
@@ -80,6 +82,7 @@ describe('workSpacesHealthyInstances', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('WorkSpace instance is in healthy state')
                 done();
             });
         });
@@ -89,7 +92,8 @@ describe('workSpacesHealthyInstances', function () {
             workSpacesHealthyInstances.run(cache, {  }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].region).to.equal('us-east-1')
+                expect(results[0].message).to.include('Workspace instance is not in healthy state')
                 done();
             });
         });
