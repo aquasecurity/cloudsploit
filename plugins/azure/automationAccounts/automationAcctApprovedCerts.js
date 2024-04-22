@@ -5,6 +5,7 @@ module.exports = {
     title: 'Automation Account Approved Certificates Only',
     category: 'Automation',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Azure Automation accounts are only using approved certificates.',
     more_info: 'Certificates in azure automation accounts should be approved by the organization to meet the organizational security requirements. ',
     recommended_action: 'Ensure that Azure Automation accounts are only using approved certificates.',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete'],
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Front Door WAF Bot Protection',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure that Bot Protection for Azure Front Door WAF policy is enabled.',
     more_info: 'Azure Web Application Firewall (WAF) for Front Door provides bot rules to protect from bad bots and to block or log requests from known malicious IP addresses.',
     recommended_action: 'Modify Front Door WAF policy and add bot protection rule set in managed rules.',

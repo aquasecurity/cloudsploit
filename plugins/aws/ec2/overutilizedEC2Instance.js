@@ -5,6 +5,7 @@ module.exports = {
     title: 'EC2 CPU Alarm Threshold Exceeded',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure EC2 instances do not exceed the alarm threshold for CPU utilization.',
     more_info: 'Excessive CPU utilization can indicate performance issues or the need for capacity optimization.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html#ec2-cloudwatch-metrics',
@@ -24,6 +25,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var ec2_cpu_threshold_fail = settings.ec2_cpu_threshold_fail || this.settings.ec2_cpu_threshold_fail.default;
 
@@ -46,10 +48,10 @@ module.exports = {
             }
 
             describeInstances.data.forEach(reservation => {
+                let accountId = reservation.OwnerId;
                 reservation.Instances.forEach(instance => {
                     if (!instance.InstanceId) return;
-
-                    var resource = instance.InstanceId;
+                    let resource = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + instance.InstanceId;
                     var getMetricStatistics = helpers.addSource(cache, source,
                         ['cloudwatch', 'getEc2MetricStatistics', region, instance.InstanceId]);
 

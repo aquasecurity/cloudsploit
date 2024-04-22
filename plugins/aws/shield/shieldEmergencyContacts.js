@@ -4,6 +4,7 @@ module.exports = {
     title: 'Shield Emergency Contacts',
     category: 'Shield',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures AWS Shield emergency contacts are configured',
     more_info: 'AWS Shield Emergency contacts should be configured so that AWS can contact an account representative in the event of a DDOS event.',
     recommended_action: 'Configure emergency contacts within AWS Shield for the account.',

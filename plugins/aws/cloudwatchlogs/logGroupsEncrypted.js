@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudWatch Log Groups Encrypted',
     category: 'CloudWatchLogs',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensure that the CloudWatch Log groups are encrypted using desired encryption level.',
     more_info: 'Log group data is always encrypted in CloudWatch Logs. You can optionally use AWS Key Management Service for this encryption. ' +
         'After you associate a customer managed key with a log group, all newly ingested data for the log group is encrypted using this key. ' +

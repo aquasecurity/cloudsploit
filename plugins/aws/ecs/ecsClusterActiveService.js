@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECS Cluster Active Services',
     category: 'ECS',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure that AWS ECS clusters have active services.',
     more_info: 'Amazon ECS service allows you to run and maintain a specified number of instances of a task definition simultaneously in an Amazon ECS cluster. It is recommended to have clusters with the active services to avoid any container attack surface.',
     recommended_action: 'Modify Cluster and create new service.',

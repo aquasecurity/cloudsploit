@@ -5,6 +5,7 @@ module.exports = {
     title: 'Ledger Automatic Digest Storage',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that ledger automatic digest storage is enabled.',
     more_info: 'Configuring Ledger automatic digest storage allows the generation and storage of digests for later verification. Automatic database digests are generated on a predefined interval of 30 seconds and uploaded to the selected storage service.',
     recommended_action: 'Modify SQL database ledger and add storage account for automatic digest storage.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Monitor External Accounts with Write Permissions',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that External Accounts with Write Permissions are being Monitored in Security Center',
     more_info: 'External Accounts with Write Permissions should be monitored to meet you organization\'s security compliance requirements.',
     recommended_action: 'Enable Monitor for External Accounts with Write Permissions by ensuring AuditIfNotExists setting is used for \'External accounts with write permissions should be removed from your subscription\' from the Azure Security Center.',

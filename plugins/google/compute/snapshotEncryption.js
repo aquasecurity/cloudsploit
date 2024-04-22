@@ -5,6 +5,7 @@ module.exports = {
     title: 'Snapshot Encryption',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure Snapshots are encrypted using Customer Managed or Supplied Keys.',
     more_info: 'GCP compute disk snapshots are encrypted with the encryption type of source disk. By default, the compute disks are encrypted using the Google-managed encryption keys. However, to have better control on the encryption process and adhere to compliance requirements, use either customer-managed keys or customer-supplied keys for encryption.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-managed-encryption',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open RDP',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 3389 for RDP is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be ' +
         'open to the public to function properly, more sensitive services such ' +

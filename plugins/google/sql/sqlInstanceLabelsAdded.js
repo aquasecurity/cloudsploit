@@ -5,12 +5,14 @@ module.exports = {
     title: 'SQL Instance Labels Added',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures SQL database instances have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/sql/docs/mysql/label-instance',
     recommended_action: 'Ensure labels are added for all SQL databases.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -5,6 +5,7 @@ module.exports = {
     title: 'EKS Kubernetes Version',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures the latest version of Kubernetes is installed on EKS clusters',
     more_info: 'EKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',
@@ -35,11 +36,11 @@ module.exports = {
             '1.20': '2022-11-01',
             '1.21': '2023-02-15',
             '1.22': '2023-06-04',
-            '1.23': '2023-10-01',
-            '1.24': '2024-01-01',
+            '1.23': '2023-10-11',
+            '1.24': '2024-01-31',
             '1.25': '2024-05-01',
             '1.26': '2024-06-01',
-            '1.27': '2024-06-01',
+            '1.27': '2024-07-01',
             '1.28': '2024-09-01'
         };
 

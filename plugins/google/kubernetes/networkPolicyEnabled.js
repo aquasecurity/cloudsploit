@@ -5,12 +5,14 @@ module.exports = {
     title: 'Network Policy Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures all Kubernetes clusters have network policy enabled',
     more_info: 'Kubernetes network policy creates isolation between cluster pods, this creates a more secure environment with only specified connections allowed.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy',
     recommended_action: 'Enable network policy on all Kubernetes clusters.',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster','container.ClusterManager.UpdateCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

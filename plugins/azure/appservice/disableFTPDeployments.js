@@ -5,6 +5,7 @@ module.exports = {
     title: 'Disable FTP Deployments',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that FTP deployments are disabled for App Services.',
     more_info: 'Disabling FTP deployments ensures that the encrypted traffic between the web application server and the FTP client cannot be decrypted by malicious actors.',
     recommended_action: 'Disable FTP deployments in the general settings for all App Services.',

@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront Logging Enabled',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures CloudFront distributions have request logging enabled.',
     more_info: 'Logging requests to CloudFront ' +
                'distributions is a helpful way of detecting and ' + 

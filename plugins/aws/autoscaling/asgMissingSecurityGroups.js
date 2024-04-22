@@ -5,6 +5,7 @@ module.exports = {
     title: 'Launch Configuration Referencing Missing Security Groups',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that Auto Scaling launch configurations are not utilizing missing security groups.',
     more_info: 'Auto Scaling launch configuration should utilize an active security group to ensure safety of managed instances.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/GettingStartedTutorial.html',

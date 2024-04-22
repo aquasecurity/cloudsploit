@@ -5,6 +5,7 @@ module.exports = {
     title: 'Snapshot Has Tags',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that Azure VM disk snapshots have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify affected snapshots and add tags.',

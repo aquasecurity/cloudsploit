@@ -5,6 +5,7 @@ module.exports = {
     title: 'Security Contact Enabled for Subscription Owner',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that security alert emails are enabled to subscription owners.',
     more_info: 'Enabling security alert emails to subscription owners ensures that they receive security alert emails from Microsoft. This ensures that they are aware of any potential security issues and can mitigate the risk in a timely fashion.',
     recommended_action: 'Modify security contact information and enable emails for subscription owners',

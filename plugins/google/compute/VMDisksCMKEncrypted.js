@@ -5,6 +5,7 @@ module.exports = {
     title: 'VM Disks CMK Encryption',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that Virtual Machine instances are encrypted using customer-managed keys.',
     more_info: 'Google encrypts all disks at rest by default. By using CMKs you can have better control over your disk encryption.',
     link: 'https://cloud.google.com/compute/docs/disks/customer-supplied-encryption',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         },
     },
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

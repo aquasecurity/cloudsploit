@@ -5,6 +5,7 @@ module.exports = {
     title: 'EBS Encrypted Snapshots',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EBS snapshots are encrypted at rest',
     more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html#encryption-support',

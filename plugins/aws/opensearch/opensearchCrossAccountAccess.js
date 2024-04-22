@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Domain Cross Account access',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Critical',
     description: 'Ensures that only trusted accounts have access to OpenSearch domains.',
     more_info: 'Allowing unrestricted access of OpenSearch clusters will cause data leaks and data loss. This can be prevented by restricting access only to the trusted entities by implementing the appropriate access policies.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/cross-cluster-search.html',

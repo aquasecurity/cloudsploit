@@ -23,7 +23,8 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     if (settings.govcloud) {
         localEvent.awsOrGov = 'aws-us-gov';
     }
-    
+
+    localEvent.scanTriggeredFromEventsFlow = settings.scanTriggeredFromEventsFlow;
     localEvent.collection = {};
     localEvent.previousCollection = {};
 

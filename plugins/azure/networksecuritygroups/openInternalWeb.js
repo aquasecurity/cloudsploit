@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Internal Web',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if TCP port 8080 for internal web is open to the public',
     more_info: 'Internal web port 8080 is used for web applications and proxy services. Allowing Inbound traffic from any IP address to TCP port 8080 is vulnerable to exploits like backdoor trojan attacks. It is a best practice to block port 8080 from the public internet.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Default Port',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure RDS database instances are not using the default ports.',
     more_info: 'Using default ports for running RDS instances can be a security risk. To protect publicly accessible RDS databases from brute force and dictionary attacks and add an additional layer of security, shift RDS instance ports to non-default ones.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.Connect.html',

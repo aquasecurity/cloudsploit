@@ -5,6 +5,7 @@ module.exports = {
     title: 'EC2 Instances Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Compute Optimizer does not have active recommendation summaries for over-provisioned or under-provisioned EC2 instances.',
     more_info: 'An EC2 instance is considered optimized when all specifications of an instance, such as CPU, memory, and network, meet the performance requirements of your workload, and the instance is not over-provisioned. For optimized instances, Compute Optimizer might sometimes recommend a new generation instance type.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ec2-recommendations.html',

@@ -5,12 +5,15 @@ module.exports = {
     title: 'Storage Auto Increase Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that Cloud SQL DB instances have Automatic Storage Increase feature enabled and desired limit is set for storage increases.',
     more_info: 'When this feature is enabled, Cloud SQL checks your available storage every 30 seconds. If the available storage falls below a threshold size, ' +
         'Cloud SQL automatically and permanently adds additional storage capacity. Setting a limit for automatic storage increase can prevent your instance size from growing too large.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings?authuser=1#automatic-storage-increase-2ndgen',
     recommended_action: 'Edit Cloud SQL instances and enable automatic storage increases feature under storage',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.update','cloudsql.instances.delete','cloudsql.instances.create'],
+
     settings: {
         sql_storage_auto_increase_limit: {
             name: 'SQL Storage Auto Increase Limit',

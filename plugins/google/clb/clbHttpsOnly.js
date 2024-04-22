@@ -5,6 +5,7 @@ module.exports = {
     title: 'CLB HTTPS Only',
     category: 'CLB',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures that HTTP(S) CLBs are configured to only accept connections on HTTPS ports.',
     more_info: 'For maximum security, CLBs can be configured to only accept HTTPS connections. Standard HTTP connections will be blocked. This should only be done if the client application is configured to query HTTPS directly and not rely on a redirect from HTTP.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
@@ -18,6 +19,7 @@ module.exports = {
             'load balancer HTTPS redirection should be used to ensure site visitors ' +
             'are always connecting over a secure channel.',
     },
+    realtime_triggers: ['compute.backendServices.patch','compute.backendServices.insert','compute.backendServices.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,6 +4,7 @@ module.exports = {
     title: 'Security Center Edition',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that your cloud Security Center edition is Advanced or plus.',
     more_info: 'Premium Security Center editions like Advanced or Enterprise Edition provides crucial features liekthreat detection for network and endpoints, ' + 
         'providing malware detection, webshell detection and anomaly detection in Security Center.',

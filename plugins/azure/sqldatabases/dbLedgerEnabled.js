@@ -5,6 +5,7 @@ module.exports = {
     title: 'Database Ledger Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure ledger is enabled for SQL databases.',
     more_info: 'Azure ledger helps protect the integrity of data by enabling customers to use cryptographic seals on their data. The database ledger incrementally captures the state of a database as the database evolves over time, while updates occur on ledger tables',
     recommended_action: 'Enable Azure ledger for all SQL databases.',

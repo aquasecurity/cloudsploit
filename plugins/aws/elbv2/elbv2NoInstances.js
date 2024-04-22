@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELBv2 No Instances',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Detects ELBs that have no target groups attached',
     more_info: 'All ELBs should have backend server resources. ' +
         'Those without any are consuming costs without providing ' +

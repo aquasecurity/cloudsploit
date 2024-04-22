@@ -5,11 +5,13 @@ module.exports = {
     title: 'PostgreSQL Latest Version',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that PostgreSQL database servers are using the latest major version of PostgreSQL database.',
     more_info: 'To make use of the latest database features and benefit from enhanced performance and security, make sure that your PostgreSQL database instances are using the latest major version of PostgreSQL.',
     link: 'https://cloud.google.com/sql/docs/postgres/db-versions',
     recommended_action: 'Ensure that all your PostgreSQL database instances are using the latest PostgreSQL database version.',
     apis: ['sql:list'],
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

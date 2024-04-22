@@ -5,12 +5,14 @@ module.exports = {
     title: 'Web Dashboard Disabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensures all Kubernetes clusters have the web dashboard disabled.',
     more_info: 'It is recommended to disable the web dashboard because it is backed by a highly privileged service account.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/dashboards',
     recommended_action: 'Ensure that no Kubernetes clusters have the web dashboard enabled',
     apis: ['kubernetes:list'],
-
+    realtime_triggers: ['container.ClusterManager.CreateCluster','container.ClusterManager.DeleteCluster'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Infrastructure Encryption Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that Azure Storage Accounts have infrastructure encryption enabled.',
     more_info: 'Azure Storage automatically encrypts all data in a storage account at the service level using 256-bit AES encryption. But customers who require higher levels of assurance that their data is secure can also enable 256-bit AES encryption at the Azure Storage infrastructure level for double encryption. Double encryption of Azure Storage data protects against a scenario where one of the encryption algorithms or keys may be compromised. In this scenario, the additional layer of encryption continues to protect your data.',
     recommended_action: 'Delete storage account and create new storage account with infrastructure encryption enabled.',

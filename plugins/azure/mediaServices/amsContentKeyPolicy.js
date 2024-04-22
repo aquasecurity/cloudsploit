@@ -5,6 +5,7 @@ module.exports = {
     title: 'Media Services Content Key Policy',
     category: 'Media Services',
     domain: 'Content Delivery',
+    severity: 'Low',
     description: 'Ensure that Azure Media Services have Content Key Policy configured.',
     more_info: 'A Content Key Policy in Azure Media Services dictates how content keys, ensuring secure asset access, are delivered to end clients. It allows setting requirements or restrictions that keys with specific configurations must meet before being delivered to clients.',
     link: 'https://learn.microsoft.com/en-us/azure/media-services/latest/drm-content-key-policy-concept',

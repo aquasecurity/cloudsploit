@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Desired Machine Type',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that Virtual Machine instances are of given types.',
     more_info: 'Virtual Machine instance should be of the given types to ensure the internal compliance and prevent unexpected billing charges.',
     link: 'https://cloud.google.com/compute/docs/machine-types',
@@ -18,6 +19,8 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMachineType'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

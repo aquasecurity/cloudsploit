@@ -5,6 +5,7 @@ module.exports = {
     title: 'Multiple Subnets',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that Virtual Networks have multiple networks to provide a layered architecture',
     more_info: 'A single network within a Virtual Network increases the risk of a broader blast radius in the event of a compromise.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-vnet-plan-design-arm',

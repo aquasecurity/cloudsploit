@@ -5,6 +5,7 @@ module.exports = {
     title: 'Stateless Security Rules',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure all security rules are stateless.',
     more_info: 'Stateless security rules are one-way-rules that help mitigate ' +
         'DDoS attacks and speed up network traffic.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Dedicated Master Enabled',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that Amazon OpenSearch domains are using dedicated master nodes.',
     more_info: 'Using OpenSearch dedicated master nodes to separate management tasks from index and search requests will improve the clusters ability to manage easily different types of workload and make them more resilient in production.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-dedicatedmasternodes.html',

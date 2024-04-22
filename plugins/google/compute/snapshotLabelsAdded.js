@@ -4,11 +4,13 @@ module.exports = {
     title: 'Snapshot Labels Added',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that Compute disk snapshots have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/compute/docs/labeling-resources',
     recommended_action: 'Ensure labels are added to all Compute disk snapshots.',
     apis: ['snapshots:list'],
+    realtime_triggers: ['compute.snapshots.insert', 'compute.snapshots.delete', 'compute.snapshots.setLabels'],
 
     run: function(cache, settings, callback) {
         var results = [];

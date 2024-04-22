@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open Cassandra Thrift',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 9160 for Cassandra Thrift is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Cassandra Thrift should be restricted to known IP addresses.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',

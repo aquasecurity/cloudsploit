@@ -5,6 +5,7 @@ module.exports = {
     title: 'EBS Volume has tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that EBS Volumes have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify EBS volumes and add tags',

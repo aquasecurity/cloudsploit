@@ -5,6 +5,7 @@ module.exports = {
     title: 'Front Door Security Logging Enabled',
     category: 'Front Door',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that Azure Front Door Access and WAF logs are enabled.',
     more_info: 'Azure Front Door captures several types of logs. Access logs can be used to identify slow requests, determine error rates, and understand how Front Door\'s caching behavior is working for your solution. Web application firewall (WAF) logs can be used to detect potential attacks, and false positive detections that might indicate legitimate requests that the WAF blocked.',
     recommended_action: 'Modify Front Door profile and add diagnostic settings for Access and WAF Logs.',

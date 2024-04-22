@@ -5,6 +5,7 @@ module.exports = {
     title: 'Microsoft Support Operations Auditing Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure auditing of Microsoft support operations is enabled on SQL server.',
     more_info: 'Auditing Microsoft support operations for your Azure SQL Database server enhances transparency during support requests. This feature, combined with your existing auditing, facilitates anomaly detection, trend visualization, and data loss prevention.',
     recommended_action: 'Enable the option to capture Microsoft support operations and write them to a selected Storage account, Log Analytics workspace, or Event Hub.',

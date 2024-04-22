@@ -5,6 +5,7 @@ module.exports = {
     title: 'Config Delivery Failing',
     category: 'ConfigService',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that the AWS Config log files are delivered to the S3 bucket in order to store logging data for auditing purposes without any failures.',
     more_info: 'Amazon Config keep record of the changes within the configuration of your AWS resources and it regularly stores this data to log files that are send to an S3 bucket specified by you.',
     recommended_action: 'Configure AWS Config log files to be delivered without any failures to designated S3 bucket.',

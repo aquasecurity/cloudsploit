@@ -5,7 +5,7 @@ module.exports = {
     title: 'SSM Session Duration',
     category: 'EC2',
     domain: 'Identity and Access Management',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that all active sessions in the AWS Session Manager do not exceed the duration set in the settings.',
     more_info: 'The session manager gives users the ability to either open a shell in a EC2 instance or execute commands in a ECS task. This can be useful for when debugging issues in a container or instance.',
     recommended_action: 'Terminate all the sessions which exceed the specified duration mentioned in settings.',

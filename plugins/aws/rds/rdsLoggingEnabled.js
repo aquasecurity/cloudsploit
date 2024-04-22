@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Logging Enabled',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures logging is configured for RDS instances',
     more_info: 'Logging database level events enables teams to analyze events for the purpose diagnostics as well as audit tracking for compliance purposes.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html',

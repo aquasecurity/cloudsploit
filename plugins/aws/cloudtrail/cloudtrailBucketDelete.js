@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Delete Policy',
     category: 'S3',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token',
     more_info: 'To provide additional security, CloudTrail logging buckets should require an MFA token to delete objects',
     recommended_action: 'Enable MFA delete on the CloudTrail bucket',

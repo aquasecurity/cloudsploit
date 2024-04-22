@@ -5,11 +5,13 @@ module.exports = {
     title: 'Cloud Function Serverless VPC Access',
     category: 'Cloud Functions',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensure CloudFunctions are allowed to access only VPC resources.',
     more_info: 'Cloud Functions may require to connect directly to Compute Engine VM instances, Memorystore instances, Cloud SQL instances, and any other resources. It is a best practice to send requests to these resources using an internal IP address by connecting to VPC network using "Serverless VPC Access" configuration.',
     link: 'https://cloud.google.com/functions/docs/networking/connecting-vpc#create-connector',
     recommended_action: 'Ensure all cloud functions are using serverless VPC connectors.',
     apis: ['functions:list'],
+    realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction', 'functions.CloudFunctionsService.CreateFunction', 'functions.CloudFunctionsService.DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Desired Instance Type',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that all your Amazon OpenSearch cluster instances are of given instance types.',
     more_info: 'Limiting the type of Amazon OpenSearch cluster instances that can be provisioned will help address compliance requirements and prevent unexpected charges on the AWS bill.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/supported-instance-types.html',

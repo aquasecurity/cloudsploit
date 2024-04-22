@@ -5,6 +5,7 @@ module.exports = {
     title: 'DB Restorable',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL Database instances can be restored to a recent point',
     more_info: 'Automated backups of SQL databases with recent restore points help ensure that database recovery operations can occur without significant data loss.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',

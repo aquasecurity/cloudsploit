@@ -5,6 +5,7 @@ module.exports = {
     title: 'Virtual Network Alerts Monitor',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log Alerts for the create or update and delete Virtual Networks events are enabled',
     more_info: 'Monitoring for create or update and delete Virtual Networks events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Virtual Networks create or update and delete events.',

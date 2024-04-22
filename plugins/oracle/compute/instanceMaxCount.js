@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Max Count',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures the total number of VM instances does not exceed a set threshold.',
     more_info: 'The number of running VM instances should be carefully audited, especially in unused regions, to ensure only approved applications are consuming compute resources. Many compromised Oracle accounts see large numbers of VM instances launched.',
     recommended_action: 'Ensure that the number of running VM instances matches the expected count. If instances are launched above the threshold, investigate to ensure they are legitimate.',

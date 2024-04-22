@@ -5,6 +5,7 @@ module.exports = {
     title: 'Subnet IP Availability',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determine if a subnet is at risk of running out of IP addresses',
     more_info: 'Subnets have finite IP addresses. Running out of IP addresses could prevent resources from launching.',
     recommended_action: 'Add a new subnet with larger CIDR block and migrate resources.',

@@ -5,6 +5,7 @@ module.exports = {
     title: 'WAF Policy Has Tags',
     category: 'Application Gateway',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensure that each Microsoft Azure WAF Policy has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify WAF policies and add tags.',

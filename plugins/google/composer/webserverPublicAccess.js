@@ -5,11 +5,13 @@ module.exports = {
     title: 'Airflow Web Server Public Access',
     category: 'Cloud Composer',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure Composer Airflow web server is not open to the world',
     more_info: 'Allowing access from all IP addresses on the Internet to Composer Environments is risky as it can lead to Brute Force or DoS attacks. As a security best practice, only allow access from required IP ranges.',
     link: 'https://cloud.google.com/composer/docs/concepts/private-ip',
     recommended_action: 'Ensure that all composer environments have private airflow web servers',
     apis: ['composer:environments'],
+    realtime_triggers: ['orchestration.airflow.service.Environments.CreateEnviroments', 'orchestration.airflow.service.Environments.UpdateEnvironment', 'orchestration.airflow.service.Environments.DeleteEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Secure CloudFront Origin',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Detects the use of secure web origins with secure protocols for CloudFront.',
     more_info: 'Traffic passed between the CloudFront edge nodes and the backend resource should be sent over HTTPS with modern protocols for all web-based origins.',
     link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web.html',

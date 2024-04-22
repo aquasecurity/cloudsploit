@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Deletion Protection Enabled',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures deletion protection is enabled for RDS database instances.',
     more_info: 'Deletion protection prevents Amazon RDS instances from being deleted accidentally by any user.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2018/09/amazon-rds-now-provides-database-deletion-protection/',

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Pod Security Policy Enabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures pod security policy is enabled for all Kubernetes clusters',
     more_info: 'Kubernetes pod security policy is a resource that controls security sensitive aspects of the pod configuration.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies',
     recommended_action: 'Ensure that all Kubernetes clusters have pod security policy enabled.',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

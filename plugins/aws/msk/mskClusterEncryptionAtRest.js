@@ -5,6 +5,7 @@ module.exports = {
     title: 'MSK Cluster Encryption At-Rest',
     category: 'MSK',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that Amazon Managed Streaming for Kafka (MSK) clusters are using desired encryption key for at-rest encryption.',
     more_info: 'Amazon MSK encrypts all data at rest using AWS-managed KMS keys by default. Use AWS customer-managed Keys (CMKs) instead in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
     recommended_action: 'Modify MSK cluster encryption configuration to use desired encryption key',

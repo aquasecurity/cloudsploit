@@ -5,6 +5,7 @@ module.exports = {
     title: 'WorkSpaces Instance Count',
     category: 'WorkSpaces',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that the number of Amazon WorkSpaces provisioned in your AWS account has not reached set limit.',
     more_info: 'In order to manage your WorkSpaces compute resources efficiently and prevent unexpected charges on your AWS bill, monitor and configure limits for the maximum number of WorkSpaces instances provisioned within your AWS account.',
     recommended_action: 'Ensure that number of WorkSpaces created within your AWS account is within set limit',
