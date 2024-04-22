@@ -1078,6 +1078,7 @@ module.exports = {
         'recoveryVaultLoggingEnabled'   : require(__dirname + '/plugins/azure/recoveryService/recoveryVaultLoggingEnabled.js'),
 
         'domainPublicAccessEnabled'     : require(__dirname + '/plugins/azure/eventGrid/domainPublicAccess.js'),
+        'domainMinimumTlsVersion'       : require(__dirname + '/plugins/azure/eventGrid/domainMinimumTlsVersion.js'),
         'domainDiagnosticLogs'          : require(__dirname + '/plugins/azure/eventGrid/domainDiagnosticLogs.js'),
         'domainLocalAuthDisabled'       : require(__dirname + '/plugins/azure/eventGrid/domainLocalAuthDisabled.js'),
         'domainManagedIdentity'         : require(__dirname + '/plugins/azure/eventGrid/domainManagedIdentity.js'),
