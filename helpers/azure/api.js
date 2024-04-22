@@ -1218,8 +1218,12 @@ var tertiarycalls = {
             reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByDatabricksWorkspace: {
+            reliesOnPath: 'databricks.listWorkspaces',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
