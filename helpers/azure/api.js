@@ -850,6 +850,13 @@ var postcalls = {
             post: true
         }
     },
+    containerApps: {
+        getAuthSettings : {
+            reliesOnPath: 'containerApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/authConfigs?api-version=2023-05-01',
+        }
+    }, 
     endpoints: {
         listByProfile: {
             reliesOnPath: 'profiles.list',
