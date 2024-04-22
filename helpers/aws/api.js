@@ -502,7 +502,7 @@ var serviceMap = {
             BridgeProvider: 'aws', BridgeServiceName: 'forecastservice', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: 'DatasetArn', BridgeIdTemplate: '', BridgeResourceType: 'dataset',
             BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
-            BridgeCollectionService: 'forecastservice', BridgeCall: 'listForecastExportJobs', DataIdentifier: 'data',
+            BridgeCollectionService: 'forecastservice', BridgeCall: 'listDatasets', DataIdentifier: 'data',
         },
         {
             enabled: true, isSingleSource: true, InvAsset: 'translateJobs', InvService: 'translate',
