@@ -684,6 +684,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
         }
     },
+    certificates: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/certificates?api-version=2023-11-01'
+        }
+    },  
     flowLogs: {
         list: {
             reliesOnPath: 'networkWatchers.listAll',
@@ -1211,8 +1218,12 @@ var tertiarycalls = {
             reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByDatabricksWorkspace: {
+            reliesOnPath: 'databricks.listWorkspaces',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
-
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
