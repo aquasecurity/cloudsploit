@@ -1956,6 +1956,12 @@ var postcalls = [
                 filterValue: 'StackName',
                 rateLimit: 100 // ms to rate limit between stacks
             },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
             sendIntegration: serviceMap['CloudFormation']
         },
         CloudFront: {

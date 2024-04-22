@@ -1783,7 +1783,13 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName',
                 rateLimit: 500 // ms to rate limit between stacks
-            }
+            },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
         },
         WAFRegional: {
             listResourcesForWebACL: {
