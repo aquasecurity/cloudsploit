@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensures that DBFS root storage for Databricks premium workspace has infrastructure encryption enabled.',
-    more_info: 'Enabling infrastructure level encryption for Azure Databricks workspace DBFS root allows data in storage account to be encrypted twice, once at the service level and once at the infrastructure level, using two different encryption algorithms and two different keys and provides an extra layer of protection and security in case one of the keys is compromised.',
+    more_info: 'Enabling infrastructure level encryption for Azure Databricks workspace DBFS root storage allows data in storage account to be encrypted twice, once at the service level and once at the infrastructure level, using two different encryption algorithms and two different keys and provides an extra layer of protection and security in case one of the keys is compromised.',
     recommended_action: 'Enable infrastructure level encryption for all Databricks premium workspace DBFS root storage.',
     link: 'https://learn.microsoft.com/en-us/azure/databricks/security/keys/#--enable-double-encryption-for-dbfs',
     apis: ['databricks:listWorkspaces'],
