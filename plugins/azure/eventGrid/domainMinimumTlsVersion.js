@@ -45,7 +45,7 @@ module.exports = {
                         location, domain.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Event Grid domain is not using latest TLS version of ${domain.minimumTlsVersionAllowed}`,
+                        `Event Grid domain is not using latest TLS version of ${tlsVersion}`,
                         location, domain.id);
                 }
             }
