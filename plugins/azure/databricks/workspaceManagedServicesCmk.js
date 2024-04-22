@@ -6,7 +6,7 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensures that Databricks workspace managed services are encrypted with CMK.',
+    description: 'Ensures that Databricks premium workspace managed services are encrypted with CMK.',
     more_info: 'Azure Databricks allows you to encrypt data in your workspace using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault',
     recommended_action: 'Ensure that Databricks workspace managed services has CMK encryption enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/databricks/security/keys/cmk-managed-disks-azure',
