@@ -17,6 +17,7 @@ module.exports = {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        const tlsVersion = 1.2;
 
         async.each(locations.eventGrid, function(location, rcb) {
             const domains = helpers.addSource(cache, source, 
@@ -38,13 +39,13 @@ module.exports = {
             for (let domain of domains.data){
                 if (!domain.id) continue;
                 
-                if (domain.minimumTlsVersionAllowed && parseFloat(domain.minimumTlsVersionAllowed) >= 1.2) {
+                if (domain.minimumTlsVersionAllowed && parseFloat(domain.minimumTlsVersionAllowed) >= tlsVersion) {
                     helpers.addResult(results, 0,
                         `Event Grid domain is using latest TLS version: ${domain.minimumTlsVersionAllowed}`,
                         location, domain.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Event Grid domain is not using latest TLS version',
+                        `Event Grid domain is not using latest TLS version of ${domain.minimumTlsVersionAllowed}`,
                         location, domain.id);
                 }
             }
