@@ -699,7 +699,6 @@ module.exports = {
         'queueServiceAllAccessAcl'      : require(__dirname + '/plugins/azure/queueservice/queueServiceAllAccessAcl.js'),  
         
         'externalNetworkAccess'         : require(__dirname + '/plugins/azure/containerapps/externalNetworkAccess.js'),
-        
         'containerAppManagedIdentity'   : require(__dirname + '/plugins/azure/containerapps/containerAppManagedIdentity.js'),
         'containerAppAuthEnabled'       : require(__dirname + '/plugins/azure/containerapps/containerAppAuthEnabled.js'),
         'containerAppHttpsOnly'         : require(__dirname + '/plugins/azure/containerapps/containerAppHttpsOnly.js'),
