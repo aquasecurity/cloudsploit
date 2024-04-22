@@ -679,6 +679,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/automaticTuning/current?api-version=2020-08-01-preview'
         }
     },
+    certificates: {
+        listByAutomationAccounts: {
+            reliesOnPath: 'automationAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/certificates?api-version=2023-11-01'
+        }
+    },  
     flowLogs: {
         list: {
             reliesOnPath: 'networkWatchers.listAll',
