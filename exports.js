@@ -501,6 +501,7 @@ module.exports = {
         'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
         'lambdaTracingEnabled'          : require(__dirname + '/plugins/aws/lambda/lambdaTracingEnabled.js'),
         'lambdaHasTags'                 : require(__dirname + '/plugins/aws/lambda/lambdaHasTags.js'),
+        'lambdaDeadLetterQueue'         : require(__dirname + '/plugins/aws/lambda/lambdaDeadLetterQueue.js'),
         'lambdaEnhancedMonitoring'      : require(__dirname + '/plugins/aws/lambda/lambdaEnhancedMonitoring.js'),
         'lambdaUniqueExecutionRole'     : require(__dirname + '/plugins/aws/lambda/lambdaUniqueExecutionRole.js'),
 

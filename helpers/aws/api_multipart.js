@@ -1993,6 +1993,12 @@ var postcalls = [
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
             },
+            getFunctionConfiguration: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName'
+            },
             getFunctionCodeSigningConfig : {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
