@@ -853,6 +853,7 @@ module.exports = {
         'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),
         'flexibleServerPrivateDns'      : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateDns.js'),
         'flexibleServerVersion'         : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerVersion.js'),
+        'flexibleServerConnectionThrottle': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerConnectionThrottle.js'),
         'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
