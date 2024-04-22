@@ -581,7 +581,7 @@ module.exports = {
         'exportedFindingsEncrypted'     : require(__dirname + '/plugins/aws/guardduty/exportedFindingsEncrypted.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
-        'workSpacesOperationalState'    : require(__dirname + '/plugins/aws/workspaces/workSpacesOperationalState.js'),
+        'workSpacesHealthyInstances'    : require(__dirname + '/plugins/aws/workspaces/workSpacesHealthyInstances.js'),
         'workspacesIpAccessControl'     : require(__dirname + '/plugins/aws/workspaces/workspacesIpAccessControl.js'),
         'unusedWorkspaces'              : require(__dirname + '/plugins/aws/workspaces/unusedWorkspaces.js'),
         'workspacesInstanceCount'       : require(__dirname + '/plugins/aws/workspaces/workspacesInstanceCount.js'),

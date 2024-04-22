@@ -1,6 +1,6 @@
 
 var expect = require('chai').expect;
-var workSpacesOperationalState = require('./workSpacesOperationalState');
+var workSpacesHealthyInstances = require('./workSpacesHealthyInstances');
 
 const describeWorkspaces = [
     {
@@ -52,11 +52,11 @@ const createErrorCache = () => {
     };
 };
 
-describe('workSpacesOperationalState', function () {
+describe('workSpacesHealthyInstances', function () {
     describe('run', function () {
         it('should PASS if no workspace instances found', function (done) {
             const cache = createCache([]);
-            workSpacesOperationalState.run(cache, { }, (err, results) => {
+            workSpacesHealthyInstances.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.include('us-east-1')
@@ -66,7 +66,7 @@ describe('workSpacesOperationalState', function () {
 
         it('should UNKNOWN if Unable to query for WorkSpaces instances', function (done) {
             const cache = createErrorCache();
-            workSpacesOperationalState.run(cache,{}, (err, results) => {
+            workSpacesHealthyInstances.run(cache,{}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.include('us-east-1')
@@ -76,7 +76,7 @@ describe('workSpacesOperationalState', function () {
 
         it('should PASS if the Workspace is operational', function (done) {
             const cache = createCache([describeWorkspaces[0]]);
-            workSpacesOperationalState.run(cache, { }, (err, results) => {
+            workSpacesHealthyInstances.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -86,7 +86,7 @@ describe('workSpacesOperationalState', function () {
 
         it('should FAIL if Workspace is not operational', function (done) {
             const cache = createCache([describeWorkspaces[1]]);
-            workSpacesOperationalState.run(cache, {  }, (err, results) => {
+            workSpacesHealthyInstances.run(cache, {  }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
