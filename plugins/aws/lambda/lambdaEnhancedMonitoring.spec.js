@@ -75,7 +75,7 @@ describe('Lambda Enhanced Monitoring Enabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Lambda functions has enhanced monitoring enabled');
+                expect(results[0].message).to.include('Lambda function has enhanced monitoring enabled');
                 done();
             };
 

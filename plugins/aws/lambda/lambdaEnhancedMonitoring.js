@@ -54,7 +54,7 @@ module.exports = {
                     functionInfo.data.Configuration.Layers && 
                     functionInfo.data.Configuration.Layers[0] &&
                     functionInfo.data.Configuration.Layers[0].Arn) {
-                    helpers.addResult(results, 0, 'Lambda functions has enhanced monitoring enabled', region, resource);
+                    helpers.addResult(results, 0, 'Lambda function has enhanced monitoring enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Lambda function does not have enhanced monitoring enabled', region, resource);
                 }
