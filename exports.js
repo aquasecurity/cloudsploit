@@ -585,6 +585,7 @@ module.exports = {
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
         'noActiveFindings'              : require(__dirname + '/plugins/aws/guardduty/noActiveFindings'),
         's3ProtectionEnabled'           : require(__dirname + '/plugins/aws/guardduty/s3ProtectionEnabled.js'),
+        'rdsProtectionEnabled'          : require(__dirname + '/plugins/aws/guardduty/rdsProtectionEnabled.js'),
         'exportedFindingsEncrypted'     : require(__dirname + '/plugins/aws/guardduty/exportedFindingsEncrypted.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
