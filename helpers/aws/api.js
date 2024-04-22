@@ -497,11 +497,11 @@ var serviceMap = {
             BridgeCollectionService: 'comprehend', BridgeCall: 'listEntitiesDetectionJobs', DataIdentifier: 'data',
         },
         {
-            enabled: true, isSingleSource: true, InvAsset: 'exportJobs', InvService: 'forecast',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'Forecast ExportJob',
+            enabled: true, isSingleSource: true, InvAsset: 'forecastDataset', InvService: 'forecast',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'Forecast Dataset',
             BridgeProvider: 'aws', BridgeServiceName: 'forecastservice', BridgePluginCategoryName: 'AI & ML',
-            BridgeArnIdentifier: 'ForecastExportJobArn', BridgeIdTemplate: '', BridgeResourceType: 'forecast-export-job',
-            BridgeResourceNameIdentifier: 'ForecastExportJobName', BridgeExecutionService: 'AI & ML',
+            BridgeArnIdentifier: 'DatasetArn', BridgeIdTemplate: '', BridgeResourceType: 'dataset',
+            BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'forecastservice', BridgeCall: 'listForecastExportJobs', DataIdentifier: 'data',
         },
         {
@@ -549,7 +549,7 @@ var serviceMap = {
             InvResourceCategory: 'ai&ml', InvResourceType: 'Lookout Equipment',
             BridgeProvider: 'aws', BridgeServiceName: 'lookoutequipment', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: 'DatasetArn', BridgeIdTemplate: '',
-            BridgeResourceType: 'lookoutequipment', BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
+            BridgeResourceType: 'dataset', BridgeResourceNameIdentifier: 'DatasetName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'lookoutequipment', BridgeCall: 'listDatasets', DataIdentifier: 'data',
         },
         {
@@ -564,7 +564,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'sageMaker',
             InvResourceCategory: 'ai&ml', InvResourceType: 'Sagemaker Instance',
             BridgeProvider: 'aws', BridgeServiceName: 'sagemaker', BridgePluginCategoryName: 'AI & ML',
-            BridgeArnIdentifier: 'NotebookInstanceArn', BridgeIdTemplate: '', BridgeResourceType: 'sagemaker',
+            BridgeArnIdentifier: 'NotebookInstanceArn', BridgeIdTemplate: '', BridgeResourceType: 'notebook-instance',
             BridgeResourceNameIdentifier: 'NotebookInstanceName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'sagemaker', BridgeCall: 'describeNotebookInstance', DataIdentifier: 'data',
         },
