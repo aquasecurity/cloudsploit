@@ -131,5 +131,6 @@ module.exports = {
     logAnalytics: locations,
     publicIpAddresses: locations,
     computeGalleries: locations,
+    databricks: locations,
     containerApps: locations
 };

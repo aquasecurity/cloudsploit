@@ -298,6 +298,9 @@ module.exports = {
     publicIpAddresses: {
         list: 'id'
     },
+    databricks: {
+        listWorkspaces: 'id'
+    },
     containerApps: {
         list: 'id'
     }

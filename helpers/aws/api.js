@@ -826,6 +826,10 @@ var calls = {
             params: {
                 MaxResults: 100
             }
+        },
+        listFlywheels:{
+            property: 'FlywheelSummaryList',
+            paginate: 'nextToken'
         }
     },
     Connect: {
@@ -1742,9 +1746,6 @@ var postcalls = [
         DocDB: {
             sendIntegration: serviceMap['DocumentDB']
         },
-        Comprehend: {
-            sendIntegration: serviceMap['AI & ML'][1]
-        },
         Translate: {
             sendIntegration: serviceMap['AI & ML'][3]
         },
@@ -1955,6 +1956,12 @@ var postcalls = [
                 filterValue: 'StackName',
                 rateLimit: 100 // ms to rate limit between stacks
             },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
             sendIntegration: serviceMap['CloudFormation']
         },
         CloudFront: {
@@ -1984,6 +1991,15 @@ var postcalls = [
                 filterValue: 'TrailARN'
             },
             sendIntegration: serviceMap['CloudTrail']
+        },
+        Comprehend: {
+            describeFlywheel: {
+                reliesOnService: 'comprehend',
+                reliesOnCall: 'listFlywheels',
+                filterKey: 'FlywheelArn',
+                filterValue: 'FlywheelArn'
+            },
+            sendIntegration: serviceMap['AI & ML'][1]
         },
         Imagebuilder: {
             getContainerRecipe: {
@@ -2629,6 +2645,12 @@ var postcalls = [
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
                 rateLimit: 100, // it's not documented but experimentially 10/second works.
+            },
+            getFunction: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
             },
             listTags: {
                 reliesOnService: 'lambda',
