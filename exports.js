@@ -1147,6 +1147,9 @@ module.exports = {
         'accountHasTags'                : require(__dirname + '/plugins/azure/openai/accountHasTags.js'),
         'accountPublicAccessDisabled'   : require(__dirname + '/plugins/azure/openai/accountPublicAccessDisabled.js'),
 
+        'workspaceDbfsInfraEncryption'  : require(__dirname + '/plugins/azure/databricks/workspaceDbfsInfraEncryption.js'),
+
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),

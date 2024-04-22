@@ -515,6 +515,11 @@ var calls = {
         },
         sendIntegration: serviceMap['AI & ML']
     },
+    databricks: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Databricks/workspaces?api-version=2023-02-01'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {
