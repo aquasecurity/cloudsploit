@@ -1165,6 +1165,7 @@ module.exports = {
         'workspaceSecureCluster'        : require(__dirname + '/plugins/azure/databricks/workspaceSecureCluster.js'),
         'workspaceDiagnosticLogs'       : require(__dirname + '/plugins/azure/databricks/workspaceDiagnosticLogs.js'),
         'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
+        'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
 
     },
     github: {
