@@ -62,7 +62,7 @@ const createCache = (err, list, configuration) => {
     }
 };
 
-describe('flexibleServerLogDisconnections', function() {
+describe('flexibleServerLogDuration', function() {
     describe('run', function() {
         it('should PASS if no existing servers found', function(done) {
             const callback = (err, results) => {
