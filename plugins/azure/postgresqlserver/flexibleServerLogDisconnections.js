@@ -24,6 +24,8 @@ module.exports = {
 
             if (!servers) return rcb();
 
+            helpers.checkFlexibleServerConfigs(servers, cache, source, location, results, 'PostgreSQL Flexible', 'log_disconnections', 'Log disconnections');
+
             if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for PostgreSQL flexible servers: ' + helpers.addError(servers), location);
