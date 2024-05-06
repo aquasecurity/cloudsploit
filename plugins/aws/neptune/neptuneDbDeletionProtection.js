@@ -11,13 +11,12 @@ module.exports = {
     recommended_action: 'Modify Neptune database instance and enable deletion protection.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/manage-console-instances-delete.html',
     apis: ['Neptune:describeDBClusters'],
-    realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster','neptune:ModifyCluster'], 
+    realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster', 'neptune:ModifyDBCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
-
 
         async.each(regions.neptune, function(region, rcb){
             var describeDBClusters = helpers.addSource(cache, source,
