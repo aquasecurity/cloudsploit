@@ -6,10 +6,10 @@ module.exports = {
     category: 'Neptune',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that your AWS Neptune database instances are created to be cross-AZ for high availability.',
+    description: 'Ensure that your AWS Neptune database instances have the multi-AZ feature enabled.',
     more_info: '',
     recommended_action: 'Modify Neptune database instance to enable scaling across multiple availability zones.',
-    link: '',
+    link: 'https://docs.aws.amazon.com/neptune/latest/userguide/feature-overview-db-clusters.html',
     apis: ['Neptune:describeDBClusters'],
     realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster'], 
 
