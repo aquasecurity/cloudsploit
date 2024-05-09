@@ -1154,6 +1154,7 @@ module.exports = {
         'automationAcctHasTags'         : require(__dirname + '/plugins/azure/automationAccounts/automationAcctHasTags.js'),
         'validSourceControls'           : require(__dirname + '/plugins/azure/automationAccounts/validSourceControls.js'),
 
+        'batchAccountCmkEncrypted'      : require(__dirname + '/plugins/azure/batchAccounts/batchAccountCmkEncrypted.js'),
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
         'accountManagedIdentity'        : require(__dirname + '/plugins/azure/openai/accountManagedIdentity.js'),

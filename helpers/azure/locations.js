@@ -132,5 +132,6 @@ module.exports = {
     publicIpAddresses: locations,
     computeGalleries: locations,
     databricks: locations,
-    containerApps: locations
+    containerApps: locations,
+    batchAccounts: locations,
 };
