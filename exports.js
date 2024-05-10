@@ -710,6 +710,7 @@ module.exports = {
         'externalNetworkAccess'         : require(__dirname + '/plugins/azure/containerapps/externalNetworkAccess.js'),
         'containerAppManagedIdentity'   : require(__dirname + '/plugins/azure/containerapps/containerAppManagedIdentity.js'),
         'containerAppAuthEnabled'       : require(__dirname + '/plugins/azure/containerapps/containerAppAuthEnabled.js'),
+        'containerAppVolumeMount'       : require(__dirname + '/plugins/azure/containerapps/containerAppVolumeMount.js'),
         'containerAppHttpsOnly'         : require(__dirname + '/plugins/azure/containerapps/containerAppHttpsOnly.js'),
 
 
