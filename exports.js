@@ -614,6 +614,7 @@ module.exports = {
         'networkMemberDataEncrypted'    : require(__dirname + '/plugins/aws/managedblockchain/networkMemberDataEncrypted.js'),
 
         'docdbClusterEncrypted'         : require(__dirname + '/plugins/aws/documentDB/docdbClusterEncrypted.js'),
+        'docDbHasTags'                  : require(__dirname + '/plugins/aws/documentDB/docDbHasTags.js'),
         'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
