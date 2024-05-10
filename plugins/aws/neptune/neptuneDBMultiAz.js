@@ -6,9 +6,9 @@ module.exports = {
     category: 'Neptune',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that your AWS Neptune database instances have the multi-AZ feature enabled.',
-    more_info: '',
-    recommended_action: 'Modify Neptune database instance to enable scaling across multiple availability zones.',
+    description: 'Ensure that your AWS Neptune database instances have the multi-az feature enabled.',
+    more_info: 'Enabling Neptune\'s Multi-AZ feature boosts database reliability by automatically replicating data across multiple availability zones. This ensures continuous availability and minimal downtime for your graph database deployments.',
+    recommended_action: 'Modify Neptune database instance to multi-az feature.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/feature-overview-db-clusters.html',
     apis: ['Neptune:describeDBClusters'],
     realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster'], 
@@ -48,6 +48,7 @@ module.exports = {
                     helpers.addResult(results, 2, 'Neptune database instance does not have multi-AZ enabled', resource, region);
                 }
             }
+            
             rcb();
         }, function(){
             callback(null, results, source);
