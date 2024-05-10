@@ -502,6 +502,7 @@ module.exports = {
         'environmentDataEncrypted'      : require(__dirname + '/plugins/aws/mwaa/environmentDataEncrypted.js'),
 
         'neptuneDBInstanceEncrypted'    : require(__dirname + '/plugins/aws/neptune/neptuneDBInstanceEncrypted.js'),
+        'neptuneDBMinorVersionUpgrade'  : require(__dirname + '/plugins/aws/neptune/neptuneDBMinorVersionUpgrade.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
 
