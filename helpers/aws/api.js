@@ -1742,9 +1742,6 @@ var postcalls = [
         MemoryDB: {
             sendIntegration: serviceMap['MemoryDB']
         },
-        DocDB: {
-            sendIntegration: serviceMap['DocumentDB']
-        },
         Comprehend: {
             sendIntegration: serviceMap['AI & ML'][1]
         },
@@ -2108,6 +2105,15 @@ var postcalls = [
                 override: true
             },
             sendIntegration: serviceMap['Connect']
+        },
+        DocDB: {
+            listTagsForResource: {
+                reliesOnService: 'docdb',
+                reliesOnCall: 'describeDBClusters',
+                filterKey: 'ResourceName',
+                filterValue: 'DBClusterArn' 
+            },
+            sendIntegration: serviceMap['DocumentDB']
         },
         DynamoDB: {
             describeTable: {

@@ -1409,6 +1409,14 @@ var postcalls = [
                 override: true
             }
         },
+        DocDB: {
+            listTagsForResource: {
+                reliesOnService: 'docdb',
+                reliesOnCall: 'describeDBClusters',
+                filterKey: 'ResourceName',
+                filterValue: 'DBClusterArn'            
+            },
+        },
         DynamoDB: {
             describeTable: {
                 reliesOnService: 'dynamodb',
