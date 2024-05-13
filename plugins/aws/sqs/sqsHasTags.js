@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Update Amazon SQS queue and add new tags.',
     link: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-queue-tags.html',
-    apis: ['SQS:listQueues', 'STS:getCallerIdentity', 'ResourceGroupsTaggingAPI:getResources'],
+    apis: ['SQS:listQueues', 'STS:getCallerIdentity', 'ResourceGroupsTaggingAPI:getResources', 'SQS:listQueueTags'],
     realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes', 'sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
@@ -28,13 +28,13 @@ module.exports = {
 
             if (!listQueues) return rcb();
 
-            if (listQueues.err) {
+            if (listQueues.err || !listQueues.data) {
                 helpers.addResult(results, 3,
                     `Unable to query for Amazon SQS queues: ${helpers.addError(listQueues)}`, region);
                 return rcb();
             }
 
-            if (!listQueues.data || !listQueues.data.length) {
+            if (!listQueues.data.length) {
                 helpers.addResult(results, 0, 'No Amazon SQS queues found', region);
                 return rcb();
             }
@@ -46,6 +46,7 @@ module.exports = {
                 queueName = queueName[queueName.length-1];
 
                 var resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queueName}`;
+
                 arnList.push(resource);
             }
 
