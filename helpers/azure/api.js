@@ -377,6 +377,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/locks?api-version=2016-09-01'
         }
     },
+    machineLearning: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/workspaces?api-version=2024-04-01'
+        }
+    },
     loadBalancers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/loadBalancers?api-version=2020-03-01'
@@ -1225,6 +1230,12 @@ var tertiarycalls = {
             reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByMachineLearningWorkspce: {
+        reliesOnPath: 'machineLearning.listWorkspaces',
+        properties: ['id'],
+        url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+
         },
         listByDatabricksWorkspace: {
             reliesOnPath: 'databricks.listWorkspaces',
