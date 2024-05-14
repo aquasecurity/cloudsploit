@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const documentDBHasTags = require('.//docDbHasTags');
+const documentDBHasTags = require('./docDbHasTags');
 
 const createCache = (clusters, tags) => {
     return {
