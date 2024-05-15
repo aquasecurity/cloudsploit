@@ -33,7 +33,6 @@ var newRegionsUpdate =[
     'eu-central-2',    // Europe (Zurich)
     'il-central-1',   //Israel (Tel Aviv)
     'ca-west-1',      //Canada West (Calgary)
-
 ];
 
 module.exports = {
@@ -41,10 +40,10 @@ module.exports = {
     all: [...regions, ...newRegionsUpdate],
     optin: ['ap-east-1', 'me-south-1', 'ap-southeast-3'],   // Regions that AWS disables by default
     accessanalyzer: [...regions, ...newRegionsUpdate],
-    acm: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'], 
+    acm: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     apigateway: [...regions, ...newRegionsUpdate],
     athena:[...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
-    bedrock: ['us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-northeast-1', 'eu-central-1'],
+    bedrock: ['us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'eu-central-1', 'eu-west-3'],
     cloudfront: ['us-east-1'], // CloudFront uses the default global region
     autoscaling: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     iam: ['us-east-1'],
@@ -141,12 +140,12 @@ module.exports = {
         'ap-northeast-1'],
     neptune: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'il-central-1','me-central-1' 
+        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'il-central-1','me-central-1'
     ],
-    memorydb: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 
+    memorydb: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-north-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'eu-west-3', 'eu-south-1'],
-        
+
     kafka: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
         'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'ap-south-2','ap-southeast-3', 'ap-northeast-3',
@@ -178,7 +177,7 @@ module.exports = {
         'eu-north-1'
     ],
     databrew: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
-        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 
+        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'af-south-1'
     ],
     managedblockchain: ['us-east-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-northeast-1', 'eu-west-1', 'eu-west-2'],
@@ -197,7 +196,7 @@ module.exports = {
     lookoutvision: ['us-east-1', 'us-east-2', 'ap-northeast-1',  'ap-northeast-2', 'eu-central-1', 'eu-west-1', 'us-west-2'],
     lookoutmetrics: ['us-east-1', 'us-east-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'eu-central-1',
         'eu-west-1', 'eu-north-1', 'us-west-2'],
-    forecastservice: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 
+    forecastservice: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1',
         'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1'],
     lexmodelsv2: [ 'us-east-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
         'eu-west-2', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'af-south-1'],
