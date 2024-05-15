@@ -18,7 +18,6 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
 
-    
         async.each(regions.docdb, function(region, rcb){
             var describeDBClusters = helpers.addSource(cache, source,
                 ['docdb', 'describeDBClusters', region]);
