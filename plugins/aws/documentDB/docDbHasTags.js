@@ -36,7 +36,7 @@ module.exports = {
                 return rcb();
             }
             
-            for (let cluster of describeDBClusters.data){
+            for (let cluster of describeDBClusters.data) {
                 if (!cluster.DBClusterArn) continue;
                
                 let resource = cluster.DBClusterArn;
