@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Update Amazon SQS queue and add tags.',
     link: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-queue-tags.html',
-    apis: ['SQS:listQueues', 'STS:getCallerIdentity', 'ResourceGroupsTaggingAPI:getResources', 'SQS:listQueueTags'],
+    apis: ['SQS:listQueues', 'STS:getCallerIdentity', 'ResourceGroupsTaggingAPI:getResources'],
     realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes', 'sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
