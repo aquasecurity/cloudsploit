@@ -77,6 +77,7 @@ describe('docdbDeletionProtectionEnabled', function () {
             docdbDeletionProtectionEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to list DocumentDB clusters:');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
