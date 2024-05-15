@@ -35,6 +35,7 @@ module.exports = {
                     'No DocumentDB clusters found', region);
                 return rcb();
             }
+            
             for (let cluster of describeDBClusters.data){
                 if (!cluster.DBClusterArn) continue;
                
