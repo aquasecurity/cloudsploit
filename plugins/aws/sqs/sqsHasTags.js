@@ -50,7 +50,7 @@ module.exports = {
                 arnList.push(resource);
             }
 
-            helpers.checkTags(cache, 'sqs', arnList, region, results, settings);
+            helpers.checkTags(cache, 'SQS queue', arnList, region, results, settings);
             return rcb();
 
         }, function(){
