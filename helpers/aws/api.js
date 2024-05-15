@@ -1743,9 +1743,6 @@ var postcalls = [
         MemoryDB: {
             sendIntegration: serviceMap['MemoryDB']
         },
-        Comprehend: {
-            sendIntegration: serviceMap['AI & ML'][1]
-        },
         Translate: {
             sendIntegration: serviceMap['AI & ML'][3]
         },
