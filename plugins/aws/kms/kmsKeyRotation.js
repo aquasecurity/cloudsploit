@@ -111,6 +111,12 @@ module.exports = {
                     return;
                 }
 
+                if (describeKeyData.KeyMetadata && describeKeyData.KeyMetadata.KeySpec && describeKeyData.KeyMetadata.KeySpec !== 'SYMMETRIC_DEFAULT') {
+                    noCmks = false;
+                    helpers.addResult(results, 0, `Key rotation is not available for key spec: ${describeKeyData.KeyMetadata.KeySpec}`, region, kmsKey.KeyArn);
+                    return;
+                }
+
                 var getKeyRotationStatus = helpers.addSource(cache, source,
                     ['kms', 'getKeyRotationStatus', region, kmsKey.KeyId]);
                 
