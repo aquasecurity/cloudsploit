@@ -1,10 +1,10 @@
 const expect = require('chai').expect;
-const wafv2WebAclLoggingEnabled = require('./wafv2WebAclLogsEnabled');
+const wafv2WebAclLoggingEnabled = require('./wafv2WebAclLoggingEnabled');
 
 const listWebACLsResponse = [
     {
         "Id": "abcd1234",
-        "ARN": "arn:aws:wafv2:us-west-2:123456789012:regional/webacl/abcd1234",
+        "ARN": "arn:aws:wafv2:us-east-1:123456789012:regional/webacl/abcd1234",
         "Name": "TestWebACL",
         "Description": "Test Web ACL",
         "VisibilityConfig": {
@@ -13,33 +13,34 @@ const listWebACLsResponse = [
             "MetricName": "TestWebACL"
         }
     },
-    // Add more test data as needed
 ];
 
 const loggingEnabledResponse = {
     "LoggingConfiguration": {
         "LogDestinationConfigs": [
-            "arn:aws:logs:us-west-2:123456789012:log-group:/aws/wafv2/abcd1234/web-acl"
+            "arn:aws:logs:us-east-1:123456789012:log-group:/aws/wafv2/abcd1234/web-acl"
         ],
-        "ResourceArn": "arn:aws:wafv2:us-west-2:123456789012:regional/webacl/abcd1234"
+        "ResourceArn": "arn:aws:wafv2:us-east-1:123456789012:regional/webacl/abcd1234"
     }
 };
 
-const loggingDisabledResponse = {
-    // No LoggingConfiguration property
-};
 
 const createCache = (listWebACLsResponse, loggingConfigurations) => {
     return {
         wafv2: {
             listWebACLs: {
-                'us-west-2': {
+                'us-east-1': {
                     data: listWebACLsResponse,
-                    err: {}
+                    err: null
                 }
             },
             getLoggingConfiguration: {
-                'us-west-2': loggingConfigurations
+                'us-east-1': {
+                    'arn:aws:wafv2:us-east-1:123456789012:regional/webacl/abcd1234': {
+                        data: loggingConfigurations,
+                        err: null
+                    }
+                }
             }
         }
     };
@@ -49,14 +50,14 @@ const createErrorCache = () => {
     return {
         wafv2: {
             listWebACLs: {
-                'us-west-2': {
+                'us-east-1': {
                     err: {
                         message: 'error listing Web ACLs'
                     }
                 }
             },
             getLoggingConfiguration: {
-                'us-west-2': {
+                'us-east-1': {
                     err: {
                         message: 'error getting logging configuration'
                     }
@@ -65,6 +66,28 @@ const createErrorCache = () => {
         }
     };
 };
+
+const createFalseCache = ()=>{
+    return {
+        wafv2: {
+            listWebACLs: {
+                'us-east-1': {
+                    data: listWebACLsResponse,
+                    err: null
+                }
+            },
+            getLoggingConfiguration: {
+                'us-east-1': {
+                    'arn:aws:wafv2:us-east-1:123456789012:regional/webacl/abcd1234': {
+                        err: {
+                            code: 'WAFNonexistentItemException'
+                        }
+                    }
+                }
+            }
+        }
+    };
+}
 
 describe('wafv2WebAclLoggingEnabled', function () {
     describe('run', function () {
@@ -81,7 +104,7 @@ describe('wafv2WebAclLoggingEnabled', function () {
         });
 
         it('should FAIL if logging is disabled for any Web ACL', function (done) {
-            const cache = createCache(listWebACLsResponse, loggingDisabledResponse);
+            const cache = createFalseCache();
             wafv2WebAclLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(listWebACLsResponse.length);
                 results.forEach(result => {

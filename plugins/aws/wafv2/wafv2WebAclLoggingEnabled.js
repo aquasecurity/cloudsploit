@@ -29,6 +29,7 @@ module.exports = {
                     'Unable to list WAFV2 web ACLs: ' + helpers.addError(listWebACLs), region);
                 return rcb();
             }
+            
             for (let webAcl of listWebACLs.data){
                 if (!webAcl.ARN) continue;
 
