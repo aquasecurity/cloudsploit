@@ -6,10 +6,10 @@ module.exports = {
     category: 'Neptune',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that your AWS Neptune database instance has IAM database authentication feature enabled.',
+    description: 'Ensure that AWS Neptune database instance has IAM database authentication feature enabled.',
     more_info: 'Enabling IAM authentication for AWS Neptune adds an extra layer of security by allowing access control through IAM credentials, providing more precise control over who can access your Neptune resources.',
     recommended_action: 'Modify Neptune database instance to enable IAM database authentication.',
-    link: 'https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth-enable.html',
+    link: 'https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth.html',
     apis: ['Neptune:describeDBClusters'],
     realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster','neptune:ModifyDBCluster'], 
 
