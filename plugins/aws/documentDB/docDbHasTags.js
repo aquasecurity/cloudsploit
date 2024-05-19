@@ -45,7 +45,7 @@ module.exports = {
                     ['docdb', 'listTagsForResource', region, resource]);
 
                 if (!getTags || !getTags.data || getTags.err) {
-                    helpers.addResult(results, 3, `Unable to get tags information for doc db cluster: ${helpers.addError(getTags)}`, region, resource);
+                    helpers.addResult(results, 3, `Unable to get tags for DocumentDB cluster: ${helpers.addError(getTags)}`, region, resource);
                     continue;
                 }
     
