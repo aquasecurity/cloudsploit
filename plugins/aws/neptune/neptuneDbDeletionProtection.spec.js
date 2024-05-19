@@ -56,7 +56,7 @@ describe('neptuneDbDeletionProtection', function () {
             neptuneDbDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Neptune database instance does not have deletion protection enabled');
+                expect(results[0].message).to.include('Neptune database instance has deletion protection disabled');
                 expect(results[0].region).to.include('us-east-1');
                 done();
             });
