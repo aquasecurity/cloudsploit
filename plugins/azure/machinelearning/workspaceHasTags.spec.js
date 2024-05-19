@@ -51,13 +51,14 @@ describe('workspaceHasTags', function() {
             workspaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Machine Learning workspace found');
+                expect(results[0].message).to.include('No existing Machine Learning workspaces found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give unknown result if unable to query for Machine Learning workspaces', function(done) {            const cache = createErrorCache();
+        it('should give unknown result if unable to query for Machine Learning workspaces', function(done) {            
+        const cache = createErrorCache();
             workspaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -79,7 +80,7 @@ describe('workspaceHasTags', function() {
             });
         });
 
-        it('should give failing result if Machine Learning workspacet does not have tags associated', function(done) {
+        it('should give failing result if Machine Learning workspace does not have tags associated', function(done) {
             const cache = createCache([workspaces[1]]);
             workspaceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

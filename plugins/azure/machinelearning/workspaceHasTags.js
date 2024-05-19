@@ -11,14 +11,14 @@ module.exports = {
     recommended_action: 'Modify Machine Learning workspace and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['machineLearning:listWorkspaces'],
-    realtime_triggers: ['microsoft:machinelearningservices:workspaces:write', 'microsoft:machinelearningservices:workspaces:delete'],
+    realtime_triggers: ['microsoft:machinelearningservices:workspaces:write', 'microsoft:machinelearningservices:workspaces:delete', 'microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.containerApps, function(location, rcb) {
+        async.each(locations.machineLearning, function(location, rcb) {
 
             var machineLearningWorkspaces = helpers.addSource(cache, source,
                 ['machineLearning', 'listWorkspaces', location]);
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             if (!machineLearningWorkspaces.data.length) {
-                helpers.addResult(results, 0, 'No existing Machine Learning workspace found', location);
+                helpers.addResult(results, 0, 'No existing Machine Learning workspaces found', location);
                 return rcb();
             }
 
