@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensure that Amazon DocumentDB clusters have deletion protection feature enabled.',
-    more_info: 'Enabling deletion protection feature for Amazon DocumentDB clusters acts as a safety net, preventing accidental deletions and ensuring that the data stays secure and accessible at all times.',
+    more_info: 'Enabling deletion protection feature for Amazon DocumentDB clusters acts as a safety net, preventing accidental database deletions or deletion by an unauthorized user.  A Neptune DB cluster can't be deleted while deletion protection is enabled which ensures that the data stays secure and accessible at all times.',
     recommended_action: 'Modify DocumentDb cluster and enable deletion protection.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/db-cluster-delete.html',
     apis: ['DocDB:describeDBClusters'],
@@ -39,16 +39,11 @@ module.exports = {
             for (let cluster of describeDBClusters.data) {
                 if (!cluster.DBClusterArn) continue;
 
-                let resource = cluster.DBClusterArn;
 
                 if (cluster.DeletionProtection) {
-                    helpers.addResult(results, 0,
-                        'DocumentDB cluster has deletion protection enabled',
-                        region, resource);
+                    helpers.addResult(results, 0, 'DocumentDB cluster has deletion protection enabled', region, cluster.DBClusterArn);
                 } else {
-                    helpers.addResult(results, 2,
-                        'DocumentDB cluster does not have deletion protection enabled',
-                        region, resource);
+                    helpers.addResult(results, 2,  'DocumentDB cluster does not have deletion protection enabled', region, cluster.DBClusterArn);
                 }
             }
 
