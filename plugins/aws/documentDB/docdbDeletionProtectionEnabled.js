@@ -39,7 +39,6 @@ module.exports = {
             for (let cluster of describeDBClusters.data) {
                 if (!cluster.DBClusterArn) continue;
 
-
                 if (cluster.DeletionProtection) {
                     helpers.addResult(results, 0, 'DocumentDB cluster has deletion protection enabled', region, cluster.DBClusterArn);
                 } else {
