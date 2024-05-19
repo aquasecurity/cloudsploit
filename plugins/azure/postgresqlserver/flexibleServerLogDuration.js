@@ -6,7 +6,7 @@ module.exports = {
     category: 'PostgreSQL Server',
     domain: 'Databases',
     severity: 'Low',
-    description: 'Ensures connection duration logs are enabled for PostgreSQL flexible servers.',
+    description: 'Ensures that connection duration logs are enabled for PostgreSQL flexible servers.',
     more_info: 'Enabling connection duration logs on PostgreSQL flexible servers allows for logging the duration of each completed SQL statement, aiding in performance monitoring, identifying long-running queries, and ensuring compliance with auditing requirements.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL flexible servers have the log_duration setting enabled.',
     link: 'https://learn.microsoft.com/en-us/azure/flexible-server/howto-configure-server-parameters-using-portal',
