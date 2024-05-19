@@ -40,9 +40,9 @@ module.exports = {
                 if (!container.id) continue;
 
                 if (container.tags && Object.entries(container.tags).length > 0){
-                    helpers.addResult(results, 0, 'Container app has tags', location, container.id);
+                    helpers.addResult(results, 0, 'Container app has tags associated', location, container.id);
                 } else {
-                    helpers.addResult(results, 2, 'Container app does not have tags', location, container.id);
+                    helpers.addResult(results, 2, 'Container app does not have tags associated', location, container.id);
                 }
             }
 
