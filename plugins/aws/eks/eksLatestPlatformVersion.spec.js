@@ -84,8 +84,8 @@ describe('eksLatestPlatformVersion', function () {
                   "cluster": {
                     "name": "das",
                     "arn": "arn:aws:eks:us-east-1:012345678911:cluster/das",
-                    "version": "1.23",
-                    "platformVersion": "eks.9",
+                    "version": "1.27",
+                    "platformVersion": "eks.16",
                   }
                 }
             );
