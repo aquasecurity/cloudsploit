@@ -1240,6 +1240,11 @@ var tertiarycalls = {
             reliesOnPath: 'eventGrid.listDomains',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByBatchAccounts: {
+            reliesOnPath: 'batchAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }
     },
     backupShortTermRetentionPolicies: {
