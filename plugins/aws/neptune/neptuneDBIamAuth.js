@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensure that AWS Neptune database instance has IAM database authentication feature enabled.',
-    more_info: 'Enabling IAM authentication for AWS Neptune adds an extra layer of security by allowing access control through IAM credentials, providing more precise control over who can access your Neptune resources.',
-    recommended_action: 'Modify Neptune database instance to enable IAM database authentication.',
+    more_info: 'Enabling IAM authentication for AWS Neptune adds an extra layer of security by allowing access control through IAM credentials. It ensures that network traffic for clusters is encrypted using SSL and allows centralized management. All authentication requests are automatically signed with a secure access key instead of using a password.',
+    recommended_action: 'Modify Neptune database instance and enable IAM database authentication.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth.html',
     apis: ['Neptune:describeDBClusters'],
     realtime_triggers: ['neptune:CreateDBCluster', 'neptune:DeleteDBCluster','neptune:ModifyDBCluster'], 
@@ -39,12 +39,11 @@ module.exports = {
             for (let cluster of describeDBClusters.data) {
                 if (!cluster.DBClusterArn) continue;
 
-                let resource = cluster.DBClusterArn;
 
                 if (cluster.IAMDatabaseAuthenticationEnabled) {
-                    helpers.addResult(results, 0, 'Neptune database instance has IAM authentication enabled', resource, region); 
+                    helpers.addResult(results, 0, 'Neptune database instance has IAM authentication enabled', cluster.DBClusterArn, region); 
                 } else {
-                    helpers.addResult(results, 2, 'Neptune database instance does not have IAM authentication enabled', resource, region);
+                    helpers.addResult(results, 2, 'Neptune database instance does not have IAM authentication enabled', cluster.DBClusterArn, region);
                 }
             }
             rcb();
