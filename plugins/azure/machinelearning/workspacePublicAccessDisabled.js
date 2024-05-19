@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'High',
     description: 'Ensures that Azure Machine Learning workspaces are not publicly accessible.',
-    more_info: 'Disabling public network access enhances security by preventing Machine Learning workspaces from being accessible on the public internet. You can manage workspace exposure by establishing private endpoints instead.',
+    more_info: 'Disabling public network access for Azure Machine Learning workspaces helps ensure so that your workspaces are not accessible over the public internet. This helps protect the workspaces against data leakage risks. Limit exposure of your resources by creating private endpoints instead.',
     recommended_action: 'Ensure that Azure Machine Learning workspaces have public network access disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet',
     apis: ['machineLearning:listWorkspaces'],
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             if (!machineLearningWorkspaces.data.length) {
-                helpers.addResult(results, 0, 'No existing Machine Learning workspace found', location);
+                helpers.addResult(results, 0, 'No existing Machine Learning workspaces found', location);
                 return rcb();
             }
 
@@ -41,10 +41,10 @@ module.exports = {
 
                 if (workspace.publicNetworkAccess && workspace.publicNetworkAccess.toLowerCase()=='disabled') {
                     helpers.addResult(results, 0,
-                        'Machine Learning workspace is not publicly accessible', location, workspace.id);
+                        'Machine Learning workspace has public network access disabled', location, workspace.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Machine Learning workspace is publicly accessible', location, workspace.id);
+                        'Machine Learning workspace does not have public network access disabled', location, workspace.id);
                 }
             }
 

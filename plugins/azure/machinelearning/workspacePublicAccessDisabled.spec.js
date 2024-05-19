@@ -53,13 +53,14 @@ describe('workspacePublicAccessDisabled', function() {
             workspacePublicAccessDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing Machine Learning workspace found');
+                expect(results[0].message).to.include('No existing Machine Learning workspaces found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give unknown result if unable to query for Machine Learning workspaces', function(done) {            const cache = createErrorCache();
+        it('should give unknown result if unable to query for Machine Learning workspaces', function(done) {      
+            const cache = createErrorCache();
             workspacePublicAccessDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -75,18 +76,18 @@ describe('workspacePublicAccessDisabled', function() {
             workspacePublicAccessDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Machine Learning workspace is not publicly accessible');
+                expect(results[0].message).to.include('Machine Learning workspace has public network access disabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Machine Learning workspacet does not have  public access disabled', function(done) {
+        it('should give failing result if Machine Learning workspace does not have  public access disabled', function(done) {
             const cache = createCache([workspaces[1]]);
             workspacePublicAccessDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Machine Learning workspace is publicly accessible');
+                expect(results[0].message).to.include('Machine Learning workspace does not have public network access disabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

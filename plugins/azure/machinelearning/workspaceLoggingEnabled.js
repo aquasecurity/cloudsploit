@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensure that diagnostic logging is enabled for Machine Learning workspaces.',
-    more_info: 'Enabling diagnostic logs for Machine Learning workspaces is crucial to collect resource logs, which provide detailed data about resource operations. It helps to gain valuable insights into resource activity, assisting in monitoring, diagnosing issues, and optimizing the performance of Azure resources.',
+    more_info: 'Enabling diagnostic logs for Machine Learning workspaces helps to collect resource logs, which provide detailed data about resource operations. It helps to gain valuable insights into resource activity, assisting in monitoring, diagnosing issues, and optimizing the performance.',
     recommended_action: 'Enable diagnostic logging for all Machine Learning workspaces.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/monitor-azure-machine-learning',
     apis: ['machineLearning:listWorkspaces', 'diagnosticSettings:listByMachineLearningWorkspce'],
@@ -32,7 +32,7 @@ module.exports = {
             }
 
             if (!machineLearningWorkspaces.data.length) {
-                helpers.addResult(results, 0, 'No existing Machine Learning workspace found', location);
+                helpers.addResult(results, 0, 'No existing Machine Learning workspaces found', location);
                 return rcb();
             }
 
