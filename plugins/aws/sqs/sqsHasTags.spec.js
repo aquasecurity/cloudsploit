@@ -69,7 +69,7 @@ describe('SQS Has Tags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('No Amazon SQS queues found');
+                expect(results[0].message).to.include('No SQS queues found');
                 done();
             });
         });
@@ -80,7 +80,7 @@ describe('SQS Has Tags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('Unable to query for Amazon SQS queues');
+                expect(results[0].message).to.include('Unable to query for SQS queues');
                 done();
             });
         });
