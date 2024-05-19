@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensures that Event Hubs namespace has diagnostic logs enabled.',
     more_info: 'Enabling diagnostics logs for Event Hubs namespace helps to gain insights into the service operation and troubleshoot performance issues. This helps identifying security threats and recreate activity trails to use for investigation purposes.',
-    recommended_action: 'Enable diagnostic logs for all the Event Hubs namepsaces.',
+    recommended_action: 'Enable diagnostic logs for all the Event Hubs namespaces.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/monitor-event-hubs',
     apis: ['eventHub:listEventHub','diagnosticSettings:listByEventHubs'],
     realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
