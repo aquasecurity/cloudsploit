@@ -303,5 +303,8 @@ module.exports = {
     },
     containerApps: {
         list: 'id'
+    },
+    machineLearning: {
+        listWorkspaces: 'id'
     }
 };
