@@ -1158,6 +1158,7 @@ module.exports = {
         'appConfigurationPublicAccess'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationPublicAccess.js'),
         'appConfigurationCmkEncrypted'  : require(__dirname + '/plugins/azure/appConfigurations/appConfigurationCmkEncrypted.js'),
         'appConfigHasTags'              : require(__dirname + '/plugins/azure/appConfigurations/appConfigHasTags.js'),
+        'appConfigAccessKeyAuthDisabled': require(__dirname + '/plugins/azure/appConfigurations/appConfigAccessKeyAuthDisabled.js'),
 
         'automationAcctDiagnosticLogs'  : require(__dirname + '/plugins/azure/automationAccounts/automationAcctDiagnosticLogs.js'),
         'automationAcctManagedIdentity' : require(__dirname + '/plugins/azure/automationAccounts/automationAcctManagedIdentity.js'),
