@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensure that AWS WAFV2 Web Access Control Lists (ACLs) have logging enabled.',
     more_info: 'Enabling logging for Web ACL allows detailed logging of web requests that match defined rules within the WAF Web ACL. This enables comprehensive monitoring, analysis, and troubleshooting of security threats and traffic patterns within your web application.',
     link: 'https://docs.aws.amazon.com/waf/latest/developerguide/logging-management.html',
-    recommended_action: 'Modify WAF Web ACL and enable logging',
+    recommended_action: 'Modify WAFV2 Web ACL and enable logging.',
     apis: ['WAFV2:listWebACLs','WAFV2:getLoggingConfiguration'],
     realtime_triggers: ['wafv2:CreateWebACL', 'wafv2:DeleteWebAcl', 'wafv2:PutLoggingConfiguration'],
 
