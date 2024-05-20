@@ -52,11 +52,11 @@ module.exports = {
 
                 if (cluster.BackupRetentionPeriod && cluster.BackupRetentionPeriod >=  neptune_db_backup_retention_threshold) {
                     helpers.addResult(results, 0,
-                        `Neptune database instance has a backup retention period of ${cluster.BackupRetentionPeriod} of ${neptune_db_backup_retention_threshold} days limit`,
+                        `Neptune database instance has a backup retention period of ${cluster.BackupRetentionPeriod} which is equal or greater than ${neptune_db_backup_retention_threshold} days limit`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `Neptune database instance has a backup retention period of ${cluster.BackupRetentionPeriod} of ${neptune_db_backup_retention_threshold} days limit`,
+                        `Neptune database instance has a backup retention period of ${cluster.BackupRetentionPeriod} which is less than ${neptune_db_backup_retention_threshold} days limit`,
                         region, resource);
                 }
             }

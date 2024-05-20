@@ -51,7 +51,7 @@ describe('neptuneInstanceBackupRetention', function () {
             neptuneInstanceBackupRetention.run(cache, { doc_db_backup_retention_threshold: 7 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Neptune database instance has a backup retention period of 10 of 7 days limit');
+                expect(results[0].message).to.include('Neptune database instance has a backup retention period of 10 which is equal or greater than 7 days limit');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -62,7 +62,7 @@ describe('neptuneInstanceBackupRetention', function () {
             neptuneInstanceBackupRetention.run(cache, { doc_db_backup_retention_threshold: 7 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Neptune database instance has a backup retention period of 1 of 7 days limit');
+                expect(results[0].message).to.include('Neptune database instance has a backup retention period of 1 which is less than 7 days limit');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
