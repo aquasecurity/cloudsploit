@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensure that AWS Neptune database instances are created to be cross-AZ for high availability.',
-    more_info: 'Enabling Neptune Multi-AZ feature boosts database reliability by automatically replicating data across multiple availability zones. This ensures continuous availability and minimal downtime for graph database deployments.',
+    more_info: 'Enabling Multi-AZ feature for Neptune instances boosts database reliability by automatically replicating data across multiple availability zones. This ensures continuous availability and minimal downtime for graph database deployments.',
     recommended_action: 'Modify Neptune database instance to enable multi-az feature.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/feature-overview-db-clusters.html',
     apis: ['Neptune:describeDBClusters'],
