@@ -24,40 +24,8 @@ module.exports = {
 
             if (!servers) return rcb();
 
-            if (servers.err || !servers.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for PostgreSQL flexible servers: ' + helpers.addError(servers), location);
-                return rcb();
-            }
-        
-            if (!servers.data.length) {
-                helpers.addResult(results, 0, 'No existing PostgreSQL flexible servers found', location);
-                return rcb();
-            }
+            helpers.checkFlexibleServerConfigs(servers, cache, source, location, results, 'PostgreSQL Flexible', 'log_disconnections', 'Log disconnections');
 
-            for (var flexibleServer of servers.data) {
-                if (!flexibleServer.id) continue;
-
-                const configurations = helpers.addSource(cache, source,
-                    ['flexibleServersConfigurations', 'listByPostgresServer', location, flexibleServer.id]);
-        
-                if (!configurations || configurations.err || !configurations.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for PostgreSQL flexible server configurations: ' + helpers.addError(configurations), location, flexibleServer.id);
-                    continue;
-                }
-                
-                var configuration = configurations.data.filter(config => {
-                    return (config.name == 'log_disconnections');
-                });
-        
-                if (configuration && configuration[0] && configuration[0].value && configuration[0].value.toLowerCase() == 'on') {
-                    helpers.addResult(results, 0, 'PostgreSQL flexible server has log disconnections setting enabled', location, flexibleServer.id);
-                } else {
-                    helpers.addResult(results, 2, 'PostgreSQL flexible server does not have log disconnections setting enabled', location, flexibleServer.id);
-                }
-
-            }
             rcb();
         }, function() {
             // Global checking goes here

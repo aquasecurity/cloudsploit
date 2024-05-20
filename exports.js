@@ -863,6 +863,7 @@ module.exports = {
         'flexibleServerDiagnosticLogs'  : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerDiagnosticLogs.js'),
         'flexibleServerPrivateDns'      : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateDns.js'),
         'flexibleServerVersion'         : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerVersion.js'),
+        'flexibleServerLogDuration'     : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerLogDuration.js'),
         'flexibleServerConnectionThrottle': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerConnectionThrottle.js'),
         'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
 
