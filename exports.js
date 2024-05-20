@@ -1104,6 +1104,7 @@ module.exports = {
         'domainManagedIdentity'         : require(__dirname + '/plugins/azure/eventGrid/domainManagedIdentity.js'),
 
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
+        'eventHubLocalAuthDisabled'     : require(__dirname + '/plugins/azure/eventhub/eventHubLocalAuthDisabled.js'),
         'eventHubPublicAccess'          : require(__dirname + '/plugins/azure/eventhub/eventHubPublicAccess.js'),
         'eventHubNamespaceCmkEncrypted' : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceCmkEncrypted.js'),
         'eventHubManagedIdentity'       : require(__dirname + '/plugins/azure/eventhub/eventHubManagedIdentity.js'),
