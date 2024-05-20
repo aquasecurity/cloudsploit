@@ -35,7 +35,7 @@ var additionalCalls = apiCalls.additionalCalls;
 
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
-   
+
     GoogleConfig.mRetries = 5;
     GoogleConfig.retryDelayOptions = {base: 300};
 
@@ -48,10 +48,12 @@ var collect = function(GoogleConfig, settings, callback) {
             return accumulator;
         }, {});
 
-        settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
-            accumulator[key.toLowerCase()] = settings.previousCollection[key];
-            return accumulator;
-        }, {});
+        if (settings.previousCollection) {
+            settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+                accumulator[key.toLowerCase()] = settings.previousCollection[key];
+                return accumulator;
+            }, {});
+        }
 
         if (collect[service.toLowerCase()] &&
             Object.keys(collect[service.toLowerCase()]) &&

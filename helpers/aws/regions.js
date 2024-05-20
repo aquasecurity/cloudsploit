@@ -33,7 +33,6 @@ var newRegionsUpdate =[
     'eu-central-2',    // Europe (Zurich)
     'il-central-1',   //Israel (Tel Aviv)
     'ca-west-1',      //Canada West (Calgary)
-
 ];
 
 module.exports = {
@@ -41,10 +40,10 @@ module.exports = {
     all: [...regions, ...newRegionsUpdate],
     optin: ['ap-east-1', 'me-south-1', 'ap-southeast-3'],   // Regions that AWS disables by default
     accessanalyzer: [...regions, ...newRegionsUpdate],
-    acm: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'], 
+    acm: [...regions, ...newRegionsUpdate],
     apigateway: [...regions, ...newRegionsUpdate],
-    athena:[...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
-    bedrock: ['us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-northeast-1', 'eu-central-1'],
+    athena:[...regions, ...newRegionsUpdate],
+    bedrock: ['us-east-1', 'us-west-2', 'ap-south-1','ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'eu-central-1', 'eu-west-1', 'eu-west-3'],
     cloudfront: ['us-east-1'], // CloudFront uses the default global region
     autoscaling: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     iam: ['us-east-1'],
@@ -53,9 +52,8 @@ module.exports = {
     s3: ['us-east-1'],
     s3control: ['us-east-1'],
     cognitoidentityserviceprovider: ['us-east-1','us-east-2','us-west-1','us-west-2','af-south-1','ap-southeast-3',
-        'ap-south-1','ap-northeast-3','ap-northeast-2','ap-southeast-1','ap-southeast-2',
-        'ap-northeast-1','ca-central-1','eu-central-1','eu-west-1','eu-west-2','eu-south-1',
-        'eu-west-3','eu-north-1','il-central-1','me-south-1','sa-east-1'],
+        'ap-south-1', 'ap-south-2', 'ap-northeast-3','ap-northeast-2','ap-southeast-1','ap-southeast-2', 'ap-southeast-4',   'ap-northeast-1','ca-central-1','eu-central-1','eu-central-2','eu-west-1','eu-west-2','eu-south-1','eu-south-2',
+        'eu-west-3','eu-north-1','il-central-1','me-south-1','me-central-1','sa-east-1'],
     cloudformation: [...regions, ...newRegionsUpdate],
     cloudtrail: [...regions, ...newRegionsUpdate],
     cloudwatchlogs: [...regions,...newRegionsUpdate],
@@ -64,13 +62,13 @@ module.exports = {
         'ap-southeast-2', 'ap-northeast-2', 'ap-south-1', 'ca-central-1'],
     configservice: [...regions, ...newRegionsUpdate],
     dax: ['us-east-1'], // available Globally
-    devopsguru: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2','eu-west-1', 'eu-west-2', 'eu-west-3','ap-northeast-1', 'eu-central-1',
+    devopsguru: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2','eu-west-1', 'eu-west-2', 'eu-west-3','ap-northeast-1',
         'ap-southeast-1', 'ap-southeast-2', 'eu-north-1', 'ap-south-1', 'ap-northeast-2', 'ca-central-1','eu-central-1',
         'sa-east-1'],
     dynamodb: [...regions, ...newRegionsUpdate],
     docdb: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
         'eu-west-2', 'eu-west-3', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
-        'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'eu-south-1', 'ap-east-1', 'ap-south-2'],
+        'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'eu-south-1', 'ap-east-1', 'ap-south-2', 'me-central-1'],
     dlm: [...regions, ...newRegionsUpdate],
     dms: [...regions, ...newRegionsUpdate],
     ec2: [...regions, ...newRegionsUpdate],
@@ -84,7 +82,7 @@ module.exports = {
     eventbridge: [...regions, ...newRegionsUpdate],
     emr: [...regions, ...newRegionsUpdate],
     es: [...regions, ...newRegionsUpdate],
-    glue: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    glue: [...regions, ...newRegionsUpdate],
     kinesis: [...regions, ...newRegionsUpdate],
     kinesisvideo:  ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-1','ap-northeast-2', 'ap-southeast-1',
@@ -111,22 +109,22 @@ module.exports = {
     shield: ['us-east-1'],
     sqs_encrypted: [...regions, ...newRegionsUpdate],
     sts: ['us-east-1'],
-    transfer: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    transfer: [...regions, ...newRegionsUpdate],
     lambda: [...regions, ...newRegionsUpdate],
     mwaa: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-west-1', 'eu-west-2', 'eu-west-3', 'ap-south-1', 'eu-north-1', 'eu-central-1',
         'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2', 'ap-northeast-1', 'ca-central-1', 'sa-east-1'],
     directconnect: ['us-east-1'], // this is global service
     directoryservice: [...regions, ...newRegionsUpdate],
-    efs: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    efs: [...regions, ...newRegionsUpdate],
     support: ['us-east-1'],
     wafregional: regions,
     wafv2: [...regions, ...newRegionsUpdate],
     waf: ['us-east-1'],
     organizations: ['us-east-1'],
-    guardduty: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    guardduty: [...regions, ...newRegionsUpdate],
     workspaces: ['us-east-1', 'us-west-2', 'ca-central-1', 'sa-east-1', 'ap-south-1',
         'eu-west-1', 'eu-central-1', 'eu-west-2', 'ap-southeast-1',
-        'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2', 'af-south-1'],
+        'ap-northeast-1', 'ap-southeast-2', 'ap-northeast-2', 'af-south-1', 'il-central-1'],
     servicequotas: [...regions, ...newRegionsUpdate],
     xray: [...regions, ...newRegionsUpdate],
     codestar: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ap-northeast-2',
@@ -135,22 +133,22 @@ module.exports = {
     codebuild: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     mq: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     glacier: regions,
-    backup: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    backup: [...regions, ...newRegionsUpdate],
     elasticache: [...regions, ...newRegionsUpdate],
-    timestreamwrite:  ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 'ap-southeast-2',
+    timestreamwrite:  ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 'eu-north-1', 'ap-south-1', 'ap-southeast-1', 'ap-southeast-2',
         'ap-northeast-1'],
     neptune: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
-        'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'ap-northeast-1', 'ap-northeast-2',
-        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'il-central-1','me-central-1' 
+        'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-northeast-3',
+        'ap-southeast-1', 'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'il-central-1','me-central-1'
     ],
-    memorydb: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 
+    memorydb: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-north-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'eu-west-3', 'eu-south-1'],
-        
-    kafka: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
-        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
-        'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'ap-south-2','ap-southeast-3', 'ap-northeast-3',
-        'eu-central-2', 'me-central-1'],
+
+    kafka: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'ca-west-1', 'eu-central-1', 'eu-west-1',
+        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'eu-south-2', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
+        'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'me-south-1', 'af-south-1', 'ap-south-2','ap-southeast-3', 'ap-southeast-4', 'ap-northeast-3',
+        'eu-central-2', 'me-central-1', 'il-central-1'],
     kendra:  ['us-east-1', 'us-east-2', 'us-west-2', 'ap-southeast-1', 'ap-southeast-2', 'ca-central-1', 'eu-west-1', 'ap-northeast-1', 'ap-south-1', 'eu-west-2'],
     proton: ['us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-1', 'eu-west-1', 'eu-west-2', 'eu-central-1',
         'ca-central-1', 'ap-southeast-2', 'ap-southeast-1', 'ap-northeast-2'],
@@ -159,7 +157,7 @@ module.exports = {
     qldb: ['us-east-1', 'us-east-2', 'us-west-2', 'ap-northeast-2',
         'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ca-central-1', 'eu-central-1',
         'eu-west-1', 'eu-west-2'],
-    finspace: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1','eu-west-1'],
+    finspace: ['us-east-1', 'us-east-2', 'us-west-2', 'ca-central-1','eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1', 'ap-southeast-1', 'ap-southeast-2'],
     codepipeline: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
     codeartifact: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1',
         'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1',
@@ -178,7 +176,7 @@ module.exports = {
         'eu-north-1'
     ],
     databrew: ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
-        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 
+        'eu-west-2', 'eu-west-3', 'eu-north-1', 'eu-south-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1',
         'ap-southeast-2', 'ap-south-1', 'sa-east-1', 'ap-east-1', 'af-south-1'
     ],
     managedblockchain: ['us-east-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-northeast-1', 'eu-west-1', 'eu-west-2'],
@@ -197,11 +195,11 @@ module.exports = {
     lookoutvision: ['us-east-1', 'us-east-2', 'ap-northeast-1',  'ap-northeast-2', 'eu-central-1', 'eu-west-1', 'us-west-2'],
     lookoutmetrics: ['us-east-1', 'us-east-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'eu-central-1',
         'eu-west-1', 'eu-north-1', 'us-west-2'],
-    forecastservice: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1', 
+    forecastservice: ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1', 'eu-west-1',
         'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1'],
     lexmodelsv2: [ 'us-east-1', 'us-west-2', 'ca-central-1', 'eu-central-1', 'eu-west-1',
         'eu-west-2', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'af-south-1'],
-    fsx: [...regions, 'ap-south-2', 'ap-southeast-4', 'eu-south-2', 'eu-central-2', 'il-central-1'],
+    fsx: [...regions, ...newRegionsUpdate],
     wisdom: ['us-east-1', 'us-west-2', 'eu-west-2', 'eu-central-1', 'ap-northeast-1', 'ap-southeast-2'],
     voiceid: ['us-east-1', 'us-west-2', 'eu-west-2', 'ca-central-1', 'eu-central-1',
         'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ap-northeast-2', 'af-south-1'],
@@ -214,3 +212,4 @@ module.exports = {
     opensearchserverless: ['us-east-2', 'us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1',
         'eu-central-1', 'eu-west-1']
 };
+

@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL Server Services Access Disabled',
+    title: 'PostgreSQL Server Services Network Access Disabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     severity: 'Medium',

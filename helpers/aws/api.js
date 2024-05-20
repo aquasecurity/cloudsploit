@@ -457,7 +457,7 @@ var serviceMap = {
             enabled: true, isSingleSource: true, InvAsset: 'elasticBeanstalk', InvService: 'elasticBeanstalk',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'elasticbeanstalk',
             BridgeProvider: 'aws', BridgeServiceName: 'elasticbeanstalk', BridgePluginCategoryName: 'ElasticBeanstalk',
-            BridgeArnIdentifier: 'PlatformArn', BridgeIdTemplate: '', BridgeResourceType: 'elasticbeanstalk',
+            BridgeArnIdentifier: 'EnvironmentArn', BridgeIdTemplate: '', BridgeResourceType: 'environment',
             BridgeResourceNameIdentifier: 'EnvironmentName', BridgeExecutionService: 'ElasticBeanstalk',
             BridgeCollectionService: 'elasticbeanstalk', BridgeCall: 'describeEnvironments', DataIdentifier: 'data',
         },
@@ -719,10 +719,7 @@ var calls = {
     },
     CloudTrail: {
         describeTrails: {
-            property: 'trailList',
-            params: {
-                includeShadowTrails: false
-            }
+            property: 'trailList'
         }
     },
     CloudWatch: {
@@ -829,6 +826,10 @@ var calls = {
             params: {
                 MaxResults: 100
             }
+        },
+        listFlywheels:{
+            property: 'FlywheelSummaryList',
+            paginate: 'nextToken'
         }
     },
     Connect: {
@@ -1742,12 +1743,6 @@ var postcalls = [
         MemoryDB: {
             sendIntegration: serviceMap['MemoryDB']
         },
-        DocDB: {
-            sendIntegration: serviceMap['DocumentDB']
-        },
-        Comprehend: {
-            sendIntegration: serviceMap['AI & ML'][1]
-        },
         Translate: {
             sendIntegration: serviceMap['AI & ML'][3]
         },
@@ -1761,6 +1756,12 @@ var postcalls = [
             sendIntegration: serviceMap['Timestream']
         },
         EFS: {
+            describeFileSystemPolicy: {
+                reliesOnService: 'EFS',
+                reliesOnCall: 'describeFileSystems',
+                filterKey: 'FileSystemId',
+                filterValue: 'FileSystemId'
+            },
             sendIntegration: serviceMap['EFS']
         },
         EventBridge: {
@@ -1770,6 +1771,12 @@ var postcalls = [
             sendIntegration: serviceMap['CloudWatchLogs']
         },
         CodeArtifact: {
+            getDomainPermissionsPolicy: {
+                reliesOnService: 'codeartifact',
+                reliesOnCall: 'listDomains',
+                filterKey: 'domain',
+                filterValue: 'name'
+            },
             sendIntegration: serviceMap['CodeArtifact']
         },
         ComputeOptimizer: {
@@ -1946,6 +1953,12 @@ var postcalls = [
                 filterValue: 'StackName',
                 rateLimit: 100 // ms to rate limit between stacks
             },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
             sendIntegration: serviceMap['CloudFormation']
         },
         CloudFront: {
@@ -1975,6 +1988,15 @@ var postcalls = [
                 filterValue: 'TrailARN'
             },
             sendIntegration: serviceMap['CloudTrail']
+        },
+        Comprehend: {
+            describeFlywheel: {
+                reliesOnService: 'comprehend',
+                reliesOnCall: 'listFlywheels',
+                filterKey: 'FlywheelArn',
+                filterValue: 'FlywheelArn'
+            },
+            sendIntegration: serviceMap['AI & ML'][1]
         },
         Imagebuilder: {
             getContainerRecipe: {
@@ -2070,6 +2092,12 @@ var postcalls = [
                 reliesOnCall: 'listProjects',
                 override: true
             },
+            getResourcePolicy: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'batchGetProjects',
+                filterKey: 'resourceArn',
+                filterValue: 'arn'
+            },
             sendIntegration: serviceMap['CodeBuild']
         },
         CodePipeline: {
@@ -2108,6 +2136,15 @@ var postcalls = [
                 override: true
             },
             sendIntegration: serviceMap['Connect']
+        },
+        DocDB: {
+            listTagsForResource: {
+                reliesOnService: 'docdb',
+                reliesOnCall: 'describeDBClusters',
+                filterKey: 'ResourceName',
+                filterValue: 'DBClusterArn' 
+            },
+            sendIntegration: serviceMap['DocumentDB']
         },
         DynamoDB: {
             describeTable: {
@@ -2561,6 +2598,12 @@ var postcalls = [
                 reliesOnCall: 'listStreams',
                 override: true
             },
+            getResourcePolicy: {
+                reliesOnService: 'kinesis',
+                reliesOnCall: 'describeStream',
+                filterKey: 'ResourceARN',
+                filterValue: 'StreamARN'
+            },
             sendIntegration: serviceMap['Kinesis']
         },
         Firehose: {
@@ -2609,6 +2652,12 @@ var postcalls = [
                 filterValue: 'FunctionName',
                 rateLimit: 100, // it's not documented but experimentially 10/second works.
             },
+            getFunction: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             listTags: {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
@@ -2616,6 +2665,18 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             },
             getFunctionUrlConfig :{
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
+            getFunctionConfiguration: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName'
+            },
+            getFunctionCodeSigningConfig : {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
@@ -2663,6 +2724,12 @@ var postcalls = [
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
                 filterValue: 'botId'
+            },
+            describeResourcePolicy: {
+                reliesOnService: 'lexmodelsv2',
+                reliesOnCall: 'describeBotAlias',
+                filterKey: 'resourceArn',
+                filterValue: 'botAliasId'
             }
         },
         QLDB: {
@@ -2777,6 +2844,12 @@ var postcalls = [
         },
         SecretsManager: {
             describeSecret: {
+                reliesOnService: 'secretsmanager',
+                reliesOnCall: 'listSecrets',
+                filterKey: 'SecretId',
+                filterValue: 'ARN',
+            },
+            getResourcePolicy: {
                 reliesOnService: 'secretsmanager',
                 reliesOnCall: 'listSecrets',
                 filterKey: 'SecretId',

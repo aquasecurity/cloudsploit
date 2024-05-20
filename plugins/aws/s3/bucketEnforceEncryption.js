@@ -79,7 +79,7 @@ module.exports = {
 
                 var getBucketPolicy = helpers.addSource(cache, source,
                     ['s3', 'getBucketPolicy', region, bucket.Name]);
-    
+
                 // Check the bucket policy
                 if (getBucketPolicy && getBucketPolicy.err &&
                     getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
@@ -87,7 +87,7 @@ module.exports = {
                         'No bucket policy found',
                         bucketLocation, bucketResource);
                 } else if (!getBucketPolicy || getBucketPolicy.err ||
-                           !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
+                    !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + bucket.Name +
                         ': ' + helpers.addError(getBucketPolicy),
@@ -95,10 +95,10 @@ module.exports = {
                 } else {
                     try {
                         var policyJson;
-    
+
                         if (typeof getBucketPolicy.data.Policy == 'object') {
                             policyJson = getBucketPolicy.data.Policy;
-    
+
                         } else {
                             try {
                                 policyJson = JSON.parse(getBucketPolicy.data.Policy);
@@ -109,7 +109,7 @@ module.exports = {
                                 return;
                             }
                         }
-    
+
                         if (!policyJson || !policyJson.Statement) {
                             helpers.addResult(results, 3,
                                 'Error querying for bucket policy for bucket: ' + bucket.Name +
@@ -122,21 +122,21 @@ module.exports = {
                         } else {
                             var encryptionType;
                             var nullCondition = false;
-    
+
                             for (var s in policyJson.Statement) {
                                 var statement = policyJson.Statement[s];
-    
+
                                 if (statement.Effect &&
                                     statement.Effect === 'Deny' &&
                                     statement.Principal &&
                                     ((helpers.globalPrincipal(statement.Principal)) ||
-                                     (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
+                                        (Array.isArray(statement.Principal) && statement.indexOf('*') > -1)) &&
                                     statement.Action &&
                                     ((typeof statement.Action == 'string' && statement.Action == 's3:PutObject') ||
-                                     (Array.isArray(statement.Action) && statement.indexOf('s3:PutObject') > -1)) &&
+                                        (Array.isArray(statement.Action) && statement.indexOf('s3:PutObject') > -1)) &&
                                     statement.Resource &&
                                     ((typeof statement.Resource == 'string' && statement.Resource == (bucketResource + '/*')) ||
-                                     (Array.isArray(statement.Principal) && statement.indexOf(bucketResource + '/*') > -1)) &&
+                                        (Array.isArray(statement.Principal) && statement.indexOf(bucketResource + '/*') > -1)) &&
                                     statement.Condition) {
                                     if (statement.Condition.StringNotEquals &&
                                         statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption']) {
@@ -147,7 +147,7 @@ module.exports = {
                                     }
                                 }
                             }
-    
+
                             if (nullCondition && encryptionType) {
                                 if ((config.s3_enforce_encryption_require_cmk && encryptionType !== 'aws:kms')) {
                                     helpers.addResult(results, 2,
@@ -177,7 +177,7 @@ module.exports = {
                     bucketLocation, bucketResource);
             }
 
-            
+
         }
         
         callback(null, results, source);
