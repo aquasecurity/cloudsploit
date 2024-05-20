@@ -331,7 +331,7 @@ var calls = {
     },
     profiles: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2019-04-15'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2024-02-01'
         },
         sendIntegration: serviceMap['CDN Profiles']
     },
@@ -375,6 +375,11 @@ var calls = {
     managementLocks: {
         listAtSubscriptionLevel: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/locks?api-version=2016-09-01'
+        }
+    },
+    machineLearning: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/workspaces?api-version=2024-04-01'
         }
     },
     loadBalancers: {
@@ -507,6 +512,11 @@ var calls = {
     computeGalleries: { 
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
+        }
+    },
+    batchAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Batch/batchAccounts?api-version=2024-02-01'
         }
     },
     openAI: {
@@ -1225,6 +1235,12 @@ var tertiarycalls = {
             reliesOnPath: 'bastionHosts.listAll',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
+        listByMachineLearningWorkspce: {
+            reliesOnPath: 'machineLearning.listWorkspaces',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+
         },
         listByDatabricksWorkspace: {
             reliesOnPath: 'databricks.listWorkspaces',

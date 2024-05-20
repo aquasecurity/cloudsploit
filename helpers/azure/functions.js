@@ -356,6 +356,41 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
     });
 }
 
+function checkFlexibleServerConfigs(servers, cache, source, location, results, serverType, configProperty, configName) {
+    if (!servers) return;
+
+    if (servers.err || !servers.data) {
+        addResult(results, 3,
+            'Unable to query for ' + serverType + ' Servers: ' + shared.addError(servers), location);
+        return;
+    }
+
+    if (!servers.data.length) {
+        addResult(results, 0, 'No existing ' + serverType + ' Servers found', location);
+        return;
+    }
+
+    servers.data.forEach(function(server) {
+        const configurations = shared.addSource(cache, source,
+            ['flexibleServersConfigurations', 'listByPostgresServer', location, server.id]);
+
+        if (!configurations || configurations.err || !configurations.data) {
+            addResult(results, 3,
+                'Unable to query for ' + serverType + ' Server configuration: ' + shared.addError(configurations), location, server.id);
+        } else {
+            var configuration = configurations.data.filter(config => {
+                return (config.name == configProperty && config.value.toLowerCase() == 'on');
+            });
+
+            if (configuration && configuration.length) {
+                addResult(results, 0, configName + ' is enabled for the ' + serverType + ' Server configuration', location, server.id);
+            } else {
+                addResult(results, 2, configName + ' is disabled for the ' + serverType + ' Server configuration', location, server.id);
+            }
+        }
+    });
+}
+
 function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
    
     let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
@@ -717,5 +752,7 @@ module.exports = {
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
     remediateOpenPortsHelper: remediateOpenPortsHelper,
-    checkMicrosoftDefender: checkMicrosoftDefender
+    checkMicrosoftDefender: checkMicrosoftDefender,
+    checkFlexibleServerConfigs:checkFlexibleServerConfigs
+
 };
