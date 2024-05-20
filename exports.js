@@ -1107,6 +1107,7 @@ module.exports = {
         'eventHubLocalAuthDisabled'     : require(__dirname + '/plugins/azure/eventhub/eventHubLocalAuthDisabled.js'),
         'eventHubPublicAccess'          : require(__dirname + '/plugins/azure/eventhub/eventHubPublicAccess.js'),
         'eventHubNamespaceCmkEncrypted' : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceCmkEncrypted.js'),
+        'eventHubDiagnosticLogs'        : require(__dirname + '/plugins/azure/eventhub/eventHubDiagnosticLogs.js'),
         'eventHubManagedIdentity'       : require(__dirname + '/plugins/azure/eventhub/eventHubManagedIdentity.js'),
 
         'accessLogsEnabled'             : require(__dirname + '/plugins/azure/frontdoor/accessLogsEnabled.js'),
