@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensure that AWS Neptune database instances have deletion protection feature enabled.',
-    more_info: 'Enabling deletion protection feature for Amazon Neptune adds an extra layer of security, preventing accidental database deletions or deletion by an unauthorized user.  A Neptune DB cluster can\'t be deleted while deletion protection is enabled which ensures continuous availability of data.',
+    more_info: 'Enabling deletion protection feature for Amazon Neptune adds an extra layer of security, preventing accidental database deletions or deletion by an unauthorized user. A Neptune DB cluster can\'t be deleted while deletion protection is enabled which ensures continuous availability of data.',
     recommended_action: 'Modify Neptune database instance and enable deletion protection.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/manage-console-instances-delete.html',
     apis: ['Neptune:describeDBClusters'],
