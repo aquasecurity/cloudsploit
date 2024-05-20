@@ -19,7 +19,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.machineLearning, function(location, rcb) {
-
             var machineLearningWorkspaces = helpers.addSource(cache, source,
                 ['machineLearning', 'listWorkspaces', location]);
 
@@ -44,7 +43,7 @@ module.exports = {
                         'Machine Learning workspace has public network access disabled', location, workspace.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Machine Learning workspace does not have public network access disabled', location, workspace.id);
+                        'Machine Learning workspace has public network access enabled', location, workspace.id);
                 }
             }
 
