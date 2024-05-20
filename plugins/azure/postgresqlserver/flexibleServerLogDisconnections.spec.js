@@ -68,7 +68,7 @@ describe('flexibleServerLogDisconnections', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing PostgreSQL flexible servers found');
+                expect(results[0].message).to.include('No existing PostgreSQL Flexible Servers found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -122,7 +122,7 @@ describe('flexibleServerLogDisconnections', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('PostgreSQL flexible server does not have log disconnections setting enabled');
+                expect(results[0].message).to.include('Log disconnections is disabled for the PostgreSQL Flexible Server configuration');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -144,7 +144,7 @@ describe('flexibleServerLogDisconnections', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('PostgreSQL flexible server has log disconnections setting enabled');
+                expect(results[0].message).to.include('Log disconnections is enabled for the PostgreSQL Flexible Server configuration');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

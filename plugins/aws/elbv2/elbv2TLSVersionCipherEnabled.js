@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ELBv2 TLS Version and Cipher Header Enabled',
+    title: 'ELBv2 TLS Version and Cipher Header Disabled',
     category: 'ELBv2',
     domain: 'Content Delivery',
     severity: 'Medium',
-    description: 'Ensures that AWS ELBv2 load balancers have TLS version and cipher headers enabled.',
-    more_info: 'ELBv2 load balancers should be configured with TLS version and cipher headers for security compliance and best practices.',
+    description: 'Ensures that AWS ELBv2 load balancers does not have TLS version and cipher headers enabled.',
+    more_info: 'Disabling TLS version and cipher headers mitigates potential information leakage risks and aligns with security best practices, ensuring that sensitive details are not exposed to unauthorized parties.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html',
-    recommended_action: 'Update ELBv2 load balancer traffic configuration to enable TLS version and cipher headers',
+    recommended_action: 'Update ELBv2 load balancer traffic configuration to disable TLS version and cipher headers',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeLoadBalancerAttributes'],
     realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyLoadBalancerAttributes', 'elasticloadbalancing:DeleteLoadBalancer'],
 
@@ -61,11 +61,11 @@ module.exports = {
                     attribute.Value && attribute.Value === 'true');
 
                 if (tlsCipherEnabled) {
-                    helpers.addResult(results, 0,
+                    helpers.addResult(results, 2,
                         'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite enabled', region, resource);
                 } else {
-                    helpers.addResult(results, 2,
-                        'Load balancer :' + elb.LoadBalancerName + ': does not have TLS version and cipher suite enabled', region, resource);
+                    helpers.addResult(results, 0,
+                        'Load balancer :' + elb.LoadBalancerName + ': has TLS version and cipher suite disabled', region, resource);
                 }
 
                 cb();
