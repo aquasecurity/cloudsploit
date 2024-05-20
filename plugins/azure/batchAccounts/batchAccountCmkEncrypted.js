@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensures that Azure Batch accounts are CMK encrypted.',
     more_info: 'Azure Batch allows you to encrypt data in your accounts using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault.',
-    recommended_action: 'Enable CMK encryption for all Azure Batch accounts..',
+    recommended_action: 'Enable CMK encryption for all Azure Batch accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/batch/batch-customer-managed-key',
     apis: ['batchAccounts:list'],
     realtime_triggers: ['microsoftbatch:batchaccounts:write','microsoftbatch:batchaccounts:delete'],
