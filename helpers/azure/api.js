@@ -331,7 +331,7 @@ var calls = {
     },
     profiles: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2019-04-15'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2024-02-01'
         },
         sendIntegration: serviceMap['CDN Profiles']
     },
