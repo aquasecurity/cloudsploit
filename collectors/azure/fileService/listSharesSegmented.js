@@ -8,11 +8,11 @@ module.exports = function(collection, reliesOn, callback) {
     if (!collection['fileService']['getShareAcl']) collection['fileService']['getShareAcl'] = {};
 
     // Loop through regions and properties in reliesOn
-    async.eachOf(reliesOn['storageAccounts.listKeys'], function(regionObj, region, cb) {
+    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10,function(regionObj, region, cb) {
         collection['fileService']['listSharesSegmented'][region] = {};
         collection['fileService']['getShareAcl'][region] = {};
 
-        async.eachOfLimit(regionObj, 5, async function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 10, async function(subObj, resourceId, sCb) {
             collection['fileService']['listSharesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
