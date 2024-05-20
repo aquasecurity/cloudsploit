@@ -2,7 +2,7 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'PostgreSQL FLexible Server Log Disconnections Enabled',
+    title: 'PostgreSQL Flexible Server Log Disconnections Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     severity: 'Low',

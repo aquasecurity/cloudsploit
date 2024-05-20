@@ -164,8 +164,8 @@ const createNullCache = () => {
 
 describe('elbv2TLSCipherEnabled', function () {
     describe('run', function () {
-        it('should PASS if load balancer has TLS Version and Cipher Suite enabled', function (done) {
-            const cache = createCache([loadBalancers[0]], loadBalancerAttributes[0]);
+        it('should PASS if load balancer has TLS Version and Cipher Suite disabled', function (done) {
+            const cache = createCache([loadBalancers[0]], loadBalancerAttributes[1]);
             elbv2TLSCipherEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -173,8 +173,8 @@ describe('elbv2TLSCipherEnabled', function () {
             });
         });
         
-        it('should FAIL if load balancer does not have TLS Version and Cipher Suite enabled', function (done) {
-            const cache = createCache([loadBalancers[0]], loadBalancerAttributes[1]);
+        it('should FAIL if load balancer has TLS Version and Cipher Suite enabled', function (done) {
+            const cache = createCache([loadBalancers[0]], loadBalancerAttributes[0]);
             elbv2TLSCipherEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
