@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures Auto Minor version upgrade is enabled on Neptune database instances.',
-    more_info: 'Neptune Database supports automatically upgrading the minor version of the database, which should be enabled to ensure security fixes are quickly deployed.',
+    more_info: 'AWS Neptune database service releases engine version upgrades regularly to introduce software features, bug fixes, security patches and performance improvements. Enabling auto minor version upgrade feature ensures that minor engine upgrades are applied automatically to the instance during the maintenance window.',
     recommended_action: 'Modify Neptune database instance and enable automatic minor version upgrades feature.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/cluster-maintenance.html',
     apis: ['Neptune:describeDBClusters'],
