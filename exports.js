@@ -511,6 +511,7 @@ module.exports = {
         'environmentDataEncrypted'      : require(__dirname + '/plugins/aws/mwaa/environmentDataEncrypted.js'),
 
         'neptuneDBInstanceEncrypted'    : require(__dirname + '/plugins/aws/neptune/neptuneDBInstanceEncrypted.js'),
+        'neptuneDBMinorVersionUpgrade'  : require(__dirname + '/plugins/aws/neptune/neptuneDBMinorVersionUpgrade.js'),
         'neptuneInstanceBackupRetention': require(__dirname + '/plugins/aws/neptune/neptuneInstanceBackupRetention.js'),
         'neptuneDBMultiAz'              : require(__dirname + '/plugins/aws/neptune/neptuneDBMultiAz.js'),
         'neptuneDbDeletionProtection'   : require(__dirname + '/plugins/aws/neptune/neptuneDbDeletionProtection.js'),
