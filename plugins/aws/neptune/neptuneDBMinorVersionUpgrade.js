@@ -39,7 +39,6 @@ module.exports = {
             for (let cluster of describeDBClusters.data) {
                 if (!cluster.DBClusterArn) continue;
 
-
                 if (cluster.AutoMinorVersionUpgrade) {
                     helpers.addResult(results, 0, 'Neptune database instance has auto minor version upgrade enabled', cluster.DBClusterArn, region); 
                 } else {
