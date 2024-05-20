@@ -512,6 +512,7 @@ module.exports = {
 
         'neptuneDBInstanceEncrypted'    : require(__dirname + '/plugins/aws/neptune/neptuneDBInstanceEncrypted.js'),
         'neptuneDBMultiAz'              : require(__dirname + '/plugins/aws/neptune/neptuneDBMultiAz.js'),
+        'neptuneDbDeletionProtection'   : require(__dirname + '/plugins/aws/neptune/neptuneDbDeletionProtection.js'),
         'neptuneDBIamAuth'              : require(__dirname + '/plugins/aws/neptune/neptuneDBIamAuth.js'),
 
         'monitoringMetrics'             : require(__dirname + '/plugins/aws/cloudwatchlogs/monitoringMetrics.js'),
