@@ -40,9 +40,9 @@ module.exports = {
                 if (!cluster.DBClusterArn) continue;
 
                 if (cluster.DeletionProtection) {
-                    helpers.addResult(results, 0, 'Neptune database instance has deletion protection enabled', cluster.DBClusterArn, region); 
+                    helpers.addResult(results, 0, 'Neptune database instance has deletion protection enabled', region, cluster.DBClusterArn); 
                 } else {
-                    helpers.addResult(results, 2, 'Neptune database instance has deletion protection disabled', cluster.DBClusterArn, region);
+                    helpers.addResult(results, 2, 'Neptune database instance has deletion protection disabled', region, cluster.DBClusterArn);
                 }
             }
             rcb();
