@@ -35,11 +35,11 @@ module.exports = {
             }
 
             for (var stack of listStacks.data) {
-                if (!stack.StackName) continue;
+                if (!stack.StackId || !stack.StackName) continue;
                 
-                var resource = stack.StackName;
+                var resource = stack.StackId;
                 var template = helpers.addSource(cache, source,
-                    ['cloudformation', 'getTemplate', region, resource]);
+                    ['cloudformation', 'getTemplate', region, stack.StackName]);
                 
                 if (!template || template.err || !template.data) {
                     helpers.addResult(results, 3, `Unable to query CloudFormation stack template: ${helpers.addError(template)}`, region, resource);

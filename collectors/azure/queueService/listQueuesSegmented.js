@@ -9,11 +9,11 @@ module.exports = function(collection, reliesOn, callback) {
     if (!collection['queueService']['getQueueAcl']) collection['queueService']['getQueueAcl'] = {};
 
     // Loop through regions and properties in reliesOn
-    async.eachOf(reliesOn['storageAccounts.listKeys'], function(regionObj, region, cb) {
+    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10,function(regionObj, region, cb) {
         collection['queueService']['listQueuesSegmented'][region] = {};
         collection['queueService']['getQueueAcl'][region] = {};
 
-        async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 10, function(subObj, resourceId, sCb) {
             collection['queueService']['listQueuesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
