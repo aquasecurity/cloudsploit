@@ -6,15 +6,15 @@ module.exports = {
     category: 'Neptune',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that your Neptune Database Instances have set a minimum backup retention period.',
-    more_info: 'Neptune Database Instance provides feature to retain incremental backups between 1 and 35 allowing you to quickly restore to any point within the backup retention period. Ensure that you have sufficient backup retention period configured in order to restore your data in the event of failure.',
-    recommended_action: 'Modify Neptune Database Instance to configure sufficient backup retention period.',
+    description: 'Ensure that Neptune database instances have set a minimum backup retention period.',
+    more_info: 'Neptune provides feature to retain incremental backups, which allows to quickly restore to any point within the backup retention period. Ensure that you have sufficient backup retention period configured in order to restore your data in the event of failure.',
+    recommended_action: 'Modify Neptune database instance to configure sufficient backup retention period.',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/backup-restore-overview.html',
     apis: ['Neptune:describeDBClusters'],
     settings: {
         neptune_db_backup_retention_threshold: {
             name: 'Neptune Instance Minimum Backup Retention Period',
-            description: 'Desired number of days for Neptune Database Instance backup retention period.',
+            description: 'Desired number of days for Neptune database instance backup retention period.',
             regex: '^[1-35]*$',
             default: 7
         }
