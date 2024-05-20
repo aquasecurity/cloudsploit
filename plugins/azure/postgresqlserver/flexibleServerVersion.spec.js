@@ -11,7 +11,7 @@ const listPostgresFlexibleServer = [
             "geoRedundantBackup": "Disabled",
             "storageAutogrow": "Disabled"
         },
-        "version": '13'
+        "version": '16'
     },
     {
         "id": "/subscriptions/12345/resourceGroups/Default/providers/Microsoft.DBforPostgreSQL/flexibleServers/test-server1",

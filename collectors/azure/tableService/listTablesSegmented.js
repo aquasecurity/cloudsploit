@@ -9,18 +9,18 @@ module.exports = function(collection, reliesOn, callback) {
     if (!collection['tableService']['getTableAcl']) collection['tableService']['getTableAcl'] = {};
 
     // Loop through regions and properties in reliesOn
-    async.eachOf(reliesOn['storageAccounts.listKeys'], function(regionObj, region, cb) {
+    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10,function(regionObj, region, cb) {
         collection['tableService']['listTablesSegmented'][region] = {};
         collection['tableService']['getTableAcl'][region] = {};
 
-        async.eachOfLimit(regionObj, 5, function(subObj, resourceId, sCb) {
+        async.eachOfLimit(regionObj, 10, function(subObj, resourceId, sCb) {
             collection['tableService']['listTablesSegmented'][region][resourceId] = {};
 
             if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
                 // Extract storage account name from resourceId
                 var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
                 var storageService = new azureStorage['TableService'](storageAccountName, subObj.data.keys[0].value);
-                
+
                 storageService.listTablesSegmented(null, function(tableErr, tableResults) {
                     if (tableErr || !tableResults) {
                         collection['tableService']['listTablesSegmented'][region][resourceId].err = (tableErr || 'No data returned');
