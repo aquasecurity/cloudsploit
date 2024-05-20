@@ -87,7 +87,7 @@ describe('workspacePublicAccessDisabled', function() {
             workspacePublicAccessDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Machine Learning workspace does not have public network access disabled');
+                expect(results[0].message).to.include('Machine Learning workspace has public network access enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
