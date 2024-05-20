@@ -43,9 +43,9 @@ module.exports = {
                 let resource = cluster.DBClusterArn;
 
                 if (cluster.MultiAZ) {
-                    helpers.addResult(results, 0, 'Neptune database instance has multi-AZ enabled', resource, region); 
+                    helpers.addResult(results, 0, 'Neptune database instance has multi-AZ enabled', region, resource); 
                 } else {
-                    helpers.addResult(results, 2, 'Neptune database instance does not have multi-AZ enabled', resource, region);
+                    helpers.addResult(results, 2, 'Neptune database instance does not have multi-AZ enabled', region, resource);
                 }
             }
             
