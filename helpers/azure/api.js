@@ -514,6 +514,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
         }
     },
+    batchAccounts: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Batch/batchAccounts?api-version=2024-02-01'
+        }
+    },
     openAI: {
         listAccounts: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.CognitiveServices/accounts?api-version=2023-05-01'

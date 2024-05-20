@@ -133,5 +133,6 @@ module.exports = {
     computeGalleries: locations,
     databricks: locations,
     containerApps: locations,
+    batchAccounts: locations,
     machineLearning: locations
 };
