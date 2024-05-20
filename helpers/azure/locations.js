@@ -130,5 +130,8 @@ module.exports = {
     openAI: locations,
     logAnalytics: locations,
     publicIpAddresses: locations,
-    computeGalleries: locations
+    computeGalleries: locations,
+    databricks: locations,
+    containerApps: locations,
+    machineLearning: locations
 };

@@ -42,12 +42,13 @@ module.exports = {
                 ['ses', 'describeActiveReceiptRuleSet', region]);
 
             if (!describeActiveReceiptRuleSet) return rcb();
-            
+
             if (describeActiveReceiptRuleSet.err &&
                 ((describeActiveReceiptRuleSet.err.message &&
-                    describeActiveReceiptRuleSet.err.message.includes('Unavailable Operation'))
-                    || (describeActiveReceiptRuleSet.err.code 
+                        describeActiveReceiptRuleSet.err.message.includes('Unavailable Operation'))
+                    || (describeActiveReceiptRuleSet.err.code
                         && describeActiveReceiptRuleSet.err.code.includes('InvalidAction')))) return rcb();
+
 
             if (describeActiveReceiptRuleSet.err || !describeActiveReceiptRuleSet.data) {
                 helpers.addResult(results, 3,

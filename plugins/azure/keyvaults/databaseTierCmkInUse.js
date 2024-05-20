@@ -15,7 +15,7 @@ module.exports = {
         db_tier_tag_key: {
             name: 'Database-Tier Tag Key',
             description: 'Tag key to indicate Database-Tier Key Vault keys',
-            regex: '^.*$s',
+            regex: '^.*$',
             default: ''
         }
     },
