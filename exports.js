@@ -1183,6 +1183,7 @@ module.exports = {
         'workspaceSecureCluster'        : require(__dirname + '/plugins/azure/databricks/workspaceSecureCluster.js'),
         'workspaceDiagnosticLogs'       : require(__dirname + '/plugins/azure/databricks/workspaceDiagnosticLogs.js'),
         'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
+        'workspaceManagedDiskCmk'       : require(__dirname + '/plugins/azure/databricks/workspaceManagedDiskCmk.js'),
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
 
     },
