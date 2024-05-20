@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'AWS WAFV2 Web ACL Logging Enabled',
+    title: 'Web ACL Logging Enabled',
     category: 'WAF',
     domain: 'Availability',
     severity: 'Medium',
