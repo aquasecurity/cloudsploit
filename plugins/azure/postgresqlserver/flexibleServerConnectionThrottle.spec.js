@@ -66,7 +66,7 @@ describe('flexibleServerConnectionThrottle', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing PostgreSQL flexible servers found');
+                expect(results[0].message).to.include('No existing PostgreSQL Flexible Servers found');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -120,7 +120,7 @@ describe('flexibleServerConnectionThrottle', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('PostgreSQL flexible server does not have connection throttling enabled');
+                expect(results[0].message).to.include('Connection throttling is disabled for the PostgreSQL Flexible Server configuration');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -142,7 +142,7 @@ describe('flexibleServerConnectionThrottle', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('PostgreSQL flexible server has connection throttling enabled');
+                expect(results[0].message).to.include('Connection throttling is enabled for the PostgreSQL Flexible Server configuration');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

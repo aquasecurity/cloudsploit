@@ -91,7 +91,7 @@ describe('postgresqlLatestVersion', function () {
                 [{
                     instanceType: "CLOUD_SQL_INSTANCE",
                     name: "testing-instance",
-                    databaseVersion: "POSTGRES_14"
+                    databaseVersion: "POSTGRES_15"
                 }],
             );
             
