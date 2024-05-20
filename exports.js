@@ -1060,7 +1060,8 @@ module.exports = {
         'automaticFailoverEnabled'      : require(__dirname + '/plugins/azure/cosmosdb/automaticFailoverEnabled.js'),
         'cosmosdbHasTags'               : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbHasTags.js'),
         'cosmosdbManagedIdentity'       : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbManagedIdentity.js'),
-
+        'cosmosdbLocalAuth'             : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbLocalAuth.js'),
+        
         'checkAdvisorRecommendations'   : require(__dirname + '/plugins/azure/advisor/checkAdvisorRecommendations.js'),
 
         'enableDefenderForStorage'      : require(__dirname + '/plugins/azure/defender/enableDefenderForStorage.js'),
