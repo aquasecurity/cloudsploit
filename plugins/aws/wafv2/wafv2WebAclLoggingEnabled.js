@@ -46,7 +46,7 @@ module.exports = {
                     getLoggingConfiguration.err || 
                     !getLoggingConfiguration.data.LoggingConfiguration){
                     helpers.addResult(results, 3,
-                        'Unable to get web ACL details: ' + helpers.addError(listWebACLs), region, webAcl.ARN);
+                        'Unable to get WAFV2 web ACL logging configuration: ' + helpers.addError(listWebACLs), region, webAcl.ARN);
                     continue;
                 }
 
