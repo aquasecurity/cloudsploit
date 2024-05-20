@@ -6,7 +6,7 @@ module.exports = {
     category: 'Neptune',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures Auto Minor Version Upgrade is enabled on Neptune database instances.',
+    description: 'Ensures Auto Minor version upgrade is enabled on Neptune database instances.',
     more_info: 'Neptune Database supports automatically upgrading the minor version of the database, which should be enabled to ensure security fixes are quickly deployed.',
     recommended_action: 'Modify Neptune database instance and enable automatic minor version upgrades .',
     link: 'https://docs.aws.amazon.com/neptune/latest/userguide/cluster-maintenance.html',
