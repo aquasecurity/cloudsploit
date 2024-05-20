@@ -36,7 +36,7 @@ module.exports = {
                 let getLoggingConfiguration = helpers.addSource(cache, source,
                     ['wafv2', 'getLoggingConfiguration', region, webAcl.ARN]);
 
-                if (getLoggingConfiguration.err && 
+                if (getLoggingConfiguration && getLoggingConfiguration.err && 
                     getLoggingConfiguration.err.code === 'WAFNonexistentItemException') {
                     helpers.addResult(results, 2, 'Logging for web ACL is disabled', region, webAcl.ARN);
                     continue;
