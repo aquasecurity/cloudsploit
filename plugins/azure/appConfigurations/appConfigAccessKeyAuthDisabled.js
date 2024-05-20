@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'App Configuration Access Key Authentication Disabled ',
+    title: 'App Configuration Access Key Authentication Disabled',
     category: 'App Configuration',
     domain: 'Developer Tools',
     severity: 'Low',
