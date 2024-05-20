@@ -169,10 +169,7 @@ var calls = [
         },
         CloudTrail: {
             describeTrails: {
-                property: 'trailList',
-                params: {
-                    includeShadowTrails: false
-                }
+                property: 'trailList'
             }
         },
         CloudWatch: {
@@ -1786,7 +1783,13 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName',
                 rateLimit: 500 // ms to rate limit between stacks
-            }
+            },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
         },
         WAFRegional: {
             listResourcesForWebACL: {
@@ -1972,6 +1975,12 @@ var postcalls = [
                 filterValue: 'FunctionName',
                 rateLimit: 500, // it's not documented but experimentally 10/second works.
             },
+            getFunction: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             listTags: {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
@@ -1979,6 +1988,18 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             },
             getFunctionUrlConfig :{
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
+            getFunctionConfiguration: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName'
+            },
+            getFunctionCodeSigningConfig : {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
