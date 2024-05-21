@@ -50,6 +50,23 @@ const describeKey = [
             AWSAccountId: "111122223333", 
             Arn: "arn:aws:kms:us-east-1:111122223333:key/60c4f21b-e271-4e97-86ae-6403618a9467", 
             CreationDate: "2020-08-26T16:55:28+00:00", 
+            CustomerMasterKeySpec: "HMAC_512", 
+            Description: "", 
+            Enabled: true, 
+            KeyId: "60c4f21b-e271-4e97-86ae-6403618a9467", 
+            KeyManager: "CUSTOMER", 
+            KeyState: "Enabled", 
+            KeyUsage: "ENCRYPT_DECRYPT", 
+            MultiRegion: false, 
+            Origin: "AWS_KMS",
+            KeySpec: "HMAC_512",
+        }
+    },
+    {
+        KeyMetadata: {
+            AWSAccountId: "111122223333", 
+            Arn: "arn:aws:kms:us-east-1:111122223333:key/60c4f21b-e271-4e97-86ae-6403618a9467", 
+            CreationDate: "2020-08-26T16:55:28+00:00", 
             CustomerMasterKeySpec: "SYMMETRIC_DEFAULT", 
             Description: "", 
             Enabled: true, 
@@ -206,6 +223,15 @@ describe('kmsKeyRotation', function () {
             });
         });
 
+        it('should PASS if Key Rotation is not available for KMS Key', function (done) {
+            const cache = createCache([listKeys], describeKey[2], keyPolicy[0], keyRotationStatus[0]);
+            kmsKeyRotation.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if KMS has encryption greater than awskms and has rotation disabled', function (done) {
             const cache = createCache([listKeys], describeKey[1], keyPolicy[0], keyRotationStatus[1]);
             kmsKeyRotation.run(cache, {}, (err, results) => {
@@ -235,7 +261,7 @@ describe('kmsKeyRotation', function () {
         });
         
         it('should pass if KMS encryption level is lower than or equal to awskms', function (done) {
-            const cache = createCache([listKeys], describeKey[2], keyPolicy[0], keyRotationStatus[1]);
+            const cache = createCache([listKeys], describeKey[3], keyPolicy[0], keyRotationStatus[1]);
             kmsKeyRotation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
