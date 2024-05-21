@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var workspaceHasTags = require('./workspaceHasTags');
+var workspaceHasTags = require('./mlWorkspaceHasTags');
 
 const workspaces = [
     {

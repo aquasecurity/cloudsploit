@@ -724,7 +724,7 @@ module.exports = {
 
         'workspacePublicAccessDisabled' : require(__dirname + '/plugins/azure/machinelearning/workspacePublicAccessDisabled.js'),
         'workspaceLoggingEnabled'       : require(__dirname + '/plugins/azure/machinelearning/workspaceLoggingEnabled.js'),
-        'workspaceHasTags'              : require(__dirname + '/plugins/azure/machinelearning/workspaceHasTags.js'),
+        'mlWorkspaceHasTags'              : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),
 
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
