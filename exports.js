@@ -668,6 +668,7 @@ module.exports = {
         'fsxFileSystemEncrypted'        : require(__dirname + '/plugins/aws/fsx/fsxFileSystemEncrypted.js'),
 
         'wafv2InUse'                    : require(__dirname + '/plugins/aws/wafv2/wafv2InUse.js'),
+        'wafv2WebAclLoggingEnabled'     : require(__dirname + '/plugins/aws/wafv2/wafv2WebAclLoggingEnabled.js'),
         'wafv2CloudwatchMetricsEnabled' : require(__dirname + '/plugins/aws/wafv2/wafv2CloudwatchMetricsEnabled.js'),
         'aclRulesDefaultAction'         : require(__dirname + '/plugins/aws/wafv2/aclRulesDefaultAction.js'),
 

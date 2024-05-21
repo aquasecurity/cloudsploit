@@ -1814,6 +1814,12 @@ var postcalls = [
                 override: true,
                 rateLimit: 600
             },
+            getLoggingConfiguration: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'ResourceArn',
+                filterValue: 'ARN'
+            },
             getWebACLForCognitoUserPool: {
                 reliesOnService: 'cognitoidentityserviceprovider',
                 reliesOnCall: 'listUserPools',
