@@ -98,6 +98,8 @@ describe('wafv2WebAclLoggingEnabled', function () {
                 expect(results.length).to.equal(listWebACLsResponse.length);
                 results.forEach(result => {
                     expect(result.status).to.equal(0);
+                    expect(result.region).to.equal('us-east-1');
+                    expect(result.message).to.include('Logging for web ACL is enabled');
                 });
                 done();
             });
@@ -109,6 +111,9 @@ describe('wafv2WebAclLoggingEnabled', function () {
                 expect(results.length).to.equal(listWebACLsResponse.length);
                 results.forEach(result => {
                     expect(result.status).to.equal(2);
+                    expect(result.region).to.equal('us-east-1');
+                    expect(result.message).to.include('Logging for web ACL is disabled');
+
                 });
                 done();
             });
@@ -117,20 +122,23 @@ describe('wafv2WebAclLoggingEnabled', function () {
         it('should handle error if unable to list Web ACLs', function (done) {
             const cache = createErrorCache();
             wafv2WebAclLoggingEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1); // Assuming only one region in the test case
+                expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to list WAFV2 web ACLs:');
                 done();
             });
         });
 
         it('should handle error if unable to get logging configuration for Web ACLs', function (done) {
             const cache = createCache(listWebACLsResponse, {
-                // No data property to simulate error
             });
             wafv2WebAclLoggingEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(listWebACLsResponse.length);
                 results.forEach(result => {
                     expect(result.status).to.equal(3);
+                    expect(result.region).to.equal('us-east-1');
+                    expect(result.message).to.include('Unable to get WAFV2 web ACL logging configuration:');
                 });
                 done();
             });
