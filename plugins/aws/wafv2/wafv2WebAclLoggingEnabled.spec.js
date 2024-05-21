@@ -10,7 +10,6 @@ const listWebACLsResponse = [
         "VisibilityConfig": {
             "SampledRequestsEnabled": true,
             "CloudWatchMetricsEnabled": false,
-            "MetricName": "TestWebACL"
         }
     },
 ];
