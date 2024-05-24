@@ -34,7 +34,7 @@ async function uploadResultsToBlob(resultsObject, storageConnection, blobContain
         const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
         console.log(`Blob ${blobName} uploaded successfully. Request ID: ${uploadBlobResponse.requestId}`);
     } catch (error) {
-        if(error.message && error.message == 'Invalid DefaultEndpointsProtocol') {
+        if (error.message && error.message == 'Invalid DefaultEndpointsProtocol') {
             console.log(`Invalid Storage Account connection string ${error.message}`);
         } else {
             console.log(`Failed to upload results to blob: ${error.message}`);
