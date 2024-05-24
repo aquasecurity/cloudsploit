@@ -65,7 +65,8 @@ let collect = function(AzureConfig, settings, callback) {
             helpers.call({
                 url: localUrl,
                 post: obj.post,
-                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token)
+                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token),
+                govcloud : AzureConfig.Govcloud
             }, function(err, data) {
                 if (err) return cb(err);
 
@@ -143,7 +144,8 @@ let collect = function(AzureConfig, settings, callback) {
             function(cb) {
                 function processTopCall(collectionObj, service, subCallObj, subCallCb) {
                     processCall(subCallObj, function(processCallErr, processCallData) {
-                        helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData , skip_locations);
+                        if (AzureConfig.Govcloud) helpers.addGovLocations(subCallObj, service, collectionObj, processCallErr, processCallData , skip_locations);
+                        else helpers.addLocations(subCallObj, service, collectionObj, processCallErr, processCallData , skip_locations);
                         subCallCb();
                     });
                 }

@@ -82,7 +82,7 @@ parser.add_argument('--run-asl', {
 
 let settings = parser.parse_args();
 let cloudConfig = {};
-
+settings.config = './config_example.js'
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     settings.cloud = 'aws';
@@ -163,7 +163,10 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         KeyValue: config.credentials.azure.key_value,
         DirectoryID: config.credentials.azure.directory_id,
         SubscriptionID: config.credentials.azure.subscription_id,
-        location: 'East US'
+        location: 'East US',
+        Govcloud: config.credentials.azure.govcloud,
+        StorageConnection: config.credentials.azure.storage_connection,
+        BlobContainer: config.credentials.azure.blob_container
     };
 } else if (config.credentials.google.credential_file && (!settings.cloud || (settings.cloud == 'google'))) {
     settings.cloud = 'google';
