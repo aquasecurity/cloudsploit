@@ -82,7 +82,7 @@ parser.add_argument('--run-asl', {
 
 let settings = parser.parse_args();
 let cloudConfig = {};
-settings.config = './config_example.js'
+
 // Now execute the scans using the defined configuration information.
 if (!settings.config) {
     settings.cloud = 'aws';
