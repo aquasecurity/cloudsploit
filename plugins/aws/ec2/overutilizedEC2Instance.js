@@ -14,7 +14,7 @@ module.exports = {
     settings: {
         ec2_cpu_threshold_fail: {
             name: 'EC2 CPU Threshold Fail',
-            description: 'Return a failing result when consumed EC2 insatnce cpu threshold equals or exceeds this percentage',
+            description: 'Return a failing result when consumed EC2 instance cpu threshold equals or exceeds this percentage',
             regex: '^(100|[1-9][0-9]?)$',
             default: '90'
         }
