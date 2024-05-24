@@ -16,22 +16,30 @@ function runAuth(settings, remediateConfig, callback) {
 }
 
 async function uploadResultsToBlob(resultsObject, storageConnection, blobContainerName ) {
-    const blobServiceClient = BlobServiceClient.fromConnectionString(storageConnection);
-    const containerClient = blobServiceClient.getContainerClient(blobContainerName);
+    try {
+        const blobServiceClient = BlobServiceClient.fromConnectionString(storageConnection);
+        const containerClient = blobServiceClient.getContainerClient(blobContainerName);
 
-    // Check if the container exists, if not, create it
-    const exists = await containerClient.exists();
-    if (!exists) {
-        await containerClient.create();
-        console.log(`Container ${blobContainerName} created successfully.`);
+        // Check if the container exists, if not, create it
+        const exists = await containerClient.exists();
+        if (!exists) {
+            await containerClient.create();
+            console.log(`Container ${blobContainerName} created successfully.`);
+        }
+
+        const blobName = `results-${Date.now()}.json`;
+        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+        const data = JSON.stringify(resultsObject, null, 2);
+        const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
+        console.log(`Blob ${blobName} uploaded successfully. Request ID: ${uploadBlobResponse.requestId}`);
+    } catch (error) {
+        if(error.message && error.message == 'Invalid DefaultEndpointsProtocol') {
+            console.log(`Invalid Storage Account connection string ${error.message}`);
+        } else {
+            console.log(`Failed to upload results to blob: ${error.message}`);
+        }
     }
-
-    const blobName = `results-${Date.now()}.json`;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-    const data = JSON.stringify(resultsObject, null, 2);
-    const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
-    console.log(`Blob ${blobName} uploaded successfully. Request ID: ${uploadBlobResponse.requestId}`);
 }
 
 /**
@@ -251,7 +259,7 @@ var engine = function(cloudConfig, settings) {
             }, function(err) {
                 if (err) return console.log(err);
 
-                if (cloudConfig.Govcloud && cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
+                if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
                 // console.log(JSON.stringify(collection, null, 2));
                 outputHandler.close();
                 if (settings.exit_code) {
