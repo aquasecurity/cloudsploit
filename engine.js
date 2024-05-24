@@ -259,7 +259,7 @@ var engine = function(cloudConfig, settings) {
             }, function(err) {
                 if (err) return console.log(err);
 
-               // if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
+                // if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
                 // console.log(JSON.stringify(collection, null, 2));
                 outputHandler.close();
                 if (settings.exit_code) {
