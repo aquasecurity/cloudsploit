@@ -16,15 +16,19 @@
  - callback: Function to call when the collection is complete
  *********************/
 
-var AWS = require('aws-sdk');
+
+const {
+    EC2
+} = require('@aws-sdk/client-ec2');
+
 var async = require('async');
-var https = require('https');
 var helpers = require(__dirname + '/../../helpers/aws');
 var collectors = require(__dirname + '/../../collectors/aws');
 var collectData = require(__dirname + '/../../helpers/shared.js');
-// Override max sockets
-var agent = new https.Agent({maxSockets: 100});
-AWS.config.update({httpOptions: {agent: agent}});
+
+const { Agent } = require('https');
+const { Agent: HttpAgent } = require("http");
+const { NodeHttpHandler } = require('@aws-sdk/node-http-handler');
 
 var rateError = {message: 'rate', statusCode: 429};
 
@@ -50,7 +54,12 @@ var collect = function(AWSConfig, settings, callback) {
     var AWSXRay;
     var debugMode = settings.debug_mode;
     if (debugMode) AWSXRay = require('aws-xray-sdk');
-
+    // Override max sockets
+    const customRequestHandler = new NodeHttpHandler({
+        httpsAgent: new Agent({maxSockets: 100}),
+        httpAgent: new HttpAgent({maxSockets: 100})
+    });
+    AWSConfig.requestHandler = customRequestHandler;
     AWSConfig.maxRetries = 8;
     AWSConfig.retryDelayOptions = {base: 100};
 
@@ -63,7 +72,8 @@ var collect = function(AWSConfig, settings, callback) {
 
     let runApiCalls = [];
 
-    var AWSEC2 = new AWS.EC2(AWSConfig);
+    var AWSEC2 = new EC2(AWSConfig);
+
     var params = {AllRegions: true};
     var excludeRegions = [];
 
@@ -136,7 +146,7 @@ var collect = function(AWSConfig, settings, callback) {
                             }
                         });
                     } else {
-                        var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                        var executor = debugMode ? (AWSXRay.captureAWSClient(new AWSXRay[serviceName](LocalAWSConfig))) : new AWSXRay[serviceName](LocalAWSConfig);
                         var paginating = false;
                         var executorCb = function(err, data) {
                             if (err) {
@@ -305,7 +315,7 @@ var collect = function(AWSConfig, settings, callback) {
                                     }
                                 });
                             } else {
-                                var executor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                                var executor = debugMode ? (AWSXRay.captureAWSClient(new AWSXRay[serviceName](LocalAWSConfig))) : new AWSXRay[serviceName](LocalAWSConfig);
 
                                 if (!collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region] ||
                                     !collection[callObj.reliesOnService][callObj.reliesOnCall][LocalAWSConfig.region].data) {

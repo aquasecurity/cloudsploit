@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    AutoScaling
+} = require('@aws-sdk/client-auto-scaling');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var autoscaling = new AWS.AutoScaling(AWSConfig);
+    var autoscaling = new AutoScaling(AWSConfig);
 
     async.eachLimit(collection.autoscaling.describeAutoScalingGroups[AWSConfig.region].data, 15, function(asg, cb){        
         var params = {

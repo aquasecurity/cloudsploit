@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    SQS
+} = require('@aws-sdk/client-sqs');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var sqs = new AWS.SQS(AWSConfig);
+    var sqs = new SQS(AWSConfig);
 
     async.eachLimit(collection.sqs.listQueues[AWSConfig.region].data, 15, function(queue, cb){
         collection.sqs.getQueueAttributes[AWSConfig.region][queue] = {};

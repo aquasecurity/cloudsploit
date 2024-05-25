@@ -1,6 +1,5 @@
 var async = require('async');
 var regions = require(__dirname + '/regions');
-var AWS = require('aws-sdk');
 var helpers = require('../shared.js');
 
 function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
@@ -919,9 +918,9 @@ function getUsedSecurityGroups(cache, results, region) {
         return  result['Error'];
     }
 
-    describeNetworkInterfaces.data.forEach(interface => {
-        if (interface.Groups) {
-            interface.Groups.forEach(group => {
+    describeNetworkInterfaces.data.forEach(networkInterface => {
+        if (networkInterface.Groups) {
+            networkInterface.Groups.forEach(group => {
                 if (!result.includes(group.GroupId)) result.push(group.GroupId);
             });
         }

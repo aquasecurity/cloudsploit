@@ -1,10 +1,12 @@
-var AWS = require('aws-sdk');
+const {
+    WAFV2
+} = require('@aws-sdk/client-wafv2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
 
-    var wafv2 = new AWS.WAFV2(AWSConfig);
+    var wafv2 = new WAFV2(AWSConfig);
     var region = 'us-east-1';
     var partition = 'aws';
     if (wafv2.endpoint.hostname.includes('gov')){
