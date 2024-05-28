@@ -40,7 +40,7 @@ module.exports = {
                 const devOpsAuditingSettings = helpers.addSource(cache, source,
                     ['devOpsAuditingSettings', 'list', location, server.id]);
 
-                if (!devOpsAuditingSettings || devOpsAuditingSettings.err || !devOpsAuditingSettings.data) {
+                if (!devOpsAuditingSettings || devOpsAuditingSettings.err || !devOpsAuditingSettings.data || !devOpsAuditingSettings.data.length) {
                     helpers.addResult(results, 3,
                         'Unable to query Auditing Policies: ' + helpers.addError(devOpsAuditingSettings), location, server.id);
                 } else {
@@ -50,10 +50,7 @@ module.exports = {
                         } else {
                             helpers.addResult(results, 2, 'Microsoft support operations auditing is not enabled on SQL server', location, server.id);
                         }
-                    } else {
-                        helpers.addResult(results, 2, 'No existing auditing policies found', location, server.id);
                     }
-                    
                 }
             });
 

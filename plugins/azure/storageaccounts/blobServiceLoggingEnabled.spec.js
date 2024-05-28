@@ -8,6 +8,16 @@ const storageAccounts = [
         name: 'csb100320011e293683',
         type: 'Microsoft.Storage/storageAccounts',
         location: 'eastus',
+    },
+    {
+        kind: 'StorageV2',
+        id: '/subscriptions/1234/resourceGroups/cloud-shell-storage-eastus/providers/Microsoft.Storage/storageAccounts/csb100320011e293683',
+        name: 'csb100320011e293683',
+        type: 'Microsoft.Storage/storageAccounts',
+        location: 'eastus',
+        sku: {
+            tier: 'Premium'
+        }
     }
 ];
 
@@ -166,6 +176,18 @@ describe('blobServiceLoggingEnabled', function () {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('eastus');
                 expect(results[0].message).to.equal('No storage accounts found');
+
+                done();
+            });
+        });
+
+        it('should PASS if storage account tier is premium', function (done) {
+            const cache = createCache([storageAccounts[1]], []);
+            blobServiceLoggingEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('eastus');
+                expect(results[0].message).to.equal('Storage Account tier is premium');
 
                 done();
             });

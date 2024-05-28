@@ -1449,6 +1449,10 @@ var calls = {
         describeDBClusters: {
             property: 'DBClusters',
             paginate: 'Marker'
+        },
+        describeDBInstances: {
+            property: 'DBInstances',
+            paginate: 'Marker'
         }
     },
     Organizations: {

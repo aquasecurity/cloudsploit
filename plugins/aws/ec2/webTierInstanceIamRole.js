@@ -11,7 +11,7 @@ module.exports = {
     more_info: 'EC2 instances should have IAM roles configured with necessary permission to access other AWS services',
     link: 'https://aws.amazon.com/blogs/security/new-attach-an-aws-iam-role-to-an-existing-amazon-ec2-instance-by-using-the-aws-cli/',
     recommended_action: 'Modify EC2 instances to attach IAM roles with required IAM policies',
-    apis: ['EC2:describeInstances', 'EC2:describeTags', 'IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies'],
+    apis: ['EC2:describeInstances', 'IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies'],
     settings: {
         ec2_web_tier_tag_key: {
             name: 'EC2 Web-Tier Tag Key',
@@ -71,14 +71,8 @@ module.exports = {
                     var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${entry.InstanceId}`;
 
                     var tagFound = false;
-                    for (let t in describeTags.data) {
-                        let tag = describeTags.data[t];
-
-                        if (tag.ResourceId && tag.ResourceId === entry.InstanceId &&
-                            tag.Key && tag.Key === config.ec2_web_tier_tag_key) {
-                            tagFound = true;
-                            break;
-                        }
+                    if (entry.Tags && entry.Tags.length) {
+                        tagFound = entry.Tags.find(tag => tag.Key === config.ec2_web_tier_tag_key);
                     }
 
                     if (!tagFound) {
@@ -93,7 +87,7 @@ module.exports = {
                     } else {
                         var roleNameArr = entry.IamInstanceProfile.Arn.split('/');
                         var roleName = roleNameArr[roleNameArr.length-1];
-                        
+
                         // Get managed policies attached to role
                         var listAttachedRolePolicies = helpers.addSource(cache, source,
                             ['iam', 'listAttachedRolePolicies', region, roleName]);
@@ -136,10 +130,10 @@ module.exports = {
                         }
                     }
                 }
-                
+
                 cb();
             });
-            
+
             return rcb();
         }, function(){
             callback(null, results, source);

@@ -104,7 +104,7 @@ describe('lbPublicIp', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Load Balancer has public IP associated');
+                expect(results[0].message).to.include('Load Balancer is configured as public');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -120,7 +120,7 @@ describe('lbPublicIp', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Load Balancer does not have public IP associated');
+                expect(results[0].message).to.include('Load Balancer is not configured as public');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
