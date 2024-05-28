@@ -1,6 +1,5 @@
 var request = require('request');
 var locations = require(__dirname + '/locations.js');
-var locations_gov = require(__dirname + '/locations_gov.js');
 
 var dontReplace = {
     'type': {
@@ -59,39 +58,22 @@ module.exports = {
                 });
         }
 
-        if (azureConfig.Govcloud) {
-            performLogin({ environment: msRestAzure.AzureEnvironment.AzureUSGovernment }, function(err, credentials) {
-                if (err) return callback(err);
-                performLogin({ tokenAudience: 'https://graph.microsoft.us', environment: msRestAzure.AzureEnvironment.AzureUSGovernment }, function(graphErr, graphCredentials) {
-                    if (graphErr) return callback(graphErr);
-                    performLogin({ tokenAudience: 'https://vault.azure.us', environment: msRestAzure.AzureEnvironment.AzureUSGovernment }, function(vaultErr, vaultCredentials) {
-                        if (vaultErr) console.log('No vault');
-                        callback(null, {
-                            environment: credentials.environment,
-                            token: credentials.tokenCache._entries[0].accessToken,
-                            graphToken: graphCredentials ? graphCredentials.tokenCache._entries[0].accessToken : null,
-                            vaultToken: vaultCredentials ? vaultCredentials.tokenCache._entries[0].accessToken : null
-                        });
+        // First, login without audience
+        performLogin(null, function(err, credentials) {
+            if (err) return callback(err);
+            performLogin({ tokenAudience: 'https://graph.microsoft.com' }, function(graphErr, graphCredentials) {
+                if (graphErr) return callback(graphErr);
+                performLogin({ tokenAudience: 'https://vault.azure.net' }, function(vaultErr, vaultCredentials) {
+                    if (vaultErr) return callback(vaultErr);
+                    callback(null, {
+                        environment: credentials.environment,
+                        token: credentials.tokenCache._entries[0].accessToken,
+                        graphToken: graphCredentials.tokenCache._entries[0].accessToken,
+                        vaultToken: vaultCredentials.tokenCache._entries[0].accessToken
                     });
                 });
             });
-        } else {
-            performLogin(null, function(err, credentials) {
-                if (err) return callback(err);
-                performLogin({ tokenAudience: 'https://graph.microsoft.com' }, function(graphErr, graphCredentials) {
-                    if (graphErr) return callback(graphErr);
-                    performLogin({ tokenAudience: 'https://vault.azure.net' }, function(vaultErr, vaultCredentials) {
-                        if (vaultErr) return callback(vaultErr);
-                        callback(null, {
-                            environment: credentials.environment,
-                            token: credentials.tokenCache._entries[0].accessToken,
-                            graphToken: graphCredentials.tokenCache._entries[0].accessToken,
-                            vaultToken: vaultCredentials.tokenCache._entries[0].accessToken
-                        });
-                    });
-                });
-            });
-        }
+        });
     },
 
     call: function(params, callback) {
@@ -103,9 +85,6 @@ module.exports = {
             headers['Content-Length'] = JSON.stringify(params.body).length;
             headers['Content-Type'] = 'application/json;charset=UTF-8';
         }
-
-        if (params.govcloud) params.url = params.url.replace('management.azure.com', 'management.usgovcloudapi.net');
-
 
         request({
             method: params.method ? params.method : params.post ? 'POST' : 'GET',
@@ -176,32 +155,9 @@ module.exports = {
         });
     },
 
-    addLocations: function(obj, service, collection, err, data, skip_locations) {
+    addLocations: function(obj, service, collection, err, data , skip_locations) {
         if (!service || !locations[service]) return;
         locations[service].forEach(function(location) {
-            if (skip_locations.includes(location)) return;
-            collection[location.toLowerCase()] = {};
-            if (err) {
-                collection[location.toLowerCase()].err = err;
-            } else if (data) {
-                if (data.value && Array.isArray(data.value)) {
-                    collection[location.toLowerCase()].data = data.value.filter(function(dv) {
-                        if (dv.location &&
-                            dv.location.toLowerCase().replace(/ /g, '') == location.toLowerCase()) {
-                            return true;
-                        } else if (location.toLowerCase() == 'global' && (!dv.location || obj.ignoreLocation)) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    reduceProperties(service, collection[location.toLowerCase()].data);
-                }
-            }
-        });
-    },
-    addGovLocations: function(obj, service, collection, err, data , skip_locations) {
-        if (!service || !locations_gov[service]) return;
-        locations_gov[service].forEach(function(location) {
             if (skip_locations.includes(location)) return;
             collection[location.toLowerCase()] = {};
             if (err) {

@@ -53,6 +53,7 @@ module.exports = {
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
 
         'customModelInVpc'              :require(__dirname + '/plugins/aws/bedrock/customModelInVpc.js'),
+        'bedrockInUse'                  :require(__dirname + '/plugins/aws/bedrock/bedrockInUse.js'),
         'privateCustomModel'            :require(__dirname + '/plugins/aws/bedrock/privateCustomModel.js'),
         'customModelHasTags'            :require(__dirname + '/plugins/aws/bedrock/customModelHasTags.js'),
         'modelInvocationLoggingEnabled' :require(__dirname + '/plugins/aws/bedrock/modelInvocationLoggingEnabled.js'),
@@ -725,7 +726,7 @@ module.exports = {
 
         'workspacePublicAccessDisabled' : require(__dirname + '/plugins/azure/machinelearning/workspacePublicAccessDisabled.js'),
         'workspaceLoggingEnabled'       : require(__dirname + '/plugins/azure/machinelearning/workspaceLoggingEnabled.js'),
-        'mlWorkspaceHasTags'              : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),
+        'mlWorkspaceHasTags'            : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),
 
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),

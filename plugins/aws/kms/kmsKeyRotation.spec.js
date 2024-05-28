@@ -23,7 +23,8 @@ const describeKey = [
             KeyState: "Enabled", 
             KeyUsage: "ENCRYPT_DECRYPT", 
             MultiRegion: false, 
-            Origin: "AWS_KMS"
+            Origin: "AWS_KMS",
+            KeySpec: "HMAC_512",
         }
     },
     {
@@ -42,7 +43,8 @@ const describeKey = [
             KeyState: "Enabled", 
             KeyUsage: "ENCRYPT_DECRYPT", 
             MultiRegion: false, 
-            Origin: "AWS_KMS"
+            Origin: "AWS_KMS",
+            KeySpec: "SYMMETRIC_DEFAULT",
         }
     },
     {
@@ -61,7 +63,8 @@ const describeKey = [
             KeyState: "PendingDeletion", 
             KeyUsage: "ENCRYPT_DECRYPT", 
             MultiRegion: false, 
-            Origin: "AWS_KMS"
+            Origin: "AWS_KMS",
+            KeySpec: "SYMMETRIC_DEFAULT",
         }
     }
 ]
@@ -247,6 +250,17 @@ describe('kmsKeyRotation', function () {
             const cache = createNullCache();
             kmsKeyRotation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should not pass if key rotation is not avaible for KMS ', function (done) {
+            const cache = createCache([listKeys], describeKey[0], keyPolicy[0], keyRotationStatus[0]);
+            kmsKeyRotation.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Key rotation is not available for HMAC_512 key type');
                 done();
             });
         });

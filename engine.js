@@ -3,7 +3,6 @@ var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
 var azureHelper = require('./helpers/azure/auth.js');
-var azureStorage = require('@azure/storage-blob');
 
 function runAuth(settings, remediateConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
@@ -14,34 +13,6 @@ function runAuth(settings, remediateConfig, callback) {
         });
     } else callback();
 }
-
-async function uploadResultsToBlob(resultsObject, storageConnection, blobContainerName ) {
-    try {
-        const blobServiceClient = azureStorage.BlobServiceClient.fromConnectionString(storageConnection);
-        const containerClient = blobServiceClient.getContainerClient(blobContainerName);
-
-        // Check if the container exists, if not, create it
-        const exists = await containerClient.exists();
-        if (!exists) {
-            await containerClient.create();
-            console.log(`Container ${blobContainerName} created successfully.`);
-        }
-
-        const blobName = `results-${Date.now()}.json`;
-        const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-        const data = JSON.stringify(resultsObject, null, 2);
-        const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
-        console.log(`Blob ${blobName} uploaded successfully. Request ID: ${uploadBlobResponse.requestId}`);
-    } catch (error) {
-        if (error.message && error.message == 'Invalid DefaultEndpointsProtocol') {
-            console.log(`Invalid Storage Account connection string ${error.message}`);
-        } else {
-            console.log(`Failed to upload results to blob: ${error.message}`);
-        }
-    }
-}
-
 /**
  * The main function to execute CloudSploit scans.
  * @param cloudConfig The configuration for the cloud provider.
@@ -177,19 +148,16 @@ var engine = function(cloudConfig, settings) {
         console.log('INFO: Analysis complete. Scan report to follow...');
 
         var maximumStatus = 0;
-        var resultsObject = {};  // Initialize resultsObject for azure gov cloud
-
+        
         function executePlugins(cloudRemediateConfig) {
             async.mapValuesLimit(plugins, 10, function(plugin, key, pluginDone) {
                 if (skippedPlugins.indexOf(key) > -1) return pluginDone(null, 0);
+    
                 var postRun = function(err, results) {
                     if (err) return console.log(`ERROR: ${err}`);
                     if (!results || !results.length) {
                         console.log(`Plugin ${plugin.title} returned no results. There may be a problem with this plugin.`);
                     } else {
-                        if (!resultsObject[plugin.title]) {
-                            resultsObject[plugin.title] = [];
-                        }
                         for (var r in results) {
                             // If we have suppressed this result, then don't process it
                             // so that it doesn't affect the return code.
@@ -197,8 +165,6 @@ var engine = function(cloudConfig, settings) {
                                 continue;
                             }
     
-                            resultsObject[plugin.title].push(results[r]);
-
                             var complianceMsg = [];
                             if (settings.compliance && settings.compliance.length) {
                                 settings.compliance.forEach(function(c) {
@@ -258,8 +224,6 @@ var engine = function(cloudConfig, settings) {
                 }
             }, function(err) {
                 if (err) return console.log(err);
-
-                if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
                 // console.log(JSON.stringify(collection, null, 2));
                 outputHandler.close();
                 if (settings.exit_code) {

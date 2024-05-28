@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Load Balancer Public IP',
+    title: 'Public Load Balancer',
     category: 'Load Balancer',
     domain: 'Availability',
-    description: 'Ensures that Azure Load Balancers have public IPs associated.',
+    description: 'Ensures that Azure Load Balancers are configured as public.',
     severity: 'Medium',
-    more_info: 'A public load balancer offers a dedicated IP for Internet-facing access to backend resources. This configuration facilitates efficient egress to the Internet for backend pool members through the assigned frontend IP. It ensures streamlined connectivity and reliable resource availability, simplifying scalability to meet varying demand levels.',
-    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/configure-public-ip-load-balancer',
-    recommended_action: 'Modify load balancers and add Public IP address.',
+    more_info: 'To meet your organization\'s security compliance, ensure that load balancers are public to facilitate efficient egress to the Internet for backend pool members through the assigned frontend IP, ensuring streamlined connectivity and reliable resource availability.',
+    link: 'https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview',
+    recommended_action: 'Create the Load Balancer with Ip associations as per your organization\'s requirements.',
     apis: ['loadBalancers:listAll'],
     realtime_triggers: ['microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
 
@@ -42,9 +42,9 @@ module.exports = {
                 if (lb.frontendIPConfigurations && lb.frontendIPConfigurations.length && 
                     lb.frontendIPConfigurations.some(ipconfig => 
                         ipconfig.properties && ipconfig.properties.publicIPAddress)) {
-                    helpers.addResult(results, 0, 'Load Balancer has public IP associated', location, lb.id);
+                    helpers.addResult(results, 0, 'Load Balancer is configured as public', location, lb.id);
                 } else {
-                    helpers.addResult(results, 2, 'Load Balancer does not have public IP associated', location, lb.id);
+                    helpers.addResult(results, 2, 'Load Balancer is not configured as public', location, lb.id);
                 } 
             }
             rcb();
