@@ -13,7 +13,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/storage/tables/monitor-table-storage?tabs=azure-portal',
     apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'diagnosticSettings:listByTableServices'],
     realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
- 
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -38,27 +38,34 @@ module.exports = {
             for (let storageAccount of storageAccounts.data) {
                 if (!storageAccount.id) continue;
 
-                const diagnosticSettings = helpers.addSource(cache, source,
-                    ['diagnosticSettings', 'listByTableServices', location, storageAccount.id]);
-
-
-                if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                    helpers.addResult(results, 3, 'Unable to query Storage Account diagnostics settings: ' + helpers.addError(diagnosticSettings), location, storageAccount.id);
+                if (storageAccount.sku &&
+                    storageAccount.sku.tier &&
+                    storageAccount.sku.tier.toLowerCase() == 'premium') {
+                    helpers.addResult(results, 0, 'Storage Account tier is premium', location, storageAccount.id);
                 } else {
-                    //First consider that all the logs are missing then remove the ones that are present
-                    var missingLogs = ['StorageRead', 'StorageWrite','StorageDelete'];
 
-                    diagnosticSettings.data.forEach(settings => {
-                        const logs = settings.logs;
-                        missingLogs = missingLogs.filter(requiredCategory =>
-                            !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
-                        );
-                    });
+                    const diagnosticSettings = helpers.addSource(cache, source,
+                        ['diagnosticSettings', 'listByTableServices', location, storageAccount.id]);
 
-                    if (missingLogs.length) {
-                        helpers.addResult(results, 2, `Storage Account does not have logging enabled for table service. Missing Logs ${missingLogs}`, location, storageAccount.id);
+
+                    if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                        helpers.addResult(results, 3, 'Unable to query Storage Account diagnostics settings: ' + helpers.addError(diagnosticSettings), location, storageAccount.id);
                     } else {
-                        helpers.addResult(results, 0, 'Storage Account has logging enabled for table service read, write and delete requests', location, storageAccount.id);
+                        //First consider that all the logs are missing then remove the ones that are present
+                        var missingLogs = ['StorageRead', 'StorageWrite','StorageDelete'];
+
+                        diagnosticSettings.data.forEach(settings => {
+                            const logs = settings.logs;
+                            missingLogs = missingLogs.filter(requiredCategory =>
+                                !logs.some(log => (log.category === requiredCategory && log.enabled) || log.categoryGroup === 'allLogs' && log.enabled)
+                            );
+                        });
+
+                        if (missingLogs.length) {
+                            helpers.addResult(results, 2, `Storage Account does not have logging enabled for table service. Missing Logs ${missingLogs}`, location, storageAccount.id);
+                        } else {
+                            helpers.addResult(results, 0, 'Storage Account has logging enabled for table service read, write and delete requests', location, storageAccount.id);
+                        }
                     }
                 }
             }
