@@ -3,7 +3,6 @@ var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
 var azureHelper = require('./helpers/azure/auth.js');
-var azureStorage = require('@azure/storage-blob');
 
 function runAuth(settings, remediateConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
@@ -16,6 +15,8 @@ function runAuth(settings, remediateConfig, callback) {
 }
 
 async function uploadResultsToBlob(resultsObject, storageConnection, blobContainerName ) {
+    var azureStorage = require('@azure/storage-blob');
+
     try {
         const blobServiceClient = azureStorage.BlobServiceClient.fromConnectionString(storageConnection);
         const containerClient = blobServiceClient.getContainerClient(blobContainerName);
