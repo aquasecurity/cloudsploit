@@ -530,6 +530,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Databricks/workspaces?api-version=2023-02-01'
         }
     },
+    apiManagementService: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ApiManagement/service?api-version=2022-08-01'
+        }
+    },
     // For CIEM
     aad: {
         listRoleAssignments: {

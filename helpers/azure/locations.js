@@ -134,5 +134,6 @@ module.exports = {
     databricks: locations,
     containerApps: locations,
     batchAccounts: locations,
-    machineLearning: locations
+    machineLearning: locations,
+    apiManagementService: locations
 };
