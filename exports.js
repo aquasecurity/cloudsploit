@@ -1196,6 +1196,7 @@ module.exports = {
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
 
         'apiInstanceManagedIdentity'    : require(__dirname + '/plugins/azure/apiManagement/apiInstanceManagedIdentity.js'),
+        'apiInstanceHasTags'            : require(__dirname + '/plugins/azure/apiManagement/apiInstanceHasTags.js'),
 
     },
     github: {
