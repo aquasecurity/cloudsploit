@@ -51,11 +51,11 @@ module.exports = {
                     helpers.addResult(results, 3,
                         `Unable to query CodeBuild project: ${helpers.addError(batchGetProjects)}`, region, resource);
                 } else {
-                    if(batchGetProjects.data.projects[0] && 
+                    if (batchGetProjects.data.projects[0] && 
                        batchGetProjects.data.projects[0].environment &&
                        batchGetProjects.data.projects[0].environment.privilegedMode) {
                         helpers.addResult(results, 2,
-                           'CodeBuild project environment has privileged mode enabled', region, resource);
+                            'CodeBuild project environment has privileged mode enabled', region, resource);
                     } else {
                         helpers.addResult(results, 0,
                             'CodeBuild project environment has privileged mode disabled', region, resource);
