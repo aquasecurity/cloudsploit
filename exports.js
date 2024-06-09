@@ -608,6 +608,7 @@ module.exports = {
 
         'codebuildValidSourceProviders' : require(__dirname + '/plugins/aws/codebuild/codebuildValidSourceProviders.js'),
         'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
+        'buildProjectEnvPriviligedMode' : require(__dirname + '/plugins/aws/codebuild/buildProjectEnvPriviligedMode.js'),
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
         'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
