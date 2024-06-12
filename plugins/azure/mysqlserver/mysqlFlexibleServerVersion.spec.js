@@ -15,7 +15,7 @@ const createCache = (err, list) => {
     }
 };
 
-describe('mysqlFlexibleServersMinTls', function() {
+describe('mysqlFlexibleServerVersion', function() {
     describe('run', function() {
         it('should PASS if no existing servers found', function(done) {
             const callback = (err, results) => {
