@@ -1044,6 +1044,9 @@ var calls = [
             describeHub: {
                 property: '',
                 paginate: 'NextToken'
+            },
+            getFindings: {
+                paginate: 'NextToken'
             }
         },
         Transfer: {
