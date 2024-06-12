@@ -615,6 +615,7 @@ module.exports = {
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
+        'dataStoreHasTags'              : require(__dirname + '/plugins/aws/healthlake/dataStoreHasTags.js'),
 
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
 
