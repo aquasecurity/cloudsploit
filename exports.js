@@ -1181,6 +1181,7 @@ module.exports = {
 
         'batchAccountCmkEncrypted'      : require(__dirname + '/plugins/azure/batchAccounts/batchAccountCmkEncrypted.js'),
         'batchAccountDiagnosticLogs'    : require(__dirname + '/plugins/azure/batchAccounts/batchAccountDiagnosticLogs.js'),
+        'batchAccountsHasTags'          : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsHasTags.js'),
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
         'accountManagedIdentity'        : require(__dirname + '/plugins/azure/openai/accountManagedIdentity.js'),
