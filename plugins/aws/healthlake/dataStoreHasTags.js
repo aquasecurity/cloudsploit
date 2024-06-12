@@ -9,9 +9,9 @@ module.exports = {
     description: 'Ensure that HealthLake data stores have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify HealthLake data store and add tags.',
-    link: '',
+    link: 'https://docs.aws.amazon.com/healthlake/latest/devguide/add-a-tag.html',
     apis: ['HealthLake:listFHIRDatastores', 'ResourceGroupsTaggingAPI:getResources'],
-    realtime_triggers: ['healthlake:CreateFHIRDatastore', 'healthlake:DeleteFHIRDatastore'],
+    realtime_triggers: ['healthlake:CreateFHIRDatastore', 'healthlake:DeleteFHIRDatastore', 'healthlake:TagResource', 'healthlake:UntagResource'],
 
     run: function(cache, settings, callback) {
         var results = [];
