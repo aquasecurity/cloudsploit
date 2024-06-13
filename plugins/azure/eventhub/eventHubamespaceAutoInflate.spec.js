@@ -74,7 +74,7 @@ describe('eventHubamespaceAutoInflate', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Event Hubs namespace does not have auto-inflate feature enabled');
+                expect(results[0].message).to.include('Event Hubs namespace does not have auto inflate feature enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -87,7 +87,7 @@ describe('eventHubamespaceAutoInflate', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Event Hubs namespace has auto-inflate feature enabled');
+                expect(results[0].message).to.include('Event Hubs namespace has auto inflate feature enabled');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
