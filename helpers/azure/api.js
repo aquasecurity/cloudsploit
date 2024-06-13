@@ -564,6 +564,11 @@ var calls = {
 
         }
     },
+    synapse: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/workspaces?api-version=2021-06-01'
+        }
+    }
 
 };
 
