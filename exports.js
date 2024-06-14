@@ -1552,6 +1552,7 @@ module.exports = {
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
+        'functionDefaultServiceAccount' : require(__dirname + '/plugins/google/cloudfunctions/functionDefaultServiceAccount.js'),
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
         'cloudFunctionLabelsAdded'      : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionLabelsAdded.js'),
         'functionAllUsersPolicy'        : require(__dirname + '/plugins/google/cloudfunctions/functionAllUsersPolicy.js'),
