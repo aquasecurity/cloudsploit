@@ -6,7 +6,7 @@ module.exports = {
     category: 'Batch',
     domain: 'Compute',
     severity: 'Low',
-    description: 'Ensures that Batch account have tags associated.',
+    description: 'Ensures that Batch accounts have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify Batch Account and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources-portal',
