@@ -1,6 +1,6 @@
 var assert = require('assert');
 var expect = require('chai').expect;
-var auth = require('./mysqlFlexibleServerManagedIdentity');
+var auth = require('./mysqlFlexibleServerIdentity');
 
 const createCache = (err, list) => {
     return {
