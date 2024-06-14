@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify Synapse Workspace and enable microsoft entra id authentication.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/active-directory-authentication',
     apis: ['synapse:listWorkspaces'],
-    realtime_triggers: [],
+    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
