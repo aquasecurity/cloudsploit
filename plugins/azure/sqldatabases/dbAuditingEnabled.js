@@ -54,7 +54,7 @@ module.exports = {
                     } else {
                         var databases = helpers.addSource(cache, source,
                             ['databases', 'listByServer', location, server.id]);
-    
+
                         if (!databases || databases.err || !databases.data) {
                             helpers.addResult(results, 3,
                                 'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
@@ -65,25 +65,28 @@ module.exports = {
                             } else {
                                 // Loop through databases and add policies
                                 databases.data.forEach(function(database){
-                                    var databaseBlobAuditingPolicies = helpers.addSource(cache, source,
-                                        ['databaseBlobAuditingPolicies', 'get', location, database.id]);
-    
-                                    if (!databaseBlobAuditingPolicies || databaseBlobAuditingPolicies.err || !databaseBlobAuditingPolicies.data) {
-                                        helpers.addResult(results, 3,
-                                            'Unable to query for SQL server database auditing policies: ' + helpers.addError(databaseBlobAuditingPolicies), location, database.id);
-                                    } else {
-                                        if (!databaseBlobAuditingPolicies.data.length) {
-                                            helpers.addResult(results, 2,
-                                                'SQL server database does not contain auditing policies', location, database.id);
+
+                                    if (database.name && database.name.toLowerCase() !== 'master') {
+                                        var databaseBlobAuditingPolicies = helpers.addSource(cache, source,
+                                            ['databaseBlobAuditingPolicies', 'get', location, database.id]);
+
+                                        if (!databaseBlobAuditingPolicies || databaseBlobAuditingPolicies.err || !databaseBlobAuditingPolicies.data) {
+                                            helpers.addResult(results, 3,
+                                                'Unable to query for SQL server database auditing policies: ' + helpers.addError(databaseBlobAuditingPolicies), location, database.id);
                                         } else {
-                                            databaseBlobAuditingPolicies.data.forEach(function(policy){
-                                                if (policy.state &&
-                                                    policy.state.toLowerCase() == 'enabled') {
-                                                    helpers.addResult(results, 0, 'Database Auditing is enabled on the SQL database', location, policy.id);
-                                                } else {
-                                                    helpers.addResult(results, 2, 'Database Auditing is not enabled on the SQL database', location, policy.id);
-                                                }
-                                            });
+                                            if (!databaseBlobAuditingPolicies.data.length) {
+                                                helpers.addResult(results, 2,
+                                                    'SQL server database does not contain auditing policies', location, database.id);
+                                            } else {
+                                                databaseBlobAuditingPolicies.data.forEach(function(policy){
+                                                    if (policy.state &&
+                                                        policy.state.toLowerCase() == 'enabled') {
+                                                        helpers.addResult(results, 0, 'Database Auditing is enabled on the SQL database', location, policy.id);
+                                                    } else {
+                                                        helpers.addResult(results, 2, 'Database Auditing is not enabled on the SQL database', location, policy.id);
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
                                 });

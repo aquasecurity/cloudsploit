@@ -5,7 +5,7 @@ const listFunctions = [
     {
         "FunctionName": "test-lambda",
         "FunctionArn": "arn:aws:lambda:us-east-1:000011112222:function:test-lambda",
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs18.x",
         "Role": "arn:aws:iam::000011112222:role/lambda-role",
         "Handler": "index.handler",
         "TracingConfig": { "Mode": "PassThrough" }

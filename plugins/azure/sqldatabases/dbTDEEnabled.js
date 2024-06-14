@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption?view=sql-server-ver15',
     apis: ['servers:listSql', 'databases:listByServer', 'transparentDataEncryption:list'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:transparentdataencryption:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -46,23 +46,25 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         databases.data.forEach(database => {
-                            
-                            var transparentDataEncryption = helpers.addSource(cache, source, ['transparentDataEncryption', 'list', location, database.id]);
-                            
-                            if (!transparentDataEncryption || transparentDataEncryption.err || !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
-                                helpers.addResult(results, 3, 'Unable to query transparent data encryption for SQL Database: ' + helpers.addError(transparentDataEncryption), location, database.id);
-                                return;
-                            }
-                            var encryption = transparentDataEncryption.data[0];
-                            if (encryption.state && encryption.state.toLowerCase() == 'enabled') {
-                                helpers.addResult(results, 0, 'Transparent data encryption is enabled for SQL Database', location, database.id);
-                            } else {
-                                helpers.addResult(results, 2, 'Transparent data encryption is not enabled for SQL Database', location, database.id);
+
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+                                var transparentDataEncryption = helpers.addSource(cache, source, ['transparentDataEncryption', 'list', location, database.id]);
+
+                                if (!transparentDataEncryption || transparentDataEncryption.err || !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
+                                    helpers.addResult(results, 3, 'Unable to query transparent data encryption for SQL Database: ' + helpers.addError(transparentDataEncryption), location, database.id);
+                                    return;
+                                }
+                                var encryption = transparentDataEncryption.data[0];
+                                if (encryption.state && encryption.state.toLowerCase() == 'enabled') {
+                                    helpers.addResult(results, 0, 'Transparent data encryption is enabled for SQL Database', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 2, 'Transparent data encryption is not enabled for SQL Database', location, database.id);
+                                }
                             }
                         });
                     }
                 }
-               
+
             });
 
             rcb();

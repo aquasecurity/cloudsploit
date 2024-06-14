@@ -54,12 +54,15 @@ module.exports = {
                     } else {
                         // Loop through databases
                         databases.data.forEach(function(database) {
-                            if (database.earliestRestoreDate) {
-                                helpers.addResult(results, 0,
-                                    'SQL Database is restorable', location, database.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'SQL Database is not restorable', location, database.id);
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+
+                                if (database.earliestRestoreDate) {
+                                    helpers.addResult(results, 0,
+                                        'SQL Database is restorable', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 2,
+                                        'SQL Database is not restorable', location, database.id);
+                                }
                             }
                         });
                     }

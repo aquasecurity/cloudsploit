@@ -3,60 +3,68 @@ var agHttpsListenerOnly = require('./agHttpsListenerOnly');
 
 const appGateway = [
     {   "sku": {
-        "tier": "WAF_v2"
+            "tier": "WAF_v2"
         },
         "name": 'test-gateway',
         "id": '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-gateway",',
         "type": "Microsoft.Network/applicationGateways",
         "httpListeners": [
             {
-              "name": "listenerhttp",
-              "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
-              "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
-                "protocol": "Http",
-                "hostNames": [],
-                "requireServerNameIndication": false,
-              "type": "Microsoft.Network/applicationGateways/httpListeners"
+                "name": "listenerhttp",
+                "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
+                "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
+                "properties": {
+                    "protocol": "Http",
+                    "hostNames": [],
+                    "requireServerNameIndication": false,
+                },
+                "type": "Microsoft.Network/applicationGateways/httpListeners"
             },
             {
                 "name": "listenerhttp2",
                 "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
                 "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
-                  "protocol": "Http",
-                  "hostNames": [],
-                  "requireServerNameIndication": false,
+                "properties": {
+                    "protocol": "Http",
+                    "hostNames": [],
+                    "requireServerNameIndication": false,
+                },
                 "type": "Microsoft.Network/applicationGateways/httpListeners"
-              },
-              {
+            },
+            {
                 "name": "listenerhttp3",
                 "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
                 "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
-                  "protocol": "Https",
-                  "hostNames": [],
-                  "requireServerNameIndication": false,
+                "properties": {
+                    "protocol": "Https",
+                    "hostNames": [],
+                    "requireServerNameIndication": false,
+                },
                 "type": "Microsoft.Network/applicationGateways/httpListeners"
-              }
-          ],
+            }
+        ],
     },
-    {   
+    {
         "sku": {
-        "tier": "WAF_v2"
+            "tier": "WAF_v2"
         },
-       "name": 'test-gateway',
+        "name": 'test-gateway',
         "id": '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test",',
         "type": "Microsoft.Network/applicationGateways",
         "location": "eastus",
         "httpListeners": [
             {
-              "name": "listenerhttp",
-              "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
-              "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
-                "protocol": "Https",
-                "hostNames": [],
-                "requireServerNameIndication": false,
-              "type": "Microsoft.Network/applicationGateways/httpListeners"
+                "name": "listenerhttp",
+                "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Network/applicationGateways/test-app-gateway/httpListeners/listenerhttp",
+                "etag": "W/\"9a09a0a2-7baa-44a2-b37b-88308429d799\"",
+                "properties": {
+                    "protocol": "Https",
+                    "hostNames": [],
+                    "requireServerNameIndication": false,
+                },
+                "type": "Microsoft.Network/applicationGateways/httpListeners"
             }
-          ],
+        ],
     },
 ];
 
@@ -127,7 +135,7 @@ describe('agHttpsListenerOnly', function() {
                 done();
             });
         });
-        
+
     });
-}); 
+});
 

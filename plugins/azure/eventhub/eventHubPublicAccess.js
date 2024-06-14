@@ -38,12 +38,17 @@ module.exports = {
             for (let eventHub of eventHubs.data){
                 if (!eventHub.id) continue;
 
-                if (eventHub.publicNetworkAccess && eventHub.publicNetworkAccess.toLowerCase() === 'enabled') {
-                    helpers.addResult(results, 2,
-                        'Event Hubs namespace is publicly accessible',location, eventHub.id);
-                } else {
+                if (eventHub.sku &&  eventHub.sku.tier && eventHub.sku.tier.toLowerCase() === 'basic') {
                     helpers.addResult(results, 0,
-                        'Event Hubs namespace is not publicly accessible', location, eventHub.id);
+                        'Event Hubs namespace tier is basic', location, eventHub.id);
+                } else {
+                    if (eventHub.publicNetworkAccess && eventHub.publicNetworkAccess.toLowerCase() === 'enabled') {
+                        helpers.addResult(results, 2,
+                            'Event Hubs namespace is publicly accessible',location, eventHub.id);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'Event Hubs namespace is not publicly accessible', location, eventHub.id);
+                    }
                 }
             }
             rcb();

@@ -19,7 +19,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.appConfigurations, function(location, rcb){
-            var appConfigurations = helpers.addSource(cache, source, 
+            var appConfigurations = helpers.addSource(cache, source,
                 ['appConfigurations', 'list', location]);
 
             if (!appConfigurations) return rcb();
@@ -37,10 +37,17 @@ module.exports = {
             for (let appConfiguration of appConfigurations.data) {
                 if (!appConfiguration.id) continue;
 
-                if (appConfiguration.encryption && appConfiguration.encryption.keyVaultProperties && appConfiguration.encryption.keyVaultProperties.keyIdentifier) {
-                    helpers.addResult(results, 0, 'App Configuration is encrypted using CMK', location, appConfiguration.id);
+                if (appConfiguration.sku &&
+                    appConfiguration.sku.name &&
+                    appConfiguration.sku.name.toLowerCase() === 'free') {
+                    helpers.addResult(results, 0, 'App Configuration tier is free', location, appConfiguration.id);
                 } else {
-                    helpers.addResult(results, 2, 'App Configuration is not encrypted using CMK', location, appConfiguration.id);
+
+                    if (appConfiguration.encryption && appConfiguration.encryption.keyVaultProperties && appConfiguration.encryption.keyVaultProperties.keyIdentifier) {
+                        helpers.addResult(results, 0, 'App Configuration is encrypted using CMK', location, appConfiguration.id);
+                    } else {
+                        helpers.addResult(results, 2, 'App Configuration is not encrypted using CMK', location, appConfiguration.id);
+                    }
                 }
             }
 
