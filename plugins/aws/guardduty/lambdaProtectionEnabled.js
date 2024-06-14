@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures GuardDuty protection is enabled for Lambda functions.' ,
-    more_info: 'Lambda Protection helps detect potential security threats in your Lambda functions by monitoring network activity logs and generating findings for suspicious traffic.',
+    more_info: 'Enabling GuardDuty Lambda Protection helps detect potential security threats offering enhanced security by monitoring network activity logs and generating findings for suspicious activities or security issues.',
     recommended_action: 'Enable GuardDuty Lambda protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/lambda-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
@@ -45,7 +45,7 @@ module.exports = {
                 if (!getDetector) return;
 
                 if (getDetector.err || !getDetector.data) {
-                    helpers.addResult(results, 3, 'Unable to get GuardDuty detector: ' + helpers.addError(getDetector),region);
+                    helpers.addResult(results, 3, 'Unable to get GuardDuty detector: ' + helpers.addError(getDetector),region, detectorId);
                     return;
                 }
 
@@ -54,9 +54,9 @@ module.exports = {
                 var lambdaLoginEventsFeature = (detector.Features && detector.Features.find(feature => feature.Name === 'LAMBDA_NETWORK_LOGS' && feature.Status === 'ENABLED')) ? true : false;
 
                 if (lambdaLoginEventsFeature) {
-                    helpers.addResult(results, 0, 'GuardDuty lambda protection is enabled' , region, resource);
+                    helpers.addResult(results, 0, 'GuardDuty Lambda protection is enabled' , region, resource);
                 } else {
-                    helpers.addResult(results, 2, 'GuardDuty lambda protection is disabled ' , region, resource);
+                    helpers.addResult(results, 2, 'GuardDuty Lambda protection is disabled ' , region, resource);
                 }
                  
             });

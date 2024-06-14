@@ -157,7 +157,7 @@ describe('lambdaProtectionEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('GuardDuty lambda protection is disabled');
+                expect(results[0].message).to.include('GuardDuty Lambda protection is disabled');
                 done();
             });
         });
@@ -168,7 +168,7 @@ describe('lambdaProtectionEnabled', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('GuardDuty lambda protection is enabled');
+                expect(results[0].message).to.include('GuardDuty Lambda protection is enabled');
                 done();
             });
         });
