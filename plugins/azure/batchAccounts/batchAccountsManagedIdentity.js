@@ -37,7 +37,7 @@ module.exports = {
             for (let batchAccount of batchAccounts.data) { 
                 if (!batchAccount.id) continue;
         
-                if (batchAccount.identity) {
+                if (batchAccount.identity && batchAccount.identity.type) {
                     helpers.addResult(results, 0, 'Batch account has managed identity enabled', location, batchAccount.id);
                 } else {
                     helpers.addResult(results, 2, 'Batch account does not have managed identity enabled', location, batchAccount.id);
