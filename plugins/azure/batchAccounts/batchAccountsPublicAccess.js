@@ -6,7 +6,7 @@ module.exports = {
     category: 'Batch',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensures that Batch account are not publicly accessible.',
+    description: 'Ensures that Batch accounts are not publicly accessible.',
     more_info: 'Disabling public access for your Azure Batch Account enhances security by restricting unauthorized access to your batch resources. This setting ensures that only trusted, internal sources can interact with your batch services, protecting your data and processes from potential external threats.',
     recommended_action: 'Modify Batch Account and disable public access.',
     link: 'https://learn.microsoft.com/en-us/azure/batch/public-network-access',
