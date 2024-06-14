@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'MySQL Flexible Server Logging Enabled',
+    title: 'MySQL Flexible Server Diagnostic Logs',
     category: 'MySQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures diagnostic logging is enabled for MySQL Flexible server.',
+    description: 'Ensures that diagnostic logging is enabled for MySQL Flexible server.',
     more_info: 'Enabling diagnostic logging for Azure Database for MySQL Flexible servers helps with performance monitoring, troubleshooting, and security optimization.',
     recommended_action: 'Enable diagnostic logging for all MySQL Flexible Servers.',
-    link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/tutorial-configure-audit',
+    link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-monitoring',
     apis: ['servers:listMysqlFlexibleServer', 'diagnosticSettings:listByMysqlFlexibleServer'],
     realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:delete', 'microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 

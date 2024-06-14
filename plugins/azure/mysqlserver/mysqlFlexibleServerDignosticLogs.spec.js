@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./mysqlFlexibleServerLogsEnabled');
+var auth = require('./mysqlFlexibleServerDignosticLogs');
 
 const servers = [
     {
