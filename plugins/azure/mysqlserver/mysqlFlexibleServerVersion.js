@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures that MySQL Flexible Servers are using the latest server version.',
-    more_info: 'Using the latest version of Upgrade the version of PostgreSQL flexible server to the latest available version. will give access to new software features, resolve reported bugs through security patches, and improve compatibility with other applications and services',
+    more_info: 'Using the latest version of Upgrade the version of MySQL flexible server to the latest available version will give access to new software features, resolve reported bugs through security patches, and improve compatibility with other applications and services.',
     recommended_action: 'Ensure MySQL Flexible Servers are using the latest server version.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-upgrade',
     apis: ['servers:listMysqlFlexibleServer'],   
@@ -36,7 +36,7 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
-                if (!flexibleServer.id) return;
+                if (!flexibleServer.id || !flexibleServer.version) continue;
 
                 let version = parseFloat(flexibleServer.version);
             
