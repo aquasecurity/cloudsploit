@@ -6,7 +6,7 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Content Delivery',
     severity: 'Low',
-    description: 'Ensure that HealthLake data stores have tags associated.',
+    description: 'Ensure that HealthLake Data Store has tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify HealthLake data store and add tags.',
     link: 'https://docs.aws.amazon.com/healthlake/latest/devguide/add-a-tag.html',
