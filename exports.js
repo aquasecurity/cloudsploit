@@ -855,7 +855,7 @@ module.exports = {
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
         'mysqlServerHasTags'            : require(__dirname + '/plugins/azure/mysqlserver/mysqlServerHasTags.js'),
-        'mysqlServerFlexibleManagedIdentity': require(__dirname + '/plugins/azure/mysqlserver/mysqlServerFlexibleManagedIdentity.js'),
+        'mysqFlexibleServerManagedIdentity': require(__dirname + '/plugins/azure/mysqlserver/mysqFlexibleServerManagedIdentity.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
