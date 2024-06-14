@@ -66,10 +66,10 @@ describe('docdbInstanceCertificateRotated', function () {
     describe('run', function () {
         it('should PASS if DocumentDB cluster instance does not need certificate rotation', function (done) {
             const cache = createCache(describeDBInstances);
-            docdbInstanceCertificateRotated.run(cache, { docdb_certificate_rotation_limit: 30 }, (err, results) => {
+            docdbInstanceCertificateRotated.run(cache, { docdb_certificate_rotation_limit: 20 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('DocumentDB cluster instance does not need certificate rotation as it expires in 31 days of 30 days limit');
+                expect(results[0].message).to.include('DocumentDB cluster instance does not need certificate rotation as it expires in 29 days of 20 days limit');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
@@ -81,7 +81,7 @@ describe('docdbInstanceCertificateRotated', function () {
             docdbInstanceCertificateRotated.run(cache, { docdb_certificate_rotation_limit: 40 }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('DocumentDB cluster instance needs certificate rotation as it expires in 31 days of 40 days limit');
+                expect(results[0].message).to.include('DocumentDB cluster instance needs certificate rotation as it expires in 29 days of 40 days limit');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });
