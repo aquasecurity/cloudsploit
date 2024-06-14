@@ -38,10 +38,15 @@ module.exports = {
             for (let eventHub of eventHubs.data){
                 if (!eventHub.id) continue;
 
-                if (eventHub.identity) {
-                    helpers.addResult(results, 0, 'Event Hubs namespace has managed identity enabled', location, eventHub.id);
+                if (eventHub.sku &&  eventHub.sku.tier && eventHub.sku.tier.toLowerCase() === 'basic') {
+                    helpers.addResult(results, 0,
+                        'Event Hubs namespace tier is basic', location, eventHub.id);
                 } else {
-                    helpers.addResult(results, 2, 'Event Hubs namespace does not have managed identity enabled', location, eventHub.id);
+                    if (eventHub.identity) {
+                        helpers.addResult(results, 0, 'Event Hubs namespace has managed identity enabled', location, eventHub.id);
+                    } else {
+                        helpers.addResult(results, 2, 'Event Hubs namespace does not have managed identity enabled', location, eventHub.id);
+                    }
                 }
             }
 
