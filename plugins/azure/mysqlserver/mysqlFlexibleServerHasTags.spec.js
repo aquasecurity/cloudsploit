@@ -56,7 +56,7 @@ describe('mysqlServerHasTags', function() {
             server.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('MySQL Flexible server does not have tags associated');
+                expect(results[0].message).to.include('MySQL flexible server does not have tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -78,7 +78,7 @@ describe('mysqlServerHasTags', function() {
             server.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('MySQL Flexible server has tags associated');
+                expect(results[0].message).to.include('MySQL flexible server has tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

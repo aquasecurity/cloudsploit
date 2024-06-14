@@ -41,9 +41,9 @@ module.exports = {
                 if (!flexibleServer.id) continue;
                 
                 if (flexibleServer.tags && Object.entries(flexibleServer.tags).length > 0){
-                    helpers.addResult(results, 0, 'MySQL Flexible server has tags associated', location, flexibleServer.id);
+                    helpers.addResult(results, 0, 'MySQL flexible server has tags associated', location, flexibleServer.id);
                 } else {
-                    helpers.addResult(results, 2, 'MySQL Flexible server does not have tags associated', location, flexibleServer.id);
+                    helpers.addResult(results, 2, 'MySQL flexible server does not have tags associated', location, flexibleServer.id);
                 }
             }
 
