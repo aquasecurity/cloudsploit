@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify Synapse Workspace and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/synapse-service-identity',
     apis: ['synapse:listWorkspaces'],
-    realtime_triggers: [],
+    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
