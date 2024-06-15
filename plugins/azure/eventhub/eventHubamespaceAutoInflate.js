@@ -7,7 +7,7 @@ module.exports = {
     category: 'Event Hubs',
     domain: 'Content Delivery',
     severity: 'Low',
-    description: 'Ensure that Event Hubs namespace have Auto Inflate feature enabled.',
+    description: 'Ensure that Event Hubs namespaces have Auto Inflate feature enabled.',
     more_info: 'Enabling Auto-inflate for your Azure Event Hubs namespace ensures seamless scaling by automatically adjusting the number of throughput units (TUs) based on workload demands. This feature helps prevent throttling issues by scaling up as needed, providing efficient and reliable data handling without manual intervention.',
     recommended_action: 'Modify Event Hub namespace and enable auto-inflate feature.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-auto-inflate',
