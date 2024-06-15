@@ -1109,7 +1109,7 @@ module.exports = {
 
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
         'eventHubNamespaceHasTags'      : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceHasTags.js'),
-        'eventHubamespaceAutoInflate'   : require(__dirname + '/plugins/azure/eventhub/eventHubamespaceAutoInflate.js'),
+        'eventHubNamespaceAutoInflate'   : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceAutoInflate.js'),
         'eventHubLocalAuthDisabled'     : require(__dirname + '/plugins/azure/eventhub/eventHubLocalAuthDisabled.js'),
         'eventHubPublicAccess'          : require(__dirname + '/plugins/azure/eventhub/eventHubPublicAccess.js'),
         'eventHubNamespaceCmkEncrypted' : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceCmkEncrypted.js'),
