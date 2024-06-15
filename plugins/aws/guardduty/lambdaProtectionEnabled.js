@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures GuardDuty protection is enabled for Lambda functions.' ,
-    more_info: 'Enabling GuardDuty Lambda Protection helps detect potential security threats offering enhanced security by monitoring network activity logs and generating findings for suspicious activities or security issues.',
+    more_info: 'Enabling GuardDuty Lambda Protection helps detect potential security threats offering enhanced security by monitoring network activity logs and generating findings for suspicious activities and security issues.',
     recommended_action: 'Enable GuardDuty Lambda protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/lambda-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
