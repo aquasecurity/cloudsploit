@@ -6,7 +6,7 @@ module.exports = {
     category: 'MySQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures that MySQL Flexible Servers are using the latest server version.',
+    description: 'Ensures that MySQL flexible servers are using the latest server version.',
     more_info: 'Using the latest version of Upgrade the version of MySQL flexible server to the latest available version will give access to new software features, resolve reported bugs through security patches, and improve compatibility with other applications and services.',
     recommended_action: 'Ensure MySQL Flexible Servers are using the latest server version.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-upgrade',
@@ -17,6 +17,7 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+        const latestServerVersion = 8.0;
 
         async.each(locations.servers, (location, rcb) => {
             const servers = helpers.addSource(cache, source,
@@ -36,16 +37,14 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
-                if (!flexibleServer.id || !flexibleServer.version) continue;
-
-                let version = parseFloat(flexibleServer.version);
+                if (!flexibleServer.id) continue;
             
-                if (version && version >= 8.0) {
+                if (flexibleServer.version && parseFloat(flexibleServer.version) >= latestServerVersion) {
                     helpers.addResult(results, 0,
-                        'MySQL flexible server has latest server version', location, flexibleServer.id);
+                        `MySQL flexible server has latest server version: ${flexibleServer.version}`, location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'MySQL flexible server does not have latest server version', location, flexibleServer.id);
+                        `MySQL flexible server does not have latest server version: ${latestServerVersion}`, location, flexibleServer.id);
                 }
             }
             rcb();

@@ -39,7 +39,7 @@ describe('mysqlFlexibleServerVersion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('MySQL flexible server does not have latest server version');
+                expect(results[0].message).to.include('MySQL flexible server does not have latest server version: 8');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -62,7 +62,7 @@ describe('mysqlFlexibleServerVersion', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('MySQL flexible server has latest server version');
+                expect(results[0].message).to.include('MySQL flexible server has latest server version: 8');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
