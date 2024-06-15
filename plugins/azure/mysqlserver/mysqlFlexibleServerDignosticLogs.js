@@ -6,12 +6,12 @@ module.exports = {
     category: 'MySQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures that diagnostic logging is enabled for MySQL Flexible server.',
+    description: 'Ensures that MySQL flexible server has diagnostic logs enabled.',
     more_info: 'Enabling diagnostic logging for Azure Database for MySQL Flexible servers helps with performance monitoring, troubleshooting, and security optimization.',
-    recommended_action: 'Enable diagnostic logging for all MySQL Flexible Servers.',
+    recommended_action: 'Enable diagnostic logging for all MySQL flexible servers.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-monitoring',
     apis: ['servers:listMysqlFlexibleServer', 'diagnosticSettings:listByMysqlFlexibleServer'],
-    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:delete', 'microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
+    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
