@@ -3,11 +3,11 @@ var async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Event Hubs Namespace Auto Inflate Enabled',
+    title: 'Event Hubs Namespace Auto-Inflate Enabled',
     category: 'Event Hubs',
     domain: 'Content Delivery',
     severity: 'Low',
-    description: 'Ensure that Event Hubs namespaces have Auto Inflate feature enabled.',
+    description: 'Ensure that Event Hubs namespaces have Auto-inflate feature enabled.',
     more_info: 'Enabling Auto-inflate for your Azure Event Hubs namespace ensures seamless scaling by automatically adjusting the number of throughput units (TUs) based on workload demands. This feature helps prevent throttling issues by scaling up as needed, providing efficient and reliable data handling without manual intervention.',
     recommended_action: 'Modify Event Hub namespace and enable auto-inflate feature.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-auto-inflate',
@@ -36,22 +36,25 @@ module.exports = {
                 return rcb();
             }
 
-            for (let eventHub of eventHubs.data){
+            for (let eventHub of eventHubs.data) {
                 if (!eventHub.id) continue;
 
-                if (eventHub.sku && 
-                    eventHub.sku.tier && 
-                    eventHub.sku.tier.toLowerCase() != 'standard') continue;
-
-                if (eventHub.isAutoInflateEnabled){
+                if (eventHub.sku &&
+                    eventHub.sku.tier &&
+                    eventHub.sku.tier.toLowerCase() != 'standard') {
                     helpers.addResult(results, 0,
-                        'Event Hubs namespace has auto inflate feature enabled',location, eventHub.id);
+                        'Event Hubs namespace is not a standard namespace', location, eventHub.id);
                 } else {
-                    helpers.addResult(results, 2,
-                        'Event Hubs namespace does not have auto inflate feature enabled', location, eventHub.id);
+                    if (eventHub.isAutoInflateEnabled) {
+                        helpers.addResult(results, 0,
+                            'Event Hubs namespace has auto inflate feature enabled', location, eventHub.id);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Event Hubs namespace does not have auto inflate feature enabled', location, eventHub.id);
+                    }
                 }
             }
-            
+
             rcb();
         }, function() {
             callback(null, results, source);
