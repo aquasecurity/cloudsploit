@@ -74,7 +74,7 @@ describe('batchAccountsAADEnabled', function () {
             batchAccountsAADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Batch account is configured with AAD Authentication');
+                expect(results[0].message).to.include('Batch account has Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -85,7 +85,7 @@ describe('batchAccountsAADEnabled', function () {
             batchAccountsAADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Batch account is not configured with AAD Authentication');
+                expect(results[0].message).to.include('Batch account does not have Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

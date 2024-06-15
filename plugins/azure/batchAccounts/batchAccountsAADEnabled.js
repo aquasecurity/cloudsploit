@@ -11,14 +11,14 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all Batch accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/batch/batch-aad-auth',
     apis: ['batchAccounts:list'],
-    realtime_triggers: ['microsoftbatch:batchaccounts:write','microsoftbatch:batchaccounts:delete'],
+    realtime_triggers: ['microsoftbatch:batchaccounts:write', 'microsoftbatch:batchaccounts:delete'],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.batchAccounts, function(location, rcb){
+        async.each(locations.batchAccounts, function (location, rcb) {
 
             var batchAccounts = helpers.addSource(cache, source,
                 ['batchAccounts', 'list', location]);
@@ -34,30 +34,23 @@ module.exports = {
                 return rcb();
             }
 
-            for (let batchAccount of batchAccounts.data) { 
+            for (let batchAccount of batchAccounts.data) {
                 if (!batchAccount.id) continue;
-                
-                let found = false;
-                if (batchAccount.allowedAuthenticationModes &&
-                    batchAccount.allowedAuthenticationModes.length) {
-                    batchAccount.allowedAuthenticationModes.forEach(mode => {
-                        if (mode.toUpperCase() == 'AAD') {
-                            found = true;
-                        }
-                    });
 
-                    if (found) {
-                        helpers.addResult(results, 0, 'Batch account is configured with AAD Authentication', location, batchAccount.id);
-                    } else {
-                        helpers.addResult(results, 2, 'Batch account is not configured with AAD Authentication', location, batchAccount.id);
-                    }
+                let found = batchAccount.allowedAuthenticationModes && 
+                            batchAccount.allowedAuthenticationModes.length?
+                            batchAccount.allowedAuthenticationModes.some(mode => mode.toUpperCase() === 'AAD') : false;
+
+                if (found) {
+                    helpers.addResult(results, 0, 'Batch account has Active Directory authentication enabled', location, batchAccount.id);
                 } else {
-                    helpers.addResult(results, 2, 'Batch account is not configured with AAD Authentication', location, batchAccount.id);
+                    helpers.addResult(results, 2, 'Batch account does not have Active Directory authentication enabled', location, batchAccount.id);
                 }
+
             }
-            
+
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
     }
