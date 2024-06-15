@@ -6,9 +6,9 @@ module.exports = {
     category: 'Batch',
     domain: 'Compute',
     severity: 'Low',
-    description: 'Ensures that Batch accounts have tags associated.',
+    description: 'Ensures that Azure Batch accounts have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
-    recommended_action: 'Modify Batch Account and add tags.',
+    recommended_action: 'Modify Batch account and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources-portal',
     apis: ['batchAccounts:list'],
     realtime_triggers: ['microsoftbatch:batchaccounts:write','microsoftbatch:batchaccounts:delete'],
@@ -19,7 +19,6 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         async.each(locations.batchAccounts, function(location, rcb){
-
             var batchAccounts = helpers.addSource(cache, source,
                 ['batchAccounts', 'list', location]);
 
