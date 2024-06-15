@@ -81,7 +81,7 @@ const createCache = (hub) => {
     }
 };
 
-describe('eventHubamespaceAutoInflate', function() {
+describe('eventHubNamespaceAutoInflate', function() {
     describe('run', function() {
         it('should give passing result if no event hub found', function(done) {
             const callback = (err, results) => {
@@ -93,7 +93,7 @@ describe('eventHubamespaceAutoInflate', function() {
             };
 
             const cache = createCache([]);
-            eventHubamespaceAutoInflate.run(cache, {}, callback);
+            eventHubNamespaceAutoInflate.run(cache, {}, callback);
         });
 
         it('should give failing result if Event Hubs namespace does not have auto-inflate feature enabled', function(done) {
@@ -106,7 +106,7 @@ describe('eventHubamespaceAutoInflate', function() {
             };
 
             const cache = createCache([eventHubs[1]]);
-            eventHubamespaceAutoInflate.run(cache, {}, callback);
+            eventHubNamespaceAutoInflate.run(cache, {}, callback);
         });
 
         it('should give passing result if Event Hubs namespace has auto-inflate feature enabled', function(done) {
@@ -119,7 +119,7 @@ describe('eventHubamespaceAutoInflate', function() {
             };
 
             const cache = createCache([eventHubs[0]]);
-            eventHubamespaceAutoInflate.run(cache, {}, callback);
+            eventHubNamespaceAutoInflate.run(cache, {}, callback);
         });
 
         it('should give unknown result if unable to query for event hubs', function(done) {
@@ -132,20 +132,20 @@ describe('eventHubamespaceAutoInflate', function() {
             };
 
             const cache = createCache(null);
-            eventHubamespaceAutoInflate.run(cache, {}, callback);
+            eventHubNamespaceAutoInflate.run(cache, {}, callback);
         });
 
         it('should give passing result if event hub namespace is not standard type', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Event Hubs namespace is not standard namespace');
+                expect(results[0].message).to.include('Event Hubs namespace is not a standard namespace');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
 
             const cache = createCache([eventHubs[2]]);
-            eventHubamespaceAutoInflate.run(cache, {}, callback);
+            eventHubNamespaceAutoInflate.run(cache, {}, callback);
         });
     })
 })
