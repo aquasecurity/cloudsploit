@@ -13,12 +13,12 @@ module.exports = {
     apis: ['batchAccounts:list'],
     realtime_triggers: ['microsoftbatch:batchaccounts:write', 'microsoftbatch:batchaccounts:delete'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.batchAccounts, function (location, rcb) {
+        async.each(locations.batchAccounts, function(location, rcb) {
 
             var batchAccounts = helpers.addSource(cache, source,
                 ['batchAccounts', 'list', location]);
@@ -39,7 +39,7 @@ module.exports = {
 
                 let found = batchAccount.allowedAuthenticationModes && 
                             batchAccount.allowedAuthenticationModes.length?
-                            batchAccount.allowedAuthenticationModes.some(mode => mode.toUpperCase() === 'AAD') : false;
+                    batchAccount.allowedAuthenticationModes.some(mode => mode.toUpperCase() === 'AAD') : false;
 
                 if (found) {
                     helpers.addResult(results, 0, 'Batch account has Active Directory authentication enabled', location, batchAccount.id);
@@ -50,7 +50,7 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
