@@ -2,16 +2,16 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'API Gateway Request validation',
+    title: 'API Gateway Request Validation',
     category: 'API Gateway',
     domain: 'Availability',
     severity: 'Medium',
     description: 'Ensures that Amazon API Gateway method has request validation enabled.',
-    more_info: 'Enabling request validation for API Gateway allows to perform basic validation of an API request before proceeding with the integration request. When request validation fails, API Gateway immediately fails the request reduceing unnecessary calls to the backend.',
-    recommended_action: 'Modify API Gateway configuration and ensure that appropriate request validators are set up for each API.',
+    more_info: 'Enabling request validation for API Gateway allows to perform basic validation of an API request before proceeding with the integration request and publishes the validation results in CloudWatch Logs. When request validation fails, API Gateway immediately fails the request reducing unnecessary calls to the backend.',
+    recommended_action: 'Modify API Gateway configuration and ensure that appropriate request validators are set for each API.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getRequestValidators'],
-    realtime_triggers: ['apigateway:CreateRestApi','apigateway:DeleteRestApi','apigateway:ImportRestApi','apigateway:CreateAuthorizer','apigateway:DeleteAuthorizer'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:DeleteRestApi','apigateway:ImportRestApi','apigateway:CreateRequestValidator','apigateway:UpdateRequestValidator','apigateway:DeleteRequestValidator'],
     
     run: function(cache, settings, callback) {
         var results = [];
@@ -54,7 +54,7 @@ module.exports = {
                 if (!getRequestValidators.data.items.length) {
                     helpers.addResult(results, 2,
                         'No request validators found for API Gateway Rest API',
-                        region, apiArn );
+                        region, apiArn);
                 } else {
                     helpers.addResult(results, 0,
                         'Request validators found for API Gateway Rest API',
