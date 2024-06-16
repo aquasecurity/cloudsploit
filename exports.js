@@ -1195,7 +1195,7 @@ module.exports = {
         'workspaceManagedDiskCmk'       : require(__dirname + '/plugins/azure/databricks/workspaceManagedDiskCmk.js'),
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
         
-        'workspacePrivateEndpoint'      : require(__dirname + '/plugins/azure/synapse/workspacePrivateEndpoint.js'),
+        'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
 
     },
     github: {

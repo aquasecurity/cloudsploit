@@ -6,10 +6,10 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensure that Azure Synapse Analytics Workspace are accessible only through private endpoints.',
-    more_info: 'Azure Private Endpoint is a network interface that connects you privately and securely to a service powered by Azure Private Link. Private Endpoint uses a private IP address from your VNet, effectively bringing the service such as Azure Storage Accounts into your VNet.',
+    description: 'Ensure that Azure Synapse Workspace is accessible only through managed private endpoints.',
+    more_info: 'Enabling managed private endpoints for Azure Synapse Analytics ensure secure, private communication between your Synapse workspace and other Azure resources, traversing exclusively over the Microsoft backbone network. It enhances security by protecting against data exfiltration and allowing connectivity only to specific approved resources.',
     recommended_action: 'Modify Synapse Workspace and configure private endpoints.',
-    link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/security/how-to-connect-to-workspace-with-private-links',
+    link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-private-endpoints',
     apis: ['synapse:listWorkspaces'],
     realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
 
@@ -36,11 +36,13 @@ module.exports = {
             }
 
             for (let workspace of workspaces.data) {
+                if (!workspace.id) continue;
+                
                 if (workspace.privateEndpointConnections &&
                     workspace.privateEndpointConnections.length) {
-                    helpers.addResult(results, 0, 'Private endpoints are configured for the Synapse workspace', location, workspace.id);
+                    helpers.addResult(results, 0, 'Synapse workspace has managed private endpoints configured', location, workspace.id);
                 } else {
-                    helpers.addResult(results, 2, 'Private endpoints are not configured for the Synapse workspace', location, workspace.id);
+                    helpers.addResult(results, 2, 'Synapse workspace does not have managed private endpoints configured', location, workspace.id);
                 }
             }
 
