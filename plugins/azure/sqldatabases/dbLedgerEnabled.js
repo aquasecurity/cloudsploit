@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-overview?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -48,16 +48,18 @@ module.exports = {
                     } else {
                         // Loop through databases
                         databases.data.forEach(database => {
-                          
-                            if (database.isLedgerOn) {
-                                helpers.addResult(results, 0, 'Ledger is enabled for SQL database', location, database.id);
-                            } else {
-                                helpers.addResult(results, 2, 'Ledger is not enabled for SQL database', location, database.id);
+
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+
+                                if (database.isLedgerOn) {
+                                    helpers.addResult(results, 0, 'Ledger is enabled for SQL database', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 2, 'Ledger is not enabled for SQL database', location, database.id);
+                                }
                             }
-                                
                         });
                     }
-                    
+
                 }
             });
 
