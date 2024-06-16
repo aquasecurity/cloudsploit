@@ -38,7 +38,7 @@ module.exports = {
                 if (!apiInstance.id) continue;
 
                 if (apiInstance.tags && Object.entries(apiInstance.tags).length > 0) {
-                    helpers.addResult(results, 0, 'API Management service has tags associated', location, apiInstance.id);
+                    helpers.addResult(results, 0, 'API Management has tags associated', location, apiInstance.id);
                 } else {
                     helpers.addResult(results, 2, 'API Management instance does not have tags associated', location, apiInstance.id);
                 }
