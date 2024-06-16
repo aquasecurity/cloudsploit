@@ -9,15 +9,15 @@ const appConfigurations = [
         "creationDate": "2023-12-27T09:26:54+00:00",
         "endpoint": "https://dummy-test-rg.azconfig.io",
         "encryption": {
-          "keyVaultProperties": {
-              "keyIdentifier": "https://dummy-test-key.vault.azure.net/keys/test-key",
-              "identityClientId": null
-          },
-        "privateEndpointConnections": null,
-        "publicNetworkAccess": "Disabled",
-        "disableLocalAuth": false,
-        "softDeleteRetentionInDays": 0,
-        "enablePurgeProtection": false
+            "keyVaultProperties": {
+                "keyIdentifier": "https://dummy-test-key.vault.azure.net/keys/test-key",
+                "identityClientId": null
+            },
+            "privateEndpointConnections": null,
+            "publicNetworkAccess": "Disabled",
+            "disableLocalAuth": false,
+            "softDeleteRetentionInDays": 0,
+            "enablePurgeProtection": false
         },
         "id": "/subscriptions/123/resourceGroups/meerab-rg/providers/Microsoft.AppConfiguration/configurationStores/meerab-test-rg",
         "name": "meerab-test-rg",
@@ -30,7 +30,7 @@ const appConfigurations = [
         "creationDate": "2023-12-27T09:26:54+00:00",
         "endpoint": "https://dummy-test-rg.azconfig.io",
         "encryption": {
-          "keyVaultProperties": null
+            "keyVaultProperties": null
         },
         "privateEndpointConnections": null,
         "publicNetworkAccess": "Disabled",
@@ -45,13 +45,37 @@ const appConfigurations = [
             "principalId": "12345",
             "tenantId": "123456",
             "userAssignedIdentities": {
-              "/subscriptions/123/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
-                "PrincipalId": "1234567",
-                "ClientId": "123456789"
-              }
+                "/subscriptions/123/resourcegroups/meerab-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/testmeerab": {
+                    "PrincipalId": "1234567",
+                    "ClientId": "123456789"
+                }
             }
         }
-    }
+    },
+    {
+        "type": "Microsoft.AppConfiguration/configurationStores",
+        "location": "eastus",
+        "provisioningState": "Succeeded",
+        "creationDate": "2023-12-27T09:26:54+00:00",
+        "endpoint": "https://dummy-test-rg.azconfig.io",
+        "encryption": {
+            "keyVaultProperties": {
+                "keyIdentifier": "https://dummy-test-key.vault.azure.net/keys/test-key",
+                "identityClientId": null
+            },
+            "privateEndpointConnections": null,
+            "publicNetworkAccess": "Disabled",
+            "disableLocalAuth": false,
+            "softDeleteRetentionInDays": 0,
+            "enablePurgeProtection": false
+        },
+        "id": "/subscriptions/123/resourceGroups/meerab-rg/providers/Microsoft.AppConfiguration/configurationStores/meerab-test-rg",
+        "name": "meerab-test-rg",
+        "tags": {},
+        "sku": {
+            "name": "free"
+        }
+    },
 ];
 
 const createCache = (appConfigurations,err) => {
@@ -98,6 +122,17 @@ describe('appConfigurationCmkEncrypted', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('App Configuration is encrypted using CMK');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if App Configuration tier is free', function (done) {
+            const cache = createCache([appConfigurations[2]]);
+            appConfigurationCmkEncrypted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('App Configuration tier is free');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

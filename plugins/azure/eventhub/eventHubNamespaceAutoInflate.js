@@ -1,15 +1,16 @@
+
 var async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Event Hubs Namespace Managed Identity',
+    title: 'Event Hubs Namespace Auto-Inflate Enabled',
     category: 'Event Hubs',
     domain: 'Content Delivery',
-    severity: 'Medium',
-    description: 'Ensures Microsoft Azure Event Hubs namespaces have managed identity enabled.',
-    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
-    recommended_action: 'Modify Event Hubs namespace and enable managed identity.',
-    link: 'https://learn.microsoft.com/en-us/azure/event-hubs/authenticate-managed-identity',
+    severity: 'Low',
+    description: 'Ensure that Event Hubs namespaces have Auto-inflate feature enabled.',
+    more_info: 'Enabling Auto-inflate for your Azure Event Hubs namespace ensures seamless scaling by automatically adjusting the number of throughput units (TUs) based on workload demands. This feature helps prevent throttling issues by scaling up as needed, providing efficient and reliable data handling without manual intervention.',
+    recommended_action: 'Modify Event Hub namespace and enable auto-inflate feature.',
+    link: 'https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-auto-inflate',
     apis: ['eventHub:listEventHub'],
     realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete'],
 
@@ -35,17 +36,21 @@ module.exports = {
                 return rcb();
             }
 
-            for (let eventHub of eventHubs.data){
+            for (let eventHub of eventHubs.data) {
                 if (!eventHub.id) continue;
 
-                if (eventHub.sku &&  eventHub.sku.tier && eventHub.sku.tier.toLowerCase() === 'basic') {
+                if (eventHub.sku &&
+                    eventHub.sku.tier &&
+                    eventHub.sku.tier.toLowerCase() != 'standard') {
                     helpers.addResult(results, 0,
-                        'Event Hubs namespace tier is basic', location, eventHub.id);
+                        'Event Hubs namespace is not a standard namespace', location, eventHub.id);
                 } else {
-                    if (eventHub.identity) {
-                        helpers.addResult(results, 0, 'Event Hubs namespace has managed identity enabled', location, eventHub.id);
+                    if (eventHub.isAutoInflateEnabled) {
+                        helpers.addResult(results, 0,
+                            'Event Hubs namespace has auto inflate feature enabled', location, eventHub.id);
                     } else {
-                        helpers.addResult(results, 2, 'Event Hubs namespace does not have managed identity enabled', location, eventHub.id);
+                        helpers.addResult(results, 2,
+                            'Event Hubs namespace does not have auto inflate feature enabled', location, eventHub.id);
                     }
                 }
             }
