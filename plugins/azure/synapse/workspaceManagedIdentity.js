@@ -6,9 +6,9 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensure that Azure Synapse Analytics Workspace have managed identity enabled.',
+    description: 'Ensure that Azure Synapse workspace has managed identity enabled.',
     more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
-    recommended_action: 'Modify Synapse Workspace and enable managed identity.',
+    recommended_action: 'Modify Synapse workspace and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/synapse-service-identity',
     apis: ['synapse:listWorkspaces'],
     realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
@@ -36,7 +36,9 @@ module.exports = {
             }
 
             for (let workspace of workspaces.data) {
-                if (workspace.identity && workspace.identity) {
+                if (!workspace.id) continue; 
+
+                if (workspace.identity && workspace.identity.type) {
                     helpers.addResult(results, 0, 'Synapse workspace has managed identity enabled', location, workspace.id);
                 } else {
                     helpers.addResult(results, 2, 'Synapse workspace does not have managed identity enabled', location, workspace.id);
