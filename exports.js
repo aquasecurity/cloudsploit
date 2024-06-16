@@ -26,6 +26,7 @@ module.exports = {
         'apigatewayDefaultEndpointDisabled'  : require(__dirname + '/plugins/aws/apigateway/apigatewayDefaultEndpointDisabled.js'),
         'apigatewayAuthorization'       : require(__dirname + '/plugins/aws/apigateway/apigatewayAuthorization.js'),
         'apigatewayV2Authorization'     : require(__dirname + '/plugins/aws/apigateway/apigatewayV2Authorization.js'),
+        'apigatewayV2AccessLogging'     : require(__dirname + '/plugins/aws/apigateway/apigatewayV2AccessLogging.js'),
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
         'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
