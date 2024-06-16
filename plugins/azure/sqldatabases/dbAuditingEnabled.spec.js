@@ -9,13 +9,14 @@ const servers = [
 
 const databases = [
     {
-       id: '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master',
+       id: '/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database',
+        "name": "test-database",
     }
 ];
 
 const databaseBlobAuditingPolicies = [
     {
-        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master/auditingSettings/Default",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database/auditingSettings/Default",
         "name": "Default",
         "type": "Microsoft.Sql/servers/databases/auditingSettings",
         "retentionDays": 9,
@@ -23,7 +24,7 @@ const databaseBlobAuditingPolicies = [
         "state": "Enabled",
     },
     {
-        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master/auditingSettings/Default",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database/auditingSettings/Default",
         "name": "Default",
         "type": "Microsoft.Sql/servers/databases/auditingSettings",
         "retentionDays": 9,

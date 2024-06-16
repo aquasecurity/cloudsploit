@@ -55,43 +55,45 @@ module.exports = {
                         'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
                     return scb();
                 }
-                
+
                 if (!databases.data.length) {
                     helpers.addResult(results, 0,
                         'No databases found for SQL server', location, server.id);
                     return scb();
                 }
-                
+
                 for (const database of databases.data) {
-                    const policies = helpers.addSource(cache, source,
-                        ['backupShortTermRetentionPolicies', 'listByDatabase', location, database.id]);
-                    
-                    if (!policies || policies.err || !policies.data) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for SQL database retention policies: ' + helpers.addError(policies), location, database.id);
-                        continue;
-                    }
-                    
-                    if (!policies.data.length) {
-                        helpers.addResult(results, 0,
-                            'No retention policies found for SQL database', location, database.id);
-                        continue;
-                    }
-                    
-                    for (const policy of policies.data) {
-                        let retentionDays = 0;
-                        if (policy.retentionDays){
-                            retentionDays =  policy.retentionDays;
+                    if (database.name && database.name.toLowerCase() !== 'master') {
+                        const policies = helpers.addSource(cache, source,
+                            ['backupShortTermRetentionPolicies', 'listByDatabase', location, database.id]);
+
+                        if (!policies || policies.err || !policies.data) {
+                            helpers.addResult(results, 3,
+                                'Unable to query for SQL database retention policies: ' + helpers.addError(policies), location, database.id);
+                            continue;
                         }
 
-                        if (retentionDays >= config.retentionDays) {
+                        if (!policies.data.length) {
                             helpers.addResult(results, 0,
-                                `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
-                                location, database.id);
-                        } else {
-                            helpers.addResult(results, 2,
-                                `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
-                                location, database.id);
+                                'No retention policies found for SQL database', location, database.id);
+                            continue;
+                        }
+
+                        for (const policy of policies.data) {
+                            let retentionDays = 0;
+                            if (policy.retentionDays){
+                                retentionDays =  policy.retentionDays;
+                            }
+
+                            if (retentionDays >= config.retentionDays) {
+                                helpers.addResult(results, 0,
+                                    `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
+                                    location, database.id);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
+                                    location, database.id);
+                            }
                         }
                     }
                 }

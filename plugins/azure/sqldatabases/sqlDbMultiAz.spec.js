@@ -9,11 +9,13 @@ const servers = [
 
 const databases = [
     {
-       "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master",
-       "zoneRedundant": true,
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database",
+        "zoneRedundant": true,
     },
     {
-        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database",
         "zoneRedundant": false,
     }
 ];

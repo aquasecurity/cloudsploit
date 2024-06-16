@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-dynamic-data-masking-get-started-portal',
     apis: ['servers:listSql', 'databases:listByServer', 'dataMaskingPolicies:get'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -47,7 +47,7 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         databases.data.forEach(database =>  {
-                            if (database.name === 'master' || (database.sku && database.sku.tier && database.sku.tier.toLowerCase() === 'datawarehouse')) return;
+                            if (database.name && database.name.toLowerCase() === 'master' || (database.sku && database.sku.tier && database.sku.tier.toLowerCase() === 'datawarehouse')) return;
 
                             var dataMaskingPolicies = helpers.addSource(cache, source, ['dataMaskingPolicies', 'get', location, database.id]);
 

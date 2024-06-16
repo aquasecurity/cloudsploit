@@ -1196,6 +1196,8 @@ module.exports = {
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
         
         'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
+        'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
