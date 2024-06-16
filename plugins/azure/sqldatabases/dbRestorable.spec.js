@@ -9,11 +9,13 @@ const servers = [
 
 const databases = [
     {
-       "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master",
-       "earliestRestoreDate": "2021-03-05T16:01:34Z",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database",
+        "earliestRestoreDate": "2021-03-05T16:01:34Z",
     },
     {
-        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/master",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database"
     }
 ];
 

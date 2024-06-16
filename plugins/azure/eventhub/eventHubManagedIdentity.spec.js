@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var eventHubManagedIdentity = require('./eventHubManagedIdentity');
+const eventHubPublicAccess = require("./eventHubPublicAccess");
 
 const eventHubs = [
     {
@@ -40,7 +41,28 @@ const eventHubs = [
         "isAutoInflateEnabled": false,
         "maximumThroughputUnits": 0,
         "kafkaEnabled": false,
-    }
+    },
+    {
+        "kind": "v12.0",
+        "location": "eastus",
+        "tags": {},
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/testHub'",
+        "name": "testHub2",
+        "type": 'Microsoft.EventHub/Namespaces',
+        "location": 'East US',
+        "tags": {},
+        "sku": {
+            "name": "Basic",
+            "tier": "Basic",
+            "capacity": 1
+        },
+        "minimumTlsVersion": '1.2',
+        "publicNetworkAccess": 'Enabled',
+        "disableLocalAuth": true,
+        "isAutoInflateEnabled": false,
+        "maximumThroughputUnits": 0,
+        "kafkaEnabled": false
+    },
 ];
 
 const createCache = (hub) => {
@@ -93,6 +115,19 @@ describe('eventHubManagedIdentity', function() {
             };
 
             const cache = createCache([eventHubs[0]]);
+            eventHubManagedIdentity.run(cache, {}, callback);
+        });
+
+        it('should give passing result if eventHub is of basic tier', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Event Hubs namespace tier is basic');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache([eventHubs[2]]);
             eventHubManagedIdentity.run(cache, {}, callback);
         });
 

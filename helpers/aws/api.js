@@ -1842,6 +1842,12 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getRequestValidators: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
             }
         },
         AppConfig: {

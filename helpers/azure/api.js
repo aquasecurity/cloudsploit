@@ -564,6 +564,11 @@ var calls = {
 
         }
     },
+    synapse: {
+        listWorkspaces: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/workspaces?api-version=2021-06-01'
+        }
+    }
 
 };
 
@@ -1261,7 +1266,12 @@ var tertiarycalls = {
             reliesOnPath: 'batchAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
-        }
+        },
+        listByMysqlFlexibleServer: {
+            reliesOnPath: 'servers.listMysqlFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
+        },
     },
     backupShortTermRetentionPolicies: {
         listByDatabase: {
