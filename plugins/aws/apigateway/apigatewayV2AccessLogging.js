@@ -5,7 +5,7 @@ module.exports = {
     title: 'API Gateway V2 Access Logging',
     category: 'API Gateway',
     domain: 'Availability',
-    severity: 'High',
+    severity: 'Medium',
     description: 'Ensures that Amazon API Gateway V2 APIs stages have access logging enabled.',
     more_info: 'API Gateway V2 access logs provide detailed information about APIs and how the caller accessed the API. These logs are useful for applications for security and access audits which helps to analyze traffic patterns and to troubleshoot issues.',
     recommended_action: 'Modify API Gateway V2 configuration and ensure that access logging is configured for each stage.',
