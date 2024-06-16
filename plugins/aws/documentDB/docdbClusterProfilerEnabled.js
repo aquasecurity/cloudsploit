@@ -5,10 +5,10 @@ module.exports = {
     title: 'DocumentDB Cluster Profiler Enabled',
     category: 'DocumentDB',
     domain: 'Databases',
-    severity: 'Medium',
+    severity: 'Low',
     description: 'Ensure that Amazon DocumentDB clusters have profiler feature enabled.',
-    more_info: 'Enabling the Profiler for your Amazon DocumentDB clusters helps you to monitor and log slow database operations. This makes it easier to identify and fix performance issues by analyzing detailed logs in Amazon CloudWatch.',
-    recommended_action: 'Modify DocumentDb cluster and enable profiler feature.',
+    more_info: 'Enabling the Profiler for your Amazon DocumentDB clusters helps to monitor and log database operations. This makes it easier to identify slowest operations on cluster and fix performance issues by analyzing detailed logs in Amazon CloudWatch.
+    recommended_action: 'Modify DocumentDB cluster and enable profiler feature.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html',
     apis: ['DocDB:describeDBClusters'],
     realtime_triggers: ['docdb:CreateDBCluster','docdb:ModifyDBCluster','docdb:DeleteDBCluster'],
