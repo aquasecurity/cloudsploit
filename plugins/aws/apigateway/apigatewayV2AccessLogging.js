@@ -2,17 +2,17 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'API Gateway V2 Authorization',
+    title: 'API Gateway V2 Access Logging',
     category: 'API Gateway',
     domain: 'Availability',
     severity: 'High',
-    description: 'Ensures that Amazon API Gateway V2 APIs are using authorizer.',
-    more_info: 'API Gateway V2 APIs should be configured to use authorizer to enforce security measures and restrict access to API to only authorized users or processess.',
-    recommended_action: 'Modify API Gateway V2 configuration and ensure that appropriate authorizers are set up for each API.',
-    link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html',
+    description: 'Ensures that Amazon API Gateway V2 APIs stages have access logging enabled.',
+    more_info: 'API Gateway V2 access logs provide detailed information about APIs and how the caller accessed the API. These logs are useful for applications for security and access audits which helps to analyze traffic patterns and to troubleshoot issues.',
+    recommended_action: 'Modify API Gateway V2 configuration and ensure that access logging is configured for each stage.',
+    link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-logging.html',
     apis: ['ApiGatewayV2:getApis','ApiGatewayV2:getStages'],
     realtime_triggers: ['ApiGatewayV2:createApi','ApiGatewayV2:deleteApi','ApiGatewayV2:importApi','ApiGatewayv2:CreateStage','ApiGatewayv2:UpdateStage','ApiGatewayv2:DeleteStage'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
