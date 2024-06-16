@@ -36,7 +36,7 @@ module.exports = {
             }
 
             for (var flexibleServer of servers.data) {
-                if(!flexibleServer.id) continue;
+                if (!flexibleServer.id) continue;
     
                 if (flexibleServer.properties &&
                     flexibleServer.properties.network && 
