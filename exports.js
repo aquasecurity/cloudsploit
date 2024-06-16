@@ -1191,6 +1191,7 @@ module.exports = {
 
         'batchAccountCmkEncrypted'      : require(__dirname + '/plugins/azure/batchAccounts/batchAccountCmkEncrypted.js'),
         'batchAccountDiagnosticLogs'    : require(__dirname + '/plugins/azure/batchAccounts/batchAccountDiagnosticLogs.js'),
+        'batchAccountsAADEnabled'       : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsAADEnabled.js'),
         'batchAccountsHasTags'          : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsHasTags.js'),
         'batchAccountsPublicAccess'     : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsPublicAccess.js'),
 
