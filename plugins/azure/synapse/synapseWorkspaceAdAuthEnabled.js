@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Synapse Workspace AAD Auth Enabled',
+    title: 'Synapse Workspace AD Auth Enabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensure that Azure Synapse Analytics Workspace have AAD Auth enabled.',
-    more_info: 'Enabling Microsoft Entra ID (AAD) Authentication for your Synapse workspace enhances security by ensuring that only authenticated and authorized users can access your resources. This feature integrates seamlessly with AAD, providing robust access control and simplifying user management.',
-    recommended_action: 'Modify Synapse Workspace and enable microsoft entra id authentication.',
+    description: 'Ensures that Azure Synapse workspace has Active Directory (AD) authentication enabled.',
+    more_info: 'Enabling Azure Active Directory authentication for Synapse workspace enhances security by ensuring that only authenticated and authorized users can access resources and eliminating the need for password storage. This integration simplifies permission management and secure access.',
+    recommended_action: 'Enable Active Directory (AD) authentication mode for all Synapse workspace.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/active-directory-authentication',
     apis: ['synapse:listWorkspaces'],
     realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
@@ -36,10 +36,12 @@ module.exports = {
             }
 
             for (let workspace of workspaces.data) {
+                if (!workspace.id) continue;
+                
                 if (workspace.azureADOnlyAuthentication) {
-                    helpers.addResult(results, 0, 'Synapse workspace has AAD auth enabled', location, workspace.id);
+                    helpers.addResult(results, 0, 'Synapse workspace has Active Directory authentication enabled', location, workspace.id);
                 } else {
-                    helpers.addResult(results, 2, 'Synapse workspace does not have AAD auth enabled', location, workspace.id);
+                    helpers.addResult(results, 2, 'Synapse workspace does not have Active Directory authentication enabled', location, workspace.id);
                 }
             }
 

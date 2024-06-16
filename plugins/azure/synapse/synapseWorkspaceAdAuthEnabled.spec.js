@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var workspaceAADAuthEnabled = require('./workspaceAADAuthEnabled');
+var synapseWorkspaceAdAuthEnabled = require('./synapseWorkspaceAdAuthEnabled');
 
 const workspaces = [
     {
@@ -32,12 +32,12 @@ const createCache = (workspaces, err) => {
     };
 };
 
-describe('workspaceAADAuthEnabled', function () {
+describe('synapseWorkspaceAdAuthEnabled', function () {
     describe('run', function () {
 
         it('should give a passing result if no Synapse workspaces are found', function (done) {
             const cache = createCache([], null);
-            workspaceAADAuthEnabled.run(cache, {}, (err, results) => {
+            synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No existing Synapse workspaces found');
@@ -48,7 +48,7 @@ describe('workspaceAADAuthEnabled', function () {
 
         it('should give unknown result if unable to query for Synapse workspaces', function (done) {
             const cache = createCache(null, ['error']);
-            workspaceAADAuthEnabled.run(cache, {}, (err, results) => {
+            synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query Synapse workspaces');
@@ -59,10 +59,10 @@ describe('workspaceAADAuthEnabled', function () {
 
         it('should give passing result if workspace has AAD auth enabled', function (done) {
             const cache = createCache([workspaces[0]], null);
-            workspaceAADAuthEnabled.run(cache, {}, (err, results) => {
+            synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Synapse workspace has AAD auth enabled');
+                expect(results[0].message).to.include('Synapse workspace has Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -70,10 +70,10 @@ describe('workspaceAADAuthEnabled', function () {
 
         it('should give failing result if workspace does not have AAD auth', function (done) {
             const cache = createCache([workspaces[1]], null);
-            workspaceAADAuthEnabled.run(cache, {}, (err, results) => {
+            synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Synapse workspace does not have AAD auth enabled');
+                expect(results[0].message).to.include('Synapse workspace does not have Active Directory authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
