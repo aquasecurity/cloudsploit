@@ -859,6 +859,7 @@ module.exports = {
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
         'mysqlFlexibleServerVersion'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerVersion.js'),
         'mysqlServerHasTags'            : require(__dirname + '/plugins/azure/mysqlserver/mysqlServerHasTags.js'),
+        'mysqlFlexibleServerIdentity'   : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerIdentity.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
