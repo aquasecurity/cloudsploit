@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that MySQL Flexible servers are not publicly accessible.',
-    more_info: 'Configuring public access on for  MySQL flexible server instance allows the server to be accessible through a public endpoint. This can expose the server to unauthorized access and various cyber threats. Disabling public access enhances security by limiting access to authorized connections only.',
+    more_info: 'Configuring public access on for MySQL flexible server instance allows the server to be accessible through a public endpoint. This can expose the server to unauthorized access and various cyber threats. Disabling public access enhances security by limiting access to authorized connections only.',
     recommended_action: 'Modify MySQL Flexible server and diasble public access.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking-public',
     apis: ['servers:listMysqlFlexibleServer'],   
