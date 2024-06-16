@@ -85,5 +85,6 @@ module.exports = {
     computeGalleries: locations,
     databricks: locations,
     containerApps: locations,
-    apiManagementService: locations
+    apiManagementService: locations,
+    synapse: locations
 };

@@ -39,7 +39,7 @@ module.exports = {
 
                 if (appGateway.httpListeners && appGateway.httpListeners.length) {
                     var httpListeners = appGateway.httpListeners
-                        .filter(listener => listener.protocol && listener.protocol.toLowerCase() !== 'https')
+                        .filter(listener => listener.properties.protocol && listener.properties.protocol.toLowerCase() !== 'https')
                         .map(listener => listener.name);
 
                     if (httpListeners && httpListeners.length) {

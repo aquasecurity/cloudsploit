@@ -135,5 +135,6 @@ module.exports = {
     containerApps: locations,
     batchAccounts: locations,
     machineLearning: locations,
-    apiManagementService: locations
+    apiManagementService: locations,
+    synapse: locations
 };
