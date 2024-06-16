@@ -1211,6 +1211,9 @@ module.exports = {
         'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
         'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
 
+        'apiInstanceManagedIdentity'    : require(__dirname + '/plugins/azure/apiManagement/apiInstanceManagedIdentity.js'),
+        'apiInstanceHasTags'            : require(__dirname + '/plugins/azure/apiManagement/apiInstanceHasTags.js'),
+
     },
     github: {
         'publicKeysRotated'             : require(__dirname + '/plugins/github/users/publicKeysRotated.js'),
