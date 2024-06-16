@@ -596,6 +596,7 @@ module.exports = {
         's3ProtectionEnabled'           : require(__dirname + '/plugins/aws/guardduty/s3ProtectionEnabled.js'),
         'rdsProtectionEnabled'          : require(__dirname + '/plugins/aws/guardduty/rdsProtectionEnabled.js'),
         'exportedFindingsEncrypted'     : require(__dirname + '/plugins/aws/guardduty/exportedFindingsEncrypted.js'),
+        'lambdaProtectionEnabled'       : require(__dirname + '/plugins/aws/guardduty/lambdaProtectionEnabled.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workSpacesHealthyInstances'    : require(__dirname + '/plugins/aws/workspaces/workSpacesHealthyInstances.js'),
@@ -615,6 +616,7 @@ module.exports = {
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
+        'dataStoreHasTags'              : require(__dirname + '/plugins/aws/healthlake/dataStoreHasTags.js'),
 
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
 
@@ -635,6 +637,7 @@ module.exports = {
         'docDbHasTags'                  : require(__dirname + '/plugins/aws/documentDB/docDbHasTags.js'),
         'docdbDeletionProtectionEnabled': require(__dirname + '/plugins/aws/documentDB/docdbDeletionProtectionEnabled.js'),
         'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
+        'docdbClusterProfilerEnabled'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterProfilerEnabled.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
@@ -854,8 +857,10 @@ module.exports = {
 
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
+        'mysqlFlexibleServerVersion'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerVersion.js'),
         'mysqlServerHasTags'            : require(__dirname + '/plugins/azure/mysqlserver/mysqlServerHasTags.js'),
         'mysqlFlexibleServerDignosticLogs': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerDignosticLogs.js'),
+        'mysqlFlexibleServerIdentity'   : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerIdentity.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
@@ -1195,6 +1200,10 @@ module.exports = {
         'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
         'workspaceManagedDiskCmk'       : require(__dirname + '/plugins/azure/databricks/workspaceManagedDiskCmk.js'),
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
+        
+        'workspaceManagedIdentity'      : require(__dirname + '/plugins/azure/synapse/workspaceManagedIdentity.js'),
+        'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
+        'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
 
     },
     github: {
