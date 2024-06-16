@@ -13,7 +13,7 @@ const apiManagementService = [
         "zones": null,
         "tags": {},
         "location": "East US",
-        "id": "/subscriptions/123456/resourceGroups/fatima-testfunction_group/providers/Microsoft.ApiManagement/service/meerab",
+        "id": "/subscriptions/123456/resourceGroups/testfunction_group/providers/Microsoft.ApiManagement/service/test",
         "name": "meerab",
         "type": "Microsoft.ApiManagement/service"
     },
@@ -32,7 +32,7 @@ const apiManagementService = [
         "zones": null,
         "location": "East US",
         "tags": {"key": "value"},
-        "id": "/subscriptions/123456/resourceGroups/fatima-testfunction_group/providers/Microsoft.ApiManagement/service/meerab",
+        "id": "/subscriptions/123456/resourceGroups/testfunction_group/providers/Microsoft.ApiManagement/service/test",
         "name": "meerab",
         "type": "Microsoft.ApiManagement/service"
     }
@@ -59,7 +59,7 @@ describe('apiInstanceHasTags', function () {
             apiInstanceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing API Management service instances found');
+                expect(results[0].message).to.include('No existing API Management instances found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -70,7 +70,7 @@ describe('apiInstanceHasTags', function () {
             apiInstanceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query API Management service instances');
+                expect(results[0].message).to.include('Unable to query API Management instances');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -81,7 +81,7 @@ describe('apiInstanceHasTags', function () {
             apiInstanceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('API Management service instance has tags associated');
+                expect(results[0].message).to.include('API Management instance has tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -92,7 +92,7 @@ describe('apiInstanceHasTags', function () {
             apiInstanceHasTags.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('API Management service instance does not have tags associated');
+                expect(results[0].message).to.include('API Management instance does not have tags associated');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
