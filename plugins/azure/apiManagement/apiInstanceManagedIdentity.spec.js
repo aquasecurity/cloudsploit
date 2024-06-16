@@ -59,7 +59,7 @@ describe('apiInstanceManagedIdentity', function () {
             apiInstanceManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing API Management service instances found');
+                expect(results[0].message).to.include('No existing API Management instances found');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -70,7 +70,7 @@ describe('apiInstanceManagedIdentity', function () {
             apiInstanceManagedIdentity.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query API Management service instances:');
+                expect(results[0].message).to.include('Unable to query API Management instances:');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
