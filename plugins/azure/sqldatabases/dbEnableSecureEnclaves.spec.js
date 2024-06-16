@@ -10,10 +10,12 @@ const servers = [
 const databases = [
     {
         "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database",
         "preferredEnclaveType": "VBS",
     },
     {
         "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/databases/test-database",
+        "name": "test-database"
     },
 ];
 

@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/sql-data-sync-data-sql-server-sql-database?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'syncGroups:list'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:syncgroups:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -35,7 +35,7 @@ module.exports = {
 
             // Loop through servers and check databases
             servers.data.forEach(function(server) {
-                
+
                 var databases = helpers.addSource(cache, source,
                     ['databases', 'listByServer', location, server.id]);
 
@@ -48,31 +48,33 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         databases.data.forEach(database => {
-                            
-                            var syncGroups = helpers.addSource(cache, source, ['syncGroups', 'list', location, database.id]);
 
-                            if (!syncGroups || syncGroups.err || !syncGroups.data) {
-                                helpers.addResult(results, 3, 'Unable to query for SQL Database sync groups: ' + helpers.addError(syncGroups), location, database.id);
-                                return;
-                            }
-                            if (!syncGroups.data.length) {
-                                helpers.addResult(results, 0,
-                                    'No sync groups found for SQL database', location, database.id);
-                            } else {
-                                var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e) => e.name);
-    
-                                if (missingPrivateConfigGrps.length) {
-                                    helpers.addResult(results, 2, `Following SQL Database sync groups are not configured to use private link: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
-                                   
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+
+                                var syncGroups = helpers.addSource(cache, source, ['syncGroups', 'list', location, database.id]);
+
+                                if (!syncGroups || syncGroups.err || !syncGroups.data) {
+                                    helpers.addResult(results, 3, 'Unable to query for SQL Database sync groups: ' + helpers.addError(syncGroups), location, database.id);
+                                    return;
+                                }
+                                if (!syncGroups.data.length) {
+                                    helpers.addResult(results, 0,
+                                        'No sync groups found for SQL database', location, database.id);
                                 } else {
-                                    helpers.addResult(results, 0, 'All SQL Database sync groups are configured to use private link', location, database.id);
+                                    var missingPrivateConfigGrps = syncGroups.data.filter((e) => !e.usePrivateLinkConnection).map((e) => e.name);
+
+                                    if (missingPrivateConfigGrps.length) {
+                                        helpers.addResult(results, 2, `Following SQL Database sync groups are not configured to use private link: ${missingPrivateConfigGrps.join(', ')} `, location, database.id);
+
+                                    } else {
+                                        helpers.addResult(results, 0, 'All SQL Database sync groups are configured to use private link', location, database.id);
+                                    }
                                 }
                             }
-                           
                         });
                     }
                 }
-               
+
             });
 
             rcb();
