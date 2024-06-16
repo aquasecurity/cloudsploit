@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensure that your AWS CodeBuild build project has S3 or Cloudwatch logs enabled.',
     more_info: 'Monitoring AWS CodeBuild projects helps maintaining the reliability, availability, and performance of the resource. It helps to easily debug multi-point failure and potential incidents.',
-    recommended_action: 'Modify CodeBuild build project enable logging.',
+    recommended_action: 'Ensure that CodeBuild project has logging enabled.',
     link: 'https://docs.aws.amazon.com/codebuild/latest/userguide/monitoring-builds.html',
     apis: ['CodeBuild:listProjects', 'CodeBuild:batchGetProjects', 'STS:GetCallerIdentity'],
     realtime_triggers: ['codebuild:CreateProject', 'codebuild:UpdateProject', 'codebuild:DeleteProject'],
