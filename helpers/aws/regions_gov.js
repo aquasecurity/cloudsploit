@@ -12,6 +12,7 @@ module.exports = {
     accessanalyzer: regions,
     acm: regions,
     apigateway: regions,
+    apigatewayv2: regions,
     athena: regions,
     backup: regions,
     bedrock: ['us-gov-west-1'],
