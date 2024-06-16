@@ -13,7 +13,7 @@ const apiManagementService = [
         "zones": null,
         "location": "East US",
         "tags": {},
-        "id": "/subscriptions/123456/resourceGroups/fatima-testfunction_group/providers/Microsoft.ApiManagement/service/meerab",
+        "id": "/subscriptions/123456/resourceGroups/testfunction_group/providers/Microsoft.ApiManagement/service/test",
         "name": "meerab",
         "type": "Microsoft.ApiManagement/service"
     },
@@ -32,7 +32,7 @@ const apiManagementService = [
         "zones": null,
         "location": "East US",
         "tags": {},
-        "id": "/subscriptions/123456/resourceGroups/fatima-testfunction_group/providers/Microsoft.ApiManagement/service/meerab",
+        "id": "/subscriptions/123456/resourceGroups/testfunction_group/providers/Microsoft.ApiManagement/service/test",
         "name": "meerab",
         "type": "Microsoft.ApiManagement/service"
     }
