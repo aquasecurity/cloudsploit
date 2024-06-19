@@ -859,6 +859,7 @@ module.exports = {
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
 
+        'mysqlFlexibleServerHasTags'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerHasTags.js'),
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
         'mysqlFlexibleServerVersion'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerVersion.js'),
