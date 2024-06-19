@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify MySQL flexible server and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['servers:listMysql', 'servers:listMysqlFlexibleServer'],
-    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:delete'],
+    realtime_triggers: ['microsoftdbformysql:flexibleservers:write','microsoftdbformysql:flexibleservers:delete', 'microsoftresources:tags:write'],
 
 
     run: function(cache, settings, callback) {
@@ -20,7 +20,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.servers, (location, rcb) => {
-
             const servers = helpers.addSource(cache, source,
                 ['servers', 'listMysqlFlexibleServer', location]);
 
