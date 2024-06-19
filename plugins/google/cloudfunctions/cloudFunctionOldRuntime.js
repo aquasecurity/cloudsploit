@@ -6,10 +6,10 @@ module.exports = {
     category: 'Cloud Functions',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensure Cloud Functions are not using deprecated runtime versions',
+    description: 'Ensure Cloud Functions are not using deprecated runtime versions.',
     more_info: 'Cloud Functions runtimes should be kept current with recent versions of the underlying codebase. It is recommended to update to the latest supported versions to avoid potential security risks and ensure compatibility.',
     link: 'https://cloud.google.com/functions/docs/concepts/execution-environment',
-    recommended_action: 'Modify Cloud Functions to latest versions',
+    recommended_action: 'Modify Cloud Functions to use latest versions.',
     apis: ['functions:list'],
     settings: {
         function_runtime_fail: {
