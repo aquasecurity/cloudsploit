@@ -2,12 +2,12 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'MySQL Flexible Server Public Access Disabled',
+    title: 'MySQL Flexible Server Public Access',
     category: 'MySQL Server',
     domain: 'Databases',
     severity: 'High',
-    description: 'Ensures that MySQL Flexible servers are not publicly accessible.',
-    more_info: 'Configuring public access on for MySQL flexible server instance allows the server to be accessible through a public endpoint. This can expose the server to unauthorized access and various cyber threats. Disabling public access enhances security by limiting access to authorized connections only.',
+    description: 'Ensures that MySQL flexible servers are not publicly accessible.',
+    more_info: 'Configuring public access for MySQL flexible server instance allows the server to be accessible through public endpoint. This can expose the server to unauthorized access and various cyber threats. Disabling public access enhances security by limiting access to authorized connections only.',
     recommended_action: 'Modify MySQL flexible server and disable public network access.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking-public',
     apis: ['servers:listMysqlFlexibleServer'],   
