@@ -694,7 +694,8 @@ module.exports = {
         'opensearchCollectionCmkEncrypted': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionCmkEncrypted.js'),
         'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
 
-        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js')
+        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js'),
+        'securityHubActiveFindings'     : require(__dirname + '/plugins/aws/securityhub/securityHubActiveFindings.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
