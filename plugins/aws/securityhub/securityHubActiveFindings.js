@@ -7,11 +7,9 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensure that Security Hub active findings do not exist in your AWS account.',
-    more_info: 'AWS Security Hub provides you with a comprehensive view of your security state within AWS. ' +
-    'It continuously monitors your environment using automated security checks based on AWS best practices and industry standards, ' +
-    'and aggregates findings from various AWS services. Active findings should be remediated and archived to maintain a secure environment.',
+    more_info: 'AWS Security Hub provides you with a comprehensive view of your security state within AWS. It continuously monitors your environment using automated security checks based on AWS best practices and industry standards, and aggregates findings from various AWS services. Active findings should be remediated and archived to maintain a secure environment.',
     link: 'https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-findings.html',
-    recommended_action: 'Resolve the Security Hub findings and archive them',
+    recommended_action: 'Resolve the Security Hub findings and archive them.',
     apis: ['SecurityHub:describeHub', 'SecurityHub:getFindings'],
     settings: {
         securityhub_findings_fail: {
