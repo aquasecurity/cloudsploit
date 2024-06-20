@@ -640,6 +640,7 @@ module.exports = {
         'docDbHasTags'                  : require(__dirname + '/plugins/aws/documentDB/docDbHasTags.js'),
         'docdbDeletionProtectionEnabled': require(__dirname + '/plugins/aws/documentDB/docdbDeletionProtectionEnabled.js'),
         'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
+        'docdbCertificateRotated'       : require(__dirname + '/plugins/aws/documentDB/docdbCertificateRotated.js'),
         'docdbClusterProfilerEnabled'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterProfilerEnabled.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
