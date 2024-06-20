@@ -51,21 +51,24 @@ module.exports = {
                 if (!instance.Engine || instance.Engine.toLowerCase() != 'docdb') continue;
                
                 let resource = instance.DBInstanceArn;
-    
-                if (instance.CertificateDetails && 
-                    instance.CertificateDetails.ValidTill) {
-                    var then = new Date(instance.CertificateDetails.ValidTill);
-                    var difference = Math.round((new Date(then).getTime() - new Date().getTime())/(24*60*60*1000));
 
-                    if (difference > docdb_certificate_rotation_limit) {
-                        helpers.addResult(results, 0, `DocumentDB cluster instance does not need certificate rotation as it expires in ${difference} days ` +
-                            `of ${docdb_certificate_rotation_limit} days limit`, region, resource);
-                    } else {
-                        helpers.addResult(results, 2, `DocumentDB cluster instance needs certificate rotation as it expires in ${difference} days ` +
-                            `of ${docdb_certificate_rotation_limit} days limit`, region, resource);
-                    } 
+                if (resource) {
+                    if (instance.CertificateDetails && 
+                        instance.CertificateDetails.ValidTill) {
+                        var then = new Date(instance.CertificateDetails.ValidTill);
+                        var difference = Math.round((new Date(then).getTime() - new Date().getTime())/(24*60*60*1000));
+
+                        if (difference > docdb_certificate_rotation_limit) {
+                            helpers.addResult(results, 0, `DocumentDB cluster instance does not need certificate rotation as it expires in ${difference} days ` +
+                                `of ${docdb_certificate_rotation_limit} days limit`, region, resource);
+                        } else {
+                            helpers.addResult(results, 2, `DocumentDB cluster instance needs certificate rotation as it expires in ${difference} days ` +
+                                `of ${docdb_certificate_rotation_limit} days limit`, region, resource);
+                        } 
+                    }
+                } else {
+                    helpers.addResult(results, 0, 'No DocumentDB cluster instances found', region);
                 }
-                    
             }
             
             rcb();
