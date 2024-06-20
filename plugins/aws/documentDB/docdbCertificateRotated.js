@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensure that DocumentDB cluster instance certificates are rotated.',
-    more_info: 'Enabling the AWS DocumentDB cluster certificate rotation ensures that your cluster\'s TLS certificates are automatically rotated to maintain security and compliance standards. This feature helps in seamlessly updating certificates without downtime, ensuring continuous protection for data in transit within the DocumentDB cluster.',
+    more_info: 'AWS DocumentDB cluster certificate rotation ensures that cluster\'s TLS certificates are automatically rotated to maintain security and compliance standards. This feature helps in seamlessly updating certificates without downtime, ensuring continuous protection for data in transit within the DocumentDB cluster.',
     recommended_action: 'Modify DocumentDB cluster instance and rotate the old server certificate.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/ca_cert_rotation.html',
     apis: ['RDS:describeDBInstances'],
