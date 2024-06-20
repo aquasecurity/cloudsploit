@@ -54,7 +54,7 @@ module.exports = {
                
                 let resource = instance.DBInstanceArn;
 
-                if (resource) docdbInstanceFound = true;
+                docdbInstanceFound = true;
 
                 if (instance.CertificateDetails && 
                     instance.CertificateDetails.ValidTill) {
