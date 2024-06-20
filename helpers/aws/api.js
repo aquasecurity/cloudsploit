@@ -1860,6 +1860,12 @@ var postcalls = [
             }
         },
         ApiGatewayV2: {
+            getStages: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
+            },
             getAuthorizers: {
                 reliesOnService: 'apigatewayv2',
                 reliesOnCall: 'getApis',
