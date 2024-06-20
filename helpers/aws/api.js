@@ -594,6 +594,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ApiGatewayV2: {
+        getApis: {
+            property: 'Items',
+            paginate: 'NextToken'
+        },
+    },
     AppConfig: {
         listApplications: {
             property: 'Items',
@@ -1851,6 +1857,14 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            }
+        },
+        ApiGatewayV2: {
+            getAuthorizers: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
             }
         },
         AppConfig: {
