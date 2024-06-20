@@ -1553,6 +1553,9 @@ var calls = {
         describeHub: {
             property:'',
             paginate: 'NextToken'
+        },
+        getFindings: {
+            paginate: 'NextToken'
         }
     },
     SageMaker: {
@@ -1838,6 +1841,12 @@ var postcalls = [
                 filterValue: 'id'
             },
             getAuthorizers:{
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            },
+            getRequestValidators: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',

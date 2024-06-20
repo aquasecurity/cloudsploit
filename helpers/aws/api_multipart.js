@@ -1044,6 +1044,9 @@ var calls = [
             describeHub: {
                 property: '',
                 paginate: 'NextToken'
+            },
+            getFindings: {
+                paginate: 'NextToken'
             }
         },
         Transfer: {
@@ -1195,6 +1198,12 @@ var postcalls = [
                 filterValue: 'id'
             },
             getResources: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            },
+            getRequestValidators: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
