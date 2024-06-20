@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Availability',
     severity: 'High',
     description: 'Ensures that Amazon API Gateway V2 APIs are using authorizer.',
-    more_info: 'API Gateway V2 APIs should be configured to use authorizer to enforce security measures and restrict access to API to only authorized users or processess.',
+    more_info: 'API Gateway V2 APIs should be configured to use authorizer to enforce security measures and restrict access to API to only authorized users or processes.',
     recommended_action: 'Modify API Gateway V2 configuration and ensure that appropriate authorizers are set up for each API.',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html',
     apis: ['ApiGatewayV2:getApis','ApiGatewayV2:getAuthorizers'],

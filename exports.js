@@ -27,6 +27,7 @@ module.exports = {
         'apigatewayAuthorization'       : require(__dirname + '/plugins/aws/apigateway/apigatewayAuthorization.js'),
         'apigatewayV2Authorization'     : require(__dirname + '/plugins/aws/apigateway/apigatewayV2Authorization.js'),
         'apigatewayV2AccessLogging'     : require(__dirname + '/plugins/aws/apigateway/apigatewayV2AccessLogging.js'),
+        'apigatewayRequestValidation'   : require(__dirname + '/plugins/aws/apigateway/apigatewayRequestValidation.js'),
 
         'restrictExternalTraffic'       : require(__dirname + '/plugins/aws/appmesh/restrictExternalTraffic.js'),
         'appmeshTLSRequired'            : require(__dirname + '/plugins/aws/appmesh/appmeshTLSRequired.js'),
@@ -598,6 +599,7 @@ module.exports = {
         's3ProtectionEnabled'           : require(__dirname + '/plugins/aws/guardduty/s3ProtectionEnabled.js'),
         'rdsProtectionEnabled'          : require(__dirname + '/plugins/aws/guardduty/rdsProtectionEnabled.js'),
         'exportedFindingsEncrypted'     : require(__dirname + '/plugins/aws/guardduty/exportedFindingsEncrypted.js'),
+        'lambdaProtectionEnabled'       : require(__dirname + '/plugins/aws/guardduty/lambdaProtectionEnabled.js'),
 
         'workspacesVolumeEncryption'    : require(__dirname + '/plugins/aws/workspaces/workspacesVolumeEncryption.js'),
         'workSpacesHealthyInstances'    : require(__dirname + '/plugins/aws/workspaces/workSpacesHealthyInstances.js'),
@@ -610,6 +612,8 @@ module.exports = {
 
         'codebuildValidSourceProviders' : require(__dirname + '/plugins/aws/codebuild/codebuildValidSourceProviders.js'),
         'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
+        'buildProjectEnvPriviligedMode' : require(__dirname + '/plugins/aws/codebuild/buildProjectEnvPriviligedMode.js'),
+        'codebuildProjectLoggingEnabled': require(__dirname + '/plugins/aws/codebuild/codebuildProjectLoggingEnabled.js'),
 
         'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
         'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
@@ -617,6 +621,7 @@ module.exports = {
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
+        'dataStoreHasTags'              : require(__dirname + '/plugins/aws/healthlake/dataStoreHasTags.js'),
 
         'codeartifactDomainEncrypted'   : require(__dirname + '/plugins/aws/codeartifact/codeartifactDomainEncrypted.js'),
 
@@ -637,6 +642,8 @@ module.exports = {
         'docDbHasTags'                  : require(__dirname + '/plugins/aws/documentDB/docDbHasTags.js'),
         'docdbDeletionProtectionEnabled': require(__dirname + '/plugins/aws/documentDB/docdbDeletionProtectionEnabled.js'),
         'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
+        'docdbCertificateRotated'       : require(__dirname + '/plugins/aws/documentDB/docdbCertificateRotated.js'),
+        'docdbClusterProfilerEnabled'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterProfilerEnabled.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
@@ -690,7 +697,8 @@ module.exports = {
         'opensearchCollectionCmkEncrypted': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionCmkEncrypted.js'),
         'opensearchCollectionPublicAccess': require(__dirname + '/plugins/aws/openSearchServerless/opensearchCollectionPublicAccess.js'),
 
-        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js')
+        'securityHubEnabled'            : require(__dirname + '/plugins/aws/securityhub/securityHubEnabled.js'),
+        'securityHubActiveFindings'     : require(__dirname + '/plugins/aws/securityhub/securityHubActiveFindings.js'),
     },
     azure : {
         'fileServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/fileServiceEncryption.js'),
@@ -854,9 +862,14 @@ module.exports = {
         'resourceAllowedLocations'      : require(__dirname + '/plugins/azure/policyservice/resourceAllowedLocations.js'),
         'resourceLocationMatch'         : require(__dirname + '/plugins/azure/policyservice/resourceLocationMatch.js'),
 
+        'mysqlFlexibleServerHasTags'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerHasTags.js'),
         'enforceMySQLSSLConnection'     : require(__dirname + '/plugins/azure/mysqlserver/enforceMySQLSSLConnection.js'),
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
+        'mysqlFlexibleServerVersion'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerVersion.js'),
         'mysqlServerHasTags'            : require(__dirname + '/plugins/azure/mysqlserver/mysqlServerHasTags.js'),
+        'mysqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerPublicAccess.js'),
+        'mysqlFlexibleServerDignosticLogs': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerDignosticLogs.js'),
+        'mysqlFlexibleServerIdentity'   : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerIdentity.js'),
 
         'logRetentionDays'              : require(__dirname + '/plugins/azure/postgresqlserver/logRetentionDays.js'),
         'connectionThrottlingEnabled'   : require(__dirname + '/plugins/azure/postgresqlserver/connectionThrottlingEnabled.js'),
@@ -1111,6 +1124,7 @@ module.exports = {
 
         'eventHubMinimumTLSversion'     : require(__dirname + '/plugins/azure/eventhub/eventHubMinimumTLSversion.js'),
         'eventHubNamespaceHasTags'      : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceHasTags.js'),
+        'eventHubNamespaceAutoInflate'   : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceAutoInflate.js'),
         'eventHubLocalAuthDisabled'     : require(__dirname + '/plugins/azure/eventhub/eventHubLocalAuthDisabled.js'),
         'eventHubPublicAccess'          : require(__dirname + '/plugins/azure/eventhub/eventHubPublicAccess.js'),
         'eventHubNamespaceCmkEncrypted' : require(__dirname + '/plugins/azure/eventhub/eventHubNamespaceCmkEncrypted.js'),
@@ -1183,6 +1197,9 @@ module.exports = {
 
         'batchAccountCmkEncrypted'      : require(__dirname + '/plugins/azure/batchAccounts/batchAccountCmkEncrypted.js'),
         'batchAccountDiagnosticLogs'    : require(__dirname + '/plugins/azure/batchAccounts/batchAccountDiagnosticLogs.js'),
+        'batchAccountsAADEnabled'       : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsAADEnabled.js'),
+        'batchAccountsHasTags'          : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsHasTags.js'),
+        'batchAccountsPublicAccess'     : require(__dirname + '/plugins/azure/batchAccounts/batchAccountsPublicAccess.js'),
 
         'accountCMKEncrypted'           : require(__dirname + '/plugins/azure/openai/accountCMKEncrypted.js'),
         'accountManagedIdentity'        : require(__dirname + '/plugins/azure/openai/accountManagedIdentity.js'),
@@ -1196,6 +1213,13 @@ module.exports = {
         'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
         'workspaceManagedDiskCmk'       : require(__dirname + '/plugins/azure/databricks/workspaceManagedDiskCmk.js'),
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
+        
+        'workspaceManagedIdentity'      : require(__dirname + '/plugins/azure/synapse/workspaceManagedIdentity.js'),
+        'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
+        'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
+
+        'apiInstanceManagedIdentity'    : require(__dirname + '/plugins/azure/apiManagement/apiInstanceManagedIdentity.js'),
+        'apiInstanceHasTags'            : require(__dirname + '/plugins/azure/apiManagement/apiInstanceHasTags.js'),
 
     },
     github: {
@@ -1554,8 +1578,10 @@ module.exports = {
         'instanceNodeCount'             : require(__dirname + '/plugins/google/spanner/instanceNodeCount.js'),
 
         'httpTriggerRequireHttps'       : require(__dirname + '/plugins/google/cloudfunctions/httpTriggerRequireHttps.js'),
+        'functionDefaultServiceAccount' : require(__dirname + '/plugins/google/cloudfunctions/functionDefaultServiceAccount.js'),
         'ingressAllTrafficDisabled'     : require(__dirname + '/plugins/google/cloudfunctions/ingressAllTrafficDisabled.js'),
         'cloudFunctionLabelsAdded'      : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionLabelsAdded.js'),
+        'cloudFunctionOldRuntime'       : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionOldRuntime.js'),
         'functionAllUsersPolicy'        : require(__dirname + '/plugins/google/cloudfunctions/functionAllUsersPolicy.js'),
 
         'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
