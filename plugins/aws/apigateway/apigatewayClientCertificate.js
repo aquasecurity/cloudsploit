@@ -5,11 +5,13 @@ module.exports = {
     title: 'API Gateway Client Certificate',
     category: 'API Gateway',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that Amazon API Gateway API stages use client certificates.',
     more_info: 'API Gateway API stages should use client certificates to ensure API security authorization.',
     recommended_action: 'Attach client certificate to API Gateway API stages',
     link: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html',
     apis: ['APIGateway:getRestApis', 'APIGateway:getStages'],
+    realtime_triggers: ['apigateway:CreateRestApi','apigateway:DeleteRestApi','apigateway:ImportRestApi','apigateway:CreateStage','apigateway:DeleteStage','apigateway:UpdateStage'],
 
     run: function(cache, settings, callback) {
         var results = [];

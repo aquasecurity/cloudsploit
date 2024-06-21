@@ -5,11 +5,13 @@ module.exports = {
     title: 'OpenSearch Exposed Domain',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures OpenSearch domains are not publicly exposed to all AWS accounts',
     more_info: 'OpenSearch domains should not be publicly exposed to all AWS accounts.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html',
     recommended_action: 'Update OpenSearch domain to set access control.',
     apis: ['OpenSearch:listDomainNames', 'OpenSearch:describeDomain', 'STS:getCallerIdentity'],
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

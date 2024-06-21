@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket MFA Delete Status',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures MFA delete is enabled on S3 buckets.',
     more_info: 'Adding MFA delete adds another layer of security while changing the version state' +
         'in the event of security credentials being compromised or unauthorized' +
@@ -22,11 +23,13 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketVersionning','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         
         var config = {
             whitelist_buckets_for_mfa_deletion: settings.whitelist_buckets_for_mfa_deletion || this.settings.whitelist_buckets_for_mfa_deletion.default
@@ -55,7 +58,7 @@ module.exports = {
             if (config.whitelist_buckets_for_mfa_deletion.includes(bucket.Name)) {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' is whitelisted',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
                 return;
             }
 
@@ -66,15 +69,15 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket versioning for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketVersioning),
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (getBucketVersioning.data.MFADelete && getBucketVersioning.data.MFADelete.toUpperCase() === 'ENABLED') {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has MFA Delete enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' has MFA Delete disabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             }
         });
         callback(null, results, source);

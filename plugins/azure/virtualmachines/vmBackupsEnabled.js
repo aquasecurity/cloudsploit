@@ -5,11 +5,13 @@ module.exports = {
     title: 'VM Backups Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that Azure virtual machine backups are enabled.',
     more_info: 'Azure Backup provides independent and isolated backups to guard against unintended destruction of the data on your VMs.',
     recommended_action: 'Enable Azure virtual machine backups',
-    link: 'https://docs.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
+    link: 'https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-introduction',
     apis: ['virtualMachines:listAll', 'recoveryServiceVaults:listBySubscriptionId', 'backupProtectedItems:listByVault'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftrecoveryservices:vaults:write', 'microsoftrecoveryservices:vaults:delete', 'microsoftrecoveryservices:vaults:backupfabrics:protectioncontainers:protecteditems:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

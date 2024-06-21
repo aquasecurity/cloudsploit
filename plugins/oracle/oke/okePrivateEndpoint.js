@@ -5,6 +5,7 @@ module.exports = {
     title: 'OKE Private Endpoint',
     category: 'OKE',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the private endpoint setting is enabled for OKE clusters.',
     more_info: 'OKE private endpoints can be used to route all traffic between the Kubernetes worker and control plane nodes over a private VCN endpoint rather than across the public internet.',
     recommended_action: 'Enable the private endpoint setting for all OKE clusters.',
@@ -40,9 +41,9 @@ module.exports = {
                     if (cluster.lifecycleState && cluster.lifecycleState === 'DELETED') return;
         
                     if (cluster.endpointConfig && cluster.endpointConfig.isPublicIpEnabled) {
-                        helpers.addResult(results, 2, 'OKE cluster does not have private endpoint enabled', region, cluster.name);
+                        helpers.addResult(results, 2, 'OKE cluster does not have private endpoint enabled', region, cluster.id);
                     } else {
-                        helpers.addResult(results, 0, 'OKE cluster has private endpoint enabled', region, cluster.name);
+                        helpers.addResult(results, 0, 'OKE cluster has private endpoint enabled', region, cluster.id);
                     }
                 });
             }

@@ -1,6 +1,5 @@
 // Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html
 
-
 var regions = [
     'cn-north-1',
     'cn-northwest-1'
@@ -15,6 +14,7 @@ module.exports = {
     acm: [],
     apigateway: regions,
     athena: [],
+    bedrock:[],
     cloudfront: [],
     efs: [],
     autoscaling: regions,
@@ -122,5 +122,6 @@ module.exports = {
     computeoptimizer: regions,
     appconfig: regions,
     opensearch:regions,
-    opensearchserverless: regions
+    opensearchserverless: regions,
+    securityhub: regions
 };

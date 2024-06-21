@@ -5,19 +5,21 @@ module.exports = {
     title: 'App Tier CMK In Use',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that a Customer-Managed Key (CMK) is created and configured for your Microsoft Azure application tier.',
     more_info: 'Setting a CMK for app tier, you gain full control over who can use this key to access the application data, implementing the principle of least privilege on the encryption key ownership and usage.',
     recommended_action: 'Ensure a CMK created and configured for application tier in each region.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-customer-managed-keys',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
         app_tier_tag_key: {
             name: 'App-Tier Tag Key',
             description: 'Tag key to indicate App-Tier Key Vault keys',
-            regex: '^.*$s',
+            regex: '^.*$',
             default: ''
         }
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

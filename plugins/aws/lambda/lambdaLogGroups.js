@@ -5,11 +5,13 @@ module.exports = {
     title: 'Lambda Log Groups',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensures each Lambda function has a valid log group attached to it',
     more_info: 'Every Lambda function created should automatically have a CloudWatch log group generated to handle its log streams.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html',
     recommended_action: 'Update the Lambda function permissions to allow CloudWatch logging.',
     apis: ['Lambda:listFunctions', 'CloudWatchLogs:describeLogGroups'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];

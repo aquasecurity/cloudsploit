@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 Minimum Number of EC2 Target Instances',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that there is a minimum number of two healthy target instances associated with each AWS ELBv2 load balancer.',
     more_info: 'There should be a minimum number of two healthy target instances associated with each AWS ELBv2 load balancer to ensure fault tolerance.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html',
     recommended_action: 'Associate at least two healthy target instances to AWS ELBv2 load balancer',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 'ELBv2:describeTargetHealth'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyTargetGroup','elasticloadbalancing:RegisterTarget', 'elasticloadbalancing:DeregisterTargets', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

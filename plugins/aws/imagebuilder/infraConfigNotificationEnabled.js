@@ -5,12 +5,13 @@ module.exports = {
     title: 'Infrastructure Configuration Notification Enabled',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that Image Builder infrastructure configurations have SNS notifications enabled.',
     more_info: 'Infrastructure configurations allow you to specify the infrastructure within which to build and test your EC2 Image Builder image.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-infra-config.html',
     recommended_action: 'Enable SNS notification in EC2 Image Builder infrastructure configurations to get notified of any changes in the service.',
     apis: ['Imagebuilder:listInfrastructureConfigurations', 'Imagebuilder:getInfrastructureConfiguration'],
+    realtime_triggers: ['Imagebuilder:CreateInfrastructureConfiguration','Imagebuilder:UpdateInfrastructureConfiguration','Imagebuilder:DeleteInfrastructureConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

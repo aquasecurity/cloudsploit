@@ -109,7 +109,8 @@ const masterRoleActions = {
 module.exports = {
     title: 'IAM Master and IAM Manager Roles',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensure IAM Master and IAM Manager roles are active within your AWS account.',
     more_info: 'IAM roles should be split into IAM Master and IAM Manager roles to work in two-person rule manner for best prectices.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -129,6 +130,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -238,8 +240,7 @@ module.exports = {
                     getRolePolicy[policyName].data &&
                     getRolePolicy[policyName].data.PolicyDocument) {
 
-                    var statements = helpers.normalizePolicyDocument(
-                        getRolePolicy[policyName].data.PolicyDocument);
+                    var statements = getRolePolicy[policyName].data.PolicyDocument;
                     if (!statements) break;
 
                     for (var s in statements) {

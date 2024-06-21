@@ -5,11 +5,13 @@ module.exports = {
     title: 'Web Apps Insights Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Application Insights feature is enabled for Azure web apps.',
     more_info: 'Application insights provide advanced application monitoring. Application Insights is an extensible Application Performance Management (APM) service for developers and DevOps professionals available as monitoring feature within Azure cloud.',
     recommended_action: 'Enable Application insights for Azure Web Apps',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview',
     apis: ['webApps:list', 'webApps:listAppSettings'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,9 +5,10 @@ module.exports = {
     title: 'No Custom Owner Roles',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that no custom owner roles exist.',
     more_info: 'Subscription owners should not include permissions to create custom owner roles. This follows the principle of least privilege.',
-    link: 'https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles',
+    link: 'https://learn.microsoft.com/en-us/azure/role-based-access-control/custom-roles',
     recommended_action: 'Remove roles that allow permissions to create custom owner roles.',
     apis: ['roleDefinitions:list'],
 

@@ -4,11 +4,13 @@ module.exports = {
     title: 'Disk Automatic Backup Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Google Compute disks have scheduled snapshots configured.',
     more_info: 'Having scheduled snapshots configured for your disks will periodically backup data from your persistent disks.',
     link: 'https://cloud.google.com/compute/docs/disks/scheduled-snapshots',
     recommended_action: 'Ensure that all compute disks have a snapshot schedule attached.',
     apis: ['disks:aggregatedList'],
+    realtime_triggers: ['compute.disks.insert','compute.disks.delete', 'compute.disk.addResourcePolicies', 'compute.disk.removeResourcePolicies'],
     
     run: function(cache, settings, callback) {
         var results = [];

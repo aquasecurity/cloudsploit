@@ -4,11 +4,13 @@ module.exports = {
     title: 'CloudFront TLS Deprecated Protocols',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures AWS CloudFront distribution is not using deprecated TLS Version.',
     more_info: 'Use latest TLS policy for CloudFront distribution to meet compliance and regulatory requirements within your organisation and to adhere to AWS security best policies.',
     link: 'https://aws.amazon.com/about-aws/whats-new/2020/07/cloudfront-tls-security-policy/',
     recommended_action: 'Modify cloudFront distribution and update the TLS version.',
     apis: ['CloudFront:listDistributions'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
 
     run: function(cache, settings, callback) {
         var results = [];

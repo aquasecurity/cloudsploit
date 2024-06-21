@@ -5,9 +5,10 @@ module.exports = {
     title: 'Ensure No Guest User',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures that there are no guest users in the subscription',
     more_info: 'Guest users are usually users that are invited from outside the company structure, these users are not part of the onboarding/offboarding process and could be overlooked, causing security vulnerabilities.',
-    link: 'https://docs.microsoft.com/en-us/azure/active-directory/b2b/add-users-administrator',
+    link: 'https://learn.microsoft.com/en-us/azure/active-directory/b2b/add-users-administrator',
     recommended_action: 'Remove all guest users unless they are required to be members of the Active Directory account.',
     apis: ['users:list'],
 

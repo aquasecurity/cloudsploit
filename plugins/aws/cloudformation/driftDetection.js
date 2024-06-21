@@ -5,12 +5,14 @@ module.exports = {
     title: 'CloudFormation Drift Detection',
     category: 'CloudFormation',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudFormation stacks are not in a drifted state.',
     more_info: 'AWS CloudFormation stack should not be in drifted state to ensure that stack template is aligned with the resources.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resource-import-resolve-drift.html',
     recommended_action: 'Resolve CloudFormation stack drift by importing drifted resource back to the stack.',
     apis: ['CloudFormation:listStacks'],
-
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

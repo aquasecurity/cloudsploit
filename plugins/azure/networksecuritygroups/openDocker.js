@@ -5,9 +5,10 @@ module.exports = {
     title: 'Open Docker',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if Docker port 2375 or 2376 is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Docker should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP ports 2375 and 2376 to known IP addresses',
     remediation_min_version: '202011201836',
     remediation_description: 'The impacted network security group rule will be deleted if no input is provided. If the failing port is in a port range and no input is provided, the range will be deleted. Otherwise, any input will replace the open CIDR rule.',
@@ -29,6 +30,7 @@ module.exports = {
     permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

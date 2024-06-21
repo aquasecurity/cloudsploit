@@ -77,7 +77,7 @@ describe('cloudfrontCustomOriginHttpsOnly', function () {
                 done();
             });
         });
-        it('should FAIL if Cloudfront Distribution is not https only', function (done) {
+        it('should FAIL if CloudFront Distribution is not https only', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontCustomOriginHttpsOnly.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

@@ -4,11 +4,14 @@ module.exports = {
     title: 'Domain Expiry',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures domains are not expiring too soon',
     more_info: 'Expired domains can be lost and reregistered by a third-party.',
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html',
     recommended_action: 'Reregister the expiring domain',
     apis: ['Route53Domains:listDomains'],
+    realtime_triggers: ['route53domains:RegisterDomain','route53domains:RenewDomain','route53domians:DeleteDomain'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

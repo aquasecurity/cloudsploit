@@ -4,11 +4,13 @@ module.exports = {
     title: 'Domain Transfer Lock',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures domains have the transfer lock set',
     more_info: 'To avoid having a domain maliciously transferred to a third-party, all domains should enable the transfer lock unless actively being transferred.',
     link: 'http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-from-route-53.html',
     recommended_action: 'Enable the transfer lock for the domain',
     apis: ['Route53Domains:listDomains'],
+    realtime_triggers: ['route53domains:RegisterDomain', 'route53domain:EnableDomainTransferLock', 'route53domain:DisableDomainTransferLock','route53domians:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

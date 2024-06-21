@@ -10,9 +10,7 @@ const listNotebookInstances = [
         "KmsKeyId": "0723d7e2-8655-4553-b4e3-20084f6bddba",
         "InstanceType": "ml.t2.medium",
         "CreationTime": "2020-11-16T14:59:14.821Z",
-        "LastModifiedTime": "2020-11-16T14:59:21.692Z",
-        "SubnetId": "subnet-012345678",
-        "NetworkInterfaceId": "eni-0123456789abcdef0"
+        "LastModifiedTime": "2020-11-16T14:59:21.692Z",      
     },
     {
         "NotebookInstanceName": "nb-instance-3",
@@ -21,17 +19,70 @@ const listNotebookInstances = [
         "DirectInternetAccess": "Enabled",
         "Url": "nb-instance-2.notebook.us-east-1.sagemaker.aws",
         "InstanceType": "ml.t2.medium",
-        "CreationTime": "2020-11-16T14:59:14.821Z",
-        "LastModifiedTime": "2020-11-16T14:59:21.692Z"
     }
 ];
 
-const createCache = (instances) => {
+const describeNotebookInstance = [
+    {
+        "NotebookInstanceArn": "arn:aws:sagemaker:us-east-1:1122334455:notebook-instance/test",
+        "NotebookInstanceName": "test",
+        "NotebookInstanceStatus": "Pending",
+        "Url": "test-mdbp.notebook.us-east-1.sagemaker.aws",
+        "InstanceType": "ml.t3.medium",
+        "SubnetId": "subnet-090543c3cc7bee455",
+        "SecurityGroups": [
+            "sg-0931c3a02deed68f5"
+        ],
+        "RoleArn": "arn:aws:iam::11222333445:role/service-role/AmazonSageMaker-ExecutionRole-20230803T155360",
+        "NetworkInterfaceId": "eni-0fce758c1693daae7",
+        "LastModifiedTime": "2023-08-04T12:59:53.661000+05:00",
+        "CreationTime": "2023-08-04T12:59:46.521000+05:00",
+        "DirectInternetAccess": "Disabled",
+        "VolumeSizeInGB": 5,
+        "RootAccess": "Enabled",
+        "PlatformIdentifier": "notebook-al2-v2",
+        "InstanceMetadataServiceConfiguration": {
+            "MinimumInstanceMetadataServiceVersion": "2"
+        }
+    },
+    {
+        "NotebookInstanceArn": "arn:aws:sagemaker:us-east-1:11222334455:notebook-instance/test",
+        "NotebookInstanceName": "test",
+        "NotebookInstanceStatus": "Pending",
+        "Url": "test-mdbp.notebook.us-east-1.sagemaker.aws",
+        "InstanceType": "ml.t3.medium",
+        "SecurityGroups": [
+            "sg-0931c3a02deed68f5"
+        ],
+        "RoleArn": "arn:aws:iam::1122334455:role/service-role/AmazonSageMaker-ExecutionRole-20230803T155360",
+        "LastModifiedTime": "2023-08-04T12:59:53.661000+05:00",
+        "CreationTime": "2023-08-04T12:59:46.521000+05:00",
+        "DirectInternetAccess": "Disabled",
+        "VolumeSizeInGB": 5,
+        "RootAccess": "Enabled",
+        "PlatformIdentifier": "notebook-al2-v2",
+        "InstanceMetadataServiceConfiguration": {
+            "MinimumInstanceMetadataServiceVersion": "2"
+        }
+    }
+
+
+];
+
+const createCache = (listInstances, instances) => {
+    var name = (listInstances && listInstances.length) ? listInstances[0].NotebookInstanceName : null;
     return {
         sagemaker: {
             listNotebookInstances: {
                 'us-east-1': {
-                    data: instances
+                    data: listInstances
+                }
+            },
+            describeNotebookInstance: {
+                'us-east-1': {
+                    [name] : {
+                        data: instances
+                    }
                 }
             }
         }
@@ -47,6 +98,15 @@ const createErrorCache = () => {
                         message: 'Error listing notebook instances'
                     }
                 }
+            },
+            describeNotebookInstance: {
+                'us-east-1': {
+                    'NotebookInstanceName': {
+                        err: {
+                            message: 'error fetching instance detail'
+                        },
+                    },
+                },
             }
         }
     };
@@ -66,7 +126,7 @@ const createNullCache = () => {
 describe('notebookInstanceInVpc', function() {
     describe('run', function () {
         it('should PASS if instance launched within VPC', function(done) {
-            const cache = createCache([listNotebookInstances[0]]);
+            const cache = createCache([listNotebookInstances[0]],describeNotebookInstance[0]);
             notebookInstanceInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -75,7 +135,7 @@ describe('notebookInstanceInVpc', function() {
         });
 
         it('should FAIL if instance is not launched within VPC', function(done) {
-            const cache = createCache([listNotebookInstances[1]]);
+            const cache = createCache([listNotebookInstances[1]],describeNotebookInstance[1]);
             notebookInstanceInVpc.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

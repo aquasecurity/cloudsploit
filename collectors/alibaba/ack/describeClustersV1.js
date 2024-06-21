@@ -7,7 +7,7 @@ var body = '{}';
 var headers = {
     'Content-Type': 'application/json'
 };
-var requestOption = {};
+var requestOption = {timeout: 30000};
 var pageNumber = 1;
 
 module.exports = function(AlibabaConfig, collection, region, callback) {

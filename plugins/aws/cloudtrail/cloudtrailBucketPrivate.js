@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Private',
     category: 'S3',
     domain: 'Compliance',
+    severity: 'High',
     description: 'Ensures CloudTrail logging bucket is not publicly accessible',
     more_info: 'CloudTrail buckets contain large amounts of sensitive account data and should only be accessible by logged in users.',
     recommended_action: 'Set the S3 bucket access policy for all CloudTrail buckets to only allow known users to access its files.',
@@ -22,6 +23,8 @@ module.exports = {
         }
 
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:UpdateTrail','s3:PutBucketPublicAccessBlock','s3:PutBucketAcl','s3:DeleteBucket'],
+
     run: function(cache, settings, callback) {
         var config = {
             whitelist_ct_private_buckets: settings.whitelist_ct_private_buckets ||  this.settings.whitelist_ct_private_buckets.default
@@ -33,6 +36,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', defaultRegion]);
@@ -68,14 +72,14 @@ module.exports = {
 
                 if (regBucket && regBucket.test(trail.S3BucketName)) {
                     helpers.addResult(results, 0, 
-                        'Bucket is whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
+                        'Bucket is whitelisted', region, `arn:${awsOrGov}:s3:::`+trail.S3BucketName);
                     return cb();
                 }
 
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,
                         'Unable to locate S3 bucket, it may have been deleted',
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                     return cb(); 
                 }
 
@@ -87,7 +91,7 @@ module.exports = {
                 if (!getBucketAcl || getBucketAcl.err || !getBucketAcl.data) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketAcl),
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                     return cb();
                 }
 
@@ -106,11 +110,11 @@ module.exports = {
                 if (allowsAllUsersTypes.length) {
                     helpers.addResult(results, 2,
                         'Bucket: ' + trail.S3BucketName + ' allows global access to: ' + allowsAllUsersTypes.concat(', '),
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 } else {
                     helpers.addResult(results, 0,
                         'Bucket: ' + trail.S3BucketName + ' does not allow public access',
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 }
 
                 cb();

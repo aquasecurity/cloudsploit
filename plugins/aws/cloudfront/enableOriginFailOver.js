@@ -4,12 +4,15 @@ module.exports = {
     title: 'CloudFront Enable Origin Failover',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Origin Failover feature is enabled for your CloudFront distributions in order to improve the availability of the content delivered to your end users.',
     more_info: ' With Origin Failover capability, you can setup two origins for your CloudFront web distributions primary and secondary. In the event of primary origin failure, ' +
                'your content is automatically served from the secondary origin, maintaining the distribution high reliability. ',
     link: 'https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_OriginGroupFailoverCriteria.html',
     recommended_action: 'Modify CloudFront distributions and configure origin group instead of a single origin',
     apis: ['CloudFront:listDistributions'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 

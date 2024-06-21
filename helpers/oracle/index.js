@@ -64,6 +64,9 @@ function OracleExecutor(OracleConfig) {
                         if (callObj.limit) {
                             parameters['limit'] = callObj.limit;
                         }
+
+                        parameters['lifecycleState'] = 'AVAILABLE';
+
                         oci(callObj.api, oracleService, callKey, OracleConfig, parameters, function(result) {
                             if (result.code) {
                                 aggregatedErrors.push(result);

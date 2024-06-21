@@ -5,11 +5,13 @@ module.exports = {
     title: 'EBS Volumes Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Compute Optimizer does not have active recommendation summaries for unoptimized EBS Volumes.',
     more_info: 'An EBS volume is considered optimized when Compute Optimizer determines that the volume is correctly provisioned to run your workload, based on the chosen volume type, volume size, and IOPS specification. For optimized resources, Compute Optimizer might sometimes recommend a new generation volume type.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ebs-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for EBS volumes.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
+    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus','ec2:CreateVolume','ec2:ModifyVolume','ec2:DeleteVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];

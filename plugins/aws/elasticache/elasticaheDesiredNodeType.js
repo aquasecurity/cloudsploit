@@ -5,6 +5,7 @@ module.exports = {
     title: 'ElastiCache Desired Node Type',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that the Amazon ElastiCache cluster nodes provisioned in your AWS account have the desired node type established within your organization based on the workload deployed.',
     more_info: 'Setting limits for the type of Amazon ElastiCache cluster nodes will help you address internal compliance requirements and prevent unexpected charges on your AWS bill.',
     recommended_action: 'Create ElastiCache clusters with desired node types',
@@ -18,6 +19,7 @@ module.exports = {
             default:'cache.t2.micro'
         }
     },
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:ModifyReplicationGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

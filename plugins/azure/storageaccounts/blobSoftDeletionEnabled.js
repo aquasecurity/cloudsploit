@@ -5,10 +5,11 @@ module.exports = {
     title: 'Blobs Soft Deletion Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that soft delete feature is enabled for all Microsoft Storage Account blobs.',
     more_info: 'When soft delete for blobs is enabled for a storage account, blobs, blob versions, and snapshots in that storage account may be recovered after they are deleted, within a retention period that you specify.',
     recommended_action: 'Enable soft delete for blobs and set deletion retention policy to keep blobs for more than desired number of days',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/soft-delete-blob-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-blob-overview',
     apis: ['storageAccounts:list', 'blobServices:getServiceProperties'],
     settings: {
         keep_deleted_blobs_for_days: {
@@ -18,6 +19,7 @@ module.exports = {
             default: '30'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftstorage:storageaccounts:blobservices:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

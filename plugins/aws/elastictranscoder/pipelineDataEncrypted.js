@@ -5,6 +5,7 @@ module.exports = {
     title: 'Elastic Transcoder Pipeline Data Encrypted',
     category: 'Elastic Transcoder',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Elastic Transcoder pipelines have encryption enabled with desired encryption level to encrypt your data.',
     more_info: 'Amazon Elastic Transcoder pipelines use AWS-managed KMS keys to encrypt your data.' +
         'You should use customer-managed keys in order to gain more granular control over encryption/decryption process',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline', 'elastictranscoder:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];

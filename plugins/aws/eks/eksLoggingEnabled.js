@@ -5,6 +5,7 @@ module.exports = {
     title: 'EKS Logging Enabled',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures all EKS cluster logs are being sent to CloudWatch',
     more_info: 'EKS supports routing of cluster event and audit logs to CloudWatch, including control plane logs. All logs should be sent to CloudWatch for security analysis.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html',
@@ -15,6 +16,7 @@ module.exports = {
     apis_remediate: ['EKS:listClusters', 'EKS:describeCluster'],
     actions: {remediate: ['EKS:updateClusterConfig'], rollback: ['EKS:updateClusterConfig']},
     permissions: {remediate: ['eks:UpdateClusterConfig'], rollback: ['eks:UpdateClusterConfig']},
+    realtime_triggers: ['eks:CreateCluster', 'eks:updateClusterConfig', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

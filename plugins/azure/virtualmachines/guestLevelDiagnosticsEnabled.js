@@ -6,11 +6,13 @@ module.exports = {
     title: 'Guest Level Diagnostics Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the guest level diagnostics are enabled ',
     more_info: 'Guest Level Diagnostics should be enabled to collect information about VMs processing and state of VM applications.',
     recommended_action: 'Enable guest level diagnostics for all virtual machines',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-vm-agent',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-vm-agent',
     apis: ['virtualMachines:listAll', 'virtualMachines:get'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write','microsoftcompute:virtualmachines:extensions:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

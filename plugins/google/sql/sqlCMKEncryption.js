@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQL CMK Encryption',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that Cloud SQL instances are encrypted using Customer Managed Keys (CMKs).',
     more_info: 'By default, your Google Cloud SQL instances are encrypted using Google-managed keys. To have a better control over the encryption process of your Cloud SQL instances you can use Customer-Managed Keys (CMKs).',
     link: 'https://cloud.google.com/sql/docs/sqlserver/cmek',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create'],
 
     run: function(cache, settings, callback) {
         var results = [];

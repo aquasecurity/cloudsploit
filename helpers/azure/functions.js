@@ -2,7 +2,7 @@ var shared = require(__dirname + '/../shared.js');
 var auth = require(__dirname + '/auth.js');
 var async = require('async');
 
-const defualyPolicyAssignments = {
+const defualtPolicyAssignments = {
     adaptiveApplicationControlsMonitoringEffect: 'AuditIfNotExists',
     diskEncryptionMonitoringEffect: 'AuditIfNotExists',
     endpointProtectionMonitoringEffect: 'AuditIfNotExists',
@@ -178,8 +178,8 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
 
     const policyAssignment = policyAssignments.data.find((policyAssignment) => {
         return (policyAssignment &&
-                policyAssignment.displayName &&
-                policyAssignment.displayName.toLowerCase().includes('asc default'));
+            policyAssignment.displayName &&
+            policyAssignment.displayName.toLowerCase().includes('asc default'));
     });
 
     if (!policyAssignment) {
@@ -191,18 +191,16 @@ function checkPolicyAssignment(policyAssignments, param, text, results, location
     // This check is required to handle a defect in the Azure API that causes
     // unmodified ASC policies to return an empty object for parameters: {}
     // https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000PMSZCA4
-    if (policyAssignment.parameters &&
-        !Object.keys(policyAssignment.parameters).length) {
-        addResult(results, 0,
-            'There ASC Default Policy Assignment includes all plugins', location,
-            policyAssignment.id);
-        return;
+
+    // The api used returns empty parameters in case of all the default values,
+    var policyAssignmentStatus = '';
+    if (policyAssignment.parameters && Object.keys(policyAssignment.parameters).length) {
+        policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) || defualtPolicyAssignments[param] || '';
+    } else {
+        policyAssignmentStatus =  defualtPolicyAssignments[param]
     }
 
-    const policyAssignmentStatus = (policyAssignment.parameters && policyAssignment.parameters[param] && policyAssignment.parameters[param].value) ||
-    defualyPolicyAssignments[param] || '';
-
-    if (!policyAssignmentStatus.length) {
+    if (!policyAssignmentStatus || !policyAssignmentStatus.length) {
         addResult(results, 0,
             text + ' is no supported', location, policyAssignment.id);
     } else if (policyAssignmentStatus == 'AuditIfNotExists' || policyAssignmentStatus == 'Audit') {
@@ -356,6 +354,55 @@ function checkServerConfigs(servers, cache, source, location, results, serverTyp
             }
         }
     });
+}
+
+function checkFlexibleServerConfigs(servers, cache, source, location, results, serverType, configProperty, configName) {
+    if (!servers) return;
+
+    if (servers.err || !servers.data) {
+        addResult(results, 3,
+            'Unable to query for ' + serverType + ' Servers: ' + shared.addError(servers), location);
+        return;
+    }
+
+    if (!servers.data.length) {
+        addResult(results, 0, 'No existing ' + serverType + ' Servers found', location);
+        return;
+    }
+
+    servers.data.forEach(function(server) {
+        const configurations = shared.addSource(cache, source,
+            ['flexibleServersConfigurations', 'listByPostgresServer', location, server.id]);
+
+        if (!configurations || configurations.err || !configurations.data) {
+            addResult(results, 3,
+                'Unable to query for ' + serverType + ' Server configuration: ' + shared.addError(configurations), location, server.id);
+        } else {
+            var configuration = configurations.data.filter(config => {
+                return (config.name == configProperty && config.value.toLowerCase() == 'on');
+            });
+
+            if (configuration && configuration.length) {
+                addResult(results, 0, configName + ' is enabled for the ' + serverType + ' Server configuration', location, server.id);
+            } else {
+                addResult(results, 2, configName + ' is disabled for the ' + serverType + ' Server configuration', location, server.id);
+            }
+        }
+    });
+}
+
+function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
+   
+    let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
+    if (pricingData) {
+        if (pricingData.pricingTier.toLowerCase() === 'standard') {
+           addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
+        } else {
+           addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location, pricingData.id);
+        }
+    } else {
+       addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location);
+    }
 }
 
 function processCall(config, method, body, baseUrl, resource, callback) {
@@ -704,5 +751,8 @@ module.exports = {
     remediatePlugin: remediatePlugin,
     processCall: processCall,
     remediateOpenPorts: remediateOpenPorts,
-    remediateOpenPortsHelper: remediateOpenPortsHelper
+    remediateOpenPortsHelper: remediateOpenPortsHelper,
+    checkMicrosoftDefender: checkMicrosoftDefender,
+    checkFlexibleServerConfigs:checkFlexibleServerConfigs
+
 };

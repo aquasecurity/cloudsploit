@@ -5,12 +5,14 @@ module.exports = {
     title: 'App Service SCM Site Access Restriction',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Azure App Services restrict access to the SCM site that\'s used by your app.',
     more_info: 'In addition to being able to control access to your app, you can restrict access to the SCM site that\'s used by your app. ' +
         'The SCM site is both the web deploy endpoint and the Kudu console.',
     recommended_action: 'Add access restriction rules under network settings for the scm site used by your app',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

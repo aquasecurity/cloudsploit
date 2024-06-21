@@ -5,6 +5,7 @@ module.exports = {
     title: 'User MFA Enabled',
     category: 'Users',
     types: ['user'],
+    severity: 'Medium',
     description: 'Ensures multi-factor authentication is enabled for the default user account',
     more_info: 'GitHub MFA provides additional account security by requiring an additional login device or code. All accounts should have MFA enabled.',
     link: 'https://help.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/',

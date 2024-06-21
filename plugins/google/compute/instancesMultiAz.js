@@ -5,11 +5,13 @@ module.exports = {
     title: 'Instances Multi AZ',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures managed instances are regional for availability purposes.',
     more_info: 'Creating instances in a single zone creates a single point of failure for all systems in the VPC. All managed instances should be created as Regional to ensure proper failover.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Launch new instances as regional instance groups.',
     apis: ['instanceGroups:aggregatedList', 'compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

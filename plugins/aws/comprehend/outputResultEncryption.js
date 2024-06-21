@@ -3,14 +3,16 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Amazon Comprehend Output Result Encryption',
-    category: 'Comprehend',
+    category: 'AI & ML',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures the Comprehend service is using encryption for all result output.',
     more_info: 'Comprehend supports using KMS keys to result output, which should be enabled.',
     link: 'https://docs.aws.amazon.com/comprehend/latest/dg/kms-in-comprehend.html',
     recommended_action: 'Enable output result encryption for the Comprehend job',
     apis: ['Comprehend:listEntitiesDetectionJobs', 'Comprehend:listDominantLanguageDetectionJobs', 'Comprehend:listTopicsDetectionJobs',
         'Comprehend:listDocumentClassificationJobs', 'Comprehend:listKeyPhrasesDetectionJobs', 'Comprehend:listSentimentDetectionJobs'],
+    realtime_triggers: ['comprehend:StartEntitiesDetectionJob','comprehend:StartTopicsDetectionJob','comprehend:StartSentimentDetectionJob','comprehend:StartKeyPhrasesDetectionJob','comprehend:StartDominantLanguageDetectionJob'],
 
     run: function(cache, settings, callback) {
         var results = [];

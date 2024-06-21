@@ -5,11 +5,13 @@ module.exports = {
     title: 'CloudTrail Global Services Logging Duplicated',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudTrail trails are not duplicating global services events in log files.',
     more_info: 'Only one trail should have Include Global Services feature enabled to avoid duplication of global services events in log files.',
     recommended_action: 'Update CloudTrail trails to log global services events enabled for only one trail',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html',
     apis: ['CloudTrail:describeTrails'],
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

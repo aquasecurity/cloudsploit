@@ -5,11 +5,13 @@ module.exports = {
     title: 'VPC Subnet Instances Present',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that there are instances attached to every subnet.',
     more_info: 'All subnets should have instances associated and unused subnets should be removed to avoid reaching the limit.',
     recommended_action: 'Update VPC subnets and attach instances to it or remove the unused VPC subnets',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
     apis: ['EC2:describeInstances', 'EC2:describeSubnets'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:CreateSubnet', 'ec2:TerminateInstances','ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var results = [];

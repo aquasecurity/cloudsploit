@@ -5,7 +5,7 @@ module.exports = {
     title: 'Event Bus Public Access',
     category: 'EventBridge',
     domain: 'Management and Governance',
-    severity: 'HIGH',
+    severity: 'High',
     description: 'Ensure that EventBridge event bus is configured to prevent exposure to public access.',
     more_info: 'The default event bus in your Amazon account only allows events from one account. You can grant additional permissions to an event bus by attaching a resource-based policy to it.',
     link: 'https://docs.amazonaws.cn/en_us/eventbridge/latest/userguide/eb-event-bus-perms.html',
@@ -19,6 +19,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceOwner,aws:SourceArn,aws:SourceAccount'
         }
     },
+    realtime_triggers: ['eventbridge:CreateEventBus', 'eventbridge:PutRule', 'eventbridge:PutTarget','eventbridge:PutPermission', 'eventbridge:DeleteEventBus', 'eventbridge:DeleteRule'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -72,9 +73,9 @@ module.exports = {
 
                 for (var statement of statements) {
                     var effectEval = (statement.Effect && statement.Effect == 'Allow' ? true : false);
-                    var principalEval = helpers.globalPrincipal(statement.Principal);
+                    var principalEval = helpers.globalPrincipal(statement.Principal, settings);
                     let scopedCondition;
-                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId);
+                    if (statement.Condition) scopedCondition = helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId, settings);
 
                     if (!scopedCondition && principalEval && effectEval) {
                         if (statement.Action && typeof statement.Action === 'string') {

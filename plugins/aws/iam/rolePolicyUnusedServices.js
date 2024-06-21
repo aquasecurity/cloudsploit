@@ -1,12 +1,12 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
     title: 'IAM Role Policy Unused Services',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services.',
     more_info: 'IAM role policies should only contain actions for resource types which are being used in your account i.e. dynamodb:ListTables permission should only be given when there are DynamoDB tables to adhere to security best practices and to follow principal of least-privilege.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -95,6 +95,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DetachRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -126,8 +127,10 @@ module.exports = {
         var source = {};
 
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var iamRegion = helpers.defaultRegion(settings);
 
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
         var allResources = [];
         const allServices = {
             apigateway: ['stage',  'restapi', 'api'],
@@ -337,9 +340,9 @@ module.exports = {
                             break;
                         }
 
-                        if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+                        if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(policy.PolicyArn)) continue;
 
-                        if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+                        if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(policy.PolicyArn)) continue;
 
                         var getPolicy = helpers.addSource(cache, source,
                             ['iam', 'getPolicy', iamRegion, policy.PolicyArn]);
@@ -394,8 +397,7 @@ module.exports = {
                             getRolePolicy[policyName] &&
                             getRolePolicy[policyName].data &&
                             getRolePolicy[policyName].data.PolicyDocument) {
-                            var statements = helpers.normalizePolicyDocument(
-                                getRolePolicy[policyName].data.PolicyDocument);
+                            var statements = getRolePolicy[policyName].data.PolicyDocument;
 
                             if (!statements) break;
 

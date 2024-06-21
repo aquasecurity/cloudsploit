@@ -5,6 +5,7 @@ module.exports = {
     title: 'Allowed Custom Ports',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures that security groups does not allow public access to any port.',
     more_info: 'Security groups should be used to restrict access to ports from known networks.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules', 'ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -144,3 +146,4 @@ module.exports = {
         });
     }
 };
+

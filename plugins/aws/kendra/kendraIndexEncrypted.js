@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Kendra Index Encrypted',
-    category: 'Kendra',
+    category: 'AI & ML',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that the Kendra index is encrypted using desired encryption level.',
     more_info: 'Amazon Kendra encrypts your data at rest with AWS-manager keys by default. Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create Kendra Index with customer-manager keys (CMKs).',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['kendra:CreateIndex','kendra:UpdateIndex','kendra:DeleteIndex'],
 
     run: function(cache, settings, callback) {
         var results = [];

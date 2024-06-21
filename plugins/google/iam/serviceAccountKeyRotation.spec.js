@@ -51,6 +51,32 @@ describe('serviceAccountKeyRotation', function () {
             plugin.run(cache, {}, callback);
         });
 
+        it('should give passing result if no user managed service account keys found', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.be.above(0);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No user managed service account keys found');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        "name": "projects/example-project/serviceAccounts/test@example-project.iam.gserviceaccount.com/keys/1234564354235fg34523562536",
+                        "validBeforeTime": "2019-11-17T18:56:00Z",
+                        "keyAlgorithm": "KEY_ALG_RSA_2048",
+                        "keyOrigin": "GOOGLE_PROVIDED",
+                        "keyType": "SYSTEM_MANAGED"
+                    }
+                ]
+            );
+
+            plugin.run(cache, {}, callback);
+        });
+
+
         it('should give passing result if the service account key has been rotated within defined threshold time', function (done) {
             const callback = (err, results) => {    
                 expect(results.length).to.be.above(0);

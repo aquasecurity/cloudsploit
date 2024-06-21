@@ -117,7 +117,7 @@ describe('virtualNetworkPeering', function() {
             virtualNetworkPeering.run(cache, { enable_virtual_network_peering: 'true' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Vitual network has peering with these unknown subscriptions: 123');
+                expect(results[0].message).to.include('Virtual network has peering with these unknown subscriptions: 123');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

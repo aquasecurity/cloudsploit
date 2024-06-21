@@ -5,6 +5,7 @@ module.exports = {
     title: 'Flow Logs Enabled',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures VPC flow logs are enabled for traffic logging',
     more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
     link: 'https://cloud.google.com/vpc/docs/using-flow-logs',
@@ -17,6 +18,7 @@ module.exports = {
         pci: 'PCI requires logging of all network access to environments containing ' +
             'cardholder data. Enable VPC flow logs to log these network requests.'
     },
+    realtime_triggers: ['compute.subnetworks.insert', 'compute.subnetworks.patch','compute.subnetworks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

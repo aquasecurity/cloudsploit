@@ -5,7 +5,8 @@ module.exports = {
     title: 'Service Encrypted',
     category: 'App Runner',
     domain: 'Compute',
-    description: 'Ensure that AWS App Runner service is encrypted using using desired encryption level.',
+    severity: 'High',
+    description: 'Ensure that AWS App Runner service is encrypted using desired encryption level.',
     more_info: 'To protect your application\'s data at rest, App Runner encrypts all stored copies of your application source image or source bundle using AWS-managed key by default.' +
                'Use customer-managed keys (CMKs) instead in order to gain more granular control over encryption/decryption process.',
     recommended_action: 'Create App Runner Service with customer-manager keys (CMKs)',
@@ -19,6 +20,8 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['apprunner:CreateService','apprunner:DeleteService'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

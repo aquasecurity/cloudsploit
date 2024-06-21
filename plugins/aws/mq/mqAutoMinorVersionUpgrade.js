@@ -5,11 +5,13 @@ module.exports = {
     title: 'MQ Auto Minor Version Upgrade',
     category: 'MQ',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon MQ brokers have the Auto Minor Version Upgrade feature enabled.',
     more_info: 'As AWS MQ deprecates minor engine version periodically and provides new versions for upgrade, it is highly recommended that Auto Minor Version Upgrade feature is enabled to apply latest upgrades.',
     recommended_action: 'Enabled Auto Minor Version Upgrade feature for MQ brokers',
     link: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/broker.html',
     apis: ['MQ:listBrokers', 'MQ:describeBroker'],
+    realtime_triggers: ['mq:CreateBrocker', 'mq:UpdateBrocker', 'mq:DeleteBrocker'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -1,8 +1,6 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var adminAccessArn = 'arn:aws:iam::aws:policy/AdministratorAccess';
-var iamFullAccessArn = 'arn:aws:iam::aws:policy/IAMFullAccess';
 
 var iamEditAccessPermissions = [
     '*',
@@ -26,7 +24,8 @@ var iamEditAccessPermissions = [
 module.exports = {
     title: 'IAM User Unauthorized to Edit',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensures AWS IAM users that are not authorized to edit IAM access policies are decommissioned.',
     more_info: 'Only authorized IAM users should have permission to edit IAM access policies to prevent any unauthorized requests.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_controlling.html',
@@ -47,6 +46,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AddUserToGroup','iam:RemoveUserFromGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var whitelisted_users = settings.iam_authorized_user_arns || this.settings.iam_authorized_user_arns.default;
@@ -55,6 +55,10 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var adminAccessArn = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
+        var iamFullAccessArn = `arn:${awsOrGov}:iam::aws:policy/IAMFullAccess`;
 
         var listUsers = helpers.addSource(cache, source,
             ['iam', 'listUsers', region]);

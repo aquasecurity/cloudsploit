@@ -5,10 +5,11 @@ module.exports = {
     title: 'Resources Usage Limits',
     category: 'Resources',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Determines if resources are close to the Azure per-account limit',
     more_info: 'Azure limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     recommended_action: 'Check if resources are close to the account limit to avoid resource launch failures',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-subscription-service-limits',
     apis: ['subscriptions:listLocations', 'usages:list'],
 
     run: function(cache, settings, callback) {
@@ -34,6 +35,10 @@ module.exports = {
             }
 
             subLocations.data.forEach(function(sloc){
+                if (sloc.name !=='global'){
+                    if (!locations.all.includes(sloc.name)) return;
+                }
+
                 const usages = helpers.addSource(cache, source,
                     ['usages', 'list', location, sloc.id]);
 

@@ -5,9 +5,10 @@ module.exports = {
     title: 'VM Instance Limit',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Determines if the number of VM instances is close to the Azure per-region limit',
     more_info: 'Azure limits regions to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/overview',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/overview',
     recommended_action: 'Contact Azure support to increase the number of instances available',
     apis: ['virtualMachines:listAll'],
     settings: {
@@ -30,6 +31,7 @@ module.exports = {
             default: 25000
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -3,7 +3,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSH Keys Rotated',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures SSH keys are not older than 180 days in order to reduce accidental exposures',
     more_info: 'SSH keys should be rotated frequently to avoid having them accidentally exposed.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_ssh-keys.html',
@@ -23,6 +24,7 @@ module.exports = {
             default: 180
         }
     },
+    realtime_triggers: ['iam:UploadSSHPublicKey','iam:DeleteSSHPublicKey'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -59,7 +61,7 @@ module.exports = {
 
             if (!listSSHPublicKeys || listSSHPublicKeys.err || !listSSHPublicKeys.data || !listSSHPublicKeys.data.SSHPublicKeys) {
                 helpers.addResult(results, 3,
-                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), user.Arn);
+                    'Unable to query for SSH Keys: ' + helpers.addError(listSSHPublicKeys), 'global', user.Arn);
                 continue;
             }
 

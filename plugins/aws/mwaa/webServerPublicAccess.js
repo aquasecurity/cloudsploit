@@ -5,11 +5,13 @@ module.exports = {
     title: 'Web Server Public Access',
     category: 'MWAA',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures web access to the Apache Airflow UI in your MWAA environment is not public.',
     more_info: 'To restrict access to the Apache Airflow UI, environment should be configured to be accessible only from within the VPC selected.',
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/vpc-create.html',
     recommended_action: 'Modify Amazon MWAA environments to set web server access mode to be private only',
     apis: ['MWAA:listEnvironments', 'MWAA:getEnvironment', 'STS:getCallerIdentity'],
+    realtime_triggers: ['mwaa:CreateEnvironment','mwaa:UpdateEnviroment', 'mwaa:DeleteEnvironment'], 
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,7 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM Policies Present',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensure that required policies are present in all IAM roles.',
     more_info: 'Validate the presence of required policies in IAM roles in order to follow your organizations\'s security and compliance requirements.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {

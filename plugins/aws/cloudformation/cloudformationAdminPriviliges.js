@@ -1,19 +1,21 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
+//var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
     title: 'CloudFormation Admin Priviliges',
     category: 'CloudFormation',
     domain: 'Application Integration',
-    severity: 'MEDIUM',
+    severity: 'Medium',
     description: 'Ensures no AWS CloudFormation stacks available in your AWS account has admin privileges.',
     more_info: 'A service role is an AWS Identity and Access Management (IAM) role that allows AWS CloudFormation to make calls to resources in a stack on your behalf. You can specify an IAM role that allows AWS CloudFormation to create, update, or delete your stack resources',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html',
     recommended_action: 'Modify IAM role attached with AWS CloudFormation stack to provide the minimal amount of access required to perform its tasks',
     apis: ['CloudFormation:listStacks', 'CloudFormation:describeStacks', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy'],
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:DeleteStack','cloudformation:UpdateStack','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:DeleteRolePolicy','iam:PutRolePolicy'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -21,6 +23,8 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.cloudformation, function(region, rcb){
             var listStacks = helpers.addSource(cache, source,
@@ -135,8 +139,7 @@ module.exports = {
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        let statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges

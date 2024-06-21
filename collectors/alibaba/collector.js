@@ -159,6 +159,9 @@ var calls = {
         },
         DescribeVersionConfig: {
             apiVersion: '2018-12-03'
+        },
+        DescribeVulConfig: {
+            apiVersion: '2018-12-03'
         }
     }
 };
@@ -312,7 +315,14 @@ var postcalls = [
                 filterValue: ['ApiId', 'GroupId'],
                 apiVersion: '2016-07-14'
             }
-        }
+        },
+        ACK: {
+            describeClusterDetail: {
+                reliesOnService: 'ack',
+                reliesOnCall: 'describeClustersV1',
+                override: true             
+            }
+        },
     }
 ];
 

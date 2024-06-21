@@ -95,7 +95,7 @@ describe('dynamoUnusedTable', function () {
             dynamoUnusedTable.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('DynamoDB table "akd-03" is unused');
+                expect(results[0].message).to.include('DynamoDB table "akd-03" is empty');
                 done();
             });
         });

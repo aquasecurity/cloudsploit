@@ -5,7 +5,8 @@ module.exports = {
     title: 'Managed Blockchain Network Member Data Encrypted',
     category: 'Managed Blockchain',
     domain: 'Content Delivery',
-    description: 'Ensure that members created in Amazon Managed Blockchain are encrtypted using desired encryption level.',
+    severity: 'High',
+    description: 'Ensure that members created in Amazon Managed Blockchain are encrypted using desired encryption level.',
     more_info: 'Amazon Managed Blockchain encrypts the network member data at-rest by default with AWS-managed keys. ' +
         'Use your own key (CMK) to encrypt this data to meet regulatory compliance requirements within your organization',
     link: 'https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/managed-blockchain-encryption-at-rest.html',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk',
         }
     },
+    realtime_triggers: ['managedblockchain:CreateNetwork', 'managedblockchain:DeleteMember'],
 
     run: function(cache, settings, callback) {
         var results = [];

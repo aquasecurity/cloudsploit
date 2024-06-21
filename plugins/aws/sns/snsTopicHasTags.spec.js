@@ -70,7 +70,6 @@ describe('snsTopicHasTags', function () {
         it('should PASS if SNS topic has tags', function (done) {
             const cache = createCache([listTopics[0]], [resourcegroupstaggingapi[0]]);
             snsTopicHasTags.run(cache, {}, (err, results) => {
-                console.log(results)
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');

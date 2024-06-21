@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket CMK Encrypted',
     category: 'OSS',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that OSS buckets are encrypted using Alibaba CMK.',
     more_info: 'OSS buckets should be encrypted using customer master keys in order to gain greater control and transparency, ' +
         'as well as increasing security by having full control of the encryption keys.',
@@ -59,7 +60,9 @@ module.exports = {
 
         var listKeys = helpers.addSource(cache, source, ['kms', 'ListKeys', region]);
 
-        if (!listKeys || listKeys.err || !listKeys.data) {
+        if (!listKeys) return callback(null, results, source);
+
+        if (listKeys.err || !listKeys.data) {
             helpers.addResult(results, 3, 'Unable to query KMS keys: ' + helpers.addError(listKeys), region);
             return callback(null, results, source);
         }

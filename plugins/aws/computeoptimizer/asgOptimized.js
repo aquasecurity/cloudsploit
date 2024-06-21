@@ -5,11 +5,13 @@ module.exports = {
     title: 'Auto Scaling Group Optimized',
     category: 'Compute Optimizer',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Compute Optimizer does not have active recommendation summaries for unoptimized Auto Scaling groups.',
     more_info: 'An Auto Scaling group is considered optimized when Compute Optimizer determines that the group is correctly provisioned to run your workload, based on the chosen instance type. For optimized Auto Scaling groups, Compute Optimizer might sometimes recommend a new generation instance type.',
     link: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-asg-recommendations.html',
     recommended_action: 'Resolve Compute Optimizer recommendations for Auto Scaling groups.',
     apis: ['ComputeOptimizer:getRecommendationSummaries'],
+    realtime_triggers: ['ComputeOptimizer:UpdateEnrollmentStatus','autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:StartInstanceRefresh','autoscaling:DeleteAutoScalingGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

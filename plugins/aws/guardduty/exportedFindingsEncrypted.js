@@ -5,6 +5,7 @@ module.exports = {
     title: 'Exported Findings Encrypted',
     category: 'GuardDuty',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that GuardDuty findings export is encrypted using desired KMS encryption level.',
     more_info: 'GuardDuty data, such as findings, is encrypted at rest using AWS owned customer master keys (CMK). ' +
         'Additionally, you can use your use key (CMKs) in order to gain more control over data encryption/decryption process.',
@@ -19,6 +20,7 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['guardduty:CreateDetector', 'guardduty:DeleteDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];

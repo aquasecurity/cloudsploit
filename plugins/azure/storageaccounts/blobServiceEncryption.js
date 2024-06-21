@@ -5,10 +5,11 @@ module.exports = {
     title: 'Blob Service Encryption',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures encryption is properly configured for Blob Services',
     more_info: 'Blob Services can be configured to encrypt data-at-rest. By default Azure will create a set of keys to encrypt Blob Services, but the recommended approach is to create your own keys using Azure Key Vault.',
     recommended_action: 'Ensure that Blob Service is configured to use a customer-provided key vault key.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption',
     apis: ['storageAccounts:list'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
@@ -17,6 +18,7 @@ module.exports = {
              'Encryption should be enabled for all storage accounts storing this ' +
              'type of data.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

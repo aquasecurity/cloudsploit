@@ -5,10 +5,11 @@ module.exports = {
     title: 'SQL Server Minimum TLS Version',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Microsoft Azure SQL Servers do not allow outdated TLS certificate versions.',
     more_info: 'TLS 1.2 or higher should be used for all TLS connections to Microsoft Azure SQL server. This setting applies to all databases associated with the server.',
     recommended_action: 'Modify SQL server firewall and virtual network settings to set desired minimum TLS version.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings#minimal-tls-version',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings#minimal-tls-version',
     apis: ['servers:listSql'],
     settings: {
         sql_server_min_tls_version: {
@@ -23,7 +24,7 @@ module.exports = {
     apis_remediate: ['servers:listSql'],
     actions: {remediate:['servers:update'], rollback:['servers:update']},
     permissions: {remediate: ['servers:update'], rollback: ['servers:update']},
-    realtime_triggers: ['microsoftsql:servers:write'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

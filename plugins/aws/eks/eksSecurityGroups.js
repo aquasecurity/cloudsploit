@@ -5,11 +5,13 @@ module.exports = {
     title: 'EKS Security Groups',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures the EKS control plane only allows inbound traffic on port 443.',
     more_info: 'The EKS control plane only requires port 443 access. Security groups for the control plane should not add additional port access.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html',
     recommended_action: 'Configure security groups for the EKS control plane to allow access only on port 443.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'EC2:describeSecurityGroups', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'ec2:RevokeSecurityGroupIngress', 'ec2:AuthorizeSecurityGroupIngress', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,10 +5,11 @@ module.exports = {
     title: 'Storage Accounts Encryption',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures encryption is enabled for Storage Accounts',
     more_info: 'Storage accounts can be configured to encrypt data-at-rest. By default Azure will create a set of keys to encrypt the storage account, but the recommended approach is to create your own keys using Azure Key Vault.',
     recommended_action: 'Ensure all Storage Accounts are configured with a BYOK key.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption-customer-managed-keys',
     apis: ['storageAccounts:list'],
     compliance: {
         hipaa: 'HIPAA requires that all data is encrypted, including data at rest. ' +
@@ -25,6 +26,7 @@ module.exports = {
             default: '^aquaacct([a-f0-9]){16}$'
         }
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

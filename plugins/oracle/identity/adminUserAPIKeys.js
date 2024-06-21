@@ -4,6 +4,7 @@ module.exports = {
     title: 'Admin User API Keys',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that API keys do not exist for tenancy administrator users.',
     more_info: 'The administrator user should avoid using API keys. Since the administrator user has full permissions across the entire tenancy, creating API keys for it only increases the chance that they are compromised. ' +
         'Instead, create non-admin user with limited permissions and use its API keys.',
@@ -80,7 +81,13 @@ module.exports = {
 
         if (adminGroup) {
 
-            let adminUsers = userGroups.data.map(userGroup => userGroup.userId) || [];
+            let adminUsers = [];
+            userGroups.data.forEach(userGroup => {
+                if (userGroup.groupId === adminGroup.id) {
+                    // User group is part of the 'Administrators' group
+                    adminUsers.push(userGroup.userId); // Add user ID to the array
+                }
+            });
 
             for (let user of users.data) {
                 if (!user.id) continue;

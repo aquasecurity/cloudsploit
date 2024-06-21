@@ -5,11 +5,13 @@ module.exports = {
     title: 'Resources Allowed Locations',
     category: 'Azure Policy',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures deployed resources and resource groups belong to the list set in the allowed locations for resource groups policy',
     more_info: 'Setting allowed locations for a service helps ensure the service can only be deployed in expected locations.',
     recommended_action: 'Ensure that all services contain policy definitions that defined allowed locations.',
-    link: 'https://docs.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/governance/policy/assign-policy-portal',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write', 'microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

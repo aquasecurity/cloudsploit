@@ -5,6 +5,7 @@ module.exports = {
     title: 'Transfer Logging Enabled',
     category: 'Transfer',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures AWS Transfer servers have CloudWatch logging enabled.',
     more_info: 'AWS Transfer servers can log activity to CloudWatch if a proper IAM service role is provided. This role should be configured for all servers to ensure proper access logging.',
     link: 'https://docs.aws.amazon.com/transfer/latest/userguide/monitoring.html',
@@ -14,6 +15,7 @@ module.exports = {
         hipaa: 'HIPAA requires that all data access is audited via proper logging configurations.',
         pci: 'PCI requires that all account access activity be logged.'
     },
+    realtime_triggers: ['transfer:CreateServer', 'transfer:UpdateServer', 'transfer:DeleteServer'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,17 +4,20 @@ module.exports = {
     title: 'S3 DNS Compliant Bucket Names',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures that S3 buckets have DNS complaint bucket names.',
     more_info: 'S3 bucket names must be DNS-compliant and not contain period "." to enable S3 Transfer Acceleration and to use buckets over SSL.',
     recommended_action: 'Recreate S3 bucket to use "-" instead of "." in S3 bucket names.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html',
     apis: ['S3:listBuckets', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -33,7 +36,7 @@ module.exports = {
         }
 
         for (var bucket of listBuckets.data) {
-            var resource = `arn:aws:s3:::${bucket.Name}`;
+            var resource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
             if (bucket.Name && bucket.Name.indexOf('.') === -1) {
                 helpers.addResult(results, 0,

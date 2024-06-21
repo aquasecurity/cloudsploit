@@ -5,11 +5,13 @@ module.exports = {
     title: 'ElastiCache Reserved Cache Node Payment Failed',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that payments for ElastiCache Reserved Cache Nodes available within your AWS account has been processed completely. ',
     more_info: 'When using ElastiCache Reserved Cache Nodes over standard On-Demand Cache Nodes savings are up to max that they give when used in steady state, therefore in order to receive this benefit you need to make sure that all your ElastiCache reservation purchases have been fully successful.',
     link: 'https://aws.amazon.com/elasticache/reserved-cache-nodes/',
     recommended_action: 'Identify any failed payments for ElastiCache reserved cache nodes',
     apis: ['ElastiCache:describeReservedCacheNodes'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:PurchaseReservedCacheNodesOffering'],
 
     run: function(cache, settings, callback) {
         var results = [];

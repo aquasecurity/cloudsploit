@@ -3,7 +3,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Password Requires Uppercase',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy requires at least one uppercase letter',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -27,6 +28,7 @@ module.exports = {
              'requirements enforces this policy.',
         cis1: '1.5 Ensure IAM password policy requires at least one uppercase letter'
     },
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

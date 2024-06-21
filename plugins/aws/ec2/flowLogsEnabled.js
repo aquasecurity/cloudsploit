@@ -6,6 +6,7 @@ module.exports = {
     title: 'VPC Flow Logs Enabled',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures VPC flow logs are enabled for traffic logging',
     more_info: 'VPC flow logs record all traffic flowing in to and out of a VPC. These logs are critical for auditing and review after security incidents.',
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/flow-logs.html',
@@ -19,6 +20,7 @@ module.exports = {
              'cardholder data. Enable VPC flow logs to log these network requests.',
         cis2: '2.9 Ensure VPC flow logging is enabled in all VPCs'
     },
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:CreateFlowLogs', 'ec2:DeleteFlowLogs', 'ec2:DeleteVpc'],
 
     run: function(cache, settings, callback) {
         var results = [];

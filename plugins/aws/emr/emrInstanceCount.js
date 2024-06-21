@@ -5,6 +5,7 @@ module.exports = {
     title: 'EMR Instances Counts',
     category: 'EMR',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that the number of EMR cluster instances provisioned in your AWS account has not reached the desired threshold established by your organization.',
     more_info: 'Setting threshold for the number of EMR cluster instances provisioned within your AWS account will help to manage EMR compute resources and' +
         'prevent unexpected charges on your AWS bill.',
@@ -25,6 +26,7 @@ module.exports = {
             default: 100
         }
     },
+    realtime_triggers: ['emr:CreateCluster', 'emr:TerminateClusters'],
 
     run: function(cache, settings, callback) {
         var config = {

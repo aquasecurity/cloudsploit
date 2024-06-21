@@ -5,10 +5,11 @@ module.exports = {
     title: 'Detect Insecure Custom Origin',
     category: 'CDN Profiles',
     domain: 'Content Delivery',
+    severity: '',
     description: 'Ensures that HTTPS is enabled for CDN endpoints with a custom origin',
     more_info: 'All Azure CDN endpoints should enable HTTPS to secure traffic to the backend custom origin.',
     recommended_action: 'Enable HTTPS and disable HTTP for each custom origin endpoint for each CDN profile.',
-    link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
+    link: 'https://learn.microsoft.com/en-us/azure/cdn/cdn-create-endpoint-how-to',
     apis: ['profiles:list', 'endpoints:listByProfile'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
@@ -18,6 +19,7 @@ module.exports = {
                 'Secure CDN origins should be used to ensure traffic between ' +
                 'the Azure CDN and backend service is encrypted.'
     },
+    realtime_triggers: ['microsoftcdn:profiles:write','microsoftcdn:profiles:delete','microsoftcdn:profiles:endpoints:write','microsoftcdn:profiles:endpoints:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

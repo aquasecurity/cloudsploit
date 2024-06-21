@@ -5,11 +5,14 @@ module.exports = {
     title: 'ASG Multiple AZ',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that ASGs are created to be cross-AZ for high availability.',
     more_info: 'ASGs can easily be configured to allow instances to launch in multiple availability zones. This ensures that the ASG can continue to scale, even when AWS is experiencing downtime in one or more zones.',
     link: 'http://docs.aws.amazon.com/autoscaling/latest/userguide/AutoScalingGroup.html',
     recommended_action: 'Modify the autoscaling instance to enable scaling across multiple availability zones.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

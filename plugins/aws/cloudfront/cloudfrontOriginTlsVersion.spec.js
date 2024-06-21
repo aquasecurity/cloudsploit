@@ -85,7 +85,7 @@ describe('cloudfrontOriginTLSVersion', function () {
                 done();
             });
         });
-        it('should FAIL if Cloudfront Distribution custom origin TLS version is deprecated', function (done) {
+        it('should FAIL if CloudFront Distribution custom origin TLS version is deprecated', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontOriginTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

@@ -38,7 +38,7 @@ describe('mysqlFlexibleServersMinTls', function() {
             );
 
             auth.run(cache, {}, callback);
-        })
+        });
 
         it('should FAIL if MySQL server is not using TLSV1.2', function(done) {
             const callback = (err, results) => {
@@ -122,5 +122,27 @@ describe('mysqlFlexibleServersMinTls', function() {
             auth.run(cache, {}, callback);
         });
 
+        it('should UNKNOWN if unable to query for configurations', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        "id": "/subscriptions/12345/resourceGroups/Default/providers/Microsoft.DBforMySQL/flexibleServers/test-server",
+                        "type": "Microsoft.DBforMySQL/flexibleServers"
+                    }
+                ],
+                {}
+            );
+
+            auth.run(cache, {}, callback);
+        })
     })
 })

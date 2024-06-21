@@ -5,16 +5,18 @@ module.exports = {
     title: 'Audit Action Groups Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Server Audit Action and Groups is configured properly',
     more_info: 'SQL Server Audit Action and Groups should be configured to at least include SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP, FAILED_DATABASE_AUTHENTICATION_GROUP and BATCH_COMPLETED_GROUP.',
     recommended_action: 'If SQL Server Audit Action and Groups is not configured properly when enabling Auditing, these settings must be configured in Powershell.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit record for ' +
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:auditingsettings:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

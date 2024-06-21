@@ -5,16 +5,19 @@ module.exports = {
     title: 'Sender Policy Framework In Use',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Sender Policy Framework (SPF) is used to stop spammers from spoofing your AWS Route 53 domain.',
     more_info: 'The Sender Policy Framework enables AWS Route 53 registered domain to publicly state the mail servers that are authorized to send emails on its behalf.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrsets-working-with.html',
     recommended_action: 'Updated the domain records to have SPF.',
     apis: ['Route53:listHostedZones', 'Route53:listResourceRecordSets'],
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets','route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
 
@@ -36,7 +39,7 @@ module.exports = {
         async.each(listHostedZones.data, function(zone, cb){
             if (!zone.Id) return cb();
 
-            var resource = `arn:aws:route53:::${zone.Id}`;
+            var resource = `arn:${awsOrGov}:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
                 ['route53', 'listResourceRecordSets', region, zone.Id]);

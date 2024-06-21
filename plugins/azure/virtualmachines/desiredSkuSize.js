@@ -5,19 +5,21 @@ module.exports = {
     title: 'VM Desired SKU Size',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that virtual machines is using the desired SKU size. This is an opt in plugin and will not run if no desired SKU size is provided.',
     more_info: 'VM SKU size defines the compute power and data processing speed. VM SKU size should be chosen carefully to address compute requirements for the organization and to save un-necessary costs.',
     recommended_action: 'Resize VM to desired SKU size.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/sizes',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/sizes',
     apis: ['virtualMachines:listAll'],
     settings: {
         vm_desired_sku_size: {
             name: 'VM Desired SKU Size',
-            description: 'Comma separated desired SKU sizes for the virtual machines. Created virtual machine SKU sizes should match the desired SKU size.Please visit https://docs.microsoft.com/en-us/azure/virtual-machines/sizes for available sizes',
+            description: 'Comma separated desired SKU sizes for the virtual machines. Created virtual machine SKU sizes should match the desired SKU size.Please visit https://learn.microsoft.com/en-us/azure/virtual-machines/sizes for available sizes',
             regex: '(.*,?)+',
             default: ''
         }
     },
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:disks:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

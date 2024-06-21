@@ -5,6 +5,7 @@ module.exports = {
     title: 'OSS Bucket Versioning',
     category: 'OSS',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that OSS bucket has versioning enabled.',
     more_info: 'OSS allows you to configure versioning to protect data in buckets. When versioning is enabled for a bucket, ' +
         'data that is overwritten or deleted in the bucket is saved as a previous version.',

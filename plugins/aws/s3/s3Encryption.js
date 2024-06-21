@@ -22,7 +22,7 @@ function statementTargetsAction(statement, targetAction) {
  */
 function getEncryptionLevel(statement) {
     if (statement) {
-        if (statement.Effect === 'Deny' && statement.Principal === '*') {
+        if (statement.Effect === 'Deny' && helpers.globalPrincipal(statement.Principal)) {
             if (statementTargetsAction(statement, 's3:PutObject')) {
                 if (statement.Condition && statement.Condition.StringNotEquals) {
                     if (statement.Condition.StringNotEquals['s3:x-amz-server-side-encryption'] === 'AES256') {
@@ -51,6 +51,7 @@ module.exports = {
     title: 'S3 Bucket Encryption Enforcement',
     category: 'S3',
     domain: 'Storage',
+    severity: 'High',
     description: 'All statements in all S3 bucket policies must have a condition that requires encryption at a certain level',
     more_info: 'S3 buckets support numerous types of encryption, including AES-256, KMS using a default key, KMS with a CMK, or via HSM-based key.',
     recommended_action: 'Configure a bucket policy to enforce encryption.',
@@ -70,6 +71,7 @@ module.exports = {
             default: 'false',
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:putBucketEncryption','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -84,6 +86,7 @@ module.exports = {
         var allowSkipEncryption = (s3_allow_unencrypted_static_websites == 'true');
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
 
@@ -99,7 +102,7 @@ module.exports = {
         }
 
         for (let bucket of listBuckets.data) {
-            var bucketResource = `arn:aws:s3:::${bucket.Name}`;
+            var bucketResource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             if (allowSkipEncryption) {

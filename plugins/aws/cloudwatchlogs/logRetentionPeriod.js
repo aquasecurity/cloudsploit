@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudWatch Log Retention Period',
     category: 'CloudWatchLogs',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures that the CloudWatch Log retention period is set above a specified length of time.',
     more_info: 'Retention settings can be used to specify how long log events are kept in CloudWatch Logs. Expired log events get deleted automatically.',
     recommended_action: 'Ensure CloudWatch logs are retained for at least 90 days.',
@@ -18,6 +19,7 @@ module.exports = {
             default: '90'
         }
     },
+    realtime_triggers: ['cloudwatchlogs:CreateLogGroup', 'cloudwatchlogs:PutRetentionPolicy','cloudwatchlogs:DeleteLogGroup'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -30,7 +32,9 @@ module.exports = {
         async.each(regions.cloudwatchlogs, function(region, rcb){
             var describeLogGroups = helpers.addSource(cache, source, ['cloudwatchlogs', 'describeLogGroups', region]);
 
-            if (!describeLogGroups || describeLogGroups.err ||
+            if (!describeLogGroups) return rcb();
+
+            if (describeLogGroups.err ||
                 !describeLogGroups.data) {
                 helpers.addResult(results, 3, `Unable to query CloudWatch Logs log groups: ${helpers.addError(describeLogGroups)}`, region);
                 return rcb();

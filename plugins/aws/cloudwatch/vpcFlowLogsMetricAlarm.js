@@ -5,7 +5,7 @@ module.exports = {
     title: 'VPC Flow Logs Metric Alarm',
     category: 'CloudWatch',
     domain: 'Compliance',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that an AWS CloudWatch alarm exists and configured for metric filter attached with VPC flow logs CloudWatch group.',
     more_info: 'A metric alarm watches a single CloudWatch metric or the result of a math expression based on CloudWatch metrics. ' + 
         'The alarm performs one or more actions based on the value of the metric or expression relative to a threshold over a number of time periods. ' +
@@ -21,6 +21,7 @@ module.exports = {
             default: 'vpc_flow_logs'
         }
     },
+    realtime_triggers: ['cloudwatchlogs:PutMetricFilter','cloudwatchlogs:DeleteMetricFilter', 'cloudwatch:PutMetricAlarm','cloudwatch:DeleteAlarms'],
 
     run: function(cache, settings, callback) {
         var results = [];

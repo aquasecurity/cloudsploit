@@ -5,11 +5,13 @@ module.exports = {
     title: 'Azure Active Directory Admin Configured',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Active Directory admin is set up on all PostgreSQL servers.',
     more_info: 'Using Azure Active Directory authentication allows key rotation and permission management to be managed in one location for all servers. This can be done are configuring an Active Directory administrator.',
     recommended_action: 'Set up an Active Directory admin for PostgreSQL database servers.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-sign-in-aad-authentication',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-sign-in-aad-authentication',
     apis: ['servers:listPostgres', 'serverAdministrators:list'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 Deprecated SSL Policies',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Elbv2 listeners are configured to use the latest predefined security policies.',
     more_info: 'Insecure or deprecated security policies can expose the client and the load balancer to various vulnerabilities.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html',
     recommended_action: 'Modify ELBv2 listeners with the latest predefined AWS security policies.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:CreateListener', 'elasticloadbalancing:ModifyListener', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteListener'],
     
     run: function(cache, settings, callback) {
         var results = [];

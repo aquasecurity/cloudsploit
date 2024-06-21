@@ -63,17 +63,17 @@ function addResult(results, status, message, region, resource, custom){
     }
 }
 
-function findOpenPorts(groups, ports, service, region, results, cache, config, callback) {
+function findOpenPorts(groups, ports, service, region, results, cache, config, callback, settings={}) {
     if (config.ec2_skip_unused_groups) {
         var usedGroups = getUsedSecurityGroups(cache, results, region);
         if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return callback();
     }
-
+    var awsOrGov = defaultPartition(settings);
     for (var g in groups) {
         var string;
         var openV4Ports = [];
         var openV6Ports = [];
-        var resource = `arn:aws:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
+        var resource = `arn:${awsOrGov}:ec2:${region}:${groups[g].OwnerId}:security-group/${groups[g].GroupId}`;
 
         for (var p in groups[g].IpPermissions) {
             var permission = groups[g].IpPermissions[p];
@@ -151,9 +151,11 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
                 }
             }
 
-            if (config.ec2_skip_unused_groups && groups[g].GroupId && !usedGroups.includes(groups[g].GroupId)) {
+            if (config.ec2_skip_unused_groups && groups[g].GroupId && (!usedGroups || !usedGroups.includes(groups[g].GroupId))) {
                 addResult(results, 1, `Security Group: ${groups[g].GroupId} is not in use`,
                     region, resource);
+            } else if (config.check_network_interface) {
+                checkNetworkInterface(groups[g].GroupId,groups[g].GroupName, resultsString, region, results, resource, cache);
             } else {
                 addResult(results, 2, resultsString,
                     region, resource);
@@ -176,6 +178,43 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
     return;
 }
 
+function checkNetworkInterface(groupId, groupName, resultsString, region, results, resource, cache) {
+    const describeNetworkInterfaces = helpers.addSource(cache, {},
+        ['ec2', 'describeNetworkInterfaces', region]);
+
+    if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
+        return;
+    }
+    let hasOpenSecurityGroup = false;
+    let networksWithSecurityGroup = [];
+    for (var network of describeNetworkInterfaces.data) {
+        for (const group of network.Groups) {
+            if (groupId === group.GroupId) {
+                networksWithSecurityGroup.push(network);
+                hasOpenSecurityGroup = true;
+                break;
+            }
+        }
+    }
+    if (hasOpenSecurityGroup) {
+        let hasPublicIp = false;
+        for (var eni of networksWithSecurityGroup) {
+            if (eni.Association && eni.Association.PublicIp) {
+                hasPublicIp = true;
+                break;
+            }
+        }
+        if (hasPublicIp) {
+            addResult(results, 2, `Security Group ${groupId}(${groupName}) is associated with an ENI that is publicly exposed`, region, resource);
+        } else {
+            addResult(results, 0, `Security Group ${groupId} (${groupName}) is only exposed internally`, region, resource);
+        }
+    } else {
+        addResult(results, 2, resultsString, region, resource);
+    }
+}
 function normalizePolicyDocument(doc) {
     /*
     Convert a policy document for IAM into a normalized object that can be used
@@ -226,7 +265,7 @@ function normalizePolicyDocument(doc) {
     return statementsToReturn;
 }
 
-function globalPrincipal(principal) {
+function globalPrincipal(principal, settings={}) {
     if (!principal) return false;
 
     if (typeof principal === 'string' && principal === '*') {
@@ -238,8 +277,9 @@ function globalPrincipal(principal) {
         awsPrincipals = [awsPrincipals];
     }
 
+    var awsOrGov = defaultPartition(settings);
     if (awsPrincipals.indexOf('*') > -1 ||
-        awsPrincipals.indexOf('arn:aws:iam::*') > -1) {
+        awsPrincipals.indexOf(`arn:${awsOrGov}:iam::*`) > -1) {
         return true;
     }
 
@@ -255,9 +295,10 @@ function userGlobalAccess(statement, restrictedPermissions) {
     return false;
 }
 
-function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
+function crossAccountPrincipal(principal, accountId, fetchPrincipals, settings={}) {
+    var awsOrGov = defaultPartition(settings);
     if (typeof principal === 'string' &&
-        (/^[0-9]{12}$/.test(principal) || /^arn:aws:.*/.test(principal)) &&
+        (/^[0-9]{12}$/.test(principal) || new RegExp(`^arn:${awsOrGov}:.*/`).test(principal)) &&
         !principal.includes(accountId)) {
         if (fetchPrincipals) return [principal];
         return true;
@@ -271,7 +312,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals) {
     var principals = [];
 
     for (var a in awsPrincipals) {
-        if (/^arn:aws:.*/.test(awsPrincipals[a]) &&
+        if (new RegExp(`^arn:${awsOrGov}:.*`).test(awsPrincipals[a]) &&
             awsPrincipals[a].indexOf(accountId) === -1) {
             if (!fetchPrincipals) return true;
             principals.push(awsPrincipals[a]);
@@ -363,7 +404,7 @@ function filterDenyPermissionsByPrincipal(permissionsMap, principal) {
     return response;
 }
 
-function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId) {
+function isValidCondition(statement, allowedConditionKeys, iamConditionOperators, fetchConditionPrincipals, accountId, settings={}) {
     if (statement.Condition && statement.Effect) {
         var effect = statement.Effect;
         var values = [];
@@ -379,12 +420,13 @@ function isValidCondition(statement, allowedConditionKeys, iamConditionOperators
                 if (!allowedConditionKeys.find(conditionKey => conditionKey.toLowerCase() == keyLower)) continue;
 
                 var value = subCondition[key];
+                var awsOrGov = defaultPartition(settings);
                 if (iamConditionOperators.string[effect].includes(defaultOperator) ||
                     iamConditionOperators.arn[effect].includes(defaultOperator)) {
                     if (keyLower === 'kms:calleraccount' && typeof value === 'string' && effect === 'Allow' &&  value === accountId) {
                         foundValid = true;
                         values.push(value);
-                    } else if (/^[0-9]{12}$/.test(value) || /^arn:aws:.+/.test(value)) {
+                    } else if (/^[0-9]{12}$/.test(value) || new RegExp(`^arn:${awsOrGov}:.+`).test(value) || /^o-[a-zA-Z0-9]{10,32}$/.test(value)) {
                         foundValid = true;
                         values.push(value);
                     }
@@ -902,7 +944,9 @@ function getPrivateSubnets(subnetRTMap, subnets, routeTables) {
 
     routeTables.forEach(routeTable => {
         if (routeTable.RouteTableId && routeTable.Routes &&
-            routeTable.Routes.find(route => route.GatewayId && !route.GatewayId.startsWith('igw-'))) privateRouteTables.push(routeTable.RouteTableId);
+            routeTable.Routes.every(route => !route.GatewayId || !route.GatewayId.startsWith('igw-'))) {
+            privateRouteTables.push(routeTable.RouteTableId);
+        }
     });
 
     subnets.forEach(subnet => {
@@ -1018,6 +1062,17 @@ var logError = function(service, call, region, err, errorsLocal, apiCallErrorsLo
     }
 };
 
+function checkConditions(startsWithBuckets, notStartsWithBuckets, endsWithBuckets, notEndsWithBuckets, bucketName) {
+    const startsWithCondition = startsWithBuckets.length > 0 ? startsWithBuckets.some(startsWith => bucketName.startsWith(startsWith)): false;
+    const notStartsWithCondition = notStartsWithBuckets.length > 0 ? !notStartsWithBuckets.some(notStartsWith => bucketName.startsWith(notStartsWith)): false;
+    const endsWithCondition = endsWithBuckets.length > 0 ? endsWithBuckets.some(endsWith => bucketName.endsWith(endsWith)): false;
+    const notEndsWithCondition = notEndsWithBuckets.length > 0 ? !notEndsWithBuckets.some(notEndsWith => bucketName.endsWith(notEndsWith)): false;
+
+    return {
+        startsWithCondition, notStartsWithCondition,  endsWithCondition, notEndsWithCondition
+    };
+}
+
 var collectRateError = function(err, rateError) {
     let isError = false;
 
@@ -1030,8 +1085,31 @@ var collectRateError = function(err, rateError) {
 
     return isError;
 };
+function processFieldSelectors(fieldSelectors,buckets ,startsWithBuckets,notEndsWithBuckets,endsWithBuckets, notStartsWithBuckets) {
+    fieldSelectors.forEach(f => {
+        if (f.Field === 'resources.ARN') {
+            if (f.Equals && f.Equals.length) {
+                const bucketName = f.Equals[0].split(':::')[1].split('/')[0];
+                buckets.push(bucketName);
+            }
+            if (f.StartsWith && f.StartsWith.length) {
+                startsWithBuckets.push(...f.StartsWith);
+            }
+            if (f.EndsWith && f.EndsWith.length) {
+                endsWithBuckets.push(...f.EndsWith);
+            }
+            if (f.NotStartsWith && f.NotStartsWith.length) {
+                notStartsWithBuckets.push(...f.NotStartsWith);
+            }
+            if (f.NotEndsWith && f.NotEndsWith.length) {
+                notEndsWithBuckets.push(...f.NotEndsWith);
+            }
+        }
+    });
+    return { buckets, startsWithBuckets, endsWithBuckets, notStartsWithBuckets, notEndsWithBuckets };
+}
 
-var checkTags = function(cache, resourceName, resourceList, region, results) {
+var checkTags = function(cache, resourceName, resourceList, region, results, settings={}) {
     const allResources = helpers.addSource(cache, {},
         ['resourcegroupstaggingapi', 'getResources', region]);
     
@@ -1040,8 +1118,8 @@ var checkTags = function(cache, resourceName, resourceList, region, results) {
             'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
         return;
     }
-
-    const resourceARNPrefix = `arn:aws:${resourceName.split(' ')[0].toLowerCase()}:`;
+    var awsOrGov = defaultPartition(settings);
+    const resourceARNPrefix = `arn:${awsOrGov}:${resourceName.split(' ')[0].toLowerCase()}:`;
     const filteredResourceARN = [];
     allResources.data.map(resource => {
         if ((resource.ResourceARN.startsWith(resourceARNPrefix)) && (resource.Tags.length > 0)){
@@ -1091,5 +1169,8 @@ module.exports = {
     debugApiCalls: debugApiCalls,
     logError: logError,
     collectRateError: collectRateError,
-    checkTags: checkTags
+    checkTags: checkTags,
+    checkConditions: checkConditions,
+    processFieldSelectors: processFieldSelectors,
+    checkNetworkInterface: checkNetworkInterface,
 };

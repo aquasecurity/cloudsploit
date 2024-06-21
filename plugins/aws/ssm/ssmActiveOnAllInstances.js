@@ -4,7 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Agent Active All Instances',
     category: 'EC2',
-    domain: 'Identity Access and Management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures SSM agents are installed and active on all servers',
     more_info: 'SSM allows for centralized monitoring of all servers and should be activated on all EC2 instances.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-setting-up.html',
@@ -18,11 +19,13 @@ module.exports = {
             default: 20
         }
     },
+    realtime_triggers: ['ec2:RunInstances', 'ssm:CreateAssociation', 'ssm:UpdateAssociation', 'ec2:TerminateInstance', 'ssm:DeleteAssociation'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
@@ -80,7 +83,7 @@ module.exports = {
 
             // See if every instance has SSM installed
             instanceList.forEach(function(id){
-                var arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + id;
+                var arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + id;
 
                 if (ssmMap[id] && ssmMap[id].PingStatus && ssmMap[id].PingStatus == 'Online') {
                     instanceListPass.push(arn);

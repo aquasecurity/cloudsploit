@@ -5,11 +5,13 @@ module.exports = {
     title: 'Cognito User Pool WAF Enabled',
     category: 'Cognito',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that Cognito User Pool has WAF enabled.',
     more_info: 'Enabling WAF allows control over unwanted requests to your hosted UI and Amazon Cognito API service endpoints, allowing or denying traffic based off rules in the Web ACL.',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-waf.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable WAF from properties.',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'WAFV2:getWebACLForCognitoUserPool', 'STS:getCallerIdentity'],
+    realtime_triggers: ['cognitoidentityserviceprovider:CreateUserPool','cognitoidentityserviceprovider:DeleteUserPool','wafv2:AssociateWebACL','wafv2:DisassociateWebACL'],
 
     run: function(cache, settings, callback) {
         var results = [];

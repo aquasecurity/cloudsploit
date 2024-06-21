@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront Geo Restriction',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that geo-restriction feature is enabled for your CloudFront distribution to allow or block location-based access.',
     more_info: ' AWS CloudFront geo restriction feature can be used to assist in mitigation of Distributed Denial of Service (DDoS) attacks. ' +
                'Also you have the ability to block IP addresses based on Geo IP from reaching your distribution and your web application content delivered by the distribution.',
@@ -18,6 +19,8 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Automatic IAM Grants',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Disable Automatic IAM Grants for Default Service Accounts" policy is enforced at the organization level.',
     more_info: 'By default, service accounts get the editor role when created. To improve access security, disable the automatic IAM role grant.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

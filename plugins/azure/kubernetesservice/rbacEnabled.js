@@ -5,12 +5,14 @@ module.exports = {
     title: 'Kubernetes RBAC Enabled',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensures that RBAC is enabled on all Azure Kubernetes Service instances',
     more_info: 'Role Based Access Control (RBAC) provides greater control and security for Kubernetes clusters and should be enabled on all instances.',
     recommended_action: 'Enable RBAC authentication for all Azure Kubernetes Clusters',
-    link: 'https://docs.microsoft.com/en-us/azure/aks/aad-integration',
+    link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list'],
-
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

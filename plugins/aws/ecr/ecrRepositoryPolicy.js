@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECR Repository Policy',
     category: 'ECR',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures ECR repository policies do not enable global or public access to images',
     more_info: 'ECR repository policies should limit access to images to known IAM entities and AWS accounts and avoid the use of account-level wildcards.',
     link: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/RepositoryPolicyExamples.html',
@@ -24,6 +25,7 @@ module.exports = {
             default: 'true'
         }
     },
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:SetRepositoryPolicy', 'ecr:DeleteRepository'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -105,11 +107,11 @@ module.exports = {
                             if (Array.isArray(srcAcct) && srcAcct.length == 1 && srcAcct[0] == registryId) continue;
                         }
 
-                        if (statement.Principal && helpers.globalPrincipal(statement.Principal) && config.ecr_check_global_principal) {
+                        if (statement.Principal && helpers.globalPrincipal(statement.Principal, settings) && config.ecr_check_global_principal) {
                             // Check for global access
                             found.push('Repository allows global access for actions: ' + statement.Action.join(', ') + '.');
                             if (result < 2) result = 2;
-                        } else if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, registryId) && config.ecr_check_cross_account_principal) {
+                        } else if (statement.Principal && helpers.crossAccountPrincipal(statement.Principal, registryId, undefined, settings) && config.ecr_check_cross_account_principal) {
                             // Check for cross-account access
                             found.push('Repository allows cross-account access for actions: ' + statement.Action.join(', ') + '.');
                             if (result < 2) result = 2;

@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Access From IP Addresses',
     category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure only whitelisted IP addresses can access Amazon OpenSearch domains.',
     more_info: 'OpenSearch domains should only be accessible only from whitelisted IP addresses to avoid unauthorized access.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ac.html#ac-types-ip',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -74,7 +76,7 @@ module.exports = {
 
                 for (var s in statements) {
                     var statement = statements[s];
-                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal)) {
+                    if (!statement.Condition && statement.Principal && helpers.globalPrincipal(statement.Principal, settings)) {
                         globalAccess = true;
                         break;
                     }

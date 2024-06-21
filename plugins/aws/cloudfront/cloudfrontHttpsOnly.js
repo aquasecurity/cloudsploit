@@ -4,6 +4,7 @@ module.exports = {
     title: 'CloudFront HTTPS Only',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures CloudFront distributions are configured to redirect non-HTTPS traffic to HTTPS.',
     more_info: 'For maximum security, CloudFront distributions can be configured to only accept HTTPS connections or to redirect HTTP connections to HTTPS.',
     link: 'http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFront.html',
@@ -25,7 +26,7 @@ module.exports = {
         remediate: ['cloudfront:UpdateDistribution'],
         rollback: ['cloudfront:UpdateDistribution']
     },
-    realtime_triggers: ['cloudfront:CreateDistribution', 'cloudfront:UpdateDistribution'],
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
     remediation_inputs: {
         cdnPolicyOption: {
             name: 'Viewer Protocol Policy Option',

@@ -5,15 +5,17 @@ module.exports = {
     title: 'Monitor SQL Encryption',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Monitor SQL Encryption is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center will monitor for unencrypted SQL databases, associated backups, and transaction log files.',
     recommended_action: 'Ensure SQL encryption monitoring is configured for SQL databases from the Azure Security Center.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
     compliance: {
         hipaa: 'HIPAA requires data to be encrypted at rest. Enabling SQL encryption ' +
                 'monitoring ensures this configuration is not modified undetected.'
     },
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,15 +5,28 @@ module.exports = {
     title: 'Open Memcached',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Determine if TCP or UDP port 11211 for Memcached is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Memcached should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
     recommended_action: 'Restrict TCP and UDP port 11211 to known IP addresses',
-    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
+    apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions', 'EC2:describeSubnets', 'EC2:describeRouteTables','ElastiCache:describeCacheClusters','ElastiCache:describeCacheSubnetGroups' ],
     settings: {
         ec2_skip_unused_groups: {
             name: 'EC2 Skip Unused Groups',
             description: 'When set to true, skip checking ports for unused security groups and produce a WARN result',
+            regex: '^(true|false)$',
+            default: 'false',
+        },
+        ignore_groups_with_private_clusters: {
+            name: 'Ignore security groups which are associated with clusters in private subnet',
+            description: 'When set to true, pass all the security groups associated with clusters that are in private subnet',
+            regex: '^(true|false)$',
+            default: 'false',
+        },
+        check_network_interface: {
+            name: 'Check Associated ENI',
+            description: 'When set to true, checks elastic network interfaces associated to the security group and returns FAIL if both the security group and ENI are publicly exposed',
             regex: '^(true|false)$',
             default: 'false',
         }
@@ -43,14 +56,18 @@ module.exports = {
         remediate: ['ec2:AuthorizeSecurityGroupIngress','ec2:RevokeSecurityGroupIngress'],
         rollback:['ec2:AuthorizeSecurityGroupIngress']
     },
-    realtime_triggers: ['ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:AuthorizeSecurityGroupIngress', 'ec2:ModifySecurityGroupRules','ec2:RevokeSecurityGroupIngress', 'ec2:DeleteSecurityGroup'],
 
     run: function(cache, settings, callback) {
         var config = {
             ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
+            ignore_groups_with_private_clusters: settings.ignore_groups_with_private_clusters|| this.settings.ignore_groups_with_private_clusters.default,
+            check_network_interface: settings.check_network_interface || this.settings.check_network_interface.default,
         };
 
         config.ec2_skip_unused_groups = (config.ec2_skip_unused_groups == 'true');
+        config.ignore_groups_with_private_clusters = (config.ignore_groups_with_private_clusters == 'true');
+        config.check_network_interface = (config.check_network_interface == 'true');
 
         var results = [];
         var source = {};
@@ -66,21 +83,97 @@ module.exports = {
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
                 ['ec2', 'describeSecurityGroups', region]);
-
             if (!describeSecurityGroups) return rcb();
-
             if (describeSecurityGroups.err || !describeSecurityGroups.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
                 return rcb();
             }
-
             if (!describeSecurityGroups.data.length) {
                 helpers.addResult(results, 0, 'No security groups present', region);
                 return rcb();
             }
-            helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb);
 
+            if (!config.ignore_groups_with_private_clusters) {
+                helpers.findOpenPorts(describeSecurityGroups.data, ports, service, region, results, cache, config, rcb, settings);
+            } else {
+                var subnetGroup;
+                var subnetRouteTableMap;
+                var privateSubnets = [];
+                var publicClusterSecurityGroups = [];
+                var privateClusterSecurityGroups = [];
+                var describeClusters = helpers.addSource(cache, source,
+                    ['elasticache', 'describeCacheClusters', region]);
+       
+                if (!describeClusters || describeClusters.err || !describeClusters.data ) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for clusters: ' + helpers.addError(describeClusters), region);
+                    return rcb();
+                } else {
+                    var describeSubnets = helpers.addSource(cache, source,
+                        ['ec2', 'describeSubnets', region]);
+                    var describeRouteTables = helpers.addSource(cache, {},
+                        ['ec2', 'describeRouteTables', region]);
+                    
+                    if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data ) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for route tables: ' + helpers.addError(describeRouteTables), region);
+                        return rcb();
+                    }     
+                
+                    if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+                        return rcb();                  
+                    } else {
+                        subnetRouteTableMap = helpers.getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+                        privateSubnets = helpers.getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);   
+                    }
+
+                    for ( var cluster of describeClusters.data) {
+                        subnetGroup = cluster.CacheSubnetGroupName;
+                        var describeCacheSubnetGroups = helpers.addSource(cache, source, ['elasticache','describeCacheSubnetGroups', region, subnetGroup]);
+         
+                        if (!describeCacheSubnetGroups || describeCacheSubnetGroups.err || !describeCacheSubnetGroups.data || !describeCacheSubnetGroups.data.CacheSubnetGroups) continue;
+                        var clusterSubnets = describeCacheSubnetGroups.data.CacheSubnetGroups;
+                        var allPrivate = clusterSubnets[0].Subnets.every(subnet => privateSubnets.includes(subnet.SubnetIdentifier));
+                        var groupIds = cluster.SecurityGroups.map(group => group.SecurityGroupId);
+       
+                        if (allPrivate) {
+                            privateClusterSecurityGroups.push(...groupIds.filter(groupId => !privateClusterSecurityGroups.includes(groupId)));
+                        } else {
+                            publicClusterSecurityGroups.push(...groupIds.filter(groupId => !publicClusterSecurityGroups.includes(groupId)));
+                        }  
+                    }
+                    if (privateClusterSecurityGroups.length > 0) {
+                        var privateGroupNames = [];
+                        privateClusterSecurityGroups = privateClusterSecurityGroups.filter(groupId => !publicClusterSecurityGroups.includes(groupId));
+                        privateClusterSecurityGroups.forEach(groupId => {
+                            var securityGroupData = describeSecurityGroups.data.find(group => group.GroupId === groupId);
+                            if (securityGroupData) {
+                                privateGroupNames.push({
+                                    groupId: groupId,
+                                    name: securityGroupData.GroupName,
+                                    description: securityGroupData.Description,
+                                    OwnerId: securityGroupData.OwnerId
+                                });
+                            }
+                        });
+                        privateGroupNames.forEach(privateGroup => {
+                            var resource = `arn:aws:ec2:${region}:${privateGroup.OwnerId}:security-group/${privateGroup.groupId}`;
+                            helpers.addResult(results, 0, `Security group ${privateGroup.groupId} (${privateGroup.name}) has all private clusters attached`, region, resource);
+                        });
+                    }
+                    var filteredSecurityGroups = describeSecurityGroups.data.filter(function(group) {
+                        return !privateClusterSecurityGroups.includes(group.GroupId);
+                    });  
+                    if (!filteredSecurityGroups.length) {
+                        return rcb();
+                    } else {
+                        helpers.findOpenPorts(filteredSecurityGroups, ports, service, region, results, cache, config, rcb, settings);
+                    }
+                } 
+            }
             rcb();
         }, function(){
             callback(null, results, source);

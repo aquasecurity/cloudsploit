@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 Deregistration Delay',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that AWS ELBv2 target groups have deregistration delay configured.',
     more_info: 'AWS ELBv2 target groups should have deregistration delay configured to help in-flight requests to the target to complete.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html#deregistration-delay',
     recommended_action: 'Update ELBv2 target group attributes and set the deregistration delay value',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 'ELBv2:describeTargetGroupAttributes'],
+    realtime_triggers: ['elasticloadbalancing:CreateTargetGroup', 'elasticloadbalancing:ModifyTargetGroupAttributes', 'elasticloadbalancing:DeleteTargetGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

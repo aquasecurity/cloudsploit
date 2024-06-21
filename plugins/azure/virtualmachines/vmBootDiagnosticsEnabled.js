@@ -6,11 +6,13 @@ module.exports = {
     title: 'Virtual Machine Boot Diagnostics Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the VM boot diagnostics is enabled for virtual machines.',
     more_info: 'Boot diagnostics is a debugging feature for Azure virtual machines (VM) that allows diagnosis of VM boot failures. Boot diagnostics enables a user to observe the state of their VM as it is booting up by collecting serial log information and screenshots.',
     recommended_action: 'Enable boot diagnostics for all virtual machines.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/boot-diagnostics',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/boot-diagnostics',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

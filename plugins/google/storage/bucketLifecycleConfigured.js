@@ -5,11 +5,13 @@ module.exports = {
     title: 'Bucket Lifecycle Configured',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that Cloud Storage buckets are using lifecycle management rules to transition objects between storage classes.',
     more_info: 'Lifecycle management rules allow you to delete buckets at the end of their lifecycle and help optimize your data for storage costs.',
     link: 'https://cloud.google.com/storage/docs/managing-lifecycles',
     recommended_action: 'Modify storage buckets and configure lifecycle rules.',
     apis: ['buckets:list'],
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

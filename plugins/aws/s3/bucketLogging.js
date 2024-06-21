@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Logging',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures S3 bucket logging is enabled for S3 buckets',
     more_info: 'S3 bucket logging helps maintain an audit trail of \
                 access that can be used in the event of a security \
@@ -31,11 +32,14 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['s3:CreateBucket','s3:PutBucketLogging','s3:DeleteBucket'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -63,15 +67,15 @@ module.exports = {
                 helpers.addResult(results, 3,
                     'Error querying bucket logging for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketLogging),
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else if (getBucketLogging.data.LoggingEnabled) {
                 helpers.addResult(results, 0,
                     'Bucket : ' + bucket.Name + ' has logging enabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else {
                 helpers.addResult(results, 2,
                     'Bucket : ' + bucket.Name + ' has logging disabled',
-                    bucketLocation, 'arn:aws:s3:::' + bucket.Name);
+                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             }
         });
         callback(null, results, source);

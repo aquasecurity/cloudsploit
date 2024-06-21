@@ -4,7 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Access Keys Extra',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Detects the use of more than one access key by any single user',
     more_info: 'Having more than one access key for a single user increases the chance of accidental exposure. Each account should only have one key that defines the users permissions.',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html',
@@ -27,6 +28,8 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['iam:CreateAccessKey','iam:UpdateAccessKey','iam:DeleteAccessKey'],
+
     run: function(cache, settings, callback) {
 
         var results = [];

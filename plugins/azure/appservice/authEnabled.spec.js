@@ -1,4 +1,3 @@
-var assert = require('assert');
 var expect = require('chai').expect;
 var auth = require('./authEnabled');
 
@@ -35,7 +34,7 @@ describe('authEnabled', function() {
             );
 
             auth.run(cache, {}, callback);
-        })
+        });
 
         it('should give failing result if disable App Service', function(done) {
             const callback = (err, results) => {
@@ -70,7 +69,7 @@ describe('authEnabled', function() {
             );
 
             auth.run(cache, {}, callback);
-        })
+        });
 
         it('should give passing result if enabled App Service', function(done) {
             const callback = (err, results) => {
@@ -105,6 +104,38 @@ describe('authEnabled', function() {
             );
 
             auth.run(cache, {}, callback);
-        })
+        });
+
+        it('should ignore if enabled App Service is a logic app', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(0)
+                done()
+            };
+
+            const cache = createCache(
+                null,
+                [
+                    {
+                        "id": "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp",
+                        "name": "gio-test-webapp",
+                        "type": "Microsoft.Web/sites",
+                        "kind": "app,workflowapp",
+                        "location": "East US",
+                        "state": "Running"
+                    }
+                ],
+                {
+                    "/subscriptions/abcdef-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/devresourcegroup/providers/Microsoft.Web/sites/test-webapp": {
+                        "data": {
+                            "name": "authsettings",
+                            "type": "Microsoft.Web/sites/config",
+                            "enabled": true
+                        }
+                    }
+                }
+            );
+
+            auth.run(cache, {}, callback);
+        });
     })
 })

@@ -5,6 +5,7 @@ module.exports = {
     title: 'ELB HTTPS Only',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures ELBs are configured to only accept' + 
                  ' connections on HTTPS ports.',
     more_info: 'For maximum security, ELBs can be configured to only'+
@@ -20,7 +21,7 @@ module.exports = {
     apis_remediate: ['ELB:describeLoadBalancers'],
     actions: {remediate: ['ELB:deleteLoadBalancerListeners'], rollback: ['ELB:createLoadBalancerListeners']},
     permissions: {remediate: ['elasticloadbalancing:DeleteLoadBalancerListeners'], rollback: ['elasticloadbalancing:CreateLoadBalancerListeners']},
-    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancerListeners','elasticloadbalancing:CreateLoadBalancer'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancerListeners','elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteLoadBalancerListeners'],
 
     run: function(cache, settings, callback) {
         var results = [];

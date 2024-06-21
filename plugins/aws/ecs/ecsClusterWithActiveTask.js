@@ -5,11 +5,13 @@ module.exports = {
     title: 'ECS Cluster Service Active Tasks',
     category: 'ECS',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure ECS clusters have services with running tasks.',
     more_info: 'A task is the instantiation of a task definition within a cluster. Amazon ECS service instantiates and maintains the specified number of tasks simultaneously in a cluster. As a best practice, ensure you always have running tasks in a cluster.',
     recommended_action: 'Modify Cluster services and add tasks',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html',
     apis: ['ECS:listClusters', 'ECS:describeCluster'],
+    realtime_triggers: ['ecs:CreateCluster', 'ecs:RunTask', 'ecs:StopTask', 'ecs:DeleteCluster'],
 
     run: function(cache, settings, callback){
         var results = [];

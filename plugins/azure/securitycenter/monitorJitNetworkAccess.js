@@ -5,11 +5,13 @@ module.exports = {
     title: 'Monitor JIT Network Access',
     category: 'Security Center',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Just In Time Network Access monitoring is enabled in Security Center',
     more_info: 'When this setting is enabled, Security Center audits Just In Time Network Access on all virtual machines (Windows and Linux as well) to enhance data protection at rest',
     recommended_action: 'Ensure JIT Network Access monitoring is configured for compute and apps from the Azure Security Center.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
     apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

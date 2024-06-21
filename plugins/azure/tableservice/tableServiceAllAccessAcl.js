@@ -5,17 +5,19 @@ module.exports = {
     title: 'Table Service All Access ACL',
     category: 'Table Service',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures tables do not allow full write, delete, or read ACL permissions',
     more_info: 'Table Service tables can be configured to allow to read, write or delete on objects. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, and delete policies on all tables and ensure the ACL is configured with least privileges.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:listTablesSegmented', 'tableService:getTableAcl'],
+    link: 'https://learn.microsoft.com/en-us/azure/storage/tables/table-storage-quickstart-portal',
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'tableService:listTablesSegmentedNew', 'tableService:getTableAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. Table Service ACLs enable granular permissions for data access.',
         pci: 'PCI data must be secured via least-privileged ACLs. Table Service ACLs ' +
                 'enable granular permissions for data access.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -59,7 +61,7 @@ module.exports = {
                             'No existing Table Service tables found', location, storageAccount.id);
                     } else {
                         listTablesSegmented.data.forEach(function(table) {
-                            var tableId = `${storageAccount.id}/tableService/${table}`;
+                            var tableId = `${storageAccount.id}/tableService/${table.name}`;
 
                             // Add ACL
                             var getTableAcl = helpers.addSource(cache, source,
@@ -71,10 +73,10 @@ module.exports = {
                             } else {
                                 var acl = getTableAcl.data;
                                 var fullPermissions = [];
-
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
-                                        var permissions = acl.signedIdentifiers[ident].Permissions;
+                                        var permissions = acl.signedIdentifiers[ident].accessPolicy.permission;
+
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":

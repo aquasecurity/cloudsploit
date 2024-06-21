@@ -82,7 +82,7 @@ describe('eksKubernetesVersion', function () {
                   "cluster": {
                     "name": "mycluster",
                     "arn": "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-                    "version": "1.21",
+                    "version": "1.27",
                   }
                 }
             );

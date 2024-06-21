@@ -204,7 +204,7 @@ const createNullCache = () => {
 
 describe('appmeshTLSRequired', function () {
     describe('run', function () {
-        it('should PASS if App Mesh vitual gateway listeners restrict TLS enabled connections', function (done) {
+        it('should PASS if App Mesh virtual gateway listeners restrict TLS enabled connections', function (done) {
             const cache = createCache([listMeshes[0]], [listVirtualGateways[0]], describeVirtualGateway[0]);
             appmeshTLSRequired.run(cache, { }, (err, results) => {
                 expect(results.length).to.equal(1);

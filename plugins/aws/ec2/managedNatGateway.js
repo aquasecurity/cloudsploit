@@ -5,11 +5,13 @@ module.exports = {
     title: 'Managed NAT Gateway In Use',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure AWS VPC Managed NAT (Network Address Translation) Gateway service is enabled for high availability (HA).',
     more_info: 'VPCs should use highly available Managed NAT Gateways in order to enable EC2 instances to connect to the internet or with other AWS components.',
     link: 'https://aws.amazon.com/blogs/aws/new-managed-nat-network-address-translation-gateway-for-aws/',
     recommended_action: 'Update VPCs to use Managed NAT Gateways instead of NAT instances',
     apis: ['EC2:describeVpcs', 'EC2:describeNatGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateNatGateway', 'ec2:ReplaceRoute','ec2:CreateVpc', 'ec2:DeleteNatGateway', 'ec2:DeleteVpc'],
 
     run: function(cache, settings, callback) {
         var results = [];

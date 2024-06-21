@@ -5,11 +5,13 @@ module.exports = {
     title: 'Classic Load Balancers In Use',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that HTTP/HTTPS applications are using Application Load Balancer instead of Classic Load Balancer.',
     more_info: 'HTTP/HTTPS applications should use Application Load Balancer instead of Classic Load Balancer for cost and web traffic distribution optimization.',
     link: 'https://aws.amazon.com/elasticloadbalancing/features/',
     recommended_action: 'Detach Classic Load balancer from HTTP/HTTPS applications and attach Application Load Balancer to those applications',
     apis: ['ELB:describeLoadBalancers', 'STS:getCallerIdentity'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

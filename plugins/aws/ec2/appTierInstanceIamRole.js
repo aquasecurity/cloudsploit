@@ -6,11 +6,12 @@ module.exports = {
     title: 'App-Tier EC2 Instance IAM Role',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure IAM roles attached with App-Tier EC2 instances have IAM policies attached.',
     more_info: 'EC2 instances should have IAM roles configured with necessary permission to access other AWS services',
     link: 'https://aws.amazon.com/blogs/security/new-attach-an-aws-iam-role-to-an-existing-amazon-ec2-instance-by-using-the-aws-cli/',
     recommended_action: 'Modify EC2 instances to attach IAM roles with required IAM policies',
-    apis: ['EC2:describeInstances', 'EC2:describeTags', 'IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies'],
+    apis: ['EC2:describeInstances', 'IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies'],
     settings: {
         ec2_app_tier_tag_key: {
             name: 'EC2 App-Tier Tag Key',
@@ -19,6 +20,7 @@ module.exports = {
             default: ''
         },
     },
+    realtime_triggers: ['ec2:RunInstances', 'ec2:AssociateIamInstanceProfile', 'ec2:DisassociateIamInstanceProfile', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -69,14 +71,8 @@ module.exports = {
                     var resource = `arn:${awsOrGov}:ec2:${region}:${accountId}:instance/${entry.InstanceId}`;
 
                     var tagFound = false;
-                    for (let t in describeTags.data) {
-                        let tag = describeTags.data[t];
-
-                        if (tag.ResourceId && tag.ResourceId === entry.InstanceId &&
-                            tag.Key && tag.Key === config.ec2_app_tier_tag_key) {
-                            tagFound = true;
-                            break;
-                        }
+                    if (entry.Tags && entry.Tags.length) {
+                        tagFound = entry.Tags.find(tag => tag.Key === config.ec2_app_tier_tag_key);
                     }
 
                     if (!tagFound) {
@@ -91,7 +87,7 @@ module.exports = {
                     } else {
                         var roleNameArr = entry.IamInstanceProfile.Arn.split('/');
                         var roleName = roleNameArr[roleNameArr.length-1];
-                        
+
                         // Get managed policies attached to role
                         var listAttachedRolePolicies = helpers.addSource(cache, source,
                             ['iam', 'listAttachedRolePolicies', region, roleName]);
@@ -134,10 +130,10 @@ module.exports = {
                         }
                     }
                 }
-                
+
                 cb();
             });
-            
+
             return rcb();
         }, function(){
             callback(null, results, source);

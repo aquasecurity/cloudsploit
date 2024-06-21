@@ -5,12 +5,13 @@ module.exports = {
     title: 'Enable Geo-Redundant Backups',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that your Microsoft Azure PostgreSQL database servers have geo-redundant backups enabled.',
     more_info: 'Enabling geo-redundant backup storage for PostgreSQL database servers gives better protection and ability to restore your server in a different region in the event of a disaster.',
     recommended_action: 'PostgreSQL servers does not support modifying geo-redundant storage configuration. ' +
         'You need to create a new server using current server\'s configuration with geo-redundant backup storage enabled ' +
         'and then delete the current PostgreSQL server',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/concepts-backup',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/concepts-backup',
     apis: ['servers:listPostgres'],
 
     run: function(cache, settings, callback) {

@@ -5,9 +5,10 @@ module.exports = {
     title: 'Open Hadoop HDFS NameNode Metadata Service',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Determine if TCP port 8020 for HDFS NameNode metadata service is open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Hadoop/HDFS should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 8020 to known IP addresses for Hadoop/HDFS.',
     apis: ['networkSecurityGroups:listAll'],
     apis_remediate: ['networkSecurityGroups:listAll'],
@@ -29,6 +30,7 @@ module.exports = {
     },
     actions: {remediate:['networkSecurityGroups:update'], rollback:['networkSecurityGroups:update']},
     permissions: {remediate: ['networkSecurityGroups:update'], rollback: ['networkSecurityGroups:update']},
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

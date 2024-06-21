@@ -5,16 +5,19 @@ module.exports = {
     title: 'Default Security Group In Use',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that AWS EC2 Instances are not associated with default security group.',
     more_info: 'The default security group allows all traffic inbound and outbound, which can make your resources vulnerable to attacks. Ensure that the Amazon EC2 instances are not associated with the default security groups.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#default-security-group',
     recommended_action: 'Modify EC2 instances and change security group.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:ModifyInstanceAttribute', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source, ['ec2', 'describeInstances', region]);
@@ -36,7 +39,7 @@ module.exports = {
 
                 for (var instance of instances.Instances) {
                     const { InstanceId } = instance;
-                    const arn = `arn:aws:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
+                    const arn = `arn:${awsOrGov}:ec2:${region}:${OwnerId}:instance/${InstanceId}`;
                     const defaultSecurityGroup = (instance.SecurityGroups && instance.SecurityGroups.length) ? instance.SecurityGroups.find(sg => sg.GroupName.toLowerCase() == 'default'): false;
                     if (defaultSecurityGroup) {
                         helpers.addResult(results, 2, 'EC2 instance is associated with default security group', region, arn);

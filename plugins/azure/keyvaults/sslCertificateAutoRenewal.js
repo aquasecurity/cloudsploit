@@ -5,11 +5,13 @@ module.exports = {
     title: 'SSL Certificate Auto Renewal',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Key Vault SSL certificates have auto renewal enabled.',
     more_info: 'Configure auto renewal for SSL certificates in order to prevent any application or service outage, credential leak, or process violation that can disrupt your business.',
     recommended_action: 'Ensure that Key Vault SSL certificates are configured to have auto renewal enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/overview-renew-certificate',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/certificates/overview-renew-certificate',
     apis: ['vaults:list', 'vaults:getCertificates', 'getCertificatePolicy:get'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

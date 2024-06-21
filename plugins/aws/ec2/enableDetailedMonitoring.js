@@ -6,16 +6,19 @@ module.exports = {
     title: 'Instance Detailed Monitoring',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that EC2 instances have detailed monitoring feature enabled.',
     more_info: 'By default, your instance is enabled for basic monitoring. After you enable detailed monitoring, EC2 console displays monitoring graphs with a 1-minute period.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html',
     recommended_action: 'Modify EC2 instance to enable detailed monitoring.',
     apis: ['EC2:describeInstances'],
+    realtime_triggers: ['ec2:RunInstances', 'ec2:MonitorInstances', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb) {
             const describeInstances = helpers.addSource(
@@ -37,7 +40,7 @@ module.exports = {
             for (const reservation of describeInstances.data) {
                 const accountId = reservation.OwnerId;
                 for (const instance of reservation.Instances) {
-                    const arn = 'arn:aws:ec2:' + region + ':' + accountId + ':instance/' + instance.InstanceId;
+                    const arn = `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' + instance.InstanceId;
 
                     if (instance.Monitoring && instance.Monitoring.State && instance.Monitoring.State.toLowerCase() === 'enabled') {
                         helpers.addResult(results, 0,

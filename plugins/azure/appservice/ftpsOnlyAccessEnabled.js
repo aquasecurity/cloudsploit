@@ -5,11 +5,13 @@ module.exports = {
     title: 'FTPS Only Access Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Azure Web Apps have FTPS only access enabled.',
     more_info: 'FTPS-only access for your Azure App Services applications, can guarantee that the encrypted traffic between the web application servers and the FTP clients cannot be decrypted by malicious actors.',
     recommended_action: 'Enable FTPS-only access for Azure Web Apps',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal#enforce-ftps',
     apis: ['webApps:list', 'webApps:listConfigurations'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

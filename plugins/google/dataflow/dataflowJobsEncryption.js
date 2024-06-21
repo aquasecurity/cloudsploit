@@ -5,6 +5,7 @@ module.exports = {
     title: 'Dataflow Jobs Encryption',
     category: 'Dataflow',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Google Dataflow jobs are encrypted with desired encryption level.',
     more_info: 'Google encrypts all jobs in Dataflow by default. Protecting source and sinks data for Dataflow batch pipeline with CMEK gives user more granular access to encryption and decryption process.',
     link: 'https://cloud.google.com/dataflow/docs/guides/customer-managed-encryption-keys',
@@ -26,6 +27,7 @@ module.exports = {
             default: 'cloudcmek'
         }
     },
+    realtime_triggers: ['dataflow.jobs.create', 'dataflow.jobs.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

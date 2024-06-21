@@ -1,3 +1,5 @@
+var async      = require('async');
+
 var ONE_DAY = 24*60*60*1000;
 var ONE_HOUR = 60*60*1000;
 
@@ -18,8 +20,15 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     let localSettings = {};
     localSettings = settings;
 
+    if (settings.govcloud) {
+        localEvent.awsOrGov = 'aws-us-gov';
+    }
+
+    localEvent.scanTriggeredFromEventsFlow = settings.scanTriggeredFromEventsFlow;
     localEvent.collection = {};
     localEvent.previousCollection = {};
+
+    localEvent.lastScanId = settings.lastScanId;
 
     localEvent.collection[serviceName.toLowerCase()] = {};
     localEvent.previousCollection[serviceName.toLowerCase()] = {};
@@ -34,26 +43,52 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     if (calls[serviceName] && calls[serviceName].sendIntegration && calls[serviceName].sendIntegration.isSingleSource) {
         localEvent.data = calls[serviceName].sendIntegration;
     }
+    let singleSourceArr = [];
 
     for (let postcall of postcalls) {
-        if (postcall[serviceName] && postcall[serviceName].sendIntegration && postcall[serviceName].sendIntegration.isSingleSource) {
+        if (postcall[serviceName] && postcall[serviceName].sendIntegration && Array.isArray(postcall[serviceName].sendIntegration)) {
+            singleSourceArr = postcall[serviceName].sendIntegration;
+            break;
+        } else if (postcall[serviceName] && postcall[serviceName].sendIntegration && postcall[serviceName].sendIntegration.isSingleSource) {
             localEvent.data = postcall[serviceName].sendIntegration;
             break;
         }
     }
 
-    processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
-        localEvent.collection = collectionReturned;
+    if (singleSourceArr && singleSourceArr.length) {
+        async.eachLimit(singleSourceArr, 1, function(singleSourceObj, sCb) {
+            localEvent.data = singleSourceObj;
 
-        processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
-            localEvent.previousCollection = previousCollectionReturned;
-            localSettings.integration(localEvent, function() {
-                if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+            processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+                localEvent.collection = collectionReturned;
 
-                return iCb();
+                processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+                    localEvent.previousCollection = previousCollectionReturned;
+                    localSettings.integration(localEvent, function() {
+                        if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                        return sCb();
+                    });
+                });
+            });
+        }, function() {
+            return iCb();
+        });
+    } else {
+        processIntegrationAdditionalData(serviceName, settings, collection, calls, postcalls, localEvent.collection, function(collectionReturned){
+            localEvent.collection = collectionReturned;
+
+            processIntegrationAdditionalData(serviceName, settings, settings.previousCollection, calls, postcalls, localEvent.previousCollection, function(previousCollectionReturned){
+                localEvent.previousCollection = previousCollectionReturned;
+                localSettings.integration(localEvent, function() {
+                    if (debugMode) console.log(`Processed Event: ${JSON.stringify(localEvent)}`);
+
+                    return iCb();
+                });
             });
         });
-    });
+
+    }
 };
 
 var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
@@ -383,7 +418,7 @@ module.exports = {
         var s1 = v1.split('.');
         var s2 = v2.split('.');
 
-        for (var i = 0; i < Math.max(s1.length - 1, s2.length - 1); i++) {
+        for (var i = 0; i < Math.max(s1.length , s2.length); i++) {
             var n1 = parseInt(s1[i] || 0, 10);
             var n2 = parseInt(s2[i] || 0, 10);
 
@@ -393,3 +428,4 @@ module.exports = {
         return 0;
     }
 };
+

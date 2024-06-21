@@ -5,11 +5,13 @@ module.exports = {
     title: 'Send Alerts Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that send alerts is enabled in advanced data security for SQL servers.',
     more_info: 'Enabling send alerts in advanced data security on all SQL servers ensures that monitored data for unusual activity, vulnerabilities, and threats get sent to the email addresses configured in advanced data protections.',
     recommended_action: 'Ensure that an email address is activated under send alerts in advanced data security for all SQL servers.',
-    link: 'https://docs.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
+    link: 'https://learn.microsoft.com/en-gb/azure/sql-database/sql-database-advanced-data-security',
     apis: ['servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:securityalertpolicies:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

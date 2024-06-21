@@ -5,6 +5,7 @@ module.exports = {
     title: 'Cross VPC Public Private Communication',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures communication between public and private VPC tiers is not enabled',
     more_info: 'Communication between the public tier of one VPC and the private tier of other VPCs should never be allowed. Instead, VPC peerings with proper NACLs and gateways should be used',
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html',
@@ -16,18 +17,22 @@ module.exports = {
              'communicate across these segmented boundaries. Ensure that public ' +
              'services in one VPC cannot communicate with the private tier of another.'
     },
+    realtime_triggers: ['ec2:CreateVpcPeeringConnection', 'ec2:ModifyVpcPeeringConnectionOptions', 'ec2:DeleteVpcPeeringConnection'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb) {
             // for Subnets
             var describeSubnets = helpers.addSource(cache, source, ['ec2', 'describeSubnets', region]);
 
+            if (!describeSubnets) return rcb();
+
             // error handling
-            if (!describeSubnets || !describeSubnets.data || describeSubnets.err) {
+            if (describeSubnets.data || describeSubnets.err) {
                 helpers.addResult(results, 3, 'Unable to query for Subnets: ' + helpers.addError(describeSubnets), region);
                 return rcb();
             }
@@ -220,7 +225,7 @@ module.exports = {
                 for (var d in prvRecord) {
                     if (pubRecord[c].peeringId == prvRecord[d].peeringId) {
                         register++;
-                        helpers.addResult(results, 2, 'A route between public and private subnets of different VPCs found, for Subnets: ' + pubRecord[c].subnetId + ' and ' + prvRecord[d].subnetId, region, 'arn:aws:ec2:' + region + ':' + prvRecord[d].ownerId + ':vpc-peering-connection/' + prvRecord[d].peeringId);
+                        helpers.addResult(results, 2, 'A route between public and private subnets of different VPCs found, for Subnets: ' + pubRecord[c].subnetId + ' and ' + prvRecord[d].subnetId, region, `arn:${awsOrGov}:ec2:` + region + ':' + prvRecord[d].ownerId + ':vpc-peering-connection/' + prvRecord[d].peeringId);
                     }
                 }
             }

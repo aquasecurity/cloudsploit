@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Encryption Enabled',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures at-rest encryption is setup for RDS instances',
     more_info: 'AWS provides at-read encryption for RDS instances which should be enabled to ensure the integrity of data stored within the databases.',
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
@@ -33,6 +34,7 @@ module.exports = {
              'encryption should be enabled for all instances storing this type ' +
              'of data.'
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

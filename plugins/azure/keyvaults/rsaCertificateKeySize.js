@@ -5,10 +5,11 @@ module.exports = {
     title: 'RSA Certificate Allowed Key Size',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure Key Vault RSA certificates are using the allowed minimum key size.',
     more_info: 'Having the right key size for your Azure Key Vault RSA certificates will enforce the best practices as specified in the security and compliance regulations implemented within your organization.',
     recommended_action: 'Ensure that Key Vault RSA certificates are using the allowed minimum key size.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/certificates/about-certificates',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/certificates/about-certificates',
     apis: ['vaults:list', 'vaults:getCertificates', 'getCertificatePolicy:get'],
     settings: {
         min_rsa_certificate_key_size: {
@@ -18,6 +19,7 @@ module.exports = {
             default: '2048'
         }
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

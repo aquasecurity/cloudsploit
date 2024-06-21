@@ -5,11 +5,13 @@ module.exports = {
     title: 'Multiple Subnets',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that Virtual Networks have multiple networks to provide a layered architecture',
     more_info: 'A single network within a Virtual Network increases the risk of a broader blast radius in the event of a compromise.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-vnet-plan-design-arm',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-vnet-plan-design-arm',
     recommended_action: 'Create multiple networks/subnets in each Virtual Network and change the architecture to take advantage of public and private tiers.',
     apis: ['virtualNetworks:listAll'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

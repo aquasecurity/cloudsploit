@@ -5,15 +5,17 @@ module.exports = {
     title: 'Key Vault Recovery Enabled',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that Purge Protection and Soft Delete are enabled on all Key Vaults',
     more_info: 'Purge Protection and Soft Delete are features that safeguard losing key access. With these setting enabled, key vaults have recovery actions available to restore deleted or compromised key vaults.',
     recommended_action: 'Once Key Vaults are created, the Azure CLI must be used to update the vault Soft Delete and Purge Protection settings.',
-    link: 'https://docs.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete',
+    link: 'https://learn.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete',
     apis: ['vaults:list'],
     compliance: {
         hipaa: 'HIPAA requires that all encryption mechanisms be protected against ' +
                 'modifications or loss.'
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

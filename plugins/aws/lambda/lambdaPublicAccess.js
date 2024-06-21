@@ -5,11 +5,13 @@ module.exports = {
     title: 'Lambda Public Access',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensures Lambda functions are not accessible globally',
     more_info: 'The Lambda function execution policy should not allow public invocation of the function.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html',
     recommended_action: 'Update the Lambda policy to prevent access from the public.',
     apis: ['Lambda:listFunctions', 'Lambda:getPolicy'],
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:AddPermission', 'lambda:RemovePermission','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -57,7 +59,7 @@ module.exports = {
                     for (var n in normalized) {
                         var statement = normalized[n];
                         if (statement.Principal) {
-                            var isGlobal = helpers.globalPrincipal(statement.Principal);
+                            var isGlobal = helpers.globalPrincipal(statement.Principal, settings);
                             if (isGlobal) {
                                 for (var s in statement.Action) {
                                     if (found.indexOf(statement.Action[s]) == -1) {

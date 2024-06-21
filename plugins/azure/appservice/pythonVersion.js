@@ -5,10 +5,11 @@ module.exports = {
     title: 'Python Version',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensures the latest version of Python is installed for all App Services',
     more_info: 'Installing the latest version of Python will reduce the security risk of missing security patches.',
     recommended_action: 'Select the latest version of Python for all Python-based App Services',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/containers/how-to-configure-python',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/containers/how-to-configure-python',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     settings: {
         latestPythonVersion: {
@@ -18,6 +19,8 @@ module.exports = {
             regex: '[0-9.]{2,5}'
         }
     },
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
+
 
     run: function(cache, settings, callback) {
         const config = {
@@ -68,16 +71,14 @@ module.exports = {
                         found = true;
 
                         var pythonVersion = webConfigs.data[0].linuxFxVersion.substr(webConfigs.data[0].linuxFxVersion.indexOf('|') + 1);
+                        var isLatestVersion = helpers.compareVersions(pythonVersion, config.latestPythonVersion);
 
-                        var version = parseFloat(pythonVersion);
-                        var allowedVersion = parseFloat(config.latestPythonVersion);
-
-                        if (version >= allowedVersion) {
-                            helpers.addResult(results, 0,
-                                `The Python version (${pythonVersion}) is the latest version`, location, webApp.id, custom);
-                        } else {
+                        if (isLatestVersion === -1) {
                             helpers.addResult(results, 2,
                                 `The Python version (${pythonVersion}) is not the latest version`, location, webApp.id, custom);
+                        } else {
+                            helpers.addResult(results, 0,
+                                `The Python version (${pythonVersion}) is the latest version`, location, webApp.id, custom);
                         }
                     }
                 }

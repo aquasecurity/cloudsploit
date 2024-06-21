@@ -5,11 +5,13 @@ module.exports = {
     title: 'Auto-Failover Groups Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that auto-failover groups are configured for Azure SQL database servers.',
     more_info: 'In case of any outage that impacts one or more SQL databases, automatic failover process switches all secondary databases in the group to primary databases to ensure high availability.',
     recommended_action: 'Ensure that auto-failover Groups are configured for Azure SQL database servers',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/auto-failover-group-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/auto-failover-group-overview',
     apis: ['servers:listSql', 'failoverGroups:listByServer'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:failovergroups:write', 'microsoftsql:servers:failovergroups:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

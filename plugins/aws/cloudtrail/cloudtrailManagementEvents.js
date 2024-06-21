@@ -5,11 +5,13 @@ module.exports = {
     title: 'CloudTrail Management Events',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudTrail trails are configured to log management events.',
     more_info: 'AWS CloudTrail trails should be configured to log management events to record management operations that are performed on resources in your AWS account.',
     recommended_action: 'Update CloudTrail to enable management events logging',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getEventSelectors'],
+    realtime_triggers: ['cloudtrail:CreateTrail', 'cloudtrail:PutEventSelectors','cloudtrail:DeleteTrail'],
 
     run: function(cache, settings, callback) {
         var results = [];

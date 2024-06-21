@@ -5,11 +5,13 @@ module.exports = {
     title: 'Managed VM Machine Image',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VM is launched from a managed VM image.',
     more_info: 'A managed VM image contains the information necessary to create a VM, including the OS and data disks. Virtual Machines should be launched using managed images to ensure security practices and consistency across all the instances.',
     recommended_action: 'Ensure that VM is launched using managed VM image',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/create-vm-generalized-managed',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/create-vm-generalized-managed',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

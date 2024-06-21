@@ -1,12 +1,12 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
 
 module.exports = {
     title: 'IAM Role Policies',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures IAM role policies are properly scoped with specific permissions',
     more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
@@ -83,6 +83,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -111,6 +112,8 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
@@ -138,7 +141,6 @@ module.exports = {
                 role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
                 return cb();
             }
-            
             // Get role details
             var getRole = helpers.addSource(cache, source,
                 ['iam', 'getRole', region, role.RoleName]);
@@ -160,7 +162,7 @@ module.exports = {
                             tag.Key == key && value.test(tag.Value));
                     }
                 });
-                if (ignoreRole) return cb(); 
+                if (ignoreRole) return cb();
             }
 
             if (config.ignore_identity_federation_roles &&
@@ -206,9 +208,9 @@ module.exports = {
                         break;
                     }
 
-                    if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+                    if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(policy.PolicyArn)) continue;
 
-                    if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+                    if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(policy.PolicyArn)) continue;
 
                     var getPolicy = helpers.addSource(cache, source,
                         ['iam', 'getPolicy', region, policy.PolicyArn]);
@@ -245,8 +247,7 @@ module.exports = {
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
 
-                        var statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        var statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
                         addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
                     }
@@ -267,7 +268,7 @@ module.exports = {
         }, function(){
             callback(null, results, source);
         });
-    } 
+    }
 };
 
 function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {

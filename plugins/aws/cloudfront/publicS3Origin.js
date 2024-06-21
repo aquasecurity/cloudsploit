@@ -5,6 +5,7 @@ module.exports = {
     title: 'Public S3 CloudFront Origin',
     category: 'CloudFront',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Detects the use of an S3 bucket as a CloudFront origin without an origin access identity',
     more_info: 'When S3 is used as an origin for a CloudFront bucket, the contents should be kept private and an origin access identity should allow CloudFront access. This prevents someone from bypassing the caching benefits that CloudFront provides, repeatedly loading objects directly from S3, and amassing a large access bill.',
     link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html',
@@ -12,9 +13,11 @@ module.exports = {
     apis: ['CloudFront:listDistributions'],
     compliance: {
         hipaa: 'HIPAA requires that access to protected information is controlled and audited. ' +
-                'If an S3 bucket backing a CloudFront distribution does not require the end ' +
-                'user to access the contents through CloudFront, this policy may be violated.'
+            'If an S3 bucket backing a CloudFront distribution does not require the end ' +
+            'user to access the contents through CloudFront, this policy may be violated.'
     },
+    realtime_triggers: ['cloudfront:CreateDistribution','cloudfront:UpdateDistribution','cloudfront:DeleteDistribution'],
+
 
     run: function(cache, settings, callback) {
 
@@ -46,19 +49,23 @@ module.exports = {
                     'global', distribution.ARN);
                 return cb();
             }
-
+            let publicOrigins = [];
             for (var o in distribution.Origins.Items) {
                 var origin = distribution.Origins.Items[o];
-
-                if (origin.S3OriginConfig &&
+                if (origin.DomainName && origin.DomainName.match(/s3(.*)\.amazonaws\.com/) &&
+                    origin.S3OriginConfig &&
                     (!origin.S3OriginConfig.OriginAccessIdentity ||
-                     !origin.S3OriginConfig.OriginAccessIdentity.length)) {
-                    helpers.addResult(results, 2, 'CloudFront distribution is using an S3 ' + 
-                        'origin without an origin access identity', 'global', distribution.ARN);
-                } else {
-                    helpers.addResult(results, 0, 'CloudFront distribution origin is not setup ' +
-                        'without an origin access identity', 'global', distribution.ARN);
+                        !origin.S3OriginConfig.OriginAccessIdentity.length) && !origin.OriginAccessControlId) {
+                    publicOrigins.push(origin.Id);
                 }
+            }
+
+            if (publicOrigins.length) {
+                helpers.addResult(results, 2, 'CloudFront distribution is using these S3 ' +
+                    `origins without an origin access identity: ${publicOrigins.join(',')}`, 'global', distribution.ARN);
+            } else {
+                helpers.addResult(results, 0, 'CloudFront distribution does not have any origin setup ' +
+                    'without an origin access identity', 'global', distribution.ARN);
             }
 
             cb();

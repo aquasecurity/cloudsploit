@@ -5,11 +5,13 @@ module.exports = {
     title: 'Kubernetes Alpha Disabled',
     category: 'Kubernetes',
     domain: 'Containers',
+    severity: 'Medium',
     description: 'Ensure the GKE Cluster alpha cluster feature is disabled.',
     more_info: 'It is recommended to not use Alpha clusters as they expire after thirty days and do not receive security updates.',
     link: 'https://cloud.google.com/kubernetes-engine/docs/concepts/alpha-clusters',
     recommended_action: '1. Create a new cluster with the alpha feature disabled. 2. Migrate all required cluster data from the cluster with alpha to this newly created cluster. 3.Delete the engine cluster with alpha enabled.',
     apis: ['kubernetes:list'],
+    realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Cross Region Replication Enabled',
     category: 'OSS',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensure that OSS buckets have cross region replication enabled.',
     more_info: 'Enabling Cross region replication for OSS buckets provides automatic and asynchronous replication of objects across buckets in different Object Storage Service (OSS) regions.',
     recommended_action: 'Modify OSS buckets to enable cross region replication.',

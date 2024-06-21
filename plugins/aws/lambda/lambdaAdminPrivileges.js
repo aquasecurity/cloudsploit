@@ -1,24 +1,27 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
-
 module.exports = {
     title: 'Lambda Admin Privileges',
     category: 'Lambda',
     domain: 'Serverless',
+    severity: 'Medium',
     description: 'Ensures no Lambda function available in your AWS account has admin privileges.',
     more_info: 'AWS Lambda Function should have most-restrictive IAM permissions for Lambda security best practices.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-permissions.html',
     recommended_action: 'Modify IAM role attached with Lambda function to provide the minimal amount of access required to perform its tasks',
     apis: ['Lambda:listFunctions', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy'],
-
+    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration', 'lambda:DeleteFunction'],
+           
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
         var defaultRegion = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
+
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.lambda, function(region, rcb){
             var listFunctions = helpers.addSource(cache, source,
@@ -59,8 +62,14 @@ module.exports = {
                 var getRolePolicy = helpers.addSource(cache, source,
                     ['iam', 'getRolePolicy', defaultRegion, roleName]);
 
-                if (!listAttachedRolePolicies ||
-                    listAttachedRolePolicies.err ||
+                if (!listAttachedRolePolicies || !listRolePolicies ) {
+                    helpers.addResult(results, 0,
+                        'No IAM Attached Role Found',
+                        region, resource);
+                    return fcb();
+                }
+
+                if (listAttachedRolePolicies.err ||
                     !listAttachedRolePolicies.data ||
                     !listAttachedRolePolicies.data.AttachedPolicies) {
                     helpers.addResult(results, 3,
@@ -69,7 +78,7 @@ module.exports = {
                     return fcb();
                 }
 
-                if (!listRolePolicies || listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
+                if (listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
                     helpers.addResult(results, 3,
                         `Unable to query for IAM role policy for role "${roleName}": ${helpers.addError(listRolePolicies)}`, 
                         region, resource);
@@ -123,8 +132,7 @@ module.exports = {
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        let statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Diagnostics Settings Enabled',
     category: 'Monitor',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures that Diagnostics Settings exist and are exporting activity logs.',
     more_info: 'Diagnostic setting should be configured for all appropriate resources for your environment in order to log the interactions within your cloud resources and gain insight into the operations that were performed within that resource itself.',
     recommended_action: 'Ensure that a Diagnostic status is enabled for all supported resources in Diagnostics Settings under Monitor.',
-    link: 'https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
+    link: 'https://learn.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile',
     apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

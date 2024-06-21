@@ -56,7 +56,7 @@ describe('cloudfrontTLSVersion', function () {
             });
         });
 
-        it('should FAIL if Cloudfront DistributionTLS version is deprecated', function (done) {
+        it('should FAIL if CloudFront DistributionTLS version is deprecated', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontTLSVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

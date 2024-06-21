@@ -79,6 +79,7 @@ module.exports = {
     title: 'Insecure Ciphers',
     category: 'ELB',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Detect use of insecure ciphers on ELBs',
     more_info: 'Various security vulnerabilities have rendered several ciphers insecure. Only the recommended ciphers should be used.',
     link: 'http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/elb-security-policy-options.html',
@@ -92,6 +93,7 @@ module.exports = {
         pci: 'PCI requires secure transfer of cardholder data. It does not permit SSL or TLS ' +
              'version 1.0. ELB listeners should be configured for TLS v1.2.'
     },
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:CreateLoadBalancerPolicy', 'elasticloadbalancing:DeleteLoadBalancerPolicy',  'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

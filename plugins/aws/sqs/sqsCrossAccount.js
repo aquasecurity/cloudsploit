@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Cross Account Access',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures SQS policies disallow cross-account access',
     more_info: 'SQS policies should be carefully restricted to prevent publishing or reading from the queue from unexpected sources. Queue policies can be used to limit these privileges.',
     recommended_action: 'Update the SQS policy to prevent access from external accounts.',
@@ -35,6 +36,7 @@ module.exports = {
             default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
         },
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes','sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -129,13 +131,13 @@ module.exports = {
 
                     var crossAccountAccess = false;
                     var conditionalPrincipals = (statement.Condition) ?
-                        helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId) : [];
+                        helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, true, accountId, settings) : [];
 
-                    if (helpers.globalPrincipal(statement.Principal)) {
+                    if (helpers.globalPrincipal(statement.Principal, settings)) {
                         // if (statement.Condition && helpers.isValidCondition(statement, allowedConditionKeys, helpers.IAM_CONDITION_OPERATORS, false, accountId)) continue;
                         if (statement.Condition && conditionalPrincipals.length) {
                             for (let principal of conditionalPrincipals) {
-                                if (helpers.crossAccountPrincipal(principal, accountId)) {
+                                if (helpers.crossAccountPrincipal(principal, accountId, undefined, settings)) {
                                     crossAccountAccess = true;
                                     break;
                                 }
@@ -149,12 +151,12 @@ module.exports = {
                         }
                     }
 
-                    if (helpers.crossAccountPrincipal(statement.Principal, accountId)) crossAccountAccess = true;
+                    if (helpers.crossAccountPrincipal(statement.Principal, accountId, undefined, settings)) crossAccountAccess = true;
 
                     if (crossAccountAccess) {
-                        if (helpers.crossAccountPrincipal(statement.Principal, accountId) ||
+                        if (helpers.crossAccountPrincipal(statement.Principal, accountId, undefined, settings) ||
                             (conditionalPrincipals && conditionalPrincipals.length)) {
-                            let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true);
+                            let crossAccountPrincipals = helpers.crossAccountPrincipal(statement.Principal, accountId, true, settings);
 
                             if (conditionalPrincipals && conditionalPrincipals.length) {
                                 conditionalPrincipals.forEach(conPrincipal => {

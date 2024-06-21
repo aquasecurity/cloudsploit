@@ -5,7 +5,8 @@ module.exports = {
     title: 'Connect Instance Call Recording Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
-    description: 'Ensure that Amazon Connect instances have encryption enabled for call recordgins being saved on S3.',
+    severity: 'High',
+    description: 'Ensure that Amazon Connect instances have encryption enabled for call recordings being saved on S3.',
     more_info: 'You can configure Amazon Connect instance to save recordings for incoming call to be saved on S3. When you save ' +
         'such data on S3, enable encryption for the data and use a KMS key with desired encrypted level to meet regulatory compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/connect/latest/adminguide/encryption-at-rest.html',
@@ -19,6 +20,8 @@ module.exports = {
             default: 'awscmk'
         }
     },
+    realtime_triggers: ['connect:CreateInstance', 'connect:AssociateInstanceStorageConfig', 'connect:UpdateInstanceStorageConfig','connect:DeleteInstance', 'connect:DisassociateInstanceStorageConfig'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

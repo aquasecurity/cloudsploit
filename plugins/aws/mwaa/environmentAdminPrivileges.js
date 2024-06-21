@@ -1,18 +1,18 @@
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-var managedAdminPolicy = 'arn:aws:iam::aws:policy/AdministratorAccess';
-
 module.exports = {
     title: 'Environment Admin Privileges',
     category: 'MWAA',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures no Amazon MWAA environment available in your AWS account has admin privileges.',
     more_info: 'Amazon MWAA environments should have most-restrictive IAM permissions for security best practices.',
     link: 'https://docs.aws.amazon.com/mwaa/latest/userguide/manage-access.html',
     recommended_action: 'Modify IAM role attached with MWAA environment to provide the minimal amount of access required to perform its tasks',
     apis: ['MWAA:listEnvironments', 'MWAA:getEnvironment', 'IAM:listRoles', 'IAM:listAttachedRolePolicies', 'IAM:listRolePolicies',
         'IAM:listPolicies', 'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'STS:getCallerIdentity'],
+    realtime_triggers: ['mwaa:CreateEnvironment','mwaa:UpdateEnviroment', 'mwaa:DeleteEnvironment'],    
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -22,6 +22,8 @@ module.exports = {
         var defaultRegion = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', defaultRegion, 'data']);
+
+        var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
         async.each(regions.mwaa, function(region, rcb){
             var listEnvironments = helpers.addSource(cache, source,
@@ -133,8 +135,7 @@ module.exports = {
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = helpers.normalizePolicyDocument(
-                            getRolePolicy[policyName].data.PolicyDocument);
+                        let statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges

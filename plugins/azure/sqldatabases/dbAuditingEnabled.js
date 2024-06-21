@@ -5,16 +5,18 @@ module.exports = {
     title: 'Database Auditing Enabled',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Database Auditing is enabled',
     more_info: 'Enabling SQL Database Auditing ensures that all database activities are being logged properly, including potential malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL database.',
-    link: 'https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-databases',
+    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-databases',
     apis: ['servers:listSql', 'databases:listByServer', 'databaseBlobAuditingPolicies:get', 'serverBlobAuditingPolicies:get'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit record for ' +
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:auditingsettings:write','microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:auditingsettings:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -4,6 +4,7 @@ module.exports = {
     title: 'S3 Bucket Public Access Block',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures S3 public access block is enabled on all buckets or for AWS account',
     more_info: 'Blocking S3 public access at the account level or bucket-level ensures objects are not accidentally exposed.',
     recommended_action: 'Enable the S3 public access block on all S3 buckets or for AWS account.',
@@ -23,6 +24,7 @@ module.exports = {
             default: 'false'
         }
     },
+    realtime_triggers: ['s3:CreateBucket', 's3:PutPublicAccessBlock','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -38,6 +40,7 @@ module.exports = {
         var source = {};
 
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
         var listBuckets = helpers.addSource(cache, source, ['s3', 'listBuckets', region]);
 
@@ -77,7 +80,7 @@ module.exports = {
 
             if (config.check_global_block) { 
                 if (!globalMissingBlocks.length) {
-                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', bucketLocation, `arn:aws:s3:::${bucket}`);
+                    helpers.addResult(results, 0, 'AWS account has public access block fully enabled', bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`);
                     continue;
                 }
             }
@@ -88,23 +91,23 @@ module.exports = {
             if (allowRegex && allowRegex.test(bucket)) {
                 helpers.addResult(results, 0,
                     'Bucket: ' + bucket + ' is whitelisted via custom setting.',
-                    bucketLocation, `arn:aws:s3:::${bucket}`, custom);
+                    bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`, custom);
             } else {
                 if (getPublicAccessBlock.err && getPublicAccessBlock.err.code === 'NoSuchPublicAccessBlockConfiguration') {
-                    helpers.addResult(results, 2, 'S3 bucket does not have Public Access Block enabled', bucketLocation, `arn:aws:s3:::${bucket}`);
+                    helpers.addResult(results, 2, 'S3 bucket does not have Public Access Block enabled', bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`);
                     continue;
                 }
                 if (getPublicAccessBlock.err || !getPublicAccessBlock.data) {
-                    helpers.addResult(results, 3, `Error: ${helpers.addError(getPublicAccessBlock)}`, bucketLocation, `arn:aws:s3:::${bucket}`);
+                    helpers.addResult(results, 3, `Error: ${helpers.addError(getPublicAccessBlock)}`, bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`);
                     continue;
                 }
                 var configLocal = getPublicAccessBlock.data.PublicAccessBlockConfiguration;
                 var missingBlocks = Object.keys(configLocal).filter(k => !configLocal[k]);
                 if (missingBlocks.length) {
-                    helpers.addResult(results, 2, `S3 bucket is missing public access blocks: ${missingBlocks.join(', ')}`, bucketLocation, `arn:aws:s3:::${bucket}`);
+                    helpers.addResult(results, 2, `S3 bucket is missing public access blocks: ${missingBlocks.join(', ')}`, bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`);
                     continue;
                 }
-                helpers.addResult(results, 0, 'S3 bucket has public access block fully enabled', bucketLocation, `arn:aws:s3:::${bucket}`);
+                helpers.addResult(results, 0, 'S3 bucket has public access block fully enabled', bucketLocation, `arn:${awsOrGov}:s3:::${bucket}`);
             }
         }
 
