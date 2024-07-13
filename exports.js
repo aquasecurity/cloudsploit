@@ -497,6 +497,7 @@ module.exports = {
         'ssmSessionDuration'            : require(__dirname + '/plugins/aws/ssm/ssmSessionDuration'),
 
         'ledgerEncrypted'               : require(__dirname + '/plugins/aws/qldb/ledgerEncrypted'),
+        'ledgerHasTags'                 : require(__dirname + '/plugins/aws/qldb/ledgerHasTags'),
 
         'lambdaAdminPrivileges'         : require(__dirname + '/plugins/aws/lambda/lambdaAdminPrivileges.js'),
         'envVarsClientSideEncryption'   : require(__dirname + '/plugins/aws/lambda/envVarsClientSideEncryption.js'),
