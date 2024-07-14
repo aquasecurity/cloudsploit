@@ -5,7 +5,7 @@ module.exports = {
     title: 'Machine Learning Registry Public Access Disabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
-    severity: 'High',
+    severity: 'Medium',
     description: 'Ensures that Azure Machine Learning registries are not publicly accessible.',
     more_info: 'Disabling public network access for Azure Machine Learning registries helps prevent data leakage risks by ensuring that your registries are not accessible over the public internet. Instead, private endpoints provide network isolation, securing connections within a virtual network (VNet) and preventing exposure of sensitive data.',
     recommended_action: 'Ensure that Azure Machine Learning registries have public network access disabled.',
