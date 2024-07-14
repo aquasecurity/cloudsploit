@@ -380,7 +380,11 @@ var calls = {
     machineLearning: {
         listWorkspaces: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/workspaces?api-version=2024-04-01'
-        }
+        },
+        listRegistries: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/registries?api-version=2024-04-01'
+        },
+
     },
     loadBalancers: {
         listAll: {
