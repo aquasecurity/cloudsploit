@@ -594,6 +594,7 @@ module.exports = {
         'organizationInvite'            : require(__dirname + '/plugins/aws/organizations/organizationInvite.js'),
 
         'guardDutyEnabled'              : require(__dirname + '/plugins/aws/guardduty/guarddutyEnabled.js'),
+        'eksProtectionEnabled'          : require(__dirname + '/plugins/aws/guardduty/eksProtectionEnabled.js'),
         'guardDutyMaster'               : require(__dirname + '/plugins/aws/guardduty/guarddutyMaster.js'),
         'noActiveFindings'              : require(__dirname + '/plugins/aws/guardduty/noActiveFindings'),
         's3ProtectionEnabled'           : require(__dirname + '/plugins/aws/guardduty/s3ProtectionEnabled.js'),
