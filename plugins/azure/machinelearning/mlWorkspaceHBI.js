@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Ensures that High Business Impact (HBI) feature enabled for Machine Learning workspace.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/concept-data-encryption',
     apis: ['machineLearning:listWorkspaces'],
-    realtime_triggers: ['microsoft:machinelearningservices:workspaces:write', 'microsoft:machinelearningservices:workspaces:delete', 'microsoftresources:tags:write'],
+    realtime_triggers: ['microsoft:machinelearningservices:workspaces:write', 'microsoft:machinelearningservices:workspaces:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
