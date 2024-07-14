@@ -830,6 +830,7 @@ module.exports = {
         'loadBalancerLoggingEnabled'    : require(__dirname + '/plugins/azure/logalerts/loadBalancerLoggingEnabled.js'),
         'virtualMachineLogging'         : require(__dirname + '/plugins/azure/logalerts/virtualMachineLogging.js'),
         'flexibleServerLoggingEnabled'  : require(__dirname + '/plugins/azure/logalerts/flexibleServerLoggingEnabled.js'),
+        'mysqlFlexibleServerLoggingEnabled': require(__dirname + '/plugins/azure/logalerts/mysqlFlexibleServerLoggingEnabled.js'),
         'postgreSqlDBLoggingEnabled'    : require(__dirname + '/plugins/azure/logalerts/postgreSqlDBLoggingEnabled.js'),
         'sqlServerDatabaseRenameAlert'  : require(__dirname + '/plugins/azure/logalerts/sqlServerDatabaseRenameAlert.js'),
         'virtualMachinesPowerOffAlert'  : require(__dirname + '/plugins/azure/logalerts/virtualMachinesPowerOffAlert.js'),
