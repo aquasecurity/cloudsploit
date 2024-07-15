@@ -66,19 +66,19 @@ module.exports = {
                             region, member.Arn);
                         continue;
                     }
-                    const getmember = getMember.data.Member
+                    const getmember = getMember.data.Member;
 
                     if (getmember.LogPublishingConfiguration && getmember.LogPublishingConfiguration.Fabric &&
                         getmember.LogPublishingConfiguration.Fabric.CaLogs && getmember.LogPublishingConfiguration.Fabric.CaLogs.Cloudwatch
                         &&  getmember.LogPublishingConfiguration.Fabric.CaLogs.Cloudwatch.Enabled) {
-                            helpers.addResult(results, 0,
-                                'Network member has CloudWatch logs enabled',
-                                region, resource);
-                        } else {
-                            helpers.addResult(results, 2,
-                                'Network member does not have CloudWatch logs enabled',
-                                region, resource);
-                        }
+                        helpers.addResult(results, 0,
+                            'Network member has CloudWatch logs enabled',
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Network member does not have CloudWatch logs enabled',
+                            region, resource);
+                    }
                 }
             }
 
