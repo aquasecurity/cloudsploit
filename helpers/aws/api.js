@@ -594,6 +594,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ApiGatewayV2: {
+        getApis: {
+            property: 'Items',
+            paginate: 'NextToken'
+        },
+    },
     AppConfig: {
         listApplications: {
             property: 'Items',
@@ -1553,6 +1559,9 @@ var calls = {
         describeHub: {
             property:'',
             paginate: 'NextToken'
+        },
+        getFindings: {
+            paginate: 'NextToken'
         }
     },
     SageMaker: {
@@ -1842,6 +1851,26 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getRequestValidators: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
+            }
+        },
+        ApiGatewayV2: {
+            getStages: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
+            },
+            getAuthorizers: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
             }
         },
         AppConfig: {

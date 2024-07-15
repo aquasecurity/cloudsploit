@@ -50,12 +50,14 @@ module.exports = {
                     } else {
                         // Loop through databases
                         databases.data.forEach(function(database) {
-                            if (database.zoneRedundant) {
-                                helpers.addResult(results, 0,
-                                    'SQL Database has zone redundancy enabled', location, database.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'SQL Database does not have zone redundancy enabled', location, database.id);
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+                                if (database.zoneRedundant) {
+                                    helpers.addResult(results, 0,
+                                        'SQL Database has zone redundancy enabled', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 2,
+                                        'SQL Database does not have zone redundancy enabled', location, database.id);
+                                }
                             }
                         });
                     }

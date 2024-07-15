@@ -28,7 +28,7 @@ module.exports = {
 
         },
     },
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -65,55 +65,57 @@ module.exports = {
                     helpers.addResult(results, 0,
                         'No databases found for SQL server', location, server.id);
                     return;
-                    
+
                 } else {
                     databases.data.forEach(database=> {
-                            
-                        var diagnosticSettings = helpers.addSource(cache, source, ['diagnosticSettings', 'listByDatabase', location, database.id]);
-                        
-                        if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
-                            helpers.addResult(results, 3, 'Unable to query SQL database diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
-                            return;
-                            
-                        } 
-                        var foundLogs = true;
-                        var foundMetrics = true;
 
-                        var missingLogs = [];
-                        var missingMetrics = [];
-                        var missingConfig = [];
+                        if (database.name && database.name.toLowerCase() !== 'master') {
 
-                        if (logsConfig == '*') {
-                            foundLogs = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length && ds.logs.some(log=>log.enabled));
-                        } else {
-                            logsConfig = logsConfig.replace(/\s/g, '');
-                            missingLogs = logsConfig.toLowerCase().split(',');
-                            diagnosticSettings.data.forEach(settings => {
-                                missingLogs = missingLogs.filter(requiredCategory =>
-                                    !settings.logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup && log.categoryGroup.toLowerCase() === 'alllogs' && log.enabled)
-                                );
-                            });
+                            var diagnosticSettings = helpers.addSource(cache, source, ['diagnosticSettings', 'listByDatabase', location, database.id]);
+
+                            if (!diagnosticSettings || diagnosticSettings.err || !diagnosticSettings.data) {
+                                helpers.addResult(results, 3, 'Unable to query SQL database diagnostic settings: ' + helpers.addError(diagnosticSettings), location, database.id);
+                                return;
+
+                            }
+                            var foundLogs = true;
+                            var foundMetrics = true;
+
+                            var missingLogs = [];
+                            var missingMetrics = [];
+                            var missingConfig = [];
+
+                            if (logsConfig == '*') {
+                                foundLogs = diagnosticSettings.data.some(ds => ds.logs && ds.logs.length && ds.logs.some(log=>log.enabled));
+                            } else {
+                                logsConfig = logsConfig.replace(/\s/g, '');
+                                missingLogs = logsConfig.toLowerCase().split(',');
+                                diagnosticSettings.data.forEach(settings => {
+                                    missingLogs = missingLogs.filter(requiredCategory =>
+                                        !settings.logs.some(log => (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) || log.categoryGroup && log.categoryGroup.toLowerCase() === 'alllogs' && log.enabled)
+                                    );
+                                });
+                            }
+                            if (metricsConfig == '*') {
+                                foundMetrics = diagnosticSettings.data.some(ds => ds.metrics && ds.metrics.length && ds.metrics.some(metrics=>metrics.enabled));
+                            } else {
+                                metricsConfig = metricsConfig.replace(/\s/g, '');
+                                missingMetrics = metricsConfig.toLowerCase().split(',');
+                                diagnosticSettings.data.forEach(settings => {
+                                    missingMetrics = missingMetrics.filter(requiredCategory =>
+                                        !settings.metrics.some(metric => (metric.category && metric.category.toLowerCase() === requiredCategory && metric.enabled))
+                                    );
+                                });
+                            }
+                            missingConfig = [...missingLogs, ...missingMetrics];
+
+                            if (!missingConfig.length && foundLogs && foundMetrics) {
+                                helpers.addResult(results, 0, 'SQL database has diagnostic logs/metrics enabled', location, database.id);
+
+                            } else {
+                                helpers.addResult(results, 2, `SQL database does not have diagnostic logs/metrics enabled ${missingConfig.length ? `for following: ${missingConfig.join(',')}` : ''}`, location, database.id);
+                            }
                         }
-                        if (metricsConfig == '*') {
-                            foundMetrics = diagnosticSettings.data.some(ds => ds.metrics && ds.metrics.length && ds.metrics.some(metrics=>metrics.enabled));
-                        } else {
-                            metricsConfig = metricsConfig.replace(/\s/g, '');
-                            missingMetrics = metricsConfig.toLowerCase().split(',');
-                            diagnosticSettings.data.forEach(settings => {
-                                missingMetrics = missingMetrics.filter(requiredCategory =>
-                                    !settings.metrics.some(metric => (metric.category && metric.category.toLowerCase() === requiredCategory && metric.enabled))
-                                );
-                            });
-                        }
-                        missingConfig = [...missingLogs, ...missingMetrics];
-                       
-                        if (!missingConfig.length && foundLogs && foundMetrics) {
-                            helpers.addResult(results, 0, 'SQL database has diagnostic logs/metrics enabled', location, database.id);
-        
-                        } else {
-                            helpers.addResult(results, 2, `SQL database does not have diagnostic logs/metrics enabled ${missingConfig.length ? `for following: ${missingConfig.join(',')}` : ''}`, location, database.id);
-                        }
-                        
                     });
                 }
             });

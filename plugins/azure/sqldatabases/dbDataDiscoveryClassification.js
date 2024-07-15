@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview?view=azuresql',
     apis: ['servers:listSql', 'databases:listByServer', 'currentSensitivityLabels:list'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -47,19 +47,21 @@ module.exports = {
                     } else {
                         databases.data.forEach(function(database) {
 
-                            var currentSensitivityLabels = helpers.addSource(cache, source, ['currentSensitivityLabels', 'list', location, database.id]);
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+                                var currentSensitivityLabels = helpers.addSource(cache, source, ['currentSensitivityLabels', 'list', location, database.id]);
 
-                            if (!currentSensitivityLabels || !currentSensitivityLabels.data ||  currentSensitivityLabels.err) {
-                                helpers.addResult(results, 2, 'Unable to query data discovery and classification information: ' + helpers.addError(currentSensitivityLabels), location, database.id);
-                            } else {
-                                if (currentSensitivityLabels.data.length) {
-                                    helpers.addResult(results, 0, 'SQL Database is using data discovery and classification', location, database.id);
+                                if (!currentSensitivityLabels || !currentSensitivityLabels.data ||  currentSensitivityLabels.err) {
+                                    helpers.addResult(results, 2, 'Unable to query data discovery and classification information: ' + helpers.addError(currentSensitivityLabels), location, database.id);
                                 } else {
-                                    helpers.addResult(results, 2, 'SQL Database is not using data discovery and classification', location, database.id);
+                                    if (currentSensitivityLabels.data.length) {
+                                        helpers.addResult(results, 0, 'SQL Database is using data discovery and classification', location, database.id);
+                                    } else {
+                                        helpers.addResult(results, 2, 'SQL Database is not using data discovery and classification', location, database.id);
+                                    }
                                 }
                             }
-                        } );
-                        
+                        });
+
                     }
                 }
             });

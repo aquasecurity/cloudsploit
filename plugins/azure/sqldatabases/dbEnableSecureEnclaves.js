@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-enclaves?view=sql-server-ver16',
     apis: ['servers:listSql', 'databases:listByServer'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
-    
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -46,13 +46,15 @@ module.exports = {
                             'No databases found for SQL server', location, server.id);
                     } else {
                         databases.data.forEach(database => {
-                            if (!database.preferredEnclaveType) {
-                                helpers.addResult(results, 2, 'Secure enclaves encryption is disabled for SQL database', location, database.id);
-                            } else {
-                                helpers.addResult(results, 0, 'Secure enclaves encryption is enabled for SQL database', location, database.id);
+
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+                                if (!database.preferredEnclaveType) {
+                                    helpers.addResult(results, 2, 'Secure enclaves encryption is disabled for SQL database', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 0, 'Secure enclaves encryption is enabled for SQL database', location, database.id);
+                                }
                             }
-                        }
-                        );
+                        });
                     }
                 }
             });
