@@ -41,13 +41,11 @@ module.exports = {
 
                 let resource = cluster.ARN;
 
-                if (cluster.SnapshotRetentionLimit && 
-                    cluster.SnapshotRetentionLimit > 0) {
-                        helpers.addResult(results, 0, 'MemoryDB cluster has snapshot retention period set', region, resource);
-                    } else {
-                        helpers.addResult(results, 2, 'MemoryDB cluster does not have snapshot retention period set', region, resource);
-                    }
-                
+                if (cluster.SnapshotRetentionLimit && cluster.SnapshotRetentionLimit > 0) {
+                    helpers.addResult(results, 0, 'MemoryDB cluster has snapshot retention period set', region, resource);
+                } else {
+                    helpers.addResult(results, 2, 'MemoryDB cluster does not have snapshot retention period set', region, resource);
+                }
             }
 
             rcb();
