@@ -1217,6 +1217,7 @@ module.exports = {
         'workspaceManagedIdentity'      : require(__dirname + '/plugins/azure/synapse/workspaceManagedIdentity.js'),
         'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
         'synapseWorkspacPrivateEndpoint': require(__dirname + '/plugins/azure/synapse/synapseWorkspacPrivateEndpoint.js'),
+        'workspaceDoubleEncryption'     : require(__dirname + '/plugins/azure/synapse/workspaceDoubleEncryption.js'),
 
         'apiInstanceManagedIdentity'    : require(__dirname + '/plugins/azure/apiManagement/apiInstanceManagedIdentity.js'),
         'apiInstanceHasTags'            : require(__dirname + '/plugins/azure/apiManagement/apiInstanceHasTags.js'),
