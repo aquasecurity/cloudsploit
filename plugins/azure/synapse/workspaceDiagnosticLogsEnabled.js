@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Enable diagnostic logging for all Synapse workspaces.',
     link: 'https://learn.microsoft.com/en-gb/azure/azure-monitor/essentials/diagnostic-settings',
     apis: ['synapse:listWorkspaces', 'diagnosticSettings:listByWorkspaces'],
-    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete','microsoftinsights:diagnosticSettings:delete'],
+    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete','microsoftinsights:diagnosticSettings:delete','microsoftinsights:diagnosticSettings:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
