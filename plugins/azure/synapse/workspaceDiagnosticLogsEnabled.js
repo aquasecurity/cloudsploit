@@ -6,8 +6,8 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensures diagnostic logging is enabled for Synapse workspace.',
-    more_info: 'Enabling diagnostic logging for Azure Synapse workspace enhances performance monitoring, troubleshooting, and security optimization. This feature captures detailed logs of workspace activities, allowing you to gain insights, identify issues, and maintain the integrity and efficiency of data operations.',
+    description: 'Ensures that diagnostic logging is enabled for Synapse workspace.',
+    more_info: 'Enabling diagnostic logs in Azure Synapse workspace is important for monitoring, troubleshooting, and optimizing performance. These logs provide detailed insights into resource usage, query execution, and potential issues, allowing administrators to identify bottlenecks, track errors, and improve the overall efficiency and reliability of the workspace.',
     recommended_action: 'Enable diagnostic logging for all Synapse workspaces.',
     link: 'https://learn.microsoft.com/en-gb/azure/azure-monitor/essentials/diagnostic-settings',
     apis: ['synapse:listWorkspaces', 'diagnosticSettings:listByWorkspaces'],
@@ -24,7 +24,6 @@ module.exports = {
 
             if (!workspaces) return rcb();
 
-
             if (workspaces.err || !workspaces.data) {
                 helpers.addResult(results, 3, 'Unable to query Synapse workspaces: ' + helpers.addError(workspaces), location);
                 return rcb();
@@ -36,6 +35,7 @@ module.exports = {
             }
 
             for (let workspace of workspaces.data) {
+
                 var diagnosticSettings = helpers.addSource(cache, source, 
                     ['diagnosticSettings', 'listByWorkspaces', location, workspace.id]);
  
