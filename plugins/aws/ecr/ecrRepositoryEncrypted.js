@@ -17,7 +17,7 @@ module.exports = {
             name: 'ECR Repository Encryption',
             description: 'In order (lowest to highest) sse=AES-256; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
     realtime_triggers: ['ecr:CreateRepository', 'ecr:DeleteRepository'],

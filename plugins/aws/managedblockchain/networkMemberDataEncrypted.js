@@ -17,7 +17,7 @@ module.exports = {
             name: 'Managed Blockchain Member Target Encryption Level',
             description: 'In order (lowest to highest) sse=S3-SSE; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
     realtime_triggers: ['managedblockchain:CreateNetwork', 'managedblockchain:DeleteMember'],
