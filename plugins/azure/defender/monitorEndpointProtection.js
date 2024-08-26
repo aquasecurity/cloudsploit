@@ -3,13 +3,13 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Monitor Endpoint Protection',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures Endpoint Protection monitoring is enabled in Security Center',
-    more_info: 'When this setting is enabled, Security Center audits the Endpoint Protection setting for all virtual machines for malware protection.',
-    recommended_action: 'Enable Adaptive Application Controls for Endpoint Protection from the Azure Security Center by ensuring AuditIfNotExists setting is used to monitor missing Endpoint Protection.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    description: 'Ensures Endpoint Protection monitoring is enabled in Microsoft Defender.',
+    more_info: 'When this setting is enabled, Microsoft Defender for Cloud audits the Endpoint Protection setting for all virtual machines for malware protection.',
+    recommended_action: 'Enable Adaptive Application Controls for Endpoint Protection from the Microsoft Defender by ensuring AuditIfNotExists setting is used to monitor missing Endpoint Protection.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 

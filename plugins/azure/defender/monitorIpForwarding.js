@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Monitor External Accounts with Write Permissions',
-    category: 'Security Center',
+    title: 'Monitor IP Forwarding',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that External Accounts with Write Permissions are being Monitored in Security Center',
-    more_info: 'External Accounts with Write Permissions should be monitored to meet you organization\'s security compliance requirements.',
-    recommended_action: 'Enable Monitor for External Accounts with Write Permissions by ensuring AuditIfNotExists setting is used for \'External accounts with write permissions should be removed from your subscription\' from the Azure Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    description: 'Ensures that Virtual Machine IP Forwarding Monitoring is enabled in Microsoft Defender.',
+    more_info: 'IP Forwarding feature should be monitored to meet you organization\'s security compliance requirements.',
+    recommended_action: 'Enable IP Forwarding Monitoring by ensuring AuditIfNotExists setting is used for \'IP Forwarding on your virtual machine should be disabled\' from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
@@ -24,8 +24,8 @@ module.exports = {
                 ['policyAssignments', 'list', location]);
 
             helpers.checkPolicyAssignment(policyAssignments,
-                'identityRemoveExternalAccountWithWritePermissionsMonitoringEffect',
-                'Monitor for External Accounts with Write Permissions', results, location);
+                'disableIPForwardingMonitoringEffect',
+                'IP Forwarding Monitoring', results, location);
 
             rcb();
         }, function() {

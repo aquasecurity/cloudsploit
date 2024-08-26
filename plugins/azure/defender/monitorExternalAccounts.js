@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Monitor Total Number of Subscription Owners',
-    category: 'Security Center',
+    title: 'Monitor External Accounts with Write Permissions',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that Total Number of Subscription Owners is being Monitored in Security Center',
-    more_info: 'Total Number of Subscription Owners should be monitored to meet you organization\'s security compliance requirements.',
-    recommended_action: 'Enable Monitor for Total Number of Subscription Owners by ensuring AuditIfNotExists setting is used for \'A maximum of 3 owners should be designated for your subscription\' from the Azure Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    description: 'Ensures that External Accounts with Write Permissions are being Monitored in Microsoft Defender.',
+    more_info: 'External Accounts with Write Permissions should be monitored to meet you organization\'s security compliance requirements.',
+    recommended_action: 'Enable Monitor for External Accounts with Write Permissions by ensuring AuditIfNotExists setting is used for \'External accounts with write permissions should be removed from your subscription\' from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
@@ -24,8 +24,8 @@ module.exports = {
                 ['policyAssignments', 'list', location]);
 
             helpers.checkPolicyAssignment(policyAssignments,
-                'identityDesignateLessThanOwnersMonitoringEffect',
-                'Monitor for Total Number of Subscription Owners', results, location);
+                'identityRemoveExternalAccountWithWritePermissionsMonitoringEffect',
+                'Monitor for External Accounts with Write Permissions', results, location);
 
             rcb();
         }, function() {

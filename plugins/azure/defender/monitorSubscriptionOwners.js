@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Security Configuration Monitoring',
-    category: 'Security Center',
+    title: 'Monitor Total Number of Subscription Owners',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that Security Configuration Monitoring is enabled in Security Center',
-    more_info: 'When this setting is enabled, Security Center will monitor virtual machines for security configurations.',
-    recommended_action: 'Ensure Security Configuration Monitoring is configured for virtual machines from the Azure Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/governance/policy/overview',
+    description: 'Ensures that Total Number of Subscription Owners is being Monitored in Microsoft Defender.',
+    more_info: 'Total Number of Subscription Owners should be monitored to meet you organization\'s security compliance requirements.',
+    recommended_action: 'Enable Monitor for Total Number of Subscription Owners by ensuring AuditIfNotExists setting is used for \'A maximum of 3 owners should be designated for your subscription\' from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
@@ -24,8 +24,8 @@ module.exports = {
                 ['policyAssignments', 'list', location]);
 
             helpers.checkPolicyAssignment(policyAssignments,
-                'systemConfigurationsMonitoringEffect',
-                'Monitor Security Configuration', results, location);
+                'identityDesignateLessThanOwnersMonitoringEffect',
+                'Monitor for Total Number of Subscription Owners', results, location);
 
             rcb();
         }, function() {

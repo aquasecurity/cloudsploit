@@ -3,13 +3,13 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Monitor Next Generation Firewall',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that Next Generation Firewall (NGFW) Monitoring is enabled in Security Center',
-    more_info: 'When this setting is enabled, Security Center will search for deployments where a NGFW is recommended.',
-    recommended_action: 'Enable Next Generation Firewall Monitoring by ensuring AuditIfNotExists setting is used for \'All network ports should be restricted on network security groups associated to your virtual machine\' from the Azure Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    description: 'Ensures that Next Generation Firewall (NGFW) Monitoring is enabled in Microsoft Defender.',
+    more_info: 'When this setting is enabled, Microsoft Defender for Cloud will search for deployments where a NGFW is recommended.',
+    recommended_action: 'Enable Next Generation Firewall Monitoring by ensuring AuditIfNotExists setting is used for \'All network ports should be restricted on network security groups associated to your virtual machine\' from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
