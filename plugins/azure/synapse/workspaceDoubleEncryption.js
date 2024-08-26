@@ -6,7 +6,7 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'High',
-    description: 'Ensures that Azure Synapse workspace has double Encryption enabled.',
+    description: 'Ensures that Azure Synapse workspaces have double Encryption enabled.',
     more_info: 'Enabling double encryption for Synapse workspace provides an extra layer of protection for data at rest and in transit. This feature significantly enhances security and helps ensure compliance with stringent data protection standards within the Azure environment.',
     recommended_action: 'Create a new Synapse workspace and enable double encryption using CMK.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/security/workspaces-encryption',
