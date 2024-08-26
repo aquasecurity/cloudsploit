@@ -30,12 +30,12 @@ module.exports = {
 
             if (listLedgers.err || !listLedgers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Ledgers: ' + helpers.addError(listLedgers), region);
+                    'Unable to query QLDB ledgers: ' + helpers.addError(listLedgers), region);
                 return rcb();
             }
 
             if (!listLedgers.data.length) {
-                helpers.addResult(results, 0, 'No Ledgers found', region);
+                helpers.addResult(results, 0, 'No QLDB ledgers found', region);
                 return rcb();
             }
 

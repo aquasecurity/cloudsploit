@@ -57,6 +57,7 @@ describe('ledgerHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('QLDB ledger has tags');
                 done();
             });
         });
@@ -67,6 +68,7 @@ describe('ledgerHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('QLDB ledger does not have any tags');
                 done();
             });
         });
@@ -77,6 +79,7 @@ describe('ledgerHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No QLDB ledgers found');
                 done();
             });
         });
@@ -87,6 +90,7 @@ describe('ledgerHasTags', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query QLDB ledgers');
                 done();
             });
         });
