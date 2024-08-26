@@ -58,6 +58,7 @@ describe('ledgerDeletionProtection', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('QLDB ledger has deletion protection enabled');
                 done();
             });
         });
@@ -68,6 +69,7 @@ describe('ledgerDeletionProtection', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('QLDB ledger does not have deletion protection enabled');
                 done();
             });
         });
@@ -78,16 +80,18 @@ describe('ledgerDeletionProtection', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('No QLDB ledgers found');
                 done();
             });
         });
 
-        it('should UNKNOWN if unable to list  QLDB ledgers', function (done) {
+        it('should UNKNOWN if unable to list QLDB ledgers', function (done) {
             const cache = createCache(null, null, null, { message: "Unable to list QLDB ledgers" });
             ledgerDeletionProtection.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Unable to query QLDB ledgers');
                 done();
             });
         });

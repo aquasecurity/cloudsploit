@@ -6,7 +6,7 @@ module.exports = {
     category: 'QLDB',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that AWS QLDB ledger has deletion protection feature enabled.',
+    description: 'Ensures that AWS QLDB ledger has deletion protection feature enabled.',
     more_info: 'Enabling deletion protection feature for Amazon QLDB ledger acts as a safety net, preventing accidental database deletions or deletion by an unauthorized user. It ensures that the data stays secure and accessible at all times.',
     recommended_action: 'Modify QLDB ledger and enable deletion protection.',
     link: 'https://docs.aws.amazon.com/qldb/latest/developerguide/ledger-management.basics.html',
@@ -30,12 +30,12 @@ module.exports = {
 
             if (listLedgers.err || !listLedgers.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query Ledgers: ' + helpers.addError(listLedgers), region);
+                    'Unable to query QLDB ledgers: ' + helpers.addError(listLedgers), region);
                 return rcb();
             }
 
             if (!listLedgers.data.length) {
-                helpers.addResult(results, 0, 'No Ledgers found', region);
+                helpers.addResult(results, 0, 'No QLDB ledgers found', region);
                 return rcb();
             }
 
@@ -49,7 +49,7 @@ module.exports = {
 
                 if (!describeLedger || describeLedger.err || !describeLedger.data ) {
                     helpers.addResult(results, 3,
-                        `Unable to get Ledgers description: ${helpers.addError(describeLedger)}`,
+                        `Unable to get QLDB ledgers description: ${helpers.addError(describeLedger)}`,
                         region, resource);
                     continue;
                 } 
