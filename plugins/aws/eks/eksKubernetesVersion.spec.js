@@ -1,84 +1,119 @@
-var assert = require("assert");
-var expect = require("chai").expect;
-var eks = require("./eksKubernetesVersion");
+var assert = require('assert');
+var expect = require('chai').expect;
+var eks = require('./eksLatestPlatformVersion');
 
 const createCache = (listData, descData) => {
-  return {
-    eks: {
-      listClusters: {
-        "us-east-1": {
-          err: null,
-          data: listData,
+    return {
+        eks: {
+            listClusters: {
+                'us-east-1': {
+                    err: null,
+                    data: listData
+                }
+            },
+            describeCluster: {
+                'us-east-1': {
+                    'das': {
+                        err: null,
+                        data: descData
+                    }
+                }
+            }
         },
-      },
-      describeCluster: {
-        "us-east-1": {
-          mycluster: {
-            err: null,
-            data: descData,
-          },
-        },
-      },
-    },
-    sts: {
-      getCallerIdentity: {
-        data: "012345678911",
-      },
-    },
-  };
+        sts: {
+            getCallerIdentity: {
+                data: '012345678911'
+            }
+        }
+    }
 };
 
-describe("eksKubernetesVersion", function () {
-  describe("run", function () {
-    it("should give passing result if no EKS clusters present", function (done) {
-      const callback = (err, results) => {
-        expect(results.length).to.equal(1);
-        expect(results[0].status).to.equal(0);
-        expect(results[0].message).to.include("No EKS clusters present");
-        done();
-      };
 
-      const cache = createCache([], {});
+describe('eksLatestPlatformVersion', function () {
+    describe('run', function () {
+        it('should give passing result if no EKS clusters present', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('No EKS clusters present')
+                done()
+            };
 
-      eks.run(cache, {}, callback);
-    });
+            const cache = createCache(
+                [],
+                {}
+            );
 
-    it("should give error result if EKS cluster is deprecated", function (done) {
-      const callback = (err, results) => {
-        expect(results.length).to.equal(1);
-        expect(results[0].status).to.equal(2);
-        expect(results[0].message).to.include("which was deprecated");
-        done();
-      };
+            eks.run(cache, {}, callback);
+        })
 
-      const cache = createCache(["mycluster"], {
-        cluster: {
-          name: "mycluster",
-          arn: "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-          version: "1.15",
-        },
-      });
+        it('should give passing result if EKS cluster running platform is deprecated', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('EKS cluster using deprecated EKS version')
+                done()
+            };
 
-      eks.run(cache, {}, callback);
-    });
+            const cache = createCache(
+                ['das'],
+                {
+                  "cluster": {
+                    "name": "das",
+                    "arn": "arn:aws:eks:us-east-1:012345678911:cluster/das",
+                    "version": "1.16",
+                    "platformVersion": "eks.9",
+                  }
+                }
+            );
 
-    it("should give passing result if EKS cluster is current", function (done) {
-      const callback = (err, results) => {
-        expect(results.length).to.equal(1);
-        expect(results[0].status).to.equal(0);
-        expect(results[0].message).to.include("current version of Kubernetes");
-        done();
-      };
+            eks.run(cache, {}, callback);
+        })
 
-      const cache = createCache(["mycluster"], {
-        cluster: {
-          name: "mycluster",
-          arn: "arn:aws:eks:us-east-1:012345678911:cluster/mycluster",
-          version: "1.29",
-        },
-      });
+        it('should give passing result if EKS cluster is latest', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(0)
+                expect(results[0].message).to.include('EKS cluster is running latest EKS platform version')
+                done()
+            };
 
-      eks.run(cache, {}, callback);
-    });
-  });
-});
+            const cache = createCache(
+                ['das'],
+                {
+                  "cluster": {
+                    "name": "das",
+                    "arn": "arn:aws:eks:us-east-1:012345678911:cluster/das",
+                    "version": "1.27",
+                    "platformVersion": "eks.16",
+                  }
+                }
+            );
+
+            eks.run(cache, {}, callback);
+        })
+
+        it('should give error result if EKS cluster is not the latest', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1)
+                expect(results[0].status).to.equal(2)
+                expect(results[0].message).to.include('EKS cluster is not running latest EKS platform version')
+                done()
+            };
+
+            const cache = createCache(
+                ['das'],
+                {
+                  "cluster": {
+                    "name": "das",
+                    "arn": "arn:aws:eks:us-east-1:012345678911:cluster/das",
+                    "version": "1.21",
+                    "platformVersion": "eks.2",
+                  }
+                }
+            );
+
+            eks.run(cache, {}, callback);
+        })
+    })
+})
