@@ -15,7 +15,7 @@ const domains = [
         "Expiry": 1602712345.0
     },
     {
-        "DomainName": "example.com.uk",
+        "DomainName": "example.com.jp",
         "AutoRenew": true,
         "TransferLock": true,
         "Expiry": 1602712345.0
