@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures that AWS QLDB ledger has deletion protection feature enabled.',
-    more_info: 'Enabling deletion protection feature for Amazon QLDB ledger acts as a safety net, preventing accidental database deletions or deletion by an unauthorized user. It ensures that the data stays secure and accessible at all times.',
+    more_info: 'Enabling deletion protection for an Amazon QLDB ledger prevents accidental or unauthorized deletions, ensuring the ledger remains secure and accessible. It requires explicit action to disable this protection before the ledger can be deleted.',
     recommended_action: 'Modify QLDB ledger and enable deletion protection.',
     link: 'https://docs.aws.amazon.com/qldb/latest/developerguide/ledger-management.basics.html',
     apis: ['QLDB:listLedgers','QLDB:describeLedger','STS:getCallerIdentity'],
