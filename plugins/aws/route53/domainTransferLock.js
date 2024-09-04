@@ -55,14 +55,17 @@ module.exports = {
             '.se',
         ];
         var unsupported = false;
+
         for (var i in listDomains.data) {
             var domain = listDomains.data[i];
+
             if (!domain.DomainName) continue;
+
             dtlUnsupportedDomains.forEach((region) => {
                 if (domain.DomainName.includes(region)) {
                     unsupported = true;
                 }
-            });
+            })
             // Skip the unsupported domains
             if (unsupported) {
                 helpers.addResult(results, 0,
