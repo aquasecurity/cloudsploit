@@ -6,7 +6,7 @@ module.exports = {
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Low',
-    description: 'Ensures that Azure Synapse workspace has tags associated.',
+    description: 'Ensures that Azure Synapse workspaces have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify Synapse workspace and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
