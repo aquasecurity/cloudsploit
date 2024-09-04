@@ -34,31 +34,31 @@ module.exports = {
             return callback(null, results, source);
         }
 
+
+        var dtlUnsupportedDomains= [
+            '.za',
+            '.cl',
+            '.ar',
+            '.au',
+            '.nz',
+            '.au',
+            '.jp',
+            '.qa',
+            '.ru',
+            '.ch',
+            '.de',
+            '.es',
+            '.eu',
+            'fi',
+            '.it',
+            '.nl',
+            '.se',
+        ];
+        var unsupported = false;
         for (var i in listDomains.data) {
             var domain = listDomains.data[i];
             if (!domain.DomainName) continue;
-
-            var dtlUnsupportedRegions = [
-                '.za',
-                '.cl',
-                '.ar',
-                '.au',
-                '.nz',
-                '.au',
-                '.jp',
-                '.qa',
-                '.ru',
-                '.ch',
-                '.de',
-                '.es',
-                '.eu',
-                'fi',
-                '.it',
-                '.nl',
-                '.se',
-            ];
-            var unsupported = false;
-            dtlUnsupportedRegions.forEach((region) => {
+            dtlUnsupportedDomains.forEach((region) => {
                 if (domain.DomainName.includes(region)) {
                     unsupported = true;
                 }
