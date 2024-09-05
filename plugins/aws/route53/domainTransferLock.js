@@ -65,7 +65,7 @@ module.exports = {
                 if (domain.DomainName.includes(region)) {
                     unsupported = true;
                 }
-            })
+            });
             // Skip the unsupported domains
             if (unsupported) {
                 helpers.addResult(results, 0,
