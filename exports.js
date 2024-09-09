@@ -242,6 +242,7 @@ module.exports = {
         'ebsVolumeHasTags'              : require(__dirname + '/plugins/aws/ec2/ebsVolumeHasTags.js'),
         'openAllPortsProtocolsEgress'   : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocolsEgress.js'),
         'defaultSecurityGroupInUse'     : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroupInUse.js'),
+        'ec2NetworkExposure'            : require(__dirname + '/plugins/aws/ec2/ec2NetworkExposure.js'),
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
@@ -805,6 +806,7 @@ module.exports = {
         'vmDiskCMKRotation'             : require(__dirname + '/plugins/azure/virtualmachines/vmDiskCMKRotation.js'),
         'vmDiskPublicAccess'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskPublicAccess.js'),
         'computeGalleryRbacSharing'     : require(__dirname + '/plugins/azure/virtualmachines/computeGalleryRbacSharing.js'),
+        'vmNetworkExposure'             : require(__dirname + '/plugins/azure/virtualmachines/vmNetworkExposure.js'),
 
         'bastionHostExists'             : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
         'bastionHostDiagnosticLogs'     : require(__dirname + '/plugins/azure/bastion/bastionHostDiagnosticLogs.js'),
@@ -1436,6 +1438,7 @@ module.exports = {
         'confidentialComputingEnabled'  : require(__dirname + '/plugins/google/compute/confidentialComputingEnabled.js'),
         'imagesCMKEncrypted'            : require(__dirname + '/plugins/google/compute/imagesCMKEncrypted.js'),
         'snapshotEncryption'            : require(__dirname + '/plugins/google/compute/snapshotEncryption.js'),
+        'instanceNetworkExposure'       : require(__dirname + '/plugins/google/compute/instanceNetworkExposure.js'),
 
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
