@@ -741,6 +741,56 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function checkSecurityGroup(securityGroups) {
+    var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
+    
+    const allRules = securityGroups.flatMap(nsg => 
+        [
+          ...nsg.securityRules?.map(rule => ({
+            ...rule,
+            nsgName: nsg.name 
+          })),
+          ...(nsg.defaultSecurityRules?.map(rule => ({
+            ...rule,
+            nsgName: nsg.name 
+          })) || [])
+        ]
+      );
+    
+    // sorting by priority
+    const sortedRules = allRules.sort((a, b) => a.properties.priority - b.properties.priority);
+    
+    // The most restrictive rule takes precedence
+    for (const rule of sortedRules) {
+        if (rule.properties.direction === "Inbound" && openPrefix.includes(rule.properties.sourceAddressPrefix)) {
+            if (rule.properties.access === "Deny") {
+                return {exposed: false}; 
+            }
+            if (rule.properties.access === "Allow") {
+                return {exposed: true, nsg: rule.nsgName};
+            }
+        }
+    }
+    
+    return {exposed: true}; 
+}
+
+function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, region, results)  {
+    let exposedPath = '';
+   
+    if (securityGroups && securityGroups.length) {
+        // Scenario 1: check if security group allow all inbound traffic
+        let exposedSG = checkSecurityGroup(securityGroups);
+        if (exposedSG && exposedSG.exposed) {
+            if (exposedSG.nsg) {
+                exposedPath += `NSG ${exposedSG.nsg}`
+            } 
+        } 
+    
+    return exposedPath
+}
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -753,6 +803,7 @@ module.exports = {
     remediateOpenPorts: remediateOpenPorts,
     remediateOpenPortsHelper: remediateOpenPortsHelper,
     checkMicrosoftDefender: checkMicrosoftDefender,
-    checkFlexibleServerConfigs:checkFlexibleServerConfigs
+    checkFlexibleServerConfigs:checkFlexibleServerConfigs,
+    checkNetworkExposure: checkNetworkExposure
 
 };

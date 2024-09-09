@@ -402,6 +402,53 @@ function checkIAMRole(iamPolicy, roles, region, results, project, notFoundMessag
     }
 }
 
+function checkFirewallRules(firewallRules) {
+    firewallRules.sort((a, b) => (a.priority || 1000) - (b.priority || 1000));
+
+    for (const firewallRule of firewallRules) {
+        if (firewallRule.direction !== 'INGRESS' || firewallRule.disabled) {
+            continue;
+        }
+    
+        const networkName = firewallRule.network ? firewallRule.network.split('/').pop() : '';
+    
+        let allSources = firewallRule.sourceRanges?.some(sourceAddressPrefix =>
+            sourceAddressPrefix === '*' ||
+            sourceAddressPrefix === '0.0.0.0/0' ||
+            sourceAddressPrefix === '::/0' ||
+            sourceAddressPrefix.includes('/0') ||
+            sourceAddressPrefix.toLowerCase() === 'internet' ||
+            sourceAddressPrefix.includes('<nw>/0')
+        );
+        
+        if (allSources && firewallRule.allowed?.some(allow => !!allow.IPProtocol)) {
+            return {exposed: true, networkName};
+        }
+        
+        if (allSources && firewallRule.denied?.some(deny => deny.IPProtocol === 'all')) {
+            return {exposed: false};
+        }
+    }
+    
+    return {exposed: true};
+
+
+}
+
+function checkNetworkExposure(cache, source, networks, firewallRules, region, results)  {
+    let exposedPath = '';
+
+    if (firewallRules && firewallRules.length) {
+        // Scenario 1: check if any firewall rule allows all inbound traffic
+        let isExposed = checkFirewallRules(firewallRules);
+        if (isExposed.exposed) {
+            if (isExposed.networkName) {
+                return isExposed.networkName;
+            } 
+        }
+    }
+    return exposedPath
+}
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -413,5 +460,6 @@ module.exports = {
     createResourceName: createResourceName,
     checkOrgPolicy: checkOrgPolicy,
     checkIAMRole: checkIAMRole,
-    findOpenAllPortsEgress: findOpenAllPortsEgress
+    findOpenAllPortsEgress: findOpenAllPortsEgress,
+    checkNetworkExposure: checkNetworkExposure
 };
