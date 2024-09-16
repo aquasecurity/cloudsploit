@@ -67,7 +67,7 @@ module.exports = {
 
                 instances.data.forEach(instance => {
                     let networks = instance.networkInterfaces.map(nic => nic.network);
-                    let tags = instance.tags?.items || [];
+                    let tags = instance.tags && instance.tags.items ? instance.tags.items : [];
                     let serviceAccount = instance.serviceAccounts[0]?.email || '';
 
                     let firewallRules = firewalls.data.filter(rule => {
