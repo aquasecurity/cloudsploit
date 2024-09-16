@@ -3,7 +3,7 @@ var mysqlFlexibleServerLoggingEnabled = require("./mysqlFlexibleServerLoggingEna
 
 const activityLogAlerts = [
     {
-        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
+        "id": "/subscriptions/12345/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
         "name": "NSG2",
         "type": "Microsoft.Insights/ActivityLogAlerts",
         "location": "global",
