@@ -37,6 +37,7 @@ module.exports = {
 
             for (let container of containerApps.data) {
                 if (!container.id) continue;
+
                 if (container.configuration && container.configuration.ingress && container.configuration.ingress.ipSecurityRestrictions && container.configuration.ingress.ipSecurityRestrictions.length) {
                     helpers.addResult(results, 0,
                         'Container app has IP restrictions configured', location, container.id);
