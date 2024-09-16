@@ -746,14 +746,14 @@ function checkSecurityGroup(securityGroups) {
 
     const allRules = securityGroups.flatMap(nsg =>
         [
-            ...nsg.securityRules?.map(rule => ({
+            ...(nsg.securityRules ? nsg.securityRules.map(rule => ({
                 ...rule,
                 nsgName: nsg.name
-            })),
-            ...(nsg.defaultSecurityRules?.map(rule => ({
+            })) : []),
+            ...(nsg.defaultSecurityRules ? nsg.defaultSecurityRules.map(rule => ({
                 ...rule,
                 nsgName: nsg.name
-            })) || [])
+            })) : [])
         ]
     );
 
