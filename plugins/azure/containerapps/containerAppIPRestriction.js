@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     severity: 'Medium',
     description: 'Ensures that Container Apps are configured to allow only specific IP addresses.',
-    more_info: 'Azure Container Apps provides IP ingress restrictions for controlling inbound traffic, enhancing application security. Allow or deny rules can be defined for specific IP ranges, enabling precise access management to container apps. This feature is crucial for reducing potential security vulnerabilities, as unrestricted configurations permit all inbound traffic by default.'
+    more_info: 'Azure Container Apps provides IP ingress restrictions for controlling inbound traffic, enhancing application security. Allow or deny rules can be defined for specific IP ranges, enabling precise access management to container apps. This feature is crucial for reducing potential security vulnerabilities, as unrestricted configurations permit all inbound traffic by default.',
     recommended_action: 'Modify Container Apps and configure IP restriction.',
     link: 'https://learn.microsoft.com/en-us/azure/container-apps/ip-restrictions',
     apis: ['containerApps:list'],
