@@ -38,7 +38,7 @@ module.exports = {
             for (var flexibleServer of servers.data) {
                 if (!flexibleServer.id) continue;
     
-                if (flexibleServer.dataEncryption && flexibleServer.dataEncryption.primaryKeyURI ) {
+                if (flexibleServer.dataEncryption && flexibleServer.dataEncryption.primaryKeyURI) {
                     helpers.addResult(results, 0, 'MySQL flexible server data is encrypted using CMK', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 2, 'MySQL flexible server data is not encrypted using CMK', location, flexibleServer.id);
