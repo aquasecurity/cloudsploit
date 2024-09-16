@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Modify Synapse workspace and add tags.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources',
     apis: ['synapse:listWorkspaces'],
-    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
+    realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete','microsoftresources:tags:write'],
 
     run: function(cache, settings, callback) {
         const results = [];
