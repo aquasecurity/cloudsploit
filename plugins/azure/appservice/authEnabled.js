@@ -22,11 +22,23 @@ module.exports = {
                'for auditing and security controls.',
         pci: 'Access to system components must be restricted to known users.'
     },
+    settings: {
+        whitelist_functions_for_auth_enabled: {
+            name: 'Whitelist Functions For Authentication Enabled',
+            description: 'List of comma separated functions which should be whitelisted to check',
+            regex: '^.*$',
+            default: 'aqua-agentless-scanner-continuous-onboarding',
+        }
+    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+
+        let config = {
+            whitelist_functions_for_auth_enabled: settings.whitelist_functions_for_auth_enabled || this.settings.whitelist_functions_for_auth_enabled.default
+        };
 
         async.each(locations.webApps, function(location, rcb) {
 
@@ -51,19 +63,24 @@ module.exports = {
             webApps.data.forEach(function(webApp) {
                 if (webApp.kind && webApp.kind.includes('workflowapp')) return;
 
-                const authSettings = helpers.addSource(
-                    cache, source, ['webApps', 'getAuthSettings', location, webApp.id]
-                );
-
-                if (!authSettings || authSettings.err || !authSettings.data) {
-                    helpers.addResult(results, 3,
-                        'Unable to query App Service: ' + helpers.addError(authSettings),
-                        location, webApp.id);
+                if (webApp.name.includes(config.whitelist_functions_for_auth_enabled)) {
+                    helpers.addResult(results, 0, 'The App Service is whitelisted', location, webApp.id);
                 } else {
-                    if (authSettings.data.enabled) {
-                        helpers.addResult(results, 0, 'App Service has App Service Authentication enabled', location, webApp.id);
+
+                    const authSettings = helpers.addSource(
+                        cache, source, ['webApps', 'getAuthSettings', location, webApp.id]
+                    );
+
+                    if (!authSettings || authSettings.err || !authSettings.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to query App Service: ' + helpers.addError(authSettings),
+                            location, webApp.id);
                     } else {
-                        helpers.addResult(results, 2, 'App Service does not have App Service Authentication enabled', location, webApp.id);
+                        if (authSettings.data.enabled) {
+                            helpers.addResult(results, 0, 'App Service has App Service Authentication enabled', location, webApp.id);
+                        } else {
+                            helpers.addResult(results, 2, 'App Service does not have App Service Authentication enabled', location, webApp.id);
+                        }
                     }
                 }
             });

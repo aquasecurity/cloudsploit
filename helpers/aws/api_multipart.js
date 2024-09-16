@@ -1046,7 +1046,25 @@ var calls = [
                 paginate: 'NextToken'
             },
             getFindings: {
-                paginate: 'NextToken'
+                property: 'Findings',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100,
+                    Filters: {
+                        RecordState: [
+                            {
+                                Comparison: 'EQUALS',
+                                Value: 'ACTIVE'
+                            }
+                        ],
+                        WorkflowStatus: [
+                            {
+                                Comparison: 'EQUALS',
+                                Value: 'NEW'
+                            }
+                        ]
+                    }
+                }
             }
         },
         Transfer: {
@@ -1424,7 +1442,7 @@ var postcalls = [
                 reliesOnService: 'docdb',
                 reliesOnCall: 'describeDBClusters',
                 filterKey: 'ResourceName',
-                filterValue: 'DBClusterArn'            
+                filterValue: 'DBClusterArn'
             },
         },
         DynamoDB: {
@@ -2323,8 +2341,7 @@ var postcalls = [
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                filterKey: 'RoleName',
-                filterValue: 'RoleName',
+                override: true,
                 rateLimit: 500
             },
             listRolePolicies: {
