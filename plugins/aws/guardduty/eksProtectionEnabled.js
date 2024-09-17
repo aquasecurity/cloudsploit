@@ -33,7 +33,7 @@ module.exports = {
                 return rcb();
             }
 
-            if (!listDetectors.data  ||  !listDetectors.data.length) {
+            if (!listDetectors.data || !listDetectors.data.length) {
                 helpers.addResult(results, 0, 'No GuardDuty detectors found', region);
                 return rcb();
             }
