@@ -9,7 +9,7 @@ const activityLogAlerts = [
         "location": "global",
         "tags": {},
         "scopes": [
-            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
+            "/subscriptions/123456"
         ],
         "enabled": true,
         "condition": {
@@ -27,20 +27,20 @@ const activityLogAlerts = [
         "actions": {
             "actionGroups": [
                 {
-                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
+                    "actionGroupId": "/subscriptions/123456/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
                     "webhookProperties": {}
                 }
             ]
         }
     },
     {
-        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
+        "id": "/subscriptions/123456/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
         "name": "NSG2",
         "type": "Microsoft.Insights/ActivityLogAlerts",
         "location": "global",
         "tags": {},
         "scopes": [
-            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
+            "/subscriptions/123456"
         ],
         "enabled": true,
         "condition": {
@@ -62,20 +62,20 @@ const activityLogAlerts = [
         "actions": {
             "actionGroups": [
                 {
-                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
+                    "actionGroupId": "/subscriptions/123456/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
                     "webhookProperties": {}
                 }
             ]
         }
     },
     {
-        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
+        "id": "/subscriptions/123456/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
         "name": "NSG2",
         "type": "Microsoft.Insights/ActivityLogAlerts",
         "location": "global",
         "tags": {},
         "scopes": [
-            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
+            "/subscriptions/123456"
         ],
         "enabled": true,
         "condition": {
@@ -93,20 +93,20 @@ const activityLogAlerts = [
         "actions": {
             "actionGroups": [
                 {
-                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
+                    "actionGroupId": "/subscriptions/123456/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
                     "webhookProperties": {}
                 }
             ]
         }
     },
     {
-        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
+        "id": "/subscriptions/123456/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
         "name": "NSG2",
         "type": "Microsoft.Insights/ActivityLogAlerts",
         "location": "global",
         "tags": {},
         "scopes": [
-            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
+            "/subscriptions/123456"
         ],
         "enabled": true,
         "condition": {
@@ -124,7 +124,7 @@ const activityLogAlerts = [
         "actions": {
             "actionGroups": [
                 {
-                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
+                    "actionGroupId": "/subscriptions/123456/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
                     "webhookProperties": {}
                 }
             ]
