@@ -6,7 +6,7 @@ module.exports = {
     category: 'GuardDuty',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures GuardDuty protection is enabled for EKS' ,
+    description: 'Ensures that GuardDuty protection is enabled for EKS clusters.' ,
     more_info: 'Enabling GuardDuty EKS protection helps detect potential security threats in your EKS clusters by monitoring audit logs, user activities, and control plane operations. It provides enhanced security by offering proactive threat detection and automated alerting for suspicious activities and security issues within your AWS environment.',
     recommended_action: 'Enable GuardDuty EKS protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/kubernetes-protection.html',
