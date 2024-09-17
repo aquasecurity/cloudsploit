@@ -55,7 +55,7 @@ module.exports = {
                 if (detector.DataSources && 
                     detector.DataSources.Kubernetes && 
                     detector.DataSources.Kubernetes.AuditLogs && 
-                    detector.DataSources.Kubernetes.AuditLogs.Status
+                    detector.DataSources.Kubernetes.AuditLogs.Status &&
                     detector.DataSources.Kubernetes.AuditLogs.Status.toLowerCase() === 'disabled'){
                     helpers.addResult(results, 2, 'GuardDuty EKS protection is disabled', region, resource);
                 } else {
