@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that Machine Learning Workspaces are encrypted using CMK.',
-    more_info: 'Azure Machine Learning allows you to encrypt workspces using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault.',
+    more_info: 'Azure Machine Learning allows you to encrypt workspaces using customer-managed keys (CMK) instead of using platform-managed keys, which are enabled by default. Using CMK encryption offers enhanced security and compliance, allowing centralized management and control of encryption keys through Azure Key Vault.',
     recommended_action: 'Ensure that Machine Learning Workspaces are encrypted using CMK.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/concept-customer-managed-keys',
     apis: ['machineLearning:listWorkspaces'],   
