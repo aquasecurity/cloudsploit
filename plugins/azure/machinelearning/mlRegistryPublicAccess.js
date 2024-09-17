@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensures that Azure Machine Learning registries are not publicly accessible.',
-    more_info: 'Disabling public network access for Azure Machine Learning registries helps prevent data leakage risks by ensuring that your registries are not accessible over the public internet. Instead, private endpoints provide network isolation, securing connections within a virtual network (VNet) and preventing exposure of sensitive data.',
+    more_info: 'Disabling public network access for Azure Machine Learning registries helps prevent data leakage risks by ensuring that your registries are not accessible over the public internet. Configuring network isolation with private endpoints prevents the network traffic from going over the public internet and brings Azure Machine Learning registry service to your Virtual network preventing exposure of sensitive data.',
     recommended_action: 'Ensure that Azure Machine Learning registries have public network access disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/how-to-registry-network-isolation',
     apis: ['machineLearning:listRegistries'],
