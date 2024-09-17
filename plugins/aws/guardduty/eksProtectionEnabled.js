@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures GuardDuty protection is enabled for EKS' ,
-    more_info: 'Enabling GuardDuty EKS Protection helps detect potential security threats in your EKS clusters by monitoring audit logs, user activities, and control plane operations. It provides enhanced security by offering proactive threat detection and automated alerting for suspicious activities and security issues within your AWS environment.',
+    more_info: 'Enabling GuardDuty EKS protection helps detect potential security threats in your EKS clusters by monitoring audit logs, user activities, and control plane operations. It provides enhanced security by offering proactive threat detection and automated alerting for suspicious activities and security issues within your AWS environment.',
     recommended_action: 'Enable GuardDuty EKS protection for all AWS accounts.',
     link: 'https://docs.aws.amazon.com/guardduty/latest/ug/kubernetes-protection.html',
     apis: ['GuardDuty:listDetectors', 'GuardDuty:getDetector', 'STS:getCallerIdentity'],
@@ -52,7 +52,11 @@ module.exports = {
                 var detector = getDetector.data;
                 var resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
 
-                if ( detector.DataSources  &&  detector.DataSources.Kubernetes && detector.DataSources.Kubernetes.AuditLogs && detector.DataSources.Kubernetes.AuditLogs.Status === 'DISABLED'){
+                if (detector.DataSources && 
+                    detector.DataSources.Kubernetes && 
+                    detector.DataSources.Kubernetes.AuditLogs && 
+                    detector.DataSources.Kubernetes.AuditLogs.Status
+                    detector.DataSources.Kubernetes.AuditLogs.Status.toLowerCase() === 'disabled'){
                     helpers.addResult(results, 2, 'GuardDuty EKS protection is disabled', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'GuardDuty EKS protection is enabled', region, resource);
