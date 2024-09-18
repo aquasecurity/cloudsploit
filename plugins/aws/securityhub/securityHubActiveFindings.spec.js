@@ -12,51 +12,22 @@ const describeHub = {
 
 const getFindings = [
     {
-        "Findings": [
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': new Date(),
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            },
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': failDate,
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            },
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': new Date(),
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            }
-        ]
+        'AwsAccountId':'123456',
+        'CompanyName':'AWS',
+        'CreatedAt': new Date(),
+        'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
     },
     {
-        "Findings": [
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': new Date(),
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            },
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': new Date(),
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            },
-            {
-                'AwsAccountId':'123456',
-                'CompanyName':'AWS',
-                'CreatedAt': new Date(),
-                'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
-            }
-        ]
+        'AwsAccountId':'123456',
+        'CompanyName':'AWS',
+        'CreatedAt': failDate,
+        'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
     },
     {
-        "Findings": []
+        'AwsAccountId':'123456',
+        'CompanyName':'AWS',
+        'CreatedAt': new Date(),
+        'Description': 'Real-time monitoring of API calls can be achieved by directing CloudTrail Logs to CloudWatch Logs and establishing corresponding metric filters and alarms. Routing tables are used to route network traffic between subnets and to network gateways. It is recommended that a metric filter and alarm be established for changes to route tables.',
     }
 ]
 
@@ -109,7 +80,7 @@ describe('securityHubActiveFindings', function () {
         });
 
         it('should PASS if Security Hub has no active findings', function (done) {
-            const cache = createCache(describeHub, null, getFindings[2]);
+            const cache = createCache(describeHub, null, []);
             securityHubActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -120,7 +91,7 @@ describe('securityHubActiveFindings', function () {
         });
 
         it('should PASS if Security Hub has zero active findings', function (done) {
-            const cache = createCache(describeHub, null, getFindings[1]);
+            const cache = createCache(describeHub, null, [getFindings[0]]);
             securityHubActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -131,7 +102,7 @@ describe('securityHubActiveFindings', function () {
         });
 
         it('should FAIL if Security Hub has  active findings', function (done) {
-            const cache = createCache(describeHub, null, getFindings[0]);
+            const cache = createCache(describeHub, null, [getFindings[1]]);
             securityHubActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
