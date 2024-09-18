@@ -61,6 +61,7 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 0, 'GuardDuty EKS protection is enabled', region, resource);
                 }     
+                
             });
            
             rcb();
