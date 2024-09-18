@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures that diagnostic logging is enabled for Synapse workspace.',
     more_info: 'Enabling diagnostic logs in Azure Synapse workspace is important for monitoring, troubleshooting, and optimizing performance. These logs provide detailed insights into resource usage, query execution, and potential issues, allowing administrators to identify bottlenecks, track errors, and improve the overall efficiency and reliability of the workspace.',
     recommended_action: 'Enable diagnostic logging for all Synapse workspaces.',
-    link: 'https://learn.microsoft.com/en-gb/azure/azure-monitor/essentials/diagnostic-settings',
+    link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/monitor-synapse-analytics',
     apis: ['synapse:listWorkspaces', 'diagnosticSettings:listByWorkspaces'],
     realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete','microsoftinsights:diagnosticSettings:delete','microsoftinsights:diagnosticSettings:write'],
 
