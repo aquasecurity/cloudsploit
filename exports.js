@@ -876,6 +876,7 @@ module.exports = {
         'mysqlFlexibleServersMinTls'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServersMinTls.js'),
         'mysqlFlexibleServerVersion'    : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerVersion.js'),
         'mysqlServerHasTags'            : require(__dirname + '/plugins/azure/mysqlserver/mysqlServerHasTags.js'),
+        'mysqlFlexibleServerCMKEncrypted': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerCMKEncrypted.js'),
         'mysqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerPublicAccess.js'),
         'mysqlFlexibleServerDignosticLogs': require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerDignosticLogs.js'),
         'mysqlFlexibleServerIdentity'   : require(__dirname + '/plugins/azure/mysqlserver/mysqlFlexibleServerIdentity.js'),
