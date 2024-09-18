@@ -16,7 +16,7 @@ module.exports = {
             name: 'Glue S3 Encryption Level',
             description: 'In order (lowest to highest) sse=S3 Server-Side; awskms=AWS-managed KMS; awscmk=Customer managed KMS;',
             regex: '^(sse|awskms|awscmk)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
     realtime_triggers: ['glue:CreateSecurityConfiguration','glue:DeleteSecurityConfiguration'],

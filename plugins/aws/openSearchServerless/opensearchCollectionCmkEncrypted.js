@@ -17,7 +17,7 @@ module.exports = {
             name: 'OpenSearch Collection Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
     realtime_triggers: ['opensearchserverless:CreateCollection', 'opensearchserverless:DeleteCollection'],

@@ -219,7 +219,7 @@ describe('redisClusterEncryptionAtRest', function () {
     describe('run', function () {
         it('should PASS if Redis Cluster at-rest is encrypted with desired encryption level', function (done) {
             const cache = createCache(describeCacheClusters[0], listKeys, describeReplicationGroups[0], describeKey[0]);
-            redisClusterEncryptionAtRest.run(cache, { ec_atrest_desired_encryption_level: 'awscmk' }, (err, results) => {
+            redisClusterEncryptionAtRest.run(cache, { ec_cluster_target_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -229,7 +229,7 @@ describe('redisClusterEncryptionAtRest', function () {
 
         it('should FAIL if Redis Cluster at-rest is not encrypted with desired encryption level', function (done) {
             const cache = createCache([describeCacheClusters[1]],listKeys, describeReplicationGroups[1], describeKey[1]);
-            redisClusterEncryptionAtRest.run(cache, { ec_atrest_desired_encryption_level: 'awscmk' }, (err, results) => {
+            redisClusterEncryptionAtRest.run(cache, { ec_cluster_target_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

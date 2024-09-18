@@ -98,7 +98,7 @@ describe('auditmanagerDataEncrypted', function () {
 
         it('should FAIL if Audit Manager data is not encrypted with desired encryption level', function (done) {
             const cache = createCache(getSettings, listKeys, describeKey[1]);
-            auditmanagerDataEncrypted.run(cache, {}, (err, results) => {
+            auditmanagerDataEncrypted.run(cache, {auditmanager_data_encryption_level: 'awscmk'}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
