@@ -3,13 +3,13 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Application Whitelisting Enabled',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that Security Center Monitor Adaptive Application Whitelisting is enabled',
+    description: 'Ensures that Microsoft Defender Monitor Adaptive Application Whitelisting is enabled.',
     more_info: 'Adaptive application controls work in conjunction with machine learning to analyze processes running in a VM and help control which applications can run, hardening the VM against malware.',
-    recommended_action: 'Enable Adaptive Application Controls for Virtual Machines from the Azure Security Center by ensuring AuditIfNotExists setting is used.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-adaptive-application',
+    recommended_action: 'Enable Adaptive Application Controls for Virtual Machines from the Microsoft Defender for Cloud by ensuring AuditIfNotExists setting is used.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/adaptive-application-controls',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
     

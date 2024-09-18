@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Security Contact Enabled for Subscription Owner',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensure that security alert emails are enabled to subscription owners.',

@@ -3,13 +3,13 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Security Contacts Enabled',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that security contact phone number and email address are set',
+    description: 'Ensures that security contact phone number and email address are set.',
     more_info: 'Setting security contacts ensures that any security incidents detected by Azure are sent to a security team equipped to handle the incident.',
-    recommended_action: 'Ensure that email notifications are configured for the subscription from the Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details',
+    recommended_action: 'Ensure that email notifications are configured for the subscription from the Microsoft Defender for Cloud.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications',
     apis: ['securityContacts:list'],
     realtime_triggers: ['microsoftsecurity:securitycontacts:write','microsoftsecurity:securitycontacts:delete'],
 

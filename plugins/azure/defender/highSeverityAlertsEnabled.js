@@ -5,7 +5,7 @@ const SEVERITY_LEVELS = ['low', 'medium', 'high'];
 
 module.exports = {
     title: 'High Severity Alerts Enabled',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensures that high severity alerts are enabled and properly configured.',
