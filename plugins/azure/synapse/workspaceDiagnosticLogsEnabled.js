@@ -35,6 +35,7 @@ module.exports = {
             }
 
             for (let workspace of workspaces.data) {
+                if (!workspace.id) continue;
 
                 var diagnosticSettings = helpers.addSource(cache, source, 
                     ['diagnosticSettings', 'listByWorkspaces', location, workspace.id]);
