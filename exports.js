@@ -1225,7 +1225,6 @@ module.exports = {
         'workspaceDiagnosticLogsEnabled': require(__dirname + '/plugins/azure/synapse/workspaceDiagnosticLogsEnabled.js'),
         'workspaceDoubleEncryption'     : require(__dirname + '/plugins/azure/synapse/workspaceDoubleEncryption.js'),
 
-
         'apiInstanceManagedIdentity'    : require(__dirname + '/plugins/azure/apiManagement/apiInstanceManagedIdentity.js'),
         'apiInstanceHasTags'            : require(__dirname + '/plugins/azure/apiManagement/apiInstanceHasTags.js'),
 
