@@ -735,7 +735,7 @@ module.exports = {
         'containerAppHasTags'           : require(__dirname + '/plugins/azure/containerapps/containerAppHasTags.js'),
 
 
-        'mlRegistryPublicAccess'        : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHBI.js'),
+        'mlWorkspaceHBI'                : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHBI.js'),
         'workspacePublicAccessDisabled' : require(__dirname + '/plugins/azure/machinelearning/workspacePublicAccessDisabled.js'),
         'workspaceLoggingEnabled'       : require(__dirname + '/plugins/azure/machinelearning/workspaceLoggingEnabled.js'),
         'mlWorkspaceHasTags'            : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),

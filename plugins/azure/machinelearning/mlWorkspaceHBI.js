@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensures that Machine Learning workspaces have High Business Impact (HBI) feature enabled.',
-    more_info: 'Enabling a high business impact workspace controls the data Microsoft collects for diagnostics and prevents sending confidential telemetry data to Microsoft, ensuring security measures, compliance, and risk management protocols are in place to protect sensitive data.',
+    more_info: 'Enabling the High Business Impact (HBI) feature in Machine Learning workspaces controls the data Microsoft collects for diagnostics, prevents the transmission of confidential telemetry, and enhances encryption to protect sensitive business information while ensuring compliance with security protocols.',
     recommended_action: 'Ensures that High Business Impact (HBI) feature enabled for Machine Learning workspace.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/concept-data-encryption',
     apis: ['machineLearning:listWorkspaces'],
@@ -19,7 +19,6 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.machineLearning, function(location, rcb) {
-
             var machineLearningWorkspaces = helpers.addSource(cache, source,
                 ['machineLearning', 'listWorkspaces', location]);
 
