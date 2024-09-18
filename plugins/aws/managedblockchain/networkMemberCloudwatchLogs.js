@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     severity: 'Medium',
     description: 'Ensure that Amazon Managed Blockchain members have CloudWatch logs enabled.',
-    more_info: 'Enabling CloudWatch Logs for Amazon Managed Blockchain helps troubleshoot chaincode development, monitor network activity, and identify errors by publishing peer node, chaincode, and certificate authority (CA) logs.',
+    more_info: 'Enabling CloudWatch Logs for Amazon Managed Blockchain members is essential for monitoring certificate authority (CA) activity, ensuring proper identity management, and troubleshooting any access-related issues by publishing CA logs.',
     link: 'https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/monitoring-cloudwatch-logs.html',
     recommended_action: 'Modify Managed Blockchain members to enable CloudWatch Logs',
     apis: ['ManagedBlockchain:listMembers', 'ManagedBlockchain:listNetworks', 'ManagedBlockchain:getMember'],
