@@ -42,6 +42,9 @@ module.exports = {
                     storageAccount.sku.tier &&
                     storageAccount.sku.tier.toLowerCase() == 'premium') {
                     helpers.addResult(results, 0, 'Storage Account tier is premium', location, storageAccount.id);
+                } else if (storageAccount.kind &&
+                    storageAccount.kind.toLowerCase() != 'storagev2') {
+                    helpers.addResult(results, 0, 'Storage Account kind is not StorageV2', location, storageAccount.id);
                 } else {
 
                     const diagnosticSettings = helpers.addSource(cache, source,
