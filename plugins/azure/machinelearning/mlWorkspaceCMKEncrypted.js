@@ -44,7 +44,6 @@ module.exports = {
                     helpers.addResult(results, 2, 'Machine Learning workspace is not encrypted using CMK', location, workspace.id);
                 }
             }
-
             rcb();
         }, function() {
             // Global checking goes here
