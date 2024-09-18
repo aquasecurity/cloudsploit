@@ -745,6 +745,7 @@ module.exports = {
         'mlWorkspaceCMKEncrypted'       : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceCMKEncrypted.js'),
         'workspaceLoggingEnabled'       : require(__dirname + '/plugins/azure/machinelearning/workspaceLoggingEnabled.js'),
         'mlWorkspaceHasTags'            : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),
+        'mlRegistryPublicAccess'        : require(__dirname + '/plugins/azure/machinelearning/mlRegistryPublicAccess.js'),
 
 
         'minimumTlsVersion'             : require(__dirname + '/plugins/azure/redisCache/minimumTlsVersion.js'),
