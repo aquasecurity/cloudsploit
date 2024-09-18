@@ -64,7 +64,8 @@ const activityLogAlerts = [
                 {
                     "actionGroupId": "/subscriptions/123456/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
                     "webhookProperties": {}
-                }
+               
+                 }
             ]
         }
     },
