@@ -191,6 +191,30 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                     message.push(`${condition.parsed} is not the right property type for this operation`);
                     return 2;
                 }
+            } else if (condition.op == 'NOTCONTAINS') {
+                var conditionStringified = JSON.stringify(condition.parsed);
+                if (condition.value && condition.value.includes(':')) {
+
+                    var conditionKey = condition.value.split(/:(?!.*:)/)[0];
+                    var conditionValue = condition.value.split(/:(?!.*:)/)[1];
+
+                    if (conditionStringified.includes(conditionKey) && !conditionStringified.includes(conditionValue)){
+                        message.push(`${property}: ${condition.value} not found in ${conditionStringified}`);
+                        return 0;
+                    } else {
+                        message.push(`${condition.value} found in ${conditionStringified}`);
+                        return 2;
+                    }
+                } else if (conditionStringified && !conditionStringified.includes(condition.value)) {
+                    message.push(`${property}: ${condition.value} not found in ${conditionStringified}`);
+                    return 0;
+                } else if (conditionStringified && conditionStringified.length){
+                    message.push(`${condition.value} found in ${conditionStringified}`);
+                    return 2;
+                } else {
+                    message.push(`${condition.parsed} is not the right property type for this operation`);
+                    return 2;
+                }
             } else {
                 // Recurse into the same function
                 var subProcessed = [];
@@ -280,6 +304,17 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                 message.push(`${condition.parsed} is not the right property type for this operation`);
                 return 2;
             }
+        } else if (condition.op == 'NOTCONTAINS') {
+            if (condition.parsed && condition.parsed.length && !condition.parsed.includes(condition.value)) {
+                message.push(`${property}: ${condition.value} not found in ${condition.parsed}`);
+                return 0;
+            } else if (condition.parsed && condition.parsed.length){
+                message.push(`${condition.value} found in ${condition.parsed}`);
+                return 2;
+            } else {
+                message.push(`${condition.parsed} is not the right property type for this operation`);
+                return 2;
+            }
         }
         return conditionResult;
     }
@@ -331,7 +366,7 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
                 propertyArr.shift();
                 property = propertyArr.join('.');
                 condition.property = property;
-                if (condition.op !== 'CONTAINS') {
+                if (condition.op !== 'CONTAINS' || condition.op !== 'NOTCONTAINS') {
                     condition.parsed.forEach(parsed => {
                         if (property.includes('[*]')) {
                             runValidation(parsed, condition, inputResultsArr, nestedResultArr);
