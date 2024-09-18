@@ -37,27 +37,27 @@ module.exports = {
             }
 
             describeLoadBalancers.data.forEach(function(lb) {
-                var resource = describeLoadBalancers.LoadBalancerArn;
+                var resource = lb.LoadBalancerArn;
                 var unhealthyInstances = 0;
                 var describeTargetGroups = helpers.addSource(cache, source,
                     ['elbv2', 'describeTargetGroups', region, lb.DNSName]);
-            
+
                 if (!describeTargetGroups || describeTargetGroups.err || !describeTargetGroups.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for Application/Network load balancer target groups: ${helpers.addError(describeTargetGroups)}`,
                         region, resource);
                     return;
                 }
-                
+
                 if (!describeTargetGroups.data.TargetGroups || !describeTargetGroups.data.TargetGroups.length) {
                     helpers.addResult(results, 2, 'No Application/Network load balancer target groups found', region, resource);
                     return;
                 }
-            
+
                 describeTargetGroups.data.TargetGroups.forEach(function(tg) {
                     var describeTargetHealth = helpers.addSource(cache, source,
                         ['elbv2', 'describeTargetHealth', region, tg.TargetGroupArn]);
-            
+
                     if (!describeTargetHealth || describeTargetHealth.err || !describeTargetHealth.data
                             || !describeTargetHealth.data.TargetHealthDescriptions || !describeTargetHealth.data.TargetHealthDescriptions.length) {
                         return;
@@ -81,7 +81,7 @@ module.exports = {
                         region, resource);
                 }
             });
-         
+
             rcb();
         }, function(){
             callback(null, results, source);
