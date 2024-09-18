@@ -741,6 +741,7 @@ module.exports = {
 
         'mlWorkspaceHBI'                : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHBI.js'),
         'workspacePublicAccessDisabled' : require(__dirname + '/plugins/azure/machinelearning/workspacePublicAccessDisabled.js'),
+        'mlWorkspaceCMKEncrypted'       : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceCMKEncrypted.js'),
         'workspaceLoggingEnabled'       : require(__dirname + '/plugins/azure/machinelearning/workspaceLoggingEnabled.js'),
         'mlWorkspaceHasTags'            : require(__dirname + '/plugins/azure/machinelearning/mlWorkspaceHasTags.js'),
 
