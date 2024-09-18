@@ -45,7 +45,6 @@ module.exports = {
                     helpers.addResult(results, 2, 'Synapse workspace does not have tags', location, workspace.id);
                 }
             }
-
             rcb();
         }, function() {
             // Global checking goes here
