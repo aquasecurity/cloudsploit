@@ -34,12 +34,40 @@ module.exports = {
             return callback(null, results, source);
         }
 
+
+        var dtlUnsupportedDomains= [
+            '.za',
+            '.cl',
+            '.ar',
+            '.au',
+            '.nz',
+            '.au',
+            '.jp',
+            '.qa',
+            '.ru',
+            '.ch',
+            '.de',
+            '.es',
+            '.eu',
+            'fi',
+            '.it',
+            '.nl',
+            '.se',
+        ];
+        var unsupported = false;
+
         for (var i in listDomains.data) {
             var domain = listDomains.data[i];
+
             if (!domain.DomainName) continue;
 
-            // Skip .uk and .co.uk domains
-            if (domain.DomainName.indexOf('.uk') > -1) {
+            dtlUnsupportedDomains.forEach((region) => {
+                if (domain.DomainName.includes(region)) {
+                    unsupported = true;
+                }
+            });
+            // Skip the unsupported domains
+            if (unsupported) {
                 helpers.addResult(results, 0,
                     'Domain: ' + domain.DomainName + ' does not support transfer locks',
                     'global', domain.DomainName);
