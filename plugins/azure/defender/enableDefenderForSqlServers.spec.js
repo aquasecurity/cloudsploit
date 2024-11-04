@@ -1,6 +1,6 @@
-var assert = require('assert');
-var expect = require('chai').expect;
-var auth = require('./enableDefenderForSqlServers');
+const assert = require('assert');
+const expect = require('chai').expect;
+const plugin = require('./enableDefenderForSqlServers');
 
 const createCache = (err, data) => {
     return {
@@ -15,7 +15,7 @@ const createCache = (err, data) => {
     }
 };
 
-describe('enableDefenderForSqlDatabases', function() {
+describe('enableDefenderForSqlServers', function() {
     describe('run', function() {
         it('should give passing result if no pricings found', function(done) {
             const callback = (err, results) => {
@@ -26,19 +26,16 @@ describe('enableDefenderForSqlDatabases', function() {
                 done()
             };
 
-            const cache = createCache(
-                null,
-                []
-            );
-
-            auth.run(cache, {}, callback);
+            const cache = createCache(null, []);
+            plugin.run(cache, {}, callback);
         });
 
-        it('should give failing result if Azure Defender for SQL Server Databases is not enabled', function(done) {
+        it('should give failing result if Azure Defender for SQL Servers is not enabled', function(done) {
             const callback = (err, results) => {
+                console.log(results[0])
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Defender is not enabled for SQL Server Databases');
+                expect(results[0].message).to.include('Azure Defender is not enabled for SQL Servers');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -47,23 +44,23 @@ describe('enableDefenderForSqlDatabases', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/SqlServers",
                         "name": "SqlServers",
                         "type": "Microsoft.Security/pricings",
-                        "pricingTier": "free",
-                        "location": "global"
+                        "pricingTier": "Free"
+                        
                     }
                 ]
             );
 
-            auth.run(cache, {}, callback);
+            plugin.run(cache, {}, callback);
         });
 
-        it('should give passing result if Azure Defender for SQL Server Databases is enabled', function(done) {
+        it('should give passing result if Azure Defender for SQL Servers is enabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Defender is enabled for SQL Server Databases');
+                expect(results[0].message).to.include('Azure Defender is enabled for SQL Servers');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -72,16 +69,28 @@ describe('enableDefenderForSqlDatabases', function() {
                 null,
                 [
                     {
-                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/default",
+                        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/providers/Microsoft.Security/pricings/SqlServers",
                         "name": "SqlServers",
                         "type": "Microsoft.Security/pricings",
-                        "pricingTier": "Standard",
-                        "location": "global"
+                        "pricingTier": "Standard"
                     }
                 ]
             );
 
-            auth.run(cache, {}, callback);
-        })
-    })
+            plugin.run(cache, {}, callback);
+        });
+
+        it('should give unknown result if unable to query pricing information', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query Pricing information');
+                expect(results[0].region).to.equal('global');
+                done()
+            };
+
+            const cache = createCache(new Error('API error'));
+            plugin.run(cache, {}, callback);
+        });
+    });
 }); 
