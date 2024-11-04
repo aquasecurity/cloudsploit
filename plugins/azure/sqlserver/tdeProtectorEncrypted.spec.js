@@ -17,6 +17,7 @@ const managedInstances = [
     }
 ];
 
+
 const byokEncryptionProtector = {
     "kind": "azurekeyvault",
     "serverKeyType": "AzureKeyVault",

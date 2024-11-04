@@ -19,6 +19,7 @@ module.exports = {
             default: 'byok'
         }
     },
+    
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:encryptionprotector:write'],
 
     run: function(cache, settings, callback) {
