@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var auth = require('./keyVaultKeyExpiryRbac');
+var auth = require('./keyVaultKeyExpiry');
 
 var keyExpiryPass = new Date();
 keyExpiryPass.setMonth(keyExpiryPass.getMonth() + 2);
