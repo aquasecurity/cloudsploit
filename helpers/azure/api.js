@@ -573,8 +573,12 @@ var calls = {
         listWorkspaces: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/workspaces?api-version=2021-06-01'
         }
-    }
-
+    },
+    managedInstances: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Sql/managedInstances?api-version=2022-05-01-preview'
+        }
+    },
 };
 
 var postcalls = {
@@ -1106,6 +1110,13 @@ var postcalls = {
             reliesOnPath: 'storageAccounts.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
+        }
+    },
+    managedDatabases: {
+        get: {
+            reliesOnPath: 'managedDatabases.listByInstance',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-05-01-preview'
         }
     },
 };
