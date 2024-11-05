@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Vault Secret Expiry',
+    title: 'Key Vault Secret Expiry RBAC',
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
