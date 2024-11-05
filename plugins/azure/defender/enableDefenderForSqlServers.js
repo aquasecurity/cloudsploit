@@ -18,7 +18,7 @@ module.exports = {
             regex: '^(subscription|resource)$',
             default: 'subscription'
         }
-    },
+    }, 
     realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete','microsoftsql:servers:securityalertpolicies:write'],
 
     run: function(cache, settings, callback) {
