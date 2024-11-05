@@ -18,7 +18,7 @@ module.exports = {
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '30'
         }
-    },
+    }, 
     realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {

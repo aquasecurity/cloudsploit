@@ -22,7 +22,7 @@ const listKeyVaults = [
             "name": "Standard"
         }
     },
-    {
+    { 
         "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
         "name": "testvault",
         "type": "Microsoft.KeyVault/vaults",
