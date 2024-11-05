@@ -12,42 +12,45 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities',
     apis: ['pricings:list', 'servers:listSql', 'serverSecurityAlertPolicies:listByServer'],
     settings: {
-        subscription_level_check: {
-            name: 'Check At Subscription Level Only',
-            description: 'When enabled, only checks for Defender at subscription level and skips resource-level checks if subscription-level check passes',
-            regex: '^(true|false)$',
-            default: 'true'
+        check_level: {
+            name: 'Defender Check Level',
+            description: 'Check for Defender at subscription level or resource level',
+            regex: '^(subscription|resource)$',
+            default: 'subscription'
         }
     },
     realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete','microsoftsql:servers:securityalertpolicies:write'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        var pricings = helpers.addSource(cache, source, ['pricings', 'list', 'global']);
+        var config = {
+            check_level: settings.check_level || this.settings.check_level.default
+        }; 
+
         var serviceName = 'sqlservers';
         var serviceDisplayName = 'SQL Servers';
 
-        if (!pricings) return callback(null, results, source);
+        
+        if (config.check_level === 'subscription') {
+            var pricings = helpers.addSource(cache, source, ['pricings', 'list', 'global']);
 
-        if (pricings.err || !pricings.data) {
-            helpers.addResult(results, 3,
-                'Unable to query Pricing information: ' + helpers.addError(pricings), 'global');
-            return callback(null, results, source);
-        }
+            if (!pricings) return callback(null, results, source);
 
-        if (!pricings.data.length) {
-            helpers.addResult(results, 0, 'No Pricing information found', 'global');
-            return callback(null, results, source);
-        }
+            if (pricings.err || !pricings.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query Pricing information: ' + helpers.addError(pricings), 'global');
+                return callback(null, results, source);
+            }
 
-        var config = {
-            subscription_level_check: settings.subscription_level_check || this.settings.subscription_level_check.default
-        };
+            if (!pricings.data.length) {
+                helpers.addResult(results, 0, 'No Pricing information found', 'global');
+                return callback(null, results, source);
+            }
 
-        if (config.subscription_level_check === 'true') {
+
             let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
         
             if (pricingData && pricingData.pricingTier && pricingData.pricingTier.toLowerCase() === 'standard') {
