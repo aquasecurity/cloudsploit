@@ -11,7 +11,7 @@ const servers = [
 
 const managedInstances = [
     {
-        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/managedInstances/test-instance",
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/managedInstances/test-instance", 
         "name": "test-instance",
         "type": "Microsoft.Sql/managedInstances"
     }
