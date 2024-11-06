@@ -297,6 +297,11 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters?api-version=2020-03-01'
         }
     },
+    managedInstances: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Sql/managedInstances?api-version=2021-11-01'
+        }
+    },
     networkWatchers: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/networkWatchers?api-version=2022-01-01'
@@ -843,6 +848,13 @@ var postcalls = {
             reliesOnPath: 'servers.listSql',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/encryptionProtector?api-version=2015-05-01-preview'
+        },
+    },
+    managedInstanceEncryptionProtectors: {
+        listByInstance: {
+            reliesOnPath: 'managedInstances.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/encryptionProtector?api-version=2024-05-01-preview'
         },
     },
     webApps: {
