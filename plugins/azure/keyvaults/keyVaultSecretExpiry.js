@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Vault Secret Expiry',
+    title: 'Key Vault Secret Expiry RBAC',
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
@@ -46,6 +46,13 @@ module.exports = {
             }
 
             vaults.data.forEach(function(vault) {
+                // Check if vault is RBAC-enabled
+                if (!vault.properties || !vault.properties.enableRbacAuthorization) {
+                    helpers.addResult(results, 0,
+                        'Key Vault is not RBAC-enabled', location, vault.id);
+                    return;
+                }
+
                 var secrets = helpers.addSource(cache, source,
                     ['vaults', 'getSecrets', location, vault.id]);
 
