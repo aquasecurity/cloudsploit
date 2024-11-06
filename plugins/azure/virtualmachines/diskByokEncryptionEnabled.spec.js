@@ -7,6 +7,7 @@ const disks = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
         'type': 'Microsoft.Compute/disks',
         'location': 'eastus',
+        'diskState': 'Attached',
         'encryption': {
             'type': 'EncryptionAtRestWithPlatformKey'
         }
@@ -14,8 +15,9 @@ const disks = [
     {
         'name': 'test',
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
-        'type': 'Microsoft.Compute/disks',
+        'type': 'Microsoft.Compute/daisks',
         'location': 'eastus',
+        'diskState': 'Attached',
         'encryption': {
             'type': 'EncryptionAtRestWithCustomerKey',
             'diskEncryptionSetId': '/subscriptions/123/resourceGroups/AQUA-RESOURCE-GROUP/providers/Microsoft.Compute/diskEncryptionSets/test-encrypt-set'
@@ -26,9 +28,20 @@ const disks = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
         'type': 'Microsoft.Compute/disks',
         'location': 'eastus',
+        'diskState': 'Attached',
         'encryption': {
             'type': 'EncryptionAtRestWithPlatformAndCustomerKeys',
             'diskEncryptionSetId': '/subscriptions/123/resourceGroups/AQUA-RESOURCE-GROUP/providers/Microsoft.Compute/diskEncryptionSets/test-encrypt-set'
+        }
+    },
+    {
+        'name': 'test',
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
+        'type': 'Microsoft.Compute/disks',
+        'location': 'eastus',
+        'diskState': 'Unattached',
+        'encryption': {
+            'type': 'EncryptionAtRestWithPlatformKey'
         }
     }
 ];
