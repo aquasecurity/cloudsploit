@@ -30,7 +30,7 @@ module.exports = {
             sql_tde_protector_encryption_key: settings.sql_tde_protector_encryption_key || this.settings.sql_tde_protector_encryption_key.default
         };
     
-        function checkEncryptionProtection(encryptionProtector, location, config) {
+        function checkEncryptionProtection(encryptionProtector, location, config, serviceType) {
             if (config.sql_tde_protector_encryption_key == 'byok') {
                 if ((encryptionProtector.kind &&
                     encryptionProtector.kind.toLowerCase() != 'azurekeyvault') ||
@@ -38,14 +38,16 @@ module.exports = {
                         encryptionProtector.serverKeyType.toLowerCase() != 'azurekeyvault') ||
                     !encryptionProtector.uri) {
                     helpers.addResult(results, 2,
-                        'SQL Server TDE protector is not encrypted with BYOK', location, encryptionProtector.id);
+                        `${serviceType} TDE protector is not encrypted with BYOK`, location, encryptionProtector.id);
                 } else {
                     helpers.addResult(results, 0,
-                        'SQL Server TDE protector is encrypted with BYOK', location, encryptionProtector.id);
+                        `${serviceType} TDE protector is encrypted with BYOK`, location, encryptionProtector.id);
                 }
             } else {
-                helpers.addResult(results, 0,
-                    'SQL Server TDE protector is encrypted with service-managed key', location, encryptionProtector.id);
+                if (encryptionProtector.kind || encryptionProtector.serverKeyType) {
+                    helpers.addResult(results, 0,
+                        `${serviceType} TDE protector is encrypted with service-managed key`, location, encryptionProtector.id);
+                }
             }
         }
     
@@ -80,7 +82,7 @@ module.exports = {
                             helpers.addResult(results, 0, 'No SQL Server Encryption Protectors found', location, server.id);
                         } else {
                             encryptionProtectors.data.forEach(protector => {
-                                checkEncryptionProtection(protector, location, config);
+                                checkEncryptionProtection(protector, location, config, 'SQL Server');
                             });
                         }
                     });
@@ -116,7 +118,7 @@ module.exports = {
                             helpers.addResult(results, 0, 'No Managed Instance Encryption Protectors found', location, instance.id);
                         } else {
                             managedInstanceEncryptionProtectors.data.forEach(protector => {
-                                checkEncryptionProtection(protector, location, config);
+                                checkEncryptionProtection(protector, location, config, 'Managed Instance');
                             });
                         }
                     });

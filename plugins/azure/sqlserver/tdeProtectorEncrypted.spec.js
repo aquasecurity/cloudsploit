@@ -109,7 +109,7 @@ describe('tdeProtectorEncrypted', function() {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('SQL Server TDE protector is not encrypted with BYOK');
                 expect(results[1].status).to.equal(2);
-                expect(results[1].message).to.include('SQL Server TDE protector is not encrypted with BYOK');
+                expect(results[1].message).to.include('Managed Instance TDE protector is not encrypted with BYOK');
                 done();
             };
 
@@ -126,7 +126,7 @@ describe('tdeProtectorEncrypted', function() {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('SQL Server TDE protector is encrypted with BYOK');
                 expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('SQL Server TDE protector is encrypted with BYOK');
+                expect(results[1].message).to.include('Managed Instance TDE protector is encrypted with BYOK');
                 done();
             };
 
@@ -143,7 +143,7 @@ describe('tdeProtectorEncrypted', function() {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('SQL Server TDE protector is encrypted with service-managed key');
                 expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('SQL Server TDE protector is encrypted with service-managed key');
+                expect(results[1].message).to.include('Managed Instance TDE protector is encrypted with service-managed key');
                 done();
             };
 
