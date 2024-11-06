@@ -59,9 +59,11 @@ module.exports = {
                                         }
                                         var encryption = transparentDataEncryption.data[0];
                                         if (encryption.state && encryption.state.toLowerCase() == 'enabled') {
-                                            helpers.addResult(results, 0, 'Transparent data encryption is enabled for SQL Database', location, database.id);
+                                            helpers.addResult(results, 0, 
+                                                'SQL Database: Transparent data encryption is enabled', location, database.id);
                                         } else {
-                                            helpers.addResult(results, 2, 'Transparent data encryption is not enabled for SQL Database', location, database.id);
+                                            helpers.addResult(results, 2, 
+                                                'SQL Database: Transparent data encryption is not enabled', location, database.id);
                                         }
                                     }
                                 });
@@ -105,7 +107,7 @@ module.exports = {
                                 if (database.name && database.name.toLowerCase() !== 'master') {
                                     // Managed instances have TDE enabled by default and cannot be disabled
                                     helpers.addResult(results, 0,
-                                        'Transparent data encryption is enabled for managed instance database', location, database.id);
+                                        'Managed Instance Database: Transparent data encryption is enabled', location, database.id);
                                 }
                             });
                         }

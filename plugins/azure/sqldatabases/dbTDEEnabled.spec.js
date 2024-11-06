@@ -129,7 +129,7 @@ describe('enableTransparentDataEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Transparent data encryption is enabled for SQL Database');
+                expect(results[0].message).to.include('SQL Database: Transparent data encryption is enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -146,7 +146,7 @@ describe('enableTransparentDataEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Transparent data encryption is not enabled for SQL Database');
+                expect(results[0].message).to.include('SQL Database: Transparent data encryption is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             };
@@ -203,7 +203,7 @@ describe('enableTransparentDataEncryption', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[1].status).to.equal(0);
-                expect(results[1].message).to.include('Transparent data encryption is enabled for managed instance database');
+                expect(results[1].message).to.include('Managed Instance Database: Transparent data encryption is enabled');
                 expect(results[1].region).to.equal('eastus');
                 done();
             };
