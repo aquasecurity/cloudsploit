@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Key Vault Key Expiry',
+    title: 'Key Vault Key Expiry RBAC',
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
-    description: 'Proactively check for Key Vault keys expiry date and rotate them before expiry date is reached.',
-    more_info: 'After expiry date has reached for Key Vault key, it cannot be used for cryptographic operations anymore.',
-    recommended_action: 'Ensure that Key Vault keys are rotated before they get expired.',
+    description: 'Ensures that expiration date is set for all keys in RBAC-enabled Key Vaults.',
+    more_info: 'Setting an expiration date on keys helps in key lifecycle management and ensures that keys are rotated regularly.',
+    recommended_action: 'Modify keys in RBAC-enabled Key Vaults to have an expiration date set.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
@@ -45,7 +45,17 @@ module.exports = {
                 return rcb();
             }
 
-            vaults.data.forEach(function(vault){
+            vaults.data.forEach(function(vault) {
+                if (!vault || !vault.properties) {
+                    helpers.addResult(results, 3, 'Unable to read vault properties', location, vault.id);
+                    return;
+                }
+                if (!vault.properties.enableRbacAuthorization) {
+                    helpers.addResult(results, 0, 
+                        'Key Vault does not have RBAC authorization enabled', location, vault.id);
+                    return;
+                }
+
                 var keys = helpers.addSource(cache, source,
                     ['vaults', 'getKeys', location, vault.id]);
 
