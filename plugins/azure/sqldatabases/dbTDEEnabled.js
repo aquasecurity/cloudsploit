@@ -52,7 +52,7 @@ module.exports = {
 
                                     if (database.name && database.name.toLowerCase() !== 'master') {
                                         var transparentDataEncryption = helpers.addSource(cache, source, 
-                                        ['transparentDataEncryption', 'list', location, database.id]);
+                                            ['transparentDataEncryption', 'list', location, database.id]);
 
                                         if (!transparentDataEncryption || transparentDataEncryption.err ||
                                                  !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
