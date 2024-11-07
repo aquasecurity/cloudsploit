@@ -17,7 +17,7 @@ describe('enableDefenderForSqlServers', function() {
             plugin.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Defender is enabled for SQL Servers at subscription level');
+                expect(results[0].message).to.include('Azure Defender is enabled for SQL Servers');
                 done();
             });
         }); 
@@ -35,7 +35,7 @@ describe('enableDefenderForSqlServers', function() {
             plugin.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Defender is not enabled for SQL Servers at subscription level');
+                expect(results[0].message).to.include('Azure Defender is not enabled for SQL Servers');
                 done();
             });
         });

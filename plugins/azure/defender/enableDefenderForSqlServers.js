@@ -50,16 +50,7 @@ module.exports = {
                 return callback(null, results, source);
             }
 
-
-            let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
-        
-            if (pricingData && pricingData.pricingTier && pricingData.pricingTier.toLowerCase() === 'standard') {
-                helpers.addResult(results, 0, 
-                    `Azure Defender is enabled for ${serviceDisplayName} at subscription level`, 'global', pricingData.id);
-            } else {
-                helpers.addResult(results, 2,
-                    `Azure Defender is not enabled for ${serviceDisplayName} at subscription level`, 'global');
-            }
+            helpers.checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, 'global');
             return callback(null, results, source);
         }
 
