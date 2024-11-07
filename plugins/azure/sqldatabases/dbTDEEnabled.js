@@ -51,9 +51,11 @@ module.exports = {
                                 databases.data.forEach(database => {
 
                                     if (database.name && database.name.toLowerCase() !== 'master') {
-                                        var transparentDataEncryption = helpers.addSource(cache, source, ['transparentDataEncryption', 'list', location, database.id]);
+                                        var transparentDataEncryption = helpers.addSource(cache, source, 
+                                        ['transparentDataEncryption', 'list', location, database.id]);
 
-                                        if (!transparentDataEncryption || transparentDataEncryption.err || !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
+                                        if (!transparentDataEncryption || transparentDataEncryption.err ||
+                                                 !transparentDataEncryption.data || !transparentDataEncryption.data.length) {
                                             helpers.addResult(results, 3, 'Unable to query transparent data encryption for SQL Database: ' + helpers.addError(transparentDataEncryption), location, database.id);
                                             return;
                                         }
