@@ -51,8 +51,6 @@ module.exports = {
                     return;
                 }
                 if (!vault.properties.enableRbacAuthorization) {
-                    helpers.addResult(results, 0, 
-                        'Key Vault does not have RBAC authorization enabled', location, vault.id);
                     return;
                 }
 
