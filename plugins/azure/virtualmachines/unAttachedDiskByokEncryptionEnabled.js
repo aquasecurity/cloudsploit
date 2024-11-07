@@ -3,11 +3,11 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Unattached Disk Volumes with Default Encryption',
+    title: 'Unattached Disk Volumes BYOK Encryption Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensures that no default encrypted Azure virtual machine disks are in unattached state.',
+    description: 'Ensures that unattached Azure virtual machine disks have BYOK (Customer-Managed Key) encryption enabled.',
     more_info: 'Encrypting virtual machine disk volumes helps protect and safeguard your data to meet organizational security and compliance commitments. Having unattached disks with default encryption type can lead to data leakage.',
     recommended_action: 'Delete remove unattached disks or enable BYOK encryption for them.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault',
@@ -40,9 +40,9 @@ module.exports = {
                 if (disk.encryption && disk.encryption.type &&
                     disk.encryption.type === 'EncryptionAtRestWithPlatformKey' &&
                     disk.diskState && disk.diskState.toLowerCase() === 'unattached') {
-                    helpers.addResult(results, 2, 'Disk volume is unattached and encrypted with default encryption key', location, disk.id);
+                    helpers.addResult(results, 2, ' Unattached disk volume has BYOK encryption disabled', location, disk.id);
                 } else {
-                    helpers.addResult(results, 0, 'Disk volume is attached or encrypted with BYOK', location, disk.id);
+                    helpers.addResult(results, 0, 'Unattached disk volume has BYOK encryption enabled', location, disk.id);
                 }
             }
             rcb();
