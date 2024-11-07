@@ -38,7 +38,7 @@ module.exports = {
             for (let account of storageAccount.data) {
                 if (!account.id) continue;
 
-                if (account.publicNetworkAccess && account.publicNetworkAccess.toLowerCase() == 'disabled'){
+                if (account.publicNetworkAccess && (account.publicNetworkAccess.toLowerCase() == 'disabled' || account.publicNetworkAccess.toLowerCase() == 'securedbyperimeter')){
                     helpers.addResult(results, 0, 'Storage account has public network access disabled', location, account.id);
                 } else {
                     helpers.addResult(results, 2, 'Storage account does not have public network access disabled', location, account.id);

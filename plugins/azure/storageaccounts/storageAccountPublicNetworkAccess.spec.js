@@ -15,6 +15,13 @@ const storageAccounts = [
         'name': 'acc',
         'tags': {},
         "publicNetworkAccess": "Enabled"
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Storage/storageAccounts/acc',
+        'location': 'eastus',
+        'name': 'acc',
+        'tags': {},
+        "publicNetworkAccess": "SecuredByPerimeter"
     }
 ];
 
@@ -75,12 +82,23 @@ describe('storageAccountPublicNetworkAccess', function() {
             });
         });
 
-        it('should give failing result if Storage account has public network access disabled', function(done) {
+        it('should give failing result if Storage account does not have public network access disabled', function(done) {
             const cache = createCache([storageAccounts[1]]);
             storageAccountPublicNetworkAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Storage account does not have public network access disabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if Storage account has public network access secured by perimeter', function(done) {
+            const cache = createCache([storageAccounts[2]]);
+            storageAccountPublicNetworkAccess.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Storage account has public network access disabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
