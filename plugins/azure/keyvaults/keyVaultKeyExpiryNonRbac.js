@@ -12,7 +12,7 @@ module.exports = {
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
-        key_vault_key_expiry_fail: {
+        non_rbac_key_vault_key_expiry_fail: {
             name: 'Key Vault Key Expiry Fail',
             description: 'Return a failing result when key expiration date is within this number of days in the future',
             regex: '^[1-9]{1}[0-9]{0,3}$',
@@ -26,7 +26,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
         var config = {
-            key_vault_key_expiry_fail: parseInt(settings.key_vault_key_expiry_fail || this.settings.key_vault_key_expiry_fail.default)
+            key_vault_key_expiry_fail: parseInt(settings.non_rbac_key_vault_key_expiry_fail || this.settings.non_rbac_key_vault_key_expiry_fail.default)
         };
 
         async.each(locations.vaults, function(location, rcb) {

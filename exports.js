@@ -1063,7 +1063,7 @@ module.exports = {
         'manageKeyAccessAndPermissions' : require(__dirname + '/plugins/azure/keyvaults/manageKeyAccessAndPermissions.js'),
         'rsaCertificateKeySize'         : require(__dirname + '/plugins/azure/keyvaults/rsaCertificateKeySize.js'),
         'keyVaultSecretExpiry'          : require(__dirname + '/plugins/azure/keyvaults/keyVaultSecretExpiry.js'),
-        'keyVaultKeyExpiry': require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiry.js'),
+        'keyVaultKeyExpiry'             : require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiry.js'),
         'keyVaultKeyExpiryNonRbac'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiryNonRbac.js'),
         'allowedCertificateKeyTypes'    : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
         'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
