@@ -15,7 +15,7 @@ const disks = [
     {
         'name': 'test',
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
-        'type': 'Microsoft.Compute/daisks',
+        'type': 'Microsoft.Compute/disks',
         'location': 'eastus',
         'diskState': 'Attached',
         'encryption': {
