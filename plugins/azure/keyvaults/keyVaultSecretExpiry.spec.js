@@ -158,18 +158,6 @@ describe('keyVaultSecretExpiry', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give passing result if vault is not RBAC-enabled', function(done) {
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Key Vault is not RBAC-enabled');
-                expect(results[0].region).to.equal('eastus');
-                done()
-            };
-
-            auth.run(createCache(null, [listKeyVaults[1]], {}), {}, callback);
-        });
-
         it('should give passing result if secret expiration is not enabled in RBAC vault', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);

@@ -48,8 +48,6 @@ module.exports = {
             vaults.data.forEach(function(vault) {
                 // Check if vault is RBAC-enabled
                 if (!vault.properties || !vault.properties.enableRbacAuthorization) {
-                    helpers.addResult(results, 0,
-                        'Key Vault is not RBAC-enabled', location, vault.id);
                     return;
                 }
 
