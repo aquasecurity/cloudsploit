@@ -5,11 +5,13 @@ module.exports = {
     title: 'Endpoint Logging Enabled',
     category: 'CDN Profiles',
     domain: 'Content Delivery',
+    severity: '',
     description: 'Ensures that endpoint requests are being logged for CDN endpoints',
     more_info: 'Endpoint Logging ensures that all requests to a CDN endpoint are logged.',
     recommended_action: 'Ensure that diagnostic logging is enabled for each CDN endpoint for each CDN profile',
-    link: 'https://docs.microsoft.com/en-us/azure/cdn/cdn-azure-diagnostic-logs',
+    link: 'https://learn.microsoft.com/en-us/azure/cdn/cdn-azure-diagnostic-logs',
     apis: ['profiles:list', 'endpoints:listByProfile', 'diagnosticSettings:listByEndpoint'],
+    realtime_triggers: ['microsoftcdn:profiles:write','microsoftcdn:profiles:delete','microsoftcdn:profiles:endpoints:write','microsoftcdn:profiles:endpoints:delete','microsoftinsights:diagnosticsettings:write','microsoftinsights:diagnosticsettings:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

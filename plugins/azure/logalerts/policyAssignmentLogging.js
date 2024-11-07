@@ -5,11 +5,13 @@ module.exports = {
     title: 'Policy Assignment Alerts Enabled',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log alerts for create or update and delete Policy Assignment events are enabled',
     more_info: 'Monitoring for create or update and delete Policy Assignment events gives insight into policy changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for Policy Assignment create or update and delete events.',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-alerts',
     apis: ['activityLogAlerts:listBySubscriptionId'],
+    realtime_triggers: ['microsoftinsights:activitylogalerts:write', 'microsoftinsights:activitylogalerts:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

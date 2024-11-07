@@ -5,11 +5,13 @@ module.exports = {
     title: 'No Network Gateways Connections',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Low',
     description: 'Ensures that virtual network gateways do not have any established connections.',
     more_info: 'To meet your organization\'s security compliance requirements.',
-    link: 'https://docs.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal',
     recommended_action: 'Delete network gateway connections',
     apis: ['resourceGroups:list', 'networkGatewayConnections:listByResourceGroup'],
+    realtime_triggers: ['microsoftnetwork:virtualnetworkgateways:write','microsoftnetwork:virtualnetworkgateways:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

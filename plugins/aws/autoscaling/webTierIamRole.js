@@ -5,6 +5,7 @@ module.exports = {
     title: 'Web-Tier Launch Configurations IAM Roles',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that Web-Tier Auto Scaling launch configuration is configured to use a customer created IAM role.',
     more_info: 'Web-Tier Auto Scaling launch configuration should have a customer created Web-Tier IAM role to provide necessary credentials to access AWS services.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/us-iam-role.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:createLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

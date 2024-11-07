@@ -5,11 +5,13 @@ module.exports = {
     title: 'Redshift Parameter Group SSL Required',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures AWS Redshift non-default parameter group associated with Redshift cluster require SSL connection.',
     more_info: 'Redshift parameter group associated with Redshift cluster should be configured to require SSL to secure data in transit.',
     link: 'https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-ssl-support.html',
     recommended_action: 'Update Redshift parameter groups to have require-ssl parameter set to true.',
     apis: ['Redshift:describeClusters', 'Redshift:describeClusterParameterGroups', 'Redshift:describeClusterParameters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyClusterParameterGroup', 'redshift:RestoreFromClusterSnapshot', 'redshift:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

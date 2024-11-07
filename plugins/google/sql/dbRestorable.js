@@ -5,6 +5,7 @@ module.exports = {
     title: 'DB Restorable',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances can be restored to a recent point',
     more_info: 'Google will maintain a point to which the database can be restored. This point should not drift too far into the past, or else the risk of irrecoverable data loss may occur.',
     link: 'https://cloud.google.com/sql/docs/mysql/instance-settings',
@@ -15,7 +16,8 @@ module.exports = {
              'compromised services, be tested frequently. RDS restorable time ' +
              'indicates the last known time to which the instance can be restored.'
     },
-
+    realtime_triggers:['cloudsql.backupRuns.delete','cloudsql.backupRuns.create'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

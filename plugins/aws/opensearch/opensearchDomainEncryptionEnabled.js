@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'OpenSearch Encryption Enabled',
-    category: 'ES',
+    category: 'OpenSearch',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS OpenSearch domains have encryption enabled.',
     more_info: 'OpenSearch domains should be encrypted to ensure that data is secured.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/encryption-at-rest.html',
@@ -15,9 +16,10 @@ module.exports = {
             name: 'OpenSearch Domain Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['opensearch:CreateDomain', 'opensearch:UpdateDomainConfig', 'opensearch:DeleteDomain'], 
     
     run: function(cache, settings, callback) {
         var config = {

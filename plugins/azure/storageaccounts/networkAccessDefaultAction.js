@@ -5,10 +5,11 @@ module.exports = {
     title: 'Network Access Default Action',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that Storage Account access is restricted to trusted networks',
     more_info: 'Storage Accounts should be configured to accept traffic only from trusted networks. By default, all networks are selected but can be changed when creating a new storage account or in the firewall settings.',
     recommended_action: 'Configure the firewall of each Storage Account to allow access only from known virtual networks.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security',
     apis: ['storageAccounts:list'],
     compliance: {
         pci: 'PCI requires data access to be configured to use a firewall. Removing the ' +
@@ -30,7 +31,7 @@ module.exports = {
     apis_remediate: ['storageAccounts:list'],
     actions: {remediate:['storageAccounts:update'], rollback:['storageAccounts:update']},
     permissions: {remediate: ['storageAccounts:update'], rollback: ['storageAccounts:update']},
-    realtime_triggers: ['microsoftstorage:storageaccounts:write'],
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -5,11 +5,13 @@ module.exports = {
     title: 'VPC Endpoint Exposed',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure Amazon VPC endpoints are not publicly exposed.',
     more_info: 'VPC endpoints should not be publicly accessible in order to avoid any unsigned requests made to the services inside VPC.',
     recommended_action: 'Update VPC endpoint access policy in order to stop any unsigned requests',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints-access.html',
     apis: ['EC2:describeVpcEndpoints', 'EC2:describeSubnets', 'EC2:describeRouteTables', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpcEndpoint', 'ec2:ModifyVpcEndpoint', 'ec2:DeleteVpcEndpoint'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -82,7 +84,7 @@ module.exports = {
                     var statement = statements[s];
                     
                     if (statement.Effect == 'Allow') {
-                        if (helpers.globalPrincipal(statement.Principal)) {
+                        if (helpers.globalPrincipal(statement.Principal, settings)) {
                             publicEndpoint = true;
                             break;
                         }

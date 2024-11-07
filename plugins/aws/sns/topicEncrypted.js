@@ -5,6 +5,7 @@ module.exports = {
     title: 'SNS Topic Encrypted',
     category: 'SNS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures that Amazon SNS topics enforce Server-Side Encryption (SSE)',
     more_info: 'SNS topics should enforce Server-Side Encryption (SSE) to secure data at rest. SSE protects the contents of messages in Amazon SNS topics using keys managed in AWS Key Management Service (AWS KMS).',
     recommended_action: 'Enable Server-Side Encryption to protect the content of SNS topic messages.',
@@ -29,7 +30,7 @@ module.exports = {
         remediate: ['sns:SetTopicAttributes'],
         rollback: ['sns:SetTopicAttributes']
     },
-    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes'],
+    realtime_triggers: ['sns:CreateTopic', 'sns:SetTopicAttributes', 'sns:DeleteTopic'],
     asl: {
         conditions: [
             {

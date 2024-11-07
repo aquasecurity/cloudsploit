@@ -9,7 +9,7 @@ var globalServices = [
 ];
 
 var integrationSendLast = [
-    'EC2'
+    'EC2', 'IAM'
 ];
 
 var calls = [
@@ -48,7 +48,7 @@ var calls = [
                 property: 'collectionSummaries'
             },
             listNetworkSecurityPolicies: {
-                override: true, 
+                override: true,
             },
             listEncryptionSecurityPolicies:{
                 override: true,
@@ -115,6 +115,20 @@ var calls = [
             },
             listBackupPlans: {
                 property: 'BackupPlansList',
+                paginate: 'NextToken'
+            }
+        },
+        Bedrock:{
+            listCustomModels:{
+                property: 'modelSummaries',
+                paginate: 'NextToken',
+            },
+            listModelCustomizationJobs:{
+                property: 'modelCustomizationJobSummaries"',
+                paginate: 'NextToken',
+            },
+            getModelInvocationLoggingConfiguration: {
+                property: 'loggingConfig',
                 paginate: 'NextToken'
             }
         },
@@ -383,7 +397,6 @@ var calls = [
                             Values: [
                                 'pending',
                                 'running',
-                                'shutting-down',
                                 'stopping',
                                 'stopped'
                             ]
@@ -677,7 +690,7 @@ var calls = [
             },
             listRoles: {
                 property: 'Roles',
-                paginate: 'Marker'
+                override: true
             },
             listPolicies: {
                 property: 'Policies',
@@ -824,6 +837,10 @@ var calls = [
         Neptune: {
             describeDBClusters: {
                 property: 'DBClusters',
+                paginate: 'Marker'
+            },
+            describeDBInstances: {
+                property: 'DBInstances',
                 paginate: 'Marker'
             }
         },
@@ -991,10 +1008,7 @@ var calls = [
             },
             describeParameters: {
                 property: 'Parameters',
-                params: {
-                    MaxResults: 50
-                },
-                paginate: 'NextToken'
+                override: true
             },
             listAssociations: {
                 property: 'Associations',
@@ -1025,6 +1039,33 @@ var calls = [
                 property: 'checks',
                 params: {language: 'en'},
             },
+        },
+        SecurityHub: {
+            describeHub: {
+                property: '',
+                paginate: 'NextToken'
+            },
+            getFindings: {
+                property: 'Findings',
+                paginate: 'NextToken',
+                params: {
+                    MaxResults: 100,
+                    Filters: {
+                        RecordState: [
+                            {
+                                Comparison: 'EQUALS',
+                                Value: 'ACTIVE'
+                            }
+                        ],
+                        WorkflowStatus: [
+                            {
+                                Comparison: 'EQUALS',
+                                Value: 'NEW'
+                            }
+                        ]
+                    }
+                }
+            }
         },
         Transfer: {
             listServers: {
@@ -1179,6 +1220,12 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
+            },
+            getRequestValidators: {
+                reliesOnService: 'apigateway',
+                reliesOnCall: 'getRestApis',
+                filterKey: 'restApiId',
+                filterValue: 'id'
             }
         },
         AppConfig: {
@@ -1247,6 +1294,20 @@ var postcalls = [
                 filterValue: 'BackupPlanId',
             }
         },
+        Bedrock:{
+            getCustomModel: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listCustomModels',
+                filterKey: 'modelIdentifier',
+                filterValue: 'modelName',
+            },
+            getModelCustomizationJob: {
+                reliesOnService: 'bedrock',
+                reliesOnCall: 'listModelCustomizationJobs',
+                filterKey: 'jobIdentifier',
+                filterValue: 'jobArn',
+            }
+        },
         CloudFront: {
             getDistribution: {
                 reliesOnService: 'cloudfront',
@@ -1284,6 +1345,31 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 override: true,
             },
+            getEc2MetricStatistics: {
+                reliesOnService: 'ec2',
+                reliesOnCall: 'describeInstances',
+                override: true,
+            },
+            getredshiftMetricStatistics: {
+                reliesOnService: 'redshift',
+                reliesOnCall: 'describeClusters',
+                override: true,
+            },
+            getRdsMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true,
+            },
+            getRdsWriteIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true,
+            },
+            getRdsReadIOPSMetricStatistics: {
+                reliesOnService: 'rds',
+                reliesOnCall: 'describeDBInstances',
+                override: true,
+            }
         },
         ConfigService: {
             getComplianceDetailsByConfigRule: {
@@ -1351,6 +1437,14 @@ var postcalls = [
                 override: true
             }
         },
+        DocDB: {
+            listTagsForResource: {
+                reliesOnService: 'docdb',
+                reliesOnCall: 'describeDBClusters',
+                filterKey: 'ResourceName',
+                filterValue: 'DBClusterArn'
+            },
+        },
         DynamoDB: {
             describeTable: {
                 reliesOnService: 'dynamodb',
@@ -1374,7 +1468,12 @@ var postcalls = [
                 reliesOnCall: 'describeCacheClusters',
                 filterKey: 'ReplicationGroupId',
                 filterValue: 'ReplicationGroupId'
-            }
+            },
+            describeCacheSubnetGroups: {
+                reliesOnService: 'elasticache',
+                reliesOnCall: 'describeCacheClusters',
+                override: true
+            },
         },
         ES: {
             describeElasticsearchDomain: {
@@ -1723,7 +1822,13 @@ var postcalls = [
                 filterKey: 'StackName',
                 filterValue: 'StackName',
                 rateLimit: 500 // ms to rate limit between stacks
-            }
+            },
+            getTemplate: {
+                reliesOnService: 'cloudformation',
+                reliesOnCall: 'listStacks',
+                filterKey: 'StackName',
+                filterValue: 'StackName'
+            },
         },
         WAFRegional: {
             listResourcesForWebACL: {
@@ -1739,6 +1844,12 @@ var postcalls = [
                 reliesOnCall: 'listWebACLs',
                 override: true,
                 rateLimit: 600
+            },
+            getLoggingConfiguration: {
+                reliesOnService: 'wafv2',
+                reliesOnCall: 'listWebACLs',
+                filterKey: 'ResourceArn',
+                filterValue: 'ARN'
             },
             getWebACLForCognitoUserPool: {
                 reliesOnService: 'cognitoidentityserviceprovider',
@@ -1909,6 +2020,12 @@ var postcalls = [
                 filterValue: 'FunctionName',
                 rateLimit: 500, // it's not documented but experimentally 10/second works.
             },
+            getFunction: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
             listTags: {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
@@ -1916,6 +2033,18 @@ var postcalls = [
                 filterValue: 'FunctionArn'
             },
             getFunctionUrlConfig :{
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName',
+            },
+            getFunctionConfiguration: {
+                reliesOnService: 'lambda',
+                reliesOnCall: 'listFunctions',
+                filterKey: 'FunctionName',
+                filterValue: 'FunctionName'
+            },
+            getFunctionCodeSigningConfig : {
                 reliesOnService: 'lambda',
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
@@ -2212,8 +2341,7 @@ var postcalls = [
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                filterKey: 'RoleName',
-                filterValue: 'RoleName',
+                override: true,
                 rateLimit: 500
             },
             listRolePolicies: {
@@ -2296,12 +2424,12 @@ var postcalls = [
             getNetworkSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
-                override: true,   
+                override: true,
             },
             getEncryptionSecurityPolicy: {
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listEncryptionSecurityPolicies',
-                override: true,   
+                override: true,
             }
         }
     },

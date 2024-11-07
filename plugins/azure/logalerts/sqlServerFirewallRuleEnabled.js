@@ -5,10 +5,11 @@ module.exports = {
     title: 'SQL Server Firewall Rule Alerts Monitor',
     category: 'Log Alerts',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures Activity Log Alerts for the create or update and delete SQL Server Firewall Rules events are enabled',
     more_info: 'Monitoring for create or update and delete SQL Server Firewall Rules events gives insight into event changes and may reduce the time it takes to detect suspicious activity.',
     recommended_action: 'Add a new log alert to the Alerts service that monitors for SQL Server Firewall Rules create or update and delete events.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure',
     apis: ['activityLogAlerts:listBySubscriptionId'],
     compliance: {
         hipaa: 'HIPAA requires the auditing of changes to access controls for network ' +
@@ -17,6 +18,7 @@ module.exports = {
                 'a monitor for SQL Server firewall rules ensures the integrity of those ' +
                 'firewalls.'
     },
+    realtime_triggers: ['microsoftinsights:activitylogalerts:write', 'microsoftinsights:activitylogalerts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

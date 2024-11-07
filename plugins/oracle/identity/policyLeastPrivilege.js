@@ -4,6 +4,7 @@ module.exports = {
     title: 'Policy Least Privilege',
     category: 'Identity',
     domain: 'Identity and Access Management',
+    severity: 'High',
     description: 'Ensure only Compartment/Tenancy admins have blanket statements to manage or use resources without restriction.',
     more_info: 'Adding service-level admins to Oracle policies instead of blanket statements mitigates unintended access to resources by unauthorized users or groups.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/iam_security.htm',

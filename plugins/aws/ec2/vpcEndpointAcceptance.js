@@ -5,6 +5,7 @@ module.exports = {
     title: 'VPC PrivateLink Endpoint Acceptance Required',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures VPC PrivateLink endpoints require acceptance',
     more_info: 'VPC PrivateLink endpoints should be configured to require acceptance so that access to the endpoint is controlled on a case-by-case basis.',
     recommended_action: 'Update the VPC PrivateLink endpoint to require acceptance',
@@ -18,6 +19,7 @@ module.exports = {
             default: 'false'
         },
     },
+    realtime_triggers: ['ec2:CreateVpcEndpointServiceConfiguration', 'ec2:ModifyVpcEndpointServiceConfiguration', 'ec2:DeleteVpcEndpointServiceConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

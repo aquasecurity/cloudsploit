@@ -5,11 +5,13 @@ module.exports = {
     title: 'SQL Server Automatic Tuning Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure SQL servers have automatic tuning configured.',
     more_info: 'Automatic tuning is a fully managed intelligent performance service that uses built-in intelligence to continuously monitor queries executed on a database, and it automatically improves their performance.',
     recommended_action: 'Modify SQL server to enable automatic tuning',
-    link: 'https://docs.microsoft.com/en-us/azure/azure-sql/database/automatic-tuning-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/automatic-tuning-overview',
     apis: ['servers:listSql', 'serverAutomaticTuning:get'],
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:automatictuning:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

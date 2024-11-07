@@ -5,6 +5,7 @@ module.exports = {
     title: 'FSx File System Encrypted',
     category: 'FSx',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensure that Amazon FSx for Windows File Server file systems are encrypted using desired KMS encryption level.',
     more_info: 'If your organization is subject to corporate or regulatory policies that require encryption of data and metadata at rest, AWS recommends creating encrypted file systems.',
     recommended_action: 'Enable encryption for file systems created under Amazon FSx for Windows File Server',
@@ -15,9 +16,11 @@ module.exports = {
             name: 'FSx File Systems Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['fsx:CreateFileSystem', 'fsx:DeleteFileSystem'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

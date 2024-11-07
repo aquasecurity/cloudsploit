@@ -6,11 +6,13 @@ module.exports = {
     title: 'No Unattached Disk Volumes',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that the Azure virtual machines have no unattached disk volumes.',
     more_info: 'When a virtual machine (VM) in Azure is deleted, by default, any disks that are attached to the VM aren\'t deleted. Those disks need to be deleted to save cost for unused resources.',
     recommended_action: 'Ensure that there are no unattached virtual machine disk volumes',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/disks-find-unattached-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disks-find-unattached-portal',
     apis: ['disks:list'],
+    realtime_triggers: ['microsoftcompute:disks:write', 'microsoftcompute:disks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -33,7 +35,7 @@ module.exports = {
             }
 
             disks.data.forEach(disk => {
-                if (disk.diskState && disk.diskState.toLowerCase() === 'attached') {
+                if (disk.diskState && disk.diskState.toLowerCase() != 'unattached') {
                     helpers.addResult(results, 0, 'Disk volume is attached to a virtual machine', location, disk.id);
                 } else {
                     helpers.addResult(results, 2, 'Disk volume is not attached to a virtual machine', location, disk.id);

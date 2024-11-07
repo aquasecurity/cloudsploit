@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Write Logs Enabled',
     category: 'Object Store',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensures write level Object Storage logging is enabled for all buckets.',
     more_info: 'Enabling write level logging for object store buckets will provide you more visibility into changes to objects in your buckets.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Object/Tasks/managingbuckets.htm',
@@ -51,9 +52,9 @@ module.exports = {
                     }
 
                     if (bucketLog) {
-                        helpers.addResult(results, 0, 'The bucket has write level logging enabled', region, bucket.name);
+                        helpers.addResult(results, 0, 'The bucket has write level logging enabled', region, bucket.id);
                     } else {
-                        helpers.addResult(results, 2, 'The bucket does not have write level logging enabled', region, bucket.name);
+                        helpers.addResult(results, 2, 'The bucket does not have write level logging enabled', region, bucket.id);
                     }
                 });
             }

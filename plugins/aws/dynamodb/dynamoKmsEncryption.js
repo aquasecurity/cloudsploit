@@ -5,6 +5,7 @@ module.exports = {
     title: 'DynamoDB KMS Encryption',
     category: 'DynamoDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures DynamoDB tables are encrypted using a customer-owned KMS key.',
     more_info: 'DynamoDB tables can be encrypted using AWS-owned or customer-owned KMS keys. Customer keys should be used to ensure control over the encryption seed data.',
     link: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html',
@@ -29,7 +30,7 @@ module.exports = {
             required: false
         }
     },
-    realtime_triggers: ['DynamoDB:UpdateTable', 'DynamoDB:CreateTable'],
+    realtime_triggers: ['dynamodb:CreateTable','dynamodb:UpdateTable','dynamodb:DeleteTable'],
 
     run: function(cache, settings, callback) {
         var results = [];

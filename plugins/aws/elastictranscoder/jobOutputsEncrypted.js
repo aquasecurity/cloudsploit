@@ -5,12 +5,14 @@ module.exports = {
     title: 'Elastic Transcoder Job Outputs Encrypted',
     category: 'Elastic Transcoder',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Elastic Transcoder jobs have encryption enabled to encrypt your data before saving on S3.',
     more_info: 'Amazon Elastic Transcoder jobs saves th result output on S3. If you don\'t configure encryption parameters, these job will save the file unencrypted. ' +
         'You should enabled encryption for output files and use customer-managed keys for encryption in order to gain more granular control over encryption/decryption process',
     recommended_action: 'Enable encryption for Elastic Transcoder job outputs',
     link: 'https://docs.aws.amazon.com/elastictranscoder/latest/developerguide/encryption.html',
     apis: ['ElasticTranscoder:listPipelines', 'ElasticTranscoder:listJobsByPipeline'],
+    realtime_triggers: ['elastictranscoder:CreatePipeline', 'elastictranscoder:UpdatePipeline', 'elastictranscoder:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];

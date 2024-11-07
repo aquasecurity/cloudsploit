@@ -152,7 +152,7 @@ describe('memorydbClusterEncrypted', function () {
 
         it('should FAIL if MemoryDB Cluster for Redis is not encrypted with desired encyption level', function (done) {
             const cache = createCache([describeClusters[0]], listKeys, describeKey[1]);
-            memorydbClusterEncrypted.run(cache, {} , (err, results) => {
+            memorydbClusterEncrypted.run(cache, {memorydb_cluster_target_encryption_level: 'awscmk'} , (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('MemoryDB cluster is encrypted with awskms');

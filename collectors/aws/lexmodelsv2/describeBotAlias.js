@@ -28,7 +28,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 if (err) {
                     collection.lexmodelsv2.describeBotAlias[AWSConfig.region][alias.botAliasId].err = err;
                 }
-
+                data.id =  `${bot.botId}/${alias.botAliasId}`;
                 collection.lexmodelsv2.describeBotAlias[AWSConfig.region][alias.botAliasId].data = data;
                 pCb();
             });

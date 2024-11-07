@@ -130,5 +130,9 @@ module.exports = {
     },
     users: {
         list: ''
+    },
+    vertexAI: {
+        listDatasets: 'name',
+        listModels: 'name'
     }
 };

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Boot Volume CMK Encryption',
     category: 'Block Storage',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures that boot volumes have encryption enabled using desired protection level.',
     more_info: 'By default, boot volumes are encrypted using an Oracle-managed master encryption key. To have better control over the encryption process, you can use Customer-Managed Keys (CMKs).',
     recommended_action: 'Ensure all boot volumes have desired encryption level.',

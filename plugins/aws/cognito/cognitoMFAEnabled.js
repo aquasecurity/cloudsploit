@@ -5,11 +5,14 @@ module.exports = {
     title: 'Cognito User Pool MFA enabled',
     category: 'Cognito',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that Cognito user pool has MFA enabled.',
     more_info: 'Enabling Multi-factor authentication (MFA) increases security for your app. You can choose SMS text messages or time-based one-time passwords (TOTP) as second factors to sign in your users.',
     link: 'https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-mfa.html',
     recommended_action: '1. Enter the Cognito service. 2. Enter user pools and enable MFA from sign in experience.',
     apis: ['CognitoIdentityServiceProvider:listUserPools', 'CognitoIdentityServiceProvider:describeUserPool', 'STS:getCallerIdentity'],
+    realtime_triggers: ['CognitoIdentityServiceProvider:CreateUserPool','CognitoIdentityServiceProvider:SetUserPoolMfaConfig','cognitoidentityserviceprovider:DeleteUserPool'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

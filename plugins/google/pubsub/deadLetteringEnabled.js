@@ -5,11 +5,13 @@ module.exports = {
     title: 'Dead Lettering Enabled',
     category: 'Pub/Sub',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensure that each Google Pub/Sub subscription is configured to use dead-letter topic.',
     more_info: 'Enabling dead lettering will handle message failures by forwarding undelivered messages to a dead-letter topic that stores the message for later access.',
     link: 'https://cloud.google.com/pubsub/docs/dead-letter-topics',
     recommended_action: 'Ensure that dead letter topics are configured for all your Google Cloud Pub/Sub subscriptions.',
     apis: ['subscriptions:list'],
+    realtime_triggers:['pubsub.Subscriber.CreateSubscription','pubsub.Subscriber.UpdateSubscription','pubsub.Subscriber.DeleteSubscription'],
 
     run: function(cache, settings, callback) {
         var results = [];

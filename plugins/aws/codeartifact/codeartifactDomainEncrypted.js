@@ -5,6 +5,7 @@ module.exports = {
     title: 'CodeArtifact Domain Encrypted',
     category: 'CodeArtifact',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures that AWS CodeArtifact domains have encryption enabled with desired encryption level.',
     more_info: 'CodeArtifact domains make it easier to manage multiple repositories across an organization. By default, domain assets are encrypted with AWS-managed KMS key. ' +
         'Encrypt them using customer-managed keys in order to gain more granular control over encryption/decryption process',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'CodeArtifact Domain Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['codeartifact:CreateDomain', 'codeartifact:DeleteDomain'],
 
     run: function(cache, settings, callback) {
         var results = [];

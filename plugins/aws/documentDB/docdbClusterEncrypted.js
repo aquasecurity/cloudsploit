@@ -5,6 +5,7 @@ module.exports = {
     title: 'DocumentDB Cluster Encrypted',
     category: 'DocumentDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that data at-rest in encrypted in AWS DocumentDB clusters using desired encryption level.',
     more_info: 'Amazon DocumentDB integrates with AWS KMS and uses a method known as envelope encryption to protect your data. ' +
         'This gives you an extra layer of data security and help meet security compliance and regulations within your organization.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'DocumentDB Cluster Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['docdb:CreateDBCluster','docdb:CreateDBInstance','docdb:DeleteDBCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

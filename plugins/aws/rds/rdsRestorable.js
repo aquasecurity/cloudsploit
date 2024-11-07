@@ -5,6 +5,7 @@ module.exports = {
     title: 'RDS Restorable',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures RDS instances can be restored to a recent point',
     more_info: 'AWS will maintain a point to which the database can be restored. This point should not drift too far into the past, or else the risk of irrecoverable data loss may occur.',
     link: 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html',
@@ -29,6 +30,7 @@ module.exports = {
             default: 6
         }
     },
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'], 
 
     run: function(cache, settings, callback) {
         var config = {

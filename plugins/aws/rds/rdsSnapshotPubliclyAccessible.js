@@ -5,12 +5,14 @@ module.exports = {
     title: 'RDS Snapshot Publicly Accessible',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that Amazon RDS database snapshots are not publicly exposed.',
     more_info: 'If an RDS snapshot is exposed to the public, any AWS account can copy the snapshot and create a new database instance from it. ' +
         'It is a best practice to ensure RDS snapshots are not exposed to the public to avoid any accidental leak of sensitive information.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ShareSnapshot.html',
     recommended_action: 'Ensure Amazon RDS database snapshot is not publicly accessible and available for any AWS account to copy or restore it.',
     apis: ['RDS:describeDBSnapshots', 'RDS:describeDBSnapshotAttributes'],
+    realtime_triggers: ['rds:CreateDBSnapshot', 'rds:ModifyDBSnapshotAttribute','rds:DeleteDBSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];

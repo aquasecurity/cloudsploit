@@ -5,11 +5,13 @@ module.exports = {
     title: 'Trigger Has Tags',
     category: 'CloudBuild',
     domain: 'Application Integration',
+    severity: 'Low',
     description: 'Ensure cloud build triggers have tags.',
     more_info: 'Tags are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/build/docs/automating-builds/create-manage-triggers',
     recommended_action: 'Ensure all cloudbuild triggers have tags added.',
     apis: ['cloudbuild:triggers'],
+    realtime_triggers: ['devtools.cloudbuild.CloudBuild.CreateBuildTrigger','devtools.cloudbuild.CloudBuild.UpdateBuildTrigger','devtools.cloudbuild.CloudBuild.DeleteBuildTrigger'],
 
     run: function(cache, settings, callback) {
         var results = [];

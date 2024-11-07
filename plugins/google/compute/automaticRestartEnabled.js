@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance Automatic Restart Enabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Virtual Machine instances have automatic restart feature enabled.',
     more_info: 'Automatic Restart sets the virtual machine restart behavior when an instance is crashed or stopped by the system. If it is enabled, Google Cloud Compute Engine restarts the instance if it crashes or is stopped.',
     link: 'https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options#autorestart',
@@ -15,7 +16,7 @@ module.exports = {
     apis_remediate: ['compute:list', 'projects:get'],
     actions: {remediate:['compute.instances.setScheduling'], rollback:['compute.instances.setScheduling']},
     permissions: {remediate: ['compute.instances.setScheduling'], rollback: ['compute.instances.setScheduling']},
-    realtime_triggers: ['compute.instances.setScheduling', 'compute.instances.insert'],
+    realtime_triggers: ['compute.instances.setScheduling', 'compute.instances.insert', 'compute.instances.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

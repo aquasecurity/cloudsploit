@@ -5,16 +5,19 @@ module.exports = {
     title: 'Unused Security Groups',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Identify and remove unused EC2 security groups.',
     more_info: 'Keeping the number of security groups to a minimum makes the management easier and helps to avoid reaching the service limit.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html',
     recommended_action: 'Remove security groups that are not being used.',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
+    realtime_triggers: ['ec2:CreateSecurityGroup','ec2:DeleteSecurityGroup','ec2:RunInstances','ec2:ModifyInstanceAttribute', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSecurityGroups = helpers.addSource(cache, source,
@@ -37,7 +40,7 @@ module.exports = {
             var usedGroups = helpers.getUsedSecurityGroups(cache, results, region);
             if (usedGroups && usedGroups.length && usedGroups[0] === 'Error') return rcb();
             for (var g in groups) {
-                var resource = 'arn:aws:ec2:' + region + ':' + groups[g].OwnerId + ':security-group/' +
+                var resource = `arn:${awsOrGov}:ec2:` + region + ':' + groups[g].OwnerId + ':security-group/' +
                                groups[g].GroupId;      
                 if (groups[g].GroupId && usedGroups && usedGroups.includes(groups[g].GroupId)) {
                     helpers.addResult(results, 0, 'Security group is being used', region, resource);

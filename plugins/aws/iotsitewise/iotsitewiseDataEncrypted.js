@@ -5,6 +5,7 @@ module.exports = {
     title: 'IoT SiteWise Data Encrypted',
     category: 'IoT SiteWise',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that AWS IoT SiteWise is using desired encryption level for data at-rest.',
     more_info: 'AWS IoT SiteWise encrypts data such as your asset property values and aggregate values by default.'+
         'It is recommended to use customer managed keys in order to gain more control over data encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'IoT SiteWise Data Target Encryption Level',
             description: 'In order (lowest to highest)  awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['imagebuilder:PutDefaultEncryptionConfiguration'],
    
     run: function(cache, settings, callback) {
         var results = [];

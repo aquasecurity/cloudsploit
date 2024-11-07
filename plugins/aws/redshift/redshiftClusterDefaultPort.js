@@ -5,11 +5,13 @@ module.exports = {
     title: 'Redshift Cluster Default Port',
     category: 'Redshift',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures that Amazon Redshift clusters are not using port "5439" (default port) for database access.',
     more_info: 'Amazon Redshift clusters should not use the default port for database access to ensure cluster security.',
     link: 'https://docs.amazonaws.cn/en_us/redshift/latest/gsg/rs-gsg-launch-sample-cluster.html',
     recommended_action: 'Update Amazon Redshift cluster endpoint port.',
     apis: ['Redshift:describeClusters', 'STS:getCallerIdentity'],
+    realtime_triggers: ['redshift:CreateCluster', 'redshift:ModifyCluster', 'redshift:RestoreFromClusterSnapshot','redshift:DeleteCluster'], 
 
     run: function(cache, settings, callback) {
         var results = [];

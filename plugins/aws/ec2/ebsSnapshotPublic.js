@@ -5,11 +5,13 @@ module.exports = {
     title: 'Amazon EBS Public Snapshots',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that Amazon EBS volume snapshots are not shared to all AWS accounts.',
     more_info: 'AWS Elastic Block Store (EBS) volume snapshots should not be not publicly shared with other AWS account to avoid data exposure.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html',
     recommended_action: 'Modify the permissions of public snapshots to remove public access.',
     apis: ['EC2:describeSnapshots', 'EC2:describeSnapshotAttribute'],
+    realtime_triggers: ['ec2:CreateSnapshot' , 'ec2:ModifySnapshotAttribute', 'ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];

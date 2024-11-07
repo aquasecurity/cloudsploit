@@ -5,11 +5,15 @@ module.exports = {
     title: 'AutoScaling ELB Same Availability Zone',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'High',
     description: 'Ensures all autoscaling groups with attached ELBs are operating in the same availability zone.',
     more_info: 'To work properly and prevent orphaned instances, ELBs must be created in the same availability zones as the backend instances in the autoscaling group.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-availability-zone.html',
     recommended_action: 'Update the ELB to use the same availability zones as the autoscaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'ELB:describeLoadBalancers', 'ELBv2:describeLoadBalancers'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:CreateLoadBalancer','elasticloadbalancing:DeleteLoadBalancer','elasticloadbalancing:DeleteLoadBalancer'],
+
+
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -3,7 +3,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Password Expiration',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures password policy enforces a password expiration',
     more_info: 'A strong password policy enforces minimum length, expirations, reuse, and symbol usage',
     link: 'http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html',
@@ -39,6 +40,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['iam:UpdateAccountPasswordPolicy','iam:DeleteAccountPasswordPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

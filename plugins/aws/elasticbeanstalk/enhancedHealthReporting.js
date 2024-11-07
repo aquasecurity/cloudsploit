@@ -5,6 +5,7 @@ module.exports = {
     title: 'Enhanced Health Reporting',
     category: 'ElasticBeanstalk',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Amazon Elastic Beanstalk (EB) environments have enhanced health reporting feature enabled.',
     more_info: 'Enhanced health reporting is a feature that you can enable on your environment to allow AWS Elastic Beanstalk to gather additional'
         + 'information about resources in your environment. Elastic Beanstalk analyzes the information gathered to provide a better picture of overall'
@@ -12,6 +13,7 @@ module.exports = {
     recommended_action: 'Modify Elastic Beanstalk environmentsand enable enhanced health reporting.',
     link: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html',
     apis: ['ElasticBeanstalk:describeEnvironments'],
+    realtime_triggers: ['elasticbeanstalk:CreateEnvironment', 'elasticbeanstalk:UpdateEnvironment', 'elasticbeanstalk:TerminateEnvironment'],
 
     run: function(cache, settings, callback) {
         var results = [];

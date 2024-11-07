@@ -5,7 +5,7 @@ module.exports = {
     title: 'Dockerfile Template Encrypted',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that Image Recipe dockerfile templates are encrypted.',
     more_info: 'Image Builder now offers a managed service for building Docker images. With Image Builder, you can automatically produce new up-to-date container images and publish them to specified Amazon Elastic Container Registry (Amazon ECR) repositories after running stipulated tests. Custom components are encrypted with your KMS key or a KMS key owned by Image Builder.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',
@@ -17,9 +17,10 @@ module.exports = {
             name: 'Docker File Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['imagebuilder:CreateContainerRecipe','imagebuilder:DeleteContainerRecipe'],
 
     run: function(cache, settings, callback) {
         var results = [];

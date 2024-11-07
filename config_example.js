@@ -2,6 +2,13 @@
 
 module.exports = {
     credentials: {
+        alibaba: {
+            // OPTION 1: If using a credential JSON file, enter the path below
+            // credential_file: '/path/to/file.json',
+            // OPTION 2: If using hard-coded credentials, enter them below
+            // access_key: process.env.ALIBABA_ACCESS_KEY_ID || '',
+            // access_key_secret: process.env.ALIBABA_ACCESS_KEY_SECRET || '',    
+        },
         aws: {
             // OPTION 1: If using a credential JSON file, enter the path below
             // credential_file: '/path/to/file.json',
@@ -26,7 +33,10 @@ module.exports = {
             // application_id: process.env.AZURE_APPLICATION_ID || '',
             // key_value: process.env.AZURE_KEY_VALUE || '',
             // directory_id: process.env.AZURE_DIRECTORY_ID || '',
-            // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
+            // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || '',
+            // storage_connection: process.env.AZURE_STORAGE_CONNECTION || '',
+            // blob_container: process.env.AZURE_BLOB_CONTAINER || '',
+            // govcloud: process.env.AZURE_GOV_CLOUD || ''
         },
         azure_remediate: {
             // OPTION 1: If using a credential JSON file, enter the path below

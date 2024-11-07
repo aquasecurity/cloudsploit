@@ -5,16 +5,18 @@ module.exports = {
     title: 'Log Connections Enabled',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensures connection logs are enabled for PostgreSQL servers',
     more_info: 'Connection logs ensure all attempted and successful connections to the server are logged.',
     recommended_action: 'Ensure the server parameters for each PostgreSQL server have the log_connections setting enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal',
     apis: ['servers:listPostgres', 'configurations:listByServer'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit log record for ' +
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete','microsoft.dbforpostgresql:servers:configurations:write'],
 
     run: function(cache, settings, callback) {
         const results = [];

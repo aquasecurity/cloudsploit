@@ -5,11 +5,14 @@ module.exports = {
     title: 'Empty AutoScaling Group',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures all autoscaling groups contain at least 1 instance.',
     more_info: 'AutoScaling groups that are no longer in use should be deleted to prevent accidental use.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html',
     recommended_action: 'Delete the unused AutoScaling group.',
     apis: ['AutoScaling:describeAutoScalingGroups'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup'],
+
 
     run: function(cache, settings, callback) {
         var results = [];

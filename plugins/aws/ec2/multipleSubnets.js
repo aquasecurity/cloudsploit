@@ -5,11 +5,13 @@ module.exports = {
     title: 'VPC Multiple Subnets',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that VPCs have multiple subnets to provide a layered architecture',
     more_info: 'VPCs should be designed to have separate public and private subnets, ideally across availability zones, enabling a DMZ-style architecture.',
     link: 'https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#SubnetSecurity',
     recommended_action: 'Create at least two subnets in each VPC, utilizing one for public traffic and the other for private traffic.',
     apis: ['EC2:describeVpcs', 'EC2:describeSubnets', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:CreateSubnet', 'ec2:DeleteSubnet'],
 
     run: function(cache, settings, callback) {
         var results = [];

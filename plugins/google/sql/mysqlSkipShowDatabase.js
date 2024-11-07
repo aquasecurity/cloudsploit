@@ -5,12 +5,14 @@ module.exports = {
     title: 'MySQL Skip Show Database Enabled',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances for MySQL type have skip show database flag enabled.',
     more_info: 'SQL instances for MySQL type database provides skip_show_database flag, revents people from using the SHOW DATABASES statement if they do not have the SHOW DATABASES privilege. This can improve security if you have concerns about users being able to see databases belonging to other users.',
     link: 'https://cloud.google.com/sql/docs/mysql/flags',
     recommended_action: 'Ensure that skip show database flag is enabled for all MySQL instances.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

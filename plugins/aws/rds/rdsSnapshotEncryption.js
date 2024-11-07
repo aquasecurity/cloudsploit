@@ -5,11 +5,13 @@ module.exports = {
     title: 'RDS Snapshot Encryption',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensures encryption is enabled for RDS snapshots to ensure encryption of data at rest.',
     more_info: 'AWS provides encryption for RDS snapshots which should be enabled to ensure that all data at rest is encrypted.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html',
     recommended_action: 'Copy the snapshot to a new snapshot that is encrypted and delete the old snapshot.',
     apis: ['RDS:describeDBSnapshots'],
+    realtime_triggers: ['rds:CreateDBSnapshot', 'rds:CopyDBSnapshot', 'rds:DeleteDBSnapshot'], 
 
     run: function(cache, settings, callback) {
         var results = [];

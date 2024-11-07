@@ -5,12 +5,14 @@ module.exports = {
     title: 'BigTable Instance Labels Added',
     category: 'BigTable',
     domain: 'Databases',
+    severity: 'Low',
     description: 'Ensure that all BigTable instances have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/bigtable/docs/creating-managing-labels',
     recommended_action: 'Ensure labels are added to all BigTable instances.',
     apis: ['bigtable:list'],
-
+    realtime_triggers: ['bigtable.admin.BigtableInstanceAdmin.PartialUpdateInstance','bigtable.admin.BigtableInstanceAdmin.CreateInstance','bigtable.admin.BigtableInstanceAdmin.DeleteInstance'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

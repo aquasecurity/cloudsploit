@@ -5,6 +5,7 @@ module.exports = {
     title: 'LB Network Security Groups Enabled',
     category: 'Networking',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures Load Balancers are using network security groups to restrict network access.',
     more_info: 'Network security groups gives fine grained control of resources. Security rules associated with network security groups can be associated with specific resources.',
     link: 'https://docs.cloud.oracle.com/iaas/Content/Security/Reference/networking_security.htm',

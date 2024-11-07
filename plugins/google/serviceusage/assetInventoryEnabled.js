@@ -4,11 +4,13 @@ module.exports = {
     title: 'Asset Inventory Enabled',
     category: 'Service Usage',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Ensure that Asset Inventory service is enabled for the project.',
     more_info: 'GCP Cloud Asset Inventory enables security analysis, resource change tracking, and compliance auditing for GCP resources and IAM policies.',
     link: 'https://cloud.google.com/asset-inventory/docs',
     recommended_action: 'Enable Asset Inventory service for the GCP project.',
     apis: ['projects:getWithNumber', 'services:listEnabled'],
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

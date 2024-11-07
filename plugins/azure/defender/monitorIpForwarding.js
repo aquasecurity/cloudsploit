@@ -1,0 +1,36 @@
+const async = require('async');
+const helpers = require('../../../helpers/azure');
+
+module.exports = {
+    title: 'Monitor IP Forwarding',
+    category: 'Defender',
+    domain: 'Management and Governance',
+    severity: 'Medium',
+    description: 'Ensures that Virtual Machine IP Forwarding Monitoring is enabled in Microsoft Defender.',
+    more_info: 'IP Forwarding feature should be monitored to meet you organization\'s security compliance requirements.',
+    recommended_action: 'Enable IP Forwarding Monitoring by ensuring AuditIfNotExists setting is used for \'IP Forwarding on your virtual machine should be disabled\' from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
+    apis: ['policyAssignments:list'],
+    realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
+
+    run: function(cache, settings, callback) {
+        const results = [];
+        const source = {};
+        const locations = helpers.locations(settings.govcloud);
+
+        async.each(locations.policyAssignments, function(location, rcb) {
+
+            const policyAssignments = helpers.addSource(cache, source,
+                ['policyAssignments', 'list', location]);
+
+            helpers.checkPolicyAssignment(policyAssignments,
+                'disableIPForwardingMonitoringEffect',
+                'IP Forwarding Monitoring', results, location);
+
+            rcb();
+        }, function() {
+            // Global checking goes here
+            callback(null, results, source);
+        });
+    }
+};

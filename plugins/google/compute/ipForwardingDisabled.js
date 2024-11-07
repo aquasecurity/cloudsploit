@@ -5,11 +5,13 @@ module.exports = {
     title: 'IP Forwarding Disabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures that IP forwarding is disabled on all instances',
     more_info: 'Disabling IP forwarding ensures that the instance only sends and receives packets with matching destination or source IPs.',
     link: 'https://cloud.google.com/vpc/docs/using-routes',
     recommended_action: 'IP forwarding settings can only be chosen when creating a new instance. Delete the affected instances and redeploy with IP forwarding disabled.',
     apis: ['compute:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete'],
     
     run: function(cache, settings, callback) {
         var results = [];

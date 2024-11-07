@@ -5,11 +5,13 @@ module.exports = {
     title: 'Open HTTP',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 80 for HTTP is open to the public',
     more_info: 'Network security groups should be periodically evaluated for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity and restricted wherever they are not explicitly required and narrowly configured.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 80 to known IP addresses. ',
     apis: ['networkSecurityGroups:listAll'],
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
     
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,15 +5,17 @@ module.exports = {
     title: 'DB Restorable',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL Database instances can be restored to a recent point',
     more_info: 'Automated backups of SQL databases with recent restore points help ensure that database recovery operations can occur without significant data loss.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-recovery-using-backups',
     recommended_action: 'Ensure that each SQL database has automated backups configured with a sufficient retention period and that the last known backup operation completes successfully.',
     apis: ['servers:listSql', 'databases:listByServer'],
     compliance: {
         hipaa: 'HIPAA requires backups of all user data ' +
             'and inventory to ensure future availability.'
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -52,12 +54,15 @@ module.exports = {
                     } else {
                         // Loop through databases
                         databases.data.forEach(function(database) {
-                            if (database.earliestRestoreDate) {
-                                helpers.addResult(results, 0,
-                                    'SQL Database is restorable', location, database.id);
-                            } else {
-                                helpers.addResult(results, 2,
-                                    'SQL Database is not restorable', location, database.id);
+                            if (database.name && database.name.toLowerCase() !== 'master') {
+
+                                if (database.earliestRestoreDate) {
+                                    helpers.addResult(results, 0,
+                                        'SQL Database is restorable', location, database.id);
+                                } else {
+                                    helpers.addResult(results, 2,
+                                        'SQL Database is not restorable', location, database.id);
+                                }
                             }
                         });
                     }

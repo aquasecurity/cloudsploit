@@ -3,12 +3,14 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'SSM Documents Public Access',
     category: 'SSM',
-    domain: 'Identity Access and Management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that SSM service has block public sharing setting enabled.',
     more_info: 'Public documents can be viewed by all AWS accounts. To prevent unwanted access to your documents, turn on the block public access sharing setting.',
     link: 'https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-share-block.html',
     recommended_action: 'Enable block public sharing setting under SSM  documents preferences.',
     apis: ['SSM:getServiceSetting', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ssm:UpdateServiceSetting'],
 
     run: function(cache, settings, callback) {
         const results = [];

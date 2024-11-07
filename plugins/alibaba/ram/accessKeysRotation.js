@@ -4,6 +4,7 @@ module.exports = {
     title: 'Access Keys Rotation',
     category: 'RAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that RAM user access keys are rotated after regular interval of time.',
     more_info: 'Access keys should be rotated to avoid having them accidentally exposed.',
     link: 'https://www.alibabacloud.com/help/doc-detail/152682.htm',

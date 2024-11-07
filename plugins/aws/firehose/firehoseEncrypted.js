@@ -7,6 +7,7 @@ module.exports = {
     title: 'Firehose Delivery Streams Encrypted',
     category: 'Firehose',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures Firehose Delivery Stream encryption is enabled',
     more_info: 'Data sent through Firehose Delivery Streams can be encrypted using KMS server-side encryption. Existing delivery streams can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all Firehose Delivery Streams.',
@@ -17,6 +18,7 @@ module.exports = {
                 'AWS KMS encryption ensures that the Firehose payload meets the ' +
                 'encryption in transit and at rest requirements of HIPAA.'
     },
+    realtime_triggers: ['firehose:CreateDeliveryStreams','firehose:StartDeliveryStreamEncryption', 'kinesis:StartStreamEncryption', 'firehose:DeleteliveryStreams'],
 
     run: function(cache, settings, callback) {
         var results = [];

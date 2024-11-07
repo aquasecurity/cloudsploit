@@ -206,6 +206,76 @@ function findOpenAllPorts(ngs, location, results, cache, source) {
     }
 }
 
+function findOpenAllPortsEgress(ngs, location, results, cache, source) {
+    let projects = shared.addSource(cache, source,
+        ['projects','get', 'global']);
+
+    if (!projects || projects.err || !projects.data || !projects.data.length) {
+        addResult(results, 3,
+            'Unable to query for projects: ' + shared.addError(projects), 'global', null, null, (projects) ? projects.err : null);
+        return;
+    }
+
+    var project = projects.data[0].name;
+    let protocols = {'tcp': '*', 'udp' : '*'};
+    for (let sgroups of ngs) {
+        let strings = [];
+        let resource = createResourceName('firewalls', sgroups.name, project, 'global');
+        if (sgroups.allowed && sgroups.allowed.length) {
+            let firewallRules = sgroups.allowed;
+            let destAddressPrefix = sgroups.destinationRanges;
+
+            if (!destAddressPrefix || !destAddressPrefix.length) continue;
+
+            for (let firewallRule of firewallRules) {
+                for (let protocol in protocols) {
+                    if (sgroups['direction'] && (sgroups['direction'] === 'EGRESS') &&
+                        firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === protocol) &&
+                        !sgroups['disabled'] &&
+                        destAddressPrefix &&
+                        (destAddressPrefix.includes('*') || destAddressPrefix.includes('') || destAddressPrefix.includes('0.0.0.0/0') || destAddressPrefix.includes('<nw>/0') || destAddressPrefix.includes('/0') || destAddressPrefix.includes('internet'))) {
+                        if (firewallRule['ports']) {
+                            firewallRule['ports'].forEach((portRange) => {
+                                if (portRange.includes("-")) {
+                                    portRange = portRange.split("-");
+                                    let startPort = portRange[0];
+                                    let endPort = portRange[1];
+                                    if (parseInt(startPort) === 0 && parseInt(endPort) === 65535) {
+                                        var string = 'all ports open to the public';
+                                        if (strings.indexOf(string) === -1) strings.push(string);
+                                    }
+                                } else if (portRange === 'all') {
+                                    var string = 'all ports open to the public';
+                                    if (strings.indexOf(string) === -1) strings.push(string);
+                                }
+                            });
+                        }
+                    } else if (sgroups['direction'] && (sgroups['direction'] === 'EGRESS') &&
+                        firewallRule['IPProtocol'] && (firewallRule['IPProtocol'] === 'all') &&
+                        !sgroups['disabled'] &&
+                        destAddressPrefix &&
+                        (destAddressPrefix.includes('*') || destAddressPrefix.includes('') || destAddressPrefix.includes('0.0.0.0/0') || destAddressPrefix.includes('<nw>/0') || destAddressPrefix.includes('/0') || destAddressPrefix.includes('internet'))) {
+                        var string = 'all ports open to the public';
+                        if (strings.indexOf(string) === -1) strings.push(string);
+                    }
+                }
+            }
+        }
+        if (strings.length) {
+            shared.addResult(results, 2,
+                'Firewall Rule:(' + sgroups.name +
+                ') has ' + strings.join(' and '), location,
+                resource);
+        }
+        else {
+            shared.addResult(results, 0,
+                'Firewall Rule:(' + sgroups.name +
+                ') does not have all ports open to the public', location,
+                resource);
+        }
+    }
+}
+
 function hasBuckets(buckets){
     if(buckets.length &&
         Object.keys(buckets[0]).length>1) {
@@ -295,7 +365,7 @@ function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEna
         } else {
             isEnabled = ifNotFound;
         }
-    } 
+    }
     let successMessage = `"${displayName}" constraint is enforced at the organization level.`;
     let failureMessage = `"${displayName}" constraint is not enforced at the organization level.`;
     let status, message;
@@ -311,6 +381,75 @@ function checkOrgPolicy(orgPolicies, constraintName, constraintType, shouldBeEna
 
 }
 
+function checkIAMRole(iamPolicy, roles, region, results, project, notFoundMessage) {
+    let roleExists = false;
+    if (iamPolicy && iamPolicy.bindings && iamPolicy.bindings.length) {
+        iamPolicy.bindings.forEach(roleBinding => {
+            if (roleBinding.role && roles.includes(roleBinding.role)) {
+                roleExists = true;
+                roleBinding.members.forEach(member => {
+                    let accountName = (member.includes(':')) ? member.split(':')[1] : member;
+                    let memberType = member.startsWith('serviceAccount') ? 'serviceAccounts' : 'users';
+                    let resource = createResourceName(memberType, accountName, project);
+                    shared.addResult(results, 2,
+                        `The account has the pre-defined role: ${roleBinding.role}`, region, resource);
+                });
+            }
+        });
+    }
+    if (!roleExists) {
+        shared.addResult(results, 0, notFoundMessage, region);
+    }
+}
+
+function checkFirewallRules(firewallRules) {
+    firewallRules.sort((a, b) => (a.priority || 1000) - (b.priority || 1000));
+
+    for (const firewallRule of firewallRules) {
+        if (firewallRule.direction !== 'INGRESS' || firewallRule.disabled) {
+            continue;
+        }
+
+        const networkName = firewallRule.network ? firewallRule.network.split('/').pop() : '';
+
+        let allSources = firewallRule.sourceRanges && firewallRule.sourceRanges.some(sourceAddressPrefix =>
+            sourceAddressPrefix === '*' ||
+            sourceAddressPrefix === '0.0.0.0/0' ||
+            sourceAddressPrefix === '::/0' ||
+            sourceAddressPrefix.includes('/0') ||
+            sourceAddressPrefix.toLowerCase() === 'internet' ||
+            sourceAddressPrefix.includes('<nw>/0')
+        );
+
+        if (allSources && firewallRule.allowed && firewallRule.allowed.some(allow => !!allow.IPProtocol)) {
+            return { exposed: true, networkName: `vpc ${networkName}` };
+        }
+        
+        if (allSources && firewallRule.denied && firewallRule.denied.some(deny => deny.IPProtocol === 'all')) {
+            return { exposed: false };
+        }
+        
+    }
+
+    return {exposed: true};
+
+
+}
+
+function checkNetworkExposure(cache, source, networks, firewallRules, region, results)  {
+    let exposedPath = '';
+
+    if (firewallRules && firewallRules.length) {
+        // Scenario 1: check if any firewall rule allows all inbound traffic
+        let isExposed = checkFirewallRules(firewallRules);
+        if (isExposed.exposed) {
+            if (isExposed.networkName) {
+                return isExposed.networkName;
+            }
+        }
+    }
+    return exposedPath
+}
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -320,5 +459,8 @@ module.exports = {
     getProtectionLevel: getProtectionLevel,
     listToObj: listToObj,
     createResourceName: createResourceName,
-    checkOrgPolicy: checkOrgPolicy
+    checkOrgPolicy: checkOrgPolicy,
+    checkIAMRole: checkIAMRole,
+    findOpenAllPortsEgress: findOpenAllPortsEgress,
+    checkNetworkExposure: checkNetworkExposure
 };

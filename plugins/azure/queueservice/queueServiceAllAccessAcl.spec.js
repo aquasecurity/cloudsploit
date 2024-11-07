@@ -47,7 +47,7 @@ const listQueuesSegmented = [
 const getQueueAcl = [
     {
         name: 'queuecs',
-        signedIdentifiers: { read: { Permissions: 'raup' } }
+        signedIdentifiers: [{ accessPolicy: { permissions: 'raup' } }]
     },
     {
         name: 'queuecs',
@@ -55,7 +55,7 @@ const getQueueAcl = [
     },
     {
         name: 'queuecs',
-        signedIdentifiers: { read: { Permissions: 'cwdl' } }
+        signedIdentifiers: [{ accessPolicy: { permissions: 'cwdl' } }]
     },
 ];
 

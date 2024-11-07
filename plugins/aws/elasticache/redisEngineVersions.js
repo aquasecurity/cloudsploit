@@ -5,12 +5,14 @@ module.exports = {
     title: 'ElastiCache Engine Versions for Redis',
     category: 'ElastiCache',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensure that Amazon ElastiCache clusters are using the stable latest version of Redis cache engine.',
     more_info: 'ElastiCache clusters with the latest version of Redis cache engine, You will benefit from new features and enhancements, ' +
         'Using engines prior to version 3.2.6 will not be benefited with Encryption Options, support for HIPAA compliance and much more. Also engine version 3.2.10 does not support Encryption options.',
     link: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/supported-engine-versions.html',
     recommended_action: 'Upgrade the version of Redis on all ElastiCache clusters to the latest available version.',
     apis: ['ElastiCache:describeCacheClusters'],
+    realtime_triggers: ['elasticache:CreateCacheCluster', 'elasticache:DeleteCacheCluster', 'elasticache:ModifyCacheCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -37,6 +39,7 @@ module.exports = {
             '2.8.6'  : 'redis',
             '2.6.13' : 'redis',
             '3.2.10' : 'redis',
+            '3.2.6'  : 'redis',
         };
 
         async.each(regions.elasticache, function(region, rcb){

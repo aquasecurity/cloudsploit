@@ -13,6 +13,16 @@ function commaSafe(str) {
     return str.replace(/,/g, ' ');
 }
 
+function XMLSafe(str) {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
 function log(msg, settings) {
     if (!settings.mocha) console.log(msg);
 }
@@ -177,7 +187,7 @@ module.exports = {
                     time = time.substr(0, time.indexOf('.'));
 
                     this.testSuites[suiteName] = {
-                        name: plugin.title + ': ' + (plugin.description || ''),
+                        name: XMLSafe(plugin.title + ': ' + (plugin.description || '')),
                         package: pluginKey,
                         failures: 0,
                         errors: 0,
@@ -202,12 +212,12 @@ module.exports = {
                 var name = result.region + '; ' + (result.resource || 'N/A') + '; ' + result.message;
 
                 testSuite.testCases.push({
-                    name: name,
+                    name: XMLSafe(name),
                     classname: pluginKey,
                     file: '',
                     line: 0,
-                    failure: failure,
-                    error: error
+                    failure: XMLSafe(failure),
+                    error: XMLSafe(error)
                 });
             },
         

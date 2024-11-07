@@ -5,6 +5,7 @@ module.exports = {
     title: 'SQS Encryption Enabled',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure SQS queues are encrypted using keys of desired encryption level',
     more_info: 'Messages sent to SQS queues can be encrypted using KMS server-side encryption. Existing queues can be modified to add encryption with minimal overhead.'+
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
@@ -17,9 +18,10 @@ module.exports = {
             name: 'SQS Queues Target Encryption Level',
             description: 'In order (lowest to highest) sse=SSE-SQS; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes', 'sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -81,7 +83,9 @@ module.exports = {
             });
          
             for (let queue of listQueues.data) {
-                let resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queue}`;
+                var queueName = queue.split('/');
+                queueName = queueName[queueName.length-1];
+                let resource = `arn:${awsOrGov}:sqs:${region}:${accountId}:${queueName}`;
                 
                 var getQueueAttributes = helpers.addSource(cache, source,
                     ['sqs', 'getQueueAttributes', region, queue]);  

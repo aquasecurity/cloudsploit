@@ -5,11 +5,13 @@ module.exports = {
     title: 'Deprecated Images',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that Compute instances are not created from deprecated images.',
     more_info: 'Deprecated Compute Disk Images should not be used to create VM instances.',
     link: 'https://cloud.google.com/compute/docs/images/image-management-best-practices',
     recommended_action: 'Ensure that no compute instances are created from deprecated images.',
     apis: ['compute:list', 'disks:list', 'images:list'],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete','compute.disks.insert','compute.disks.delete', 'compute.images.insert', 'compute.images.delete', 'compute.images.deprecate'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -29,10 +31,15 @@ module.exports = {
         var images = helpers.addSource(cache, source,
             ['images', 'list', 'global']);
 
-        
-        if (!images || images.err || !images.data || !images.data.length) {
-            helpers.addResult(results, 3,
-                'Unable to query for disk images: ' + helpers.addError(images), 'global', null, null, (images) ? images.err : null);
+        if (!images) return callback(null, results, source);
+
+        if (images.err || !images.data) {
+            ('Unable to query for disk images: ' + helpers.addError(images), 'global', null, null, images.err);
+            return callback(null, results, source);
+        }
+
+        if (!images.data.length) {
+            helpers.addResult(results, 0, 'No disk images found', 'global');
             return callback(null, results, source);
         }
 

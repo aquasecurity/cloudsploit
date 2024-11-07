@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 NLB Listener Security',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that AWS Network Load Balancers have secured listener configured.',
     more_info: 'AWS Network Load Balancer should have TLS protocol listener configured to terminate TLS traffic.',
     link: 'https://docs.amazonaws.cn/en_us/elasticloadbalancing/latest/network/create-tls-listener.html',
     recommended_action: 'Attach TLS listener to AWS Network Load Balancer',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:CreateListener', 'elasticloadbalancing:ModifyListener','elasticloadbalancing:DeleteListener', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

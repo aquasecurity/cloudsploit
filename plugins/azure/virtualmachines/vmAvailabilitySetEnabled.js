@@ -5,11 +5,13 @@ module.exports = {
     title: 'VM Availability Set Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensures that Virtual Machines have Availability Set enabled',
     more_info: 'Enabling Availability Sets ensures that during either a planned or unplanned maintenance event, the virtual machine will still be available.',
     recommended_action: 'Virtual Machine Availability Sets can only be configured when creating a new virtual machine. Recreate the Virtual Machine with Availability Sets enabled.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-machines/windows/manage-availability',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/windows/manage-availability',
     apis: ['virtualMachines:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 Insecure Ciphers',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Elbv2 listeners are configured to use the predefined security policies containing secure ciphers.',
     more_info: 'A security policy is a combination of protocols and ciphers. The protocol establishes a secure connection between a client and a server and ensures that all data passed between the client and your load balancer is private.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.htmll',
     recommended_action: 'Modify ELBv2 listeners with the predefined AWS security policies containing secure ciphers.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeListeners'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:CreateListener', 'elasticloadbalancing:ModifyListener', 'elasticloadbalancing:DeleteLoadBalancer', 'elasticloadbalancing:DeleteListener'],
     
     run: function(cache, settings, callback) {
         var results = [];

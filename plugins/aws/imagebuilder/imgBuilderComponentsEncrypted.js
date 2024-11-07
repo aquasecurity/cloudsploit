@@ -5,7 +5,7 @@ module.exports = {
     title: 'Image Builder Components Encrypted',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'LOW',
+    severity: 'Medium',
     description: 'Ensure that Image Builder components are encrypted.',
     more_info: 'Build components contain software, settings, and configurations that are installed or applied during the process of building custom images. Tests are run after a custom image is built to validate functionality, security, performance, etc. Custom components are encrypted with your KMS key or a KMS key owned by Image Builder.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',
@@ -17,9 +17,10 @@ module.exports = {
             name: 'Image Builder Component Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['Imagebuilder:CreateComponent','Imagebuilder:DeleteComponent'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Ledger Encrypted',
     category: 'QLDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS QLDB ledger is encrypted using desired encryption level',
     more_info: 'QLDB encryption at rest provides enhanced security by encrypting all ledger data at rest using encryption keys in AWS Key Management Service (AWS KMS).' +
                'Use customer-managed keys (CMKs) instead in order to gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'QLDB ledger desired encryption level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['qldb:CreateLedger', 'qldb:UpdateLedger', 'qldb:DeleteLedger'], 
 
     run: function(cache, settings, callback) {
         var results = [];

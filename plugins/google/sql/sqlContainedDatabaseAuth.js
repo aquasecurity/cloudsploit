@@ -5,13 +5,15 @@ module.exports = {
     title: 'SQL Contained Database Authentication',
     category: 'SQL',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SQL instances of SQL Server type have Contained Database Authentication flag disabled.',
     more_info: 'Enabling Contained Database Authentication flag allows users to connect to the database without authenticating ' +
         'a login at the Database Engine level along with other security threats.',
     link: 'https://cloud.google.com/sql/docs/sqlserver/flags',
     recommended_action: 'Ensure that Contained Database Authentication flag is disabled for all SQL Server instances.',
     apis: ['sql:list'],
-
+    realtime_triggers:['cloudsql.instances.delete','cloudsql.instances.create','cloudsql.instances.update'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

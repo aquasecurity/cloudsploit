@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Versioning',
     category: 'Object Store',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures object store buckets have bucket versioning enabled.',
     more_info: 'To minimize data loss in case of inadvertent or malicious deletes, make sure that all your object store buckets are configured with object versioning.',
     recommended_action: 'Enable bucket versioning for all object store buckets.',

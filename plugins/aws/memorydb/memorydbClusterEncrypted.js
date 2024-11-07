@@ -5,6 +5,7 @@ module.exports = {
     title: 'MemoryDB Cluster Encrypted',
     category: 'MemoryDB',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that your Amazon MemoryDB cluster is encrypted with desired encryption level.',
     more_info: 'To help keep your data secure, MemoryDB at-rest encryption is always enabled to increase data security by encrypting persistent data using AWS-managed KMS keys. ' +
         'Use AWS customer-managed Keys (CMKs) instead in order to have a fine-grained control over data-at-rest encryption/decryption process and meet compliance requirements.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'MemoryDB Cluster Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['MemoryDB:CreateCluster', 'MemoryDB:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

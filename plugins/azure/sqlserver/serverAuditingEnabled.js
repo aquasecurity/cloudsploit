@@ -5,16 +5,18 @@ module.exports = {
     title: 'Server Auditing Enabled',
     category: 'SQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that SQL Server Auditing is enabled for SQL servers',
     more_info: 'Enabling SQL Server Auditing ensures that all activities are being logged properly, including potentially-malicious activity.',
     recommended_action: 'Ensure that auditing is enabled for each SQL server.',
-    link: 'https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
+    link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-auditing',
     apis: ['servers:listSql', 'serverBlobAuditingPolicies:get'],
     compliance: {
         hipaa: 'HIPAA requires that a secure audit record for ' +
             'write read and delete is created for all ' +
             'activities in the system.'
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:auditingsettings:write'],
 
     run: function(cache, settings, callback) {
         var results = [];

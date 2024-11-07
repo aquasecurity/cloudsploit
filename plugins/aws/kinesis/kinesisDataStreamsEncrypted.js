@@ -5,6 +5,7 @@ module.exports = {
     title: 'Kinesis Data Streams Encrypted',
     category: 'Kinesis',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures Kinesis data streams are encrypted using AWS KMS key of desired encryption level.',
     more_info: 'Data sent to Kinesis data streams can be encrypted using KMS server-side encryption. Existing streams can be modified to add encryption with minimal overhead. '+ 
         'Use customer-managed keys instead in order to gain more granular control over encryption/decryption process.',
@@ -17,9 +18,10 @@ module.exports = {
             name: 'Kinesis Data Stream Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['kinesis:CreateStream','kinesis:StartStreamEncryption','kinesis:StopStreamEncryption','kinesis:DeleteStream'],
 
 
     run: function(cache, settings, callback) {

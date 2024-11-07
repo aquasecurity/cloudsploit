@@ -3,7 +3,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM User Account Not In Use',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that IAM user accounts are being actively used.',
     more_info: 'To increase the security of your AWS account, remove IAM user accounts that have not been used over a certain period of time.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_finding-unused.html',
@@ -17,6 +18,7 @@ module.exports = {
             default: '90'
         }
     },
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser'],
 
     run: function(cache, settings, callback) {
         const config = {

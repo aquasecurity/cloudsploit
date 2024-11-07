@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudFormation Stack Failed Status',
     category: 'CloudFormation',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that AWS CloudFormation stacks are not in Failed mode for more than the maximum failure limit hours.',
     more_info: 'AWS CloudFormation stacks should not be in failed mode to avoid application downtime.',
     link: 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-view-stack-data-resources.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 0
         }
     },
+    realtime_triggers: ['cloudformation:CreateStack','cloudformation:UpdateStack','cloudformation:DeleteStack'],
 
     run: function(cache, settings, callback) {
         var results = [];

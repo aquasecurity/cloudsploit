@@ -5,6 +5,7 @@ module.exports = {
     title: 'EC2 Instance Key Based Login',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures EC2 instances have associated keys for password-less SSH login',
     more_info: 'AWS allows EC2 instances to be launched with a specified PEM key for SSH login which should be used instead of user and password login.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: '10'
         }
     },
+    realtime_triggers: ['ec2:RunInstances', 'ec2:ModifyInstanceAttribute', 'ec2;TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -29,6 +31,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source,
@@ -59,7 +62,7 @@ module.exports = {
                         found += 1;
                         helpers.addResult(results, 2,
                             'Instance does not have associated keys for password-less SSH login', region,
-                            'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
+                            `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' +
                             instance.InstanceId, custom);
                     }
                 }

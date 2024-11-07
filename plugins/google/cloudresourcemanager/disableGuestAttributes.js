@@ -4,6 +4,7 @@ module.exports = {
     title: 'Disable Guest Attributes',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Disable Guest Attributes of Compute Engine Metadata" constraint policy is enabled at the GCP organization level.',
     more_info: 'Guest attributes are used for VM instance configuration. For security reasons, ensure that users cannot configure guest attributes for your VM instances.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',

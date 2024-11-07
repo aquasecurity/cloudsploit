@@ -3,13 +3,15 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'AWS Glue CloudWatch Encrypted Logs',
-    category: 'AWS Glue',
+    category: 'Glue',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensures that encryption at-rest is enabled when writing AWS Glue logs to Amazon CloudWatch.',
     more_info: 'AWS Glue should have encryption at-rest enabled for AWS Glue logs to ensure security of AWS Glue logs.',
     recommended_action: 'Modify Glue Security Configurations to enable CloudWatch logs encryption at-rest',
     link: 'https://docs.aws.amazon.com/glue/latest/dg/console-security-configurations.html',
     apis: ['Glue:getSecurityConfigurations', 'STS:getCallerIdentity'],
+    realtime_triggers: ['glue:CreateSecurityConfiguration', 'glue:DeleteSecurityConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

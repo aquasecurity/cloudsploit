@@ -63,7 +63,10 @@ const logProfile = [
           "switzerlandwest",
           "brazilsoutheast",
           "global",
-          'qatarcentral'
+          "qatarcentral",
+          "polandcentral",
+          "italynorth",
+          "israelcentral"
         ],
         "categories": [
           "Write",

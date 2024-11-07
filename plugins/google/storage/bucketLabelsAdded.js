@@ -5,11 +5,13 @@ module.exports = {
     title: 'Bucket Labels Added',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensure that all Cloud Storage buckets have labels added.',
     more_info: 'Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.Labels are a lightweight way to group resources together that are related to or associated with each other. It is a best practice to label cloud resources to better organize and gain visibility into their usage.',
     link: 'https://cloud.google.com/storage/docs/using-bucket-labels',
     recommended_action: 'Ensure labels are added to all storage buckets.',
     apis: ['buckets:list'],
+    realtime_triggers: ['storage.buckets.create', 'storage.buckets.delete', 'storage.buckets.update'],
 
     run: function(cache, settings, callback) {
         var results = [];

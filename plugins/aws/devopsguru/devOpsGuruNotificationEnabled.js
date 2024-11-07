@@ -3,13 +3,15 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'DevOps Guru Notifications Enabled',
-    category: 'DevOpsGuru',
+    category: 'AI & ML',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensures SNS topic is set up for Amazon DevOps Guru.',
     more_info: 'Amazon DevOps Guru uses an SNS topic to notify you about important DevOps Guru events.',
     recommended_action: 'Add a notification channel to DevOps Guru',
     link: 'https://docs.aws.amazon.com/devops-guru/latest/userguide/setting-up.html',
     apis: ['DevOpsGuru:listNotificationChannels'],
+    realtime_triggers: ['devopsguru:AddNotificationChannel','devopsguru:RemoveNotificationChannel'],
 
     run: function(cache, settings, callback) {
         var results = [];

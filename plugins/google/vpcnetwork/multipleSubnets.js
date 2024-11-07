@@ -5,11 +5,13 @@ module.exports = {
     title: 'Multiple Subnets',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensures that VPCs have multiple networks to provide a layered architecture',
     more_info: 'A single network within a VPC increases the risk of a broader blast radius in the event of a compromise.',
     link: 'https://cloud.google.com/vpc/docs/vpc',
     recommended_action: 'Create multiple networks/subnets in each VPC and change the architecture to take advantage of public and private tiers.',
     apis: ['networks:list'],
+    realtime_triggers: ['compute.networks.insert', 'compute.networks.delete', 'compute.subnetworks.insert', 'compute.subnetworks.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

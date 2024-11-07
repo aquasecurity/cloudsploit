@@ -5,12 +5,13 @@ module.exports = {
     title: 'Backup Failure Notification Enabled',
     category: 'Backup',
     domain: 'Storage',
-    severity: 'LOW',
+    severity: 'Low',
     description: 'Ensure that Amazon Backup vaults send notifications via Amazon SNS for each failed backup job event.',
     more_info: 'AWS Backup can take advantage of the robust notifications delivered by Amazon Simple Notification Service (Amazon SNS). You can configure Amazon SNS to notify you of AWS Backup events from the Amazon SNS console.',
     recommended_action: 'Configure Backup vaults to sent notifications alert for failed backup job events.',
     link: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/sns-notifications.html',
-    apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultNotifications' ],
+    apis: ['Backup:listBackupVaults', 'Backup:getBackupVaultNotifications'],
+    realtime_triggers: ['backup:CreateBackupVault','backup:PutBackupVaultNotifications','backup:DeleteBackupVault'],
 
     run: function(cache, settings, callback) {
         var results = [];

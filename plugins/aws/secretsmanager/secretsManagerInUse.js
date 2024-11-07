@@ -5,11 +5,13 @@ module.exports = {
     title: 'Secrets Manager In Use',
     category: 'Secrets Manager',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensure that Amazon Secrets Manager service is being used in your account to manage all the credentials.',
     more_info: 'Amazon Secrets Manager helps you protect sensitive information needed to access your cloud applications, services and resources. Users and apps can use secrets manager to get the secrets stored with a call to Secrets Manager API, enhancing access security.',
     recommended_action: 'Use Secrets Manager service to store sensitive information in your AWS account.',
     apis: ['SecretsManager:listSecrets'],
     link: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/asm_access.html',
+    realtime_triggers: ['secretesmanager:CreateSecret', 'secretesmanager:DeleteSecret'],
 
     run: function(cache, settings, callback) {
         var results = [];

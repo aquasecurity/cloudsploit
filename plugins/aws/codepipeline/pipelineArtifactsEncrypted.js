@@ -5,6 +5,7 @@ module.exports = {
     title: 'Pipeline Artifacts Encrypted',
     category: 'CodePipeline',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that AWS CodePipeline is using desired encryption level to encrypt pipeline artifacts being stored in S3.',
     more_info: 'CodePipeline creates an S3 artifact bucket and default AWS managed key when you create a pipeline.'+
     'By default, these artifacts are encrypted using default AWS-managed S3 key. Use customer-managed key for encryption in order to to gain more granular control over encryption/decryption process.',
@@ -17,9 +18,10 @@ module.exports = {
             name: 'Pipeline Artifacts Desired Encrypted Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['codepipeline:CreatePipeline','codepipeline:DeletePipeline'],
 
     run: function(cache, settings, callback) {
         var results = [];

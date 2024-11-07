@@ -19,6 +19,7 @@ var async = require('async');
 
 var helpers     = require(__dirname + '/../../helpers/google');
 var collectData = require(__dirname + '/../../helpers/shared');
+var collectors = require(__dirname + '/index.js');
 var apiCalls    = require(__dirname + '/../../helpers/google/api.js');
 
 var calls = apiCalls.calls;
@@ -27,9 +28,14 @@ var postcalls = apiCalls.postcalls;
 
 var tertiarycalls = apiCalls.tertiarycalls;
 
+var specialcalls = apiCalls.specialcalls;
+
+var additionalCalls = apiCalls.additionalCalls;
+
+
 var collect = function(GoogleConfig, settings, callback) {
     var collection = {};
-   
+
     GoogleConfig.mRetries = 5;
     GoogleConfig.retryDelayOptions = {base: 300};
 
@@ -42,10 +48,12 @@ var collect = function(GoogleConfig, settings, callback) {
             return accumulator;
         }, {});
 
-        settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
-            accumulator[key.toLowerCase()] = settings.previousCollection[key];
-            return accumulator;
-        }, {});
+        if (settings.previousCollection) {
+            settings.previousCollection = Object.keys(settings.previousCollection).reduce((accumulator, key) => {
+                accumulator[key.toLowerCase()] = settings.previousCollection[key];
+                return accumulator;
+            }, {});
+        }
 
         if (collect[service.toLowerCase()] &&
             Object.keys(collect[service.toLowerCase()]) &&
@@ -171,9 +179,62 @@ var collect = function(GoogleConfig, settings, callback) {
                             cb();
                         }
                     });
-                }
+                },
+                function(cb) {
+                    async.eachOfLimit(additionalCalls, 10, function(additionalCallObj, service, additionalCallCb) {
+                        helpers.processCall(GoogleConfig, collection, settings, regions, additionalCallObj, service, client, function() {
+                            if (settings.identifier && additionalCalls[service].sendIntegration && additionalCalls[service].sendIntegration.enabled) {
+                                if (!additionalCalls[service].sendIntegration.integrationReliesOn) {
+                                    integrationCall(collection, settings, service, [], [additionalCalls], function() {
+                                        additionalCallCb();
+                                    });
+                                } else {
+                                    services.push(service);
+                                    additionalCallCb();
+                                }
+                            } else {
+                                additionalCallCb();
+                            }
+                        });
+                    }, function() {
+                        if (settings.identifier) {
+                            async.each(services, function(serv, callB) {
+                                integrationCall(collection, settings, serv, [], [additionalCalls], callB);
+                            }, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                services = [];
+                                cb();
+                            });
+                        } else {
+                            cb();
+                        }
+                    });
+                },
+                function(cb) {
+                    async.eachOfLimit(specialcalls, 10, function(specialCallObj, service, specialCallCb) {
+                        async.eachOfLimit(specialCallObj, 10, function(subCallObj, one, subCallCb) {
+                            if (settings.api_calls && settings.api_calls.indexOf(service + ':' + one) === -1) return subCallCb();
+                            collectors[service][one](GoogleConfig, collection, settings, regions, specialCallObj, service, client, function() {
+                                if (settings.identifier && specialcalls[service].sendIntegration && specialcalls[service].sendIntegration.enabled) {
+                                    integrationCall(collection, settings, service, [], [specialcalls], function() {
+                                        subCallCb();
+                                    });
+                                } else {
+                                    subCallCb();
+                                }
+                            });
+                        }, function() {
+                            specialCallCb();
+                        });
+                    }, function() {
+                        cb();
+                    });
+                },
+
             ], function() {
-                if (collection && (!collection.projects || !collection.projects.get)) {
+                if (collection && (!collection.projects || !collection.projects.get || (collection.projects && collection.projects.get && !Object.keys(collection.projects.get).length))) {
                     collection.projects = {
                         ...collection.projects,
                         get: {

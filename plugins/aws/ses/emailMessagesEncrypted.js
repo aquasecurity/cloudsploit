@@ -5,6 +5,7 @@ module.exports = {
     title: 'SES Email Messages Encrypted',
     category: 'SES',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon SES email messages are encrypted before delivering them to specified buckets.',
     more_info: 'Amazon SES email messages should be encrypted in case they are being delivered to S3 bucket to meet regulatory compliance requirements within your organization.',
     recommended_action: 'Enable encryption for SES email messages if they are being delivered to S3 in active rule-set .',
@@ -15,9 +16,10 @@ module.exports = {
             name: 'SES Email Desired Encryption Level',
             description: 'Desired encryption level for email messages to encrypt them before they get saves on S3',
             regex: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['ses:CreateEmailIdentity','ses:SetActiveReceiptRuleSet','ses:DeleteEmailIdentity'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -40,9 +42,13 @@ module.exports = {
                 ['ses', 'describeActiveReceiptRuleSet', region]);
 
             if (!describeActiveReceiptRuleSet) return rcb();
-            
-            if (describeActiveReceiptRuleSet.err && describeActiveReceiptRuleSet.err.message &&
-                describeActiveReceiptRuleSet.err.message.includes('Unavailable Operation')) return rcb();
+
+            if (describeActiveReceiptRuleSet.err &&
+                ((describeActiveReceiptRuleSet.err.message &&
+                        describeActiveReceiptRuleSet.err.message.includes('Unavailable Operation'))
+                    || (describeActiveReceiptRuleSet.err.code
+                        && describeActiveReceiptRuleSet.err.code.includes('InvalidAction')))) return rcb();
+
 
             if (describeActiveReceiptRuleSet.err || !describeActiveReceiptRuleSet.data) {
                 helpers.addResult(results, 3,

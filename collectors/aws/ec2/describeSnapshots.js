@@ -8,6 +8,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 module.exports = function(AWSConfig, collection, retries, callback) {
     var ec2 = new AWS.EC2(AWSConfig);
     var sts = new AWS.STS(AWSConfig);
+    var paginating = false;
 
     helpers.makeCustomCollectorCall(sts, 'getCallerIdentity', {}, retries, null, null, null, function(stsErr, stsData) {
         if (stsErr || !stsData.Account) {
@@ -16,6 +17,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         }
 
         var params = {
+            MaxResults: 1000,
             Filters: [
                 {
                     Name: 'owner-id',
@@ -32,13 +34,36 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             ]
         };
 
-        helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', params, retries, null, null, null, function(err, data) {
+        var paginateCb = function(err, data) {
             if (err) {
                 collection.ec2.describeSnapshots[AWSConfig.region].err = err;
-            } else {
-                collection.ec2.describeSnapshots[AWSConfig.region].data = data.Snapshots;
+            } else if (data) {
+                if (paginating && data.Snapshots && data.Snapshots.length &&
+                    collection.ec2.describeSnapshots[AWSConfig.region].data &&
+                    collection.ec2.describeSnapshots[AWSConfig.region].data.length) {
+                    collection.ec2.describeSnapshots[AWSConfig.region].data = collection.ec2.describeSnapshots[AWSConfig.region].data.concat(data.Snapshots);
+                } else if (!paginating) {
+                    collection.ec2.describeSnapshots[AWSConfig.region].data = data.Snapshots;
+                }
+                if (data.NextToken &&
+                    collection.ec2.describeSnapshots[AWSConfig.region].data &&
+                    collection.ec2.describeSnapshots[AWSConfig.region].data.length) {
+                    paginating = true;
+                    return execute(data.NextToken);
+                }
             }
+
             callback();
-        });
+        };
+        function execute(nextToken) { // eslint-disable-line no-inner-declarations
+            var localParams = JSON.parse(JSON.stringify(params || {}));
+            if (nextToken) localParams['NextToken'] = nextToken;
+            if (nextToken) {
+                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', localParams, retries, null, null, null, paginateCb);
+            } else {
+                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', params, retries, null, null, null, paginateCb);
+            }
+        }
+        execute();
     });
 };

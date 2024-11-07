@@ -5,16 +5,19 @@ module.exports = {
     title: 'S3 Bucket Lifecycle Configuration',
     category: 'S3',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures that S3 buckets have lifecycle configuration enabled to automatically transition S3 bucket objects.',
     more_info: 'S3 bucket should have lifecycle configuration enabled to automatically downgrade the storage class for your objects.',
     recommended_action: 'Update S3 bucket and create lifecycle rule configuration',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/how-to-set-lifecycle-configuration-intro.html',
     apis: ['S3:listBuckets', 'S3:getBucketLifecycleConfiguration', 'S3:getBucketLocation'],
+    realtime_triggers: ['s3:CreateBucket', 's3:PutBucketLifeCycleConfiguration', 's3:DeleteBucketLifeCycle','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -35,7 +38,7 @@ module.exports = {
         async.each(listBuckets.data, function(bucket, cb){
             if (!bucket.Name) return cb();
 
-            var resource = `arn:aws:s3:::${bucket.Name}`;
+            var resource = `arn:${awsOrGov}:s3:::${bucket.Name}`;
             var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
 
             var getBucketLifecycleConfiguration = helpers.addSource(cache, source,

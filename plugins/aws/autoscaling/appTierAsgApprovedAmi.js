@@ -5,6 +5,7 @@ module.exports = {
     title: 'App-Tier ASG Launch Configurations Approved AMIs',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Medium',
     description: 'Ensures that App-Tier Auto Scaling Group Launch Configurations are using approved AMIs.',
     more_info: 'App-Tier Auto Scaling Group Launch Configurations should use approved AMIs only to launch EC2 instances within the ASG',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',
@@ -24,6 +25,7 @@ module.exports = {
             default: ''
         }
     },
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:UpdateAutoScalingGroup','autoscaling:createLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
 
     run: function(cache, settings, callback) {
         var results = [];

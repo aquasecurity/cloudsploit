@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Translate Job Output Encrypted',
-    category: 'Translate',
+    category: 'AI & ML',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensure that your Amazon Translate jobs have CMK encryption enabled for output data residing on S3.',
     more_info: 'Amazon Translate encrypts your output data with AWS-manager keys by default. ' +
         'Encrypt your files using customer-managed keys in order to gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'Translate Job Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['translate:StartTextTranslationJob', 'translate:StopTextTranslationJob'],
 
     run: function(cache, settings, callback) {
         var results = [];

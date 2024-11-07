@@ -5,6 +5,7 @@ module.exports = {
     title: 'Service Limits',
     category: 'IAM',
     domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Determines if the number of resources is close to the per-account limit.',
     more_info: 'Google limits accounts to certain numbers of resources. Exceeding those limits could prevent resources from launching.',
     link: 'https://cloud.google.com/resource-manager/docs/limits',
@@ -24,6 +25,7 @@ module.exports = {
             default: 75
         }
     },
+    realtime_triggers: ['compute.projects.insert', 'compute.projects.delete'],
 
     run: function(cache, settings, callback) {
         var config = {

@@ -5,18 +5,19 @@ module.exports = {
     title: 'App Service Access Restriction',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that Azure App Services have access restriction configured to control network access to your app.',
     more_info: 'By setting up access restrictions, you can define a priority-ordered allow/deny list that controls network access to your app. ' + 
         'The list can include IP addresses or Azure Virtual Network subnets. When there are one or more entries, an implicit deny all exists at the end of the list.',
     recommended_action: 'Add access restriction rules under network settings for the app services',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
     apis: ['webApps:list', 'webApps:listConfigurations'],
     remediation_min_version: '202201131602',
     remediation_description: 'Access restriction rule will be added to deny access from any source for affected app services',
     apis_remediate: ['webApps:list', 'webApps:listConfigurations'],
     actions: {remediate:['webApps:updateconfiguration'], rollback:['webApps:updateconfiguration']},
     permissions: {remediate: ['webApps:updateconfiguration'], rollback: ['webApps:updateconfiguration']},
-    realtime_triggers: ['microsoftweb:sites:config:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

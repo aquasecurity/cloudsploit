@@ -5,10 +5,11 @@ module.exports = {
     title: 'Log Container Public Access',
     category: 'Storage Accounts',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures that the Activity Log Container does not have public read access',
     more_info: 'The container used to store Activity Log data should not be exposed publicly to avoid data exposure of sensitive activity logs.',
     recommended_action: 'Ensure the access level for the storage account containing Activity Log data is set to private.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources',
     apis: ['storageAccounts:list', 'blobContainers:list', 'diagnosticSettingsOperations:list'],
     compliance: {
         hipaa: 'HIPAA requires that all systems used for storing ' +
@@ -16,6 +17,7 @@ module.exports = {
                 'default, along with keeping all data private ' +
                 'and secure.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:write', 'microsoftstorage:storageaccounts:delete', 'microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -26,7 +28,9 @@ module.exports = {
         var diagnosticSettingsOperations = helpers.addSource(cache, source,
             ['diagnosticSettingsOperations', 'list', 'global']);
 
-        if (!diagnosticSettingsOperations || diagnosticSettingsOperations.err || !diagnosticSettingsOperations.data) {
+        if (!diagnosticSettingsOperations) return callback(null, results, source);
+
+        if (diagnosticSettingsOperations.err || !diagnosticSettingsOperations.data) {
             helpers.addResult(results, 3,
                 'Unable to query for diagnostic settings: ' + helpers.addError(diagnosticSettingsOperations), 'global');
             return callback(null, results, source);

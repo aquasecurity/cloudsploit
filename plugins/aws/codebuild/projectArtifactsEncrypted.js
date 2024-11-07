@@ -5,6 +5,7 @@ module.exports = {
     title: 'Project Artifacts Encrypted',
     category: 'CodeBuild',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that your AWS CodeBuild project artifacts are encrypted with desired encryption level.',
     more_info: 'AWS CodeBuild encrypts artifacts such as a cache, logs, exported raw test report data files, and build results '+
         'by default using AWS managed keys. Use customer-managed key instead, in order to to gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'Project Artifacts Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['codebuild:CreateProject', 'codebuild:UpdateProject','codebuild:DeleteProject'],
 
     run: function(cache, settings, callback) {
         var results = [];

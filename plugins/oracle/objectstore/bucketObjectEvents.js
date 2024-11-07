@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Object Events',
     category: 'Object Store',
     domain: 'Storage',
+    severity: 'Medium',
     description: 'Ensures object store buckets can emit object events.',
     more_info: 'Object store buckets should be configured to emit object events in order to help monitor and keep track of bucket state changes.',
     recommended_action: 'Ensure all object store buckets are allowed to emit object events.',

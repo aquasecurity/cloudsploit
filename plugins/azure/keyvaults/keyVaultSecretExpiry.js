@@ -5,10 +5,11 @@ module.exports = {
     title: 'Key Vault Secret Expiry',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Proactively check for Key Vault secrets expiry date and rotate them before expiry date is reached.',
     more_info: 'After the expiry date has reached for Key Vault secret, it cannot be used for storing sensitive and confidential data such as passwords and database connection strings anymore.',
     recommended_action: 'Ensure that Key Vault secrets are rotated before they get expired.',
-    link: 'https://docs.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
+    link: 'https://learn.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
     settings: {
         key_vault_secret_expiry_fail: {
@@ -18,6 +19,7 @@ module.exports = {
             default: '30'
         }
     },
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

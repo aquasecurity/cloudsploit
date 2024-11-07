@@ -4,12 +4,14 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'ACM Single Domain Name Certificates',
     category: 'ACM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensure that ACM single domain name certificates are used instead of wildcard certificates within your AWS account.',
     more_info: 'Using wildcard certificates can compromise the security of all sites i.e. domains and subdomains if the private key of a certificate is hacked. So it is recommended to use ACM single domain name certificates instead of wildcard certificates.',
     link: 'https://docs.aws.amazon.com/acm/latest/userguide/acm-certificate.html',
     recommended_action: 'Configure ACM managed certificates to use single name domain instead of wildcards.',
     apis: ['ACM:listCertificates', 'ACM:describeCertificate'],
+    realtime_triggers: ['acm:RequestCertificate','acm:ImportCertificate','acm:DeleteCertificate'],
 
     run: function(cache, settings, callback) {
         var results = [];

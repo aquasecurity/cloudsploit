@@ -5,6 +5,7 @@ module.exports = {
     title: 'EBS Encrypted Snapshots',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EBS snapshots are encrypted at rest',
     more_info: 'EBS snapshots should have at-rest encryption enabled through AWS using KMS. If the volume was not encrypted and a snapshot was taken the snapshot will be unencrypted.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html#encryption-support',
@@ -16,11 +17,13 @@ module.exports = {
                 'of EC2 instance data at rest, but volumes must be configured to use ' +
                 'encryption so their snapshots are also encrypted.'
     },
+    realtime_triggers: ['ec2:CreateSnapshot', 'ec2:CopySnapshot', 'ec2:DeleteSnapshot'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeSnapshots = helpers.addSource(cache, source,
@@ -40,7 +43,7 @@ module.exports = {
             }
 
             describeSnapshots.data.forEach(function(snapshot){
-                var arn = 'arn:aws:ec2:' + region + ':' + snapshot.OwnerId + ':snapshot/' + snapshot.SnapshotId;
+                var arn = `arn:${awsOrGov}:ec2:` + region + ':' + snapshot.OwnerId + ':snapshot/' + snapshot.SnapshotId;
                 if (snapshot.Encrypted){
                     helpers.addResult(results, 0, 'EBS snapshot is encrypted', region, arn);
                 } else {

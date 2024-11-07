@@ -5,11 +5,13 @@ module.exports = {
     title: 'Open SNMP',
     category: 'VPC Network',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determines if UDP port 161 for SNMP is open to the public',
     more_info: 'SNMP UDP 161 used by various devices and applications for logging events, monitoring and management. Allowing Inbound traffic from any external IP address on port 161 is vulnerable to  DoS attack. It is a best practice to block port 161 completely unless explicitly required.',
     link: 'https://cloud.google.com/vpc/docs/using-firewalls',
     recommended_action: 'Restrict UDP port 161 to known IP addresses.',
     apis: ['firewalls:list'],
+    realtime_triggers: ['compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
 
     run: function(cache, settings, callback) {
         var results = [];

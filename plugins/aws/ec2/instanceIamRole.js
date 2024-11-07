@@ -5,6 +5,7 @@ module.exports = {
     title: 'Instance IAM Role',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EC2 instances are using an IAM role instead of hard-coded AWS credentials',
     more_info: 'IAM roles should be assigned to all instances to enable them to access AWS resources. Using an IAM role is more secure than hard-coding AWS access keys into application code.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html',
@@ -18,6 +19,7 @@ module.exports = {
             default: 10
         }
     },
+    realtime_triggers: ['ec2:RunInstances','ec2:AssociateIamInstanceProfile', 'ec2:DisassociateIamInstanceProfile', 'ec2:TerminateInstances'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -29,6 +31,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         async.each(regions.ec2, function(region, rcb){
             var describeInstances = helpers.addSource(cache, source,
@@ -60,7 +63,7 @@ module.exports = {
                         found += 1;
                         helpers.addResult(results, 2,
                             'Instance does not use an IAM role', region,
-                            'arn:aws:ec2:' + region + ':' + accountId + ':instance/' +
+                            `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':instance/' +
                             instance.InstanceId, custom);
                     }
                 }

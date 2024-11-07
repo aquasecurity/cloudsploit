@@ -5,11 +5,13 @@ module.exports = {
     title: 'Secret Expiration Enabled',
     category: 'Key Vaults',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures that all secrets in Azure Key Vault have an expiry time set.',
     more_info: 'Setting an expiry time on all secrets forces secret rotation and removes unused and forgotten secrets from being used.',
     recommended_action: 'Ensure each Key Vault has an expiry time set that provides for sufficient rotation.',
-    link: 'https://docs.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
+    link: 'https://learn.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
+    realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

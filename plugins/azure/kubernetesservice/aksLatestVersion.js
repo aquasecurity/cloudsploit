@@ -5,11 +5,13 @@ module.exports = {
     title: 'Kubernetes Latest Version',
     category: 'Kubernetes Service',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensures the latest version of Kubernetes is installed on AKS clusters',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters to the latest available version.',
-    link: 'https://docs.microsoft.com/en-us/azure/aks/aad-integration',
+    link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
     apis: ['managedClusters:list', 'managedClusters:getUpgradeProfile'],
+    realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

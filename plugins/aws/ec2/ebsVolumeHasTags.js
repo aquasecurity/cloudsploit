@@ -5,11 +5,13 @@ module.exports = {
     title: 'EBS Volume has tags',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Low',
     description: 'Ensure that EBS Volumes have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     recommended_action: 'Modify EBS volumes and add tags',
     link: 'https://aws.amazon.com/blogs/aws/new-tag-ec2-instances-ebs-volumes-on-creation/',
     apis: ['EC2:describeVolumes', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateVolume', 'ec2:AddTags', 'ec2:DeleteTags','ec2:DeleteVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];

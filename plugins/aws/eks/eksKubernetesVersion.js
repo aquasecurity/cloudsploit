@@ -5,11 +5,13 @@ module.exports = {
     title: 'EKS Kubernetes Version',
     category: 'EKS',
     domain: 'Containers',
+    severity: 'Low',
     description: 'Ensures the latest version of Kubernetes is installed on EKS clusters',
     more_info: 'EKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     link: 'https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html',
     recommended_action: 'Upgrade the version of Kubernetes on all EKS clusters to the latest available version.',
     apis: ['EKS:listClusters', 'EKS:describeCluster', 'STS:getCallerIdentity'],
+    realtime_triggers: ['eks:CreateCluster', 'eks:UpdateClusterVersion', 'eks:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -31,7 +33,16 @@ module.exports = {
             '1.17': '2021-11-02',
             '1.18': '2022-03-31',
             '1.19': '2022-08-01',
-            '1.20': '2022-11-01'
+            '1.20': '2022-11-01',
+            '1.21': '2023-02-16',
+            '1.22': '2023-06-04',
+            '1.23': '2023-10-11',
+            '1.24': '2024-01-31',
+            '1.25': '2024-05-01',
+            '1.26': '2024-06-11',
+            '1.27': '2024-07-24',
+            '1.28': '2024-11-26',
+            '1.29': '2025-03-23'
         };
 
         var outdatedVersions = {
@@ -77,7 +88,8 @@ module.exports = {
                     let versionOutdatedDate = (outdatedVersions[version]) ? outdatedVersions[version] : null;
                     let today = new Date();
                     let dateToday = (today.getDate() < 10) ? '0' + today.getDate() : today.getDate();
-                    today = `${today.getFullYear()}-${today.getMonth()+1}-${dateToday}`;
+                    let month = (today.getMonth() < 10) ? '0' + (today.getMonth()+1) : today.getMonth();
+                    today = `${today.getFullYear()}-${month}-${dateToday}`;
 
                     if (versionDeprecationDate && today > versionDeprecationDate) {
                         helpers.addResult(results, 2,

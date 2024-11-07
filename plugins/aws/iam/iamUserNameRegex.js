@@ -4,7 +4,8 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM Username Matches Regex',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description: 'Ensures all IAM user names match the given regex',
     more_info: 'Many organizational policies require IAM user names to follow a common naming convention. This check ensures these conventions are followed.',
     recommended_action: 'Rename the IAM user name to match the provided regex.',
@@ -30,6 +31,7 @@ module.exports = {
             }
         ]
     },
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser'],
 
     run: function(cache, settings, callback) {
         var results = [];

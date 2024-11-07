@@ -5,12 +5,14 @@ module.exports = {
     title: 'Internet Gateways In VPC',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure Internet Gateways are associated with at least one available VPC.',
     more_info: 'Internet Gateways allow communication between instances in VPC and the internet. They provide a target in VPC route tables for internet-routable traffic and also perform network address translation (NAT) for instances that have been assigned public IPv4 addresses. ' +
         'Make sure they are always associated with a VPC to meet security and compliance requirements within your organization.',
     link: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html',
     recommended_action: 'Ensure Internet Gateways have VPC attached to them.',
     apis: ['EC2:describeInternetGateways', 'STS:getCallerIdentity'],
+    realtime_triggers: ['ec2:CreateInternetGateway', 'ec2:DetachInternetGateway', 'ec2:AttachInternetGateway', 'ec2:DeleteInternatGateway'],
 
     run: function(cache, settings, callback) {
         var results = [];

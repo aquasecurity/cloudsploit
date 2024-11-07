@@ -4,12 +4,14 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'IAM User Present',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Medium',
     description:  'Ensure that at least one IAM user exists so that access to your AWS services and resources is made only through IAM users instead of the root account.',
     more_info: 'To protect your AWS root account and adhere to IAM security best practices, create individual IAM users to access your AWS environment.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html',
     recommended_action: 'Create IAM user(s) and use them to access AWS services and resources.',
     apis: ['IAM:listUsers'],
+    realtime_triggers: ['iam:CreateUser','iam:DeleteUser'],
           
     run: function(cache, settings, callback) {
         var results = [];

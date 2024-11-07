@@ -5,12 +5,15 @@ module.exports = {
     title: 'Auto Scaling Unused Launch Configuration',
     category: 'AutoScaling',
     domain: 'Availability',
+    severity: 'Low',
     description: 'Ensure that any unused Auto Scaling Launch Configuration templates are identified and removed from your account in order to adhere to AWS best practices.',
     more_info: 'A launch configuration is an instance configuration template that an Auto Scaling group uses to launch EC2 instances. When you create a launch configuration, you specify information for the instances. '+
         'Every unused Launch Configuration template should be removed for a better management of your AWS Auto Scaling components.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/LaunchConfiguration.html',
     recommended_action: 'Identify and remove any Auto Scaling Launch Configuration templates that are not associated anymore with ASGs available in the selected AWS region.',
     apis: ['AutoScaling:describeAutoScalingGroups', 'AutoScaling:describeLaunchConfigurations'],
+    realtime_triggers: ['autoscaling:CreateAutoScalingGroup','autoscaling:DeleteAutoScalingGroup','autoscaling:CreateLaunchConfiguration','autoscaling:DeleteLaunchConfiguration'],
+
     
     run: function(cache, settings, callback) {
         var results = [];

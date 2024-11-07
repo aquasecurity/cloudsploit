@@ -5,16 +5,19 @@ module.exports = {
     title: 'Sender Privacy Framework Record Present',
     category: 'Route53',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensure that Route 53 hosted zones have a DNS record containing Sender Policy Framework (SPF) value set for each MX record available.',
     more_info: 'The SPF record enables Route 53 registered domains to publicly state the mail servers that are authorized to send emails on its behalf.',
     link: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html',
     recommended_action: 'Add SPF records to the DNS records.',
     apis: ['Route53:listHostedZones', 'Route53:listResourceRecordSets'],
+    realtime_triggers: ['route53:CreateHostedZone','route53:ChangeResourceRecordSets','route53:DeleteHostedZone'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
 
         var listHostedZones = helpers.addSource(cache, source,
             ['route53', 'listHostedZones', region]);
@@ -35,7 +38,7 @@ module.exports = {
 
         async.each(listHostedZones.data, function(zone, cb){
             if (!zone.Id) return cb();
-            var resource = `arn:aws:route53:::${zone.Id}`;
+            var resource = `arn:${awsOrGov}:route53:::${zone.Id}`;
 
             var listResourceRecordSets = helpers.addSource(cache, source,
                 ['route53', 'listResourceRecordSets', region, zone.Id]);

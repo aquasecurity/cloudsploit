@@ -5,6 +5,7 @@ module.exports = {
     title: 'Bucket Versioning',
     category: 'Storage',
     domain: 'Storage',
+    severity: 'Low',
     description: 'Ensures object versioning is enabled on storage buckets',
     more_info: 'Object versioning can help protect against the overwriting of objects or data loss in the event of a compromise.',
     link: 'https://cloud.google.com/storage/docs/using-object-versioning',
@@ -15,7 +16,7 @@ module.exports = {
     apis_remediate: ['buckets:list'],
     actions: {remediate:['storage.buckets.update'], rollback:['storage.buckets.update']},
     permissions: {remediate: ['storage.buckets.setIamPolicy', 'storage.buckets.update'], rollback: ['storage.buckets.setIamPolicy','storage.buckets.update']},
-    realtime_triggers: ['storage.buckets.update', 'storage.buckets.create'],
+    realtime_triggers: ['storage.buckets.update', 'storage.buckets.create', 'storage.buckets.delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -83,7 +83,12 @@ function call(OracleConfig, options, callback) {
         request.write(requestToWrite);
         request.end();
     };
-    makeCall(newOptions);
+
+    try {
+        makeCall(newOptions);
+    } catch (e) {
+        callback([]);
+    }
 }
 
 var buildHeaders = function(allowedHeaders, options) {

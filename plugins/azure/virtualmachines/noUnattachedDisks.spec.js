@@ -14,6 +14,13 @@ const disks = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
         'type': 'Microsoft.Compute/disks',
         'location': 'eastus',
+        'diskState': 'Reserved'
+    },
+    {
+        'name': 'test',
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Compute/disks/test',
+        'type': 'Microsoft.Compute/disks',
+        'location': 'eastus',
         'diskState': 'Unattached'
     }
 ];
@@ -57,18 +64,20 @@ describe('noUnattachedDisks', function() {
         });
 
         it('should give passing result if disk volume is attached to a virtual machine', function(done) {
-            const cache = createCache([disks[0]]);
+            const cache = createCache([disks[0], disks[1]]);
             noUnattachedDisks.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
+                expect(results[1].status).to.equal(0);
                 expect(results[0].message).to.include('Disk volume is attached to a virtual machine');
+                expect(results[1].message).to.include('Disk volume is attached to a virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
         it('disk volume is not attached to a virtual machine', function(done) {
-            const cache = createCache([disks[1]]);
+            const cache = createCache([disks[2]]);
             noUnattachedDisks.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

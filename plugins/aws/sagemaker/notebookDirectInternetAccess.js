@@ -3,13 +3,15 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Notebook Direct Internet Access',
-    category: 'SageMaker',
+    category: 'AI & ML',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure Notebook Instance is not publicly available.',
     more_info: 'SageMaker notebooks should not be exposed to the Internet. Public availability can be configured via the DirectInternetAccess attribute.',
     recommended_action: 'Disable DirectInternetAccess for each SageMaker notebook.',
     link: 'https://docs.aws.amazon.com/sagemaker/latest/dg/appendix-additional-considerations.html#appendix-notebook-and-internet-access',
     apis: ['SageMaker:listNotebookInstances'],
+    realtime_triggers: ['sagemaker:CreateNotebookInstance', 'sagemaker:UpdateNootbookInstance','sagemaker:DeleteNotebookInstance'],
 
     run: function(cache, settings, callback) {
         var results = [];

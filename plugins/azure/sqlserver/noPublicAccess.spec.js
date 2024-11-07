@@ -4,7 +4,23 @@ var noPublicAccess = require('./noPublicAccess');
 const servers = [
     {
         "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server",
-    }
+        "publicNetworkAccess" : "Disabled"
+    },
+    {
+        "kind": "v12.0",
+        "location": "eastus",
+        "tags": { 'key': 'value' },
+        "id": "/subscriptions/123/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/test-server",
+        "name": "test-server",
+        "type": "Microsoft.Sql/servers",
+        "administratorLogin": "aqua",
+        "version": "12.0",
+        "state": "Ready",
+        "fullyQualifiedDomainName": "test-server.database.windows.net",
+        "privateEndpointConnections": [],
+        "minimalTlsVersion": "1.1",
+        "publicNetworkAccess": "Enabled"
+    },
 ];
 
 const firewallRules = [
@@ -89,7 +105,23 @@ describe('noPublicAccess', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[1]],
+                []
+            );
+
+            noPublicAccess.run(cache, {}, callback);
+        });
+        it('should give passing result if SQL Server has prive netwrok access disabled', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('The SQL server has public network access disabled');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            const cache = createCache(
+                [servers[0]],
                 []
             );
 
@@ -106,7 +138,7 @@ describe('noPublicAccess', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[1]],
                 [firewallRules[1]]
             );
 
@@ -123,7 +155,7 @@ describe('noPublicAccess', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[1]],
                 [firewallRules[2]]
             );
 
@@ -140,7 +172,7 @@ describe('noPublicAccess', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[1]],
                 [firewallRules[0]]
             );
 
@@ -175,7 +207,7 @@ describe('noPublicAccess', function() {
             };
 
             const cache = createCache(
-                servers,
+                [servers[1]],
                 [],
                 null,
                 { message: 'Unable to query for server firewall rules'}

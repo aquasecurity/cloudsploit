@@ -5,11 +5,13 @@ module.exports = {
     title: 'RDS DocumentDB Minor Version Upgrade',
     category: 'RDS',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures Auto Minor Version Upgrade is enabled on RDS and DocumentDB databases',
     more_info: 'RDS supports automatically upgrading the minor version of the database, which should be enabled to ensure security fixes are quickly deployed.',
     link: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html#USER_UpgradeDBInstance.Upgrading.AutoMinorVersionUpgrades',
     recommended_action: 'Enable automatic minor version upgrades on RDS and DocumentDB databases',
     apis: ['RDS:describeDBInstances'],
+    realtime_triggers: ['rds:CreateDBInstance', 'rds:ModifyDBInstance', 'rds:RestoreDBInstanceFromDBSnapshot', 'rds:RestoreDBInstanceFromS3','rds:DeleteDBInstance'],  
 
     run: function(cache, settings, callback) {
         var results = [];

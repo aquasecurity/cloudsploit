@@ -5,6 +5,7 @@ module.exports = {
     title: 'OpenSearch Collection CMK Encryption',
     category: 'OpenSearch',
     domain: 'Serverless',
+    severity: 'High',
     description: 'Ensures that OpenSearch Serverless collections are encrypted with KMS Customer Master Keys (CMKs).',
     more_info: 'OpenSearch Serverless should use KMS Customer Master Keys (CMKs) instead of AWS managed keys for encryption in order to have full control over data encryption and decryption.',
     link: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless-encryption.html',
@@ -16,9 +17,11 @@ module.exports = {
             name: 'OpenSearch Collection Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['opensearchserverless:CreateCollection', 'opensearchserverless:DeleteCollection'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

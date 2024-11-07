@@ -106,7 +106,6 @@ describe('cloudtrailNotificationsEnabled', function () {
         it('should FAIL if CloudTrail trail has no SNS topic attached', function (done) {
             const cache = createCache([describeTrails[0]], listTopics[2], null, null, null, { message: 'CloudTrail trail has no SNS topic attached'} );
             cloudtrailNotificationsEnabled.run(cache, {}, (err, results) => {
-                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

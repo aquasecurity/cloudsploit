@@ -5,7 +5,7 @@ module.exports = {
     title: 'Image Recipe Storage Volumes Encrypted',
     category: 'Image Builder',
     domain: 'Compute',
-    severity: 'MEDIUM',
+    severity: 'High',
     description: 'Ensure that Image Recipe storage ebs volumes are encrypted.',
     more_info: 'EC2 Image Builder is a fully managed AWS service that makes it easier to automate the creation, management, and deployment of customized, secure, and up-to-date server images that are pre-installed and pre-configured with software and settings to meet specific IT standards.',
     link: 'https://docs.aws.amazon.com/imagebuilder/latest/userguide/data-protection.html',
@@ -17,9 +17,10 @@ module.exports = {
             name: 'Image Recipe EBS Volumes Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['Imagebuilder:CreateImageRecipe','Imagebuilder:DeleteImageRecipe'],
     
     run: function(cache, settings, callback) {
         var results = [];

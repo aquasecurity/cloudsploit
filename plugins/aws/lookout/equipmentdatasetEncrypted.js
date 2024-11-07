@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'LookoutEquipment Dataset Encrypted',
-    category: 'LookoutEquipment',
+    category: 'AI & ML',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Lookout for Equipment datasets are encrypted using desired KMS encryption level',
     more_info: 'Amazon Lookout for Equipment encrypts your data at rest with AWS owned KMS key by default. ' +
         'It is recommended to use customer-managed keys instead you will gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'Equipement Dataset Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['lookoutequipment:CreateDataset', 'lookoutequipment:DeleteDataset'],
 
     run: function(cache, settings, callback) {
         var results = [];

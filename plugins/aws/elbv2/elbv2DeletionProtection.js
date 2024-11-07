@@ -5,12 +5,14 @@ module.exports = {
     title: 'ELBv2 Deletion Protection',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures ELBv2 load balancers are configured with deletion protection.',
     more_info: 'ELBv2 load balancers should be configured with deletion protection to prevent accidental' + 
                 'deletion of live resources in production environments.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#deletion-protection',
     recommended_action: 'Update ELBv2 load balancers to use deletion protection to prevent accidental deletion',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeLoadBalancerAttributes'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyLoadBalancerAttributes', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

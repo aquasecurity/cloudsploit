@@ -5,11 +5,13 @@ module.exports = {
     title: 'Open Elasticsearch',
     category: 'Network Security Groups',
     domain: 'Network Access Control',
+    severity: 'High',
     description: 'Determine if TCP port 9200 or 9300 for Elasticsearch is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as Elasticsearch should be restricted to known IP addresses.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group',
     recommended_action: 'Restrict TCP port 9200 or 9300 to known IP addresses',
     apis: ['networkSecurityGroups:listAll'],
+    realtime_triggers: ['microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete','microsoftnetwork:networksecuritygroups:securityrules:write','microsoftnetwork:networksecuritygroups:securityrules:delete'],
     
     run: function(cache, settings, callback) {
         const results = [];

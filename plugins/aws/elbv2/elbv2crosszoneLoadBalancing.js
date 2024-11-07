@@ -5,11 +5,13 @@ module.exports = {
     title: 'ELBv2 Cross-Zone Load Balancing',
     category: 'ELBv2',
     domain: 'Content Delivery',
+    severity: 'Medium',
     description: 'Ensures that AWS ELBv2 load balancers have cross-zone load balancing enabled.',
     more_info: 'AWS ELBv2 should have cross-zone load balancing enabled to distribute the traffic evenly across the registered instances in all enabled Availability Zones.',
     link: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-disable-crosszone-lb.html',
     recommended_action: 'Update AWS ELBv2 load balancers to enable cross zone load balancing.',
     apis: ['ELBv2:describeLoadBalancers', 'ELBv2:describeLoadBalancerAttributes'],
+    realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'elasticloadbalancing:ModifyLoadBalancerAttributes', 'elasticloadbalancing:DeleteLoadBalancer'],
 
     run: function(cache, settings, callback) {
         var results = [];

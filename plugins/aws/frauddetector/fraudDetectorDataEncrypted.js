@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Fraud Detector Data Encrypted',
-    category: 'Fraud Detector',
+    category: 'AI & ML',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensure that Amazon Fraud Detector has encryption enabled for data at rest with desired KMS encryption level.',
     more_info: 'Amazon Fraud Detector encrypts your data at rest with AWS-managed KMS key. Use customer-manager KMS keys (CMKs) instead in order to follow your organizations\'s security and compliance requirements.',
     recommended_action: 'Enable encryption for data at rest using PutKMSEncryptionKey API',
@@ -15,9 +16,10 @@ module.exports = {
             name: 'Fraud Detector Data Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['frauddetector:PutKMSEncryptionKey', 'frauddetector:DeleteDetector'],
 
     run: function(cache, settings, callback) {
         var results = [];

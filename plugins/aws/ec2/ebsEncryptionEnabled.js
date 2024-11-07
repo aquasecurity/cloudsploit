@@ -36,6 +36,7 @@ module.exports = {
     title: 'EBS Encryption Enabled',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'High',
     description: 'Ensures EBS volumes are encrypted at rest',
     more_info: 'EBS volumes should have at-rest encryption enabled through AWS using KMS. If the volume is used for a root volume, the instance must be launched from an AMI that has been encrypted as well.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html',
@@ -54,10 +55,11 @@ module.exports = {
             name: 'EBS Minimum Encryption Level at rest',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         },
        
     },
+    realtime_triggers: ['ec2:CreateVolume', 'ec2;DeleteVolume'],
 
     run: function(cache, settings, callback) {
         var results = [];

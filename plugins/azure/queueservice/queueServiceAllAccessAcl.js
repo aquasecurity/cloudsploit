@@ -6,11 +6,12 @@ module.exports = {
     title: 'Queue Service All Access ACL',
     category: 'Queue Service',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures queues do not allow full write, delete, or read ACL permissions',
     more_info: 'Queues can be configured to allow object read, write or delete. This option should not be configured unless there is a strong business requirement.',
     recommended_action: 'Disable global read, write, delete policies on all queues and ensure the ACL is configured with least privileges.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
-    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmented', 'queueService:getQueueAcl'],
+    link: 'https://learn.microsoft.com/en-us/azure/storage/queues/storage-quickstart-queues-portal',
+    apis: ['storageAccounts:list', 'storageAccounts:listKeys', 'queueService:listQueuesSegmentedNew', 'queueService:getQueueAcl'],
     compliance: {
         hipaa: 'HIPAA access controls require data to be secured with least-privileged ' +
                 'ACLs. Queue Service ACLs enable granular permissions for data access.',
@@ -73,7 +74,7 @@ module.exports = {
                                 var fullPermissions = [];
                                 if (acl.signedIdentifiers && Object.keys(acl.signedIdentifiers).length) {
                                     for (var ident in acl.signedIdentifiers) {
-                                        var permissions = acl.signedIdentifiers[ident].Permissions;
+                                        var permissions = acl.signedIdentifiers[ident].accessPolicy.permissions;
                                         for (var i = 0; i <= permissions.length; i++) {
                                             switch (permissions.charAt(i)) {
                                             // case "r":

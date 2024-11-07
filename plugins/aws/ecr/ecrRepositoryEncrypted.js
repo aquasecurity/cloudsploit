@@ -5,6 +5,7 @@ module.exports = {
     title: 'ECR Repository Encrypted',
     category: 'ECR',
     domain: 'Containers',
+    severity: 'High',
     description: 'Ensure that the images in ECR repository are encrypted using desired encryption level.',
     more_info: 'By default, Amazon ECR uses server-side encryption with Amazon S3-managed encryption keys which encrypts your data at rest using an AES-256 encryption algorithm. ' +
     'Use customer-managed keys instead, in order to gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'ECR Repository Encryption',
             description: 'In order (lowest to highest) sse=AES-256; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['ecr:CreateRepository', 'ecr:DeleteRepository'],
 
     run: function(cache, settings, callback) {
         var results = [];

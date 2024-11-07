@@ -5,6 +5,7 @@ module.exports = {
     title: 'CloudTrail Bucket Access Logging',
     category: 'S3',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures CloudTrail logging bucket has access logging enabled to detect tampering of log files',
     more_info: 'CloudTrail buckets should utilize access logging for an additional layer of auditing. If the log files are deleted or modified in any way, the additional access logs can help determine who made the changes.',
     recommended_action: 'Enable access logging on the CloudTrail bucket from the S3 console',
@@ -26,6 +27,7 @@ module.exports = {
             default: '',
         }
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:UpdateTrail','s3:PutBucketLogging','s3:DeleteBucket'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -36,6 +38,7 @@ module.exports = {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var awsOrGov = helpers.defaultPartition(settings);
         var defaultRegion = helpers.defaultRegion(settings);
 
         var listBuckets = helpers.addSource(cache, source,
@@ -51,7 +54,7 @@ module.exports = {
 
             var describeTrails = helpers.addSource(cache, source,
                 ['cloudtrail', 'describeTrails', region]);
-
+            
             if (!describeTrails) return rcb();
 
             if (describeTrails.err || !describeTrails.data) {
@@ -72,14 +75,14 @@ module.exports = {
 
                 if (regBucket && regBucket.test(trail.S3BucketName)) {
                     helpers.addResult(results, 0, 
-                        'Bucket is whitelisted', region, 'arn:aws:s3:::'+trail.S3BucketName);
+                        'Bucket is whitelisted', region, `arn:${awsOrGov}:s3:::`+trail.S3BucketName);
                     return cb();
                 }
 
                 if (!listBuckets.data.find(bucket => bucket.Name == trail.S3BucketName)) {
                     helpers.addResult(results, 2,
                         'Unable to locate S3 bucket, it may have been deleted',
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                     return cb(); 
                 }
 
@@ -91,7 +94,7 @@ module.exports = {
                 if (!getBucketLogging || getBucketLogging.err || !getBucketLogging.data) {
                     helpers.addResult(results, 3,
                         'Error querying for bucket policy for bucket: ' + trail.S3BucketName + ': ' + helpers.addError(getBucketLogging),
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
 
                     return cb();
                 }
@@ -101,11 +104,11 @@ module.exports = {
                     getBucketLogging.data.LoggingEnabled) {
                     helpers.addResult(results, 0,
                         'Bucket: ' + trail.S3BucketName + ' has S3 access logs enabled',
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 } else {
                     helpers.addResult(results, 1,
                         'Bucket: ' + trail.S3BucketName + ' has S3 access logs disabled',
-                        region, 'arn:aws:s3:::' + trail.S3BucketName);
+                        region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 }
 
                 cb();

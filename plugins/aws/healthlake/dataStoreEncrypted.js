@@ -3,8 +3,9 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'HealthLake Data Store Encrypted',
-    category: 'HealthLake',
+    category: 'AI & ML',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that AWS HealthLake Data Store is using desired encryption level.',
     more_info: 'Amazon HealthLake is a Fast Healthcare Interoperability Resources (FHIR)-enabled patient Data Store that uses AWS-managed KMS keys for encryption. ' +
                'Encrypt these data stores using customer-managed keys (CMKs) in order to gain more granular control over encryption/decryption process.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'HealthLake Data Store Desired Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['healthlake:CreateFHIRDatastore', 'healthlake:DeleteFHIRDatastore'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -33,9 +33,12 @@ These fields should be according to the user and product manager, what they want
  InvAsset: 'Pub/Sub'
  InvService: 'Pub/Sub'
  InvResourceCategory: 'cloud_resources'
- InvResourceType: 'Pub/Sub'
+    Note: For specific category add the category name otherwise it should be 'cloud_resource'
 
-Note: For specific category add the category name otherwise it should be 'cloud_resource'
+ InvResourceType: 'Pub/Sub'
+    If you need that your resource type to be two words with capital letter only on first letter of the word (for example: Key Vaults), you should supply the resource type with a space delimiter.
+    If you need that your resource type to be two words and the the first word should be in capital letters (for example: CDN Profiles), you should supply the resource type with snake case delimiter
+
 
  Take the reference from the below map
 */
@@ -160,6 +163,33 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
             BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
+        },
+    'SQL':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'sql', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql', BridgeServiceName: 'sql',
+            BridgePluginCategoryName: 'gcp-SQL', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-SQL',
+            BridgeCollectionService: 'gcp-sql', DataIdentifier: 'data',
+        },
+    'Storage':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'storage', InvService: 'storage',
+            InvResourceCategory: 'storage', InvResourceType: 'bucket', BridgeServiceName: 'buckets',
+            BridgePluginCategoryName: 'gcp-Storage', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'b',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Storage',
+            BridgeCollectionService: 'gcp-buckets', DataIdentifier: 'data',
+        },
+    'AI & ML':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
+            BridgePluginCategoryName: 'gcp-AI & ML', BridgeProvider: 'Google', BridgeCall: 'listModels',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '{name}', BridgeResourceType: 'models',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-AI & ML',
+            BridgeCollectionService: 'gcp-vertexai', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -255,9 +285,7 @@ var calls = {
             location: null,
             pagination: true
         },
-        sendIntegration: {
-            enabled: true
-        }
+        sendIntegration: serviceMap['SQL']
     },
     spanner: {
         list: {
@@ -347,9 +375,7 @@ var calls = {
             location: null,
             pagination: true
         },
-        sendIntegration: {
-            enabled: true,
-        }
+        sendIntegration: serviceMap['Storage']
     },
     targetHttpProxies: {
         list: {
@@ -382,10 +408,11 @@ var calls = {
             pagination: false
         },
         getIamPolicy: {
-            url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}:getIamPolicy',
+            url: 'https://cloudresourcemanager.googleapis.com/v3/projects/{projectId}:getIamPolicy',
             location: null,
             method: 'POST',
-            pagination: false
+            pagination: false,
+            body: {options:{requestedPolicyVersion: 3}}
         },
         getWithNumber: {
             url: 'https://cloudresourcemanager.googleapis.com/v1/projects/{projectId}'
@@ -461,7 +488,8 @@ var calls = {
         list: {
             url: 'https://bigquery.googleapis.com/bigquery/v2/projects/{projectId}/datasets',
             location: null,
-            pagination: true
+            pagination: true,
+            reqParams: 'maxResults=1000'
         },
         sendIntegration: serviceMap['BigQuery']
     },
@@ -470,7 +498,11 @@ var calls = {
             url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/policies',
             location: null,
             pagination: true
-        }
+        },
+        projectDenyPolicies: { //GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Fprojects%252Fprojectid/denypolicies
+            url: 'https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Fprojects%252F{projectId}/denypolicies',
+            pagination: true
+        },
     },
     topics: {
         list: {
@@ -516,7 +548,8 @@ var calls = {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/urlMaps',
             location: null,
-            pagination: true
+            pagination: true,
+            nameRequired: true
         },
         sendIntegration: serviceMap['CLB']
     },
@@ -532,7 +565,8 @@ var calls = {
             url: 'https://dns.googleapis.com/dns/v1/projects/{projectId}/managedZones/{id}/rrsets',
             reliesOnService: ['managedZones'],
             reliesOnCall: ['list'],
-            properties: ['id']
+            properties: ['id'],
+            pagination: true
         }
     },
     accessApproval: {
@@ -547,16 +581,63 @@ var calls = {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/routes',
             location: null,
             pagination: true
+        }
+    },
+    vertexAI: {
+        listDatasets: {
+            url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/datasets',
+            location: 'region',
+            dataKey: 'datasets'
         },
-    }
+        listModels: {
+            url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/models',
+            location: 'region',
+            dataKey: 'models'
+        },
+        sendIntegration: serviceMap['AI & ML']
+    },
+
+    roles: {
+        list: {
+            url: 'https://iam.googleapis.com/v1/projects/{projectId}/roles',
+            location: null,
+            pagination: true,
+            paginationKey: 'nextPageToken'
+        },
+        predefined_list: {
+            url: 'https://iam.googleapis.com/v1/roles',
+            location: null,
+            pagination: true,
+            paginationKey: 'nextPageToken'
+        }
+    },
 };
 
 var postcalls = {
-    instances: {
+    roles: {
+        get: {
+            url: 'https://iam.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['roles'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        },
+        predefined_get: {
+            url: 'https://iam.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['roles'],
+            reliesOnCall: ['predefined_list'],
+            properties: ['name'],
+            pagination: false
+        },
+
+    },
+    compute: {
         getIamPolicy: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instances/{id}/getIamPolicy',
             location: 'zone',
-            reliesOnService: ['instances'],
+            reliesOnService: ['compute'],
             reliesOnCall: ['list'],
             properties: ['id'],
             pagination: false
@@ -584,7 +665,6 @@ var postcalls = {
             pagination: false
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['buckets']
             }
@@ -619,7 +699,6 @@ var postcalls = {
             pagination: true //needs to be verified with multiple users
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['sql']
             }
@@ -635,7 +714,6 @@ var postcalls = {
             pagination: true
         },
         sendIntegration: {
-            enabled: true,
             integrationReliesOn: {
                 serviceName: ['sql']
             }
@@ -661,7 +739,9 @@ var postcalls = {
             properties: ['datasetId'],
             subObj: ['datasetReference'],
             pagination: true,
-            dataKey: 'tables'
+            dataKey: 'tables',
+            reqParams: 'maxResults=1000',
+            maxLimit: 50000
         }
     },
     functions: {
@@ -716,6 +796,16 @@ var postcalls = {
             paginationKey: 'pageSize'
         }
     },
+    folders:{ // https://cloudresourcemanager.googleapis.com/v2/folders
+        list: {
+            url: 'https://cloudresourcemanager.googleapis.com/v2/folders?parent=organizations/{organizationId}',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId'],
+            pagination: true,
+            paginationKey: 'pageSize'
+        }
+    },
     apiKeys: {
         get: {
             url: 'https://apikeys.googleapis.com/v2/{name}',
@@ -743,7 +833,77 @@ var postcalls = {
             paginationKey: 'pageSize',
             reqParams: 'filter=state:ENABLED'
         }
-    }
+    },
+    groups: {
+        list: {
+            url: 'https://cloudidentity.googleapis.com/v1/groups?parent=customers/{directoryCustomerId}',
+            location: null,
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['directoryCustomerId'],
+            subObj: 'owner',
+            pagination: false
+        }
+    },
+    policies: {
+        getProjectDenyPolicies: {// GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Fprojects%2projectId/denypolicies/policyId
+            url:'https://iam.googleapis.com/v2/{name}',
+            reliesOnService: ['policies'],
+            reliesOnCall: ['projectDenyPolicies'],
+            properties: ['name'],
+            method: 'GET',
+            pagination: false
+        },
+        orgDenyPolicies: {// GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Forganizations%252ForganizationId/denypolicies
+            url: 'https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252F{name}/denypolicies',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            encodeProperty: true,
+            method: 'GET',
+            pagination: false
+        },
+    },
+    bigtable: {
+        getIamPolicy: {//POST https://bigtableadmin.googleapis.com/v2/{resource=projects/*/instances/*}:getIamPolicy
+            url: 'https://bigtableadmin.googleapis.com/v2/{name}:getIamPolicy',
+            reliesOnService: ['bigtable'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            method: 'POST',
+            pagination: false
+        },
+    },
+    spanner: {
+        getIamPolicy: {//POST https://spanner.googleapis.com/v1/{resource=projects/*/instances/*}:getIamPolicy
+            url: 'https://spanner.googleapis.com/v1/{name}:getIamPolicy',
+            reliesOnService: ['spanner'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            method: 'POST',
+            pagination: false
+        },
+    },
+    deployments: {
+        getIamPolicy: {//GET https://www.googleapis.com/deploymentmanager/v2/projects/project/global/deployments/resource/getIamPolicy
+            url: 'https://www.googleapis.com/deploymentmanager/v2/projects/{projectId}/global/deployments/{name}/getIamPolicy',
+            reliesOnService: ['deployments'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            method: 'GET',
+            pagination: false
+        },
+    },
+    dataproc: {
+        getIamPolicy: {//POST https://dataproc.googleapis.com/v1/{resource=projects/*/regions/*/operations/*}:getIamPolicy
+            url: 'https://dataproc.googleapis.com/v1/projects/{projectId}/regions/{locationId}/clusters/{clusterName}:getIamPolicy',
+            reliesOnService: ['dataproc'],
+            reliesOnCall: ['list'],
+            properties: ['clusterName'],
+            method: 'POST',
+            pagination: false
+        },
+    },
 };
 
 var tertiarycalls = {
@@ -764,14 +924,97 @@ var tertiarycalls = {
             reliesOnCall: ['list'],
             properties: ['datasetId', 'tableId'],
             subObj: ['tableReference'],
-            pagination: true
+            pagination: true,
+            maxLimit: 50000
         }
     },
+    groups: {
+        get: {
+            url: 'https://cloudidentity.googleapis.com/v1/{name}',
+            location: null,
+            reliesOnService: ['groups'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: false
+        }
+    },
+    memberships: {
+        list: {
+            url: 'https://cloudidentity.googleapis.com/v1/{name}/memberships',
+            location: null,
+            reliesOnService: ['groups'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            pagination: true,
+            paginationKey: 'nextPageToken'
+        }
+    },
+    folders: { //https://cloudresourcemanager.googleapis.com/v2/{resource=folders/!*}:getIamPolicy
+        getIamPolicy: {
+            url: 'https://cloudresourcemanager.googleapis.com/v2/{name}:getIamPolicy',
+            // name =  resource name of the Folder. Its format is folders/{folder_id}, for example: "folders/1234".
+            reliesOnService: ['folders'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            method: 'POST',
+            pagination: false
+        },
+    },
+    policies: { // GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Forganizations%252ForganizationId/denypolicies/policyId
+        getOrgDenyPolicies: {
+            url: 'https://iam.googleapis.com/v2/{name}',
+            reliesOnService: ['policies'],
+            reliesOnCall: ['orgDenyPolicies'],
+            properties: ['name'],
+            method: 'GET',
+            pagination: false
+        },
+        folderDenyPolicies: {// GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Ffolders%252FfolderId/denypolicies
+            url: 'https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252F{name}/denypolicies',
+            reliesOnService: ['folders'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            encodeProperty: true,
+            method: 'GET',
+            pagination: false
+        },
+    }
+};
+
+var additionalCalls = {
+    policies: {
+        getFolderDenyPolicies: {// GET https://iam.googleapis.com/v2/policies/cloudresourcemanager.googleapis.com%252Ffolders%252FfolderId/denypolicies/policyId
+            url: 'https://iam.googleapis.com/v2/{name}',
+            reliesOnService: ['policies'],
+            reliesOnCall: ['folderDenyPolicies'],
+            properties: ['name'],
+            method: 'GET',
+            pagination: false
+        },
+    },
+};
+
+var specialcalls = {
+    iam: {
+        list: {
+            pagination: true,
+            reliesOnService: ['projects','folders','organizations','memberships','policies'],
+            reliesOnCall: ['getIamPolicy','getProjectDenyPolicies','getOrgDenyPolicies','getFolderDenyPolicies']
+        },
+        sendIntegration: {
+            integrationReliesOn: {
+                serviceName: ['roles','projects','folders','organizations','memberships','policies']
+            },
+            enabled: true
+        }
+    }
 };
 
 module.exports = {
     calls: calls,
     postcalls: postcalls,
     tertiarycalls: tertiarycalls,
+    specialcalls: specialcalls,
+    additionalCalls:additionalCalls,
     serviceMap: serviceMap
 };

@@ -5,6 +5,7 @@ module.exports = {
     title: 'Timestream Database Encrypted',
     category: 'Timestream',
     domain: 'Databases',
+    severity: 'High',
     description: 'Ensure that AWS Timestream databases are encrypted with KMS Customer Master Keys (CMKs) instead of AWS managed-keys.',
     more_info: 'Timestream encryption at rest provides enhanced security by encrypting all your data at rest using encryption keys. ' +
         'This functionality helps reduce the operational burden and complexity involved in protecting sensitive data. ' +
@@ -17,9 +18,10 @@ module.exports = {
             name: 'Timestream Database Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['timestreamwrite:CreateDatabase', 'timestreamwrite:UpdateDatabase', 'timestreamwrite:DeleteDatabase'],
 
     run: function(cache, settings, callback) {
         var results = [];

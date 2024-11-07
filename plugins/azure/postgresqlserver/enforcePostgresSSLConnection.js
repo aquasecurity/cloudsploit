@@ -5,17 +5,18 @@ module.exports = {
     title: 'Enforce PostgreSQL SSL Connection',
     category: 'PostgreSQL Server',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures SSL connections are enforced on PostgreSQL Servers',
     more_info: 'SSL prevents infiltration attacks by encrypting the data stream between the server and application.',
     recommended_action: 'Ensure the connection security settings of each PostgreSQL server are configured to enforce SSL connections.',
-    link: 'https://docs.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security',
+    link: 'https://learn.microsoft.com/en-us/azure/postgresql/concepts-ssl-connection-security',
     apis: ['servers:listPostgres'],
     remediation_min_version: '202101041600',
     remediation_description: 'The SSL enforcement option will be enabled for the affected PostreSQL servers',
     apis_remediate: ['servers:listPostgres'],
     actions: {remediate:['servers:update'], rollback:['servers:update']},
     permissions: {remediate: ['servers:update'], rollback: ['server:update']},
-    realtime_triggers: ['microsoftdbforpostgresql:servers:write'],
+    realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
     compliance: {
         hipaa: 'HIPAA requires all data to be transmitted over secure channels. ' +
             'PostgreSQL SSL connection should be used to ensure internal ' +

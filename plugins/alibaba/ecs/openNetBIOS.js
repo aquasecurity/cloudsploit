@@ -5,6 +5,7 @@ module.exports = {
     title: 'Open NetBIOS',
     category: 'ECS',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensure that security groups does not have UDP port 137 or 138 for NetBIOS open to the public.',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as NetBIOS should be restricted to known IP addresses.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',

@@ -68,6 +68,7 @@ module.exports = {
     title: 'CloudWatch Monitoring Metrics',
     category: 'CloudWatchLogs',
     domain: 'Compliance',
+    severity: 'Medium',
     description: 'Ensures metric filters are setup for CloudWatch logs to detect security risks from CloudTrail.',
     more_info: 'Sending CloudTrail logs to CloudWatch is only useful if metrics are setup to detect risky activity from those logs. There are numerous metrics that should be used. For the exact filter patterns, please see this plugin on GitHub: https://github.com/cloudsploit/scans/blob/master/plugins/aws/cloudwatchlogs/monitoringMetrics.js',
     recommended_action: 'Enable metric filters to detect malicious activity in CloudTrail logs sent to CloudWatch.',
@@ -76,6 +77,8 @@ module.exports = {
     compliance: {
         cis1: '3.0 Monitoring metrics are enabled'
     },
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:UpdateTrail','cloudtrail:DeleteTrail', 'cloudwatchlogs:PutMetricFilter','cloudwatchlogs:DeleteMetricFilter'],
+    
 
     run: function(cache, settings, callback) {
         var results = [];

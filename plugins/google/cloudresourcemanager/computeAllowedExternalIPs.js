@@ -4,11 +4,13 @@ module.exports = {
     title: 'Compute Allowed External IPs',
     category: 'Resource Manager',
     domain: 'Management and Governance',
+    severity: 'Medium',
     description: 'Determine if "Define Allowed External IPs for VM Instances" constraint policy is enabled at the GCP organization level.',
     more_info: 'To reduce exposure to the internet, make sure that not all VM instances are allowed to use external IP addresses.',
     link: 'https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints',
     recommended_action: 'Ensure that "Define Allowed External IPs for VM Instances" constraint is enforced to allow you to define the VM instances that are allowed to use external IP addresses.',
     apis: ['organizations:list', 'organizations:listOrgPolicies'],
+    realtime_triggers: ['SetOrgPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -6,17 +6,18 @@ module.exports = {
     title: 'Identity Enabled',
     category: 'App Service',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensures a system or user assigned managed identity is enabled to authenticate to App Services without storing credentials in the code.',
     more_info: 'Maintaining cloud connection credentials in code is a security risk. Credentials should never appear on developer workstations and should not be checked into source control. Managed identities for Azure resources provides Azure services with a managed identity in Azure AD which can be used to authenticate to any service that supports Azure AD authentication, without having to include any credentials in code.',
     recommended_action: 'Enable system or user-assigned identities for all App Services and avoid storing credentials in code.',
-    link: 'https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity',
+    link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity',
     apis: ['webApps:list'],
     remediation_min_version: '202101041500',
     remediation_description: 'The web app will be assigned a system manager identity',
     apis_remediate: ['webApps:list'],
     actions: {remediate:['webApps:update'], rollback:['webApps:update']},
     permissions: {remediate: ['webApps:update'], rollback: ['webApps:update']},
-    realtime_triggers: ['microsoftweb:sites:write'],
+    realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

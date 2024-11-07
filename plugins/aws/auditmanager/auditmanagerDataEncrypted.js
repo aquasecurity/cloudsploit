@@ -4,6 +4,7 @@ module.exports = {
     title: 'Audit Manager Data Encrypted',
     category: 'Audit Manager',
     domain: 'Management and Governance',
+    severity: 'High',
     description: 'Ensure that all data in Audit Manager is encrypted with desired encryption level.',
     more_info: 'All resource in AWS Audit Manager such as assessments, controls, frameworks, evidence are encrypted under a customer managed key or an AWS owned key, depending on your selected settings. ' +
         'If you don’t provide a customer managed key, AWS Audit Manager uses an AWS owned key to encrypt your content. ' +
@@ -16,9 +17,10 @@ module.exports = {
             name: 'Audit Manager Data Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk',
+            default: 'awskms',
         }
     },
+    realtime_triggers: ['auditmanager:registerAccount','auditmanager:UpdateSettings','auditmanager:DeregisterAccount'],
 
     run: function(cache, settings, callback) {
         var results = [];

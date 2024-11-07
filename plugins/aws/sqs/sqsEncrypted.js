@@ -7,6 +7,7 @@ module.exports = {
     title: 'SQS Encrypted',
     category: 'SQS',
     domain: 'Application Integration',
+    severity: 'High',
     description: 'Ensures SQS encryption is enabled',
     more_info: 'Messages sent to SQS queues can be encrypted using KMS server-side encryption. Existing queues can be modified to add encryption with minimal overhead.',
     recommended_action: 'Enable encryption using KMS for all SQS queues.',
@@ -39,7 +40,7 @@ module.exports = {
         remediate: ['sqs:SetQueueAttributes'],
         rollback: ['sqs:SetQueueAttributes']
     },
-    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes'],
+    realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes', 'sqs:DeleteQueue'],
 
     run: function(cache, settings, callback) {
         var results = [];

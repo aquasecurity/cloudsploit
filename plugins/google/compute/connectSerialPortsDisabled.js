@@ -5,11 +5,13 @@ module.exports = {
     title: 'Connect Serial Ports Disabled',
     category: 'Compute',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Ensures connecting to serial ports is not enabled for VM instances',
     more_info: 'The serial console does not allow restricting IP Addresses, which allows any IP address to connect to instance and should therefore be disabled.',
     link: 'https://cloud.google.com/compute/docs/instances/interacting-with-serial-console',
     recommended_action: 'Ensure the Enable Connecting to Serial Ports option is disabled for all compute instances.',
     apis: ['compute:list'],
+    realtime_triggers: [ 'compute.instances.insert', 'compute.instances.delete', 'compute.instances.setMetadata'],
 
     run: function(cache, settings, callback) {
         var results = [];

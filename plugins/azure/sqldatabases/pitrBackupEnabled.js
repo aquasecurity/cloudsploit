@@ -5,6 +5,7 @@ module.exports = {
     title: 'Point in Time Restore Backup Retention',
     category: 'SQL Databases',
     domain: 'Databases',
+    severity: 'Medium',
     description: 'Ensures that Microsoft Azure SQL databases have a sufficient Point in Time Restore (PITR) backup retention period configured',
     more_info: 'Point-in-time restore is a self-service capability, which enables you to restore a database from backups to any point within the retention period. Point-in-time restore is useful in recovery scenarios, such as incidents caused by errors, incorrectly loaded data, or deletion of crucial data.',
     recommended_action: 'Ensure that an optimal backup retention period is set for Azure SQL databases.',
@@ -18,6 +19,7 @@ module.exports = {
             regex: '^(3[0-5]|2[0-9]|1[0-9]|[1-9])$'
         }
     },
+    realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete', 'microsoftsql:servers:databases:write','microsoftsql:servers:databases:backupshorttermretentionpolicies:write', 'microsoftsql:servers:databases:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];
@@ -53,43 +55,45 @@ module.exports = {
                         'Unable to query for SQL server databases: ' + helpers.addError(databases), location, server.id);
                     return scb();
                 }
-                
+
                 if (!databases.data.length) {
                     helpers.addResult(results, 0,
                         'No databases found for SQL server', location, server.id);
                     return scb();
                 }
-                
+
                 for (const database of databases.data) {
-                    const policies = helpers.addSource(cache, source,
-                        ['backupShortTermRetentionPolicies', 'listByDatabase', location, database.id]);
-                    
-                    if (!policies || policies.err || !policies.data) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for SQL database retention policies: ' + helpers.addError(policies), location, database.id);
-                        continue;
-                    }
-                    
-                    if (!policies.data.length) {
-                        helpers.addResult(results, 0,
-                            'No retention policies found for SQL database', location, database.id);
-                        continue;
-                    }
-                    
-                    for (const policy of policies.data) {
-                        let retentionDays = 0;
-                        if (policy.retentionDays){
-                            retentionDays =  policy.retentionDays;
+                    if (database.name && database.name.toLowerCase() !== 'master') {
+                        const policies = helpers.addSource(cache, source,
+                            ['backupShortTermRetentionPolicies', 'listByDatabase', location, database.id]);
+
+                        if (!policies || policies.err || !policies.data) {
+                            helpers.addResult(results, 3,
+                                'Unable to query for SQL database retention policies: ' + helpers.addError(policies), location, database.id);
+                            continue;
                         }
 
-                        if (retentionDays >= config.retentionDays) {
+                        if (!policies.data.length) {
                             helpers.addResult(results, 0,
-                                `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
-                                location, database.id);
-                        } else {
-                            helpers.addResult(results, 2,
-                                `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
-                                location, database.id);
+                                'No retention policies found for SQL database', location, database.id);
+                            continue;
+                        }
+
+                        for (const policy of policies.data) {
+                            let retentionDays = 0;
+                            if (policy.retentionDays){
+                                retentionDays =  policy.retentionDays;
+                            }
+
+                            if (retentionDays >= config.retentionDays) {
+                                helpers.addResult(results, 0,
+                                    `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
+                                    location, database.id);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    `SQL Database is configured to retain backups for ${retentionDays} of ${config.retentionDays} days desired limit`,
+                                    location, database.id);
+                            }
                         }
                     }
                 }

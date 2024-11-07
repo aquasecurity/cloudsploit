@@ -6,15 +6,17 @@ module.exports = {
     title: 'Blob Service Immutable',
     category: 'Blob Service',
     domain: 'Storage',
+    severity: 'High',
     description: 'Ensures data immutability is properly configured for blob services to protect critical data against deletion',
     more_info: 'Immutable storage helps store data securely by protecting critical data against deletion.',
     recommended_action: 'Enable a data immutability policy for all storage containers in the Azure storage account.',
-    link: 'https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
+    link: 'https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-immutable-storage#Getting-started',
     apis: ['storageAccounts:list', 'blobContainers:list', 'blobServices:list'],
     compliance: {
         hipaa: 'Blob immutability preserves the integrity of stored data and protects against ' +
             'accidental or malicious destruction.'
     },
+    realtime_triggers: ['microsoftstorage:storageaccounts:blobservices:containers:write','microsoftstorage:storageaccounts:blobservices:containers:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];

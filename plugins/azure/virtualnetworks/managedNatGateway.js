@@ -5,12 +5,14 @@ module.exports = {
     title: 'Managed NAT Gateway In Use',
     category: 'Virtual Networks',
     domain: 'Network Access Control',
+    severity: 'Medium',
     description: 'Ensure Azure Virtual Network Managed NAT (Network Address Translation) Gateway service is enabled for Virtual Network.',
     more_info: 'To meet your organization\'s security compliance requirements.',
-    link: 'https://docs.microsoft.com/en-us/azure/virtual-network/nat-overview',
+    link: 'https://learn.microsoft.com/en-us/azure/virtual-network/nat-overview',
     recommended_action: 'Enable Virtual Network NAT gateway for Virtual Networks',
     apis: ['virtualNetworks:listAll', 'natGateways:listBySubscription'],
-
+    realtime_triggers: ['microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftnetwork:natgateways:write','microsoftnetwork:natgateways:delete'],
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};

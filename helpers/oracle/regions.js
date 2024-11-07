@@ -27,10 +27,8 @@ var regions = [
     'us-sanjose-1',
     'mx-queretaro-1',
     'eu-marseille-1',
-    'il-jerusalem-1',
     'eu-milan-1',
     'ap-singapore-1',
-    'eu-amsterdam-1',
     'af-johannesburg-1',
     'eu-stockholm-1'
 ];
@@ -55,7 +53,7 @@ module.exports = {
     rules: regions,
     topics: regions,
     subscriptions: regions,
-    policy: regions,
+    policy: ['default'],
     defaultTags: ['default'],
     subnet: regions,
     logGroup: regions,

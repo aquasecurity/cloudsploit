@@ -56,7 +56,7 @@ describe('cloudfrontTLSWeakCipher', function () {
             });
         });
 
-        it('should FAIL if Cloudfront Distribution TLS version is weak cipher suite', function (done) {
+        it('should FAIL if CloudFront Distribution TLS version is weak cipher suite', function (done) {
             const cache = createCache([listDistributions[0]]);
             cloudfrontTLSWeakCipher.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

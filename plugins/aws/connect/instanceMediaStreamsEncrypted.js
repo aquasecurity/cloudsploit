@@ -5,6 +5,7 @@ module.exports = {
     title: 'Connect Instance Media Streams Encrypted',
     category: 'Connect',
     domain: 'Content Delivery',
+    severity: 'High',
     description: 'Ensure that Amazon Connect instances have encryption enabled for media streams being saved on Kinesis Video Stream.',
     more_info: 'In Amazon Connect, you can capture customer audio during an interaction with your contact center by sending the audio to a Kinesis video stream. ' +
             'All data put into a Kinesis video stream is encrypted at rest using AWS-managed KMS keys. Use customer-managed keys instead, in order to meet regulatory compliance requirements within your organization.',
@@ -16,9 +17,10 @@ module.exports = {
             name: 'Connect Media Streams Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
+    realtime_triggers: ['connect:CreateInstance', 'connect:AssociateInstanceStorageConfig', 'connect:UpdateInstanceStorageConfig','connect:DeleteInstance', 'connect:DisassociateInstanceStorageConfig'],
 
     run: function(cache, settings, callback) {
         var results = [];

@@ -5,11 +5,13 @@ module.exports = {
     title: 'Default VPC In Use',
     category: 'EC2',
     domain: 'Compute',
+    severity: 'Medium',
     description: 'Determines whether the default VPC is being used for launching EC2 instances.',
     more_info: 'The default VPC should not be used in order to avoid launching multiple services in the same network which may not require connectivity. Each application, or network tier, should use its own VPC.',
     link: 'http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/default-vpc.html',
     recommended_action: 'Move resources from the default VPC to a new VPC created for that application or resource group.',
     apis: ['EC2:describeVpcs', 'EC2:describeInstances', 'ELB:describeLoadBalancers', 'Lambda:listFunctions', 'RDS:describeDBInstances', 'Redshift:describeClusters'],
+    realtime_triggers: ['ec2:CreateVpc', 'ec2:DeleteVpc', 'ec2:ModifyVpcAttribute', 'ec2:RunInstances', 'ec2:TerminateInstances','elb:CreateLoadBalancer','elb:ModifyLoadBalancerAttributes','elb:DeleteLoadBalancer', 'lambda:CreateFunction','lambda:UpdateFunctionConfiguration', 'lamda:DeleteFunction','rds:CreateDBInstance','rds:ModifyDBInstance','rds:DeleteDBInstance','redshift:CreateCluster','redshift:ModifyCluster', 'redshift:DeleteCluster'],
 
     run: function(cache, settings, callback) {
         var results = [];

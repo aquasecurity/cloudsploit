@@ -4,12 +4,14 @@ var helpers = require('../../../helpers/aws');
 module.exports = {
     title: 'Group Inline Policies',
     category: 'IAM',
-    domain: 'Identity and Access management',
+    domain: 'Identity and Access Management',
+    severity: 'Low',
     description: 'Ensures that groups do not have any inline policies',
     more_info: 'Managed Policies are recommended over inline policies.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html',
     recommended_action: 'Remove inline policies attached to groups',
     apis: ['IAM:listGroups', 'IAM:listGroupPolicies'],
+    realtime_triggers: ['iam:CreateGroup','iam:PutGroupPolicy','iam:DeleteGroupPolicy','iam:DeleteGroup'],
 
     run: function(cache, settings, callback) {
         var results = [];

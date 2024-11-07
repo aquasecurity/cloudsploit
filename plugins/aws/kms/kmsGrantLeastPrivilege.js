@@ -4,11 +4,13 @@ module.exports = {
     title: 'KMS Grant Least Privilege',
     category: 'KMS',
     domain: 'Application Integration',
+    severity: 'Medium',
     description: 'Ensure that AWS KMS key grants use the principle of least privileged access.',
     more_info: 'AWS KMS key grants should be created with minimum set of permissions required by grantee principal to adhere to AWS security best practices.',
     recommended_action: 'Create KMS grants with minimum permission required',
     link: 'https://docs.aws.amazon.com/kms/latest/developerguide/grants.html',
     apis: ['KMS:listKeys', 'KMS:listGrants', 'KMS:describeKey'],
+    realtime_triggers: ['kms:CreateKey','kms:RevokeGrant','kms:CreateGrant'],
 
     run: function(cache, settings, callback) {
         var results = [];

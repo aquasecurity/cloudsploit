@@ -5,11 +5,13 @@ module.exports = {
     title: 'CloudTrail Data Events',
     category: 'CloudTrail',
     domain: 'Compliance',
+    severity: 'Low',
     description: 'Ensure Data events are included into Amazon CloudTrail trails configuration.',
     more_info: 'AWS CloudTrail trails should be configured to enable Data Events in order to log S3 object-level API operations.',
     recommended_action: 'Update CloudTrail to enable data events.',
     link: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html',
     apis: ['CloudTrail:describeTrails', 'CloudTrail:getEventSelectors'],
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:DeleteTrail','cloudtrail:PutEventSelectors'],
 
     run: function(cache, settings, callback) {
         var results = [];
