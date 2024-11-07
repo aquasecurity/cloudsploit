@@ -6,13 +6,13 @@ module.exports = {
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
-    description: 'Proactively check for Key Vault secrets expiry date and rotate them before expiry date is reached.',
+    description: 'Proactively check for non RBAC Key Vault secrets expiry date and rotate them before expiry date is reached.',
     more_info: 'After the expiry date has reached for Key Vault secret, it cannot be used for storing sensitive and confidential data such as passwords and database connection strings anymore.',
     recommended_action: 'Ensure that Key Vault secrets are rotated before they get expired.',
     link: 'https://learn.microsoft.com/en-us/azure/secret-vault/about-secrets-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getSecrets'],
     settings: {
-        key_vault_secret_expiry_fail: {
+        non_rbac_key_vault_secret_expiry_fail: {
             name: 'Key Vault Secret Expiry Fail',
             description: 'Return a failing result when secret expiration date is within this number of days in the future',
             regex: '^[1-9]{1}[0-9]{0,3}$',
@@ -26,7 +26,7 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
         var config = {
-            key_vault_secret_expiry_fail: parseInt(settings.key_vault_secret_expiry_fail || this.settings.key_vault_secret_expiry_fail.default)
+            key_vault_secret_expiry_fail: parseInt(settings.non_rbac_key_vault_secret_expiry_fail || this.settings.non_rbac_key_vault_secret_expiry_fail.default)
         };
 
         async.each(locations.vaults, function(location, rcb) {
