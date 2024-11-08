@@ -411,7 +411,8 @@ function checkFirewallRules(firewallRules) {
         }
 
         const networkName = firewallRule.network ? firewallRule.network.split('/').pop() : '';
-        let allSources = firewallRule.sourceRanges && firewallRule.sourceRanges.some(sourceAddressPrefix =>
+
+        let allSources = firewallRule.sourceRanges?.some(sourceAddressPrefix =>
             sourceAddressPrefix === '*' ||
             sourceAddressPrefix === '0.0.0.0/0' ||
             sourceAddressPrefix === '::/0' ||
@@ -420,14 +421,13 @@ function checkFirewallRules(firewallRules) {
             sourceAddressPrefix.includes('<nw>/0')
         );
 
-        if (allSources && firewallRule.allowed && firewallRule.allowed.some(allow => !!allow.IPProtocol)) {
-            return { exposed: true, networkName: `vpc ${networkName}` };
+        if (allSources && firewallRule.allowed?.some(allow => !!allow.IPProtocol)) {
+            return {exposed: true, networkName: `vpc ${networkName}`};
         }
-        
-        if (allSources && firewallRule.denied && firewallRule.denied.some(deny => deny.IPProtocol === 'all')) {
-            return { exposed: false };
+
+        if (allSources && firewallRule.denied?.some(deny => deny.IPProtocol === 'all')) {
+            return {exposed: false};
         }
-        
     }
 
     return {exposed: true};
@@ -435,7 +435,122 @@ function checkFirewallRules(firewallRules) {
 
 }
 
-function checkNetworkExposure(cache, source, networks, firewallRules, region, results)  {
+function getForwardingRules(cache, source, region, resource) {
+    let rules = [];
+
+    let forwardingRules = getAllDataForService(cache, source, 'forwardingRules', 'list', region);
+    let backendServices = getAllDataForService(cache, source, 'backendServices', 'list', region);
+    let targetHttpProxies = getAllDataForService(cache, source, 'targetHttpProxies', 'list', region);
+    let targetHttpsProxies = getAllDataForService(cache, source, 'targetHttpsProxies', 'list', region);
+    let urlMaps = getAllDataForService(cache, source, 'urlMaps', 'list', region);
+
+    if (!forwardingRules || !forwardingRules.length || !backendServices || !backendServices.length) {
+        return [];
+    }
+
+    backendServices = backendServices.filter(service => {
+        if (service.backends && service.backends.length) {
+            return service.backends.some(backend => {
+                let group = backend.group.replace(/^.*?(\/projects\/.*)$/, '$1');
+                return resource.selfLink.includes(group);
+            });
+        }
+    });
+
+    if (backendServices && backendServices.length) {
+        forwardingRules.forEach(rule => {
+            let rulePath = `FR ${rule.name}`;
+            let targetProxyLink = '';
+            let urlMapLink = '';
+            let backendServiceLink = '';
+
+            if (rule.target && (rule.target.includes('targetHttpProxies') || rule.target.includes('targetHttpsProxies'))) {
+                let target = rule.target.replace(/^.*?(\/projects\/.*)$/, '$1');
+                let targetProxy = rule.target.includes('targetHttpProxies')
+                    ? targetHttpProxies.find(proxy => proxy.selfLink.includes(target))
+                    : targetHttpsProxies.find(proxy => proxy.selfLink.includes(target));
+
+                if (targetProxy) {
+                    rulePath += ` > TP ${targetProxy.name}`;
+                    targetProxyLink = targetProxy.selfLink;
+
+                    if (targetProxy.urlMap) {
+                        let urlMap = urlMaps.find(map => map.selfLink.includes(targetProxy.urlMap.replace(/^.*?(\/projects\/.*)$/, '$1')));
+                        if (urlMap && urlMap.defaultService) {
+                            rulePath += ` > UM ${urlMap.name}`;
+                            urlMapLink = urlMap.selfLink;
+
+                            let serviceName = urlMap.defaultService.replace(/^.*?(\/projects\/.*)$/, '$1');
+                            let matchedBackendService = backendServices.find(service => service.selfLink.includes(serviceName));
+
+                            if (matchedBackendService) {
+                                rulePath += ` > BS ${matchedBackendService.name}`;
+                                backendServiceLink = matchedBackendService.selfLink;
+                            }
+                        }
+                    } else {
+                        let matchedBackendService = backendServices.find(service => targetProxy.selfLink.includes(service.selfLink.replace(/^.*?(\/projects\/.*)$/, '$1')));
+
+                        if (matchedBackendService) {
+                            rulePath += ` > BS ${matchedBackendService.name}`;
+                            backendServiceLink = matchedBackendService.selfLink;
+                        }
+                    }
+                }
+            } else if (rule.backendService) {
+                let serviceName = rule.backendService.replace(/^.*?(\/projects\/.*)$/, '$1');
+                let matchedBackendService = backendServices.find(service => service.selfLink.includes(serviceName));
+
+                if (matchedBackendService) {
+                    rulePath += ` > BS ${matchedBackendService.name}`;
+                    backendServiceLink = matchedBackendService.selfLink;
+                }
+            }
+
+            if (backendServiceLink) {
+                rules.push({ ...rule, rulePath });
+            }
+        });
+    }
+    return rules;
+}
+
+
+function getAllDataForService(cache, source, service, call, region) {
+    let allData = [];
+
+    let globalData = shared.addSource(cache, source, [service, call, 'global']);
+    let regionalData = shared.addSource(cache, source, [service, call, region]);
+
+
+    if (globalData && !globalData.err && globalData.data && globalData.data.length) {
+        allData = allData.concat(globalData.data);
+    }
+
+    if (regionalData && !regionalData.err && regionalData.data && regionalData.data.length) {
+        allData = allData.concat(regionalData.data);
+    }
+    return allData;
+}
+
+function checkClusterExposure(cluster) {
+    const privateClusterConfig = cluster.privateClusterConfig || {};
+    const masterAuthorizedNetworksConfig = cluster.masterAuthorizedNetworksConfig || {};
+
+    const cidrBlocks = masterAuthorizedNetworksConfig.cidrBlocks || [];
+
+    const publicCidrPatterns = ['0.0.0.0/0', '::/0', '*', '::0'];
+
+    const hasPublicCIDR = cidrBlocks.some(block =>  publicCidrPatterns.includes(block));
+
+    return (
+        (!privateClusterConfig.enablePrivateEndpoint && privateClusterConfig.publicEndpoint) ||    // Public endpoint with no private endpoint
+        masterAuthorizedNetworksConfig.gcpPublicCidrsAccessEnabled ||                   // Google Cloud public IPs are allowed
+        hasPublicCIDR                                    // If there is a public CIDR like 0.0.0.0/0, ::/0, or *
+    );
+}
+
+function checkNetworkExposure(cache, source, networks, firewallRules, region, results, forwardingRules)  {
     let exposedPath = '';
 
     if (firewallRules && firewallRules.length) {
@@ -444,6 +559,21 @@ function checkNetworkExposure(cache, source, networks, firewallRules, region, re
         if (isExposed.exposed) {
             if (isExposed.networkName) {
                 return isExposed.networkName;
+            }
+        } else {
+            return '';
+        }
+    }
+
+    // load balancing flow
+    if (forwardingRules && forwardingRules.length) {
+        for (let rule of forwardingRules) {
+            let ipAddress = rule.IPAddress;
+            if ((rule.loadBalancingScheme === 'EXTERNAL' || rule.loadBalancingScheme === 'EXTERNAL_MANAGED') &&
+                (ipAddress && !ipAddress.startsWith('10.') && !ipAddress.startsWith('192.168.') && !ipAddress.startsWith('172.'))) {
+                exposedPath =  rule.rulePath || rule.name;
+                break;
+
             }
         }
     }
@@ -461,5 +591,8 @@ module.exports = {
     checkOrgPolicy: checkOrgPolicy,
     checkIAMRole: checkIAMRole,
     findOpenAllPortsEgress: findOpenAllPortsEgress,
-    checkNetworkExposure: checkNetworkExposure
+    checkNetworkExposure: checkNetworkExposure,
+    getForwardingRules: getForwardingRules,
+    checkClusterExposure: checkClusterExposure,
+    checkFirewallRules: checkFirewallRules
 };

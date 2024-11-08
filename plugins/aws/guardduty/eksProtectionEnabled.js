@@ -39,6 +39,7 @@ module.exports = {
             }
 
             listDetectors.data.forEach(function(detectorId) {
+                var resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detectorId;
                 var getDetector = helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
 
                 if (!getDetector) return;
@@ -49,20 +50,19 @@ module.exports = {
                 }
 
                 var detector = getDetector.data;
-                var resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detector.detectorId;
 
-                if (detector.DataSources && 
-                    detector.DataSources.Kubernetes && 
-                    detector.DataSources.Kubernetes.AuditLogs && 
+                if (detector.DataSources &&
+                    detector.DataSources.Kubernetes &&
+                    detector.DataSources.Kubernetes.AuditLogs &&
                     detector.DataSources.Kubernetes.AuditLogs.Status &&
                     detector.DataSources.Kubernetes.AuditLogs.Status.toLowerCase() === 'disabled'){
                     helpers.addResult(results, 2, 'GuardDuty EKS protection is disabled', region, resource);
                 } else {
                     helpers.addResult(results, 0, 'GuardDuty EKS protection is enabled', region, resource);
-                }     
-                
+                }
+
             });
-           
+
             rcb();
         }, function(){
             callback(null, results, source);
