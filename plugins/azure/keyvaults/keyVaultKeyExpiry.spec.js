@@ -139,7 +139,7 @@ describe('keyVaultKeyExpiryRbac', function() {
             auth.run(createCache(null, [listKeyVaults[0]], [getKeys[1]]), { key_vault_key_expiry_fail: '30' }, callback);
         });
 
-        it('should give failing result if the key has expired', function(done) {
+        it('should give failing results if the key has expired', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
