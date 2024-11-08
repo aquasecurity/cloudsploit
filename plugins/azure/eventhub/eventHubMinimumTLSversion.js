@@ -18,11 +18,11 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        var config = {
-            event_hub_min_tls_version: '1.2'
-        };
 
-        var desiredVersion = parseFloat(config.event_hub_min_tls_version);
+        event_hub_min_tls_version = '1.2'
+
+
+        var desiredVersion = parseFloat(event_hub_min_tls_version);
 
         async.each(locations.eventHub, function(location, rcb) {
             var eventHubs = helpers.addSource(cache, source,
@@ -50,7 +50,7 @@ module.exports = {
                         location, eventHub.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Event Hubs namespace is using TLS version ${eventHub.minimumTlsVersion} instead of version ${config.event_hub_min_tls_version}`,
+                        `Event Hubs namespace is using TLS version ${eventHub.minimumTlsVersion} instead of version ${event_hub_min_tls_version}`,
                         location, eventHub.id);
                 }
             }
