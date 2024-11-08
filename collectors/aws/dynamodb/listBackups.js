@@ -18,7 +18,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.dynamodb.listBackups[AWSConfig.region][table].err = err;
             }
-            collection.dynamodb.listBackups[AWSConfig.region][table].data = data;
+            if (data) collection.dynamodb.listBackups[AWSConfig.region][table].data = data;
             cb();
         });
     }, function(){

@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.elasticache.describeCacheSubnetGroups[AWSConfig.region][cluster.CacheSubnetGroupName].err = err;
             }
-            collection.elasticache.describeCacheSubnetGroups[AWSConfig.region][cluster.CacheSubnetGroupName].data = data;
+            if (data) collection.elasticache.describeCacheSubnetGroups[AWSConfig.region][cluster.CacheSubnetGroupName].data = data;
             cb();
         });
     }, function(){

@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName].err = err;
             }
-            collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName].data = data;
+            if (data) collection.cloudwatch.getEsMetricStatistics[AWSConfig.region][domain.DomainName].data = data;
             cb();
         });
                 

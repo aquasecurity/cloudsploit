@@ -594,6 +594,12 @@ var calls = {
             paginate: 'NextToken'
         }
     },
+    ApiGatewayV2: {
+        getApis: {
+            property: 'Items',
+            paginate: 'NextToken'
+        },
+    },
     AppConfig: {
         listApplications: {
             property: 'Items',
@@ -1555,7 +1561,9 @@ var calls = {
             paginate: 'NextToken'
         },
         getFindings: {
-            paginate: 'NextToken'
+            property: 'Findings',
+            paginate: 'NextToken',
+            override: true
         }
     },
     SageMaker: {
@@ -1853,6 +1861,20 @@ var postcalls = [
                 filterValue: 'id'
             }
         },
+        ApiGatewayV2: {
+            getStages: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
+            },
+            getAuthorizers: {
+                reliesOnService: 'apigatewayv2',
+                reliesOnCall: 'getApis',
+                filterKey: 'ApiId',
+                filterValue: 'ApiId'
+            }
+        },
         AppConfig: {
             listConfigurationProfiles: {
                 reliesOnService: 'appconfig',
@@ -2089,7 +2111,6 @@ var postcalls = [
                 filterKey: 'id',
                 filterValue: 'projectId'
             },
-            sendIntegration: serviceMap['CodeStar']
         },
         CustomerProfiles: {
             getDomain: {
@@ -2155,7 +2176,7 @@ var postcalls = [
                 reliesOnService: 'docdb',
                 reliesOnCall: 'describeDBClusters',
                 filterKey: 'ResourceName',
-                filterValue: 'DBClusterArn' 
+                filterValue: 'DBClusterArn'
             },
             sendIntegration: serviceMap['DocumentDB']
         },
@@ -2995,8 +3016,7 @@ var postcalls = [
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                filterKey: 'RoleName',
-                filterValue: 'RoleName'
+                override: true
             },
             getUser: {
                 reliesOnService: 'iam',

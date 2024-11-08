@@ -16,7 +16,7 @@ module.exports = {
             name: 'Connect Customer Profiles Encrypted',
             description: 'In order (lowest to highest) awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awscmk|externalcmk|cloudhsm)$',
-            default: 'awscmk'
+            default: 'awskms'
         }
     },
     realtime_triggers: ['customerprofiles:CreateDomain', 'customerprofiles:UpdateDomain', 'customerprofile:DeleteDomain'],

@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Security Contact Additional Email',
-    category: 'Security Center',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Low',
     description: 'Ensure Additional email addresses are configured with security contact email.',

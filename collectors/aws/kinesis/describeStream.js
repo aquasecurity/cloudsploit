@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.kinesis.describeStream[AWSConfig.region][stream].err = err;
             }
-            collection.kinesis.describeStream[AWSConfig.region][stream].data = data;
+            if (data) collection.kinesis.describeStream[AWSConfig.region][stream].data = data;
             cb();
         });
     }, function(){

@@ -10,7 +10,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     helpers.makeCustomCollectorCall(opensearch, 'listSecurityPolicies', params, retries, null, null, null, function(err, data) {
         if (err) {
             collection.opensearchserverless.listNetworkSecurityPolicies[AWSConfig.region].err = err;
-        } else {
+        } else if (data && data.securityPolicySummaries) {
             collection.opensearchserverless.listNetworkSecurityPolicies[AWSConfig.region].data = data.securityPolicySummaries;
         }
         callback();

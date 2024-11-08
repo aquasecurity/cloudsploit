@@ -2,14 +2,14 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Monitor IP Forwarding',
-    category: 'Security Center',
+    title: 'Security Configuration Monitoring',
+    category: 'Defender',
     domain: 'Management and Governance',
     severity: 'Medium',
-    description: 'Ensures that Virtual Machine IP Forwarding Monitoring is enabled in Security Center',
-    more_info: 'IP Forwarding feature should be monitored to meet you organization\'s security compliance requirements.',
-    recommended_action: 'Enable IP Forwarding Monitoring by ensuring AuditIfNotExists setting is used for \'IP Forwarding on your virtual machine should be disabled\' from the Azure Security Center.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-policy-definitions',
+    description: 'Ensures that Security Configuration Monitoring is enabled in Microsoft Defender.',
+    more_info: 'When this setting is enabled, Microsoft Defender for Cloud will monitor virtual machines for security configurations.',
+    recommended_action: 'Ensure Security Configuration Monitoring is configured for virtual machines from the Microsoft Defender.',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/policy-reference',
     apis: ['policyAssignments:list'],
     realtime_triggers: ['microsoftauthorization:policyassignments:write','microsoftauthorization:policyassignments:delete'],
 
@@ -24,8 +24,8 @@ module.exports = {
                 ['policyAssignments', 'list', location]);
 
             helpers.checkPolicyAssignment(policyAssignments,
-                'disableIPForwardingMonitoringEffect',
-                'IP Forwarding Monitoring', results, location);
+                'systemConfigurationsMonitoringEffect',
+                'Monitor Security Configuration', results, location);
 
             rcb();
         }, function() {

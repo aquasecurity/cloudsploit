@@ -34,13 +34,15 @@ module.exports = {
                 return rcb();
             }
 
-            for (let virtualMachine of virtualMachines.data) { 
+            for (let virtualMachine of virtualMachines.data) {
                 const virtualMachineData = helpers.addSource(cache, source, ['virtualMachines', 'get', location, virtualMachine.id]);
 
-                if (!(virtualMachineData && virtualMachineData.data && virtualMachineData.data.resources && virtualMachineData.data.resources.length) || virtualMachineData.err) {
-                    helpers.addResult(results, 3, 'unable to query for virtual machine data', location, virtualMachine.id);
+                if (!virtualMachineData || !virtualMachineData.data || virtualMachineData.err) {
+                    helpers.addResult(results, 3, 'Unable to query for virtual machine data', location, virtualMachine.id);
                 } else {
-                    const diagnosticSetting = virtualMachineData.data.resources.find(resource => (resource.properties && resource.properties.settings && resource.properties.settings.ladCfg && resource.properties.settings.ladCfg.diagnosticMonitorConfiguration));
+
+                    const diagnosticSetting = virtualMachineData.data.resources && virtualMachineData.data.resources.length?
+                        virtualMachineData.data.resources.find(resource => (resource.properties && resource.properties.settings && resource.properties.settings.ladCfg && resource.properties.settings.ladCfg.diagnosticMonitorConfiguration)): false;
                     if (diagnosticSetting) {
                         helpers.addResult(results, 0, 'Guest Level Diagnostics are enabled for the virtual machine', location, virtualMachine.id);
                     } else {

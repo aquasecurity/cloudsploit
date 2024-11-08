@@ -392,16 +392,16 @@ function checkFlexibleServerConfigs(servers, cache, source, location, results, s
 }
 
 function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
-   
+
     let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
     if (pricingData) {
         if (pricingData.pricingTier.toLowerCase() === 'standard') {
-           addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
+            addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
         } else {
-           addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location, pricingData.id);
+            addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location, pricingData.id);
         }
     } else {
-       addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location);
+        addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location);
     }
 }
 
@@ -612,12 +612,12 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                         sourceAddressArr.push(settings.input[inputKey]);
                         sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
 
-                    // this if the input specified already exists
+                        // this if the input specified already exists
                     } else if (settings.input && settings.input[inputKey] && sourceAddressArr.indexOf(settings.input[inputKey]) > -1) {
                         ipType === 'ipv4' ? localIpExists = true : localIpV6Exists = true;
                         sourceAddressArr.splice(sourceAddressArr.indexOf(publicString), 1);
 
-                    // this is if there is no input and the failing port is in an array (destinationPortRanges). Will remove the port from the array
+                        // this is if there is no input and the failing port is in an array (destinationPortRanges). Will remove the port from the array
                     } else if ((!settings.input || !settings.input[inputKey]) && (failingRulePortIndex[failingPermission.name]) && !spliced) {
                         spliced = true;
                         failingPermission.properties['destinationPortRanges'].splice([failingRulePortIndex[failingPermission.name]], 1);
@@ -741,6 +741,79 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
     });
 }
 
+function checkSecurityGroup(securityGroups) {
+    var openPrefix = ['*', '0.0.0.0', '0.0.0.0/0', '<nw/0>', '/0', '::/0', 'internet'];
+
+    const allRules = securityGroups.flatMap(nsg =>
+        [
+            ...(nsg.securityRules ? nsg.securityRules.map(rule => ({
+                ...rule,
+                nsgName: nsg.name
+            })) : []),
+            ...(nsg.defaultSecurityRules ? nsg.defaultSecurityRules.map(rule => ({
+                ...rule,
+                nsgName: nsg.name
+            })) : [])
+        ]
+    );
+
+    // sorting by priority
+    const sortedRules = allRules.sort((a, b) => a.properties.priority - b.properties.priority);
+
+    // The most restrictive rule takes precedence
+    for (const rule of sortedRules) {
+        if (rule.properties.direction === "Inbound" && openPrefix.includes(rule.properties.sourceAddressPrefix)) {
+            if (rule.properties.access === "Deny") {
+                return {exposed: false};
+            }
+            if (rule.properties.access === "Allow") {
+                return {exposed: true, nsg: rule.nsgName};
+            }
+        }
+    }
+
+    return {exposed: true};
+}
+
+function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, location, results, lbNames)  {
+    let exposedPath = '';
+
+    if (securityGroups && securityGroups.length) {
+        // Scenario 1: check if security group allow all inbound traffic
+        let exposedSG = checkSecurityGroup(securityGroups);
+        if (exposedSG && exposedSG.exposed) {
+            if (exposedSG.nsg) {
+                return `nsg ${exposedSG.nsg}`
+            } else {
+                return '';
+            }
+        }
+    }
+
+    if (lbNames && lbNames.length) {
+        const loadBalancers = shared.addSource(cache, source,
+            ['loadBalancers', 'listAll', location]);
+
+        if (loadBalancers && !loadBalancers.err && loadBalancers.data && loadBalancers.data.length) {
+            let resourceLBs = loadBalancers.data.filter(lb => lbNames.includes(lb.id));
+            if (resourceLBs && resourceLBs.length) {
+                for (let lb of resourceLBs) {
+                    let isPublic = false;
+                    if (lb.frontendIPConfigurations && lb.frontendIPConfigurations.length) {
+                        isPublic = lb.frontendIPConfigurations.some(ipConfig => ipConfig.properties
+                            && ipConfig.properties.publicIPAddress && ipConfig.properties.publicIPAddress.id);
+                        if (isPublic && ((lb.nboundNatRules && nboundNatRules.length) || (lb.loadBalancingRules && lb.loadBalancingRules.length))) {
+                            exposedPath += `lb ${lb.name}`;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return exposedPath;
+}
+
 module.exports = {
     addResult: addResult,
     findOpenPorts: findOpenPorts,
@@ -753,6 +826,7 @@ module.exports = {
     remediateOpenPorts: remediateOpenPorts,
     remediateOpenPortsHelper: remediateOpenPortsHelper,
     checkMicrosoftDefender: checkMicrosoftDefender,
-    checkFlexibleServerConfigs:checkFlexibleServerConfigs
+    checkFlexibleServerConfigs:checkFlexibleServerConfigs,
+    checkNetworkExposure: checkNetworkExposure
 
 };

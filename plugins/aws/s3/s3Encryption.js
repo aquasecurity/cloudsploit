@@ -62,7 +62,7 @@ module.exports = {
             name: 'S3 Minimum Default Encryption Level',
             description: 'In order (low to high) sse=Server-Side Encryption; awskms=AWS KMS; awscmk=Customer KMS; externalcmk=Customer external KMS; cloudhsm=Customer CloudHSM',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'sse',
+            default: 'awskms',
         },
         s3_allow_unencrypted_static_websites: {
             name: 'S3 Allow Unencrypted Static Websites',

@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.appmesh.describeVirtualGateway[AWSConfig.region][gateway.virtualGatewayName].err = err;
                 }
 
-                collection.appmesh.describeVirtualGateway[AWSConfig.region][gateway.virtualGatewayName].data = data;
+                if (data) collection.appmesh.describeVirtualGateway[AWSConfig.region][gateway.virtualGatewayName].data = data;
                 pCb();
             });
 

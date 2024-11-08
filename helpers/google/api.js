@@ -319,6 +319,13 @@ var calls = {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/aggregated/instanceGroups',
             location: null,
             pagination: true
+        },
+        list : {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/zones/{locationId}/instanceGroups',
+            location: 'zone',
+            pagination: true,
+            ignoreMiscData: true
+
         }
     },
     instanceGroupManagers: {
@@ -357,11 +364,24 @@ var calls = {
     },
     backendServices: {
         list: {
-            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/global/backendServices',
-            location: null,
-            pagination: true
+            globalURL: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/global/backendServices',
+            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/regions/{locationId}/backendServices',
+            location: 'region',
+            pagination: true,
+            ignoreMiscData: true
         },
     },
+
+    forwardingRules: {
+        list: {
+            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/regions/{locationId}/forwardingRules',
+            globalURL: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/global/forwardingRules',
+            location: 'region',
+            pagination: true,
+            ignoreMiscData: true
+        },
+    },
+
     healthChecks: {
         list: {
             url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/global/healthChecks',
@@ -379,9 +399,20 @@ var calls = {
     },
     targetHttpProxies: {
         list: {
-            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/targetHttpProxies',
-            location: null,
-            pagination: true
+            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/regions/{locationId}/targetHttpProxies',
+            globalURL: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/targetHttpProxies',
+            location: 'region',
+            pagination: true,
+            ignoreMiscData: true,
+        }
+    },
+    targetHttpsProxies: {
+        list: {
+            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/regions/{locationId}/targetHttpsProxies',
+            globalURL: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/targetHttpsProxies',
+            location: 'region',
+            pagination: true,
+            ignoreMiscData: true
         }
     },
     autoscalers: {
@@ -544,12 +575,14 @@ var calls = {
             pagination: false
         }
     },
-    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{project}/global/urlMaps
+    urlMaps: { // https://compute.googleapis.com/compute/v1/projects/{projectid}/global/urlMaps
         list: {
-            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/urlMaps',
-            location: null,
+            globalURL: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/urlMaps',
+            url: 'https://compute.googleapis.com/compute/beta/projects/{projectId}/regions/{locationId}/urlMaps',
+            location: 'region',
             pagination: true,
-            nameRequired: true
+            nameRequired: true,
+            ignoreMiscData: true
         },
         sendIntegration: serviceMap['CLB']
     },
@@ -763,6 +796,24 @@ var postcalls = {
             pagination: false,
         }
     },
+    instanceGroups: {
+        listInstances: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/{location}/instanceGroups/{name}/listInstances',
+            method: 'POST',
+            reliesOnService: ['instanceGroups'],
+            reliesOnCall: ['aggregatedList'],
+            properties: ['location','name'],
+            filterObjKey: 'instanceGroups'
+        },
+        get: {
+            url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/{location}/instanceGroups/{name}',
+            reliesOnService: ['instanceGroups'],
+            reliesOnCall: ['aggregatedList'],
+            properties: ['location','name'],
+            filterObjKey: 'instanceGroups'
+
+        }
+    },
     organizations: { //https://cloudresourcemanager.googleapis.com/v1beta1/{resource=organizations/*}:getIamPolicy
         getIamPolicy: {
             url:'https://cloudresourcemanager.googleapis.com/v1/organizations/{organizationId}:getIamPolicy',
@@ -794,6 +845,15 @@ var postcalls = {
             properties: ['organizationId'],
             pagination: true,
             paginationKey: 'pageSize'
+        },
+        listAccessPolicies: {
+            url: 'https://accesscontextmanager.googleapis.com/v1/accessPolicies?parent=organizations/{organizationId}',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['list'],
+            properties: ['organizationId'],
+            pagination: true,
+            paginationKey: 'pageSize',
+            dataKey: 'accessPolicies'
         }
     },
     folders:{ // https://cloudresourcemanager.googleapis.com/v2/folders
@@ -978,6 +1038,17 @@ var tertiarycalls = {
             method: 'GET',
             pagination: false
         },
+    },
+    organizations: {
+        servicePerimeters: {
+            url: 'https://accesscontextmanager.googleapis.com/v1/{name}/servicePerimeters',
+            reliesOnService: ['organizations'],
+            reliesOnCall: ['listAccessPolicies'],
+            properties: ['name'],
+            method: 'GET',
+            pagination: true,
+            dataKey: 'servicePerimeters'
+        }
     }
 };
 

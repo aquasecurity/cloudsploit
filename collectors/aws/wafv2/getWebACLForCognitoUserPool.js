@@ -24,7 +24,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.wafv2.getWebACLForCognitoUserPool[AWSConfig.region][up.Id].err = err;
             }
-            collection.wafv2.getWebACLForCognitoUserPool[AWSConfig.region][up.Id].data = data;
+            if (data) collection.wafv2.getWebACLForCognitoUserPool[AWSConfig.region][up.Id].data = data;
             cb();
         });
 

@@ -3,6 +3,7 @@ var async      = require('async');
 var ONE_DAY = 24*60*60*1000;
 var ONE_HOUR = 60*60*1000;
 
+let identityServices = ['iam', 'aad'];
 var daysBetween = function(date1, date2) {
     return Math.round(Math.abs((new Date(date1).getTime() - new Date(date2).getTime())/(ONE_DAY)));
 };
@@ -20,6 +21,11 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     let localSettings = {};
     localSettings = settings;
 
+    if (settings.identifier.new_inventory_enabled &&
+        (identityServices.includes(serviceName.toLowerCase()) || (calls[serviceName] && calls[serviceName].sendIntegration && calls[serviceName].sendIntegration.isIdentity))) {
+        console.log(`Not sending ${serviceName} because new inventory ff is enabled`);
+        return iCb();
+    }
     if (settings.govcloud) {
         localEvent.awsOrGov = 'aws-us-gov';
     }
@@ -92,13 +98,13 @@ var processIntegration = function(serviceName, settings, collection, calls, post
 };
 
 var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
-    if (localCollection == undefined ||
-        (localCollection &&
-            (JSON.stringify(localCollection)==='{}' ||
-                localCollection[serviceName.toLowerCase()] == undefined ||
-                JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
+    if (!localCollection ||
+        !Object.keys(localCollection).length ||
+        !localCollection[serviceName.toLowerCase()] ||
+        !Object.keys(localCollection[serviceName.toLowerCase()]).length) {
         return callback(null);
     }
+
 
     let callsMap = calls[serviceName] ? Object.keys(calls[serviceName]) : null;
     let foundData=[];

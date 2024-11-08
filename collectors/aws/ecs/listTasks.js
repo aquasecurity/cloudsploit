@@ -18,10 +18,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         helpers.makeCustomCollectorCall(ecs, 'listTasks', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.ecs.listTasks[AWSConfig.region][cluster].err = err;
+            } else if (data && data.taskArns) {
+                collection.ecs.listTasks[AWSConfig.region][cluster].data = data.taskArns;
             }
-
-            collection.ecs.listTasks[AWSConfig.region][cluster].data = data.taskArns;
-
             cb();
         });
     }, function(){

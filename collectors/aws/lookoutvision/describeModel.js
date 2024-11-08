@@ -31,7 +31,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].err = err;
                 }
 
-                collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].data = data;
+                if (data) collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].data = data;
                 pCb();
             });
         }, function() {

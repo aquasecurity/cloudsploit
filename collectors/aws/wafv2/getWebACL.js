@@ -17,7 +17,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
 
             if (err) {
                 collection.wafv2.getWebACL[AWSConfig.region][acl.ARN].err = err;
-            } else {
+            } else if (data) {
                 collection.wafv2.getWebACL[AWSConfig.region][acl.ARN].data = data;
             }
             cb();

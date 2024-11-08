@@ -136,8 +136,16 @@ module.exports = {
                             return callback(`Error parsing error response string from Azure API: ${e}`);
                         }
                     }
-
-                    if (body &&
+                    if (response &&
+                        response.statusCode &&
+                        response.statusCode === 429 &&
+                        body &&
+                        body.error &&
+                        body.error.message &&
+                        typeof body.error.message == 'string') {
+                        var errorMessage = `TooManyRequests: ${body.error.message}`;
+                        return callback(errorMessage, null, response);
+                    } else if (body &&
                         body.error &&
                         body.error.message &&
                         typeof body.error.message == 'string') {
@@ -225,3 +233,4 @@ module.exports = {
 
     reduceProperties: reduceProperties
 };
+

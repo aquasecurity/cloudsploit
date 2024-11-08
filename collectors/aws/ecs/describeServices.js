@@ -22,7 +22,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.ecs.describeServices[AWSConfig.region][service].err = err;
                 }
 
-                collection.ecs.describeServices[AWSConfig.region][service].data = data;
+                if (data) collection.ecs.describeServices[AWSConfig.region][service].data = data;
 
                 ccb();
             });

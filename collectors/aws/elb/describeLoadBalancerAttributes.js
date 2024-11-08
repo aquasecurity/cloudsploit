@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.elb.describeLoadBalancerAttributes[AWSConfig.region][lb.DNSName].err = err;
             }
-            collection.elb.describeLoadBalancerAttributes[AWSConfig.region][lb.DNSName].data = data;
+            if (data) collection.elb.describeLoadBalancerAttributes[AWSConfig.region][lb.DNSName].data = data;
             cb();
         });
     }, function(){

@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.cloudwatch.getredshiftMetricStatistics[AWSConfig.region][cluster.ClusterIdentifier].err = err;
             }
-            collection.cloudwatch.getredshiftMetricStatistics[AWSConfig.region][cluster.ClusterIdentifier].data = data;
+            if (data) collection.cloudwatch.getredshiftMetricStatistics[AWSConfig.region][cluster.ClusterIdentifier].data = data;
             cb();
         });
                 

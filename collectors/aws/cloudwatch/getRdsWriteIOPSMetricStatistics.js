@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.cloudwatch.getRdsWriteIOPSMetricStatistics[AWSConfig.region][instance.DBInstanceIdentifier].err = err;
             }
-            collection.cloudwatch.getRdsWriteIOPSMetricStatistics[AWSConfig.region][instance.DBInstanceIdentifier].data = data;
+            if (data) collection.cloudwatch.getRdsWriteIOPSMetricStatistics[AWSConfig.region][instance.DBInstanceIdentifier].data = data;
             cb();
         });
                 

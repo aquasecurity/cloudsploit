@@ -15,8 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.elbv2.describeTags[AWSConfig.region][lb.DNSName].err = err;
             }
-
-            collection.elbv2.describeTags[AWSConfig.region][lb.DNSName].data = data;
+            if (data) collection.elbv2.describeTags[AWSConfig.region][lb.DNSName].data = data;
             cb();
         });
     }, function(){

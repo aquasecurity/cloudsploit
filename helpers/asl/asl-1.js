@@ -59,7 +59,6 @@ var parse = function(obj, path, region, cloud, accountId, resourceId) {
         return [obj];
     }
 };
-
 var transform = function(val, transformation) {
     if (transformation == 'DATE') {
         return new Date(val);
@@ -167,6 +166,10 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
 
     // Compare the property with the operator
     if (condition.op) {
+        let userRegex;
+        if (condition.op === 'MATCHES' || condition.op === 'NOTMATCHES') {
+            userRegex = new RegExp(condition.value);
+        }
         if (condition.transform && condition.transform == 'EACH' && condition) {
             if (condition.op == 'CONTAINS') {
                 var stringifiedCondition = JSON.stringify(condition.parsed);
@@ -186,6 +189,30 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                     return 0;
                 } else if (stringifiedCondition && stringifiedCondition.length){
                     message.push(`${condition.value} not found in ${stringifiedCondition}`);
+                    return 2;
+                } else {
+                    message.push(`${condition.parsed} is not the right property type for this operation`);
+                    return 2;
+                }
+            } else if (condition.op == 'NOTCONTAINS') {
+                var conditionStringified = JSON.stringify(condition.parsed);
+                if (condition.value && condition.value.includes(':')) {
+
+                    var conditionKey = condition.value.split(/:(?!.*:)/)[0];
+                    var conditionValue = condition.value.split(/:(?!.*:)/)[1];
+
+                    if (conditionStringified.includes(conditionKey) && !conditionStringified.includes(conditionValue)){
+                        message.push(`${property}: ${condition.value} not found in ${conditionStringified}`);
+                        return 0;
+                    } else {
+                        message.push(`${condition.value} found in ${conditionStringified}`);
+                        return 2;
+                    }
+                } else if (conditionStringified && !conditionStringified.includes(condition.value)) {
+                    message.push(`${property}: ${condition.value} not found in ${conditionStringified}`);
+                    return 0;
+                } else if (conditionStringified && conditionStringified.length){
+                    message.push(`${condition.value} found in ${conditionStringified}`);
                     return 2;
                 } else {
                     message.push(`${condition.parsed} is not the right property type for this operation`);
@@ -230,12 +257,18 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                 message.push(`${property}: ${condition.parsed} is: ${condition.value}`);
             }
         } else if (condition.op == 'MATCHES') {
-            var userRegex = RegExp(condition.value);
             if (userRegex.test(condition.parsed)) {
                 message.push(`${property}: ${condition.parsed} matches the regex: ${condition.value}`);
             } else {
                 conditionResult = 2;
                 message.push(`${property}: ${condition.parsed} does not match the regex: ${condition.value}`);
+            }
+        } else if (condition.op == 'NOTMATCHES') {
+            if (!userRegex.test(condition.parsed)) {
+                message.push(`${condition.property}: ${condition.parsed} does not match the regex: ${condition.value}`);
+            } else {
+                conditionResult = 2;
+                message.push(`${condition.property}: ${condition.parsed} matches the regex : ${condition.value}`);
             }
         } else if (condition.op == 'EXISTS') {
             if (condition.parsed !== 'not set') {
@@ -275,6 +308,17 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                 return 0;
             } else if (condition.parsed && condition.parsed.length){
                 message.push(`${condition.value} not found in ${condition.parsed}`);
+                return 2;
+            } else {
+                message.push(`${condition.parsed} is not the right property type for this operation`);
+                return 2;
+            }
+        } else if (condition.op == 'NOTCONTAINS') {
+            if (condition.parsed && condition.parsed.length && !condition.parsed.includes(condition.value)) {
+                message.push(`${property}: ${condition.value} not found in ${condition.parsed}`);
+                return 0;
+            } else if (condition.parsed && condition.parsed.length){
+                message.push(`${condition.value} found in ${condition.parsed}`);
                 return 2;
             } else {
                 message.push(`${condition.parsed} is not the right property type for this operation`);
@@ -331,7 +375,7 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr) {
                 propertyArr.shift();
                 property = propertyArr.join('.');
                 condition.property = property;
-                if (condition.op !== 'CONTAINS') {
+                if (condition.op !== 'CONTAINS' || condition.op !== 'NOTCONTAINS') {
                     condition.parsed.forEach(parsed => {
                         if (property.includes('[*]')) {
                             runValidation(parsed, condition, inputResultsArr, nestedResultArr);

@@ -44,7 +44,7 @@ function parseCollection(path, obj) {
     }
 }
 
-let collect = function(AzureConfig, settings, callback) {
+let collect = function(AzureConfig, settings, callback, fargateFlag) {
     // Used to gather info only
     if (settings.gather) {
         return callback(null, calls, postcalls, tertiarycalls, specialcalls);
@@ -67,8 +67,8 @@ let collect = function(AzureConfig, settings, callback) {
                 post: obj.post,
                 token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token),
                 govcloud : AzureConfig.Govcloud
-            }, function(err, data) {
-                if (err) return cb(err);
+            }, function(err, data, response) {
+                if (err) return cb(err, null, response);
 
                 // If a new nextLink is provided, this will be updated.  There shouldn't
                 // be a need to hold on to the previous value
@@ -96,14 +96,51 @@ let collect = function(AzureConfig, settings, callback) {
         };
 
         let processCall = function(obj, cb, localData) {
-            let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
-            if (obj.rateLimit) {
-                setTimeout(function() {
-                    console.log(`url: ${localUrl}`);
-                    makeCall(localUrl, obj, cb, localData);
-                }, obj.rateLimit);
+            if (fargateFlag) {
+                const maxApiRetryAttempts = 15;
+                let initialResponse = null;
+                async.retry({
+                    times: maxApiRetryAttempts,
+                    interval: function() {
+                        let retryAfter = initialResponse && initialResponse.headers['retry-after'] ? parseInt(initialResponse.headers['retry-after']) * 1000 : 5000;
+                        let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+                        console.log(`Retrying in  ${retryAfter / 1000} seconds for api call : ${localUrl}`);
+                        return retryAfter;
+                    },
+                    errorFilter: function(err) {
+                        return err.includes('TooManyRequests');
+                    }
+                }, function(retryCallback) {
+                    let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+                    // Temporary fix to add additional buffer of 6 seconds before each call
+                    var rateLimit = obj.rateLimit && obj.rateLimit == 3000? 6000: obj.rateLimit;
+                    if (rateLimit) {
+                        setTimeout(function() {
+                            console.log(`Fargate collector rate limited: url: ${localUrl}`);
+                            makeCall(localUrl, obj, function(err, data, response) {
+                                initialResponse = response;
+                                return retryCallback(err, data, response);
+                            }, localData);
+                        }, rateLimit);
+                    } else {
+                        makeCall(localUrl, obj, function(err, data, response) {
+                            initialResponse = response;
+                            return retryCallback(err, data, response);
+                        }, localData);
+                    }
+                }, function(err, data, response) {
+                    cb(err, data, response);
+                });
             } else {
-                makeCall(localUrl, obj, cb, localData);
+                let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
+                if (obj.rateLimit) {
+                    setTimeout(function() {
+                        console.log(`url: ${localUrl}`);
+                        makeCall(localUrl, obj, cb, localData);
+                    }, obj.rateLimit);
+                } else {
+                    makeCall(localUrl, obj, cb, localData);
+                }
             }
         };
 
@@ -495,3 +532,4 @@ let collect = function(AzureConfig, settings, callback) {
 };
 
 module.exports = collect;
+

@@ -46,20 +46,25 @@ module.exports = {
                 if (!getFindings) {
                     helpers.addResult(results, 0, 'No active findings available', region, resource);
                     return rcb();
-                } else if (getFindings.err || !getFindings.data || !getFindings.data.Findings) {
+                } else if (getFindings.err || !getFindings.data ) {
                     helpers.addResult(results, 3, `Unable to get SecurityHub findings: ${helpers.addError(getFindings)}`, region, resource);
-                } else if (!getFindings.data.Findings.length) {
+                } else if (!getFindings.data.length) {
                     helpers.addResult(results, 0, 'No active findings available', region, resource);
                     return rcb();
                 } else {
-                    let activeFindings = getFindings.data.Findings.filter(finding => finding.CreatedAt &&
+                    let activeFindings = getFindings.data.filter(finding => finding.CreatedAt &&
                         helpers.hoursBetween(new Date, finding.CreatedAt) > config.securityhub_findings_fail);
-                    let status = (activeFindings && activeFindings.length) ? 2 : 0;
-        
-                    helpers.addResult(results, status,
-                        `Security Hub has ${status == 0 ? 0 : activeFindings.length} active finding(s)`, region, resource);
+
+                    if (!activeFindings.length) {
+                        helpers.addResult(results, 0,
+                            'Security Hub has no active findings', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Security Hub has over ${activeFindings.length} active findings`, region, resource);
+                    }
                 }
-            }     
+
+            }
 
             return rcb();
         }, function() {

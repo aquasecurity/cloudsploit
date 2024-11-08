@@ -44,7 +44,7 @@ function addResult(results, status, message, region, resource, custom){
     // Override unknown results for regions that are opt-in
     if (status == 3 && region && regions.optin.indexOf(region) > -1 && message &&
         (message.indexOf('AWS was not able to validate the provided access credentials') > -1 ||
-         message.indexOf('The security token included in the request is invalid') > -1)) {
+            message.indexOf('The security token included in the request is invalid') > -1)) {
         results.push({
             status: 0,
             message: 'Region is not enabled',
@@ -174,15 +174,18 @@ function findOpenPorts(groups, ports, service, region, results, cache, config, c
             }
         }
     }
- 
+
     return;
 }
 
-function checkNetworkInterface(groupId, groupName, resultsString, region, results, resource, cache) {
+function checkNetworkInterface(groupId, groupName, resultsString, region, results, resource, cache, bool = false) {
     const describeNetworkInterfaces = helpers.addSource(cache, {},
         ['ec2', 'describeNetworkInterfaces', region]);
 
     if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
+        if (bool) {
+            return false;
+        }
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
         return;
@@ -198,20 +201,28 @@ function checkNetworkInterface(groupId, groupName, resultsString, region, result
             }
         }
     }
+    if (bool && !networksWithSecurityGroup.length) {
+        return groupId;
+    }
+    let exposedENI;
     if (hasOpenSecurityGroup) {
         let hasPublicIp = false;
         for (var eni of networksWithSecurityGroup) {
             if (eni.Association && eni.Association.PublicIp) {
                 hasPublicIp = true;
+                exposedENI = `sg ${groupId} > eni ${eni.NetworkInterfaceId}`;
                 break;
             }
         }
         if (hasPublicIp) {
+            if (bool) return exposedENI;
             addResult(results, 2, `Security Group ${groupId}(${groupName}) is associated with an ENI that is publicly exposed`, region, resource);
         } else {
+            if (bool) return false;
             addResult(results, 0, `Security Group ${groupId} (${groupName}) is only exposed internally`, region, resource);
         }
     } else {
+        if (bool) return false;
         addResult(results, 2, resultsString, region, resource);
     }
 }
@@ -291,7 +302,7 @@ function userGlobalAccess(statement, restrictedPermissions) {
         statement.Action && restrictedPermissions.some(permission=> statement.Action.includes(permission))) {
         return true;
     }
-    
+
     return false;
 }
 
@@ -324,7 +335,7 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals, settings={
 }
 
 function hasFederatedUserRole(policyDocument) {
-    // true iff every statement refers to federated user access 
+    // true iff every statement refers to federated user access
     for (let statement of policyDocument) {
         if (statement.Action &&
             !statement.Action.includes('sts:AssumeRoleWithSAML') &&
@@ -339,13 +350,13 @@ function extractStatementPrincipals(statement) {
     let response = [];
     if (statement.Principal) {
         let principal = statement.Principal;
-        
+
         if (typeof principal === 'string') {
             return [principal];
         }
 
         if (!principal.AWS) return response;
-        
+
         var awsPrincipals = principal.AWS;
         if (!Array.isArray(awsPrincipals)) {
             awsPrincipals = [awsPrincipals];
@@ -516,7 +527,7 @@ function getS3BucketLocation(cache, region, bucketName) {
         if (getBucketLocation.data.LocationConstraint &&
             regions.all.includes(getBucketLocation.data.LocationConstraint)) return getBucketLocation.data.LocationConstraint;
         else if (getBucketLocation.data.LocationConstraint &&
-        !regions.all.includes(getBucketLocation.data.LocationConstraint)) return 'global';
+            !regions.all.includes(getBucketLocation.data.LocationConstraint)) return 'global';
         else return 'us-east-1';
     }
 
@@ -893,7 +904,7 @@ function getOrganizationAccounts(listAccounts, accountId) {
     if (listAccounts.data && listAccounts.data.length){
         listAccounts.data.forEach(account => {
             if (account.Id && account.Id !== accountId) orgAccountIds.push(account.Id);
-        });      
+        });
     }
 
     return orgAccountIds;
@@ -903,7 +914,7 @@ function getUsedSecurityGroups(cache, results, region) {
     let result = [];
     const describeNetworkInterfaces = helpers.addSource(cache, {},
         ['ec2', 'describeNetworkInterfaces', region]);
-    
+
     if (!describeNetworkInterfaces || describeNetworkInterfaces.err || !describeNetworkInterfaces.data) {
         helpers.addResult(results, 3,
             'Unable to query for network interfaces: ' + helpers.addError(describeNetworkInterfaces), region);
@@ -912,7 +923,7 @@ function getUsedSecurityGroups(cache, results, region) {
 
     const listFunctions = helpers.addSource(cache, {},
         ['lambda', 'listFunctions', region]);
-    
+
     if (!listFunctions || listFunctions.err || !listFunctions.data) {
         helpers.addResult(results, 3,
             'Unable to list lambda functions: ' + helpers.addError(listFunctions), region);
@@ -967,7 +978,7 @@ function getSubnetRTMap(subnets, routeTables) {
             });
         }
         if (routeTable.VpcId && routeTable.RouteTableId && routeTable.Associations &&
-            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId; 
+            routeTable.Associations.find(association => association.Main) && !vpcRTMap[routeTable.VpcId]) vpcRTMap[routeTable.VpcId] = routeTable.RouteTableId;
     });
 
     subnets.forEach(subnet => {
@@ -1023,6 +1034,7 @@ var debugApiCalls = function(call, service, debugMode, finished) {
 };
 
 var logError = function(service, call, region, err, errorsLocal, apiCallErrorsLocal, apiCallTypeErrorsLocal, totalApiCallErrorsLocal, errorSummaryLocal, errorTypeSummaryLocal, debugMode) {
+    if (debugMode) console.log(`[INFO] ${service}:${call} returned error: ${err.message}`);
     totalApiCallErrorsLocal++;
 
     if (!errorSummaryLocal[service]) errorSummaryLocal[service] = {};
@@ -1112,7 +1124,7 @@ function processFieldSelectors(fieldSelectors,buckets ,startsWithBuckets,notEnds
 var checkTags = function(cache, resourceName, resourceList, region, results, settings={}) {
     const allResources = helpers.addSource(cache, {},
         ['resourcegroupstaggingapi', 'getResources', region]);
-    
+
     if (!allResources || allResources.err || !allResources.data) {
         helpers.addResult(results, 3,
             'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
@@ -1128,12 +1140,265 @@ var checkTags = function(cache, resourceName, resourceList, region, results, set
     });
 
     resourceList.map(arn => {
-        if (filteredResourceARN.includes(arn)) {   
+        if (filteredResourceARN.includes(arn)) {
             helpers.addResult(results, 0, `${resourceName} has tags`, region, arn);
         } else {
             helpers.addResult(results, 2, `${resourceName} does not have any tags`, region, arn);
         }
     });
+};
+
+function checkSecurityGroup(securityGroup, cache, region, checkENIs = true) {
+    let allowsAllTraffic;
+    for (var p in securityGroup.IpPermissions) {
+        var permission = securityGroup.IpPermissions[p];
+
+        for (var k in permission.IpRanges) {
+            var range = permission.IpRanges[k];
+
+            if (range.CidrIp === '0.0.0.0/0') {
+                allowsAllTraffic = true;
+            }
+        }
+
+        for (var l in permission.Ipv6Ranges) {
+            var rangeV6 = permission.Ipv6Ranges[l];
+
+            if (rangeV6.CidrIpv6 === '::/0') {
+                allowsAllTraffic = true;
+            }
+        }
+    }
+
+    if (allowsAllTraffic && checkENIs) {
+        return checkNetworkInterface(securityGroup.GroupId, securityGroup.GroupName, '', region, null, securityGroup, cache, true);
+    }
+    return allowsAllTraffic;
+}
+
+var getAttachedELBs =  function(cache, source, region, resourceId, lbField, lbAttribute) {
+    let elbs = [];
+
+    // check classice ELBs
+    var describeLoadBalancers = helpers.addSource(cache, source,
+        ['elb', 'describeLoadBalancers', region]);
+
+    if (describeLoadBalancers && !describeLoadBalancers.err && describeLoadBalancers.data && describeLoadBalancers.data.length) {
+        elbs  = describeLoadBalancers.data.filter(lb => lb[lbField] && lb[lbField].some(instance => instance[lbAttribute] === resourceId));
+    }
+
+    // check ALBs/NLBs
+
+    var describeLoadBalancersv2 = helpers.addSource(cache, source,
+        ['elbv2', 'describeLoadBalancers', region]);
+
+    if (describeLoadBalancersv2 && !describeLoadBalancersv2.err && describeLoadBalancersv2.data && describeLoadBalancersv2.data.length) {
+        describeLoadBalancersv2.data.forEach(function(lb) {
+            lb.targetGroups = [];
+            var describeTargetGroups = helpers.addSource(cache, source,
+                ['elbv2', 'describeTargetGroups', region, lb.DNSName]);
+
+            if (describeTargetGroups && !describeTargetGroups.err && describeTargetGroups.data && describeTargetGroups.data.TargetGroups && describeTargetGroups.data.TargetGroups.length) {
+                describeTargetGroups.data.TargetGroups.forEach(function(tg) {
+                    var describeTargetHealth = helpers.addSource(cache, source,
+                        ['elbv2', 'describeTargetHealth', region, tg.TargetGroupArn]);
+
+                    if (describeTargetHealth && !describeTargetHealth.err && describeTargetHealth.data
+                        && describeTargetHealth.data.TargetHealthDescriptions && describeTargetHealth.data.TargetHealthDescriptions.length) {
+                        describeTargetHealth.data.TargetHealthDescriptions.forEach(healthDescription => {
+                            if (healthDescription.Target && healthDescription.Target.Id &&
+                                healthDescription.Target.Id === resourceId) {
+                                lb.targetGroups.push({targetgroupName: tg.TargetGroupName, targetGroupArn: tg.TargetGroupArn});
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (lb.targetGroups && lb.targetGroups.length) {
+                let hasListener = false;
+                var describeListeners = helpers.addSource(cache, source,
+                    ['elbv2', 'describeListeners', region, lb.DNSName]);
+                if (describeListeners && describeListeners.data && describeListeners.data.Listeners && describeListeners.data.Listeners.length) {
+                    describeListeners.data.Listeners.forEach(listener => {
+                        if (!hasListener) {
+                            hasListener = listener.DefaultActions.some(action =>
+                                action.TargetGroupArn && lb.targetGroups.some(tg => tg.targetGroupArn === action.TargetGroupArn)
+                            );
+                        }
+
+                    });
+                }
+                if (hasListener) {
+                    elbs.push(lb);
+                }
+            }
+        });
+    }
+
+    return elbs;
+};
+
+var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs, region, results, resource) {
+
+    var internetExposed = '';
+    var isSubnetPrivate = false;
+
+    // Check public endpoint access for specific resources like EKS
+    if (resource && resource.resourcesVpcConfig && resource.resourcesVpcConfig.endpointPublicAccess) {
+        return 'public endpoint access';
+    }
+    // Scenario 1: check if resource is in a private subnet
+    let subnetRouteTableMap, privateSubnets;
+    var describeSubnets = helpers.addSource(cache, source,
+        ['ec2', 'describeSubnets', region]);
+    var describeRouteTables = helpers.addSource(cache, {},
+        ['ec2', 'describeRouteTables', region]);
+
+    if (!describeRouteTables || describeRouteTables.err || !describeRouteTables.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for route tables: ' + helpers.addError(describeRouteTables), region);
+    } else if (!describeSubnets || describeSubnets.err || !describeSubnets.data) {
+        helpers.addResult(results, 3,
+            'Unable to query for subnets: ' + helpers.addError(describeSubnets), region);
+    } else if (describeSubnets.data.length && subnets.length) {
+        subnetRouteTableMap = getSubnetRTMap(describeSubnets.data, describeRouteTables.data);
+        privateSubnets = getPrivateSubnets(subnetRouteTableMap, describeSubnets.data, describeRouteTables.data);
+        if (privateSubnets && privateSubnets.length) {
+            isSubnetPrivate = !subnets.some(subnet => !privateSubnets.includes(subnet.id));
+        }
+
+        // if it's in a private subnet and has no ELBs attached then its not exposed
+        if (isSubnetPrivate && (!elbs || !elbs.length)) {
+            return '';
+        }
+    }
+
+    // If the subnet is not private we will check if security groups and Network ACLs allow internal traffic
+
+    // Scenario 2: check if security group allows all traffic
+    var describeSecurityGroups = helpers.addSource(cache, source,
+        ['ec2', 'describeSecurityGroups', region]);
+
+    if (!isSubnetPrivate) {
+        if (!describeSecurityGroups || describeSecurityGroups.err || !describeSecurityGroups.data) {
+            helpers.addResult(results, 3,
+                'Unable to query for security groups: ' + helpers.addError(describeSecurityGroups), region);
+        } else if (describeSecurityGroups.data.length && securityGroups && securityGroups.length) {
+            let instanceSGs = describeSecurityGroups.data.filter(sg => securityGroups.find(isg => isg.GroupId === sg.GroupId));
+            for (var group of instanceSGs) {
+                let exposedSG = checkSecurityGroup(group, cache, region);
+                if (exposedSG) {
+                    internetExposed += internetExposed ?  `, ${exposedSG}` : exposedSG;
+                }
+            }
+        }
+
+
+        // if security group allows all traffic we need to check NACLs
+        if (internetExposed.length) {
+            let subnetIds = subnets.map(s => s.id);
+            // Scenario 3: check if Network ACLs associated with the resource allow all traffic
+            var describeNetworkAcls = helpers.addSource(cache, source,
+                ['ec2', 'describeNetworkAcls', region]);
+
+            if (!describeNetworkAcls || describeNetworkAcls.err || !describeNetworkAcls.data) {
+                helpers.addResult(results, 3,
+                    `Unable to query for Network ACLs: ${helpers.addError(describeNetworkAcls)}`, region);
+            } else if (describeNetworkAcls.data.length && subnetIds) {
+                let naclDeny = true;
+                for (let subnetId of subnetIds) {
+                    let instanceACL = describeNetworkAcls.data.find(acl => acl.Associations.find(assoc => assoc.SubnetId === subnetId));
+                    if (instanceACL && instanceACL.Entries && instanceACL.Entries.length) {
+                        const allowRules = instanceACL.Entries.filter(entry =>
+                            entry.Egress === false &&
+                            entry.RuleAction === 'allow' &&
+                            (entry.CidrBlock === '0.0.0.0/0' || entry.Ipv6CidrBlock === '::/0')
+                        );
+
+                        const denyIPv4 = instanceACL.Entries.find(entry =>
+                            entry.Egress === false &&
+                            entry.RuleAction === 'deny' &&
+                            entry.CidrBlock === '0.0.0.0/0'
+                        );
+
+                        const denyIPv6 = instanceACL.Entries.find(entry =>
+                            entry.Egress === false &&
+                            entry.RuleAction === 'deny' &&
+                            entry.Ipv6CidrBlock === '::/0'
+                        );
+
+                        let exposed = allowRules.some(allowRule => {
+                            return !instanceACL.Entries.some(denyRule => {
+                                return (
+                                    denyRule.Egress === false &&
+                                    denyRule.RuleAction === 'deny' &&
+                                    (
+                                        (allowRule.CidrBlock && denyRule.CidrBlock === allowRule.CidrBlock) ||
+                                        (allowRule.Ipv6CidrBlock && denyRule.Ipv6CidrBlock === allowRule.Ipv6CidrBlock)
+                                    ) &&
+                                    denyRule.Protocol === allowRule.Protocol &&
+                                    (
+                                        denyRule.PortRange ?
+                                            (allowRule.PortRange &&
+                                                denyRule.PortRange.From === allowRule.PortRange.From &&
+                                                denyRule.PortRange.To === allowRule.PortRange.To) : true
+                                    ) &&
+                                    denyRule.RuleNumber < allowRule.RuleNumber
+                                );
+                            });
+                        });
+
+                        // exposed - if NACL has an allow all rule
+                        if (exposed) {
+                            internetExposed += `, nacl ${instanceACL.NetworkAclId}`;
+                        }
+
+                        // not exposed - if NACL has a deny rule
+                        if (exposed || !denyIPv4 || !denyIPv6) {
+                            naclDeny = false;
+                        }
+                    } else {
+                        naclDeny = false;
+                    }
+                }
+
+                // not exposed - if all NACLs have deny rules
+                if (naclDeny) {
+                    return '';
+                }
+            }
+
+        }
+    }
+
+    // if there are no explicit allow or deny rules, we look at ELBs
+
+
+    if (elbs && elbs.length) {
+        for (const lb of elbs) {
+
+            let isLBPublic = false;
+            if (lb.Scheme && lb.Scheme.toLowerCase() === 'internet-facing') {
+                if (lb.SecurityGroups && lb.SecurityGroups.length && describeSecurityGroups &&
+                    !describeSecurityGroups.err && describeSecurityGroups.data && describeSecurityGroups.data.length) {
+                    let elbSGs = describeSecurityGroups.data.filter(sg => lb.SecurityGroups.includes(sg.GroupId));
+                    for (var elbSG of elbSGs) {
+                        let exposedSG = checkSecurityGroup(elbSG, cache, region, false);
+                        if (exposedSG) {
+                            isLBPublic = true;
+                        }
+                    }
+                }
+            }
+
+            if (isLBPublic) {
+                internetExposed += internetExposed.length ? `, elb ${lb.LoadBalancerName}`: `elb ${lb.LoadBalancerName}`;
+            }
+        }
+    }
+
+    return internetExposed;
 };
 
 module.exports = {
@@ -1173,4 +1438,7 @@ module.exports = {
     checkConditions: checkConditions,
     processFieldSelectors: processFieldSelectors,
     checkNetworkInterface: checkNetworkInterface,
+    checkNetworkExposure: checkNetworkExposure,
+    getAttachedELBs: getAttachedELBs
 };
+

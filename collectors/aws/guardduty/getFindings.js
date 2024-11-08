@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.guardduty.getFindings[AWSConfig.region][detectorId].err = err;
             }
-            collection.guardduty.getFindings[AWSConfig.region][detectorId].data = data;
+            if (data) collection.guardduty.getFindings[AWSConfig.region][detectorId].data = data;
             dcb();
         });
 

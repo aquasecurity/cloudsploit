@@ -39,7 +39,7 @@ module.exports = {
             }
 
             listDetectors.data.forEach(function(detectorId) {
-
+                var resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detectorId}`;
                 var getDetector = helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
 
                 if (!getDetector) return;
@@ -50,7 +50,6 @@ module.exports = {
                 }
 
                 var detector = getDetector.data;
-                var resource = `arn:${awsOrGov}:guardduty:${region}:${accountId}:detector/${detector.detectorId}`;
                 var rdsLoginEventsFeature = (detector.Features && detector.Features.find(feature => feature.Name === 'RDS_LOGIN_EVENTS' && feature.Status === 'ENABLED')) ? true : false;
 
                 if (rdsLoginEventsFeature) {

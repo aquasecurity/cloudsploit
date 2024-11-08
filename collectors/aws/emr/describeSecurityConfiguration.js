@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.emr.describeSecurityConfiguration[AWSConfig.region][securityConfigurationName].err = err;
             }
-            collection.emr.describeSecurityConfiguration[AWSConfig.region][securityConfigurationName].data = data;
+            if (data)  collection.emr.describeSecurityConfiguration[AWSConfig.region][securityConfigurationName].data = data;
             cb();
         });
     }, function(){

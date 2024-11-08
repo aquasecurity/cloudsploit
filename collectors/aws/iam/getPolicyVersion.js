@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn].err = err;
             }
-            collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn].data = data;
+            if (data) collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn].data = data;
             cb();
         });
     }, function(){

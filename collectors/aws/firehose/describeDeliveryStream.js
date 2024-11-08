@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.firehose.describeDeliveryStream[AWSConfig.region][deliverystream].err = err;
             }
-            collection.firehose.describeDeliveryStream[AWSConfig.region][deliverystream].data = data;
+            if (data)  collection.firehose.describeDeliveryStream[AWSConfig.region][deliverystream].data = data;
             cb();
         });
     }, function(){

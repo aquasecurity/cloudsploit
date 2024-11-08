@@ -112,10 +112,10 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
 
                 if (callObj.reliesOnService[reliedService] &&
                     (!collection[callObj.reliesOnService[reliedService]] ||
-                    !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]] ||
-                    !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region] ||
-                    !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data ||
-                    !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
+                        !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]] ||
+                        !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region] ||
+                        !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data ||
+                        !collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
                 records = collection[callObj.reliesOnService[reliedService]][myEngine][callObj.reliesOnCall[reliedService]][region].data;
                 if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj]);
@@ -154,12 +154,31 @@ var run = function(GoogleConfig, collection, settings, service, callObj, callKey
 
                 if (callObj.reliesOnService[reliedService] &&
                     (!collection[callObj.reliesOnService[reliedService]] ||
-                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
-                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
-                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
-                    !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region] ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data ||
+                        !collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data.length)) return regionCb();
 
                 records = collection[callObj.reliesOnService[reliedService]][callObj.reliesOnCall[reliedService]][region].data;
+                if (callObj.filterObjKey && records.length === 1) records = records[0];
+
+                if (records && typeof records === 'object' && !Array.isArray(records) && callObj.filterObjKey) {
+                    let callObjData = [];
+                    Object.keys(records).map(key => {
+                        if (records[key] && records[key][callObj.filterObjKey]) {
+                            if (Array.isArray(records[key][callObj.filterObjKey])) {
+                                let recordsToPush = records[key][callObj.filterObjKey];
+                                recordsToPush = recordsToPush.map(obj => {
+                                    obj.location = key;
+                                    return obj;
+
+                                });
+                                callObjData.push(...recordsToPush);
+                            }
+                        }
+                    });
+                    records =  callObjData;
+                }
                 if (callObj.subObj) records = records.filter(record => !!record[callObj.subObj]);
                 async.eachLimit(records, callObj.maxLimit ? 35 : 10, function(record, recordCb) {
                     callObj.urlToCall = callObj.url;
@@ -326,13 +345,15 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
 
     if (callObj.url || callObj.urlToCall) {
         let url = callObj.urlToCall ? callObj.urlToCall : callObj.url;
+        if (region === 'global' && callObj.globalURL) {
+            url = callObj.globalURL;
+        }
         url = url.replace('{projectId}', LocalGoogleConfig.project);
         if (callObj.location && callObj.location == 'zone') {
             url = url.replace('{locationId}', callObj.params.zone);
         } else if (callObj.location && callObj.location == 'region') {
             url = url.replace(/{locationId}/g, callObj.params.region);
         }
-
         makeApiCall(client, url, executorCb, null, {method: callObj.method, isPostCall, parentRecord, pagination: callObj.pagination, paginationKey: callObj.paginationKey, reqParams: callObj.reqParams, dataKey: callObj.dataKey, body: callObj.body});
     }
 };

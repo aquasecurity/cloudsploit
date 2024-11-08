@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         if (err) {
             collection.s3control.getPublicAccessBlock[AWSConfig.region][accountId].err = err;
         }
-        collection.s3control.getPublicAccessBlock[AWSConfig.region][accountId].data = data;
+        if (data) collection.s3control.getPublicAccessBlock[AWSConfig.region][accountId].data = data;
         callback();
     });
 };
