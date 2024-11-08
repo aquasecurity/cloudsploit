@@ -37,12 +37,12 @@ module.exports = {
             for (let disk of disks.data) {
                 if (!disk.id) continue;
                 if (disk.diskState && disk.diskState.toLowerCase() === 'unattached') {
-                     if (disk.encryption && disk.encryption.type &&
+                    if (disk.encryption && disk.encryption.type &&
                          disk.encryption.type === 'EncryptionAtRestWithPlatformKey') {
-                         helpers.addResult(results, 2, 'Unattached disk volume has BYOK encryption disabled', location, disk.id);
-                     } else {
-                         helpers.addResult(results, 0, 'Unattached disk volume has BYOK encryption enabled', location, disk.id);
-                     }
+                        helpers.addResult(results, 2, 'Unattached disk volume has BYOK encryption disabled', location, disk.id);
+                    } else {
+                        helpers.addResult(results, 0, 'Unattached disk volume has BYOK encryption enabled', location, disk.id);
+                    }
                 }
             }
             rcb();
