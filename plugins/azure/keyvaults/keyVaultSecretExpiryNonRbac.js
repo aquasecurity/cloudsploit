@@ -57,31 +57,31 @@ module.exports = {
                 if (!secrets || secrets.err || !secrets.data) {
                     helpers.addResult(results, 3, 'Unable to query for Key Vault secrets: ' + helpers.addError(secrets), location, vault.id);
                 } else if (!secrets.data.length) {
-                    helpers.addResult(results, 0, 'No Key Vault secrets found', location, vault.id);
+                    helpers.addResult(results, 0, 'No Key Vault secrets found in non RBAC vault', location, vault.id);
                 } else {
                     secrets.data.forEach(function(secret) {
                         var secretName = secret.id.substring(secret.id.lastIndexOf('/') + 1);
                         var secretId = `${vault.id}/secrets/${secretName}`;
 
                         if (!secret.attributes || !secret.attributes.enabled) {
-                            helpers.addResult(results, 0, 'Secret is not enabled', location, secretId);
+                            helpers.addResult(results, 0, 'Secret is not enabled in non RBAC vault', location, secretId);
                         } else if (secret.attributes && (secret.attributes.exp || secret.attributes.expiry)) {
                             let attributes = secret.attributes;
                             let secretExpiry = attributes.exp ? attributes.exp * 1000 : attributes.expiry;
                             let difference = Math.round((new Date(secretExpiry).getTime() - (new Date).getTime())/(24*60*60*1000));
                             if (difference > config.key_vault_secret_expiry_fail) {
                                 helpers.addResult(results, 0,
-                                    `Secret expires in ${difference} days`, location, secretId);
+                                    `Secret in non RBAC vault expires in ${difference} days`, location, secretId);
                             } else if (difference > 0){
                                 helpers.addResult(results, 2,
-                                    `Secret expires in ${difference} days`, location, secretId);
+                                    `Secret in non RBAC vault expires in ${difference} days`, location, secretId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    `Secret expired ${Math.abs(difference)} days ago`, location, secretId);
+                                    `Secret in non RBAC vault expired ${Math.abs(difference)} days ago`, location, secretId);
                             }
                         } else {
                             helpers.addResult(results, 0,
-                                'Secret expiration is not enabled', location, secretId);
+                                'Secret expiration is not enabled in non RBAC vault', location, secretId);
                         }
                     });
                 }
