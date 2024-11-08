@@ -10,8 +10,8 @@ module.exports = {
     more_info: 'Virtual machines exposed to the internet are at a higher risk of unauthorized access, data breaches, and cyberattacks. It’s crucial to limit exposure by securing access through proper configuration of security group and firewall rules.',
     link: 'https://learn.microsoft.com/en-us/azure/security/fundamentals/virtual-machines-overview',
     recommended_action: 'Secure VM instances by restricting access with properly configured security group and firewall rules.',
-    apis: ['virtualMachines:listAll', 'networkInterfaces:listAll', 'networkSecurityGroups:listAll', 'virtualNetworks:listAll', 'loadBalancers:listAll'],
-    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftnetwork:networkinterfaces:write', 'microsoftcompute:virtualmachines:delete', 'microsoftnetwork:networkinterfaces:delete', 'microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete', 'microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete','microsoftnetwork:loadbalancers:write', 'microsoftnetwork:loadbalancers:delete'],
+    apis: ['virtualMachines:listAll', 'networkInterfaces:listAll', 'networkSecurityGroups:listAll', 'virtualNetworks:listAll'],
+    realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftnetwork:networkinterfaces:write', 'microsoftcompute:virtualmachines:delete', 'microsoftnetwork:networkinterfaces:delete', 'microsoftnetwork:networksecuritygroups:write','microsoftnetwork:networksecuritygroups:delete', 'microsoftnetwork:virtualnetworks:write','microsoftnetwork:virtualnetworks:delete'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -58,7 +58,6 @@ module.exports = {
             virtualMachines.data.forEach(virtualMachine => {
                 let vm_interfaces =  [];
                 let securityGroups = [];
-                let loadBalancers = [];
                 if (virtualMachine.networkProfile && virtualMachine.networkProfile.networkInterfaces &&
                     virtualMachine.networkProfile.networkInterfaces.length > 0) {
                     let interfaceIDs =  virtualMachine.networkProfile.networkInterfaces.map(nic => nic.id);
@@ -84,41 +83,8 @@ module.exports = {
                         }
                         securityGroups = networkSecurityGroups.data.filter(nsg => securityGroupIDs.includes(nsg.id));
                     }
-
-                    // get load balancers
-                    for (let nic of vm_interfaces) {
-                        if (nic.ipConfigurations && nic.ipConfigurations.length) {
-                            nic.ipConfigurations.map(ipConfig => {
-                                if (ipConfig.properties) {
-                                    if (ipConfig.properties.loadBalancerInboundNatRules && ipConfig.properties.loadBalancerInboundNatRules.length) {
-                                        ipConfig.properties.loadBalancerInboundNatRules.forEach(rule => {
-                                            let id = rule.id;
-                                            let match = id.match(/\/subscriptions\/.+?(?=\/inboundNatRules)/);
-
-                                            if (match && match[0]) {
-                                                if (!loadBalancers.includes(match[0])) {
-                                                    loadBalancers.push(match[0]);
-                                                }
-                                            }
-                                        });
-                                    }
-                                    if (ipConfig.properties.loadBalancerBackendAddressPools && ipConfig.properties.loadBalancerBackendAddressPools.length) {
-                                        ipConfig.properties.loadBalancerBackendAddressPools.forEach(pool => {
-                                            let id = pool.id;
-                                            let match = id.match(/\/subscriptions\/.+?(?=\/backendAddressPools)/);
-                                            if (match && match[0]) {
-                                                if (!loadBalancers.includes(match[0])) {
-                                                    loadBalancers.push(match[0]);
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    }
                 }
-                let internetExposed =  helpers.checkNetworkExposure(cache, source, vm_interfaces, securityGroups, location, results, loadBalancers);
+                let internetExposed =  helpers.checkNetworkExposure(cache, source, vm_interfaces, securityGroups, location, results);
                 if (internetExposed && internetExposed.length) {
                     helpers.addResult(results, 2, `VM is exposed to the internet through ${internetExposed}`, location, virtualMachine.id);
                 } else {
