@@ -77,7 +77,7 @@ module.exports = {
                                     `Key in RBAC vault expires in ${difference} days`, location, keyId);
                             } else if (difference > 0){
                                 helpers.addResult(results, 2,
-                                    `Key in RBAC vaultexpires in ${difference} days`, location, keyId);
+                                    `Key in RBAC vault expires in ${difference} days`, location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
                                     `Key in RBAC vault expired ${Math.abs(difference)} days ago`, location, keyId);
