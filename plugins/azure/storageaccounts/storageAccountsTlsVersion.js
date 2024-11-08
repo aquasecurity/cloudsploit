@@ -25,7 +25,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         
-        sa_min_tls_version = '1.2'
+        var sa_min_tls_version = '1.2';
 
         var desiredVersion = parseFloat(sa_min_tls_version);
 

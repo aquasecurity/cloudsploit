@@ -19,7 +19,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
 
-        event_hub_min_tls_version = '1.2'
+        var event_hub_min_tls_version = '1.2';
 
 
         var desiredVersion = parseFloat(event_hub_min_tls_version);
