@@ -83,7 +83,7 @@ module.exports = {
                                     `Key in non RBAC vault expires in ${difference} days`, location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    `Key in non-RBAC vault expired ${Math.abs(difference)} days ago`, location, keyId);
+                                    `Key in non RBAC vault expired ${Math.abs(difference)} days ago`, location, keyId);
                             }
                         } else {
                             helpers.addResult(results, 0,
