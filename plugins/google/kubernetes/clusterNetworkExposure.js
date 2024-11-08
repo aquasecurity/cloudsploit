@@ -7,9 +7,9 @@ module.exports = {
     domain: 'Containers',
     severity: 'Info',
     description: 'Check if GKE clusters are exposed to the internet.',
-    "more_info": "GKE clusters exposed to the internet are at a higher risk of unauthorized access, data breaches, and cyberattacks. It’s crucial to limit exposure by securing the Kubernetes API, nodes, and services through proper configuration of network, firewall rules, and private clusters.",
-    "link": "https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters",
-    "recommended_action": "Secure GKE clusters by enabling private clusters, restricting access to the Kubernetes API, and ensuring nodes and services are protected through properly configured firewall rules and network policies.",
+    more_info: 'GKE clusters exposed to the internet are at a higher risk of unauthorized access, data breaches, and cyberattacks. It’s crucial to limit exposure by securing the Kubernetes API, nodes, and services through proper configuration of network, firewall rules, and private clusters.',
+    link: 'https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters',
+    recommended_action: 'Secure GKE clusters by enabling private clusters, restricting access to the Kubernetes API, and ensuring nodes and services are protected through properly configured firewall rules and network policies.',
     apis: ['kubernetes:list', 'firewalls:list'],
     realtime_triggers: ['container.ClusterManager.CreateCluster', 'container.ClusterManager.DeleteCluster','container.ClusterManager.UpdateCluster', 'container.ClusterManager.CreateNodePool','container.ClusterManager.DeleteNodePool',
         'compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
@@ -81,7 +81,7 @@ module.exports = {
                         // check node pools
                         let exposedNodePools = cluster.nodePools.filter(nodepool => nodepool.networkConfig && !nodepool.networkConfig.enablePrivateNodes).map(nodepool => nodepool.name);
                         if (exposedNodePools.length) {
-                            internetExposed = `node pools ${exposedNodePools.join(',')}`
+                            internetExposed = `node pools ${exposedNodePools.join(',')}`;
                         }
                     }
 

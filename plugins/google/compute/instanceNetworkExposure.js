@@ -112,7 +112,7 @@ module.exports = {
                         instanceGroups.forEach(instanceGroup => {
                             let igForwardingRules = helpers.getForwardingRules(cache, source, region, instanceGroup);
                             forwardingRules = forwardingRules.concat(igForwardingRules);
-                        })
+                        });
 
                     }
                     let internetExposed =  helpers.checkNetworkExposure(cache, source, networks, firewallRules, region, results, forwardingRules);
