@@ -44,6 +44,7 @@ module.exports = {
                          helpers.addResult(results, 0, 'Unattached disk volume has BYOK encryption enabled', location, disk.id);
                      }
                 }
+            },
             rcb();
         }, function() {
             callback(null, results, source);
