@@ -60,7 +60,7 @@ module.exports = {
                 if (!keys || keys.err || !keys.data) {
                     helpers.addResult(results, 3, 'Unable to query for Key Vault keys: ' + helpers.addError(keys), location, vault.id);
                 } else if (!keys.data.length) {
-                    helpers.addResult(results, 0, 'No Key Vault keys found', location, vault.id);
+                    helpers.addResult(results, 0, 'No Key Vault keys found in RBAC vault', location, vault.id);
                 } else {
                     keys.data.forEach(function(key) {
                         var keyName = key.kid.substring(key.kid.lastIndexOf('/') + 1);
@@ -68,23 +68,23 @@ module.exports = {
 
                         if (!key.attributes || !key.attributes.enabled) {
                             helpers.addResult(results, 0,
-                                'Key is not enabled', location, keyId);
+                                'Key in RBAC vault is not enabled', location, keyId);
                         } else if (key.attributes && (key.attributes.expires || key.attributes.exp)) {
                             let keyExpiry = key.attributes.exp ? key.attributes.exp * 1000 : key.attributes.expires;
                             let difference = Math.round((new Date(keyExpiry).getTime() - (new Date).getTime())/(24*60*60*1000));
                             if (difference > config.key_vault_key_expiry_fail) {
                                 helpers.addResult(results, 0,
-                                    `Key expires in ${difference} days`, location, keyId);
+                                    `Key in RBAC vault expires in ${difference} days`, location, keyId);
                             } else if (difference > 0){
                                 helpers.addResult(results, 2,
-                                    `Key expires in ${difference} days`, location, keyId);
+                                    `Key in RBAC vaultexpires in ${difference} days`, location, keyId);
                             } else {
                                 helpers.addResult(results, 2,
-                                    `Key expired ${Math.abs(difference)} days ago`, location, keyId);
+                                    `Key in RBAC vault expired ${Math.abs(difference)} days ago`, location, keyId);
                             }
                         } else {
                             helpers.addResult(results, 0,
-                                'Key expiration is not enabled', location, keyId);
+                                'Key expiration is not enabled in RBAC vault', location, keyId);
                         }
                     });
                 }
