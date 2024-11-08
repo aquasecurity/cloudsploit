@@ -8,7 +8,7 @@ module.exports = {
     severity: 'High',
     description: 'Ensures that expiration date is set for all keys in RBAC Key Vaults.',
     more_info: 'Setting an expiration date on keys helps in key lifecycle management and ensures that keys are rotated regularly.',
-    recommended_action: 'Modify keys in RBAC-enabled Key Vaults to have an expiration date set.',
+    recommended_action: 'Modify keys in RBAC Key Vaults to have an expiration date set.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
