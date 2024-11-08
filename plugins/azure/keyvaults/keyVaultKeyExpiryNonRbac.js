@@ -6,9 +6,9 @@ module.exports = {
     category: 'Key Vaults',
     domain: 'Application Integration',
     severity: 'High',
-    description: 'Ensures that expiration date is set for all keys in Non-RBAC Key Vaults.',
+    description: 'Ensures that expiration date is set for all keys in non-RBAC Key Vaults.',
     more_info: 'Setting an expiration date on keys helps in key lifecycle management and ensures that keys are rotated regularly.',
-    recommended_action: 'Modify keys in Non-RBAC Key Vaults to have an expiration date set.',
+    recommended_action: 'Modify keys in non-RBAC Key Vaults to have an expiration date set.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates',
     apis: ['vaults:list', 'vaults:getKeys'],
     settings: {
