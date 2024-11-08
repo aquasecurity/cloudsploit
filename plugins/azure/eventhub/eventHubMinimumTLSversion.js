@@ -11,14 +11,6 @@ module.exports = {
     recommended_action: 'Modify Event Hubs namespaces to set the desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/transport-layer-security-enforce-minimum-version',
     apis: ['eventHub:listEventHub'],
-    settings: {
-        event_hub_min_tls_version: {
-            name: 'Event Hub Minimum TLS Version',
-            description: 'Minimum desired TLS version for Microsoft Azure Event Hubs',
-            regex: '^(1.0|1.1|1.2)$',
-            default: '1.2'
-        }
-    },
     realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete'],
 
     run: function(cache, settings, callback) {
@@ -27,7 +19,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         var config = {
-            event_hub_min_tls_version: settings.event_hub_min_tls_version || this.settings.event_hub_min_tls_version.default
+            event_hub_min_tls_version: '1.2'
         };
 
         var desiredVersion = parseFloat(config.event_hub_min_tls_version);

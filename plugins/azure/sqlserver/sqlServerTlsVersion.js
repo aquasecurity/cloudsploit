@@ -11,14 +11,6 @@ module.exports = {
     recommended_action: 'Modify SQL server firewall and virtual network settings to set desired minimum TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-sql/database/connectivity-settings#minimal-tls-version',
     apis: ['servers:listSql'],
-    settings: {
-        sql_server_min_tls_version: {
-            name: 'SQL Server Minimum TLS Version',
-            description: 'Minimum desired TLS version for Microsoft Azure SQL servers',
-            regex: '^(1.0|1.1|1.2)$',
-            default: '1.2'
-        }
-    },
     remediation_min_version: '202104012200',
     remediation_description: 'TLS version 1.2 will be set for the affected SQL server',
     apis_remediate: ['servers:listSql'],
@@ -32,7 +24,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         var config = {
-            sql_server_min_tls_version: settings.sql_server_min_tls_version || this.settings.sql_server_min_tls_version.default
+            sql_server_min_tls_version: '1.2'
         };
 
         var desiredVersion = parseFloat(config.sql_server_min_tls_version);

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Medium',
     description: 'Ensures that Azure Cache for Redis is using the latest TLS version.',
-    more_info: 'TLS versions 1.0 and 1.1 are known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses.So there\'s an industry- wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
+    more_info: 'TLS versions 1.2 is known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses.So there\'s an industry- wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
     recommended_action: 'Ensure that Azure cache for Redis is using the latest TLS version',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-remove-tls-10-11',
     apis: ['redisCaches:listBySubscription'],
@@ -37,7 +37,7 @@ module.exports = {
             for (let cache of caches.data) {
                 if (!cache.minimumTlsVersion) {
                     helpers.addResult(results, 2, 'Redis Cache is using the default TLS Version', location, cache.id);
-                } else if (cache.minimumTlsVersion && (cache.minimumTlsVersion === '1.0' || cache.minimumTlsVersion === '1.1')) {
+                } else if (cache.minimumTlsVersion && (cache.minimumTlsVersion === '1.2')) {
                     helpers.addResult(results, 2, 'Redis Cache is not using the latest TLS Version', location, cache.id);
                 } else {
                     helpers.addResult(results, 0, 'Redis Cache is using the latest TLS Version', location, cache.id);
