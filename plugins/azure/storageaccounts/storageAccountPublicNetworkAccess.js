@@ -6,7 +6,7 @@ module.exports = {
     category: 'Storage Accounts',
     domain: 'Storage',
     severity: 'Medium',
-    description: 'Ensure that Public Network Access is disabled for storage accounts.',
+    description: 'Ensures that Public Network Access is disabled for storage accounts.',
     more_info: 'Disabling public network access for Azure storage accounts enhances security by blocking anonymous access to data in containers and blobs. This restriction ensures that only trusted network sources can access the storage, reducing the risk of unauthorized access and data exposure.',
     recommended_action: 'Modify storage accounts and disable Public Network Access.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security',
