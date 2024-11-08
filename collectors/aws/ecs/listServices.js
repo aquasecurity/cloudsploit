@@ -19,7 +19,8 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.ecs.listServices[AWSConfig.region][cluster].err = err;
             }
-            if (data && data.serviceArns) collection.ecs.listServices[AWSConfig.region][cluster].data = data.serviceArns;
+
+            collection.ecs.listServices[AWSConfig.region][cluster].data = data.serviceArns;
 
             cb();
         });

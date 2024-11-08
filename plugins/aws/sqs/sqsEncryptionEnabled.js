@@ -18,7 +18,7 @@ module.exports = {
             name: 'SQS Queues Target Encryption Level',
             description: 'In order (lowest to highest) sse=SSE-SQS; awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms'
+            default: 'awscmk'
         }
     },
     realtime_triggers: ['sqs:CreateQueue', 'sqs:SetQueueAttributes', 'sqs:DeleteQueue'],

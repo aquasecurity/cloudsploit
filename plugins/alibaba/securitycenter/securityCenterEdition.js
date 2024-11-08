@@ -1,5 +1,4 @@
 var helpers = require('../../../helpers/alibaba');
-const async = require('async');
 
 module.exports = {
     title: 'Security Center Edition',
@@ -7,7 +6,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensure that your cloud Security Center edition is Advanced or plus.',
-    more_info: 'Premium Security Center editions like Advanced or Enterprise Edition provides crucial features liekthreat detection for network and endpoints, ' +
+    more_info: 'Premium Security Center editions like Advanced or Enterprise Edition provides crucial features liekthreat detection for network and endpoints, ' + 
         'providing malware detection, webshell detection and anomaly detection in Security Center.',
     link: 'https://www.alibabacloud.com/help/product/28498.htm',
     recommended_action: 'Upgrade your Security Center edition to at least Advanced.',
@@ -16,7 +15,7 @@ module.exports = {
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
-        var regions = helpers.regions(settings);
+        var region = helpers.defaultRegion(settings);
 
         // Below map might not be accurate as I checked with Anti-virus and Advanced editions and API is returning
         // 6 and 5 respectively against the version key. As it will be costly to try all editions to get the acrual
@@ -30,32 +29,29 @@ module.exports = {
             5: 'Advanced',
             6: 'Anti-virus'
         };
-        async.each(regions.tds, function(region, rcb) {
-            var describeVersionConfig = helpers.addSource(cache, source,
-                ['tds', 'DescribeVersionConfig', region]);
 
-            if (!describeVersionConfig) {
-                return rcb();
-            }
+        var describeVersionConfig = helpers.addSource(cache, source,
+            ['tds', 'DescribeVersionConfig', region]);
 
-            if (describeVersionConfig.err || !describeVersionConfig.data) {
-                helpers.addResult(results, 3,
-                    `Unable to query Security Center version config: ${helpers.addError(describeVersionConfig)}`,
-                    region);
-                return rcb();
-            }
+        if (!describeVersionConfig) {
+            return callback(null, results, source);
+        }
 
-            let securityVersion = describeVersionConfig.data.Version ? describeVersionConfig.data.Version : 1;
+        if (describeVersionConfig.err || !describeVersionConfig.data) {
+            helpers.addResult(results, 3,
+                `Unable to query Security Center version config: ${helpers.addError(describeVersionConfig)}`,
+                region);
+            return callback(null, results, source);
+        }
 
-            if (securityVersion == 1 || securityVersion == 6) {
-                helpers.addResult(results, 2, `Security Center edition is ${versionIdNameMap[securityVersion]}`, region);
-            } else {
-                helpers.addResult(results, 0, `Security Center edition is ${versionIdNameMap[securityVersion]}`, region);
-            }
+        let securityVersion = describeVersionConfig.data.Version ? describeVersionConfig.data.Version : 1;
 
-            rcb();
-        }, function(){
-            callback(null, results, source);
-        });
+        if (securityVersion == 1 || securityVersion == 6) {
+            helpers.addResult(results, 2, `Security Center edition is ${versionIdNameMap[securityVersion]}`, region);
+        } else {
+            helpers.addResult(results, 0, `Security Center edition is ${versionIdNameMap[securityVersion]}`, region);
+        }
+
+        callback(null, results, source);
     }
 };

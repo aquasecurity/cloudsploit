@@ -306,8 +306,5 @@ module.exports = {
     },
     machineLearning: {
         listWorkspaces: 'id'
-    },
-    apiManagementService: {
-        list: 'id'
     }
 };

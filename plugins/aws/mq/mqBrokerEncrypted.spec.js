@@ -222,7 +222,7 @@ describe('mqBrokerEncrypted', function () {
 
         it('should FAIL if MQ Broker data at-rest is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listBrokers[1]],listKeys, [describeBroker[0]], describeKey[1]);
-            mqBrokerEncrypted.run(cache, {mq_broker_desired_encryption_level: 'awscmk'}, (err, results) => {
+            mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -232,7 +232,7 @@ describe('mqBrokerEncrypted', function () {
 
         it('should FAIL if MQ Broker data at-rest is encrypted with AWS owned key', function (done) {
             const cache = createCache([listBrokers[2]],listKeys, [describeBroker[2]], describeKey[1]);
-            mqBrokerEncrypted.run(cache, {mq_broker_desired_encryption_level: 'awscmk'}, (err, results) => {
+            mqBrokerEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

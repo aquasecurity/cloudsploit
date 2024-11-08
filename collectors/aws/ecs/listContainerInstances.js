@@ -16,9 +16,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         helpers.makeCustomCollectorCall(ecs, 'listContainerInstances', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.ecs.listContainerInstances[AWSConfig.region][cluster].err = err;
-            } else if (data && data.containerInstanceArns) {
-                collection.ecs.listContainerInstances[AWSConfig.region][cluster].data = data.containerInstanceArns;
             }
+
+            collection.ecs.listContainerInstances[AWSConfig.region][cluster].data = data.containerInstanceArns;
 
             cb();
         });

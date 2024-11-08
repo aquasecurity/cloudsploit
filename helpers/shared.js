@@ -92,13 +92,13 @@ var processIntegration = function(serviceName, settings, collection, calls, post
 };
 
 var processIntegrationAdditionalData = function(serviceName, localSettings, localCollection, calls, postcalls, localEventCollection, callback){
-    if (!localCollection ||
-        !Object.keys(localCollection).length ||
-        !localCollection[serviceName.toLowerCase()] ||
-        !Object.keys(localCollection[serviceName.toLowerCase()]).length) {
+    if (localCollection == undefined ||
+        (localCollection &&
+            (JSON.stringify(localCollection)==='{}' ||
+                localCollection[serviceName.toLowerCase()] == undefined ||
+                JSON.stringify(localCollection[serviceName.toLowerCase()])==='{}'))) {
         return callback(null);
     }
-
 
     let callsMap = calls[serviceName] ? Object.keys(calls[serviceName]) : null;
     let foundData=[];

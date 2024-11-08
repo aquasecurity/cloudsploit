@@ -101,7 +101,7 @@ describe('codeartifactDomainEncrypted', function () {
 
         it('should FAIL if CodeArtifact domain is not encrypted with desired encyption level', function (done) {
             const cache = createCache(listDomains, listKeys, describeKey[1]);
-            codeartifactDomainEncrypted.run(cache, {codeartifact_domain_encryption_level:'awscmk'}, (err, results) => {
+            codeartifactDomainEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

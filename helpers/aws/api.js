@@ -594,12 +594,6 @@ var calls = {
             paginate: 'NextToken'
         }
     },
-    ApiGatewayV2: {
-        getApis: {
-            property: 'Items',
-            paginate: 'NextToken'
-        },
-    },
     AppConfig: {
         listApplications: {
             property: 'Items',
@@ -1559,27 +1553,6 @@ var calls = {
         describeHub: {
             property:'',
             paginate: 'NextToken'
-        },
-        getFindings: {
-            property: 'Findings',
-            paginate: 'NextToken',
-            params: {
-                MaxResults: 100,
-                Filters: {
-                    RecordState: [
-                        {
-                            Comparison: 'EQUALS',
-                            Value: 'ACTIVE'
-                        }
-                    ],
-                    WorkflowStatus: [
-                        {
-                            Comparison: 'EQUALS',
-                            Value: 'NEW'
-                        }
-                    ]
-                }
-            }
         }
     },
     SageMaker: {
@@ -1869,26 +1842,6 @@ var postcalls = [
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
                 filterValue: 'id'
-            },
-            getRequestValidators: {
-                reliesOnService: 'apigateway',
-                reliesOnCall: 'getRestApis',
-                filterKey: 'restApiId',
-                filterValue: 'id'
-            }
-        },
-        ApiGatewayV2: {
-            getStages: {
-                reliesOnService: 'apigatewayv2',
-                reliesOnCall: 'getApis',
-                filterKey: 'ApiId',
-                filterValue: 'ApiId'
-            },
-            getAuthorizers: {
-                reliesOnService: 'apigatewayv2',
-                reliesOnCall: 'getApis',
-                filterKey: 'ApiId',
-                filterValue: 'ApiId'
             }
         },
         AppConfig: {
@@ -2127,6 +2080,7 @@ var postcalls = [
                 filterKey: 'id',
                 filterValue: 'projectId'
             },
+            sendIntegration: serviceMap['CodeStar']
         },
         CustomerProfiles: {
             getDomain: {
@@ -2192,7 +2146,7 @@ var postcalls = [
                 reliesOnService: 'docdb',
                 reliesOnCall: 'describeDBClusters',
                 filterKey: 'ResourceName',
-                filterValue: 'DBClusterArn'
+                filterValue: 'DBClusterArn' 
             },
             sendIntegration: serviceMap['DocumentDB']
         },
@@ -3032,7 +2986,8 @@ var postcalls = [
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                override: true
+                filterKey: 'RoleName',
+                filterValue: 'RoleName'
             },
             getUser: {
                 reliesOnService: 'iam',

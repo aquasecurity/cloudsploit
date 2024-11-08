@@ -12,7 +12,7 @@ module.exports = {
     recommended_action: '1. Enter the WAF service. 2. Enter Web ACLs and filter by the region the Application Load Balancer is in. 3. If no Web ACL is found, Create a new Web ACL in the region the ALB resides and in Resource type to associate with web ACL, select the Load Balancer. ',
     apis: ['ELBv2:describeLoadBalancers', 'WAFV2:listWebACLs', 'WAFRegional:listWebACLs', 'WAFV2:listResourcesForWebACL', 'WAFRegional:listResourcesForWebACL'],
     realtime_triggers: ['elasticloadbalancing:CreateLoadBalancer', 'wafv2:CreateWebAcl', 'wafv2:UpdateWebAcl', 'wafregional:CreateWebAcl', 'wafregional:UpdateWebAcl', 'wafv2:DeleteWebAcl', 'wafregional:DeleteWebAcl'],
-
+    
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -83,24 +83,14 @@ module.exports = {
                     return lcb();
                 }
 
-                var appElbFound = false;
-
                 loadBalancers.data.forEach(loadBalancer => {
-                    if (loadBalancer.Type &&
-                        loadBalancer.Type.toLowerCase() === 'application') {
-                        appElbFound = true;
-                        if (loadBalancer.LoadBalancerArn && (resourcesToCheck.indexOf(loadBalancer.LoadBalancerArn) > -1)) {
-                            resourcesToCheck.splice(resourcesToCheck.indexOf(loadBalancer.LoadBalancerArn), 1);
-                            helpers.addResult(results, 0, 'The Application Load Balancer has WAF enabled', loc, loadBalancer.LoadBalancerArn);
-                        } else {
-                            helpers.addResult(results, 2, 'The Application Load Balancer does not have WAF enabled', loc, loadBalancer.LoadBalancerArn);
-                        }
+                    if (loadBalancer.LoadBalancerArn && (resourcesToCheck.indexOf(loadBalancer.LoadBalancerArn) > -1)) {
+                        resourcesToCheck.splice(resourcesToCheck.indexOf(loadBalancer.LoadBalancerArn), 1);
+                        helpers.addResult(results, 0, 'The Application Load Balancer has WAF enabled', loc, loadBalancer.LoadBalancerArn);
+                    } else {
+                        helpers.addResult(results, 2, 'The Application Load Balancer does not have WAF enabled', loc, loadBalancer.LoadBalancerArn);
                     }
                 });
-
-                if (!appElbFound) {
-                    helpers.addResult(results, 0, 'No Application Load Balancers found', loc);
-                }
 
                 lcb();
             }, function() {

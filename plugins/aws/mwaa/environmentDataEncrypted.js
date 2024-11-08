@@ -17,7 +17,7 @@ module.exports = {
             name: 'MWAA Environment Data Deisred Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms'
+            default: 'awscmk'
         }
     },
     realtime_triggers: ['mwaa:CreateEnvironment', 'mwaa:DeleteEnvironment'], 

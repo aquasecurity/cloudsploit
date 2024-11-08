@@ -158,7 +158,7 @@ describe('projectArtifactsEncrypted', function () {
 
         it('should FAIL if CodeBuild project artifact is not encrypted with desired encryption level', function (done) {
             const cache = createCache(listProjects, listKeys, batchGetProjects[1], describeKey[1]);
-            projectArtifactsEncrypted.run(cache, { project_artifacts_desired_encryption_level: 'awscmk' }, (err, results) => {
+            projectArtifactsEncrypted.run(cache, { projects_artifact_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

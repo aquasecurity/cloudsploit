@@ -11,7 +11,7 @@ module.exports = {
     recommended_action: 'Ensure that Azure Machine Learning workspaces have public network access disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/machine-learning/how-to-secure-workspace-vnet',
     apis: ['machineLearning:listWorkspaces'],
-    realtime_triggers: ['microsoft:machinelearningservices:workspaces:write', 'microsoft:machinelearningservices:workspaces:delete'],
+    realtime_triggers: ['microsoftcognitiveservices:accounts:write','microsoftcognitiveservices:accounts:delete'],
 
     run: function(cache, settings, callback) {
         const results = [];

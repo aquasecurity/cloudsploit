@@ -218,7 +218,7 @@ describe('kinesisDataStreamsEncrypted', function () {
 
         it('should FAIL if Kinesis stream not encrypted with desired encryption level', function (done) {
             const cache = createCache([listStreams[1]], listKeys, [listAliases[1]], describeStream[1], describeKey[1]);
-            kinesisDataStreamsEncrypted.run(cache, {data_streams_desired_encryption_level: 'awscmk'}, (err, results) => {
+            kinesisDataStreamsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Kinesis stream is encrypted with awskms');

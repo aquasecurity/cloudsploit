@@ -13,7 +13,6 @@ module.exports = {
     cognitoidentityserviceprovider: regions,
     acm: [],
     apigateway: regions,
-    apigatewayv2: regions,
     athena: [],
     bedrock:[],
     cloudfront: [],

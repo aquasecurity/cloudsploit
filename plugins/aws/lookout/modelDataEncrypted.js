@@ -17,7 +17,7 @@ module.exports = {
             name: 'Vision Data Target Encryption Level',
             description: 'In order (lowest to highest) sse=S3-SSE; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(sse|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms'
+            default: 'awscmk'
         }
     },
     realtime_triggers: ['lookoutvision:CreateModel', 'lookoutvision:DeleteModel'],

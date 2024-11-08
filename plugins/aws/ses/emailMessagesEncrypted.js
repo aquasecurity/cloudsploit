@@ -16,7 +16,7 @@ module.exports = {
             name: 'SES Email Desired Encryption Level',
             description: 'Desired encryption level for email messages to encrypt them before they get saves on S3',
             regex: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
-            default: 'awskms'
+            default: 'awscmk'
         }
     },
     realtime_triggers: ['ses:CreateEmailIdentity','ses:SetActiveReceiptRuleSet','ses:DeleteEmailIdentity'],

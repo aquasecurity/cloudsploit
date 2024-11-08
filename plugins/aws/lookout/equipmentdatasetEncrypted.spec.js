@@ -135,7 +135,7 @@ describe('equipmentdatasetEncrypted', function () {
 
         it('should FAIL if LookoutEquipment Dataset is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listDatasets[1]], listKeys, describeDataset[1], describeKey[1]);
-            equipmentdatasetEncrypted.run(cache, {equipment_dataset_desired_encryption_level: 'awscmk'}, (err, results) => {
+            equipmentdatasetEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

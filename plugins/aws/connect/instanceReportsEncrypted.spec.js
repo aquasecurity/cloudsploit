@@ -136,7 +136,7 @@ describe('instanceReportsEncrypted', function () {
     describe('run', function () {
         it('should FAIL if Connect instance is not using desired encryption level', function (done) {
             const cache = createCache(listInstances, listInstanceExportedReportStorageConfigs[0], listKeys, describeKey[1]);
-            instanceReportsEncrypted.run(cache, {connect_exported_reports_encryption_level : 'awscmk'}, (err, results) => {
+            instanceReportsEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();

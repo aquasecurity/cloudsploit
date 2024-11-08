@@ -143,7 +143,7 @@ describe('anomalyDetectorEncrypted', function () {
 
         it('should FAIL if LookoutMetrics Anomaly Detector is not encrypted with desired encryption level', function (done) {
             const cache = createCache([listAnomalyDetectors[1]], listKeys, describeAnomalyDetector[1], describeKey[1]);
-            anomalyDetectorEncrypted.run(cache, {lookoutmetrics_anomalydetectors_desired_encryption_level: 'awscmk'}, (err, results) => {
+            anomalyDetectorEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

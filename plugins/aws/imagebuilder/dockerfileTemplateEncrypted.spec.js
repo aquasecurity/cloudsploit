@@ -196,7 +196,7 @@ describe('dockerfileTemplateEncrypted', function () {
 
         it('should FAIL if Dockerfile Template is encrypted with awskms', function (done) {
             const cache = createCache([listContainerRecipes[1]], listKeys, listAliases, getContainerRecipe[1], describeKey[1]);
-            dockerfileTemplateEncrypted.run(cache, {docker_file_desired_encryption_level: 'awscmk'}, (err, results) => {
+            dockerfileTemplateEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Dockerfile Template is encrypted with');

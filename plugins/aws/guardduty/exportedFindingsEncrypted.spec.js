@@ -147,7 +147,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should PASS if GuardDuty Export Findings is encrypted with desired level', function (done) {
             const cache = createCache([listDetectors[0]], [listPublishingDestinations[0]], describePublishingDestination[0], listKeys, describeKey[0]);
-            exportedFindingsEncrypted.run(cache, { findings_desired_encryption_level: 'awscmk' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -157,7 +157,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should FAIL if GuardDuty Export Findings is not encrypted with desired level ', function (done) {
             const cache = createCache([listDetectors[0]], [listPublishingDestinations[0]], describePublishingDestination[1], listKeys, describeKey[1]);
-            exportedFindingsEncrypted.run(cache, {findings_desired_encryption_level: 'cloudhsm' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'externalcmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
@@ -167,7 +167,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should PASS if on GuardDuty detectors found', function (done) {
             const cache = createCache([]);
-            exportedFindingsEncrypted.run(cache, { findings_desired_encryption_level: 'awscmk' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -176,7 +176,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should UNKNOWN if unable to list GuardDuty detectors', function (done) {
             const cache = createCache(null, null, null, null, null, { message: 'Unable to list GuardDuty detectors'});
-            exportedFindingsEncrypted.run(cache, { findings_desired_encryption_level: 'awscmk' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -185,7 +185,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should UNKNOWN if unable to list GuardDuty publishing destinations', function (done) {
             const cache = createCache([listDetectors[0]], {}, describePublishingDestination[0], null, null, null, null, { message: 'Unable to query GuardDuty publishing destinations'});
-            exportedFindingsEncrypted.run(cache, { findings_desired_encryption_level: 'awscmk' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 done();
@@ -194,7 +194,7 @@ describe('exportedFindingsEncrypted', function () {
 
         it('should not return anything if list detectors response not found', function (done) {
             const cache = createNullCache();
-            exportedFindingsEncrypted.run(cache, { findings_desired_encryption_level: 'awscmk' }, (err, results) => {
+            exportedFindingsEncrypted.run(cache, { exported_findings_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
             });

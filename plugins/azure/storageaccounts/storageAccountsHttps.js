@@ -80,6 +80,7 @@ module.exports = {
             'properties': {
                 'supportsHttpsTrafficOnly': true
             }
+
         };
 
         // logging

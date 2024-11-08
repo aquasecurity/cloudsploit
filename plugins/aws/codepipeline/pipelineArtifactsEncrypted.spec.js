@@ -135,7 +135,7 @@ describe('pipelineArtifactsEncrypted', function () {
     describe('run', function () {
         it('should PASS if Pipeline Artifacts is encrypted with desired encryption level', function (done) {
             const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[0]);
-            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_desired_encryption_level : 'awscmk' }, (err, results) => {
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
@@ -145,7 +145,7 @@ describe('pipelineArtifactsEncrypted', function () {
 
         it('should FAIL if Pipeline Artifacts not encrypted with desired encryption level', function (done) {
             const cache = createCache([listPipelines[0]], listKeys, listAliases, getPipeline[0], describeKey[1]);
-            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_desired_encryption_level : 'awscmk' }, (err, results) => {
+            pipelineArtifactsEncrypted.run(cache, { pipeline_artifacts_encryption : 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');

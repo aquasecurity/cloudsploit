@@ -102,7 +102,7 @@ describe('dataStoreEncrypted', function () {
     describe('run', function () {
         it('should PASS if HealthLake Data Store is encrypted with desired encryption level', function (done) {
             const cache = createCache(listFHIRDatastores, listKeys, describeKey[0]);
-            dataStoreEncrypted.run(cache, { healthlake_datastore_desired_encryption_level: 'awscmk' }, (err, results) => {
+            dataStoreEncrypted.run(cache, { healthLake_data_store_encryption: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('HealthLake data store is encrypted with awscmk');
@@ -113,7 +113,7 @@ describe('dataStoreEncrypted', function () {
 
         it('should FAIL if HealthLake Data Store is not encrypted with desired encyption level', function (done) {
             const cache = createCache(listFHIRDatastores, listKeys, describeKey[1]);
-            dataStoreEncrypted.run(cache, { healthlake_datastore_desired_encryption_level:'awscmk' }, (err, results) => {
+            dataStoreEncrypted.run(cache, { healthLake_data_store_encryption:'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('HealthLake data store is encrypted with awskms');

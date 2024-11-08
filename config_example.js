@@ -33,10 +33,7 @@ module.exports = {
             // application_id: process.env.AZURE_APPLICATION_ID || '',
             // key_value: process.env.AZURE_KEY_VALUE || '',
             // directory_id: process.env.AZURE_DIRECTORY_ID || '',
-            // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || '',
-            // storage_connection: process.env.AZURE_STORAGE_CONNECTION || '',
-            // blob_container: process.env.AZURE_BLOB_CONTAINER || '',
-            // govcloud: process.env.AZURE_GOV_CLOUD || ''
+            // subscription_id: process.env.AZURE_SUBSCRIPTION_ID || ''
         },
         azure_remediate: {
             // OPTION 1: If using a credential JSON file, enter the path below

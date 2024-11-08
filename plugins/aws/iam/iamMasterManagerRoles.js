@@ -202,7 +202,7 @@ module.exports = {
             var getRolePolicy = helpers.addSource(cache, source,
                 ['iam', 'getRolePolicy', region, role.RoleName]);
 
-            if (!listRolePolicies || listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
+            if (listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
                 helpers.addResult(results, 3,
                     'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
                 return cb();

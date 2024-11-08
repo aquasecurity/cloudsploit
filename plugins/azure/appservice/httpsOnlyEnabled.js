@@ -26,23 +26,11 @@ module.exports = {
                 'App Service HTTPS redirection should be used to ensure site visitors ' +
                 'are always connecting over a secure channel.'
     },
-    settings: {
-        whitelist_functions_for_https_only: {
-            name: 'Whitelist Functions For HTTPS Only',
-            description: 'List of comma separated functions which should be whitelisted to check',
-            regex: '^.*$',
-            default: 'aqua-agentless-scanner-continuous-onboarding',
-        }
-    },
 
     run: function(cache, settings, callback) {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
-        let config = {
-            whitelist_functions_for_https_only: settings.whitelist_functions_for_https_only || this.settings.whitelist_functions_for_https_only.default
-        };
 
         async.each(locations.webApps, function(location, rcb) {
 
@@ -64,16 +52,10 @@ module.exports = {
             }
 
             webApps.data.forEach(function(webApp) {
-
-                if (webApp.name.includes(config.whitelist_functions_for_https_only)) {
-                    helpers.addResult(results, 0, 'The App Service is whitelisted', location, webApp.id);
+                if (webApp.httpsOnly) {
+                    helpers.addResult(results, 0, 'The App Service has HTTPS Only enabled', location, webApp.id);
                 } else {
-
-                    if (webApp.httpsOnly) {
-                        helpers.addResult(results, 0, 'The App Service has HTTPS Only enabled', location, webApp.id);
-                    } else {
-                        helpers.addResult(results, 2, 'The App Service does not have HTTPS Only enabled', location, webApp.id);
-                    }
+                    helpers.addResult(results, 2, 'The App Service does not have HTTPS Only enabled', location, webApp.id);
                 }
             });
 

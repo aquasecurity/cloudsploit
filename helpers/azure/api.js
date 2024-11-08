@@ -380,11 +380,7 @@ var calls = {
     machineLearning: {
         listWorkspaces: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/workspaces?api-version=2024-04-01'
-        },
-        listRegistries: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.MachineLearningServices/registries?api-version=2024-04-01'
-        },
-
+        }
     },
     loadBalancers: {
         listAll: {
@@ -534,11 +530,6 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Databricks/workspaces?api-version=2023-02-01'
         }
     },
-    apiManagementService: {
-        list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.ApiManagement/service?api-version=2022-08-01'
-        }
-    },
     // For CIEM
     aad: {
         listRoleAssignments: {
@@ -573,11 +564,6 @@ var calls = {
 
         }
     },
-    synapse: {
-        listWorkspaces: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Synapse/workspaces?api-version=2021-06-01'
-        }
-    }
 
 };
 
@@ -1273,16 +1259,6 @@ var tertiarycalls = {
         },
         listByBatchAccounts: {
             reliesOnPath: 'batchAccounts.list',
-            properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
-        },
-        listByMysqlFlexibleServer: {
-            reliesOnPath: 'servers.listMysqlFlexibleServer',
-            properties: ['id'],
-            url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
-        },
-        listByWorkspaces: {
-            reliesOnPath: 'synapse.listWorkspaces',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/providers/microsoft.insights/diagnosticSettings?api-version=2021-05-01-preview'
         }

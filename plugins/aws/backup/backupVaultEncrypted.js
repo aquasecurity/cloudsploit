@@ -16,7 +16,7 @@ module.exports = {
             name: 'CodeArtifact Domain Target Encryption Level',
             description: 'In order (lowest to highest) awskms=AWS-managed KMS; awscmk=Customer managed KMS; externalcmk=Customer managed externally sourced KMS; cloudhsm=Customer managed CloudHSM sourced KMS',
             regex: '^(awskms|awscmk|externalcmk|cloudhsm)$',
-            default: 'awskms',
+            default: 'awscmk',
         }
     },
     realtime_triggers: ['backup:CreateBackupVault','backup:DeleteBackupVault'],

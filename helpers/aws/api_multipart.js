@@ -1044,27 +1044,6 @@ var calls = [
             describeHub: {
                 property: '',
                 paginate: 'NextToken'
-            },
-            getFindings: {
-                property: 'Findings',
-                paginate: 'NextToken',
-                params: {
-                    MaxResults: 100,
-                    Filters: {
-                        RecordState: [
-                            {
-                                Comparison: 'EQUALS',
-                                Value: 'ACTIVE'
-                            }
-                        ],
-                        WorkflowStatus: [
-                            {
-                                Comparison: 'EQUALS',
-                                Value: 'NEW'
-                            }
-                        ]
-                    }
-                }
             }
         },
         Transfer: {
@@ -1216,12 +1195,6 @@ var postcalls = [
                 filterValue: 'id'
             },
             getResources: {
-                reliesOnService: 'apigateway',
-                reliesOnCall: 'getRestApis',
-                filterKey: 'restApiId',
-                filterValue: 'id'
-            },
-            getRequestValidators: {
                 reliesOnService: 'apigateway',
                 reliesOnCall: 'getRestApis',
                 filterKey: 'restApiId',
@@ -1442,7 +1415,7 @@ var postcalls = [
                 reliesOnService: 'docdb',
                 reliesOnCall: 'describeDBClusters',
                 filterKey: 'ResourceName',
-                filterValue: 'DBClusterArn'
+                filterValue: 'DBClusterArn'            
             },
         },
         DynamoDB: {
@@ -2341,7 +2314,8 @@ var postcalls = [
             getRole: {
                 reliesOnService: 'iam',
                 reliesOnCall: 'listRoles',
-                override: true,
+                filterKey: 'RoleName',
+                filterValue: 'RoleName',
                 rateLimit: 500
             },
             listRolePolicies: {

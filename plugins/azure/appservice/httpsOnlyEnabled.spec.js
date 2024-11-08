@@ -11,11 +11,6 @@ const webApps = [
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1',
         'name': 'app1',
         'httpsOnly': false
-    },
-    {
-        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/aqua-agentless-scanner-continuous-onboarding-i2hxc3is',
-        'name': 'aqua-agentless-scanner-continuous-onboarding-i2hxc3is',
-        'httpsOnly': false
     }
 ];
 
@@ -82,17 +77,6 @@ describe('httpsOnlyEnabled', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('The App Service does not have HTTPS Only enabled');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should PASS if app service gets whitelisted', function (done) {
-            const cache = createCache([webApps[2]]);
-            httpsOnlyEnabled.run(cache, { whitelist_functions_for_https_only:'aqua-agentless-scanner-continuous-onboarding' }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('The App Service is whitelisted');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

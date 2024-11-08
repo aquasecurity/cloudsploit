@@ -172,7 +172,7 @@ describe('networkMemberDataEncrypted', function () {
 
         it('should FAIL if Network member is not using desired encryption level', function (done) {
             const cache = createCache(listNetworks ,listMembers, getMember[1], listKeys, describeKey[0]);
-            networkMemberDataEncrypted.run(cache, {blockchain_member_encryption_level: 'awscmk'}, (err, results) => {
+            networkMemberDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
