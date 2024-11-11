@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.opensearchserverless.getNetworkSecurityPolicy[AWSConfig.region][policy.name].err = err;
             }
 
-            collection.opensearchserverless.getNetworkSecurityPolicy[AWSConfig.region][policy.name].data = data;
+            if (data) collection.opensearchserverless.getNetworkSecurityPolicy[AWSConfig.region][policy.name].data = data;
 
             cb();
         });

@@ -25,7 +25,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.ec2.describeSubnets[AWSConfig.region][vpc.VpcId].err = err;
             }
 
-            collection.ec2.describeSubnets[AWSConfig.region][vpc.VpcId].data = data;
+            if (data) collection.ec2.describeSubnets[AWSConfig.region][vpc.VpcId].data = data;
 
             cb();
         });

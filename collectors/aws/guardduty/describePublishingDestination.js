@@ -31,7 +31,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].err = err;
                 }
 
-                collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].data = data;
+                if (data) collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].data = data;
                 pCb();
             });
 

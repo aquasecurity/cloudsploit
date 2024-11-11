@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.mwaa.getEnvironment[AWSConfig.region][env].err = err;
             }
-            collection.mwaa.getEnvironment[AWSConfig.region][env].data = data;
+            if (data) collection.mwaa.getEnvironment[AWSConfig.region][env].data = data;
             cb();
         });
     }, function(){

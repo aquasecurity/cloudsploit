@@ -775,7 +775,7 @@ function checkSecurityGroup(securityGroups) {
     return {exposed: true};
 }
 
-function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, region, results)  {
+function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, location, results, lbNames)  {
     let exposedPath = '';
 
     if (securityGroups && securityGroups.length) {
@@ -783,12 +783,35 @@ function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, 
         let exposedSG = checkSecurityGroup(securityGroups);
         if (exposedSG && exposedSG.exposed) {
             if (exposedSG.nsg) {
-                exposedPath += `nsg ${exposedSG.nsg}`
+                return `nsg ${exposedSG.nsg}`
+            } else {
+                return '';
             }
         }
-
-        return exposedPath
     }
+
+    if (lbNames && lbNames.length) {
+        const loadBalancers = shared.addSource(cache, source,
+            ['loadBalancers', 'listAll', location]);
+
+        if (loadBalancers && !loadBalancers.err && loadBalancers.data && loadBalancers.data.length) {
+            let resourceLBs = loadBalancers.data.filter(lb => lbNames.includes(lb.id));
+            if (resourceLBs && resourceLBs.length) {
+                for (let lb of resourceLBs) {
+                    let isPublic = false;
+                    if (lb.frontendIPConfigurations && lb.frontendIPConfigurations.length) {
+                        isPublic = lb.frontendIPConfigurations.some(ipConfig => ipConfig.properties
+                            && ipConfig.properties.publicIPAddress && ipConfig.properties.publicIPAddress.id);
+                        if (isPublic && ((lb.nboundNatRules && nboundNatRules.length) || (lb.loadBalancingRules && lb.loadBalancingRules.length))) {
+                            exposedPath += `lb ${lb.name}`;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return exposedPath;
 }
 
 module.exports = {
@@ -803,7 +826,7 @@ module.exports = {
     remediateOpenPorts: remediateOpenPorts,
     remediateOpenPortsHelper: remediateOpenPortsHelper,
     checkMicrosoftDefender: checkMicrosoftDefender,
-    checkFlexibleServerConfigs: checkFlexibleServerConfigs,
-    checkNetworkExposure: checkNetworkExposure,
+    checkFlexibleServerConfigs:checkFlexibleServerConfigs,
+    checkNetworkExposure: checkNetworkExposure
 
 };

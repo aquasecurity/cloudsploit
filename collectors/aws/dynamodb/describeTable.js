@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.dynamodb.describeTable[AWSConfig.region][table].err = err;
             }
-            collection.dynamodb.describeTable[AWSConfig.region][table].data = data;
+            if (data) collection.dynamodb.describeTable[AWSConfig.region][table].data = data;
             cb();
         });
     }, function(){

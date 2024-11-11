@@ -19,7 +19,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 collection.ecs.describeCluster[AWSConfig.region][cluster].err = err;
             }
 
-            collection.ecs.describeCluster[AWSConfig.region][cluster].data = data;
+            if (data) collection.ecs.describeCluster[AWSConfig.region][cluster].data = data;
 
             cb();
         });

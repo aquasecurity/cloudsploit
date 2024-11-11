@@ -59,7 +59,6 @@ var parse = function(obj, path, region, cloud, accountId, resourceId) {
         return [obj];
     }
 };
-
 var transform = function(val, transformation) {
     if (transformation == 'DATE') {
         return new Date(val);
@@ -167,6 +166,10 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
 
     // Compare the property with the operator
     if (condition.op) {
+        let userRegex;
+        if (condition.op === 'MATCHES' || condition.op === 'NOTMATCHES') {
+            userRegex = new RegExp(condition.value);
+        }
         if (condition.transform && condition.transform == 'EACH' && condition) {
             if (condition.op == 'CONTAINS') {
                 var stringifiedCondition = JSON.stringify(condition.parsed);
@@ -254,12 +257,18 @@ var validate = function(condition, conditionResult, inputResultsArr, message, pr
                 message.push(`${property}: ${condition.parsed} is: ${condition.value}`);
             }
         } else if (condition.op == 'MATCHES') {
-            var userRegex = RegExp(condition.value);
             if (userRegex.test(condition.parsed)) {
                 message.push(`${property}: ${condition.parsed} matches the regex: ${condition.value}`);
             } else {
                 conditionResult = 2;
                 message.push(`${property}: ${condition.parsed} does not match the regex: ${condition.value}`);
+            }
+        } else if (condition.op == 'NOTMATCHES') {
+            if (!userRegex.test(condition.parsed)) {
+                message.push(`${condition.property}: ${condition.parsed} does not match the regex: ${condition.value}`);
+            } else {
+                conditionResult = 2;
+                message.push(`${condition.property}: ${condition.parsed} matches the regex : ${condition.value}`);
             }
         } else if (condition.op == 'EXISTS') {
             if (condition.parsed !== 'not set') {

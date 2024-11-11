@@ -1563,23 +1563,7 @@ var calls = {
         getFindings: {
             property: 'Findings',
             paginate: 'NextToken',
-            params: {
-                MaxResults: 100,
-                Filters: {
-                    RecordState: [
-                        {
-                            Comparison: 'EQUALS',
-                            Value: 'ACTIVE'
-                        }
-                    ],
-                    WorkflowStatus: [
-                        {
-                            Comparison: 'EQUALS',
-                            Value: 'NEW'
-                        }
-                    ]
-                }
-            }
+            override: true
         }
     },
     SageMaker: {

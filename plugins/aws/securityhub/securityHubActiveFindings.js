@@ -54,12 +54,17 @@ module.exports = {
                 } else {
                     let activeFindings = getFindings.data.filter(finding => finding.CreatedAt &&
                         helpers.hoursBetween(new Date, finding.CreatedAt) > config.securityhub_findings_fail);
-                    let status = (activeFindings && activeFindings.length) ? 2 : 0;
-        
-                    helpers.addResult(results, status,
-                        `Security Hub has ${status == 0 ? 0 : activeFindings.length} active finding(s)`, region, resource);
+
+                    if (!activeFindings.length) {
+                        helpers.addResult(results, 0,
+                            'Security Hub has no active findings', region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Security Hub has over ${activeFindings.length} active findings`, region, resource);
+                    }
                 }
-            }     
+
+            }
 
             return rcb();
         }, function() {

@@ -10,8 +10,15 @@ module.exports = {
     more_info: 'Virtual machines exposed to the internet are at a higher risk of unauthorized access, data breaches, and cyberattacks. It’s crucial to limit exposure by securing access through proper configuration of network and firewall rules.',
     link: 'https://cloud.google.com/firewall/docs/firewalls',
     recommended_action: 'Secure VM instances by restricting access with properly configured security group and firewall rules.',
-    apis: ['compute:list', 'firewalls:list'],
-    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete','compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch'],
+    apis: ['instanceGroups:aggregatedList', 'compute:list', 'firewalls:list', 'instanceGroups:listInstances', 'urlMaps:list', 'targetHttpProxies:list', 'targetHttpsProxies:list',
+        'forwardingRules:list', 'backendServices:list'
+    ],
+    realtime_triggers: ['compute.instances.insert', 'compute.instances.delete', 'compute.instances.update', 'compute.firewalls.insert', 'compute.firewalls.delete', 'compute.firewalls.patch',
+        'compute.backendServices.insert', 'compute.backendServices.delete', 'compute.backendServices.patch', 'compute.instanceGroups.insert', 'compute.instanceGroups.delete', 'compute.instanceGroups.update',
+        'compute.instanceGroups.addInstances', 'compute.instanceGroups.removeInstances', 'compute.urlMaps.insert', 'compute.urlMaps.delete', 'compute.urlMaps.update', 'compute.urlMaps.patch',
+        'compute.targetHttpProxies.insert', 'compute.targetHttpProxies.delete', 'compute.targetHttpProxies.patch', 'compute.targetHttpsProxies.insert', 'compute.targetHttpsProxies.delete', 'compute.targetHttpsProxies.patch',
+        'compute.forwardingRules.insert', 'compute.forwardingRules.delete', 'compute.forwardingRules.patch'
+    ],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -82,8 +89,32 @@ module.exports = {
                     });
 
 
+
                     networks = networks.map(network => network.split('/').pop());
-                    let internetExposed =  helpers.checkNetworkExposure(cache, source, networks, firewallRules, region, results);
+
+                    // get all instance groups for instance
+                    let instanceGroups = [];
+
+                    var instanceList = helpers.addSource(cache, source,
+                        ['instanceGroups','listInstances', 'global']);
+
+                    if (instanceList && !instanceList.err && instanceList.data && instanceList.data.length) {
+                        let groups = instanceList.data.filter(list => list.instance === instance.selfLink);
+                        if (groups && groups.length) {
+                            instanceGroups = groups.map(group => group.parent);
+                        }
+                    }
+
+
+                    let forwardingRules = [];
+                    if (instanceGroups && instanceGroups.length) {
+                        instanceGroups.forEach(instanceGroup => {
+                            let igForwardingRules = helpers.getForwardingRules(cache, source, region, instanceGroup);
+                            forwardingRules = forwardingRules.concat(igForwardingRules);
+                        });
+
+                    }
+                    let internetExposed =  helpers.checkNetworkExposure(cache, source, networks, firewallRules, region, results, forwardingRules);
 
                     let resource = helpers.createResourceName('instances', instance.name, project, 'zone', zone);
 
@@ -106,3 +137,4 @@ module.exports = {
         });
     }
 };
+

@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.ec2.describeSnapshotAttribute[AWSConfig.region][snapshot.SnapshotId].err = err;
             }
-            collection.ec2.describeSnapshotAttribute[AWSConfig.region][snapshot.SnapshotId].data = data;
+            if (data) collection.ec2.describeSnapshotAttribute[AWSConfig.region][snapshot.SnapshotId].data = data;
             cb();
         });
     }, function(){

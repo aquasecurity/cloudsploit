@@ -19,7 +19,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.sqs.getQueueAttributes[AWSConfig.region][queue].err = err;
             }
-            collection.sqs.getQueueAttributes[AWSConfig.region][queue].data = data;
+            if (data) collection.sqs.getQueueAttributes[AWSConfig.region][queue].data = data;
             cb();
         });
     }, function(){

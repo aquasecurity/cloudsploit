@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id].err = err;
             }
-            collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id].data = data;
+            if (data) collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id].data = data;
             cb();
         });
                 

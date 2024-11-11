@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.codebuild.batchGetProjects[AWSConfig.region][project].err = err;
             }
-            collection.codebuild.batchGetProjects[AWSConfig.region][project].data = data;
+            if (data) collection.codebuild.batchGetProjects[AWSConfig.region][project].data = data;
             cb();
         });
     }, function(){

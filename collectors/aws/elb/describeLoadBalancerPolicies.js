@@ -50,7 +50,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         helpers.makeCustomCollectorCall(elb, 'describeLoadBalancerPolicies', params, retries, null, null, null, function(err, data) {
             if (err) {
                 collection.elb.describeLoadBalancerPolicies[AWSConfig.region][policy.DNSName].err = err;
-            } else {
+            } else if (data) {
                 collection.elb.describeLoadBalancerPolicies[AWSConfig.region][policy.DNSName].data = data;
             }
 

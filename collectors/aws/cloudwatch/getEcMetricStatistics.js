@@ -29,7 +29,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.cloudwatch.getEcMetricStatistics[AWSConfig.region][cluster.CacheClusterId].err = err;
             }
-            collection.cloudwatch.getEcMetricStatistics[AWSConfig.region][cluster.CacheClusterId].data = data;
+            if (data) collection.cloudwatch.getEcMetricStatistics[AWSConfig.region][cluster.CacheClusterId].data = data;
             cb();
         });
                 

@@ -28,7 +28,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.managedblockchain.getMember[AWSConfig.region][member.Id].err = err;
                 }
 
-                collection.managedblockchain.getMember[AWSConfig.region][member.Id].data = data;
+                if (data) collection.managedblockchain.getMember[AWSConfig.region][member.Id].data = data;
                 mcb();
             });
         }, function(){

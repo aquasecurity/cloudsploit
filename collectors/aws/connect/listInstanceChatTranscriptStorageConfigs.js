@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.connect.listInstanceChatTranscriptStorageConfigs[AWSConfig.region][instance.Id].err = err;
             }
-            collection.connect.listInstanceChatTranscriptStorageConfigs[AWSConfig.region][instance.Id].data = data;
+            if (data) collection.connect.listInstanceChatTranscriptStorageConfigs[AWSConfig.region][instance.Id].data = data;
             cb();
         });
     }, function(){

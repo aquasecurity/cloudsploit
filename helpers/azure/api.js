@@ -161,10 +161,10 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
             BridgeCollectionService: 'databases', DataIdentifier: 'data',
         },
-    'AI & ML': 
+    'AI & ML':
         {
             enabled: true, isSingleSource: true, InvAsset: 'account', InvService: 'openAI',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure', 
+            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure',
             BridgeServiceName: 'openAI', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'accounts',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
@@ -513,7 +513,7 @@ var calls = {
         }
 
     },
-    computeGalleries: { 
+    computeGalleries: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/galleries?api-version=2022-08-03'
         }
@@ -625,6 +625,13 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/providers/Microsoft.Compute/availabilitySets?api-version=2020-12-01'
         }
     },
+    resources: {
+        listByResourceGroup: {
+            reliesOnPath: 'resourceGroups.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/resources?api-version=2021-04-01'
+        }
+    },
     advancedThreatProtection: {
         get: {
             reliesOnPath: 'databaseAccounts.list',
@@ -714,7 +721,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/certificates?api-version=2023-11-01'
         }
-    },  
+    },
     flowLogs: {
         list: {
             reliesOnPath: 'networkWatchers.listAll',
@@ -880,7 +887,7 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/authConfigs?api-version=2023-05-01',
         }
-    }, 
+    },
     endpoints: {
         listByProfile: {
             reliesOnPath: 'profiles.list',

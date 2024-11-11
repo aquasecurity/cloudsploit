@@ -15,7 +15,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.autoscaling.describeLaunchConfigurations[AWSConfig.region][asg.AutoScalingGroupARN].err = err;
             }
-            collection.autoscaling.describeLaunchConfigurations[AWSConfig.region][asg.AutoScalingGroupARN].data = data;
+            if (data) collection.autoscaling.describeLaunchConfigurations[AWSConfig.region][asg.AutoScalingGroupARN].data = data;
 
             cb();
         });

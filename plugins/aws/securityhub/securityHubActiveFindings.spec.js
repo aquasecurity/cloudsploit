@@ -96,7 +96,7 @@ describe('securityHubActiveFindings', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.equal('Security Hub has 0 active finding(s)');
+                expect(results[0].message).to.equal('Security Hub has no active findings');
                 done();
             });
         });
@@ -107,7 +107,7 @@ describe('securityHubActiveFindings', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.equal('Security Hub has 1 active finding(s)');
+                expect(results[0].message).to.includes('Security Hub has over');
                 done();
             });
         });

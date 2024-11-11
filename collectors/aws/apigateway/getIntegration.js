@@ -35,7 +35,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                         return mCb();
                     }
 
-                    collection.apigateway.getIntegration[AWSConfig.region][api.id][resource.id][methodKey].data = data;
+                    if (data) collection.apigateway.getIntegration[AWSConfig.region][api.id][resource.id][methodKey].data = data;
                     mCb();
                 });
             }, function(){

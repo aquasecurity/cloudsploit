@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.opensearchserverless.getEncryptionSecurityPolicy[AWSConfig.region][policy.name].err = err;
             }
-            collection.opensearchserverless.getEncryptionSecurityPolicy[AWSConfig.region][policy.name].data = data;
+            if (data) collection.opensearchserverless.getEncryptionSecurityPolicy[AWSConfig.region][policy.name].data = data;
 
             cb();
         });

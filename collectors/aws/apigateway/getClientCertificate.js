@@ -26,7 +26,8 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                     collection.apigateway.getClientCertificate[AWSConfig.region][stage.clientCertificateId].err = err;
                     return pCb();
                 }
-                collection.apigateway.getClientCertificate[AWSConfig.region][stage.clientCertificateId].data = data;
+                if (data) collection.apigateway.getClientCertificate[AWSConfig.region][stage.clientCertificateId].data = data;
+
                 pCb();
             });
 

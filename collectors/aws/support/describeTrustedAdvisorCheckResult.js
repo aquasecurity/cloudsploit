@@ -16,7 +16,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (err) {
                 collection.support.describeTrustedAdvisorChecks[AWSConfig.region][check].err = err;
             }
-            collection.support.describeTrustedAdvisorChecks[AWSConfig.region][check].data = data;
+            if (data) collection.support.describeTrustedAdvisorChecks[AWSConfig.region][check].data = data;
             cb();
         });
     }, function() {
