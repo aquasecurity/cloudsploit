@@ -30,6 +30,21 @@ const servers = [
         "fullyQualifiedDomainName": "test-server.database.windows.net",
         "privateEndpointConnections": [],
         "publicNetworkAccess": "Enabled"
+    },
+    {
+        "kind": "v12.0",
+        "location": "eastus",
+        "tags": {},
+        "id": "/subscriptions/123/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/test-server",
+        "name": "test-server",
+        "type": "Microsoft.Sql/servers",
+        "administratorLogin": "aqua",
+        "version": "12.0",
+        "state": "Ready",
+        "fullyQualifiedDomainName": "test-server.database.windows.net",
+        "privateEndpointConnections": [],
+        "minimalTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled"
     }
 ];
 
@@ -77,7 +92,7 @@ describe('sqlServerTlsVersion', function() {
                 [servers[0]],
             );
 
-            sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.2' }, callback);
+            sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.1' }, callback);
         });
 
         it('should give failing result if SQL server allows all TLS versions', function(done) {
@@ -106,10 +121,10 @@ describe('sqlServerTlsVersion', function() {
             };
 
             const cache = createCache(
-                [servers[0]]
+                [servers[2]]
             );
 
-            sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.0' }, callback);
+            sqlServerTlsVersion.run(cache, { sql_server_min_tls_version: '1.2' }, callback);
         });
 
         it('should give unknown result if unable to query for SQL servers', function(done) {
