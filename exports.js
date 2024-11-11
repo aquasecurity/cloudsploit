@@ -804,6 +804,7 @@ module.exports = {
         'vmDiskHasTags'                 : require(__dirname + '/plugins/azure/virtualmachines/vmDiskHasTags.js'),
         'snapshotHasTags'               : require(__dirname + '/plugins/azure/virtualmachines/snapshotHasTags.js'),
         'unattachedDiskWithDefaultEncryption': require(__dirname + '/plugins/azure/virtualmachines/unattachedDiskWithDefaultEncryption.js'),
+        'unAttachedDiskByokEncryptionEnabled': require(__dirname + '/plugins/azure/virtualmachines/unAttachedDiskByokEncryptionEnabled.js'),
         'snapshotPublicAccessDisabled'  : require(__dirname + '/plugins/azure/virtualmachines/snapshotPublicAccessDisabled.js'),
         'snapshotByokEncryptionEnabled' : require(__dirname + '/plugins/azure/virtualmachines/snapshotByokEncryptionEnabled.js'),
         'systemAssignedIdentityEnabled' : require(__dirname + '/plugins/azure/virtualmachines/systemAssignedIdentityEnabled.js'),
