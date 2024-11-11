@@ -412,20 +412,22 @@ function checkFirewallRules(firewallRules) {
 
         const networkName = firewallRule.network ? firewallRule.network.split('/').pop() : '';
 
-        let allSources = firewallRule.sourceRanges?.some(sourceAddressPrefix =>
+        let allSources = firewallRule.sourceRanges? firewallRule.sourceRanges.some(sourceAddressPrefix =>
             sourceAddressPrefix === '*' ||
             sourceAddressPrefix === '0.0.0.0/0' ||
             sourceAddressPrefix === '::/0' ||
             sourceAddressPrefix.includes('/0') ||
             sourceAddressPrefix.toLowerCase() === 'internet' ||
             sourceAddressPrefix.includes('<nw>/0')
-        );
+        ): null;
 
-        if (allSources && firewallRule.allowed?.some(allow => !!allow.IPProtocol)) {
+        var allowed = firewallRule.allowed? firewallRule.allowed.some(allow => !!allow.IPProtocol): null;
+        var denied = firewallRule.denied? firewallRule.denied.some(deny => deny.IPProtocol === 'all'): null;
+        if (allSources && allowed) {
             return {exposed: true, networkName: `vpc ${networkName}`};
         }
 
-        if (allSources && firewallRule.denied?.some(deny => deny.IPProtocol === 'all')) {
+        if (allSources && denied) {
             return {exposed: false};
         }
     }
