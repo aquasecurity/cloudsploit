@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensures that Azure Cache for Redis is using the latest TLS version.',
     more_info: 'TLS versions 1.2 is known to be susceptible to attacks, and to have other Common Vulnerabilities and Exposures (CVE) weaknesses.So there\'s an industry- wide push toward the exclusive use of Transport Layer Security(TLS) version 1.2 or later.',
-    recommended_action: 'Ensure that Azure cache for Redis is using the latest TLS version',
+    recommended_action: 'Ensure that Azure cache for Redis is using the latest TLS version.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-remove-tls-10-11',
     apis: ['redisCaches:listBySubscription'],
     realtime_triggers: ['microsoftcache:redis:write','microsoftcache:redis:delete'],
