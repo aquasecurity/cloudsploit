@@ -1,6 +1,5 @@
 var async = require('async');
 var helpers = require('../../../helpers/google');
-const { instanceGroups, forwardingRules } = require('../../../helpers/google/regions');
 
 module.exports = {
     title: 'Network Exposure',

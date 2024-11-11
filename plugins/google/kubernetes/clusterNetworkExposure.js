@@ -30,18 +30,19 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        let firewalls = helpers.addSource(
-            cache, source, ['firewalls', 'list', 'global']);
-
-        if (!firewalls || firewalls.err || !firewalls.data) {
-            helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
-        }
-
-        if (!firewalls.data.length) {
-            helpers.addResult(results, 0, 'No firewall rules found', region);
-        }
-
         async.each(regions.kubernetes, function(region, rcb){
+            
+            let firewalls = helpers.addSource(
+                cache, source, ['firewalls', 'list', 'global']);
+    
+            if (!firewalls || firewalls.err || !firewalls.data) {
+                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
+            }
+    
+            if (!firewalls.data.length) {
+                helpers.addResult(results, 0, 'No firewall rules found', region);
+            }
+
             let clusters = helpers.addSource(cache, source,
                 ['kubernetes', 'list', region]);
 
