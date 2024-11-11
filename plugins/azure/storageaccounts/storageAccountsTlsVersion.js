@@ -12,14 +12,6 @@ module.exports = {
     recommended_action: 'Modify Storage Account configuration and set desired minimum TLS version',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version',
     apis: ['storageAccounts:list'],
-    settings: {
-        sa_min_tls_version: {
-            name: 'Storage Account Minimum TLS Version',
-            description: 'Minimum desired TLS version for Microsoft Azure Storage Accounts',
-            regex: '^(1.0|1.1|1.2)$',
-            default: '1.2'
-        }
-    },
     remediation_min_version: '202112312200',
     remediation_description: 'TLS version 1.2 will be set for the affected Storage Accounts',
     apis_remediate: ['storageAccounts:list'],
@@ -32,11 +24,9 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        var config = {
-            sa_min_tls_version: settings.sa_min_tls_version || this.settings.sa_min_tls_version.default
-        };
+        var sa_min_tls_version = '1.2';
 
-        var desiredVersion = parseFloat(config.sa_min_tls_version);
+        var desiredVersion = parseFloat(sa_min_tls_version);
 
         async.each(locations.storageAccounts, function(location, rcb) {
             var storageAccounts = helpers.addSource(cache, source,
@@ -58,17 +48,17 @@ module.exports = {
             storageAccounts.data.forEach(function(storageAccount) {
                 if (!storageAccount.id) return;
 
-                let tlsVersion = storageAccount.minimumTlsVersion ? storageAccount.minimumTlsVersion : 'TLS1.0'; //Default is TLS 1.0
+                let tlsVersion = storageAccount.minimumTlsVersion ? storageAccount.minimumTlsVersion : 'TLS1.2'; //Default is TLS 1.2
                 tlsVersion = tlsVersion.replace('TLS', '');
                 tlsVersion = tlsVersion.replace('_', '.');
  
                 if (parseFloat(tlsVersion) >= desiredVersion) {
                     helpers.addResult(results, 0,
-                        `Storage Account is using TLS version ${tlsVersion} which is equal to or higher than desired TLS version ${config.sa_min_tls_version}`,
+                        `Storage Account is using TLS version ${tlsVersion} which is equal to or higher than desired TLS version ${sa_min_tls_version}`,
                         location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Storage Account is using TLS version ${tlsVersion} which is less than desired TLS version ${config.sa_min_tls_version}`,
+                        `Storage Account is using TLS version ${tlsVersion} which is less than desired TLS version ${sa_min_tls_version}`,
                         location, storageAccount.id);   
                 }
             });
