@@ -12,14 +12,6 @@ module.exports = {
     recommended_action: 'Modify Storage Account configuration and set desired minimum TLS version',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version',
     apis: ['storageAccounts:list'],
-    settings: {
-        sa_min_tls_version: {
-            name: 'Storage Account Minimum TLS Version',
-            description: 'Minimum desired TLS version for Microsoft Azure Storage Accounts',
-            regex: '^(1.0|1.1|1.2)$',
-            default: '1.2'
-        }
-    },
     remediation_min_version: '202112312200',
     remediation_description: 'TLS version 1.2 will be set for the affected Storage Accounts',
     apis_remediate: ['storageAccounts:list'],
@@ -33,7 +25,7 @@ module.exports = {
         var locations = helpers.locations(settings.govcloud);
 
         var config = {
-            sa_min_tls_version: settings.sa_min_tls_version || this.settings.sa_min_tls_version.default
+            sa_min_tls_version: '1.2'
         };
 
         var desiredVersion = parseFloat(config.sa_min_tls_version);
@@ -58,7 +50,7 @@ module.exports = {
             storageAccounts.data.forEach(function(storageAccount) {
                 if (!storageAccount.id) return;
 
-                let tlsVersion = storageAccount.minimumTlsVersion ? storageAccount.minimumTlsVersion : 'TLS1.0'; //Default is TLS 1.0
+                let tlsVersion = storageAccount.minimumTlsVersion ? storageAccount.minimumTlsVersion : 'TLS1.2'; //Default is TLS 1.2
                 tlsVersion = tlsVersion.replace('TLS', '');
                 tlsVersion = tlsVersion.replace('_', '.');
  
