@@ -24,11 +24,9 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        var config = {
-            sa_min_tls_version: '1.2'
-        };
+        var sa_min_tls_version = '1.2';
 
-        var desiredVersion = parseFloat(config.sa_min_tls_version);
+        var desiredVersion = parseFloat(sa_min_tls_version);
 
         async.each(locations.storageAccounts, function(location, rcb) {
             var storageAccounts = helpers.addSource(cache, source,
@@ -56,11 +54,11 @@ module.exports = {
  
                 if (parseFloat(tlsVersion) >= desiredVersion) {
                     helpers.addResult(results, 0,
-                        `Storage Account is using TLS version ${tlsVersion} which is equal to or higher than desired TLS version ${config.sa_min_tls_version}`,
+                        `Storage Account is using TLS version ${tlsVersion} which is equal to or higher than desired TLS version ${sa_min_tls_version}`,
                         location, storageAccount.id);
                 } else {
                     helpers.addResult(results, 2,
-                        `Storage Account is using TLS version ${tlsVersion} which is less than desired TLS version ${config.sa_min_tls_version}`,
+                        `Storage Account is using TLS version ${tlsVersion} which is less than desired TLS version ${sa_min_tls_version}`,
                         location, storageAccount.id);   
                 }
             });

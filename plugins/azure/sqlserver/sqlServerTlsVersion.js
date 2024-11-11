@@ -23,11 +23,9 @@ module.exports = {
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        var config = {
-            sql_server_min_tls_version: '1.2'
-        };
+        var sql_server_min_tls_version = '1.2';
 
-        var desiredVersion = parseFloat(config.sql_server_min_tls_version);
+        var desiredVersion = parseFloat(sql_server_min_tls_version);
 
         async.each(locations.servers, function(location, rcb) {
             var servers = helpers.addSource(cache, source,
@@ -52,11 +50,11 @@ module.exports = {
                 if (server.minimalTlsVersion) {
                     if (parseFloat(server.minimalTlsVersion) >= desiredVersion) {
                         helpers.addResult(results, 0,
-                            `SQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than desired TLS version ${config.sql_server_min_tls_version}`,
+                            `SQL server is using TLS version ${server.minimalTlsVersion} which is equal to or higher than desired TLS version ${sql_server_min_tls_version}`,
                             location, server.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `SQL server is using TLS version ${server.minimalTlsVersion} which is less than desired TLS version ${config.sql_server_min_tls_version}`,
+                            `SQL server is using TLS version ${server.minimalTlsVersion} which is less than desired TLS version ${sql_server_min_tls_version}`,
                             location, server.id);   
                     }
                 } else {
