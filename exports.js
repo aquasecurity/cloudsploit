@@ -724,6 +724,7 @@ module.exports = {
         'queueServiceLoggingEnabled'    : require(__dirname + '/plugins/azure/storageaccounts/queueServiceLoggingEnabled.js'),
         'tableServiceLoggingEnabled'    : require(__dirname + '/plugins/azure/storageaccounts/tableServiceLoggingEnabled.js'),
         'blobServiceLoggingEnabled'     : require(__dirname + '/plugins/azure/storageaccounts/blobServiceLoggingEnabled.js'),
+        'storageAccountPublicNetworkAccess': require(__dirname + '/plugins/azure/storageaccounts/storageAccountPublicNetworkAccess.js'),
 
         'blobContainersPrivateAccess'   : require(__dirname + '/plugins/azure/blobservice/blobContainersPrivateAccess.js'),
         'blobServiceImmutable'          : require(__dirname + '/plugins/azure/blobservice/blobServiceImmutable.js'),
