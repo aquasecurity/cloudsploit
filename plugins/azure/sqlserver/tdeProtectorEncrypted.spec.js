@@ -1,56 +1,43 @@
-var expect = require('chai').expect;
-var tdeProtectorEncrypted = require('./tdeProtectorEncrypted');
+const expect = require('chai').expect;
+const tdeProtectorEncrypted = require('./tdeProtectorEncrypted');
 
 const servers = [
     {
-        "identity": {
-          "principalId": "86c16ef5-51e9-4ecb-aeda-5844b8e8eca0",
-          "type": "SystemAssigned",
-          "tenantId": "2d4f0836-5935-47f5-954c-14e713119ac2"
-        },
-        "kind": "v12.0",
-        "location": "eastus",
-        "tags": {},
-        "id": "/subscriptions/1234/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/akhtar-server",
-        "name": "akhtar-server",
-        "type": "Microsoft.Sql/servers",
-        "administratorLogin": "akhtar",
-        "version": "12.0",
-        "state": "Ready",
-        "fullyQualifiedDomainName": "akhtar-server.database.windows.net",
-        "privateEndpointConnections": [],
-        "minimalTlsVersion": "1.2",
-        "publicNetworkAccess": "Enabled"
-      }
-];
-
-const encryptionProtectors = [
-    {
-        "kind": "azurekeyvault",
-        "id": "/subscriptions/1234/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/akhtar-server/encryptionProtector/current",
-        "name": "current",
-        "type": "Microsoft.Sql/servers/encryptionProtector",
-        "serverKeyName": "sadeed-vault_sadeed-key_b5e783becb4a4e789dcd1239441d7567",
-        "serverKeyType": "AzureKeyVault",
-        "uri": "https://sadeed-vault.vault.azure.net/keys/sadeed-key/b5e783becb4a4e789dcd1239441d7567"
-    },
-    {
-        "kind": "servicemanaged",
-        "id": "/subscriptions/1234/resourceGroups/akhtar-rg/providers/Microsoft.Sql/servers/akhtar-server/encryptionProtector/current",
-        "name": "current",
-        "type": "Microsoft.Sql/servers/encryptionProtector",
-        "serverKeyName": "ServiceManaged",
-        "serverKeyType": "ServiceManaged"
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server",
+        "name": "test-server",
+        "type": "Microsoft.Sql/servers"
     }
 ];
 
-const createCache = (servers, encrypted, serversErr, encryptedErr) => {
+const managedInstances = [
+    {
+        "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/managedInstances/test-instance",
+        "name": "test-instance",
+        "type": "Microsoft.Sql/managedInstances"
+    }
+];
+
+const byokEncryptionProtector = {
+    "kind": "azurekeyvault",
+    "serverKeyType": "AzureKeyVault",
+    "uri": "https://test-vault.vault.azure.net/keys/test-key/123",
+    "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/encryptionProtector/current"
+};
+
+const serviceEncryptionProtector = {
+    "kind": "servicemanaged",
+    "serverKeyType": "ServiceManaged",
+    "id": "/subscriptions/123/resourceGroups/test-rg/providers/Microsoft.Sql/servers/test-server/encryptionProtector/current"
+};
+
+const createCache = (servers, serverEncryption, managedInstances, managedInstanceEncryption) => {
     const serverId = (servers && servers.length) ? servers[0].id : null;
+    const managedInstanceId = (managedInstances && managedInstances.length) ? managedInstances[0].id : null;
     return {
         servers: {
             listSql: {
                 'eastus': {
-                    err: serversErr,
+                    err: null,
                     data: servers
                 }
             }
@@ -59,119 +46,126 @@ const createCache = (servers, encrypted, serversErr, encryptedErr) => {
             listByServer: {
                 'eastus': {
                     [serverId]: {
-                        err: encryptedErr,
-                        data: encrypted
+                        err: null,
+                        data: serverEncryption
+                    }
+                }
+            }
+        },
+        managedInstances: {
+            list: {
+                'eastus': {
+                    err: null,
+                    data: managedInstances
+                }
+            }
+        },
+        managedInstanceEncryptionProtectors: {
+            listByInstance: {
+                'eastus': {
+                    [managedInstanceId]: {
+                        err: null,
+                        data: managedInstanceEncryption
                     }
                 }
             }
         }
-    }
+    };
 };
 
 describe('tdeProtectorEncrypted', function() {
     describe('run', function() {
-        it('should give passing result if no SQL servers found', function(done) {
+        it('should give passing result if no SQL servers or managed instances found', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('No SQL servers found');
-                expect(results[0].region).to.equal('eastus');
-                done()
+                expect(results[1].status).to.equal(0);
+                expect(results[1].message).to.include('No managed instances found');
+                done();
             };
 
-            const cache = createCache(
-                []
-            );
-
+            const cache = createCache([], null, [], null);
             tdeProtectorEncrypted.run(cache, {}, callback);
         });
 
-        it('should give passing result if No SQL Server Encryption Protectors found for server', function(done) {
+        it('should give passing result if no encryption protectors found', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No SQL Server Encryption Protectors found for server');
-                expect(results[0].region).to.equal('eastus');
-                done()
+                expect(results[0].message).to.include('No SQL Server Encryption Protectors found');
+                expect(results[1].status).to.equal(0);
+                expect(results[1].message).to.include('No Managed Instance Encryption Protectors found');
+                done();
             };
 
-            const cache = createCache(
-                servers,
-                []
-            );
-
+            const cache = createCache(servers, [], managedInstances, []);
             tdeProtectorEncrypted.run(cache, {}, callback);
         });
 
-        it('should give failing result if SQL Server TDE protector is not encrypted with BYOK', function(done) {
+        it('should give failing result if TDE protector is not encrypted with BYOK', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('SQL Server TDE protector is not encrypted with BYOK');
-                expect(results[0].region).to.equal('eastus');
-                done()
+                expect(results[1].status).to.equal(2);
+                expect(results[1].message).to.include('Managed Instance TDE protector is not encrypted with BYOK');
+                done();
             };
 
             const cache = createCache(
-                servers,
-                [encryptionProtectors[1]]
+                servers, [serviceEncryptionProtector],
+                managedInstances, [serviceEncryptionProtector]
             );
-
             tdeProtectorEncrypted.run(cache, {}, callback);
         });
 
-        it('should give passing result if SQL Server TDE protector is encrypted with BYOK', function(done) {
+        it('should give passing result if TDE protector is encrypted with BYOK', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('SQL Server TDE protector is encrypted with BYOK');
-                expect(results[0].region).to.equal('eastus');
-                done()
+                expect(results[1].status).to.equal(0);
+                expect(results[1].message).to.include('Managed Instance TDE protector is encrypted with BYOK');
+                done();
             };
 
             const cache = createCache(
-                servers,
-                [encryptionProtectors[0]]
+                servers, [byokEncryptionProtector],
+                managedInstances, [byokEncryptionProtector]
             );
-
             tdeProtectorEncrypted.run(cache, {}, callback);
         });
 
-        it('should give unknown result if Unable to query for SQL servers', function(done) {
+        it('should give passing result if TDE protector is encrypted with service-managed key when that is allowed', function(done) {
             const callback = (err, results) => {
-                expect(results.length).to.equal(1);
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('SQL Server TDE protector is encrypted with service-managed key');
+                expect(results[1].status).to.equal(0);
+                expect(results[1].message).to.include('Managed Instance TDE protector is encrypted with service-managed key');
+                done();
+            };
+
+            const cache = createCache(
+                servers, [serviceEncryptionProtector],
+                managedInstances, [serviceEncryptionProtector]
+            );
+            tdeProtectorEncrypted.run(cache, { sql_tde_protector_encryption_key: 'default' }, callback);
+        });
+
+        it('should give unknown result if unable to query SQL servers or managed instances', function(done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query for SQL servers');
-                expect(results[0].region).to.equal('eastus');
-                done()
+                expect(results[1].status).to.equal(3);
+                expect(results[1].message).to.include('Unable to query for managed instances');
+                done();
             };
 
-            const cache = createCache(
-                servers,
-                [],
-                { message: 'unable to query servers'}
-            );
-
+            const cache = createCache(null, null, null, null);
             tdeProtectorEncrypted.run(cache, {}, callback);
         });
-
-        it('should give unknown result if Unable to query for SQL Server Encryption Protectors', function(done) {
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for SQL Server Encryption Protectors');
-                expect(results[0].region).to.equal('eastus');
-                done()
-            };
-
-            const cache = createCache(
-                servers,
-                [],
-                null,
-                { message: 'Unable to query for Vulnerability Assessments setting'}
-            );
-
-            tdeProtectorEncrypted.run(cache, {}, callback);
-        });
-    })
+    });
 });

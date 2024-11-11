@@ -136,5 +136,6 @@ module.exports = {
     batchAccounts: locations,
     machineLearning: locations,
     apiManagementService: locations,
-    synapse: locations
+    synapse: locations,
+    managedInstances: locations
 };
