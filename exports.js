@@ -1067,6 +1067,7 @@ module.exports = {
         'keyVaultSecretExpiry'          : require(__dirname + '/plugins/azure/keyvaults/keyVaultSecretExpiry.js'),
         'keyVaultSecretExpiryNonRbac'   : require(__dirname + '/plugins/azure/keyvaults/keyVaultSecretExpiryNonRbac.js'),
         'keyVaultKeyExpiry'             : require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiry.js'),
+        'keyVaultKeyExpiryNonRbac'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultKeyExpiryNonRbac.js'),
         'allowedCertificateKeyTypes'    : require(__dirname + '/plugins/azure/keyvaults/allowedCertificateKeyTypes.js'),
         'appTierCmkInUse'               : require(__dirname + '/plugins/azure/keyvaults/appTierCmkInUse.js'),
         'keyVaultInUse'                 : require(__dirname + '/plugins/azure/keyvaults/keyVaultInUse.js'),
