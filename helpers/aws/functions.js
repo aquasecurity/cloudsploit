@@ -1243,7 +1243,8 @@ var getApiIdFromArn = function(arn) {
     if (!arn) return null;
     const matches = arn.match(/arn:aws:execute-api:[^:]+:[^:]+:([^/]+)/);
     return matches ? matches[1] : null;
-}
+};
+
 var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs, region, results, resource) {
     var internetExposed = '';
     var isSubnetPrivate = false;

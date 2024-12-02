@@ -52,7 +52,7 @@ module.exports = {
                 let lambdaResource = {
                     functionUrlConfig: getFunctionUrlConfig,
                     functionPolicy: getPolicy
-                }
+                };
 
                 let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], [], region, results, lambdaResource);
 
