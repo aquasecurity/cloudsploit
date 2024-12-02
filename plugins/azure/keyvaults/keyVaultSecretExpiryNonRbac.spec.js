@@ -5,7 +5,7 @@ var secretExpiryPass = new Date();
 secretExpiryPass.setMonth(secretExpiryPass.getMonth() + 2);
 
 var secretExpiryFail = new Date();
-secretExpiryFail.setMonth(secretExpiryFail.getMonth() + 1);
+secretExpiryFail.setDate(secretExpiryFail.getDate() + 25); // Set to 35 days in the future
 
 var secretExpired = new Date();
 secretExpired.setMonth(secretExpired.getMonth() - 1);
