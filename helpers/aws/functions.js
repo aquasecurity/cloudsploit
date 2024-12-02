@@ -1240,14 +1240,49 @@ var getAttachedELBs =  function(cache, source, region, resourceId, lbField, lbAt
 };
 
 var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs, region, results, resource) {
-
     var internetExposed = '';
     var isSubnetPrivate = false;
+
+    if (resource && (resource.functionPolicy || resource.functionUrlConfig)) {
+        // Check Function URL exposure
+        if (resource.functionUrlConfig && resource.functionUrlConfig.data && 
+            resource.functionUrlConfig.data.AuthType === 'NONE') {
+            internetExposed += 'public function URL';
+        }
+
+        // Check API Gateway exposure
+        if (resource.functionPolicy && resource.functionPolicy.data && 
+            resource.functionPolicy.data.Policy) {
+            let statements = helpers.normalizePolicyDocument(resource.functionPolicy.data.Policy);
+            
+            for (let statement of statements) {
+                if (statement.Principal && statement.Principal.Service === 'apigateway.amazonaws.com') {
+                    let getRestApis = helpers.addSource(cache, source,
+                        ['apigateway', 'getRestApis', region]);
+
+                    if (getRestApis && getRestApis.data && getRestApis.data.items) {
+                        let apiId = getApiIdFromArn(statement.SourceArn);
+                        let api = getRestApis.data.items.find(a => a.id === apiId);
+                        
+                        if (api && api.endpointConfiguration && 
+                            (api.endpointConfiguration.types.includes('EDGE') || 
+                             api.endpointConfiguration.types.includes('REGIONAL'))) {
+                            internetExposed += internetExposed.length ? 
+                                `, API Gateway ${api.name}` : `API Gateway ${api.name}`;
+                        }
+                    }
+                }
+            }
+        }
+
+        return internetExposed;
+    }
 
     // Check public endpoint access for specific resources like EKS
     if (resource && resource.resourcesVpcConfig && resource.resourcesVpcConfig.endpointPublicAccess) {
         return 'public endpoint access';
     }
+
     // Scenario 1: check if resource is in a private subnet
     let subnetRouteTableMap, privateSubnets;
     var describeSubnets = helpers.addSource(cache, source,
