@@ -49,12 +49,12 @@ module.exports = {
                 var getPolicy = helpers.addSource(cache, source,
                     ['lambda', 'getPolicy', region, lambda.FunctionName]);
 
-                let lambda = {
+                let lambdaResource = {
                     functionUrlConfig: getFunctionUrlConfig,
                     functionPolicy: getPolicy
                 }
 
-                let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], [], region, results, lambda);
+                let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], [], region, results, lambdaResource);
 
                 if (internetExposed && internetExposed.length) {
                     helpers.addResult(results, 2,
