@@ -1257,27 +1257,39 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
         }
 
         // Check API Gateway exposure
-        if (resource.functionPolicy && resource.functionPolicy.data && 
-            resource.functionPolicy.data.Policy) {
-            let statements = helpers.normalizePolicyDocument(resource.functionPolicy.data.Policy);
-            
-            for (let statement of statements) {
-                if (statement.Principal && statement.Principal.Service === 'apigateway.amazonaws.com') {
-                    let getRestApis = helpers.addSource(cache, source,
-                        ['apigateway', 'getRestApis', region]);
+        let getRestApis = helpers.addSource(cache, source,
+            ['apigateway', 'getRestApis', region]);
 
-                    if (getRestApis && getRestApis.data && getRestApis.data.items) {
-                        let apiId = getApiIdFromArn(statement.SourceArn);
-                        let api = getRestApis.data.items.find(a => a.id === apiId);
-                        
-                        if (api && api.endpointConfiguration && 
-                            (api.endpointConfiguration.types.includes('EDGE') || 
-                             api.endpointConfiguration.types.includes('REGIONAL'))) {
-                            internetExposed += internetExposed.length ? 
-                                `, API Gateway ${api.name}` : `API Gateway ${api.name}`;
-                        }
+        if (getRestApis && getRestApis.data) {
+            for (let api of getRestApis.data) {
+
+                if (!api.id || !api.name) continue;
+
+                // Get stages to check if API is deployed
+                let getStages = helpers.addSource(cache, source,
+                    ['apigateway', 'getStages', region, api.id]);
+
+                // Only include if API has at least one stage deployed
+                if (!getStages || getStages.err || !getStages.data || !getStages.data.item || !getStages.data.item.length) continue;
+
+                // Get integrations for this API
+                let getIntegration = helpers.addSource(cache, source,
+                    ['apigateway', 'getIntegration', region, api.id]);
+
+                if (!getIntegration || getIntegration.err || !Object.keys(getIntegration).length) continue;
+                
+                for (apiResource of Object.values(getIntegration)) {
+                    // Check if any integration points to this Lambda function
+                    let lambdaIntegrations = Object.values(apiResource).filter(integration => {
+                        return integration && integration.data && (integration.data.type === 'AWS' || integration.data.type === 'AWS_PROXY') && 
+                            integration.data.uri && 
+                            integration.data.uri.includes(resource.functionArn);
+                    });
+
+                    if (lambdaIntegrations.length) {
+                        internetExposed += internetExposed.length ? `, API Gateway ${api.name}` : `API Gateway ${api.name}`;
                     }
-                }
+                }                
             }
         }
 

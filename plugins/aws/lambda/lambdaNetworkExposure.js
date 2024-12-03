@@ -10,7 +10,8 @@ module.exports = {
     more_info: 'Lambda functions can be exposed to the internet through Function URLs with public access policies or through API Gateway integrations. It\'s important to ensure these endpoints are properly secured.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html',
     recommended_action: 'Ensure Lambda Function URLs have proper authorization configured and API Gateway integrations use appropriate security measures.',
-    apis: ['Lambda:listFunctions', 'Lambda:getFunctionUrlConfig', 'Lambda:getPolicy', 'APIGateway:getRestApis'],
+    apis: ['Lambda:listFunctions', 'Lambda:getFunctionUrlConfig', 'Lambda:getPolicy', 
+        'APIGateway:getRestApis','APIGateway:getResources', 'APIGateway:getStages', 'APIGateway:getIntegration'],
     realtime_triggers: ['lambda:CreateFunctionUrlConfig', 'lambda:UpdateFunctionUrlConfig', 'lambda:DeleteFunctionUrlConfig',
         'lambda:AddPermission', 'lambda:RemovePermission',
         'apigateway:CreateRestApi', 'apigateway:DeleteRestApi', 'apigateway:UpdateRestApi',
@@ -51,7 +52,8 @@ module.exports = {
 
                 let lambdaResource = {
                     functionUrlConfig: getFunctionUrlConfig,
-                    functionPolicy: getPolicy
+                    functionPolicy: getPolicy,
+                    functionArn: lambda.FunctionArn
                 };
 
                 let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], [], region, results, lambdaResource);
