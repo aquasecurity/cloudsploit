@@ -1239,11 +1239,6 @@ var getAttachedELBs =  function(cache, source, region, resourceId, lbField, lbAt
     return elbs;
 };
 
-var getApiIdFromArn = function(arn) {
-    if (!arn) return null;
-    const matches = arn.match(/arn:aws:execute-api:[^:]+:[^:]+:([^/]+)/);
-    return matches ? matches[1] : null;
-};
 
 var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs, region, results, resource) {
     var internetExposed = '';
@@ -1278,7 +1273,7 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
 
                 if (!getIntegration || getIntegration.err || !Object.keys(getIntegration).length) continue;
                 
-                for (apiResource of Object.values(getIntegration)) {
+                for (let apiResource of Object.values(getIntegration)) {
                     // Check if any integration points to this Lambda function
                     let lambdaIntegrations = Object.values(apiResource).filter(integration => {
                         return integration && integration.data && (integration.data.type === 'AWS' || integration.data.type === 'AWS_PROXY') && 
