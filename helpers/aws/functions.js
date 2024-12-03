@@ -1591,7 +1591,7 @@ let getLambdaTargetELBs = function(cache, source, region) {
     });
 
     return lambdaELBMap;
-}
+};
 
 module.exports = {
     addResult: addResult,
