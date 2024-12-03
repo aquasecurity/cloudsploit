@@ -11,7 +11,8 @@ module.exports = {
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html',
     recommended_action: 'Ensure Lambda Function URLs have proper authorization configured and API Gateway integrations use appropriate security measures.',
     apis: ['Lambda:listFunctions', 'Lambda:getFunctionUrlConfig', 'Lambda:getPolicy', 
-        'APIGateway:getRestApis','APIGateway:getResources', 'APIGateway:getStages', 'APIGateway:getIntegration'],
+        'APIGateway:getRestApis','APIGateway:getResources', 'APIGateway:getStages', 'APIGateway:getIntegration', 'ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 
+    'ELBv2:describeTargetHealth', 'ELBv2:describeListeners', 'EC2:describeSecurityGroups'],
     realtime_triggers: ['lambda:CreateFunctionUrlConfig', 'lambda:UpdateFunctionUrlConfig', 'lambda:DeleteFunctionUrlConfig',
         'lambda:AddPermission', 'lambda:RemovePermission',
         'apigateway:CreateRestApi', 'apigateway:DeleteRestApi', 'apigateway:UpdateRestApi',
@@ -40,6 +41,8 @@ module.exports = {
                 return rcb();
             }
 
+            let lambdaELBMap = helpers.getLambdaTargetELBs(cache, source, region);
+
             for (var lambda of listFunctions.data) {
                 if (!lambda.FunctionArn) continue;
 
@@ -50,13 +53,17 @@ module.exports = {
                 var getPolicy = helpers.addSource(cache, source,
                     ['lambda', 'getPolicy', region, lambda.FunctionName]);
 
+                let elbs = helpers.getAttachedELBs(cache, source, region, lambda.FunctionArn);
+
                 let lambdaResource = {
                     functionUrlConfig: getFunctionUrlConfig,
                     functionPolicy: getPolicy,
                     functionArn: lambda.FunctionArn
                 };
 
-                let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], [], region, results, lambdaResource);
+                let targetingELBs = lambdaELBMap[lambda.FunctionArn] || [];
+
+                let internetExposed = helpers.checkNetworkExposure(cache, source, [], [], targetingELBs, region, results, lambdaResource);
 
                 if (internetExposed && internetExposed.length) {
                     helpers.addResult(results, 2,
