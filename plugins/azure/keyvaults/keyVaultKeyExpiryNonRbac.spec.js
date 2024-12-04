@@ -5,7 +5,7 @@ var keyExpiryPass = new Date();
 keyExpiryPass.setMonth(keyExpiryPass.getMonth() + 2);
 
 var keyExpiryFail = new Date();
-keyExpiryFail.setMonth(keyExpiryFail.getMonth() + 1);
+keyExpiryFail.setDate(keyExpiryFail.getDate() + 25); // Set to 35 days in the future
 
 var keyExpired = new Date();
 keyExpired.setMonth(keyExpired.getMonth() - 1);
