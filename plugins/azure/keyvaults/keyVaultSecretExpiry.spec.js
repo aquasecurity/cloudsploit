@@ -21,9 +21,8 @@ const listKeyVaults = [
             "family": "A",
             "name": "Standard"
         },
-        "properties": {
-            "enableRbacAuthorization": true
-        }
+        "enableRbacAuthorization": true,
+
     },
     {
         "id": "/subscriptions/abcdef123-ebf6-437f-a3b0-28fc0d22117e/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.KeyVault/vaults/testvault",
@@ -35,9 +34,7 @@ const listKeyVaults = [
             "family": "A",
             "name": "Standard"
         },
-        "properties": {
-            "enableRbacAuthorization": false
-        }
+        "enableRbacAuthorization": false,
     }
 ];
 

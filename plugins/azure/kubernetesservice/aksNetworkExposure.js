@@ -83,7 +83,7 @@ module.exports = {
                                 }
                             });
                             securityGroups = networkSecurityGroups.data.filter(nsg => securityGroupIDs.includes(nsg.id));
-                            internetExposed = helpers.checkNetworkExposure(cache, source, [], securityGroups, location, results, []);
+                            internetExposed = helpers.checkNetworkExposure(cache, source, [], securityGroups, location, results, {}, cluster);
                         }
                     }
                 }

@@ -18,7 +18,7 @@ module.exports = {
             regex: '^[1-9]{1}[0-9]{0,3}$',
             default: '30'
         }
-    }, 
+    },
     realtime_triggers: ['microsoftkeyvault:vaults:write', 'microsoftkeyvault:vaults:delete'],
 
     run: function(cache, settings, callback) {
@@ -47,7 +47,7 @@ module.exports = {
 
             vaults.data.forEach(function(vault) {
                 // Check if vault is non-RBAC
-                if (vault.properties && vault.properties.enableRbacAuthorization) {
+                if (vault.enableRbacAuthorization) {
                     return;
                 }
 

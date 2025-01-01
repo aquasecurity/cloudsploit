@@ -16,8 +16,8 @@ const listKeyVaults = [
         name: 'test-vault',
         type: 'Microsoft.KeyVault/vaults',
         location: 'eastus',
+        enableRbacAuthorization: true,
         properties: {
-            enableRbacAuthorization: true,
             vaultUri: 'https://test-vault.vault.azure.net/'
         }
     },
@@ -26,8 +26,8 @@ const listKeyVaults = [
         name: 'test-vault-2',
         type: 'Microsoft.KeyVault/vaults',
         location: 'eastus',
+        enableRbacAuthorization: false,
         properties: {
-            enableRbacAuthorization: false,
             vaultUri: 'https://test-vault-2.vault.azure.net/'
         }
     }
@@ -163,4 +163,4 @@ describe('keyVaultKeyExpiryRbac', function() {
             auth.run(createCache(null, [listKeyVaults[0]], [getKeys[2]]), { key_vault_key_expiry_fail: '40' }, callback);
         });
     });
-}); 
+});

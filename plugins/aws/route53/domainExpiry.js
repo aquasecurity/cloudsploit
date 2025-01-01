@@ -42,7 +42,7 @@ module.exports = {
 
                 if (difference > 35) {
                     helpers.addResult(results, 0, returnMsg, 'global', domain.DomainName);
-                } else if (domain.DomainName.endsWith(('.com.ar, .com.br, .jp')) && difference > 30) {
+                } else if (['.com.ar', '.com.br', '.jp'].some(suffix => domain.DomainName.endsWith(suffix)) && difference > 30){
                     helpers.addResult(results, 0, returnMsg, 'global', domain.DomainName);
                 } else if (difference > 0) {
                     helpers.addResult(results, 2, returnMsg, 'global', domain.DomainName);
