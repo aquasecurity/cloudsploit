@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Network Exposure',
+    title: 'Internet Exposure',
     category: 'Virtual Machines',
     domain: 'Compute',
     severity: 'Info',
