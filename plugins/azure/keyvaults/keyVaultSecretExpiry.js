@@ -47,7 +47,7 @@ module.exports = {
 
             vaults.data.forEach(function(vault) {
                 // Check if vault is RBAC-enabled
-                if (!vault.properties || !vault.properties.enableRbacAuthorization) {
+                if (!vault.enableRbacAuthorization) {
                     return;
                 }
 

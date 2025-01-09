@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Network Exposure',
+    title: 'Internet Exposure',
     category: 'Kubernetes',
     domain: 'Containers',
     severity: 'Info',
@@ -30,19 +30,18 @@ module.exports = {
 
         var project = projects.data[0].name;
 
-        async.each(regions.kubernetes, function(region, rcb){
-            
-            let firewalls = helpers.addSource(
-                cache, source, ['firewalls', 'list', 'global']);
-    
-            if (!firewalls || firewalls.err || !firewalls.data) {
-                helpers.addResult(results, 3, 'Unable to query firewall rules', region, null, null, firewalls.err);
-            }
-    
-            if (!firewalls.data.length) {
-                helpers.addResult(results, 0, 'No firewall rules found', region);
-            }
+        let firewalls = helpers.addSource(
+            cache, source, ['firewalls', 'list', 'global']);
 
+        if (!firewalls || firewalls.err || !firewalls.data) {
+            helpers.addResult(results, 3, 'Unable to query firewall rules', 'global', null, null, firewalls.err);
+        }
+
+        if (!firewalls.data.length) {
+            helpers.addResult(results, 0, 'No firewall rules found', 'global');
+        }
+
+        async.each(regions.kubernetes, function(region, rcb){
             let clusters = helpers.addSource(cache, source,
                 ['kubernetes', 'list', region]);
 

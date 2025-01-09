@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Network Exposure',
+    title: 'Internet Exposure',
     category: 'Kubernetes Service',
     domain: 'Containers',
     severity: 'High',
@@ -83,7 +83,7 @@ module.exports = {
                                 }
                             });
                             securityGroups = networkSecurityGroups.data.filter(nsg => securityGroupIDs.includes(nsg.id));
-                            internetExposed = helpers.checkNetworkExposure(cache, source, [], securityGroups, location, results, []);
+                            internetExposed = helpers.checkNetworkExposure(cache, source, [], securityGroups, location, results, {}, cluster);
                         }
                     }
                 }

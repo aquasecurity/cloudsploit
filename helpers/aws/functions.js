@@ -1239,7 +1239,6 @@ var getAttachedELBs =  function(cache, source, region, resourceId, lbField, lbAt
     return elbs;
 };
 
-
 var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs, region, results, resource) {
     var internetExposed = '';
     var isSubnetPrivate = false;
@@ -1249,41 +1248,41 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
         if (resource.functionUrlConfig && resource.functionUrlConfig.data) {
             if (resource.functionUrlConfig.data.AuthType === 'NONE') {
                 internetExposed += 'public function URL';
-            } else if (resource.functionUrlConfig.data.AuthType === 'AWS_IAM' && 
-                      resource.functionPolicy && resource.functionPolicy.data) {
+            } else if (resource.functionUrlConfig.data.AuthType === 'AWS_IAM' &&
+                resource.functionPolicy && resource.functionPolicy.data) {
                 let authConfig = resource.functionPolicy.data;
                 if (authConfig.Policy) {
                     let statements = normalizePolicyDocument(authConfig.Policy);
-                    
+
                     if (statements) {
                         let hasDenyAll = false;
                         let hasPublicAllow = false;
                         let hasRestrictiveConditions = false;
-                        
+
                         for (let statement of statements) {
                             // Check for explicit deny statements first
                             if (statement.Effect === 'Deny') {
                                 // Check if there's a deny for all principals
-                                if ((!statement.Condition || Object.keys(statement.Condition).length === 0) && 
+                                if ((!statement.Condition || Object.keys(statement.Condition).length === 0) &&
                                     globalPrincipal(statement.Principal)) {
                                     hasDenyAll = true;
                                     break;
                                 }
-                                
+
                                 // Check for deny with IP restrictions
-                                if (statement.Condition && 
-                                    (statement.Condition['NotIpAddress'] || 
-                                     statement.Condition['IpAddress'])) {
+                                if (statement.Condition &&
+                                    (statement.Condition['NotIpAddress'] ||
+                                        statement.Condition['IpAddress'])) {
                                     hasRestrictiveConditions = true;
                                 }
                             } else if (statement.Effect === 'Allow') {
                                 // Skip if the statement doesn't include relevant Lambda actions
-                                if (!statement.Action || 
-                                    (!Array.isArray(statement.Action) ? 
+                                if (!statement.Action ||
+                                    (!Array.isArray(statement.Action) ?
                                         !statement.Action.includes('lambda:InvokeFunctionUrl') :
-                                        !statement.Action.some(action => 
-                                            action === '*' || 
-                                            action === 'lambda:*' || 
+                                        !statement.Action.some(action =>
+                                            action === '*' ||
+                                            action === 'lambda:*' ||
                                             action === 'lambda:InvokeFunctionUrl'
                                         ))) {
                                     continue;
@@ -1303,17 +1302,17 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
                                             'aws:PrincipalArn',
                                             'aws:SourceAccount'
                                         ];
-                                        
-                                        const hasRestriction = restrictiveConditions.some(condition => 
-                                            Object.keys(statement.Condition).some(key => 
+
+                                        const hasRestriction = restrictiveConditions.some(condition =>
+                                            Object.keys(statement.Condition).some(key =>
                                                 key.toLowerCase().includes(condition.toLowerCase())
                                             )
                                         );
-                                        
+
                                         if (hasRestriction) {
                                             hasRestrictiveConditions = true;
                                         } else if (statement.Condition['StringEquals'] &&
-                                                 statement.Condition['StringEquals']['lambda:FunctionUrlAuthType'] === 'NONE') {
+                                            statement.Condition['StringEquals']['lambda:FunctionUrlAuthType'] === 'NONE') {
                                             hasPublicAllow = true;
                                         }
                                     }
@@ -1323,8 +1322,8 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
 
                         // Only mark as exposed if we have a public allow and no restrictions
                         if (hasPublicAllow && !hasDenyAll && !hasRestrictiveConditions) {
-                            internetExposed += internetExposed.length ? 
-                                ', function URL with global IAM access' : 
+                            internetExposed += internetExposed.length ?
+                                ', function URL with global IAM access' :
                                 'function URL with global IAM access';
                         }
                     }
@@ -1352,19 +1351,19 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
                     ['apigateway', 'getIntegration', region, api.id]);
 
                 if (!getIntegration || getIntegration.err || !Object.keys(getIntegration).length) continue;
-                
+
                 for (let apiResource of Object.values(getIntegration)) {
                     // Check if any integration points to this Lambda function
                     let lambdaIntegrations = Object.values(apiResource).filter(integration => {
-                        return integration && integration.data && (integration.data.type === 'AWS' || integration.data.type === 'AWS_PROXY') && 
-                            integration.data.uri && 
+                        return integration && integration.data && (integration.data.type === 'AWS' || integration.data.type === 'AWS_PROXY') &&
+                            integration.data.uri &&
                             integration.data.uri.includes(resource.functionArn);
                     });
 
                     if (lambdaIntegrations.length) {
                         internetExposed += internetExposed.length ? `, API Gateway ${api.name}` : `API Gateway ${api.name}`;
                     }
-                }                
+                }
             }
         }
     }
@@ -1375,7 +1374,7 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
     }
 
     if (!resource.functionArn) {
-    // Scenario 1: check if resource is in a private subnet
+        // Scenario 1: check if resource is in a private subnet
         let subnetRouteTableMap, privateSubnets;
         var describeSubnets = helpers.addSource(cache, source,
             ['ec2', 'describeSubnets', region]);
@@ -1500,15 +1499,13 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
     if (elbs && elbs.length) {
         if (!describeSecurityGroups || !describeSecurityGroups.data) {
             describeSecurityGroups = helpers.addSource(cache, source,
-                ['ec2', 'describeSecurityGroups', region]);   
+                ['ec2', 'describeSecurityGroups', region]);
         }
 
         elbs.forEach(lb => {
             let isLBPublic = false;
             if (lb.Scheme && lb.Scheme.toLowerCase() === 'internet-facing') {
                 if (lb.SecurityGroups && lb.SecurityGroups.length) {
-                    var describeSecurityGroups = helpers.addSource(cache, source,
-                        ['ec2', 'describeSecurityGroups', region]);
                     if (describeSecurityGroups &&
                         !describeSecurityGroups.err && describeSecurityGroups.data && describeSecurityGroups.data.length) {
                         let elbSGs = describeSecurityGroups.data.filter(sg => lb.SecurityGroups.includes(sg.GroupId));
@@ -1533,7 +1530,7 @@ var checkNetworkExposure = function(cache, source, subnets, securityGroups, elbs
 
 let getLambdaTargetELBs = function(cache, source, region) {
     let lambdaELBMap = {};
-    
+
     var describeLoadBalancersv2 = helpers.addSource(cache, source,
         ['elbv2', 'describeLoadBalancers', region]);
 
@@ -1545,18 +1542,18 @@ let getLambdaTargetELBs = function(cache, source, region) {
         var describeTargetGroups = helpers.addSource(cache, source,
             ['elbv2', 'describeTargetGroups', region, lb.DNSName]);
 
-        if (!describeTargetGroups || describeTargetGroups.err || !describeTargetGroups.data || 
+        if (!describeTargetGroups || describeTargetGroups.err || !describeTargetGroups.data ||
             !describeTargetGroups.data.TargetGroups) return;
 
         describeTargetGroups.data.TargetGroups.forEach(tg => {
             var describeTargetHealth = helpers.addSource(cache, source,
                 ['elbv2', 'describeTargetHealth', region, tg.TargetGroupArn]);
 
-            if (!describeTargetHealth || describeTargetHealth.err || !describeTargetHealth.data || 
+            if (!describeTargetHealth || describeTargetHealth.err || !describeTargetHealth.data ||
                 !describeTargetHealth.data.TargetHealthDescriptions) return;
 
             describeTargetHealth.data.TargetHealthDescriptions.forEach(target => {
-                if (target.Target && target.Target.Id && 
+                if (target.Target && target.Target.Id &&
                     target.Target.Id.startsWith('arn:aws:lambda')) {
                     if (!lambdaELBMap[target.Target.Id]) {
                         lambdaELBMap[target.Target.Id] = [];
@@ -1567,13 +1564,13 @@ let getLambdaTargetELBs = function(cache, source, region) {
                         targetGroupArn: tg.TargetGroupArn,
                         targets: [target.Target]
                     });
-                    
+
                     // Check if there's an active listener for this target group
                     let hasListener = false;
                     var describeListeners = helpers.addSource(cache, source,
                         ['elbv2', 'describeListeners', region, lb.DNSName]);
-                    
-                    if (describeListeners && describeListeners.data && 
+
+                    if (describeListeners && describeListeners.data &&
                         describeListeners.data.Listeners) {
                         hasListener = describeListeners.data.Listeners.some(listener =>
                             listener.DefaultActions.some(action =>
@@ -1581,7 +1578,7 @@ let getLambdaTargetELBs = function(cache, source, region) {
                             )
                         );
                     }
-                    
+
                     if (hasListener) {
                         lambdaELBMap[target.Target.Id].push(lb);
                     }

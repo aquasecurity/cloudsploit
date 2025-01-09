@@ -30,7 +30,7 @@ module.exports = {
         };
 
         async.each(locations.vaults, function(location, rcb) {
-            var vaults = helpers.addSource(cache, source, 
+            var vaults = helpers.addSource(cache, source,
                 ['vaults', 'list', location]);
 
             if (!vaults) return rcb();
@@ -46,12 +46,7 @@ module.exports = {
             }
 
             vaults.data.forEach(function(vault) {
-                if (!vault || !vault.properties) {
-                    helpers.addResult(results, 3, 'Unable to read vault properties', location, vault.id);
-                    return;
-                }
-
-                if (vault.properties.enableRbacAuthorization) {
+                if (vault.enableRbacAuthorization) {
                     return;
                 }
 
@@ -59,10 +54,10 @@ module.exports = {
                     ['vaults', 'getKeys', location, vault.id]);
 
                 if (!keys || keys.err || !keys.data) {
-                    helpers.addResult(results, 3, 
+                    helpers.addResult(results, 3,
                         'Unable to query for Key Vault keys: ' + helpers.addError(keys), location, vault.id);
                 } else if (!keys.data.length) {
-                    helpers.addResult(results, 0, 
+                    helpers.addResult(results, 0,
                         'No Key Vault keys found in non RBAC vault', location, vault.id);
                 } else {
                     keys.data.forEach(function(key) {

@@ -5,7 +5,7 @@ var keyExpiryPass = new Date();
 keyExpiryPass.setMonth(keyExpiryPass.getMonth() + 2);
 
 var keyExpiryFail = new Date();
-keyExpiryFail.setDate(keyExpiryFail.getDate() + 25); // Set to 35 days in the future
+keyExpiryFail.setDate(keyExpiryFail.getDate() + 25);
 
 var keyExpired = new Date();
 keyExpired.setMonth(keyExpired.getMonth() - 1);
@@ -16,8 +16,8 @@ const listKeyVaults = [
         name: 'test-vault',
         type: 'Microsoft.KeyVault/vaults',
         location: 'eastus',
+        enableRbacAuthorization: false,
         properties: {
-            enableRbacAuthorization: false,
             vaultUri: 'https://test-vault.vault.azure.net/'
         }
     },
@@ -26,8 +26,8 @@ const listKeyVaults = [
         name: 'test-vault-2',
         type: 'Microsoft.KeyVault/vaults',
         location: 'eastus',
+        enableRbacAuthorization: true,
         properties: {
-            enableRbacAuthorization: true,
             vaultUri: 'https://test-vault-2.vault.azure.net/'
         }
     }
@@ -172,4 +172,4 @@ describe('keyVaultKeyExpiryNonRbac', function() {
             auth.run(createCache(null, [listKeyVaults[0]], [getKeys[2]]), { key_vault_key_expiry_fail: '40' }, callback);
         });
     });
-}); 
+});
