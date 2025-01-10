@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     severity: 'High',
     description: 'Ensure that Azure Key vaults have private endpoints configured.',
-    more_info: 'Configuring private link endpoints ensures secure network traffic from Azure Key Vault to the resources requesting secrets and keys. Using Private endpoints minimize the risk of public internet exposure and protect against external attacks.',
+    more_info: 'Configuring private link endpoints ensures secure network traffic from Azure Key Vault to the resources requesting secrets and keys. Using Private endpoints minimize the risk of public network exposure and protect against external attacks.',
     recommended_action: 'Ensure that private endpoints are configured properly and public network access is disabled for Key Vaults.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/private-link-service',
     apis: ['vaults:list'],

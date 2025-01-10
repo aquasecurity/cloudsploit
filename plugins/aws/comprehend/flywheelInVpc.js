@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Compute',
     severity: 'Low',
     description: 'Ensure that an Amazon Comprehend Flywheel is configured with a VPC.',
-    more_info: 'Configuring Amazon Comprehend flywheel within a VPC, establishes a secure environment that prevents unauthorized access to your data stored in job containers, minimizing the risk of internet exposure, data breaches and ensuring compliance with security standards.',
+    more_info: 'Configuring Amazon Comprehend flywheel within a VPC, establishes a secure environment that prevents unauthorized access to your data stored in job containers, minimizing the risk of network exposure, data breaches and ensuring compliance with security standards.',
     recommended_action: 'Update Comprehend Flywheel and configure it within VPC.',
     link: 'https://docs.aws.amazon.com/comprehend/latest/dg/usingVPC.html',
     apis: ['Comprehend:listFlywheels', 'Comprehend:describeFlywheel'],

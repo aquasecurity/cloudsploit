@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensure that Azure Automation accounts have private endpoints enabled.',
-    more_info: 'Enabling private endpoints for Automation Account enhances security by allowing access exclusively through a private network, minimizing the risk of public internet exposure and protecting against external attacks.',
+    more_info: 'Enabling private endpoints for Automation Account enhances security by allowing access exclusively through a private network, minimizing the risk of public network exposure and protecting against external attacks.',
     recommended_action: 'Ensure that private endpoints are configured properly for all Automation Accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/how-to/private-link-security',
     apis: ['automationAccounts:list', 'automationAccounts:get'],
