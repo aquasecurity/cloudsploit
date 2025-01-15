@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'Internet Exposure',
+    title: 'Network Exposure',
     category: 'EKS',
     domain: 'Containers',
     severity: 'Info',

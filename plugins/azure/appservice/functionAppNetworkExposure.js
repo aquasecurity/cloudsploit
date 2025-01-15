@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Internet Exposure',
+    title: 'Network Exposure',
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Info',
