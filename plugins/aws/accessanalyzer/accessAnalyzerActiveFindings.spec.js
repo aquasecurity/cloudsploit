@@ -138,6 +138,83 @@ const listFindings = [
         
 ];
 
+const listFindingsV2 = [
+{
+    "findings": [
+            {
+                "analyzedAt": "2025-01-23T13:06:24+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "1a234567-bc6d-7yui-h5j7-4f5f9j8987y0",
+                "resource": "arn:aws:iam::123456789123:role/abcd-abcd-adfitoui-abcdefg-p1-AsdfghTfjdudnjkDkjg-Z9JgMyMzcxOZ",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "ACTIVE",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedIAMRole"
+            },
+            {
+                "analyzedAt": "2025-01-23T13:06:24+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "938r4848-4h4j-8449-76d8-8768dh5dhh4u",
+                "resource": "arn:aws:iam::123456789123:role/abcd-abcd-adfitoui-abcdefg-AsdfghTfjdudnjkDkjg-6vzrTVSqTaNe",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "ACTIVE",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedIAMRole"
+            },
+            {
+                "analyzedAt": "2025-01-23T13:06:55+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "7484f848-984j-498l-784s-yryh74748f45",
+                "resource": "arn:aws:iam::123456789123:role/service-role/sdfghyFj-FGH-njkkjg-plgd-6uhjn9ok",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "ACTIVE",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedPermission"
+            },
+        ]
+},
+{
+    "findings": [
+            {
+                "analyzedAt": "2025-01-23T13:06:24+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "1a234567-bc6d-7yui-h5j7-4f5f9j8987y0",
+                "resource": "arn:aws:iam::123456789123:role/abcd-abcd-adfitoui-abcdefg-p1-AsdfghTfjdudnjkDkjg-Z9JgMyMzcxOZ",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "ARCHIVED",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedIAMRole"
+            },
+            {
+                "analyzedAt": "2025-01-23T13:06:24+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "938r4848-4h4j-8449-76d8-8768dh5dhh4u",
+                "resource": "arn:aws:iam::123456789123:role/abcd-abcd-adfitoui-abcdefg-AsdfghTfjdudnjkDkjg-6vzrTVSqTaNe",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "ARCHIVED",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedIAMRole"
+            },
+            {
+                "analyzedAt": "2025-01-23T13:06:55+00:00",
+                "createdAt": "2025-01-23T13:06:56+00:00",
+                "id": "7484f848-984j-498l-784s-yryh74748f45",
+                "resource": "arn:aws:iam::123456789123:role/service-role/sdfghyFj-FGH-njkkjg-plgd-6uhjn9ok",
+                "resourceType": "AWS::IAM::Role",
+                "resourceOwnerAccount": "123456789123",
+                "status": "RESOLVED",
+                "updatedAt": "2025-01-23T13:06:56+00:00",
+                "findingType": "UnusedPermission"
+            },
+        ]
+}
+
+]
 
 const createCache = (analyzer, listFindings, analyzerErr, listFindingsErr) => {
     var analyzerArn = (analyzer && analyzer.length) ? analyzer[0].arn: null;
@@ -163,7 +240,7 @@ const createCache = (analyzer, listFindings, analyzerErr, listFindingsErr) => {
 
 describe('accessAnalyzerActiveFindings', function () {
     describe('run', function () {
-        it('should FAIL if Amazon IAM access analyzer has active findings.', function (done) {
+        it('should FAIL if Amazon IAM access analyzer V1 has active findings.', function (done) {
             const cache = createCache(listAnalyzers, listFindings[0]);
             accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -174,8 +251,32 @@ describe('accessAnalyzerActiveFindings', function () {
             });
         });
 
-        it('should PASS if Amazon IAM access analyzer have no active findings.', function (done) {
+        it('should FAIL if Amazon IAM access analyzer v2 has active findings.', function (done) {
+            const cache = createCache(listAnalyzers, listFindingsV2[0]);
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Amazon IAM Access Analyzer has active findings');
+                done();
+            });
+        });
+
+        it('should PASS if Amazon IAM access analyzer V1 have no active findings.', function (done) {
             const cache = createCache(listAnalyzers, listFindings[1]);
+            accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Amazon IAM Access Analyzer has no active findings');
+                
+                done();
+            });
+        });
+
+
+        it('should PASS if Amazon IAM access analyzer V2 have no active findings.', function (done) {
+            const cache = createCache(listAnalyzers, listFindingsV2[1]);
             accessAnalyzerActiveFindings.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
