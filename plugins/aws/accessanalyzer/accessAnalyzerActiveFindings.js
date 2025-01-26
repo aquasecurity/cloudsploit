@@ -40,23 +40,23 @@ module.exports = {
                 if (!analyzer.arn) continue;
 
                 let resource = analyzer.arn;
-                let totalFiltered = []
+                let totalFiltered = [];
 
                 var listFindings = helpers.addSource(cache, source,
                     ['accessanalyzer', 'listFindings', region, analyzer.arn]);
 
-                    if (listFindings && !listFindings.err && listFindings.data) {
-                        let filtered = listFindings.data.findings.filter(finding => finding.status === 'ACTIVE');
-                        totalFiltered = totalFiltered.concat(filtered)
-                    }
+                if (listFindings && !listFindings.err && listFindings.data) {
+                    let filtered = listFindings.data.findings.filter(finding => finding.status === 'ACTIVE');
+                    totalFiltered = totalFiltered.concat(filtered);
+                }
 
                 var listFindingsV2 = helpers.addSource(cache, source,
                     ['accessanalyzer', 'listFindingsV2', region, analyzer.arn]);
 
-                    if (listFindingsV2 && !listFindingsV2.err && listFindingsV2.data) {
-                        let filteredv2 = listFindingsV2.data.findings.filter(finding => finding.status === 'ACTIVE');
-                        totalFiltered = totalFiltered.concat(filteredv2)
-                    }
+                if (listFindingsV2 && !listFindingsV2.err && listFindingsV2.data) {
+                    let filteredv2 = listFindingsV2.data.findings.filter(finding => finding.status === 'ACTIVE');
+                    totalFiltered = totalFiltered.concat(filteredv2);
+                }
                 
                 if ((!listFindings || listFindings.err || !listFindings.data) && (!listFindingsV2 || listFindingsV2.err || !listFindingsV2.data)) {
                     helpers.addResult(results, 3,
