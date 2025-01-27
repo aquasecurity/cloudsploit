@@ -1833,8 +1833,14 @@ var postcalls = [
                 reliesOnCall: 'listAnalyzers',
                 override: true
             },
+            listFindingsV2: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            },
             sendIntegration: serviceMap['IAM'][0]
         },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
@@ -2684,7 +2690,7 @@ var postcalls = [
                 reliesOnCall: 'listFunctions',
                 filterKey: 'FunctionName',
                 filterValue: 'FunctionName',
-                rateLimit: 100, // it's not documented but experimentially 10/second works.
+                rateLimit: 100, // it's not documented but experimental 10/second works.
             },
             getFunction: {
                 reliesOnService: 'lambda',
