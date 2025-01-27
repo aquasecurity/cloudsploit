@@ -1,5 +1,7 @@
 var expect = require('chai').expect;
 var automationAcctExpiredWebhooks = require('./automationAcctExpiredWebhooks');
+var nextMonthExpiry = new Date();
+nextMonthExpiry.setMonth(nextMonthExpiry.getMonth() + 1);
 
 const automationAccounts = [
     {
@@ -31,7 +33,7 @@ const webhooks = [
         "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Automation/automationAccounts/test-automationacct/webhooks/test1",
         "name": "test1",
         "creationTime": "2024-01-22T13:33:52.1066667+00:00",
-        "expiryTime": "2025-01-22T13:33:52.1066667+00:00",
+        "expiryTime": nextMonthExpiry,
     },
     {
         "id": "/subscriptions/12345/resourceGroups/test-rg/providers/Microsoft.Automation/automationAccounts/test-automationacct/webhooks/test2",
