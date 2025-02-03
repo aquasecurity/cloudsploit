@@ -16,9 +16,9 @@ module.exports = {
             }
 
             // Define allowed characters for each part
-            const allowedPluginIdChars = /^[a-zA-Z0-9_*-]{1,64}$/;
-            const allowedRegionChars = /^[a-zA-Z0-9_*-]{1,32}$/;
-            const allowedResourceIdChars = /^[a-zA-Z0-9_*\/-]{1,128}$/;
+            const allowedPluginIdChars = /^[a-zA-Z0-9_*-]{1,64}$/; // eslint-disable-line
+            const allowedRegionChars = /^[a-zA-Z0-9_*-]{1,32}$/;  // eslint-disable-line
+            const allowedResourceIdChars = /^[a-zA-Z0-9_*\/-]{1,128}$/; // eslint-disable-line
 
             const [pluginId, region, resourceId] = parts;
 
@@ -44,7 +44,7 @@ module.exports = {
 
                 // Escape special regex characters except * which we handle specially
                 const escapedExpr = expr
-                    .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // Escape special regex chars
+                    .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // eslint-disable-line
                     .split('*')
                     .join('.*'); // Replace * with .*
 
