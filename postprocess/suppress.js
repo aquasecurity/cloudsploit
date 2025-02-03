@@ -14,23 +14,25 @@ module.exports = {
             if (parts.length !== 3) {
                 throw new Error(`Invalid suppression format: ${expr}. Expected format: pluginId:region:resourceId`);
             }
-
-            // Define allowed characters for each part
-            const allowedPluginIdChars = /^[a-zA-Z0-9_*-]{1,64}$/; // eslint-disable-line
-            const allowedRegionChars = /^[a-zA-Z0-9_*-]{1,32}$/;  // eslint-disable-line
-            const allowedResourceIdChars = /^[a-zA-Z0-9_*\/-]{1,128}$/; // eslint-disable-line
-
+            
+            const pluginPattern = /^[A-Za-z0-9]{1,255}$/; // eslint-disable-line
+            const regionPattern = /^[A-Za-z0-9\-_]{1,255}$/; // eslint-disable-line
+            const resourcePattern = /^[ A-Za-z0-9._~()'!*:@,;+?#$%^&={}\\[\]\\|\"/-]{1,255}$/;  // eslint-disable-line
             const [pluginId, region, resourceId] = parts;
+            
+            // Validate pluginId
+            if (!pluginPattern.test(pluginId)) {
+                throw new Error(`Invalid pluginId in suppression: ${pluginId}. Must only contain letters and numbers and be between 1-255 characters.`);
+            }
 
-            // Validate each part
-            if (!allowedPluginIdChars.test(pluginId)) {
-                throw new Error(`Invalid pluginId in suppression: ${pluginId}. Only alphanumeric, underscore, hyphen, and * are allowed.`);
+            // Validate region
+            if (!regionPattern.test(region)) {
+                throw new Error(`Invalid region in suppression: ${region}. Must only contain letters, numbers, hyphen (-), and underscore (_) and be between 1-255 characters.`);
             }
-            if (!allowedRegionChars.test(region)) {
-                throw new Error(`Invalid region in suppression: ${region}. Only alphanumeric, underscore, hyphen, and * are allowed.`);
-            }
-            if (!allowedResourceIdChars.test(resourceId)) {
-                throw new Error(`Invalid resourceId in suppression: ${resourceId}. Only alphanumeric, underscore, hyphen, forward slash, and * are allowed.`);
+
+            // Validate resourceId with specific pattern
+            if (!resourcePattern.test(resourceId)) {
+                throw new Error(`Invalid resourceId in suppression: ${resourceId}. Must match allowed pattern and be between 1-255 characters.`);
             }
 
             return true;
@@ -44,7 +46,7 @@ module.exports = {
 
                 // Escape special regex characters except * which we handle specially
                 const escapedExpr = expr
-                    .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // eslint-disable-line
+                    .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // Escape special regex chars
                     .split('*')
                     .join('.*'); // Replace * with .*
 
