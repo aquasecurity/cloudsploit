@@ -230,7 +230,7 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            addRoleFailures(roleFailures, statements, 'managed', policy.PolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                         }
                     }
                 }
@@ -249,7 +249,7 @@ module.exports = {
 
                         var statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
+                        addRoleFailures(roleFailures, statements, 'inline', policyName, config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
                     }
                 }
             }
@@ -271,7 +271,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
+function addRoleFailures(roleFailures, statements, policyType, policyName,ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -280,11 +280,11 @@ function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpec
                 statement.Action.indexOf('*') > -1 &&
                 statement.Resource &&
                 statement.Resource.indexOf('*') > -1) {
-                failMsg = `Role ${policyType} policy allows all actions on all resources`;
+                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
-                failMsg = `Role ${policyType} policy allows all actions on selected resources`;
+                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows all actions on selected resources`;
             } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*' ){
-                failMsg = `Role ${policyType} policy allows actions on all resources`;
+                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
