@@ -213,7 +213,7 @@ module.exports = {
                 for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
                     if (policy.PolicyArn === managedAdminPolicy) {
                         if (config.iam_policy_message_format) {
-                            roleFailures.admin = "managedAdminPolicy";
+                            roleFailures.admin = 'managedAdminPolicy';
                         } else {
                             roleFailures.push('Role has managed AdministratorAccess policy');
                         }
@@ -274,10 +274,10 @@ module.exports = {
                 }
             }
 
-                if (config.iam_policy_message_format) {
-                compileFormattedResults(roleFailures, role, results, custom)
+            if (config.iam_policy_message_format) {
+            compileFormattedResults(roleFailures, role, results, custom);
             } else {
-                compileSimpleResults(roleFailures, role, results, custom)
+                compileSimpleResults(roleFailures, role, results, custom);
             }
 
 
@@ -444,7 +444,7 @@ function compileFormattedResults(roleFailures, role, results, custom) {
     if (hasFailures(roleFailures)) {
         let messages = [];
         
-        if (roleFailures.admin == "managedAdminPolicy") {
+        if (roleFailures.admin == 'managedAdminPolicy') {
             messages.push('Role has managed AdministratorAccess policy');
         }
 
