@@ -275,7 +275,7 @@ module.exports = {
             }
 
             if (config.iam_policy_message_format) {
-            compileFormattedResults(roleFailures, role, results, custom);
+                compileFormattedResults(roleFailures, role, results, custom);
             } else {
                 compileSimpleResults(roleFailures, role, results, custom);
             }
