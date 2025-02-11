@@ -81,6 +81,12 @@ module.exports = {
             description: 'Enable this setting to ignore resource wildcards i.e. \'"Resource": "*"\' in the IAM policy, which by default, are being flagged.',
             regex: '^(true|false)$',
             default: 'false'
+        },
+        iam_policy_message_format: {
+            name: 'IAM Policy Message Format',
+            description: 'Enable this setting to include policy names in the failure messages',
+            regex: '^(true|false)$',
+            default: 'false'
         }
     },
     realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
@@ -94,7 +100,8 @@ module.exports = {
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
             iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default,
-            ignore_iam_policy_resource_wildcards: settings.ignore_iam_policy_resource_wildcards || this.settings.ignore_iam_policy_resource_wildcards.default
+            ignore_iam_policy_resource_wildcards: settings.ignore_iam_policy_resource_wildcards || this.settings.ignore_iam_policy_resource_wildcards.default,
+            iam_policy_message_format: settings.iam_policy_message_format || this.settings.iam_policy_message_format.default
         };
 
         config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
@@ -102,7 +109,7 @@ module.exports = {
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
         config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
-
+        config.iam_policy_message_format = (config.iam_policy_message_format === 'true');
 
 
         var allowedRegex = RegExp(config.iam_policy_resource_specific_wildcards);
@@ -196,7 +203,8 @@ module.exports = {
                 return cb();
             }
 
-            var roleFailures = [];
+            var roleFailures = config.iam_policy_message_format ? {} : [];
+
 
             // See if role has admin managed policy
             if (listAttachedRolePolicies.data &&
@@ -204,7 +212,11 @@ module.exports = {
 
                 for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
                     if (policy.PolicyArn === managedAdminPolicy) {
-                        roleFailures.push('Role has managed AdministratorAccess policy');
+                        if (config.iam_policy_message_format) {
+                            roleFailures.admin = "managedAdminPolicy";
+                        } else {
+                            roleFailures.push('Role has managed AdministratorAccess policy');
+                        }
                         break;
                     }
 
@@ -230,7 +242,11 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            addRoleFailures(roleFailures, statements, 'managed', policy.PolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            if (config.iam_policy_message_format) {
+                                addRoleFailuresPolicyName(roleFailures, statements, 'managed', policy.PolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            } else {
+                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            }
                         }
                     }
                 }
@@ -249,20 +265,21 @@ module.exports = {
 
                         var statements = getRolePolicy[policyName].data.PolicyDocument;
                         if (!statements) break;
-                        addRoleFailures(roleFailures, statements, 'inline', policyName, config.ignore_service_specific_wildcards, allowedRegex,  config.ignore_iam_policy_resource_wildcards);
+                        if (config.iam_policy_message_format) {
+                            addRoleFailuresPolicyName(roleFailures, statements, 'inline', policyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                        } else {
+                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                        }
                     }
                 }
             }
 
-            if (roleFailures.length) {
-                helpers.addResult(results, 2,
-                    roleFailures.join(', '),
-                    'global', role.Arn, custom);
+                if (config.iam_policy_message_format) {
+                compileFormattedResults(roleFailures, role, results, custom)
             } else {
-                helpers.addResult(results, 0,
-                    'Role does not have overly-permissive policy',
-                    'global', role.Arn, custom);
+                compileSimpleResults(roleFailures, role, results, custom)
             }
+
 
             cb();
         }, function(){
@@ -271,7 +288,7 @@ module.exports = {
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType, policyName,ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
     for (var statement of statements) {
         if (statement.Effect === 'Allow' &&
             !statement.Condition) {
@@ -280,11 +297,11 @@ function addRoleFailures(roleFailures, statements, policyType, policyName,ignore
                 statement.Action.indexOf('*') > -1 &&
                 statement.Resource &&
                 statement.Resource.indexOf('*') > -1) {
-                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows all actions on all resources`;
+                failMsg = `Role ${policyType} policy allows all actions on all resources`;
             } else if (statement.Action.indexOf('*') > -1) {
-                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows all actions on selected resources`;
+                failMsg = `Role ${policyType} policy allows all actions on selected resources`;
             } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*' ){
-                failMsg = `Role ${policyType} policy "${policyName || 'unnamed'}" allows actions on all resources`;
+                failMsg = `Role ${policyType} policy allows actions on all resources`;
             } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
                 // Check each action for wildcards
                 let wildcards = [];
@@ -307,5 +324,174 @@ function addRoleFailures(roleFailures, statements, policyType, policyName,ignore
 
             if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);
         }
+    }
+}
+
+function addRoleFailuresPolicyName(roleFailures, statements, policyType, policyName, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
+    // Initialize roleFailures as an object for the first time
+    if (!roleFailures.managed) {
+        roleFailures.managed = {
+            allActionsAllResources: [],
+            allActionsSelectedResources: [],
+            actionsAllResources: [],
+            wildcardActions: {},
+            regexMismatch: {}
+        };
+    }
+    if (!roleFailures.inline) {
+        roleFailures.inline = {
+            allActionsAllResources: [],
+            allActionsSelectedResources: [],
+            actionsAllResources: [],
+            wildcardActions: {},
+            regexMismatch: {}
+        };
+    }
+    if (!roleFailures.admin) roleFailures.admin = false;
+
+    for (var statement of statements) {
+        if (statement.Effect === 'Allow' && !statement.Condition) {
+            let targetObj = roleFailures[policyType];
+
+            if (statement.Action &&
+                statement.Action.indexOf('*') > -1 &&
+                statement.Resource &&
+                statement.Resource.indexOf('*') > -1) {
+                targetObj.allActionsAllResources.push(policyName);
+            } else if (statement.Action.indexOf('*') > -1) {
+                targetObj.allActionsSelectedResources.push(policyName);
+            } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*') {
+                targetObj.actionsAllResources.push(policyName);
+            } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
+                // Check each action for wildcards
+                let wildcards = [];
+                for (var a in statement.Action) {
+                    if (/^.+:[a-zA-Z]?\*.?$/.test(statement.Action[a])) {
+                        wildcards.push(statement.Action[a]);
+                    }
+                }
+                if (wildcards.length) {
+                    if (!targetObj.wildcardActions[wildcards.join(', ')]) {
+                        targetObj.wildcardActions[wildcards.join(', ')] = [];
+                    }
+                    if (!targetObj.wildcardActions[wildcards.join(', ')].includes(policyName)) {
+                        targetObj.wildcardActions[wildcards.join(', ')].push(policyName);
+                    }
+                }
+            } else if (statement.Resource && statement.Resource.length) {
+                // Check each resource for wildcard
+                let wildcards = [];
+                for (var resource of statement.Resource) {
+                    if (!regResource.test(resource)) {
+                        wildcards.push(resource);
+                    }
+                }
+                if (wildcards.length) {
+                    if (!targetObj.regexMismatch[wildcards.join(', ')]) {
+                        targetObj.regexMismatch[wildcards.join(', ')] = [];
+                    }
+                    if (!targetObj.regexMismatch[wildcards.join(', ')].includes(policyName)) {
+                        targetObj.regexMismatch[wildcards.join(', ')].push(policyName);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function hasFailures(roleFailures) {
+    if (roleFailures.admin) return true;
+    
+    if (roleFailures.managed) {
+        if (roleFailures.managed.allActionsAllResources.length) return true;
+        if (roleFailures.managed.allActionsSelectedResources.length) return true;
+        if (roleFailures.managed.actionsAllResources.length) return true;
+        if (Object.keys(roleFailures.managed.wildcardActions).length) return true;
+        if (roleFailures.managed.regexMismatch.length) return true;
+    }
+    
+    if (roleFailures.inline) {
+        if (roleFailures.inline.allActionsAllResources.length) return true;
+        if (roleFailures.inline.allActionsSelectedResources.length) return true;
+        if (roleFailures.inline.actionsAllResources.length) return true;
+        if (Object.keys(roleFailures.inline.wildcardActions).length) return true;
+        if (roleFailures.inline.regexMismatch.length) return true;
+    }
+    
+    return false;
+}
+
+function formatPolicyNames(policyArray) {
+    if (policyArray.length <= 5) {
+        return [...new Set(policyArray)].join('", "');
+    }
+    return [...new Set(policyArray)].slice(0, 5).join('", "') + '" and so on...';
+}
+
+function compileSimpleResults(roleFailures, role, results, custom) {
+    if (roleFailures.length) {
+        helpers.addResult(results, 2,
+            roleFailures.join(', '),
+            'global', role.Arn, custom);
+    } else {
+        helpers.addResult(results, 0,
+            'Role does not have overly-permissive policy',
+            'global', role.Arn, custom);
+    }
+}
+
+function compileFormattedResults(roleFailures, role, results, custom) {
+    if (hasFailures(roleFailures)) {
+        let messages = [];
+        
+        if (roleFailures.admin == "managedAdminPolicy") {
+            messages.push('Role has managed AdministratorAccess policy');
+        }
+
+        // Format managed policies
+        if (roleFailures.managed) {
+            if (roleFailures.managed.allActionsAllResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsAllResources)}" allows all actions on all resources`);
+            }
+            if (roleFailures.managed.allActionsSelectedResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsSelectedResources)}" allows all actions on selected resources`);
+            }
+            if (roleFailures.managed.actionsAllResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.actionsAllResources)}" allows actions on all resources`);
+            }
+            for (let action in roleFailures.managed.wildcardActions) {
+                messages.push(`Role managed policy "${roleFailures.managed.wildcardActions[action].join('", "')}" allows wildcard actions: ${action}`);
+            }
+            for (let resource in roleFailures.managed.regexMismatch) {
+                messages.push(`Role managed policy "${roleFailures.managed.regexMismatch[resource].join('", "')}" does not match provided regex: ${resource}`);
+            }
+        }
+
+        // Format inline policies
+        if (roleFailures.inline) {
+            if (roleFailures.inline.allActionsAllResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsAllResources)}" allows all actions on all resources`);
+            }
+            if (roleFailures.inline.allActionsSelectedResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsSelectedResources)}" allows all actions on selected resources`);
+            }
+            if (roleFailures.inline.actionsAllResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.actionsAllResources)}" allows actions on all resources`);
+            }
+            for (let action in roleFailures.inline.wildcardActions) {
+                messages.push(`Role inline policy "${roleFailures.inline.wildcardActions[action].join('", "')}" allows wildcard actions: ${action}`);
+            }
+            for (let resource in roleFailures.inline.regexMismatch) {
+                messages.push(`Role inline policy "${roleFailures.inline.regexMismatch[resource].join('", "')}" does not match provided regex: ${resource}`);
+            }
+        }
+
+        helpers.addResult(results, 2,
+            messages.join('\n'),
+            'global', role.Arn, custom);
+    } else {
+        helpers.addResult(results, 0,
+            'Role does not have overly-permissive policy',
+            'global', role.Arn, custom);
     }
 }
