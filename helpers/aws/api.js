@@ -1833,8 +1833,14 @@ var postcalls = [
                 reliesOnCall: 'listAnalyzers',
                 override: true
             },
+            listFindingsV2: {
+                reliesOnService: 'accessanalyzer',
+                reliesOnCall: 'listAnalyzers',
+                override: true
+            },
             sendIntegration: serviceMap['IAM'][0]
         },
+        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',

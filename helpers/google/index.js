@@ -306,7 +306,7 @@ var execute = async function(LocalGoogleConfig, collection, service, callObj, ca
             resultItems = setData(collectionItems, data.data[callObj.dataKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
         } else if (data.data.clusters && ['kubernetes', 'dataproc'].includes(service)) {
             resultItems = setData(collectionItems, data.data['clusters'], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
-        } else if (callObj.dataKey && data.data && data.data.length && service == 'vertexAI') {
+        } else if (callObj.dataKey && data.data && data.data.length && callObj.isDataArray) {
             resultItems = setData(collectionItems, data.data[0][callObj.dataKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});
         } else if (callObj.dataFilterKey && data.data[callObj.dataFilterKey]) {
             resultItems = setData(collectionItems, data.data[callObj.dataFilterKey], postCall, parent, {'service': service, 'callKey': callKey, maxLimit: callObj.maxLimit});

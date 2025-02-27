@@ -24,7 +24,7 @@ var parse = function(obj, path, region, cloud, accountId, resourceId) {
             return parse(obj[localPath], path);
         } else return ['not set'];
     } else if (!Array.isArray(obj) && path && path.length) {
-        if (obj[path]) return [obj[path]];
+        if (obj[path] || typeof obj[path] === 'boolean') return [obj[path]];
         else {
             if (cloud==='aws' && path.startsWith('arn:aws')) {
                 const template_string = path;

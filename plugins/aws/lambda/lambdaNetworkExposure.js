@@ -10,8 +10,8 @@ module.exports = {
     more_info: 'Lambda functions can be exposed to the internet through Function URLs with public access policies or through API Gateway integrations. It\'s important to ensure these endpoints are properly secured.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html',
     recommended_action: 'Ensure Lambda Function URLs have proper authorization configured and API Gateway integrations use appropriate security measures.',
-    apis: ['Lambda:listFunctions', 'Lambda:getFunctionUrlConfig', 'Lambda:getPolicy', 
-        'APIGateway:getRestApis','APIGateway:getResources', 'APIGateway:getStages', 'APIGateway:getIntegration', 'ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups', 
+    apis: ['Lambda:listFunctions', 'Lambda:getFunctionUrlConfig', 'Lambda:getPolicy',
+        'APIGateway:getRestApis','APIGateway:getResources', 'APIGateway:getStages', 'APIGateway:getIntegration', 'ELBv2:describeLoadBalancers', 'ELBv2:describeTargetGroups',
         'ELBv2:describeTargetHealth', 'ELBv2:describeListeners', 'EC2:describeSecurityGroups'],
     realtime_triggers: ['lambda:CreateFunctionUrlConfig', 'lambda:UpdateFunctionUrlConfig', 'lambda:DeleteFunctionUrlConfig',
         'lambda:AddPermission', 'lambda:RemovePermission',
@@ -49,7 +49,7 @@ module.exports = {
                 // Get function URL config and policy for Lambda-specific checks
                 var getFunctionUrlConfig = helpers.addSource(cache, source,
                     ['lambda', 'getFunctionUrlConfig', region, lambda.FunctionName]);
-                
+
                 var getPolicy = helpers.addSource(cache, source,
                     ['lambda', 'getPolicy', region, lambda.FunctionName]);
 
@@ -79,4 +79,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}; 
+};

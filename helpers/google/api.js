@@ -224,6 +224,22 @@ var calls = {
             enabled: true
         }
     },
+    apiGateways: {
+        list: {
+            url: 'https://apigateway.googleapis.com/v1/projects/{projectId}/locations/{locationId}/gateways',
+            location: 'region',
+            dataKey: 'gateways',
+            isDataArray: true
+        }
+    },
+    api: {
+        list: {
+            url: 'https://apigateway.googleapis.com/v1/projects/{projectId}/locations/{locationId}/apis',
+            location: 'region',
+            dataKey: 'apis',
+            isDataArray: true
+        }
+    },
     images: {
         list: {
             url: 'https://compute.googleapis.com/compute/v1/projects/{projectId}/global/images',
@@ -620,7 +636,8 @@ var calls = {
         listDatasets: {
             url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/datasets',
             location: 'region',
-            dataKey: 'datasets'
+            dataKey: 'datasets',
+            isDataArray: true
         },
         listModels: {
             url: 'https://{locationId}-aiplatform.googleapis.com/v1/projects/{projectId}/locations/{locationId}/models',
@@ -751,6 +768,24 @@ var postcalls = {
                 serviceName: ['sql']
             }
         },
+    },
+    apiConfigs: {
+        list: {
+            url: 'https://apigateway.googleapis.com/v1/{name}/configs',
+            location: 'region',
+            reliesOnService: ['api'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+        }
+    },
+    apiGateways: {
+        getIamPolicy: {
+            url: 'https://apigateway.googleapis.com/v1/{name}:getIamPolicy',
+            location: 'region',
+            reliesOnService: ['apiGateways'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+        }
     },
     datasets: {
         get: {

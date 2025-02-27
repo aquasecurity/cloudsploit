@@ -419,10 +419,10 @@ function checkFirewallRules(firewallRules) {
             sourceAddressPrefix.includes('/0') ||
             sourceAddressPrefix.toLowerCase() === 'internet' ||
             sourceAddressPrefix.includes('<nw>/0')
-        ): null;
+        ): false;
 
-        var allowed = firewallRule.allowed? firewallRule.allowed.some(allow => !!allow.IPProtocol): null;
-        var denied = firewallRule.denied? firewallRule.denied.some(deny => deny.IPProtocol === 'all'): null;
+        var allowed = firewallRule.allowed? firewallRule.allowed.some(allow => !!allow.IPProtocol): false;
+        var denied = firewallRule.denied? firewallRule.denied.some(deny => deny.IPProtocol === 'all'): false;
         if (allSources && allowed) {
             return {exposed: true, networkName: `vpc ${networkName}`};
         }
@@ -450,14 +450,22 @@ function getForwardingRules(cache, source, region, resource) {
         return [];
     }
 
-    backendServices = backendServices.filter(service => {
-        if (service.backends && service.backends.length) {
-            return service.backends.some(backend => {
-                let group = backend.group.replace(/^.*?(\/projects\/.*)$/, '$1');
-                return resource.selfLink.includes(group);
-            });
-        }
-    });
+    if (resource.httpsTrigger && resource.httpsTrigger.url) {
+        backendServices = backendServices.filter(service => {
+            if (service.backends && service.backends.length) {
+                return service.backends.some(backend => backend.target && backend.target.includes(resource.httpsTrigger.url));
+            }
+        });
+    } else {
+        backendServices = backendServices.filter(service => {
+            if (service.backends && service.backends.length) {
+                return service.backends.some(backend => {
+                    let group = backend.group.replace(/^.*?(\/projects\/.*)$/, '$1');
+                    return resource.selfLink.includes(group);
+                });
+            }
+        });
+    }
 
     if (backendServices && backendServices.length) {
         forwardingRules.forEach(rule => {

@@ -118,7 +118,7 @@ module.exports = {
                         }
                     }
                 }
-                let internetExposed =  helpers.checkNetworkExposure(cache, source, vm_interfaces, securityGroups, location, results, loadBalancers);
+                let internetExposed =  helpers.checkNetworkExposure(cache, source, vm_interfaces, securityGroups, location, results, {lbNames: loadBalancers}, virtualMachine);
                 if (internetExposed && internetExposed.length) {
                     helpers.addResult(results, 2, `VM is exposed to the internet through ${internetExposed}`, location, virtualMachine.id);
                 } else {

@@ -30,7 +30,7 @@ module.exports = {
         };
 
         async.each(locations.vaults, function(location, rcb) {
-            var vaults = helpers.addSource(cache, source, 
+            var vaults = helpers.addSource(cache, source,
                 ['vaults', 'list', location]);
 
             if (!vaults) return rcb();
@@ -46,11 +46,7 @@ module.exports = {
             }
 
             vaults.data.forEach(function(vault) {
-                if (!vault || !vault.properties) {
-                    helpers.addResult(results, 3, 'Unable to read vault properties', location, vault.id);
-                    return;
-                }
-                if (!vault.properties.enableRbacAuthorization) {
+                if (!vault.enableRbacAuthorization) {
                     return;
                 }
 

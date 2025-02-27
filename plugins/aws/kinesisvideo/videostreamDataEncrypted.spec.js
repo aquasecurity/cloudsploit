@@ -21,6 +21,14 @@ const listKeys = [
     }
 ];
 
+const listAliases = [
+    {
+        "AliasName": "alias/my-kinesis-key",
+        "AliasArn": "arn:aws:kms:us-east-1:000011112222:alias/my-kinesis-key",
+        "TargetKeyId": "ad013a33-b01d-4d88-ac97-127399c18b3e"
+    }
+];
+
 const describeKey = [
     {
         "KeyMetadata": {
@@ -60,7 +68,7 @@ const describeKey = [
     }
 ];
 
-const createCache = (streamData, keys, describeKey, streamDataErr, keysErr, describeKeyErr) => {
+const createCache = (streamData, keys, aliases, describeKey, streamDataErr, keysErr, aliasesErr, describeKeyErr) => {
     var keyId = (keys && keys.length ) ? keys[0].KeyId : null;
     return {
         kinesisvideo: {
@@ -76,6 +84,12 @@ const createCache = (streamData, keys, describeKey, streamDataErr, keysErr, desc
                 'us-east-1': {
                     data: keys,
                     err: keysErr
+                }
+            },
+            listAliases: {
+                'us-east-1': {
+                    data: aliases,
+                    err: aliasesErr
                 }
             },
             describeKey: {
@@ -95,8 +109,8 @@ const createCache = (streamData, keys, describeKey, streamDataErr, keysErr, desc
 
 describe('videostreamDataEncrypted', function () {
     describe('run', function () {
-        it('should PASS if Kinesis Video Streams data is using desired encryption level', function (done) {
-            const cache = createCache(listStreams, listKeys, describeKey[0]);
+        it('should PASS if Kinesis Video Streams data is using customer-managed encryption (awscmk)', function (done) {
+            const cache = createCache(listStreams, listKeys, listAliases, describeKey[0]);
             videostreamDataEncrypted.run(cache, { video_stream_data_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -106,9 +120,9 @@ describe('videostreamDataEncrypted', function () {
         });
 
 
-        it('should FAIL if Kinesis Video Streams data is using desired encyption level', function (done) {
-            const cache = createCache(listStreams, listKeys, describeKey[1]);
-            videostreamDataEncrypted.run(cache, { video_stream_data_desired_encryption_level:'awscmk' }, (err, results) => {
+        it('should FAIL if Kinesis Video Streams data is using AWS managed encryption (awskms)', function (done) {
+            const cache = createCache(listStreams, listKeys, listAliases, describeKey[1]);
+            videostreamDataEncrypted.run(cache, { video_stream_data_desired_encryption_level: 'awscmk' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Kinesis Video Streams data is using awskms');
@@ -117,7 +131,7 @@ describe('videostreamDataEncrypted', function () {
         });
 
 
-        it('should PASS if no Kinesis Video Streams found', function (done) {
+        it('should PASS if no Kinesis Video Streams are found', function (done) {
             const cache = createCache([]);
             videostreamDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -128,7 +142,7 @@ describe('videostreamDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list Kinesis Video Streams', function (done) {
-            const cache = createCache(null, null, null, { message: "Unable to list Kinesis Video Streams encryption" });
+            const cache = createCache(null, null, null, null, { message: "Unable to list Kinesis Video Streams" });
             videostreamDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -138,7 +152,16 @@ describe('videostreamDataEncrypted', function () {
         });
 
         it('should UNKNOWN if unable to list KMS keys', function (done) {
-            const cache = createCache(null, null, null, null, { message: "Unable to list KMS keys" });
+            const cache = createCache(null, null, null, null, null, { message: "Unable to list KMS keys" });
+            videostreamDataEncrypted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should UNKNOWN if unable to retrieve KMS alias data', function (done) {
+            const cache = createCache(listStreams, listKeys, null, describeKey[0], null, null, { message: "Unable to list KMS aliases" });
             videostreamDataEncrypted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
