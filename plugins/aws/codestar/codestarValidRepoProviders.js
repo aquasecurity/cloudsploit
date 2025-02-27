@@ -60,6 +60,7 @@ module.exports = {
 
                 let repoProvider = (describeProject.data.projectTemplateId.split('/').length > 1) ?
                     describeProject.data.projectTemplateId.split('/')[1] : '';
+                
                 if (config.codestar_disallowed_repo_providers.includes(repoProvider)) {
                     helpers.addResult(results, 2,
                         `CodeStar project is using ${repoProvider} as repository provider which should not be used`,

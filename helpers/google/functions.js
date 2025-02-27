@@ -461,7 +461,7 @@ function getForwardingRules(cache, source, region, resource) {
             if (service.backends && service.backends.length) {
                 return service.backends.some(backend => {
                     let group = backend.group.replace(/^.*?(\/projects\/.*)$/, '$1');
-                    return resource.selfLink.includes(group);
+                    return (resource.selfLink && resource.selfLink.includes(group));
                 });
             }
         });

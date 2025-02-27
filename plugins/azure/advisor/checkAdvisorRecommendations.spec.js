@@ -40,7 +40,7 @@ const createCache = (err, recommendationsList) => {
 
 describe('checkAdvisorRecommendations', function() {
     describe('run', function() {
-        it('should give passing result if no Adivsor Recommendations are found', function(done) {
+        it('should give passing result if no Advisor Recommendations are found', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)

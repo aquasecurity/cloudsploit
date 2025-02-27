@@ -78,6 +78,7 @@ module.exports = {
                     let serviceAccount = instance.serviceAccounts && instance.serviceAccounts[0] && instance.serviceAccounts[0].email ? instance.serviceAccounts[0].email : '';
 
                     let firewallRules = firewalls.data.filter(rule => {
+                        if (!rule.network) return false;
                         let isNetworkMatch = networks.some(network => rule.network.endsWith(network));
 
                         let isTagMatch = rule.targetTags ? rule.targetTags.some(tag => tags.includes(tag)) : true;

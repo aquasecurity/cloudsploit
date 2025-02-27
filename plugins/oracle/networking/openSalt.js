@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open Salt',
     category: 'Networking',
     domain: 'Network Access Control',
-    severity: 'Critical',
+    severity: 'Medium',
     description: 'Determine if TCP ports 4505 or 4506 for the Salt master are open to the public',
     more_info: 'Active Salt vulnerabilities, CVE-2020-11651 and CVE-2020-11652 are exploiting Salt instances exposed to the internet. These ports should be closed immediately.',
     recommended_action: 'Restrict TCP ports 4505 and 4506 to known IP addresses',

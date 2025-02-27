@@ -393,7 +393,7 @@ describe('iamRolePolicies', function () {
             const cache = createCache([listRoles[0]],getRole[0], {}, listRolePolicies[1], getRolePolicy[4]);
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('allows all actions on selected resources');
+                expect(results[0].message).to.include('policy allows all actions on selected resources');
                 expect(results[0].status).to.equal(2);
                 done();
             });
@@ -403,7 +403,7 @@ describe('iamRolePolicies', function () {
             const cache = createCache([listRoles[1]],getRole[0], {}, listRolePolicies[1], getRolePolicy[3]);
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].message).to.include('allows all actions on all resources');
+                expect(results[0].message).to.include('policy allows all actions on all resources');
                 expect(results[0].status).to.equal(2);
                 done();
             });
