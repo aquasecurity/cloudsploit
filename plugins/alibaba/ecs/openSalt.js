@@ -5,7 +5,7 @@ module.exports = {
     title: 'Open Salt',
     category: 'ECS',
     domain: 'Compute',
-    severity: 'Medium',
+    severity: 'Critical',
     description: 'Ensure that security groups does not have TCP ports 4505 or 4506 for the Salt master open to the public.',
     more_info: 'Active Salt vulnerabilities, CVE-2020-11651 and CVE-2020-11652 are exploiting Salt instances exposed to the internet. These ports should be closed immediately.',
     link: 'https://www.alibabacloud.com/help/doc-detail/25471.htm',
