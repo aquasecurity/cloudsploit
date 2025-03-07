@@ -15,7 +15,7 @@ module.exports = {
                 throw new Error(`Invalid suppression format: ${expr}. Expected format: pluginId:region:resourceId`);
             }
             
-            const pluginPattern = /^[A-Za-z0-9]{1,255}$/; // eslint-disable-line
+            const pluginPattern = /^[A-Za-z0-9*]{1,255}$/; // eslint-disable-line
             const regionPattern = /^[A-Za-z0-9\-_]{1,255}$/; // eslint-disable-line
             const resourcePattern = /^[ A-Za-z0-9._~()'!*:@,;+?#$%^&={}\\[\]\\|\"/-]{1,255}$/;  // eslint-disable-line
             const [pluginId, region, resourceId] = parts;
