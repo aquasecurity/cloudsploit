@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Network Exposure',
+    title: 'Internet Exposure',
     category: 'Cloud Functions',
     domain: 'Serverless',
     severity: 'Info',
@@ -18,7 +18,7 @@ module.exports = {
         'compute.forwardingRules.insert', 'compute.forwardingRules.delete', 'compute.forwardingRules.patch', 'apigateway.gateways.create', 'apigateway.gateways.update', 'apigateway.gateways.delete'
     ],
 
-    run: function(cache, settings, callback) {
+    run: function (cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions();
@@ -32,6 +32,7 @@ module.exports = {
             return callback(null, results, source);
         }
 
+        var project = projects.data[0].name;
         let apiGateways = [], apis = [], apiConfigs = [];
         for (let region of regions.apiGateways) {
             var gateways = helpers.addSource(cache, source,
@@ -78,13 +79,13 @@ module.exports = {
                 if (!func.name) return;
                 let internetExposed = '';
                 if (func.ingressSettings && func.ingressSettings.toUpperCase() == 'ALLOW_ALL') {
-                    internetExposed = 'public access';
+                    internetExposed = 'public access'
                 } else if (func.ingressSettings && func.ingressSettings.toUpperCase() == 'ALLOW_INTERNAL_AND_GCLB') {
                     // only check load balancer flow if it allows traffic from LBs
                     let forwardingRules = [];
-                    forwardingRules = helpers.getForwardingRules(cache, source, region, func);
-                    let firewallRules = [];
                     let networks = [];
+                    let firewallRules = [];
+                    forwardingRules = helpers.getForwardingRules(cache, source, region, func);
                     internetExposed = helpers.checkNetworkExposure(cache, source, networks, firewallRules, region, results, forwardingRules);
 
                     if (!internetExposed || !internetExposed.length) {
@@ -150,7 +151,7 @@ module.exports = {
             });
 
             rcb();
-        }, function() {
+        }, function () {
             callback(null, results, source);
         });
 

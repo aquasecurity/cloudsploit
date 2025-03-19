@@ -14,7 +14,7 @@ const describeDeliveryChannels = [
     }
 ];
 
-const createCache = (records, headBucket, recordsErr, headBucketErr) => {
+const createCache = (records, headBucket, recordsErr, headBucketErr, buckets) => {
     var name = (records && records.length) ? records[0].s3BucketName : null;
     return {
         configservice: {
@@ -26,6 +26,12 @@ const createCache = (records, headBucket, recordsErr, headBucketErr) => {
             },
         },
         s3: {
+            listBuckets: {
+                'us-east-1': {
+                    err: 'err',
+                    data: buckets
+                }
+            },
             headBucket: {
                 'us-east-1': {
                     [name]: {
@@ -42,7 +48,10 @@ const createCache = (records, headBucket, recordsErr, headBucketErr) => {
 describe('configServiceMissingBucket', function () {
     describe('run', function () {
         it('should PASS if Config Service is not referencing any deleted bucket', function (done) {
-            const cache = createCache([describeDeliveryChannels[1]], null);
+            const cache = createCache([describeDeliveryChannels[1]], null, null, null,[{
+                "Name": "amazon-connect-e39f272cf1f0",
+                "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
+            }]);
             configServiceMissingBucket.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);

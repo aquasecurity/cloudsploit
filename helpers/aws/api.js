@@ -1840,7 +1840,6 @@ var postcalls = [
             },
             sendIntegration: serviceMap['IAM'][0]
         },
-        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',

@@ -810,7 +810,7 @@ function checkNetworkExposure(cache, source, networkInterfaces, securityGroups, 
                     if (lb.frontendIPConfigurations && lb.frontendIPConfigurations.length) {
                         isPublic = lb.frontendIPConfigurations.some(ipConfig => ipConfig.properties
                             && ipConfig.properties.publicIPAddress && ipConfig.properties.publicIPAddress.id);
-                        if (isPublic && ((lb.inboundNatRules && inboundNatRules.length) || (lb.loadBalancingRules && lb.loadBalancingRules.length))) {
+                        if (isPublic && ((lb.inboundNatRules && lb.inboundNatRules.length) || (lb.loadBalancingRules && lb.loadBalancingRules.length))) {
                             exposedPath += exposedPath.length ? `, lb ${lb.name}` : `lb ${lb.name}`;
                         }
                     }

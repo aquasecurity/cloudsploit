@@ -32,7 +32,6 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
                 //return callback(CREDENTIAL_REPORT_ERROR);
                 return callback('Error downloading report');
             }
-
             //CREDENTIAL_REPORT_DATA = reportData;
             //callback(null, CREDENTIAL_REPORT_DATA);
             callback(null, reportData);
@@ -1126,8 +1125,10 @@ var checkTags = function(cache, resourceName, resourceList, region, results, set
         ['resourcegroupstaggingapi', 'getResources', region]);
 
     if (!allResources || allResources.err || !allResources.data) {
-        helpers.addResult(results, 3,
-            'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
+        resourceList.map(arn => {
+            helpers.addResult(results, 3,
+                'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region, arn);
+        });
         return;
     }
     var awsOrGov = defaultPartition(settings);

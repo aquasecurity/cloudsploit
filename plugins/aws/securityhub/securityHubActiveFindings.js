@@ -43,10 +43,10 @@ module.exports = {
                 var resource = describeHub.data.HubArn;
                 const getFindings = helpers.addSource(cache, source, ['securityhub', 'getFindings', region]);
 
-                if (!getFindings) {
+                if (!getFindings || !getFindings.data) {
                     helpers.addResult(results, 0, 'No active findings available', region, resource);
                     return rcb();
-                } else if (getFindings.err || !getFindings.data ) {
+                } else if (getFindings.err) {
                     helpers.addResult(results, 3, `Unable to get SecurityHub findings: ${helpers.addError(getFindings)}`, region, resource);
                 } else if (!getFindings.data.length) {
                     helpers.addResult(results, 0, 'No active findings available', region, resource);
