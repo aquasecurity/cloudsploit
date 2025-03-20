@@ -2,7 +2,7 @@ var async = require('async');
 var helpers = require('../../../helpers/google');
 
 module.exports = {
-    title: 'Network Exposure',
+    title: 'Internet Exposure',
     category: 'Cloud Functions',
     domain: 'Serverless',
     severity: 'Info',
