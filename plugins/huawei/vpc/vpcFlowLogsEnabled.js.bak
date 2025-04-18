@@ -1,0 +1,34 @@
+'use strict';
+
+module.exports = {
+    title: 'Huawei VPC Flow Logs Enabled',
+    category: 'VPC',
+    description: 'Checks if VPC flow logs are enabled for monitoring.',
+    apis: ['ListVpcs'],
+    check: function(collection, callback) {
+        console.log('DEBUG: vpcFlowLogsEnabled plugin called with collection:', JSON.stringify(collection, null, 2));
+        var results = [];
+
+        if (!collection.vpcs || !collection.vpcs.length) {
+            results.push({
+                resource: 'N/A',
+                region: 'global',
+                status: 0,
+                message: 'No VPCs found'
+            });
+        } else {
+            collection.vpcs.forEach(function(vpc) {
+                const hasFlowLogs = vpc.flow_logs && vpc.flow_logs.length > 0;
+                results.push({
+                    resource: vpc.name || vpc.id,
+                    region: 'global',
+                    status: hasFlowLogs ? 0 : 2, // FAIL if no flow logs
+                    message: hasFlowLogs ? 'VPC has flow logs enabled' : 'VPC does not have flow logs enabled'
+                });
+            });
+        }
+
+        console.log('DEBUG: vpcFlowLogsEnabled results:', results);
+        callback(null, results);
+    }
+};

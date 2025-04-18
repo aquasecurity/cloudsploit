@@ -1,0 +1,47 @@
+'use strict';
+
+const VpcClient = require('@huaweicloud/huaweicloud-sdk-vpc');
+
+module.exports = async function(cloudConfig, callback) {
+    const client = new VpcClient({
+        accessKeyId: cloudConfig.accessKeyId,
+        secretAccessKey: cloudConfig.secretAccessKey,
+        endpoint: `https://vpc.${cloudConfig.endpoint.split('.')[1]}.myhuaweicloud.com`,
+        region: cloudConfig.region
+    });
+
+    try {
+        // List all VPCs
+        const listVpcsRequest = {};
+        const listVpcsResult = await client.listVpcs(listVpcsRequest);
+        console.log('DEBUG: Raw listVpcs response:', JSON.stringify(listVpcsResult, null, 2));
+
+        const vpcs = listVpcsResult.vpcs || [];
+        const vpcDetails = await Promise.all(vpcs.map(async (vpc) => {
+            // Fetch flow logs for each VPC
+            const listFlowLogsRequest = { resource_type: 'vpc', resource_id: vpc.id };
+            const listFlowLogsResult = await client.listFlowLogs(listFlowLogsRequest);
+            console.log(`DEBUG: Raw listFlowLogs response for VPC ${vpc.id}:`, JSON.stringify(listFlowLogsResult, null, 2));
+
+            return {
+                id: vpc.id,
+                name: vpc.name,
+                description: vpc.description,
+                cidr: vpc.cidr_block,
+                status: vpc.status,
+                routes: vpc.routes || [],
+                enterprise_project_id: vpc.enterprise_project_id,
+                tenant_id: vpc.tenant_id,
+                created_at: vpc.created_at,
+                updated_at: vpc.updated_at,
+                flow_logs: listFlowLogsResult.flow_logs || []
+            };
+        }));
+
+        const collection = { vpcs: vpcDetails };
+        callback(null, collection);
+    } catch (err) {
+        console.error('ERROR: Failed to collect VPC data:', err.message);
+        callback(err);
+    }
+};
