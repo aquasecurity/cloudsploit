@@ -1,7 +1,7 @@
 {
   "name": "cloudsploit",
   "version": "2.0.0",
-  "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts",
+  "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts, Huawei",
   "main": "index.js",
   "scripts": {
     "test": "mocha './**/*.spec.js'",
@@ -27,6 +27,7 @@
     "oracle",
     "oci",
     "cloud",
+    "Huawei",
     "security"
   ],
   "author": "Aqua Security",
@@ -47,6 +48,10 @@
     "@octokit/auth-app": "^6.0.3",
     "@octokit/request": "^8.1.6",
     "@octokit/rest": "^20.0.2",
+    "@huaweicloud/huaweicloud-sdk-core": "^3.1.145",
+    "@huaweicloud/huaweicloud-sdk-ecs": "^3.1.145",
+    "@huaweicloud/huaweicloud-sdk-vpc": "^3.1.145",
+    "esdk-obs-nodejs": "^3.24.3",
     "ali-oss": "^6.15.2",
     "argparse": "^2.0.0",
     "async": "^2.6.1",
