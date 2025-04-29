@@ -40,6 +40,7 @@ module.exports = {
             { 'id':'nodejs12.x', 'name': 'Node.js 12', 'endOfLifeDate': '2023-03-31'},
             { 'id':'nodejs14.x', 'name': 'Node.js 14', 'endOfLifeDate': '2023-12-04'},
             { 'id':'nodejs16.x', 'name': 'Node.js 16', 'endOfLifeDate': '2024-06-12'},
+            { 'id':'nodejs18.x', 'name': 'Node.js 18', 'endOfLifeDate': '2025-04-30'},
             { 'id':'dotnetcore3.1', 'name': '.Net Core 3.1', 'endOfLifeDate': '2023-04-03' },
             { 'id':'dotnetcore2.1', 'name': '.Net Core 2.1', 'endOfLifeDate': '2022-01-05' },
             { 'id':'dotnetcore2.0', 'name': '.Net Core 2.0', 'endOfLifeDate': '2019-05-30' },

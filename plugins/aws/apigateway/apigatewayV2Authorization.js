@@ -14,7 +14,6 @@ module.exports = {
     realtime_triggers: ['ApiGatewayV2:createApi','ApiGatewayV2:deleteApi','ApiGatewayV2:importApi','ApiGatewayV2:createAuthorizer','ApiGatewayV2:deleteAuthorizer'],
     
     run: function(cache, settings, callback) {
-        console.log('here');
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
