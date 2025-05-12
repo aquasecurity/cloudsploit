@@ -509,6 +509,7 @@ module.exports = {
         'lambdaPublicAccess'            : require(__dirname + '/plugins/aws/lambda/lambdaPublicAccess.js'),
         'lambdaCodeSigningEnabled'      : require(__dirname + '/plugins/aws/lambda/lambdaCodeSigningEnabled.js'),
         'lambdaLogGroups'               : require(__dirname + '/plugins/aws/lambda/lambdaLogGroups.js'),
+        'lambdaFunctionURLNotInUse'     : require(__dirname + '/plugins/aws/lambda/lambdaFunctionURLNotInUse.js'),
         'lambdaTracingEnabled'          : require(__dirname + '/plugins/aws/lambda/lambdaTracingEnabled.js'),
         'lambdaHasTags'                 : require(__dirname + '/plugins/aws/lambda/lambdaHasTags.js'),
         'lambdaDeadLetterQueue'         : require(__dirname + '/plugins/aws/lambda/lambdaDeadLetterQueue.js'),
