@@ -5,7 +5,7 @@ const listFunctions = [
     {
         "FunctionName": "test-lambda",
         "FunctionArn": "arn:aws:lambda:us-east-1:000011112222:function:test-lambda",
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs20.x",
         "Role": "arn:aws:iam::000011112222:role/lambda-role",
         "Handler": "index.handler",
         "TracingConfig": { "Mode": "PassThrough" }
@@ -63,6 +63,7 @@ describe('lambdaOldRuntimes', function () {
         it('should PASS if functions is using current version', function (done) {
             const cache = createCache([listFunctions[0]]);
             lambdaOldRuntimes.run(cache, {}, (err, results) => {
+                console.log(results);
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
