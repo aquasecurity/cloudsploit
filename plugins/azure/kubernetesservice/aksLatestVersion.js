@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures the latest version of Kubernetes is installed on AKS clusters',
     more_info: 'AKS supports provisioning clusters from several versions of Kubernetes. Clusters should be kept up to date to ensure Kubernetes security patches are applied.',
     recommended_action: 'Upgrade the version of Kubernetes on all AKS clusters to the latest available version.',
-    link: 'https://learn.microsoft.com/en-us/azure/aks/aad-integration',
+    link: 'https://learn.microsoft.com/en-us/azure/aks/upgrade-aks-cluster?tabs=azure-portal', 
     apis: ['managedClusters:list', 'managedClusters:getUpgradeProfile'],
     realtime_triggers: ['microsoftcontainerservice:managedclusters:write', 'microsoftcontainerservice:managedclusters:delete'],
 
@@ -47,7 +47,7 @@ module.exports = {
                         getUpgradeProfile.data.controlPlaneProfile.upgrades &&
                         getUpgradeProfile.data.controlPlaneProfile.upgrades.length) {
                         helpers.addResult(results, 2,
-                            `The managed cluster does not have the latest Kubernetes version: ${getUpgradeProfile.data.controlPlaneProfile.upgrades[0]}`, location, managedCluster.id);
+                            `The managed cluster does not have the latest Kubernetes version: ${getUpgradeProfile.data.controlPlaneProfile.upgrades[0].kubernetesVersion}`, location, managedCluster.id);
                     } else {
                         helpers.addResult(results, 0,
                             'The managed cluster has the latest Kubernetes version', location, managedCluster.id);

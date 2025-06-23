@@ -65,8 +65,8 @@ describe('aksLatestVersion', function() {
                                 "kubernetesVersion": "1.11.10",
                                 "osType": "Linux",
                                 "upgrades": [
-                                    "1.12.7",
-                                    "1.12.8"
+                                    {"kubernetesVersion": "1.12.7"},
+                                    {"kubernetesVersion": "1.12.8"}
                                 ]
                             },
                             "agentPoolProfiles": [
