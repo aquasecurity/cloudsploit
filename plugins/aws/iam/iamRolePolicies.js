@@ -60,7 +60,7 @@ module.exports = {
         },
         ignore_customer_managed_iam_policies: {
             name: 'Ignore Customer-Managed IAM Policies',
-            description: 'If set to true, skip customer-managed policies attached to the role',
+            description: 'If set to true, skip customer-managed policies attached to the role.',
             regex: '^(true|false)$',
             default: 'false'
         },

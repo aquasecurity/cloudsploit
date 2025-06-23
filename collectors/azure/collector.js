@@ -10,8 +10,8 @@
  - api_calls: (Optional) If provided, will only query these APIs.
  - Example:
  {
-     "skip_locations": ["eastus", "westus"],
-     "api_calls": ["storageAccounts:list", "resourceGroups:list"]
+ "skip_locations": ["eastus", "westus"],
+ "api_calls": ["storageAccounts:list", "resourceGroups:list"]
  }
  - callback: Function to call when the collection is complete
  *********************/
@@ -62,14 +62,59 @@ let collect = function(AzureConfig, settings, callback, fargateFlag) {
         var collection = {};
 
         let makeCall = function(localUrl, obj, cb, localData) {
-            helpers.call({
-                url: localUrl,
-                post: obj.post,
-                token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token),
-                govcloud : AzureConfig.Govcloud
-            }, function(err, data, response) {
-                if (err) return cb(err, null, response);
+            const makeApiCall = async(retryAttempt = 0) => {
+                try {
+                    const response = await new Promise((resolve, reject) => {
+                        helpers.call({
+                            url: localUrl,
+                            post: obj.post,
+                            token: obj.graph ? loginData.graphToken : (obj.vault ? loginData.vaultToken : loginData.token),
+                            govcloud: AzureConfig.Govcloud
+                        }, (err, data, apiResponse) => {
+                            if (err) {
+                                reject({ error: err, response: apiResponse });
+                            } else {
+                                resolve({ data, response: apiResponse });
+                            }
+                        });
+                    });
 
+                    handleResponse(response.data);
+                } catch (error) {
+                    if (error.error && error.error.includes('ECONNRESET') && retryAttempt < 3) {
+                        // Refresh token using callback patterns
+                        helpers.login(AzureConfig, function(refreshErr, refreshedLoginData) {
+                            if (refreshErr) {
+                                return cb(`Failed to refresh token: ${refreshErr}`, null, error.response);
+                            }
+
+                            // Update loginData with refreshed tokens
+                            loginData = refreshedLoginData;
+                            console.log('Token refreshed successfully. New token data:', JSON.stringify({
+                                environment: loginData.environment,
+                                token: loginData.token ? '***' + loginData.token.slice(-8) : null,
+                                graphToken: loginData.graphToken ? '***' + loginData.graphToken.slice(-8) : null,
+                                vaultToken: loginData.vaultToken ? '***' + loginData.vaultToken.slice(-8) : null
+                            }, null, 2));
+
+                            // Retry with new token
+                            makeApiCall(retryAttempt + 1)
+                                .then(() => cb(null, null, null))
+                                .catch(err => cb(err, null, null));
+                        });
+                    } else {
+                        return cb(error.error, null, error.response);
+                    }
+                }
+            };
+
+            // Start the async process
+            makeApiCall().catch(error => {
+                console.log(`Unexpected error in makeApiCall: ${error}`);
+                cb(error, null, null);
+            });
+
+            function handleResponse(data) {
                 // If a new nextLink is provided, this will be updated.  There shouldn't
                 // be a need to hold on to the previous value
                 if (data && obj.hasListResponse && data.length) data.value = data;
@@ -85,17 +130,24 @@ let collect = function(AzureConfig, settings, callback, fargateFlag) {
                     return cb(null, localData);
                 }
 
-                let resData = localData || data;
+                const resData = localData || data;
                 if (data && ((obj.paginate && data[obj.paginate]) || data['nextLink']) && (!obj.limit || (obj.limit && resData && resData.value && resData.value.length < obj.limit))) {
                     obj.nextUrl = data['nextLink'] || data[obj.paginate];
                     processCall(obj, cb, localData || data);
                 } else {
                     return cb(null, localData || data || []);
                 }
-            });
+            }
         };
 
         let processCall = function(obj, cb, localData) {
+            let callbackCalled = false;
+            const wrappedCallback = (err, data, response) => {
+                if (callbackCalled) return;
+                callbackCalled = true;
+                cb(err, data, response);
+            };
+
             if (fargateFlag) {
                 const maxApiRetryAttempts = 15;
                 let initialResponse = null;
@@ -108,38 +160,36 @@ let collect = function(AzureConfig, settings, callback, fargateFlag) {
                         return retryAfter;
                     },
                     errorFilter: function(err) {
-                        return err.includes('TooManyRequests');
+                        const errorMessage = typeof err === 'string' ? err : err.message || err.toString();
+                        return errorMessage.includes('TooManyRequests');
                     }
                 }, function(retryCallback) {
                     let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
-                    // Temporary fix to add additional buffer of 6 seconds before each call
                     var rateLimit = obj.rateLimit && obj.rateLimit == 3000? 6000: obj.rateLimit;
                     if (rateLimit) {
                         setTimeout(function() {
                             console.log(`Fargate collector rate limited: url: ${localUrl}`);
                             makeCall(localUrl, obj, function(err, data, response) {
                                 initialResponse = response;
-                                return retryCallback(err, data, response);
+                                retryCallback(err, data, response);
                             }, localData);
                         }, rateLimit);
                     } else {
                         makeCall(localUrl, obj, function(err, data, response) {
                             initialResponse = response;
-                            return retryCallback(err, data, response);
+                            retryCallback(err, data, response);
                         }, localData);
                     }
-                }, function(err, data, response) {
-                    cb(err, data, response);
-                });
+                }, wrappedCallback);
             } else {
                 let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);
                 if (obj.rateLimit) {
                     setTimeout(function() {
                         console.log(`url: ${localUrl}`);
-                        makeCall(localUrl, obj, cb, localData);
+                        makeCall(localUrl, obj, wrappedCallback, localData);
                     }, obj.rateLimit);
                 } else {
-                    makeCall(localUrl, obj, cb, localData);
+                    makeCall(localUrl, obj, wrappedCallback, localData);
                 }
             }
         };
@@ -532,4 +582,3 @@ let collect = function(AzureConfig, settings, callback, fargateFlag) {
 };
 
 module.exports = collect;
-

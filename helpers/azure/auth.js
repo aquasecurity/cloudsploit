@@ -177,6 +177,10 @@ module.exports = {
 
                     console.log(`[ERROR] Unhandled error from Azure API: Body: ${JSON.stringify(body)}`);
                 }
+                if (error && error.code === 'ECONNRESET') {
+                    console.log('[ERROR] Unhandled error from Azure API: Error: ECONNRESET');
+                    return callback('Unknown error occurred while calling the Azure API: ECONNRESET');
+                }
 
                 console.log(`[ERROR] Unhandled error from Azure API: Error: ${error}`);
                 return callback('Unknown error occurred while calling the Azure API');
@@ -233,4 +237,3 @@ module.exports = {
 
     reduceProperties: reduceProperties
 };
-
