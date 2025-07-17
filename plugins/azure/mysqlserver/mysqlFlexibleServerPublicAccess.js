@@ -37,11 +37,10 @@ module.exports = {
 
             for (var flexibleServer of servers.data) {
                 if (!flexibleServer.id) continue;
-    
-                if (flexibleServer.properties &&
-                    flexibleServer.properties.network && 
-                    flexibleServer.properties.network.publicNetworkAccess &&
-                    flexibleServer.properties.network.publicNetworkAccess.toLowerCase() == 'enabled') {
+
+                if (flexibleServer.network &&
+                    flexibleServer.network.publicNetworkAccess &&
+                    flexibleServer.network.publicNetworkAccess.toLowerCase() == 'enabled') {
                     helpers.addResult(results, 2, 'MySQL flexible server is publicly accessible', location, flexibleServer.id);
                 } else {
                     helpers.addResult(results, 0, 'MySQL flexible server is not publicly accessible', location, flexibleServer.id);

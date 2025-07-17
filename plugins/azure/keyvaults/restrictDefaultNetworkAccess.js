@@ -35,18 +35,14 @@ module.exports = {
             }
 
             vaults.data.forEach((vault) => {
-                if (vault.networkAcls){
-                    if (vault.networkAcls && ((!vault.networkAcls.defaultAction) ||
-                        (vault.networkAcls.defaultAction  && vault.networkAcls.defaultAction === 'Allow'))) {
-                        helpers.addResult(results, 2,
-                            'Key Vault allows access to all networks', location, vault.id);
-                    } else {
-                        helpers.addResult(results, 0,
-                            'Key Vault does not allow access to all networks', location, vault.id);
-                    }
-                } else {
+                if (vault.networkAcls &&
+                    vault.networkAcls.defaultAction &&
+                    vault.networkAcls.defaultAction === 'Deny') {
                     helpers.addResult(results, 0,
-                        'Network Acl is not configured for Key Vault', location, vault.id);
+                        'Key Vault does not allow access to all networks', location, vault.id);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Key Vault allows access to all networks', location, vault.id);
                 }
             });
 
