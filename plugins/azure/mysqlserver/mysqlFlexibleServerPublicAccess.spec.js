@@ -66,10 +66,10 @@ describe('mysqlFlexibleServerPublicAccess', function() {
                             "availabilityZone": "3",
                             "replicationRole": "None",
                             "replicaCapacity": 10,
-                            "network": {
-                              "publicNetworkAccess": "Disabled"
-                            },
-                        }
+                        },
+                        "network": {
+                            "publicNetworkAccess": "Disabled"
+                        },
                     }
                 ]
             );
@@ -108,10 +108,10 @@ describe('mysqlFlexibleServerPublicAccess', function() {
                             "availabilityZone": "3",
                             "replicationRole": "None",
                             "replicaCapacity": 10,
-                            "network": {
-                              "publicNetworkAccess": "Enabled"
-                            },
-                        }
+                        },
+                        "network": {
+                            "publicNetworkAccess": "Enabled"
+                        },
                     }
                 ],
             );
