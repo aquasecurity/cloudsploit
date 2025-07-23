@@ -1,103 +1,123 @@
 /**
- * Google Cloud Function entry point for running CloudSploit scans via HTTP.
- * This file should be placed in the root of the CloudSploit repository.
- *
- * This function adapts the CloudSploit CLI tool to run in a serverless environment.
- * It is triggered by an HTTP POST request and expects a JSON body with the following structure:
- * {
- * "serviceAccount": { ... a GCP service account key JSON object ... },
- * "plugins": ["gce", "gcs"], // Optional: array of plugins to run. If omitted, all are run.
- * "compliance": "pci" // Optional: specify a compliance standard.
- * }
+ * This file provides a clean, promise-based wrapper for the CloudSploit engine.
  */
-const cloudsploit = require('./lib/cloudsploit');
+
+// engine.js is the core CloudSploit scanner.
+const engine = require('./engine.js');
 const fs = require('fs').promises;
-const path = require('path');
-const os = require('os');
-
-// --- Promise Wrapper for CloudSploit's Callback-based `run` function ---
-// This is the key to handling the asynchronous nature of CloudSploit without
-// refactoring the entire library. We wrap the main `run` function in a Promise,
-// which allows us to use `async/await` in our handler to wait for completion.
-const runCloudSploit = (config) => {
-    return new Promise((resolve, reject) => {
-        cloudsploit.run(config, (err, results) => {
-            if (err) {
-                console.error('Error from CloudSploit engine:', err);
-                return reject(new Error('CloudSploit engine failed to run.'));
-            }
-            resolve(results);
-        });
-    });
-};
-
 
 /**
- * Main HTTP Cloud Function handler.
- * @param {object} req - The Express-like request object.
- * @param {object} res - The Express-like response object.
+ * Executes a CloudSploit scan by wrapping the callback-based engine in a Promise.
+ * It also handles filtering of "OK" results if specified in the settings.
+ *
+ * @param {object} cloudConfig - The cloud credentials object (i.e., the service account key).
+ * @param {object} settings - The scan settings object.
+ * @returns {Promise<Array>} A promise that resolves with the array of scan results.
  */
-exports.cloudsploitScanner = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).send('Method Not Allowed');
-    }
+function runScan(cloudConfig, settings) {
+    // Define default settings and merge them with user-provided settings.
+    // User settings will override the defaults.
+    const finalSettings = {
+        cloud: 'google',
+        console: 'none',
+        ignore_ok: true,
+        ...settings
+    };
 
-    // --- Input Validation ---
-    if (!req.body || !req.body.serviceAccount) {
-        return res.status(400).send('Bad Request: "serviceAccount" key missing from request body.');
-    }
+    // This is the portion of code that handles the callback.
+    // We return a new Promise, which allows us to use async/await.
+    return new Promise((resolve, reject) => {
 
-    if (typeof req.body.serviceAccount !== 'object' || !req.body.serviceAccount.project_id) {
-         return res.status(400).send('Bad Request: "serviceAccount" must be a valid GCP key object.');
-    }
+        // The engine function expects a callback as its third argument.
+        // This callback is what we will define right here.
+        const callback = (err, results) => {
+            // This code block is executed ONLY when the engine has
+            // finished its work and calls the callback.
 
-    let tempKeyPath = '';
+            if (err) {
+                // If the engine reports an error, we reject the promise.
+                console.error('Error reported from CloudSploit engine:', err);
+                return reject(err);
+            }
 
-    try {
-        // --- Dynamic Configuration ---
-        // We create the configuration object programmatically from the request body.
+            console.log('Engine callback received successfully. Processing results...');
 
-        // Cloud Functions have a writable /tmp directory. We write the service
-        // account key here temporarily so CloudSploit's GCP collector can read it.
-        tempKeyPath = path.join(os.tmpdir(), `sa-key-${Date.now()}.json`);
-        await fs.writeFile(tempKeyPath, JSON.stringify(req.body.serviceAccount));
-
-        const config = {
-            source: 'gcp', // Hardcode for Google Cloud
-            output: 'json', // Always return JSON as requested
-            console: 'none', // Suppress console output within the function
-            google: {
-                key_file: tempKeyPath, // Point to the temporary key file
-            },
-            // Optional: allow the user to specify which plugins to run
-            plugins: req.body.plugins || null, // e.g., ['gce', 'gcs']
-            // Optional: allow the user to specify a compliance standard
-            compliance: req.body.compliance || null // e.g., 'pci'
+            // If ignore_ok is true, filter the results before resolving.
+            if (finalSettings.ignore_ok) {
+                const filteredResults = {};
+                for (const pluginName in results) {
+                    const pluginResults = results[pluginName];
+                    // A result status of 0 means "OK". We keep everything that is NOT 0.
+                    const nonOkResults = pluginResults.filter(result => result.status !== 0);
+                    
+                    // Only add the plugin to the final object if it has non-OK results left.
+                    if (nonOkResults.length > 0) {
+                        filteredResults[pluginName] = nonOkResults;
+                    }
+                }
+                // Resolve the promise with the filtered results.
+                resolve(filteredResults);
+            } else {
+                // If ignore_ok is not set, resolve with the original results.
+                resolve(results);
+            }
         };
 
-        console.log(`Starting CloudSploit scan for project: ${req.body.serviceAccount.project_id}`);
-        console.log(`Using plugins: ${config.plugins ? config.plugins.join(', ') : 'all'}`);
+        // Now, we call the engine and pass our configuration and the callback
+        // function we just defined. The engine will run, and when it is done,
+        // it will execute our callback.
+        console.log('Calling the CloudSploit engine...');
+        engine(cloudConfig, finalSettings, callback);
+    });
+}
 
-        // --- Execute Scan and Wait for Results ---
-        // By awaiting our promise-wrapped function, we ensure the Cloud Function
-        // does not terminate before all scans are complete.
-        const results = await runCloudSploit(config);
+// --- LOCAL TESTING EXAMPLE ---
+// This block demonstrates how to USE the new promise-based `runScan` function.
+// It will only run when you execute `node main.js` from your terminal.
+if (require.main === module) {
+    (async () => {
+        console.log('--- RUNNING IN LOCAL TEST MODE ---');
 
-        console.log('CloudSploit scan completed successfully.');
-        res.status(200).json(results);
+        const testKeyPath = './key.json';
+        let serviceAccountKey;
 
-    } catch (error) {
-        console.error('An error occurred during the CloudSploit scan:', error);
-        res.status(500).send(`Internal Server Error: ${error.message}`);
-    } finally {
-        // --- Cleanup ---
-        // Always attempt to delete the temporary service account key file.
-        if (tempKeyPath) {
-            try {
-                await fs.unlink(tempKeyPath);
-            } catch (cleanupError) {
-                console.error(`Failed to clean up temporary key file: ${tempKeyPath}`, cleanupError);
-            }
+        try {
+            const keyData = await fs.readFile(testKeyPath, 'utf8');
+            serviceAccountKey = JSON.parse(keyData);
+            console.log(`Successfully loaded service account key for project: ${serviceAccountKey.project_id}`);
+        } catch (err) {
+            console.error(`\nError: Could not read or parse "${testKeyPath}".`);
+            console.error('Please ensure a valid "key.json" file exists in the project root directory.');
+            process.exit(1);
         }
-    }
-};
+        
+        // 1. Define the cloudConfig (credentials)
+        const cloudConfig = serviceAccountKey;
+        if (cloudConfig.project_id) {
+            cloudConfig.project = cloudConfig.project_id;
+        }
+
+        // 2. Define the settings for the scan. Defaults are now in runScan.
+        const settings = {
+            // plugin: 'openSsh' // Run just one specific plugin for this test
+        };
+
+        try {
+            // 3. Call our new function and wait for the results.
+            // The filtering logic is now handled inside runScan.
+            console.log(`\nAttempting to run scan for plugin: "${settings.plugin}"`);
+            const scanResults = await runScan(cloudConfig, settings);
+
+            // 4. Print the final results.
+            console.log('\n--- SCAN RESULTS (JSON) ---');
+            console.log(JSON.stringify(scanResults, null, 2));
+
+        } catch (error) {
+            console.error('\n--- SCAN FAILED ---');
+            console.error('The runScan function rejected its promise:', error);
+        }
+
+        console.log('\n--- LOCAL TEST MODE FINISHED ---');
+    })();
+}
+
