@@ -48,7 +48,12 @@ async function uploadResultsToBlob(resultsObject, storageConnection, blobContain
  * @param cloudConfig The configuration for the cloud provider.
  * @param settings General purpose settings.
  */
-var engine = function(cloudConfig, settings) {
+var engine = function(cloudConfig, settings, mainCallback) {
+
+    console.log("Reached here with config")
+    console.log(cloudConfig)
+    console.log("And settings")
+    console.log(settings)
     // Initialize any suppression rules based on the the command line arguments
     var suppressionFilter = suppress.create(settings.suppress);
 
@@ -141,7 +146,9 @@ var engine = function(cloudConfig, settings) {
         }
     });
 
-    if (!apiCalls.length) return console.log('ERROR: Nothing to collect.');
+    // if (!apiCalls.length) return console.log('ERROR: Nothing to collect.');
+    if (!apiCalls.length) return mainCallback('ERROR: Nothing to collect.');
+
 
     console.log(`INFO: Found ${apiCalls.length} API calls to make for ${settings.cloud} plugins`);
     console.log('INFO: Collecting metadata. This may take several minutes...');
@@ -171,7 +178,9 @@ var engine = function(cloudConfig, settings) {
         govcloud: settings.govcloud,
         china: settings.china
     }, function(err, collection) {
-        if (err || !collection || !Object.keys(collection).length) return console.log(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
+        // if (err || !collection || !Object.keys(collection).length) return console.log(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
+        if (err || !collection || !Object.keys(collection).length) return mainCallback(`ERROR: Unable to obtain API metadata: ${err || 'No data returned'}`);
+
         outputHandler.writeCollection(collection, settings.cloud);
 
         console.log('INFO: Metadata collection complete. Analyzing...');
@@ -257,20 +266,40 @@ var engine = function(cloudConfig, settings) {
                 } else {
                     plugin.run(collection, settings, postRun);
                 }
-            }, function(err) {
-                if (err) return console.log(err);
+            // }, function(err) {
+            //     if (err) return console.log(err);
 
-                if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
-                // console.log(JSON.stringify(collection, null, 2));
-                outputHandler.close();
-                if (settings.exit_code) {
-                    // The original cloudsploit always has a 0 exit code. With this option, we can have
-                    // the exit code depend on the results (useful for integration with CI systems)
-                    console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
-                    process.exitCode = maximumStatus;
-                }
-                console.log('INFO: Scan complete');
-            });
+            //     if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
+            //     // console.log(JSON.stringify(collection, null, 2));
+            //     outputHandler.close();
+            //     if (settings.exit_code) {
+            //         // The original cloudsploit always has a 0 exit code. With this option, we can have
+            //         // the exit code depend on the results (useful for integration with CI systems)
+            //         console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
+            //         process.exitCode = maximumStatus;
+            //     }
+            //     console.log('INFO: Scan complete');
+            // });
+        }, function(err) {
+            // Change starts here
+            if (err) return mainCallback(err);
+
+            if (cloudConfig.StorageConnection && cloudConfig.BlobContainer) {
+                uploadResultsToBlob(resultsObject, cloudConfig.StorageConnection, cloudConfig.BlobContainer);
+            }
+            
+            outputHandler.close();
+            
+            if (settings.exit_code) {
+                console.log(`INFO: Exiting with exit code: ${maximumStatus}`);
+                process.exitCode = maximumStatus;
+            }
+
+            console.log('INFO: Scan complete');
+            // This is the line that resolves the promise in main.js
+            return mainCallback(null, resultsObject);
+            // Change ends here
+        });
         }
         
         if (settings.remediate && settings.remediate.length && cloudConfig.remediate) {
