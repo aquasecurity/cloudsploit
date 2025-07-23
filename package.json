@@ -2,7 +2,7 @@
   "name": "cloudsploit",
   "version": "2.0.0",
   "description": "AWS, Azure, GCP, Oracle, GitHub security scanning scripts",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "mocha './**/*.spec.js'",
     "test-watch": "nodemon --exec npm run test",
@@ -10,7 +10,8 @@
     "test-cov-watch": "nodemon --exec npm run test-cov",
     "test-cov-html": "nyc --reporter html --reporter cobertura --reporter lcov --all -- npm run test",
     "test-cov-html-watch": "nodemon --exec npm run test-cov-html",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "deploy": "gcloud functions deploy cloudsploitScanner --runtime nodejs18 --trigger-http --allow-unauthenticated --region us-central1 --memory 1024MB --timeout 540s"
   },
   "bin": {
     "cloudsploit-scan": "./index.js"
