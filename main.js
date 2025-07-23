@@ -75,22 +75,22 @@ function runScan(cloudConfig, settings) {
 /**
  * Main HTTP Cloud Function handler.
  * This is the entry point for the deployed function.
- * @param {object} req - The Express-like request object.
- * @param {object} res - The Express-like response object.
  */
 exports.cloudsploitScanner = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).send('Method Not Allowed');
     }
 
-    if (!req.body || !req.body.serviceAccount) {
-        return res.status(400).send('Bad Request: "serviceAccount" key missing from request body.');
+    // --- Simplified Request Handling ---
+    // We pass the serviceAccount object and settings directly to the scanner.
+    // The service account key MUST contain a project_id.
+    if (!req.body || !req.body.serviceAccount || !req.body.serviceAccount.project_id) {
+        return res.status(400).send('Bad Request: "serviceAccount" key missing or it does not contain a "project_id" field.');
     }
     
-    // The service account key is the cloudConfig
     const cloudConfig = req.body.serviceAccount;
-    // The settings object can contain other options like a specific plugin
-    // e.g., { "settings": { "plugin": "openSsh" } }
+    // The engine requires a `project` property. We add it here.
+    cloudConfig.project = cloudConfig.project_id;
     const settings = req.body.settings || {};
 
     try {
@@ -105,7 +105,6 @@ exports.cloudsploitScanner = async (req, res) => {
 
 // --- LOCAL TESTING EXAMPLE ---
 // This block demonstrates how to USE the new promise-based `runScan` function.
-// It will only run when you execute `node main.js` from your terminal.
 if (require.main === module) {
     (async () => {
         console.log('--- RUNNING IN LOCAL TEST MODE ---');
@@ -116,31 +115,30 @@ if (require.main === module) {
         try {
             const keyData = await fs.readFile(testKeyPath, 'utf8');
             serviceAccountKey = JSON.parse(keyData);
+            
+            // The service account key MUST contain a project_id for local testing.
+            if (!serviceAccountKey.project_id) {
+                throw new Error('The key.json file is missing the required "project_id" field.');
+            }
             console.log(`Successfully loaded service account key for project: ${serviceAccountKey.project_id}`);
+
         } catch (err) {
             console.error(`\nError: Could not read or parse "${testKeyPath}".`);
-            console.error('Please ensure a valid "key.json" file exists in the project root directory.');
+            console.error(err.message);
             process.exit(1);
         }
         
-        // 1. Define the cloudConfig (credentials)
         const cloudConfig = serviceAccountKey;
-        if (cloudConfig.project_id) {
-            cloudConfig.project = cloudConfig.project_id;
-        }
-
-        // 2. Define the settings for the scan. Defaults are now in runScan.
-        const settings = {
-            // plugin: 'openSsh' // Run just one specific plugin for this test
-        };
+        // The CloudSploit engine requires a `project` property.
+        // We ensure it is set here before calling the scanner.
+        cloudConfig.project = cloudConfig.project_id;
+        
+        const settings = {};
 
         try {
-            // 3. Call our new function and wait for the results.
-            // The filtering logic is now handled inside runScan.
-            console.log(`\nAttempting to run scan for plugin: "${settings.plugin}"`);
+            console.log(`\nAttempting to run scan...`);
             const scanResults = await runScan(cloudConfig, settings);
 
-            // 4. Print the final results.
             console.log('\n--- SCAN RESULTS (JSON) ---');
             console.log(JSON.stringify(scanResults, null, 2));
 
@@ -152,5 +150,3 @@ if (require.main === module) {
         console.log('\n--- LOCAL TEST MODE FINISHED ---');
     })();
 }
-
-
