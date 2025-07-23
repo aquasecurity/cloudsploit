@@ -1,5 +1,6 @@
 /**
- * This file provides a clean, promise-based wrapper for the CloudSploit engine.
+ * This file provides a clean, promise-based wrapper for the CloudSploit engine
+ * and an HTTP handler to deploy it as a Google Cloud Function.
  */
 
 // engine.js is the core CloudSploit scanner.
@@ -71,6 +72,37 @@ function runScan(cloudConfig, settings) {
     });
 }
 
+/**
+ * Main HTTP Cloud Function handler.
+ * This is the entry point for the deployed function.
+ * @param {object} req - The Express-like request object.
+ * @param {object} res - The Express-like response object.
+ */
+exports.cloudsploitScanner = async (req, res) => {
+    if (req.method !== 'POST') {
+        return res.status(405).send('Method Not Allowed');
+    }
+
+    if (!req.body || !req.body.serviceAccount) {
+        return res.status(400).send('Bad Request: "serviceAccount" key missing from request body.');
+    }
+    
+    // The service account key is the cloudConfig
+    const cloudConfig = req.body.serviceAccount;
+    // The settings object can contain other options like a specific plugin
+    // e.g., { "settings": { "plugin": "openSsh" } }
+    const settings = req.body.settings || {};
+
+    try {
+        const results = await runScan(cloudConfig, settings);
+        res.status(200).json(results);
+    } catch (error) {
+        console.error('An error occurred during the CloudSploit scan:', error);
+        res.status(500).send(`Internal Server Error: ${error.message || error}`);
+    }
+};
+
+
 // --- LOCAL TESTING EXAMPLE ---
 // This block demonstrates how to USE the new promise-based `runScan` function.
 // It will only run when you execute `node main.js` from your terminal.
@@ -120,4 +152,5 @@ if (require.main === module) {
         console.log('\n--- LOCAL TEST MODE FINISHED ---');
     })();
 }
+
 
