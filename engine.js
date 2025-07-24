@@ -64,6 +64,12 @@ var engine = function(cloudConfig, settings, mainCallback) {
     var collector = require(`./collectors/${settings.cloud}/collector.js`);
     var plugins = exports[settings.cloud];
     var apiCalls = [];
+    var listOfPlugins = settings.list_of_plugins || [];
+
+    
+
+    console.log("Plugins to run")
+    console.log(listOfPlugins)
 
     // Load resource mappings
     var resourceMap;
@@ -90,6 +96,7 @@ var engine = function(cloudConfig, settings, mainCallback) {
     console.log('INFO: Determining API calls to make...');
 
     var skippedPlugins = [];
+    
 
     Object.entries(plugins).forEach(function(p){
         var pluginId = p[0];
@@ -97,7 +104,7 @@ var engine = function(cloudConfig, settings, mainCallback) {
 
         // Skip plugins that don't match the ID flag
         var skip = false;
-        if (settings.plugin && settings.plugin !== pluginId) {
+        if ((settings.plugin && settings.plugin !== pluginId) || (listOfPlugins.length > 0 && !listOfPlugins.includes(pluginId))) {
             skip = true;
         } else {
             // Skip GitHub plugins that do not match the run type

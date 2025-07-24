@@ -1,5 +1,4 @@
-/**
- * This file provides a clean, promise-based wrapper for the CloudSploit engine
+/* This file provides a clean, promise-based wrapper for the CloudSploit engine
  * and an HTTP handler to deploy it as a Google Cloud Function.
  */
 
@@ -24,6 +23,7 @@ function runScan(cloudConfig, settings) {
         ignore_ok: true,
         ...settings
     };
+
 
     // This is the portion of code that handles the callback.
     // We return a new Promise, which allows us to use async/await.
@@ -133,7 +133,10 @@ if (require.main === module) {
         // We ensure it is set here before calling the scanner.
         cloudConfig.project = cloudConfig.project_id;
         
-        const settings = {};
+        const settings = {
+            list_of_plugins: ["automaticRestartEnabled", "enableUsageExport"],
+        };
+
 
         try {
             console.log(`\nAttempting to run scan...`);
@@ -150,3 +153,4 @@ if (require.main === module) {
         console.log('\n--- LOCAL TEST MODE FINISHED ---');
     })();
 }
+
