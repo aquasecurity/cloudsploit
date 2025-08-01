@@ -111,6 +111,7 @@ describe('mysqlFlexibleServerPublicAccess', function() {
             const cache = createCache(
                 [listMysqlFlexibleServer[1]],
                 []
+
             );
 
             mysqlFlexibleServerPublicAccess.run(cache, {}, callback);
@@ -197,6 +198,7 @@ describe('mysqlFlexibleServerPublicAccess', function() {
                 null,
                 [],
                 { message: 'unable to query servers'}
+
             );
 
             mysqlFlexibleServerPublicAccess.run(cache, {}, callback);
