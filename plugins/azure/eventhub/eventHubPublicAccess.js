@@ -20,7 +20,7 @@ module.exports = {
             default: false,
         }
     },
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
@@ -28,7 +28,7 @@ module.exports = {
             check_selected_networks: settings.check_selected_networks || this.settings.check_selected_networks.default
         };
 
-        async.each(locations.eventHub, function (location, rcb) {
+        async.each(locations.eventHub, function(location, rcb) {
             var eventHubs = helpers.addSource(cache, source,
                 ['eventHub', 'listEventHub', location]);
 
@@ -79,7 +79,7 @@ module.exports = {
                 }
             }
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
