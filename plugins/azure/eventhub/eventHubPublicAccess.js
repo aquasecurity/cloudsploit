@@ -61,7 +61,7 @@ module.exports = {
                                     'Unable to query Event Hubs network rule set: ' + helpers.addError(listNetworkRuleSet), location, eventHub.id);
                                 continue;
                             }
-                            if (listNetworkRuleSet.data.ipRules && listNetworkRuleSet.data.ipRules.length > 0) {
+                            if ((listNetworkRuleSet.data.ipRules && listNetworkRuleSet.data.ipRules.length > 0) || (listNetworkRuleSet.data.virtualNetworkRules && listNetworkRuleSet.data.virtualNetworkRules.length > 0)) {
                                 helpers.addResult(results, 2,
                                     'Event Hubs namespace is publicly accessible', location, eventHub.id);
                             } else {
