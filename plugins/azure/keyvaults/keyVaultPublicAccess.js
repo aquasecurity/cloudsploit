@@ -8,7 +8,7 @@ module.exports = {
     severity: 'High',
     description: 'Ensures that Azure Key Vaults do not allow unrestricted public access',
     more_info: 'Azure Key Vaults should be configured to restrict public access to protect sensitive data. This can be achieved by either disabling public network access or implementing strict network rules.',
-    recommended_action: 'Modify Key Vault network settings to disable public access or configure network rules to deny access from 0.0.0.0/0 and ::/0',
+    recommended_action: 'Modify Key Vault network settings to disable public access or appropriate configure network rules.',
     link: 'https://learn.microsoft.com/en-us/azure/key-vault/general/network-security',
     apis: ['vaults:list'],
     settings: {
@@ -30,7 +30,6 @@ module.exports = {
             keyvault_allowed_ips: settings.keyvault_allowed_ips || this.settings.keyvault_allowed_ips.default
         };
 
-        // Parse allowed IPs into an array for easier checking
         var allowedIps = [];
         if (config.keyvault_allowed_ips && config.keyvault_allowed_ips.length) {
             allowedIps = config.keyvault_allowed_ips.split(',').map(ip => ip.trim());
