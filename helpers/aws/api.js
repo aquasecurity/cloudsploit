@@ -216,6 +216,7 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'logGroupName', BridgeExecutionService: 'CloudWatchLogs',
             BridgeCollectionService: 'cloudwatchlogs', DataIdentifier: 'data',
         },
+
     'EventBridge':
         {
             enabled: true, isSingleSource: true, InvAsset: 'bus', InvService: 'eventbridge',
@@ -224,6 +225,15 @@ var serviceMap = {
             BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'event-bus',
             BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'EventBridge',
             BridgeCollectionService: 'eventbridge', DataIdentifier: 'data',
+        },
+    'ECR':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'registry', InvService: 'ecr',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'ecr_repository',
+            BridgeServiceName: 'ecr', BridgePluginCategoryName: 'ECR', BridgeProvider: 'aws', BridgeCall: 'describeRepositories',
+            BridgeArnIdentifier: 'repositoryArn', BridgeIdTemplate: '', BridgeResourceType: 'repository',
+            BridgeResourceNameIdentifier:'repositoryName' , BridgeExecutionService: 'ECR',
+            BridgeCollectionService: 'ecr', DataIdentifier: 'data',
         },
     'App Mesh':
         {
@@ -557,7 +567,7 @@ var serviceMap = {
             InvResourceCategory: 'ai&ml', InvResourceType: 'Lookout Metrics',
             BridgeProvider: 'aws', BridgeServiceName: 'lookoutmetrics', BridgePluginCategoryName: 'AI & ML',
             BridgeArnIdentifier: 'AnomalyDetectorArn', BridgeIdTemplate: '',
-            BridgeResourceType: 'lookoutmetrics', BridgeResourceNameIdentifier: 'AnomalyDetectorName', BridgeExecutionService: 'AI & ML',
+            BridgeResourceType: 'AnomalyDetector', BridgeResourceNameIdentifier: 'AnomalyDetectorName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'lookoutmetrics', BridgeCall: 'listAnomalyDetectors', DataIdentifier: 'data',
         },
         {
@@ -567,6 +577,123 @@ var serviceMap = {
             BridgeArnIdentifier: 'NotebookInstanceArn', BridgeIdTemplate: '', BridgeResourceType: 'notebook-instance',
             BridgeResourceNameIdentifier: 'NotebookInstanceName', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'sagemaker', BridgeCall: 'describeNotebookInstance', DataIdentifier: 'data',
+        },
+    ],
+    'Guard Duty':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'detector', InvService: 'guardduty',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Guardduty Detector',
+            BridgeProvider: 'aws', BridgeServiceName: 'guardduty', BridgePluginCategoryName: 'GuardDuty',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:guardduty:{region}:{cloudAccount}:detector/{id}', BridgeResourceType: 'detector',
+            BridgeResourceNameIdentifier: 'id', BridgeExecutionService: 'GuardDuty',
+            BridgeCollectionService: 'guardduty', BridgeCall: 'getDetector', DataIdentifier: 'data',
+        },
+    'WorkSpaces':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'instance', InvService: 'workspaces',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'WorkSpace Instance',
+            BridgeProvider: 'aws', BridgeServiceName: 'workspaces', BridgePluginCategoryName: 'WorkSpaces',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:workspaces:{region}:{cloudAccount}:workspace/{name}', BridgeResourceType: 'workspace',
+            BridgeResourceNameIdentifier: 'WorkspaceId', BridgeExecutionService: 'WorkSpaces',
+            BridgeCollectionService: 'workspaces', BridgeCall: 'describeWorkspaces', DataIdentifier: 'data',
+        },
+    'Transfer':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'server', InvService: 'transfer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Transfer Server',
+            BridgeProvider: 'aws', BridgeServiceName: 'transfer', BridgePluginCategoryName: 'Transfer',
+            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'server',
+            BridgeResourceNameIdentifier: 'ServerId', BridgeExecutionService: 'Transfer',
+            BridgeCollectionService: 'transfer', BridgeCall: 'listServers', DataIdentifier: 'data',
+        },
+    'AppFlow':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'flow', InvService: 'appflow',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Appflow',
+            BridgeProvider: 'aws', BridgeServiceName: 'appflow', BridgePluginCategoryName: 'AppFlow',
+            BridgeArnIdentifier: 'flowArn', BridgeIdTemplate: '', BridgeResourceType: 'flow',
+            BridgeResourceNameIdentifier: 'flowName', BridgeExecutionService: 'AppFlow',
+            BridgeCollectionService: 'appflow', BridgeCall: 'listFlows', DataIdentifier: 'data',
+        },
+    'Cognito':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'userpool', InvService: 'cognitoidentityserviceprovider',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Cognito Userpool',
+            BridgeProvider: 'aws', BridgeServiceName: 'cognitoidentityserviceprovider', BridgePluginCategoryName: 'Cognito',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:cognito-idp:{region}:{cloudAccount}:userpool/{id}', BridgeResourceType: 'userpool',
+            BridgeResourceNameIdentifier: 'Id', BridgeExecutionService: 'Cognito',
+            BridgeCollectionService: 'cognitoidentityserviceprovider', BridgeCall: 'listUserPools', DataIdentifier: 'data',
+        },
+    'WAF':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'webacl', InvService: 'wafv2',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Web ACL',
+            BridgeProvider: 'aws', BridgeServiceName: 'wafv2', BridgePluginCategoryName: 'WAF',
+            BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'webacl',
+            BridgeResourceNameIdentifier: 'Id', BridgeExecutionService: 'WAF',
+            BridgeCollectionService: 'wafv2', BridgeCall: 'listWebACLs', DataIdentifier: 'data',
+        },
+    'Glue':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'glue', InvService: 'glue',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Glue SecurityConfigurations',
+            BridgeProvider: 'aws', BridgeServiceName: 'glue', BridgePluginCategoryName: 'Glue',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:glue:{region}:{cloudAccount}:/securityConfiguration/{name}', BridgeResourceType: 'securityConfiguration',
+            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Glue',
+            BridgeCollectionService: 'glue', BridgeCall: 'getSecurityConfigurations', DataIdentifier: 'data',
+        },
+    'ConfigService':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'configservice', InvService: 'configservice',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'ConfigService',
+            BridgeProvider: 'aws', BridgeServiceName: 'configservice', BridgePluginCategoryName: 'ConfigService',
+            BridgeArnIdentifier: 'ConfigRuleArn', BridgeIdTemplate: '', BridgeResourceType: 'config-rule',
+            BridgeResourceNameIdentifier: 'ConfigRuleName', BridgeExecutionService: 'ConfigService',
+            BridgeCollectionService: 'configservice', BridgeCall: 'describeConfigRules', DataIdentifier: 'data',
+        },
+    'Firehose':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'firehose', InvService: 'firehose',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Firehose',
+            BridgeProvider: 'aws', BridgeServiceName: 'firehose', BridgePluginCategoryName: 'Firehose',
+            BridgeArnIdentifier: 'DeliveryStreamARN', BridgeIdTemplate: '', BridgeResourceType: 'deliverystream',
+            BridgeResourceNameIdentifier: 'DeliveryStreamName', BridgeExecutionService: 'Firehose',
+            BridgeCollectionService: 'firehose', BridgeCall: 'describeDeliveryStream', DataIdentifier: 'DeliveryStreamDescription',
+        },
+    'SES':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'ses', InvService: 'SES',
+            InvResourceCategory: 'cloud_resource', InvResourceType: 'ses_emails',
+            BridgeProvider: 'aws', BridgeServiceName: 'ses', BridgePluginCategoryName: 'SES',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'arn:aws:ses:{region}:{cloudAccount}:identity/{name}', BridgeResourceType: 'identity',
+            BridgeResourceNameIdentifier: 'identityName', BridgeExecutionService: 'SES',
+            BridgeCollectionService: 'ses', BridgeCall: 'getIdentityDkimAttributes', DataIdentifier: 'DkimAttributes',
+        },
+    'FSx':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'filesystem', InvService: 'fsx',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Fsx Filesystem',
+            BridgeProvider: 'aws', BridgeServiceName: 'fsx', BridgePluginCategoryName: 'FSx',
+            BridgeArnIdentifier: 'ResourceARN', BridgeIdTemplate: '', BridgeResourceType: 'file-system',
+            BridgeResourceNameIdentifier: 'FileSystemId', BridgeExecutionService: 'FSx',
+            BridgeCollectionService: 'fsx', BridgeCall: 'describeFileSystems', DataIdentifier: 'data',
+        },
+    'OpenSearch': [
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'domain', InvService: 'opensearch',
+            InvResourceCategory: 'database', InvResourceType: 'OpenSearch Domain',
+            BridgeProvider: 'aws', BridgeServiceName: 'opensearch', BridgePluginCategoryName: 'OpenSearch',
+            BridgeArnIdentifier: 'ARN', BridgeIdTemplate: '', BridgeResourceType: 'domain',
+            BridgeResourceNameIdentifier: 'DomainName', BridgeExecutionService: 'OpenSearch',
+            BridgeCollectionService: 'opensearch', BridgeCall: 'describeDomain', DataIdentifier: 'DomainStatus',
+        },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'collection', InvService: 'opensearch',
+            InvResourceCategory: 'database', InvResourceType: 'OpenSearch Serverless',
+            BridgeProvider: 'aws', BridgeServiceName: 'opensearchserverless', BridgePluginCategoryName: 'OpenSearch',
+            BridgeArnIdentifier: 'arn', BridgeIdTemplate: '', BridgeResourceType: 'collection',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'OpenSearch',
+            BridgeCollectionService: 'opensearchserverless', BridgeCall: 'listCollections', DataIdentifier: 'data',
         },
     ],
 };
@@ -1818,6 +1945,21 @@ var postcalls = [
         IoTSiteWise: {
             sendIntegration: serviceMap['IoT SiteWise']
         },
+        Workspaces: {
+            sendIntegration: serviceMap['WorkSpaces']
+        },
+        Transfer: {
+            sendIntegration: serviceMap['Transfer']
+        },
+        Glue: {
+            sendIntegration: serviceMap['Glue'],
+        },
+        SecurityHub: {
+            sendIntegration: serviceMap['SecurityHub']
+        },
+        FSx:{
+            sendIntegration: serviceMap['FSx']
+        },
 
         ACM: {
             describeCertificate: {
@@ -1825,7 +1967,10 @@ var postcalls = [
                 reliesOnCall: 'listCertificates',
                 filterKey: 'CertificateArn',
                 filterValue: 'CertificateArn'
-            }
+            },
+            sendIntegration: {
+                enabled: true
+            },
         },
         AccessAnalyzer: {
             listFindings: {
@@ -1833,14 +1978,8 @@ var postcalls = [
                 reliesOnCall: 'listAnalyzers',
                 override: true
             },
-            listFindingsV2: {
-                reliesOnService: 'accessanalyzer',
-                reliesOnCall: 'listAnalyzers',
-                override: true
-            },
             sendIntegration: serviceMap['IAM'][0]
         },
-        
         APIGateway: {
             getStages: {
                 reliesOnService: 'apigateway',
@@ -1919,7 +2058,8 @@ var postcalls = [
                 reliesOnCall: 'listFlows',
                 filterKey: 'flowName',
                 filterValue: 'flowName'
-            }
+            },
+            sendIntegration: serviceMap['AppFlow']
         },
         Athena: {
             getWorkGroup: {
@@ -2108,7 +2248,8 @@ var postcalls = [
                 reliesOnCall: 'describeConfigRules',
                 filterKey: 'ConfigRuleName',
                 filterValue: 'ConfigRuleName'
-            }
+            },
+            sendIntegration: serviceMap['ConfigService']
         },
         CodeStar: {
             describeProject: {
@@ -2233,7 +2374,8 @@ var postcalls = [
                 reliesOnCall: 'listDomainNames',
                 filterKey: 'DomainName',
                 filterValue: 'DomainName'
-            }
+            },
+            sendIntegration: serviceMap['OpenSearch'][0]
         },
         S3: {
             getBucketLogging: {
@@ -2348,7 +2490,8 @@ var postcalls = [
                 reliesOnCall: 'listUserPools',
                 filterKey: 'UserPoolId',
                 filterValue: 'Id'
-            }
+            },
+            sendIntegration: serviceMap['Cognito']
         },
         EC2: {
             describeSubnets: {
@@ -2394,9 +2537,7 @@ var postcalls = [
                 filterKey: 'resourceArn',
                 filterValue: 'repositoryArn'
             },
-            sendIntegration: {
-                enabled: true
-            }
+            sendIntegration: serviceMap['ECR']
         },
         ECRPUBLIC: {
             describeRepositories: {
@@ -2651,7 +2792,8 @@ var postcalls = [
                 reliesOnService: 'firehose',
                 reliesOnCall: 'listDeliveryStreams',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['Firehose'],
         },
         KMS: {
             describeKey: {
@@ -2903,7 +3045,8 @@ var postcalls = [
                 reliesOnCall: 'listIdentities',
                 override: true,
                 rateLimit: 1000
-            }
+            },
+            sendIntegration: serviceMap['SES']
         },
         SNS: {
             getTopicAttributes: {
@@ -2957,7 +3100,8 @@ var postcalls = [
                 reliesOnService: 'wafv2',
                 reliesOnCall: 'listWebACLs',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['WAF']
         },
         GuardDuty: {
             getDetector: {
@@ -2980,6 +3124,7 @@ var postcalls = [
                 reliesOnCall: 'listDetectors',
                 override: true,
             },
+            sendIntegration: serviceMap['Guard Duty'],
         },
     },
     {
@@ -3136,7 +3281,8 @@ var postcalls = [
                 reliesOnService: 'opensearchserverless',
                 reliesOnCall: 'listNetworkSecurityPolicies',
                 override: true
-            }
+            },
+            sendIntegration: serviceMap['OpenSearch'][1]
         }
     }
 ];

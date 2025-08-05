@@ -8,9 +8,9 @@ module.exports = {
     domain: 'Compute',
     severity: 'Medium',
     description: 'Ensures that the VM Agent is enabled for virtual machines',
-    more_info: 'The VM agent must be enabled on Azure virtual machines in order to enable Azure Security Center for data collection.',
+    more_info: 'The VM agent must be enabled on Azure virtual machines in order to enable Azure Defender for data collection.',
     recommended_action: 'Enable the VM agent for all virtual machines.',
-    link: 'https://learn.microsoft.com/en-us/azure/security-center/security-center-enable-vm-agent',
+    link: 'https://learn.microsoft.com/en-us/azure/defender-for-cloud/enable-agentless-scanning-vms',
     apis: ['virtualMachines:listAll'],
     compliance: {
         hipaa: 'HIPAA requires the logging of all activity ' +

@@ -34,10 +34,13 @@ module.exports = {
             desiredEncryptionLevelString: settings.customer_profiles_desired_encryption_level || this.settings.customer_profiles_desired_encryption_level.default
         };
 
+        // Skip encryption check if default awskms is set
+        var skipEncryptionCheck = config.desiredEncryptionLevelString === 'awskms';
+
         var desiredEncryptionLevel = helpers.ENCRYPTION_LEVELS.indexOf(config.desiredEncryptionLevelString);
         var currentEncryptionLevel;
 
-        async.each(regions.customerprofiles, function(region, rcb){        
+        async.each(regions.customerprofiles, function(region, rcb){
             var listDomains = helpers.addSource(cache, source,
                 ['customerprofiles', 'listDomains', region]);
 
@@ -76,44 +79,54 @@ module.exports = {
                         `Unable to get customerprofiles domain description: ${helpers.addError(getDomain)}`,
                         region, resource);
                     continue;
-                } 
+                }
+                if (skipEncryptionCheck) {
+                    helpers.addResult(results, 0,
+                        'Customer Profile domain is encrypted with desired encryption level.',
+                        region, resource);
+                } else {
+                    if (getDomain.data.DefaultEncryptionKey) {
+                        let DefaultEncryptionKey = getDomain.data.DefaultEncryptionKey;
+                        var keyId = DefaultEncryptionKey.split('/')[1] ? DefaultEncryptionKey.split('/')[1] : DefaultEncryptionKey;
 
-                if (getDomain.data.DefaultEncryptionKey) {
-                    let DefaultEncryptionKey = getDomain.data.DefaultEncryptionKey;
-                    var keyId = DefaultEncryptionKey.split('/')[1] ? DefaultEncryptionKey.split('/')[1] : DefaultEncryptionKey;
+                        var describeKey = helpers.addSource(cache, source,
+                            ['kms', 'describeKey', region, keyId]);
 
-                    var describeKey = helpers.addSource(cache, source,
-                        ['kms', 'describeKey', region, keyId]);  
+                        if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                            helpers.addResult(results, 3,
+                                `Unable to query KMS key: ${helpers.addError(describeKey)}`,
+                                region, DefaultEncryptionKey);
+                            continue;
+                        }
 
-                    if (!describeKey || describeKey.err || !describeKey.data || !describeKey.data.KeyMetadata) {
+                        currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
+                    } else if (domain.DomainName.startsWith('amazon-connect') && getDomain.data.DefaultEncryptionKey == null) {
+                        helpers.addResult(results, 2,
+                            `Customer Profile domain is encrypted with awskms \
+                                which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                        continue;
+                    } else {
                         helpers.addResult(results, 3,
-                            `Unable to query KMS key: ${helpers.addError(describeKey)}`,
-                            region, DefaultEncryptionKey);
+                            'Unable to find Customer Profile domain encryption key', region, resource);
                         continue;
                     }
 
-                    currentEncryptionLevel = helpers.getEncryptionLevel(describeKey.data.KeyMetadata, helpers.ENCRYPTION_LEVELS);
-                } else {
-                    helpers.addResult(results, 3,
-                        'Unable to find Customer Profile domain encryption key', region, resource);
-                    continue;
-                }
+                    var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
 
-                var currentEncryptionLevelString = helpers.ENCRYPTION_LEVELS[currentEncryptionLevel];
-
-                if (currentEncryptionLevel >= desiredEncryptionLevel) {
-                    helpers.addResult(results, 0,
-                        `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
-                        which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
-                } else {
-                    helpers.addResult(results, 2,
-                        `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
-                        which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
-                        region, resource);
+                    if (currentEncryptionLevel >= desiredEncryptionLevel) {
+                        helpers.addResult(results, 0,
+                            `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
+                                which is greater than or equal to the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 2,
+                            `Customer Profile domain is encrypted with ${currentEncryptionLevelString} \
+                                which is less than the desired encryption level ${config.desiredEncryptionLevelString}`,
+                            region, resource);
+                    }
                 }
             }
-
             rcb();
         }, function(){
             callback(null, results, source);

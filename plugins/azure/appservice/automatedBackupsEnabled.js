@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Web Apps Backup Enabled',
+    title: 'Web Apps Custom Backup Enabled',
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'Medium',
-    description: 'Ensures that Azure Web Apps have automated backups enabled.',
+    description: 'Ensures that Azure Web Apps have custom automated backups enabled.',
     more_info: 'Protect your Azure App Services web applications against accidental deletion and/or corruption, you can configure application backups to create restorable copies of your app content.',
-    recommended_action: 'Configure backup for Azure Web Apps',
+    recommended_action: 'Configure custom automated backup for Azure Web Apps.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/manage-backup',
     apis: ['webApps:list', 'webApps:getBackupConfiguration'],
     realtime_triggers: ['microsoftweb:sites:write','microsoftweb:sites:delete','microsoftweb:sites:config:write','microsoftweb:sites:config:delete'],
@@ -44,10 +44,10 @@ module.exports = {
                     ['webApps', 'getBackupConfiguration', location, webApp.id]);
 
                 if (configs && configs.err && configs.err.includes('NotFound')) {
-                    helpers.addResult(results, 2, 'Backups are not configured for WebApp', location, webApp.id);
+                    helpers.addResult(results, 2, 'Custom Backups are not configured for WebApp', location, webApp.id);
                 } else if (!configs || configs.err || !configs.data) {
                     helpers.addResult(results, 3, 'Unable to query for Web App backup configs: ' + helpers.addError(configs), location, webApp.id);
-                } else helpers.addResult(results, 0, 'Backups are configured for WebApp', location, webApp.id);
+                } else helpers.addResult(results, 0, 'Custom Backups are configured for WebApp', location, webApp.id);
             });
 
             rcb();

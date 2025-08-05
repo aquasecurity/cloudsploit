@@ -46,7 +46,7 @@ module.exports = {
             }
             
             for (let cluster of describeDBClusters.data) {
-                if (!cluster.DBClusterArn) continue;
+                if (!cluster.DBClusterArn || cluster.Engine !== 'neptune') continue;
 
                 let resource = cluster.DBClusterArn;
 
@@ -67,3 +67,4 @@ module.exports = {
         });
     }
 };
+

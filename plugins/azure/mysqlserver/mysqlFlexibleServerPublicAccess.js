@@ -41,7 +41,7 @@ module.exports = {
                 ['servers', 'listMysqlFlexibleServer', location]);
 
             if (!servers) return rcb();
-                
+
             if (servers.err || !servers.data) {
                 helpers.addResult(results, 3,
                     'Unable to query for MySQL flexible servers: ' + helpers.addError(servers), location);

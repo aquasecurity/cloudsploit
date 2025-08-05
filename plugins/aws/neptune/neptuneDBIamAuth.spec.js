@@ -4,6 +4,7 @@ var neptuneDBIamAuth = require('./neptuneDBIamAuth');
 const describeDBClusters = [
     {
         "AllocatedStorage": 1,
+        "Engine": "neptune",
         "BackupRetentionPeriod": 1,
         "DbClusterResourceId": "cluster-WNY2ZTZWH4RQ2CTKEEP4GVCPU4",
         "DBClusterArn": "arn:aws:rds:us-east-1:000111222333:cluster:database-2",
@@ -12,6 +13,7 @@ const describeDBClusters = [
     },
     {
         "AllocatedStorage": 1,
+        "Engine": "neptune",
         "BackupRetentionPeriod": 1,
         "DbClusterResourceId": "cluster-WNY2ZTZWH4RQ2CTKEEP4GVCPU9",
         "DBClusterArn": "arn:aws:rds:us-east-1:000111222334:cluster:database-3",

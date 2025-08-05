@@ -243,6 +243,8 @@ module.exports = {
         'openAllPortsProtocolsEgress'   : require(__dirname + '/plugins/aws/ec2/openAllPortsProtocolsEgress.js'),
         'defaultSecurityGroupInUse'     : require(__dirname + '/plugins/aws/ec2/defaultSecurityGroupInUse.js'),
         'ec2NetworkExposure'            : require(__dirname + '/plugins/aws/ec2/ec2NetworkExposure.js'),
+        'ec2PrivilegeAnalysis'          : require(__dirname + '/plugins/aws/ec2/ec2PrivilegeAnalysis.js'),
+
 
         'efsCmkEncrypted'               : require(__dirname + '/plugins/aws/efs/efsCmkEncrypted.js'),
         'efsEncryptionEnabled'          : require(__dirname + '/plugins/aws/efs/efsEncryptionEnabled.js'),
@@ -269,6 +271,8 @@ module.exports = {
         'eksLatestPlatformVersion'      : require(__dirname + '/plugins/aws/eks/eksLatestPlatformVersion.js'),
         'eksClusterHasTags'             : require(__dirname + '/plugins/aws/eks/eksClusterHasTags.js'),
         'eksNetworkExposure'            : require(__dirname + '/plugins/aws/eks/eksNetworkExposure.js'),
+        'eksPrivilegeAnalysis'          : require(__dirname + '/plugins/aws/eks/eksPrivilegeAnalysis.js'),
+
 
         'kendraIndexEncrypted'          : require(__dirname + '/plugins/aws/kendra/kendraIndexEncrypted.js'),
 
@@ -515,6 +519,7 @@ module.exports = {
         'lambdaEnhancedMonitoring'      : require(__dirname + '/plugins/aws/lambda/lambdaEnhancedMonitoring.js'),
         'lambdaUniqueExecutionRole'     : require(__dirname + '/plugins/aws/lambda/lambdaUniqueExecutionRole.js'),
         'lambdaNetworkExposure'         : require(__dirname + '/plugins/aws/lambda/lambdaNetworkExposure.js'),
+        'lambdaPrivilegeAnalysis'       : require(__dirname + '/plugins/aws/lambda/lambdaPrivilegeAnalysis.js'),
 
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
@@ -620,6 +625,9 @@ module.exports = {
         'projectArtifactsEncrypted'     : require(__dirname + '/plugins/aws/codebuild/projectArtifactsEncrypted.js'),
         'buildProjectEnvPriviligedMode' : require(__dirname + '/plugins/aws/codebuild/buildProjectEnvPriviligedMode.js'),
         'codebuildProjectLoggingEnabled': require(__dirname + '/plugins/aws/codebuild/codebuildProjectLoggingEnabled.js'),
+
+        'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
+        'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
 
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
@@ -1463,7 +1471,7 @@ module.exports = {
         'imagesCMKEncrypted'            : require(__dirname + '/plugins/google/compute/imagesCMKEncrypted.js'),
         'snapshotEncryption'            : require(__dirname + '/plugins/google/compute/snapshotEncryption.js'),
         'instanceNetworkExposure'       : require(__dirname + '/plugins/google/compute/instanceNetworkExposure.js'),
-
+        'computePrivilegeAnalysis'      : require(__dirname + '/plugins/google/compute/computePrivilegeAnalysis.js'),
         'keyRotation'                   : require(__dirname + '/plugins/google/cryptographickeys/keyRotation.js'),
         'keyProtectionLevel'            : require(__dirname + '/plugins/google/cryptographickeys/keyProtectionLevel.js'),
         'kmsPublicAccess'               : require(__dirname + '/plugins/google/cryptographickeys/kmsPublicAccess.js'),
@@ -1572,7 +1580,7 @@ module.exports = {
         'binaryAuthorizationEnabled'    : require(__dirname + '/plugins/google/kubernetes/binaryAuthorizationEnabled.js'),
         'clientCertificateDisabled'     : require(__dirname + '/plugins/google/kubernetes/clientCertificateDisabled.js'),
         'clusterNetworkExposure'        : require(__dirname + '/plugins/google/kubernetes/clusterNetworkExposure.js'),
-
+        'kubernetesPrivilegeAnalysis'   : require(__dirname + '/plugins/google/kubernetes/kubernetesPrivilegeAnalysis.js'),
         'dnsSecEnabled'                 : require(__dirname + '/plugins/google/dns/dnsSecEnabled.js'),
         'dnsSecSigningAlgorithm'        : require(__dirname + '/plugins/google/dns/dnsSecSigningAlgorithm.js'),
         'dnsZoneLabelsAdded'            : require(__dirname + '/plugins/google/dns/dnsZoneLabelsAdded.js'),
@@ -1613,7 +1621,7 @@ module.exports = {
         'functionAllUsersPolicy'        : require(__dirname + '/plugins/google/cloudfunctions/functionAllUsersPolicy.js'),
         'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
         'cloudFunctionNetworkExposure'  : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionNetworkExposure.js'),
-
+        'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
         'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),
