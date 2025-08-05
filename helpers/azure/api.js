@@ -45,131 +45,131 @@ These fields should be according to the user and product manager, what they want
 
 var serviceMap = {
     'Redis Cache':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'redisCaches', InvService: 'redisCaches',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'Redis Cache', BridgeServiceName: 'rediscaches',
-        BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'Redis',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
-        BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'redisCaches', InvService: 'redisCaches',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Redis Cache', BridgeServiceName: 'rediscaches',
+            BridgePluginCategoryName: 'Redis Cache', BridgeProvider: 'Azure', BridgeCall: 'listBySubscription',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'Redis',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
+            BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
+        },
     'CDN Profiles':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'cdnProfiles', InvService: 'cdnProfiles',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'CDN_Profiles', BridgeServiceName: 'profiles',
-        BridgePluginCategoryName: 'CDN Profiles', BridgeProvider: 'Azure', BridgeCall: 'list',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'profiles',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
-        BridgeCollectionService: 'profiles', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cdnProfiles', InvService: 'cdnProfiles',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'CDN_Profiles', BridgeServiceName: 'profiles',
+            BridgePluginCategoryName: 'CDN Profiles', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'profiles',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
+            BridgeCollectionService: 'profiles', DataIdentifier: 'data',
+        },
     'Cosmos DB':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'cosmosdb', InvService: 'cosmosDB',
-        InvResourceCategory: 'database', InvResourceType: 'cosmos_DB', BridgeServiceName: 'databaseaccounts',
-        BridgePluginCategoryName: 'Cosmos DB', BridgeProvider: 'Azure', BridgeCall: 'list',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databaseAccounts',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Cosmos DB',
-        BridgeCollectionService: 'databaseaccounts', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'cosmosdb', InvService: 'cosmosDB',
+            InvResourceCategory: 'database', InvResourceType: 'cosmos_DB', BridgeServiceName: 'databaseaccounts',
+            BridgePluginCategoryName: 'Cosmos DB', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databaseAccounts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Cosmos DB',
+            BridgeCollectionService: 'databaseaccounts', DataIdentifier: 'data',
+        },
     'Key Vaults':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'vaults', InvService: 'keyVaults',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'key vaults', BridgeServiceName: 'vaults',
-        BridgePluginCategoryName: 'Key Vaults', BridgeProvider: 'Azure', BridgeCall: 'list',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'vaults',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Key Vaults',
-        BridgeCollectionService: 'vaults', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'vaults', InvService: 'keyVaults',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'key vaults', BridgeServiceName: 'vaults',
+            BridgePluginCategoryName: 'Key Vaults', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'vaults',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Key Vaults',
+            BridgeCollectionService: 'vaults', DataIdentifier: 'data',
+        },
     'Load Balancer':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'loadBalancer', InvService: 'loadBalancer',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'load_balancer', BridgeServiceName: 'loadbalancers',
-        BridgePluginCategoryName: 'Load Balancer', BridgeProvider: 'Azure', BridgeCall: 'listAll',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'loadBalancers',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Load Balancer',
-        BridgeCollectionService: 'loadbalancers', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'loadBalancer', InvService: 'loadBalancer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'load_balancer', BridgeServiceName: 'loadbalancers',
+            BridgePluginCategoryName: 'Load Balancer', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'loadBalancers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Load Balancer',
+            BridgeCollectionService: 'loadbalancers', DataIdentifier: 'data',
+        },
     'Log Alerts':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'logAlerts', InvService: 'logAlerts',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'log alerts', BridgeServiceName: 'activitylogalerts',
-        BridgePluginCategoryName: 'Log Alerts', BridgeProvider: 'Azure', BridgeCall: 'listBySubscriptionId',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'activityLogAlerts',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Log Alerts',
-        BridgeCollectionService: 'activitylogalerts', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'logAlerts', InvService: 'logAlerts',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'log alerts', BridgeServiceName: 'activitylogalerts',
+            BridgePluginCategoryName: 'Log Alerts', BridgeProvider: 'Azure', BridgeCall: 'listBySubscriptionId',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'activityLogAlerts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Log Alerts',
+            BridgeCollectionService: 'activitylogalerts', DataIdentifier: 'data',
+        },
     'Network Watcher':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'networkWatcher', InvService: 'networkWatcher',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'network_watcher', BridgeServiceName: 'networkwatchers',
-        BridgePluginCategoryName: 'Network Watcher', BridgeProvider: 'Azure', BridgeCall: 'listAll',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networkWatchers',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Network Watcher',
-        BridgeCollectionService: 'networkwatchers', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'networkWatcher', InvService: 'networkWatcher',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'network_watcher', BridgeServiceName: 'networkwatchers',
+            BridgePluginCategoryName: 'Network Watcher', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networkWatchers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Network Watcher',
+            BridgeCollectionService: 'networkwatchers', DataIdentifier: 'data',
+        },
     'Azure Policy':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'azurePolicy', InvService: 'azurePolicy',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'azure_policy', BridgeServiceName: 'policyassignments',
-        BridgePluginCategoryName: 'Azure Policy', BridgeProvider: 'Azure', BridgeCall: 'list',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'policyAssignments',
-        BridgeResourceNameIdentifier: 'displayName', BridgeExecutionService: 'Azure Policy',
-        BridgeCollectionService: 'policyassignments', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'azurePolicy', InvService: 'azurePolicy',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'azure_policy', BridgeServiceName: 'policyassignments',
+            BridgePluginCategoryName: 'Azure Policy', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'policyAssignments',
+            BridgeResourceNameIdentifier: 'displayName', BridgeExecutionService: 'Azure Policy',
+            BridgeCollectionService: 'policyassignments', DataIdentifier: 'data',
+        },
     'Virtual Networks':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'virtual_network', InvService: 'virtual_network',
-        InvResourceCategory: 'cloud_resources', InvResourceType: 'Virtual Network', BridgeServiceName: 'virtualnetworks',
-        BridgePluginCategoryName: 'Virtual Networks', BridgeProvider: 'Azure', BridgeCall: 'listAll',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualNetworks',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
-        BridgeCollectionService: 'virtualnetworks', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'virtual_network', InvService: 'virtual_network',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Virtual Network', BridgeServiceName: 'virtualnetworks',
+            BridgePluginCategoryName: 'Virtual Networks', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualNetworks',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
+            BridgeCollectionService: 'virtualnetworks', DataIdentifier: 'data',
+        },
     'Queue Service':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'queueService', InvService: 'queueService',
-        InvResourceCategory: 'storage', InvResourceType: 'queue_service', BridgeServiceName: 'queueservice',
-        BridgePluginCategoryName: 'Queue Service', BridgeProvider: 'Azure', BridgeCall: 'getQueueAcl',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'queueService',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Queue Service',
-        BridgeCollectionService: 'queueservice', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'queueService', InvService: 'queueService',
+            InvResourceCategory: 'storage', InvResourceType: 'queue_service', BridgeServiceName: 'queueservice',
+            BridgePluginCategoryName: 'Queue Service', BridgeProvider: 'Azure', BridgeCall: 'getQueueAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'queueService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Queue Service',
+            BridgeCollectionService: 'queueservice', DataIdentifier: 'data',
+        },
     'Table Service':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'tableService', InvService: 'tableService',
-        InvResourceCategory: 'storage', InvResourceType: 'table_service', BridgeServiceName: 'tableservice',
-        BridgePluginCategoryName: 'Table Service', BridgeProvider: 'Azure', BridgeCall: 'getTableAcl',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
-        BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'tableService', InvService: 'tableService',
+            InvResourceCategory: 'storage', InvResourceType: 'table_service', BridgeServiceName: 'tableservice',
+            BridgePluginCategoryName: 'Table Service', BridgeProvider: 'Azure', BridgeCall: 'getTableAcl',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'tableService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Table Service',
+            BridgeCollectionService: 'tableservice', DataIdentifier: 'data',
+        },
     'File Service':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
-        InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
-        BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
-        BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'fileService', InvService: 'fileService',
+            InvResourceCategory: 'storage', InvResourceType: 'file_service', BridgeServiceName: 'fileservice',
+            BridgePluginCategoryName: 'File Service', BridgeProvider: 'Azure', BridgeCall: 'listSharesSegmented',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'fileService',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'File Service',
+            BridgeCollectionService: 'fileservice', DataIdentifier: 'data',
+        },
     'SQL Databases':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
-        InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
-        BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
-        BridgeCollectionService: 'databases', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'database', InvService: 'sql',
+            InvResourceCategory: 'database', InvResourceType: 'sql_database', BridgeServiceName: 'databases',
+            BridgePluginCategoryName: 'SQL Databases', BridgeProvider: 'Azure', BridgeCall: 'listByServer',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'databases',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'SQL Databases',
+            BridgeCollectionService: 'databases', DataIdentifier: 'data',
+        },
     'AI & ML':
-    {
-        enabled: true, isSingleSource: true, InvAsset: 'account', InvService: 'openAI',
-        InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure',
-        BridgeServiceName: 'openAI', BridgePluginCategoryName: 'AI & ML',
-        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'accounts',
-        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
-        BridgeCollectionService: 'openai', BridgeCall: 'listAccounts', DataIdentifier: 'data',
-    },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'account', InvService: 'openAI',
+            InvResourceCategory: 'ai&ml', InvResourceType: 'OpenAI Accounts', BridgeProvider: 'Azure',
+            BridgeServiceName: 'openAI', BridgePluginCategoryName: 'AI & ML',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'accounts',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
+            BridgeCollectionService: 'openai', BridgeCall: 'listAccounts', DataIdentifier: 'data',
+        },
 };
 
 // Standard calls that contain top-level operations

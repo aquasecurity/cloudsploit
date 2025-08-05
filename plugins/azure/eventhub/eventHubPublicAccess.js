@@ -14,8 +14,8 @@ module.exports = {
     realtime_triggers: ['microsofteventhub:namespaces:write', 'microsofteventhub:namespaces:delete', 'microsofteventhub:namespaces:networkrulesets:write'],
     settings: {
         check_selected_networks: {
-            name: 'Check Selected Networks',
-            description: 'Whether the IP addresses are configured',
+            name: 'Evaluate Selected Networks',
+            description: 'Checks if specific IP addresses or virtual networks are set to restrict Event Hub access.',
             regex: '^(true|false)$',
             default: false,
         }

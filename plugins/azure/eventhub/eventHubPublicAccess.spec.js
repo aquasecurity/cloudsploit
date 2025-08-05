@@ -1,5 +1,5 @@
-var expect = require("chai").expect;
-var eventHubPublicAccess = require("./eventHubPublicAccess");
+var expect = require('chai').expect;
+var eventHubPublicAccess = require('./eventHubPublicAccess');
 
 const eventHubs = [
   {
@@ -330,19 +330,16 @@ describe("eventHubPublicAccess", function () {
       const callback = (err, results) => {
         expect(results.length).to.equal(3);
 
-        // First result: Basic tier (should pass)
         expect(results[0].status).to.equal(0);
         expect(results[0].message).to.include(
           "Event Hubs namespace tier is basic"
         );
 
-        // Second result: Enabled with no IP rules when check_selected_networks is true (should pass)
         expect(results[1].status).to.equal(0);
         expect(results[1].message).to.include(
           "Event Hubs namespace is not publicly accessible"
         );
 
-        // Third result: Enabled with IP rules when check_selected_networks is true (should fail)
         expect(results[2].status).to.equal(2);
         expect(results[2].message).to.include(
           "Event Hubs namespace is publicly accessible"
@@ -351,23 +348,22 @@ describe("eventHubPublicAccess", function () {
         done();
       };
 
-      // Mix of different event hubs with network rule sets
       const mixedCache = {
         eventHub: {
           listEventHub: {
             eastus: {
-              data: [eventHubs[2], eventHubs[0], eventHubs[3]], // basic tier, disabled, enabled with IP rules
+              data: [eventHubs[2], eventHubs[0], eventHubs[3]],
             },
           },
           listNetworkRuleSet: {
             [eventHubs[0].id]: {
               eastus: {
-                data: networkRuleSets[1], // no IP rules
+                data: networkRuleSets[1],
               },
             },
             [eventHubs[3].id]: {
               eastus: {
-                data: networkRuleSets[0], // with IP rules
+                data: networkRuleSets[0],
               },
             },
           },
