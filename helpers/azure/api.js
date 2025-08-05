@@ -1254,6 +1254,14 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/encryptionScopes?api-version=2023-01-01'
         }
     },
+    eventHub: {
+        listNetworkRuleSet: {
+            reliesOnPath: 'eventHub.listEventHub',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/networkRuleSets/default?api-version=2022-10-01-preview'
+        }
+    }
+
 };
 
 var tertiarycalls = {
