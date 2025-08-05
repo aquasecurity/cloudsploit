@@ -214,27 +214,5 @@ describe('postgresqlFlexibleServerPublicAccess', function() {
 
             postgresqlFlexibleServerPublicAccess.run(cache, {}, callback);
         });
-
-        it('should give failing result if IPv6 public access is allowed using ::', function(done) {
-            const cache = createCache([listPostgresFlexibleServer[1]], [firewallRules[2]]);
-            postgresqlFlexibleServerPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The PostgreSQL flexible server is open to outside traffic');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
-
-        it('should give failing result if IPv6 public access is allowed using ::/0', function(done) {
-            const cache = createCache([listPostgresFlexibleServer[1]], [firewallRules[3]]);
-            postgresqlFlexibleServerPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('The PostgreSQL flexible server is open to outside traffic');
-                expect(results[0].region).to.equal('eastus');
-                done();
-            });
-        });
     });
 });

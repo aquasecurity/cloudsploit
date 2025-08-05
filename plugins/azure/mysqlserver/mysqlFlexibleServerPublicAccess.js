@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that MySQL flexible servers do not allow public access',
-    more_info: 'Unless there is a specific business requirement, MySQL flexible server instances should not have a public endpoint and should only be accessed from within a VNET.',
-    recommended_action: 'Ensure that the firewall of each MySQL flexible server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
+    more_info: 'Configuring public access for MySQL flexible server instance allows the server to be accessible throught public endpoint. MySQL flexible server instances should not have a public endpoint and should only be accessed from within a VNET.',
+    recommended_action: 'Ensure that the firewall of each MySQL flexible server is configured to prohibit traffic from the public.',
     link: 'https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking-public',
     apis: ['servers:listMysqlFlexibleServer', 'firewallRules:listByFlexibleServerMysql'],
     settings: {

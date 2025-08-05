@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that PostgreSQL servers do not allow public access',
-    more_info: 'Unless there is a specific business requirement, PostgreSQL server instances should not have a public endpoint and should only be accessed from within a VNET.',
-    recommended_action: 'Ensure that the firewall of each PostgreSQL server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
+    more_info: 'Configuring public access for PostgreSQL server instance allows the server to be accessible throught public endpoint. PostgreSQL server server instances should not have a public endpoint and should only be accessed from within a VNET.',
+    recommended_action: 'Ensure that the firewall of each PostgreSQL server is configured to prohibit traffic from the public address.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules',
     apis: ['servers:listPostgres', 'firewallRules:listByServerPostgres'],
     settings: {
@@ -59,7 +59,6 @@ module.exports = {
                 if (server.publicNetworkAccess && server.publicNetworkAccess.toLowerCase() === 'disabled') {
                     helpers.addResult(results, 0, 'The PostgreSQL server has public network access disabled', location, server.id);
                 } else {
-                    // Get firewall rules
                     const firewallRules = helpers.addSource(cache, source,
                         ['firewallRules', 'listByServerPostgres', location, server.id]);
 

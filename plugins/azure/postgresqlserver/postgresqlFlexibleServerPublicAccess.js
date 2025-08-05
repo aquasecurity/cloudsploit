@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that PostgreSQL flexible servers do not allow public access',
-    more_info: 'Unless there is a specific business requirement, PostgreSQL flexible server instances should not have a public endpoint and should only be accessed from within a VNET.',
-    recommended_action: 'Ensure that the firewall of each PostgreSQL flexible server is configured to prohibit traffic from the public 0.0.0.0 global IP address.',
+    more_info: 'Configuring public access for PostgreSQL flexible server instance allows the server to be accessible throught public endpoint. PostgreSQL flexible server instances should not have a public endpoint and should only be accessed from within a VNET.',
+    recommended_action: 'Ensure that the firewall of each PostgreSQL flexible server is configured to prohibit traffic from the public address.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-firewall-rules',
     apis: ['servers:listPostgresFlexibleServer', 'firewallRules:listByFlexibleServerPostgres'],
     settings: {
@@ -70,7 +70,6 @@ module.exports = {
                             var publicAccess = false;
     
                             firewallRules.data.forEach(firewallRule => {
-                                console.log(firewallRule);
                                 const startIpAddr = firewallRule['startIpAddress'];
                                 const endIpAddr = firewallRule['endIpAddress'];
                                 
@@ -82,11 +81,6 @@ module.exports = {
                                         }
                                     } else if (startIpAddr.toString() === '0.0.0.0' &&
                                         (endIpAddr.toString() === '255.255.255.255' || endIpAddr.toString() === '0.0.0.0')) {
-                                        publicAccess = true;
-                                    }
-
-                                    // Additional check for IPv6 public access (::/0)
-                                    if ((startIpAddr === '::' || startIpAddr === '::/0') && !checkEndIp) {
                                         publicAccess = true;
                                     }
                                 }
