@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'High',
     description: 'Ensures that PostgreSQL servers do not allow public access',
-    more_info: 'Configuring public access for PostgreSQL server instance allows the server to be accessible throught public endpoint. PostgreSQL server server instances should not have a public endpoint and should only be accessed from within a VNET.',
+    more_info: 'Configuring public access for PostgreSQL server instance allows the server to be accessible through public endpoint. PostgreSQL server server instances should not have a public endpoint and should only be accessed from within a VNET.',
     recommended_action: 'Ensure that the firewall of each PostgreSQL server is configured to prohibit traffic from the public address.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules',
     apis: ['servers:listPostgres', 'firewallRules:listByServerPostgres'],
