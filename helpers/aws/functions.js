@@ -32,7 +32,6 @@ function waitForCredentialReport(iam, callback, CREDENTIAL_DOWNLOAD_STARTED) {
                 //return callback(CREDENTIAL_REPORT_ERROR);
                 return callback('Error downloading report');
             }
-
             //CREDENTIAL_REPORT_DATA = reportData;
             //callback(null, CREDENTIAL_REPORT_DATA);
             callback(null, reportData);
@@ -335,6 +334,9 @@ function crossAccountPrincipal(principal, accountId, fetchPrincipals, settings={
 }
 
 function hasFederatedUserRole(policyDocument) {
+    if (!policyDocument || !Array.isArray(policyDocument)) {
+        return false;
+    }
     // true iff every statement refers to federated user access
     for (let statement of policyDocument) {
         if (statement.Action &&
@@ -785,10 +787,20 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                         return rCb(err);
                     } else {
                         if (openIpv6Range && !localIpV6Exists) {
-                            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                                'inboundRule': '::1/128',
-                                'action': 'ADDED'
-                            });
+                            if (settings.input && settings.input[ipv6InputKey]) {
+                                const newIpv6CidrRange = settings.input[ipv6InputKey].split(',');
+                                for (const cidr of newIpv6CidrRange) {
+                                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                                        'inboundRule': cidr,
+                                        'action': 'ADDED'
+                                    });
+                                }
+                            } else {
+                                remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                                    'inboundRule': '::1/128',
+                                    'action': 'ADDED'
+                                });
+                            }
                         } else if (openIpv6Range && localIpV6Exists) {
                             remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
                                 'inboundRule': '::1/128',
@@ -797,10 +809,20 @@ function remediateOpenPorts(putCall, pluginName, protocol, port, config, cache, 
                         }
 
                         if (openIpRange && !localIpExists) {
-                            remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
-                                'inboundRule': '127.0.0.1/32',
-                                'action': 'ADDED'
-                            });
+                            if (settings.input && settings.input[ipv4InputKey]) {
+                                const newIpCidrRange = settings.input[ipv4InputKey].split(',');
+                                for (const cidr of newIpCidrRange) {
+                                    remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                                        'inboundRule': cidr,
+                                        'action': 'ADDED'
+                                    });
+                                }
+                            } else {
+                                remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
+                                    'inboundRule': '127.0.0.1/32',
+                                    'action': 'ADDED'
+                                });
+                            }
                         } else if (openIpRange && localIpExists){
                             remediation_file['remediate']['actions'][pluginName][resource]['steps'].push({
                                 'inboundRule': '127.0.0.1/32',
@@ -1126,8 +1148,10 @@ var checkTags = function(cache, resourceName, resourceList, region, results, set
         ['resourcegroupstaggingapi', 'getResources', region]);
 
     if (!allResources || allResources.err || !allResources.data) {
-        helpers.addResult(results, 3,
-            'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region);
+        resourceList.map(arn => {
+            helpers.addResult(results, 3,
+                'Unable to query all resources from group tagging api:' + helpers.addError(allResources), region, arn);
+        });
         return;
     }
     var awsOrGov = defaultPartition(settings);

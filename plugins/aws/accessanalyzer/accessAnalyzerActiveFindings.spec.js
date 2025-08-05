@@ -15,8 +15,8 @@ const listAnalyzers = [
 ];
 
 const listFindings = [
-{
-    "findings": [
+    {
+        "findings": [
             {
                 "action": [
                     "kms:RetireGrant"
@@ -74,9 +74,9 @@ const listFindings = [
                 "updatedAt": "2022-01-12T13:48:20+00:00"
             }
         ]
-},
-{
-    "findings": [
+    },
+    {
+        "findings": [
             {
                 "action": [
                     "kms:RetireGrant"
@@ -134,13 +134,13 @@ const listFindings = [
                 "updatedAt": "2022-01-12T13:48:20+00:00"
             }
         ]
-}
-        
+    }
+
 ];
 
 const listFindingsV2 = [
-{
-    "findings": [
+    {
+        "findings": [
             {
                 "analyzedAt": "2025-01-23T13:06:24+00:00",
                 "createdAt": "2025-01-23T13:06:56+00:00",
@@ -175,9 +175,9 @@ const listFindingsV2 = [
                 "findingType": "UnusedPermission"
             },
         ]
-},
-{
-    "findings": [
+    },
+    {
+        "findings": [
             {
                 "analyzedAt": "2025-01-23T13:06:24+00:00",
                 "createdAt": "2025-01-23T13:06:56+00:00",
@@ -212,7 +212,7 @@ const listFindingsV2 = [
                 "findingType": "UnusedPermission"
             },
         ]
-}
+    }
 
 ]
 
@@ -269,7 +269,7 @@ describe('accessAnalyzerActiveFindings', function () {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Amazon IAM Access Analyzer has no active findings');
-                
+
                 done();
             });
         });
@@ -282,7 +282,7 @@ describe('accessAnalyzerActiveFindings', function () {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].region).to.equal('us-east-1');
                 expect(results[0].message).to.include('Amazon IAM Access Analyzer has no active findings');
-                
+
                 done();
             });
         });

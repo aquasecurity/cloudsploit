@@ -1,58 +1,59 @@
+const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storage-blob');
 var async = require('async');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require('azure-storage');
-
     if (!collection['blobService']['listContainersSegmented']) collection['blobService']['listContainersSegmented'] = {};
     if (!collection['blobService']['getContainerAcl']) collection['blobService']['getContainerAcl'] = {};
 
-    // Loop through regions and properties in reliesOn
-    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10,function(regionObj, region, cb) {
+    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10, function(regionObj, region, cb) {
         collection['blobService']['listContainersSegmented'][region] = {};
         collection['blobService']['getContainerAcl'][region] = {};
 
         async.eachOfLimit(regionObj, 10, function(subObj, resourceId, sCb) {
             collection['blobService']['listContainersSegmented'][region][resourceId] = {};
 
-            if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
-                // Extract storage account name from resourceId
-                var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
-                var storageService = new azureStorage['BlobService'](storageAccountName, subObj.data.keys[0].value);
+            const key = subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value? subObj.data.keys[0].value : null;
+            if (!key) return sCb();
 
-                storageService.listContainersSegmented(null, function(serviceErr, serviceResults) {
-                    if (serviceErr || !serviceResults) {
-                        collection['blobService']['listContainersSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
-                        sCb();
-                    } else {
-                        collection['blobService']['listContainersSegmented'][region][resourceId].data = serviceResults.entries;
+            const storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
+            const credential = new StorageSharedKeyCredential(storageAccountName, key);
+            const blobServiceClient = new BlobServiceClient(
+                `https://${storageAccountName}.blob.core.windows.net`,
+                credential
+            );
 
-                        // Add ACLs
-                        async.eachLimit(serviceResults.entries, 10, function(entryObj, entryCb) {
-                            var entryId = `${resourceId}/blobService/${entryObj.name}`;
-                            collection['blobService']['getContainerAcl'][region][entryId] = {};
+            const containers = [];
 
-                            storageService.getContainerAcl(entryObj.name, function(getErr, getData) {
-                                if (getErr || !getData) {
-                                    collection['blobService']['getContainerAcl'][region][entryId].err = (getErr || 'No data returned');
-                                } else {
-                                    collection['blobService']['getContainerAcl'][region][entryId].data = getData;
-                                }
-                                entryCb();
-                            });
-                        }, function() {
-                            sCb();
-                        });
+            (async() => {
+                try {
+                    for await (const container of blobServiceClient.listContainers()) {
+                        containers.push(container);
                     }
-                });
-            } else {
-                sCb();
-            }
-        }, function() {
-            cb();
-        });
-    }, function() {
-        callback();
-    });
+
+                    collection['blobService']['listContainersSegmented'][region][resourceId].data = containers;
+
+                    // Get ACLs for each container
+                    async.eachLimit(containers, 10, async(entryObj, entryCb) => {
+                        const entryId = `${resourceId}/blobService/${entryObj.name}`;
+                        collection['blobService']['getContainerAcl'][region][entryId] = {};
+
+                        try {
+                            const containerClient = blobServiceClient.getContainerClient(entryObj.name);
+                            const aclResponse = await containerClient.getAccessPolicy();
+                            collection['blobService']['getContainerAcl'][region][entryId].data = aclResponse;
+                        } catch (getErr) {
+                            collection['blobService']['getContainerAcl'][region][entryId].err = getErr.message || getErr;
+                        }
+
+                        entryCb();
+                    }, sCb);
+                } catch (serviceErr) {
+                    collection['blobService']['listContainersSegmented'][region][resourceId].err = serviceErr.message || serviceErr;
+                    sCb();
+                }
+            })();
+        }, cb);
+    }, callback);
 };

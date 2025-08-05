@@ -5,14 +5,14 @@ module.exports = {
     category: 'CloudFront',
     domain: 'Content Delivery',
     severity: 'Medium',
-    description: 'Ensures CloudFront distributions have request logging enabled.',
-    more_info: 'Logging requests to CloudFront ' +
+    description: 'Ensures CloudFront distributions have S3 legacy logging enabled.',
+    more_info: 'Logging S3 legacy to CloudFront ' +
                'distributions is a helpful way of detecting and ' + 
                'investigating potential attacks, malicious activity, ' + 
-               'or misuse of backend resources. Logs can be sent to S3 ' + 
+               'or misuse of backend resources. Logs can be sent to S3 ' +
                'and processed for further analysis.',
-    link: 'http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html',
-    recommended_action: 'Enable CloudFront request logging.',
+    link: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/standard-logging-legacy-s3.html',
+    recommended_action: 'Enable CloudFront S3 legacy logging.',
     apis: ['CloudFront:listDistributions', 'CloudFront:getDistribution'],
     compliance: {
         hipaa: 'As part of the audit control requirement for HIPAA, request logging for ' +
@@ -77,10 +77,10 @@ module.exports = {
                 var logging = getDistribution.data.Distribution.DistributionConfig.Logging;
                 if (logging.Enabled){
                     helpers.addResult(results, 0,
-                        'Request logging is enabled', 'global', Distribution.ARN);
+                        'S3 legacy logging is enabled', 'global', Distribution.ARN);
                 } else {
                     helpers.addResult(results, 2,
-                        'Request logging is not enabled', 'global', Distribution.ARN);
+                        'S3 legacy logging is not enabled', 'global', Distribution.ARN);
                 }
             }
         });

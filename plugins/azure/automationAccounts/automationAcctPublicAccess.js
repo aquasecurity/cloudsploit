@@ -10,7 +10,7 @@ module.exports = {
     more_info: 'Disabling public network access ensures that network traffic between the machines on the VNet and the Automation account traverses over the a private link, eliminating exposure from the public internet.',
     recommended_action: 'Modify automation account and disable public access.',
     link: 'https://learn.microsoft.com/en-us/azure/automation/how-to/private-link-security',
-    apis: ['automationAccounts:list'],
+    apis: ['automationAccounts:list', 'automationAccounts:get'],
     realtime_triggers: ['microsoftautomation:automationaccounts:write','microsoftautomation:automationaccounts:delete'],
 
     run: function(cache, settings, callback) {
@@ -38,8 +38,20 @@ module.exports = {
             for (var account of automationAccounts.data) {
                 if (!account.id) continue;
 
-                if (!account.publicNetworkAccess) {
-                    helpers.addResult(results, 0, 'Automation account has public network access disabled', location, account.id);
+                var describeAcct = helpers.addSource(cache, source,
+                    ['automationAccounts', 'get', location, account.id]);
+
+                if (!describeAcct || describeAcct.err || !describeAcct.data ) {
+                    helpers.addResult(results, 3, 'Unable to query for Automation account: ' + helpers.addError(describeAcct), location);
+                    continue;
+                }
+
+                if (Object.prototype.hasOwnProperty.call(describeAcct.data, 'publicNetworkAccess')) {
+                    if (describeAcct.data.publicNetworkAccess) {
+                        helpers.addResult(results, 2, 'Automation account does not have public network access disabled', location, account.id);
+                    } else {
+                        helpers.addResult(results, 0, 'Automation account has public network access disabled', location, account.id);
+                    }
                 } else {
                     helpers.addResult(results, 2, 'Automation account does not have public network access disabled', location, account.id);
                 }

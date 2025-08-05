@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Workspaces IP Access Control',
-    category: 'Workspaces',
+    category: 'WorkSpaces',
     domain: 'Identity and Access Management',
     severity: 'Medium',
     description: 'Ensures enforced IP Access Control on Workspaces',

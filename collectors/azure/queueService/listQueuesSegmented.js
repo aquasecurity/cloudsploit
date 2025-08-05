@@ -1,58 +1,57 @@
+const { TableServiceClient, AzureNamedKeyCredential } = require('@azure/data-tables');
 var async = require('async');
 
 module.exports = function(collection, reliesOn, callback) {
     if (!reliesOn['storageAccounts.listKeys']) return callback();
 
-    var azureStorage = require('azure-storage');
+    if (!collection['tableService']['listTablesSegmented']) collection['tableService']['listTablesSegmented'] = {};
+    if (!collection['tableService']['getTableAcl']) collection['tableService']['getTableAcl'] = {};
 
-    if (!collection['queueService']['listQueuesSegmented']) collection['queueService']['listQueuesSegmented'] = {};
-    if (!collection['queueService']['getQueueAcl']) collection['queueService']['getQueueAcl'] = {};
-
-    // Loop through regions and properties in reliesOn
-    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10,function(regionObj, region, cb) {
-        collection['queueService']['listQueuesSegmented'][region] = {};
-        collection['queueService']['getQueueAcl'][region] = {};
+    async.eachOfLimit(reliesOn['storageAccounts.listKeys'], 10, function(regionObj, region, cb) {
+        collection['tableService']['listTablesSegmented'][region] = {};
+        collection['tableService']['getTableAcl'][region] = {};
 
         async.eachOfLimit(regionObj, 10, function(subObj, resourceId, sCb) {
-            collection['queueService']['listQueuesSegmented'][region][resourceId] = {};
+            collection['tableService']['listTablesSegmented'][region][resourceId] = {};
 
-            if (subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value) {
-                // Extract storage account name from resourceId
-                var storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
-                var storageService = new azureStorage['QueueService'](storageAccountName, subObj.data.keys[0].value);
+            const key = subObj && subObj.data && subObj.data.keys && subObj.data.keys[0] && subObj.data.keys[0].value? subObj.data.keys[0].value:null;
+            if (!key) return sCb();
 
-                storageService.listQueuesSegmented(null, function(serviceErr, serviceResults) {
-                    if (serviceErr || !serviceResults) {
-                        collection['queueService']['listQueuesSegmented'][region][resourceId].err = (serviceErr || 'No data returned');
-                        sCb();
-                    } else {
-                        collection['queueService']['listQueuesSegmented'][region][resourceId].data = serviceResults.entries;
+            const storageAccountName = resourceId.substring(resourceId.lastIndexOf('/') + 1);
+            const credential = new AzureNamedKeyCredential(storageAccountName, key);
+            const serviceClient = new TableServiceClient(
+                `https://${storageAccountName}.table.core.windows.net`,
+                credential
+            );
 
-                        // Add ACLs
-                        async.eachLimit(serviceResults.entries, 10, function(entryObj, entryCb) {
-                            var entryId = `${resourceId}/queueService/${entryObj.name}`;
-                            collection['queueService']['getQueueAcl'][region][entryId] = {};
+            const tables = [];
 
-                            storageService.getQueueAcl(entryObj.name, function(getErr, getData) {
-                                if (getErr || !getData) {
-                                    collection['queueService']['getQueueAcl'][region][entryId].err = (getErr || 'No data returned');
-                                } else {
-                                    collection['queueService']['getQueueAcl'][region][entryId].data = getData;
-                                }
-                                entryCb();
-                            });
-                        }, function() {
-                            sCb();
-                        });
+            (async() => {
+                try {
+                    for await (const table of serviceClient.listTables()) {
+                        tables.push(table.name);
                     }
-                });
-            } else {
-                sCb();
-            }
-        }, function() {
-            cb();
-        });
-    }, function() {
-        callback();
-    });
+
+                    collection['tableService']['listTablesSegmented'][region][resourceId].data = tables;
+
+                    async.eachLimit(tables, 10, async(tableName, tableCb) => {
+                        const tableId = `${resourceId}/tableService/${tableName}`;
+                        collection['tableService']['getTableAcl'][region][tableId] = {};
+
+                        try {
+                            const aclResponse = await serviceClient.getAccessPolicy(tableName);
+                            collection['tableService']['getTableAcl'][region][tableId].data = aclResponse;
+                        } catch (getErr) {
+                            collection['tableService']['getTableAcl'][region][tableId].err = getErr.message || getErr;
+                        }
+
+                        tableCb();
+                    }, sCb);
+                } catch (tableErr) {
+                    collection['tableService']['listTablesSegmented'][region][resourceId].err = tableErr.message || tableErr;
+                    sCb();
+                }
+            })();
+        }, cb);
+    }, callback);
 };

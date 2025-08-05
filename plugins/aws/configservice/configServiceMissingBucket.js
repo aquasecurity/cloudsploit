@@ -19,6 +19,7 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
         var awsOrGov = helpers.defaultPartition(settings);
+        var defaultRegion = helpers.defaultRegion(settings);
 
         async.each(regions.configservice, function(region, rcb) {
             var describeDeliveryChannels = helpers.addSource(cache, source,
@@ -36,17 +37,22 @@ module.exports = {
                 helpers.addResult(results, 0, 'No Config delivery channels found', region);
                 return rcb();
             }
+            var listBuckets = helpers.addSource(cache, source,
+                ['s3', 'listBuckets', defaultRegion]);
 
             let deletedBuckets = [];
             for (let record of describeDeliveryChannels.data) {
                 if (!record.s3BucketName) continue;
 
                 var headBucket = helpers.addSource(cache, source,
-                    ['s3', 'headBucket', region, record.s3BucketName]);
+                    ['s3', 'headBucket', defaultRegion, record.s3BucketName]);
 
-                if (headBucket && headBucket.err && headBucket.err.message &&
-                    headBucket.err.message.toLowerCase().includes('not found')){
-                    deletedBuckets.push(record);
+                var bucketFound = listBuckets && listBuckets.data && listBuckets.data.length
+                    ? listBuckets.data.some(bucket => bucket.Name === record.s3BucketName) : false;
+
+                if (!bucketFound || (headBucket && headBucket.err && headBucket.err.message &&
+                    headBucket.err.message.toLowerCase().includes('not found'))) {
+                    deletedBuckets.push(record.s3BucketName);
                 } else if (!headBucket || headBucket.err) {
                     helpers.addResult(results, 3,
                         'Unable to query S3 bucket: ' + helpers.addError(headBucket), region, `arn:${awsOrGov}:s3:::` + record.s3BucketName);

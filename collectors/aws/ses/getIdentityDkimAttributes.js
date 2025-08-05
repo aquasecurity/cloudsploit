@@ -27,10 +27,11 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 if (err) {
                     collection.ses.getIdentityDkimAttributes[AWSConfig.region].err = err;
                 } else if (data && data.DkimAttributes) {
-                    allDkimAttributes = {
-                        ...allDkimAttributes,
-                        ...data.DkimAttributes
-                    };
+                    var processedIdentities = Object.keys(data.DkimAttributes).map((key) => ({
+                        identityName: key,
+                        ...data.DkimAttributes[key],
+                    }));
+                    allDkimAttributes = allDkimAttributes.concat(processedIdentities);
                 }
                 processIdentityChunk(chunkIndex + 1);
             });
