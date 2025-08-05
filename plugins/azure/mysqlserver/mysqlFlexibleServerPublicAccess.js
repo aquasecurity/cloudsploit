@@ -57,10 +57,11 @@ module.exports = {
                 if (!server.id) return;
 
 
-                if (server.network && server.network.publicNetworkAccess === 'Disabled') {
+                if (server.network && 
+                    server.network.publicNetworkAccess &&
+                    server.network.publicNetworkAccess.toLowerCase() === 'disabled') {
                     helpers.addResult(results, 0, 'MySQL Flexible Server is protected from outside traffic', location, server.id);
                 } else {
-                    // Get firewall rules for further validation
                     const firewallRules = helpers.addSource(cache, source,
                         ['firewallRules', 'listByFlexibleServerMysql', location, server.id]);
 
