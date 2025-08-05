@@ -53,7 +53,7 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Redis Cache',
             BridgeCollectionService: 'rediscaches', DataIdentifier: 'data',
         },
-    'CDN Profiles':
+    'CDN Profiles': [
         {
             enabled: true, isSingleSource: true, InvAsset: 'cdnProfiles', InvService: 'cdnProfiles',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'CDN_Profiles', BridgeServiceName: 'profiles',
@@ -62,6 +62,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
             BridgeCollectionService: 'profiles', DataIdentifier: 'data',
         },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'endpoint', InvService: 'cdnProfiles',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Endpoints', BridgeServiceName: 'endpoints',
+            BridgePluginCategoryName: 'CDN Profiles', BridgeProvider: 'Azure', BridgeCall: 'listByProfile',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'endpoints',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'CDN Profiles',
+            BridgeCollectionService: 'endpoints', DataIdentifier: 'data',
+        }
+    ],
     'Cosmos DB':
         {
             enabled: true, isSingleSource: true, InvAsset: 'cosmosdb', InvService: 'cosmosDB',
@@ -116,7 +125,7 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'displayName', BridgeExecutionService: 'Azure Policy',
             BridgeCollectionService: 'policyassignments', DataIdentifier: 'data',
         },
-    'Virtual Networks':
+    'Virtual Networks':[
         {
             enabled: true, isSingleSource: true, InvAsset: 'virtual_network', InvService: 'virtual_network',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Virtual Network', BridgeServiceName: 'virtualnetworks',
@@ -125,6 +134,15 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
             BridgeCollectionService: 'virtualnetworks', DataIdentifier: 'data',
         },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'vn_routeTables', InvService: 'virtual_network',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'VN_RouteTables', BridgeServiceName: 'routetables',
+            BridgePluginCategoryName: 'Virtual Networks', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'routeTables',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Networks',
+            BridgeCollectionService: 'routetables', DataIdentifier: 'data',
+        }
+    ],
     'Queue Service':
         {
             enabled: true, isSingleSource: true, InvAsset: 'queueService', InvService: 'queueService',
@@ -170,6 +188,96 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'AI & ML',
             BridgeCollectionService: 'openai', BridgeCall: 'listAccounts', DataIdentifier: 'data',
         },
+    'Blob Service':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'blob_container', InvService: 'blobservice',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'blob_container', BridgeServiceName: 'blobcontainers',
+            BridgePluginCategoryName: 'Blob Service', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'containers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Blob Service',
+            BridgeCollectionService: 'blobcontainers', DataIdentifier: 'data',
+        },
+    'Virtual Machines':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'vm_scaleset', InvService: 'virtualmachines',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'VM_ScaleSet', BridgeServiceName: 'virtualmachinescalesets',
+            BridgePluginCategoryName: 'Virtual Machines', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualMachineScaleSets',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Machines',
+            BridgeCollectionService: 'virtualmachinescalesets', DataIdentifier: 'data',
+        },
+    'Event Grid':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'domain', InvService: 'eventgrid',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'EventGrid Domain', BridgeServiceName: 'eventgrid',
+            BridgePluginCategoryName: 'Event Grid', BridgeProvider: 'Azure', BridgeCall: 'listDomains',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'domains',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Event Grid',
+            BridgeCollectionService: 'eventgrid', DataIdentifier: 'data',
+        },
+    'Event Hubs':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'namespace', InvService: 'eventhubs',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Eventhubs Namespace', BridgeServiceName: 'eventhub',
+            BridgePluginCategoryName: 'Event Hubs', BridgeProvider: 'Azure', BridgeCall: 'listEventHub',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'namespaces',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Event Hubs',
+            BridgeCollectionService: 'eventhub', DataIdentifier: 'data',
+        },
+    'Defender': [
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'defender', InvService: 'defender',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Defender', BridgeServiceName: 'pricings',
+            BridgePluginCategoryName: 'Defender', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'pricings',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Defender',
+            BridgeCollectionService: 'pricings', DataIdentifier: 'data',
+        },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'defender', InvService: 'defender',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Defender Settings', BridgeServiceName: 'securitycenter',
+            BridgePluginCategoryName: 'Defender', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'settings',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Defender',
+            BridgeCollectionService: 'securitycenter', DataIdentifier: 'data',
+        }
+    ],
+    'Application Gateway': [
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'applicationGateway', InvService: 'applicationGateway',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Application Gateway', BridgeServiceName: 'applicationgateway',
+            BridgePluginCategoryName: 'Application Gateway', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'applicationGateways',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Application Gateway',
+            BridgeCollectionService: 'applicationgateway', DataIdentifier: 'data',
+        },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'policy', InvService: 'applicationGateway',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'wafpolicies', BridgeServiceName: 'wafpolicies',
+            BridgePluginCategoryName: 'Application Gateway', BridgeProvider: 'Azure', BridgeCall: 'listAll',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'ApplicationGatewayWebApplicationFirewallPolicies',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Application Gateway',
+            BridgeCollectionService: 'wafpolicies', DataIdentifier: 'data',
+        }
+    ],
+    'Active Directory': [
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Roles', BridgeServiceName: 'roledefinitions',
+            BridgePluginCategoryName: 'Active Directory', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'roleDefinitions',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Active Directory',
+            BridgeCollectionService: 'roledefinitions', DataIdentifier: 'data',
+        },
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Application', BridgeServiceName: 'applications',
+            BridgePluginCategoryName: 'Active Directory', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: '',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Active Directory',
+            BridgeCollectionService: 'applications', DataIdentifier: 'data',
+        }
+    ]
 };
 
 // Standard calls that contain top-level operations
@@ -215,7 +323,7 @@ var calls = {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/virtualNetworks?api-version=2020-03-01'
         },
-        sendIntegration: serviceMap['Virtual Networks']
+        sendIntegration: serviceMap['Virtual Networks'][0]
     },
     natGateways: {
         listBySubscription: {
@@ -290,7 +398,8 @@ var calls = {
     routeTables: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/routeTables?api-version=2022-07-01'
-        }
+        },
+        sendIntegration: serviceMap['Virtual Networks'][1]
     },
     managedClusters: {
         list: {
@@ -338,7 +447,7 @@ var calls = {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Cdn/profiles?api-version=2024-02-01'
         },
-        sendIntegration: serviceMap['CDN Profiles']
+        sendIntegration: serviceMap['CDN Profiles'][0]
     },
     autoProvisioningSettings: {
         list: {
@@ -348,7 +457,8 @@ var calls = {
     applicationGateway: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/applicationGateways?api-version=2022-07-01'
-        }
+        },
+        sendIntegration: serviceMap['Application Gateway'][0]
     },
     securityContacts: {
         list: {
@@ -375,7 +485,8 @@ var calls = {
     roleDefinitions: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions?api-version=2015-07-01'
-        }
+        },
+        sendIntegration: serviceMap['Active Directory'][0]
     },
     managementLocks: {
         listAtSubscriptionLevel: {
@@ -407,7 +518,8 @@ var calls = {
         list: {
             url: 'https://graph.microsoft.com/v1.0/applications/',
             graph: true,
-        }
+        },
+        sendIntegration: serviceMap['Active Directory'][1]
     },
     automationAccounts: {
         list: {
@@ -422,7 +534,8 @@ var calls = {
     pricings: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/pricings?api-version=2018-06-01'
-        }
+        },
+        sendIntegration: serviceMap['Defender'][0]
     },
     availabilitySets: {
         listBySubscription: {
@@ -432,7 +545,8 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-07-01'
-        }
+        },
+        sendIntegration: serviceMap['Virtual Machines']
     },
     bastionHosts: {
         listAll: {
@@ -442,7 +556,8 @@ var calls = {
     wafPolicies: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies?api-version=2022-07-01'
-        }
+        },
+        sendIntegration: serviceMap['Application Gateway'][1]
     },
     autoscaleSettings: {
         listBySubscription: {
@@ -462,7 +577,7 @@ var calls = {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/servers?api-version=2017-12-01'
         },
         listMysqlFlexibleServer: {
-            url : 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/flexibleServers?api-version=2021-05-01'
+            url : 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforMySQL/flexibleServers?api-version=2023-12-30'
         },
         listPostgres: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.DBforPostgreSQL/servers?api-version=2017-12-01'
@@ -480,7 +595,8 @@ var calls = {
     securityCenter: {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/settings?api-version=2021-06-01'
-        }
+        },
+        sendIntegration: serviceMap['Defender'][1]
     },
     publicIPAddresses: {
         listAll: {
@@ -500,12 +616,14 @@ var calls = {
     eventGrid: {
         listDomains: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventGrid/domains?api-version=2023-12-15-preview'
-        }
+        },
+        sendIntegration: serviceMap['Event Grid']
     },
     eventHub: {
         listEventHub: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.EventHub/namespaces?api-version=2022-10-01-preview'
-        }
+        },
+        sendIntegration: serviceMap['Event Hubs']
     },
     serviceBus: {
         listNamespacesBySubscription: {
@@ -815,7 +933,8 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/blobServices/default/containers?api-version=2019-06-01',
             rateLimit: 3000,
             limit: 20000
-        }
+        },
+        sendIntegration: serviceMap['Blob Service']
     },
     blobServices: {
         list: {
@@ -891,6 +1010,9 @@ var postcalls = {
             properties: ['id'],
             url: 'https://management.azure.com/{id}/config/backup/list?api-version=2021-02-01',
             post: true
+        },
+        sendIntegration: {
+            enabled: true
         }
     },
     containerApps: {
@@ -905,7 +1027,8 @@ var postcalls = {
             reliesOnPath: 'profiles.list',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/endpoints?api-version=2019-04-15'
-        }
+        },
+        sendIntegration: serviceMap['CDN Profiles'][1]
     },
     customDomain: {
         listByFrontDoorProfiles: {

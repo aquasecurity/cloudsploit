@@ -37,7 +37,7 @@ module.exports = {
             }
 
             for (let cluster of describeDBClusters.data) {
-                if (!cluster.DBClusterArn) continue;
+                if (!cluster.DBClusterArn || cluster.Engine !== 'neptune') continue;
 
                 if (cluster.IAMDatabaseAuthenticationEnabled) {
                     helpers.addResult(results, 0, 'Neptune database instance has IAM authentication enabled', region, cluster.DBClusterArn); 

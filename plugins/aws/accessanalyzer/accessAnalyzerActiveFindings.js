@@ -13,13 +13,13 @@ module.exports = {
     recommended_action: 'Investigate into active findings in your account and do the needful until you have zero active findings.',
     apis: ['AccessAnalyzer:listAnalyzers', 'AccessAnalyzer:listFindings', 'AccessAnalyzer:listFindingsV2'],
     realtime_triggers: ['accessanalyzer:CreateAnalyzer','accessanalyzer:DeleteAnalyzer','accessanalyzer:CreateArchiveRule','accessanalyzer:StartResourceScan'],
-
-    run: function(cache, settings, callback) {
-        var results = [];
-        var source = {};
+ 
+    run: function(cache, settings, callback) { 
+        var results = []; 
+        var source = {}; 
         var regions = helpers.regions(settings);
 
-        async.each(regions.accessanalyzer, function(region, rcb){        
+        async.each(regions.accessanalyzer, function(region, rcb){
             var listAnalyzers = helpers.addSource(cache, source,
                 ['accessanalyzer', 'listAnalyzers', region]);
 
@@ -57,14 +57,14 @@ module.exports = {
                     let filteredv2 = listFindingsV2.data.findings.filter(finding => finding.status === 'ACTIVE');
                     totalFiltered = totalFiltered.concat(filteredv2);
                 }
-                
+
                 if ((!listFindings || listFindings.err || !listFindings.data) && (!listFindingsV2 || listFindingsV2.err || !listFindingsV2.data)) {
                     helpers.addResult(results, 3,
                         `Unable to IAM Access Analyzer findings: ${helpers.addError(listFindings)} ${helpers.addError(listFindingsV2)}`,
                         region, resource);
                     continue;
-                } 
-                
+                }
+
                 if (!totalFiltered.length) {
                     helpers.addResult(results, 0,
                         'Amazon IAM Access Analyzer has no active findings',

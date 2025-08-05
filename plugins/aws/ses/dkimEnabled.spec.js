@@ -9,6 +9,7 @@ const listIdentities = [
 const getIdentityDkimAttributes = [
     {
         "DkimEnabled": true,
+        "identityName": 'abc.com',
         "DkimVerificationStatus": "Pending",
         "DkimTokens": [
             "otux44vv2jf7bme4j6y7qyagkni466lo",
@@ -18,6 +19,7 @@ const getIdentityDkimAttributes = [
     },
     {
         "DkimEnabled": true,
+        "identityName": 'test.com',
         "DkimVerificationStatus": "Success",
         "DkimTokens": [
             "otux44vv2jf7bme4j6y7qyagkni466lo",
@@ -27,6 +29,7 @@ const getIdentityDkimAttributes = [
     },
     {
         "DkimEnabled": false,
+        "identityName": 'test.com',
         "DkimVerificationStatus": "Pending",
         "DkimTokens": [
             "otux44vv2jf7bme4j6y7qyagkni466lo",

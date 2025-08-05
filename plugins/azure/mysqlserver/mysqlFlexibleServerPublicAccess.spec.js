@@ -53,12 +53,12 @@ describe('mysqlFlexibleServerPublicAccess', function() {
                         "properties": {
                             "administratorLogin": "test",
                             "storage": {
-                              "storageSizeGB": 20,
-                              "iops": 360,
-                              "autoGrow": "Enabled",
-                              "autoIoScaling": "Enabled",
-                              "storageSku": "Premium_LRS",
-                              "logOnDisk": "Disabled"
+                                "storageSizeGB": 20,
+                                "iops": 360,
+                                "autoGrow": "Enabled",
+                                "autoIoScaling": "Enabled",
+                                "storageSku": "Premium_LRS",
+                                "logOnDisk": "Disabled"
                             },
                             "version": "5.7",
                             "state": "Ready",
@@ -95,12 +95,12 @@ describe('mysqlFlexibleServerPublicAccess', function() {
                         "properties": {
                             "administratorLogin": "test",
                             "storage": {
-                              "storageSizeGB": 20,
-                              "iops": 360,
-                              "autoGrow": "Enabled",
-                              "autoIoScaling": "Enabled",
-                              "storageSku": "Premium_LRS",
-                              "logOnDisk": "Disabled"
+                                "storageSizeGB": 20,
+                                "iops": 360,
+                                "autoGrow": "Enabled",
+                                "autoIoScaling": "Enabled",
+                                "storageSku": "Premium_LRS",
+                                "logOnDisk": "Disabled"
                             },
                             "version": "5.7",
                             "state": "Ready",
