@@ -375,7 +375,7 @@ var calls = {
     },
     vaults: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2019-09-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2023-07-01'
         },
         sendIntegration: serviceMap['Key Vaults'],
     },
@@ -1099,6 +1099,11 @@ var postcalls = {
             reliesOnPath: 'servers.listPostgresFlexibleServer',
             properties: ['id'],
             url: 'https://management.azure.com/{id}/firewallRules?api-version=2022-12-01'
+        },
+        listByFlexibleServerMysql: {
+            reliesOnPath: 'servers.listMysqlFlexibleServer',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/firewallRules?api-version=2021-05-01'
         }
     },
     outboundFirewallRules: {
