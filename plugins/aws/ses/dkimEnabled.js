@@ -51,9 +51,9 @@ module.exports = {
                 return rcb();
             }
 
-            for (var i in getIdentityDkimAttributes.data.DkimAttributes) {
-                var resource = `arn:${awsOrGov}:ses:${region}:${accountId}:identity/${i}`;
-                var identity = getIdentityDkimAttributes.data.DkimAttributes[i];
+            for (var identity of getIdentityDkimAttributes.data.DkimAttributes) {
+                if (!identity.identityName) continue;
+                var resource = `arn:${awsOrGov}:ses:${region}:${accountId}:identity/${identity.identityName}`;
 
                 if (!identity.DkimEnabled) {
                     helpers.addResult(results, 2, 'DKIM is not enabled', region, resource);

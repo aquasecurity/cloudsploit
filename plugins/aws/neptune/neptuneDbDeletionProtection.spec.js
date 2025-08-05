@@ -8,6 +8,7 @@ const describeDBClusters = [
         "DbClusterResourceId": "cluster-WNY2ZTZWH4RQ2CTKEEP4GVCPU4",
         "DBClusterArn": "arn:aws:rds:us-east-1:000111222333:cluster:database-2",
         "AssociatedRoles": [],
+        "Engine": "neptune",
         "DeletionProtection": true
     },
     {
@@ -16,6 +17,7 @@ const describeDBClusters = [
         "DbClusterResourceId": "cluster-WNY2ZTZWH4RQ2CTKEEP4GVCPU9",
         "DBClusterArn": "arn:aws:rds:us-east-1:000111222334:cluster:database-3",
         "AssociatedRoles": [],
+        "Engine": "neptune",
         "DeletionProtection": false
     }
 ];

@@ -155,7 +155,7 @@ module.exports = {
                 if (encryptionLevel.level) return encryptionLevel.level;
                 if (encryptionLevel.key) {
                     const keyId = encryptionLevel.key.split('/')[1];
-                    const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', region, keyId]);
+                    const describeKey = helpers.addSource(cache, source, ['kms', 'describeKey', bucketLocation, keyId]);
                     if (!describeKey || describeKey.err || !describeKey.data) {
                         helpers.addResult(results, 3, `Unable to query for KMS Key: ${helpers.addError(describeKey)}`, region, keyId);
                         return 0;

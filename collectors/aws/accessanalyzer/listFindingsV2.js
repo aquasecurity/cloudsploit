@@ -19,7 +19,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             if (paginating && data.findings && data.findings.length &&
                 collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data.findings &&
                 collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data.findings.length) {
-                collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data.findings = collection.accessanalyzer.listFindings[AWSConfig.region][analyzer.arn].data.findings.concat(data.findings);
+                collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data.findings = collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data.findings.concat(data.findings);
             } else {
                 collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn].data = data;
             }

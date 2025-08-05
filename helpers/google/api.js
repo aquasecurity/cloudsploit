@@ -190,6 +190,33 @@ var serviceMap = {
             BridgeArnIdentifier: '', BridgeIdTemplate: '{name}', BridgeResourceType: 'models',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-AI & ML',
             BridgeCollectionService: 'gcp-vertexai', DataIdentifier: 'data',
+        },
+    'CloudBuild':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'trigger', InvService: 'CloudBuild',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'trigger', BridgeServiceName: 'cloudbuild',
+            BridgePluginCategoryName: 'gcp-CloudBuild', BridgeProvider: 'Google', BridgeCall: 'triggers',
+            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/locations/{region}/triggers/{name}', BridgeResourceType: 'triggers',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CloudBuild',
+            BridgeCollectionService: 'gcp-cloudbuild', DataIdentifier: 'data',
+        },
+    'Cloud Composer':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'environment', InvService: 'Cloud Composer',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'composer_environment', BridgeServiceName: 'composer',
+            BridgePluginCategoryName: 'gcp-Cloud Composer', BridgeProvider: 'Google', BridgeCall: 'environments',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'environments',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Cloud Composer',
+            BridgeCollectionService: 'gcp-composer', DataIdentifier: 'data',
+        },
+    'Resource Manager':
+        {
+            enabled: true, isSingleSource: true, InvAsset: 'organization', InvService: 'Resource Manager',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'Organization', BridgeServiceName: 'organizations',
+            BridgePluginCategoryName: 'gcp-Resource Manager', BridgeProvider: 'Google', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'organizations',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Resource Manager',
+            BridgeCollectionService: 'gcp-organizations', DataIdentifier: 'data',
         }
 };
 var calls = {
@@ -212,7 +239,8 @@ var calls = {
             pagination: true,
             paginationKey: 'pageToken',
             dataFilterKey: 'environments'
-        }
+        },
+        sendIntegration: serviceMap['Cloud Composer']
     },
     repositories: {
         list: {
@@ -488,7 +516,8 @@ var calls = {
             url: 'https://cloudbuild.clients6.google.com/v1/projects/{projectId}/locations/{locationId}/triggers',
             location: 'region',
             dataFilterKey: 'triggers'
-        }
+        },
+        sendIntegration: serviceMap['CloudBuild']
     },
     managedZones: {
         list: {
@@ -889,7 +918,8 @@ var postcalls = {
             pagination: true,
             paginationKey: 'pageSize',
             dataKey: 'accessPolicies'
-        }
+        },
+        sendIntegration: serviceMap['Resource Manager']
     },
     folders:{ // https://cloudresourcemanager.googleapis.com/v2/folders
         list: {

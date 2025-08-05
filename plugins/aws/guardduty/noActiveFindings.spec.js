@@ -55,8 +55,8 @@ const getFindings = [
                 "Region": "us-east-1",
                 "Resource": {
                 "AccessKeyDetails": {
-                    "AccessKeyId": "ASIARPGOCGXS5IZZUZNG",
-                    "PrincipalId": "AIDARPGOCGXSQEYQAT545",
+                    "AccessKeyId": "ABCDEFGHI",
+                    "PrincipalId": "000011112222",
                     "UserName": "sadeed",
                     "UserType": "IAMUser"
                 },
@@ -118,7 +118,7 @@ const getFindings = [
                 "Region": "us-east-1",
                 "Resource": {
                 "AccessKeyDetails": {
-                    "AccessKeyId": "ASIARPGOCGXSYK2EKS4B",
+                    "AccessKeyId": "ABCDEFGHI",
                     "PrincipalId": "000011112222",
                     "UserName": "aws-viteace",
                     "UserType": "Root"

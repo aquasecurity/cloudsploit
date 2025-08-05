@@ -3,6 +3,12 @@ var automationAcctPublicAccess = require('./automationAcctPublicAccess.js');
 
 const automationAccounts = [
     {
+        "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-EUS2"
+    }
+];
+
+const account = [
+    {
         "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-EUS2",
         "location": "EastUS2",
         "name": "Automate-12345-EUS2",
@@ -22,7 +28,6 @@ const automationAccounts = [
             }
         },
         "publicNetworkAccess": false,
-
     },
     {
         "id": "/subscriptions/12345/resourceGroups/DefaultResourceGroup-CUS/providers/Microsoft.Automation/automationAccounts/Automate-12345-CUS",
@@ -34,17 +39,29 @@ const automationAccounts = [
     }
 ];
 
-const createCache = (automationAccounts,err) => {
+const createCache = (automationAccounts, acct) => {
+    let automationacct = {};
+    let getacct = {};
+
+    if (automationAccounts) {
+        automationacct['data'] = automationAccounts;
+        if (automationAccounts && automationAccounts.length) {
+            getacct[automationAccounts[0].id] = {
+                'data': acct
+            };
+        }
+    }
+
     return {
         automationAccounts: {
             list: {
-                'eastus': {
-                    data: automationAccounts,
-                    err: err
-                }
+                'eastus': automationacct
+            },
+            get: {
+                'eastus': getacct
             }
         }
-    }
+    };
 };
 
 describe('automationAcctPublicAccess', function () {
@@ -62,7 +79,7 @@ describe('automationAcctPublicAccess', function () {
         });
 
         it('should give unknown result if Unable to query automation accounts:', function (done) {
-            const cache = createCache(null, 'Error');
+            const cache = createCache();
             automationAcctPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
@@ -73,7 +90,7 @@ describe('automationAcctPublicAccess', function () {
         });
 
         it('should give passing result if automation account has public network access disabled', function (done) {
-            const cache = createCache([automationAccounts[0]]);
+            const cache = createCache(automationAccounts, account[0]);
             automationAcctPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
@@ -84,7 +101,7 @@ describe('automationAcctPublicAccess', function () {
         });
 
         it('should give failing result if automation account does not have public network access disabled', function (done) {
-            const cache = createCache([automationAccounts[1]]);
+            const cache = createCache(automationAccounts, account[1]);
             automationAcctPublicAccess.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
