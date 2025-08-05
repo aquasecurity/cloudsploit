@@ -25,7 +25,6 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
-
         var config = {
             postgresql_server_allowed_ips: settings.postgresql_server_allowed_ips || this.settings.postgresql_server_allowed_ips.default
         };
