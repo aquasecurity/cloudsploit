@@ -267,7 +267,7 @@ var calls = {
     },
     vaults: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2022-07-01w'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/vaults?api-version=2023-07-01'
         },
         sendIntegration: serviceMap['Key Vaults'],
     },
