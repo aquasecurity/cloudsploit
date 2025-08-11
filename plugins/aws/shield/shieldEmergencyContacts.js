@@ -23,8 +23,8 @@ module.exports = {
         if (!describeEmergencyContactSettings) return callback(null, results, source);
 
         if (describeEmergencyContactSettings.err &&
-            describeEmergencyContactSettings.err.code &&
-            describeEmergencyContactSettings.err.code == 'ResourceNotFoundException') {
+            describeEmergencyContactSettings.err.name &&
+            describeEmergencyContactSettings.err.name == 'ResourceNotFoundException') {
             helpers.addResult(results, 2, 'Shield subscription is not enabled');
             return callback(null, results, source);
         }

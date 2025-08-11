@@ -626,9 +626,6 @@ module.exports = {
         'buildProjectEnvPriviligedMode' : require(__dirname + '/plugins/aws/codebuild/buildProjectEnvPriviligedMode.js'),
         'codebuildProjectLoggingEnabled': require(__dirname + '/plugins/aws/codebuild/codebuildProjectLoggingEnabled.js'),
 
-        'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
-        'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
-
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
@@ -895,7 +892,7 @@ module.exports = {
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
         'postgresqlTlsVersion'          : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlTlsVersion.js'),
         'postgresqlServerPublicAccess'  : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlServerPublicAccess.js'),
-
+        'postgresqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlFlexibleServerPublicAccess.js'),
         'flexibleServerPrivateAccess'   : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateAccess'),
         'diagnosticLoggingEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/diagnosticLoggingEnabled.js'),
         'flexibleServerLogDisconnections': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerLogDisconnections.js'),
@@ -907,7 +904,6 @@ module.exports = {
         'flexibleServerLogDuration'     : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerLogDuration.js'),
         'flexibleServerConnectionThrottle': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerConnectionThrottle.js'),
         'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
-        'postgresqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlFlexibleServerPublicAccess.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'nsgFlowLogsEnabled'            : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsEnabled.js'),
@@ -1087,7 +1083,7 @@ module.exports = {
         'keyVaultsPrivateEndpoint'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultsPrivateEndpoint.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/keyvaults/kvLogAnalyticsEnabled.js'),
         'keyVaultPublicAccess'          : require(__dirname + '/plugins/azure/keyvaults/keyVaultPublicAccess.js'),
-        
+
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosdbDiagnosticLogs'        : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbDiagnosticLogs.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
@@ -1750,5 +1746,5 @@ module.exports = {
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
         'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
-    } 
+    }
 };

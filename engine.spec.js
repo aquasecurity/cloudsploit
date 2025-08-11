@@ -1,10 +1,15 @@
 var engine = require('./engine');
 
-
 describe('engine', function () {
-    it('should run with no arguments', function () {
-        // Although we don't pass in anything, this is enough to test
-        // that our dependencies are actually installed.
-        engine({}, {cloud: 'aws'});
-    })
+    it('should run specific plugins and check clients', function (done) {
+        const cloudConfig = {};
+        const settings = {
+            cloud: 'aws',
+            plugins: ['s3BucketHasTags', 'ec2HasTags','iamRolePolicies'],
+            mocha: true
+        };
+
+        engine(cloudConfig, settings);
+        done();
+    });
 });
