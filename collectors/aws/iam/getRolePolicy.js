@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    IAM
+} = require('@aws-sdk/client-iam');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var iam = new AWS.IAM(AWSConfig);
+    var iam = new IAM(AWSConfig);
 
     if (!collection.iam ||
         !collection.iam.listRoles ||
