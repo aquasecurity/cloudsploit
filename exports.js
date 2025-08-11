@@ -1748,3 +1748,4 @@ module.exports = {
         'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };
+
