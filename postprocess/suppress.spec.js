@@ -8,8 +8,8 @@ describe('create', function () {
     });
 
     it('should return the filter if matches', function () {
-        var filter = suppress.create(['plugin123:us-east-1:n*']);
-        expect(filter('plugin123:us-east-1:name')).to.equal('plugin123:us-east-1:n*');
+        var filter = suppress.create(['p*:us-east-1:n*']);
+        expect(filter('plugin123:us-east-1:name')).to.equal('p*:us-east-1:n*');
     });
 
     it('should return the filter if matches whole word', function () {
