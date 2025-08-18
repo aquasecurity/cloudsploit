@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Lambda Has Tags',
-    category: 'Lambda',
+    category: 'Lambda',  
     domain: 'Serverless',
     severity: 'Low',
     description: 'Ensure that AWS Lambda functions have tags associated.',

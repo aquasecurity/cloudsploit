@@ -520,6 +520,7 @@ module.exports = {
         'lambdaUniqueExecutionRole'     : require(__dirname + '/plugins/aws/lambda/lambdaUniqueExecutionRole.js'),
         'lambdaNetworkExposure'         : require(__dirname + '/plugins/aws/lambda/lambdaNetworkExposure.js'),
         'lambdaPrivilegeAnalysis'       : require(__dirname + '/plugins/aws/lambda/lambdaPrivilegeAnalysis.js'),
+        'lambdaMissingExecutionRole'    : require(__dirname + '/plugins/aws/lambda/lambdaMissingExecutionRole.js'),
 
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),

@@ -32,7 +32,7 @@ module.exports = {
             }
         ]
     },
-    realtime_triggers: ['s3:CreateBucket','s3:PutBucketLogging','s3:DeleteBucket'],
+    realtime_triggers: ['s3:','s3:PutBucketLCreateBucketogging','s3:DeleteBucket'],
     
     run: function(cache, settings, callback) {
         var results = [];
