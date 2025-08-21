@@ -56,8 +56,8 @@ module.exports = {
             vaults.data.forEach(function(vault) {
                 if (!vault.id) return;
 
-                if (vault && 
-                    vault.publicNetworkAccess && 
+                if (vault &&
+                    vault.publicNetworkAccess &&
                     vault.publicNetworkAccess.toLowerCase() === 'disabled') {
                     helpers.addResult(results, 0,
                         'Key Vault is protected from outside traffic',
@@ -65,11 +65,11 @@ module.exports = {
                     return;
                 }
 
-             
+
                 if (vault && vault.networkAcls) {
                     var networkAcls = vault.networkAcls;
                     var defaultAction = networkAcls.defaultAction ? networkAcls.defaultAction.toLowerCase() : null;
-                    
+
                     if (!defaultAction || defaultAction === 'allow') {
                         helpers.addResult(results, 2,
                             'Key Vault is open to outside traffic',
@@ -84,8 +84,7 @@ module.exports = {
 
                         for (var rule of ipRules) {
                             if (checkAllowedIps) {
-                                if ((rule.value === '0.0.0.0/0' || rule.value === '0.0.0.0') &&
-                                    !allowedIps.includes(rule.value)) {
+                                if (!allowedIps.includes(rule.value)) {
                                     hasPublicAccess = true;
                                     publicAccessFound.push(rule.value);
                                 }
@@ -116,4 +115,4 @@ module.exports = {
             callback(null, results, source);
         });
     }
-}; 
+};
