@@ -24,8 +24,8 @@ module.exports = {
 
             if (!getRecommendationSummaries) return rcb();
 
-            if (getRecommendationSummaries && getRecommendationSummaries.err && getRecommendationSummaries.err.code &&
-                getRecommendationSummaries.err.code.toUpperCase() === 'OPTINREQUIREDEXCEPTION'){
+            if (getRecommendationSummaries && getRecommendationSummaries.err && getRecommendationSummaries.err.name &&
+                getRecommendationSummaries.err.name.toUpperCase() === 'OPTINREQUIREDEXCEPTION'){
                 helpers.addResult(results, 2, 
                     'Compute Optimizer is not enabled', region);
             } else if (getRecommendationSummaries.err || !getRecommendationSummaries.data || 

@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    KMS
+} = require('@aws-sdk/client-kms');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var kms = new AWS.KMS(AWSConfig);
+    var kms = new KMS(AWSConfig);
 
     async.eachLimit(collection.kms.listKeys[AWSConfig.region].data, 15, function(key, cb){
         collection.kms.getKeyPolicy[AWSConfig.region][key.KeyId] = {};
