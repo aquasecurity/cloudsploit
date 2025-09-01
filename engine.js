@@ -3,6 +3,7 @@ var exports = require('./exports.js');
 var suppress = require('./postprocess/suppress.js');
 var output = require('./postprocess/output.js');
 var azureHelper = require('./helpers/azure/auth.js');
+const awsClients = require('./helpers/aws/clients.js');
 
 function runAuth(settings, remediateConfig, callback) {
     if (settings.cloud && settings.cloud == 'azure') {
@@ -85,14 +86,15 @@ var engine = function(cloudConfig, settings) {
     console.log('INFO: Determining API calls to make...');
 
     var skippedPlugins = [];
+    var allApiCalls = [];
 
     Object.entries(plugins).forEach(function(p){
         var pluginId = p[0];
         var plugin = p[1];
 
-        // Skip plugins that don't match the ID flag
+        // Skip plugins that don't match the specified list
         var skip = false;
-        if (settings.plugin && settings.plugin !== pluginId) {
+        if (settings.plugins && !settings.plugins.includes(pluginId)) {
             skip = true;
         } else {
             // Skip GitHub plugins that do not match the run type
@@ -131,15 +133,31 @@ var engine = function(cloudConfig, settings) {
         } else {
             plugin.apis.forEach(function(api) {
                 if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+                if (allApiCalls.indexOf(api) === -1) allApiCalls.push(api);
             });
             // add the remediation api calls also for data to be collected
             if (settings.remediate && settings.remediate.includes(pluginId)){
                 plugin.apis_remediate.forEach(function(api) {
                     if (apiCalls.indexOf(api) === -1) apiCalls.push(api);
+                    if (allApiCalls.indexOf(api) === -1) allApiCalls.push(api);
                 });
             }
         }
     });
+
+    if (settings.mocha && allApiCalls.length > 0) {
+        console.log('INFO: Checking if all clients are present for the API calls...');
+        // Logic to check if all clients are present
+        allApiCalls.forEach(api => {
+            try {
+                var apiClient = api.split(':')[0]?  api.split(':')[0].toLowerCase() : '';
+                // eslint-disable-next-line no-unused-vars
+                const client = new awsClients[apiClient];
+            } catch (err) {
+                console.error(`Client for API ${apiClient} is not installed.`);
+            }
+        });
+    }
 
     if (!apiCalls.length) return console.log('ERROR: Nothing to collect.');
 
@@ -197,7 +215,7 @@ var engine = function(cloudConfig, settings) {
                             if (suppressionFilter([key, results[r].region || 'any', results[r].resource || 'any'].join(':'))) {
                                 continue;
                             }
-    
+
                             resultsObject[plugin.title].push(results[r]);
 
                             var complianceMsg = [];
@@ -210,10 +228,10 @@ var engine = function(cloudConfig, settings) {
                             }
                             complianceMsg = complianceMsg.join('; ');
                             if (!complianceMsg.length) complianceMsg = null;
-    
+
                             // Write out the result (to console or elsewhere)
                             outputHandler.writeResult(results[r], plugin, key, complianceMsg);
-    
+
                             // Add this to our tracking for the worst status to calculate
                             // the exit code
                             maximumStatus = Math.max(maximumStatus, results[r].status);
@@ -234,11 +252,11 @@ var engine = function(cloudConfig, settings) {
                                 }
                             }
                         }
-    
+
                     }
                     setTimeout(function() { pluginDone(err, maximumStatus); }, 0);
                 };
-    
+
                 if (plugin.asl && settings['run-asl']) {
                     console.log(`INFO: Using custom ASL for plugin: ${plugin.title}`);
                     // Inject APIs and resource maps
@@ -248,11 +266,11 @@ var engine = function(cloudConfig, settings) {
                     let aslRunner;
                     try {
                         aslRunner = require(`./helpers/asl/asl-${aslVersion}.js`);
-    
+
                     } catch (e) {
                         postRun('Error: ASL: Wrong ASL Version: ', e);
                     }
-    
+
                     aslRunner(collection, plugin.asl, resourceMap, postRun);
                 } else {
                     plugin.run(collection, settings, postRun);
@@ -272,7 +290,7 @@ var engine = function(cloudConfig, settings) {
                 console.log('INFO: Scan complete');
             });
         }
-        
+
         if (settings.remediate && settings.remediate.length && cloudConfig.remediate) {
             runAuth(settings, cloudConfig.remediate, function(err) {
                 if (err) return console.log(err);
