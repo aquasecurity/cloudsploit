@@ -260,21 +260,21 @@ var serviceMap = {
             BridgeCollectionService: 'wafpolicies', DataIdentifier: 'data',
         }
     ],
-    'Active Directory': [
+    'Entra ID': [
         {
             enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Roles', BridgeServiceName: 'roledefinitions',
-            BridgePluginCategoryName: 'Active Directory', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgePluginCategoryName: 'Entra ID', BridgeProvider: 'Azure', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'roleDefinitions',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Active Directory',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Entra ID',
             BridgeCollectionService: 'roledefinitions', DataIdentifier: 'data',
         },
         {
             enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Application', BridgeServiceName: 'applications',
-            BridgePluginCategoryName: 'Active Directory', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgePluginCategoryName: 'Entra ID', BridgeProvider: 'Azure', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: '',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Active Directory',
+            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Entra ID',
             BridgeCollectionService: 'applications', DataIdentifier: 'data',
         }
     ]
@@ -486,7 +486,7 @@ var calls = {
         list: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleDefinitions?api-version=2015-07-01'
         },
-        sendIntegration: serviceMap['Active Directory'][0]
+        sendIntegration: serviceMap['Entra ID'][0]
     },
     managementLocks: {
         listAtSubscriptionLevel: {
@@ -519,7 +519,7 @@ var calls = {
             url: 'https://graph.microsoft.com/v1.0/applications/',
             graph: true,
         },
-        sendIntegration: serviceMap['Active Directory'][1]
+        sendIntegration: serviceMap['Entra ID'][1]
     },
     automationAccounts: {
         list: {
