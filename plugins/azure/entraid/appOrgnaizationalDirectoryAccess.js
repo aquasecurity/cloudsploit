@@ -3,12 +3,12 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Azure AD App Organizational Directory Access',
-    category: 'Active Directory',
+    category: 'Entra ID',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensures that Azure Active Directory applications are accessible to accounts in organisational directory only.',
+    description: 'Ensures that Azure Entra ID applications are accessible to accounts in organisational directory only.',
     more_info: 'AAD provides different types of account access. By using single-tenant authentication, the impact gets limited to the application’s tenant i.e. all users from the same tenant could connect to the application and save app from unauthorised access.',
-    link: 'https://learn.microsoft.com/en-us/azure/active-directory/develop/single-and-multi-tenant-apps',
+    link: 'https://learn.microsoft.com/en-us/entra/identity-platform/single-and-multi-tenant-apps',
     recommended_action: 'Modify the Azure app authentication setting and provide access to accounts in organisational directory only',
     apis: ['applications:list'],
 

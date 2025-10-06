@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'No Custom Owner Roles',
-    category: 'Active Directory',
+    category: 'Entra ID',
     domain: 'Identity and Access Management',
     severity: 'Medium',
     description: 'Ensures that no custom owner roles exist.',

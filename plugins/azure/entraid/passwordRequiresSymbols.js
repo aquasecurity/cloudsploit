@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Password Requires Numbers',
+    title: 'Password Requires Symbols',
     category: 'Active Directory',
     domain: 'Identity and Access Management',
     severity: 'Low',
-    description: 'Ensures that all Azure passwords require numbers',
+    description: 'Ensures that all Azure passwords require symbol characters',
     more_info: 'Azure handles most password policy settings, including which character types are required. Azure requires 3 out of 4 of the following character types: lowercase, uppercase, special characters, and numbers.',
-    link: 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',
+    link: 'Entra ID',
     recommended_action: 'No action necessary. Azure handles password requirement settings.',
     apis: ['resources:list'],
 
@@ -33,7 +33,7 @@ module.exports = {
             rcb();
         }, function() {
             // Global checking goes here
-            helpers.addResult(results, 0, 'Password requires numbers by default', 'global');
+            helpers.addResult(results, 0, 'Password requires symbols by default', 'global');
             callback(null, results, source);
         });
     }

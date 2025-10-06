@@ -1,7 +1,7 @@
 # CloudSploit For Microsoft Azure
 
 ## Cloud Provider Configuration
-1. Log into your Azure Portal and navigate to the Azure Active Directory service.
+1. Log into your Azure Portal and navigate to the Azure Entra ID service.
 1. Select App registrations and then click on New registration.
 1. Enter "CloudSploit" and/or a descriptive name in the Name field, take note of it, it will be used again in step 3.
 1. Leave the "Supported account types" default: "Accounts in this organizational directory only (YOURDIRECTORYNAME)".
