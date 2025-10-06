@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Minimum Password Length',
-    category: 'Active Directory',
+    title: 'Password Requires Numbers',
+    category: 'Entra ID',
     domain: 'Identity and Access Management',
     severity: 'Low',
-    description: 'Ensures that all Azure passwords require a minimum length',
-    more_info: 'Azure handles most password policy settings, including the minimum password length, defaulted to 8 characters.',
-    link: 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',
+    description: 'Ensures that all Azure passwords require numbers',
+    more_info: 'Azure handles most password policy settings, including which character types are required. Azure requires 3 out of 4 of the following character types: lowercase, uppercase, special characters, and numbers.',
+    link: 'https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',
     recommended_action: 'No action necessary. Azure handles password requirement settings.',
     apis: ['resources:list'],
 
@@ -25,14 +25,15 @@ module.exports = {
             if (!resources) return rcb();
 
             if (resources.err || !resources.data) {
-                helpers.addResult(results, 3, 'Unable to query for resources: ' + helpers.addError(resources), location);
+                helpers.addResult(results, 3, 
+                    'Unable to query for resources: ' + helpers.addError(resources), location);
                 return rcb();
             }
 
             rcb();
         }, function() {
             // Global checking goes here
-            helpers.addResult(results, 0, 'Minimum password length is 8 characters', 'global');
+            helpers.addResult(results, 0, 'Password requires numbers by default', 'global');
             callback(null, results, source);
         });
     }
