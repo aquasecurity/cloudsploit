@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    CloudWatch
+} = require('@aws-sdk/client-cloudwatch');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var cloudwatch = new AWS.CloudWatch(AWSConfig);
+    var cloudwatch = new CloudWatch(AWSConfig);
    
     async.eachLimit(collection.elasticache.describeCacheClusters[AWSConfig.region].data, 10, function(cluster, cb){        
         collection.cloudwatch.getEcMetricStatistics[AWSConfig.region][cluster.CacheClusterId] = {};
@@ -13,8 +15,8 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         var params = {
             'MetricName': 'CPUUtilization',
             'Namespace':'AWS/ElastiCache',
-            'StartTime': startTime.toISOString(),
-            'EndTime': endTime.toISOString(),
+            'StartTime': startTime,
+            'EndTime': endTime,
             'Period': 3600,
             'Statistics': ['Average'],
             'Dimensions' : [
