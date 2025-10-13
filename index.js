@@ -2,8 +2,8 @@
 
 const { ArgumentParser } = require('argparse');
 const engine = require('./engine');
-
-
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info'; // Default to 'info'
+//console.log('DEBUG: Loaded collectors:', Object.keys(require('./collectors/huawei')));
 console.log(`
    _____ _                 _  _____       _       _ _   
   / ____| |               | |/ ____|     | |     (_) |  
@@ -72,8 +72,12 @@ parser.add_argument('--remediate', {
 });
 parser.add_argument('--cloud', {
     help: 'The name of cloud to run plugins for. If not provided, logic will assume cloud from config.js file based on provided credentials',
-    choices: ['aws', 'azure', 'github', 'google', 'oracle','alibaba'],
+    choices: ['aws', 'azure', 'github', 'google', 'oracle', 'alibaba', 'huawei'],
     action: 'append'
+});
+parser.add_argument('--region', {
+    help: 'The region to scan (for Huawei Cloud). Default: cn-north-4',
+    default: 'cn-north-4'
 });
 parser.add_argument('--run-asl', {
     help: 'When set, it will execute custom plugins.',
@@ -83,15 +87,12 @@ parser.add_argument('--run-asl', {
 let settings = parser.parse_args();
 let cloudConfig = {};
 
-// Now execute the scans using the defined configuration information.
 if (!settings.config) {
     settings.cloud = 'aws';
-    // AWS will handle the default credential chain without needing a credential file
     console.log('INFO: No config file provided, using default AWS credential chain.');
     return engine(cloudConfig, settings);
 }
 
-// If "compliance=cis" is passed, turn into "compliance=cis1 and compliance=cis2"
 if (settings.compliance && settings.compliance.indexOf('cis') > -1) {
     if (settings.compliance.indexOf('cis1') === -1) {
         settings.compliance.push('cis1');
@@ -102,7 +103,7 @@ if (settings.compliance && settings.compliance.indexOf('cis') > -1) {
     settings.compliance = settings.compliance.filter(function(e) { return e !== 'cis'; });
 }
 
-console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
+//console.log(`INFO: Using CloudSploit config file: ${settings.config}`);
 
 try {
     var config = require(settings.config);
@@ -188,7 +189,6 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         console.error('ERROR: Oracle credential file does not have tenancyId, compartmentId, userId, region, or keyValue');
         process.exit(1);
     }
-
     cloudConfig.RESTversion = '/20160918';
 } else if (config.credentials.oracle.tenancy_id && (!settings.cloud || (settings.cloud == 'oracle'))) {
     settings.cloud = 'oracle';
@@ -223,6 +223,16 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
     cloudConfig = {
         accessKeyId: config.credentials.alibaba.access_key_id,
         accessKeySecret: config.credentials.alibaba.access_key_secret
+    };
+} else if (config.credentials.huawei.access_key && (!settings.cloud || (settings.cloud == 'huawei'))) {
+    settings.cloud = 'huawei';
+    checkRequiredKeys(config.credentials.huawei, ['secret_access_key']);
+    cloudConfig = {
+        accessKeyId: config.credentials.huawei.access_key,
+        secretAccessKey: config.credentials.huawei.secret_access_key,
+        projectId: config.credentials.huawei.regions[settings.region].projectId,
+        endpoint: config.credentials.huawei.regions[settings.region].endpoint,
+        region: settings.region // Add region to cloudConfig for ECS collector
     };
 } else {
     console.error('ERROR: Config file does not contain any valid credential configs.');
@@ -275,5 +285,25 @@ if (settings.remediate && settings.remediate.length) {
     }
 }
 
-// Now execute the scans using the defined configuration information.
-engine(cloudConfig, settings);
+// Force the ECS collector to run before calling the engine
+//if (settings.cloud === 'huawei') {
+  //  console.log('DEBUG: Forcing ECS collector to run');
+    //console.log('DEBUG: cloudConfig passed to ECS collector:', JSON.stringify(cloudConfig, null, 2));
+    //const ecsCollector = require('./collectors/huawei/ecs');
+    //const collection = {}; // Temporary collection object to store ECS data
+    //ecsCollector(cloudConfig, (err, data) => {
+       // if (err) {
+            //console.error('ERROR: ECS collector failed:', err.message);
+          //  process.exit(1);
+        //}
+        //console.log('DEBUG: ECS collector result:', JSON.stringify(data, null, 2));
+        //collection.ecs = data; // Add ECS data to the collection
+        // Pass the pre-collected ECS data to the engine via settings
+      //  settings.preCollectedData = collection;
+        // Proceed to run the engine
+    //    engine(cloudConfig, settings);
+  //  });
+//} else {
+    // If not Huawei, run the engine directly
+    engine(cloudConfig, settings);
+//}
