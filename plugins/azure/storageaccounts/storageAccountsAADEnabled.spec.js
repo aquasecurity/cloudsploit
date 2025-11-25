@@ -41,11 +41,11 @@ describe('storageAccountsAADEnabled', function() {
             auth.run(cache, {}, callback);
         })
 
-        it('should give failing result if storage account is not configured with aad authentication', function(done) {
+        it('should give failing result if storage account is not configured with Entra ID authentication', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Storage Account is not configured with AAD Authentication');
+                expect(results[0].message).to.include('Storage Account is not configured with Entra ID Authentication');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -114,11 +114,11 @@ describe('storageAccountsAADEnabled', function() {
             auth.run(cache, {}, callback);
         })
 
-        it('should give passing result if storage account is not configured with aad authentication but no file shares', function(done) {
+        it('should give passing result if storage account is not configured with Entra ID authentication but no file shares', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Storage Account is not configured with AAD Authentication but no file shares are present');
+                expect(results[0].message).to.include('Storage Account is not configured with Entra ID Authentication but no file shares are present');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -183,7 +183,7 @@ describe('storageAccountsAADEnabled', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1)
                 expect(results[0].status).to.equal(0)
-                expect(results[0].message).to.include('Storage Account is configured with AAD Authentication');
+                expect(results[0].message).to.include('Storage Account is configured with Entra ID Authentication');
                 expect(results[0].region).to.equal('eastus')
                 done()
             };

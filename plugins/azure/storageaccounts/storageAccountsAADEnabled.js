@@ -2,12 +2,12 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Storage Accounts AAD Enabled',
+    title: 'Storage Accounts Entra ID Enabled',
     category: 'Storage Accounts',
     domain: 'Storage',
     severity: 'Medium',
     description: 'Ensures that identity-based Directory Service for Azure File Authentication is enabled for all Azure Files',
-    more_info: 'Enabling identity-based Authentication ensures that only the authorized Active Directory members can access or connect to the file shares, enforcing granular access control.',
+    more_info: 'Enabling identity-based Authentication ensures that only the authorized Entra ID members can access or connect to the file shares, enforcing granular access control.',
     recommended_action: 'Ensure that identity-based Directory Service for Azure File Authentication is enabled for all Azure File Shares.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/files/storage-files-active-directory-overview',
     apis: ['storageAccounts:list', 'fileShares:list'],
@@ -66,7 +66,7 @@ module.exports = {
                         location, storageAccount.id, custom);
                 } else {
                     if (storageAccount.enableAzureFilesAadIntegration) {
-                        helpers.addResult(results, 0, 'Storage Account is configured with AAD Authentication', location, storageAccount.id);
+                        helpers.addResult(results, 0, 'Storage Account is configured with Entra ID Authentication', location, storageAccount.id);
                     } else if (config.storage_account_check_file_share) {
                         var fileShares = helpers.addSource(cache, source,
                             ['fileShares', 'list', location, storageAccount.id]);
@@ -76,13 +76,13 @@ module.exports = {
                                 'Unable to query for file shares: ' + helpers.addError(fileShares), location, storageAccount.id);
                         } else {
                             if (!fileShares.data.length) {
-                                helpers.addResult(results, 0, 'Storage Account is not configured with AAD Authentication but no file shares are present', location, storageAccount.id);
+                                helpers.addResult(results, 0, 'Storage Account is not configured with Entra ID Authentication but no file shares are present', location, storageAccount.id);
                             } else {
-                                helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
+                                helpers.addResult(results, 2, 'Storage Account is not configured with Entra ID Authentication', location, storageAccount.id);
                             }
                         }
                     } else {
-                        helpers.addResult(results, 2, 'Storage Account is not configured with AAD Authentication', location, storageAccount.id);
+                        helpers.addResult(results, 2, 'Storage Account is not configured with Entra ID Authentication', location, storageAccount.id);
                     }
                 }
 

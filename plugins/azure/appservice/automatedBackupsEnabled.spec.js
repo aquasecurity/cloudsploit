@@ -27,12 +27,12 @@ const backupConfigs = {
     enabled: true,
     storageAccountUrl: 'https://akhtarrgdiag.blob.core.windows.net/appbackup?sp=rwdl&st=2022-03-16T07:51:37Z&se=2295-12-29T08:51:37Z&sv=2020-08-04&sr=c&sig=FeC0hGUrqJb6b%2Bh5qbIif84725sMjeqyNUzWa4tL3L4%3D',
     backupSchedule: {
-      frequencyInterval: 7,
-      frequencyUnit: 'Day',
-      keepAtLeastOneBackup: true,
-      retentionPeriodInDays: 7,
-      startTime: '2022-03-16T07:51:38.699',
-      lastExecutionTime: '2022-03-16T07:53:38.4131659'
+        frequencyInterval: 7,
+        frequencyUnit: 'Day',
+        keepAtLeastOneBackup: true,
+        retentionPeriodInDays: 7,
+        startTime: '2022-03-16T07:51:38.699',
+        lastExecutionTime: '2022-03-16T07:53:38.4131659'
     },
     databases: [],
     mySqlDumpParams: null

@@ -824,6 +824,7 @@ module.exports = {
         'vmDiskCMKRotation'             : require(__dirname + '/plugins/azure/virtualmachines/vmDiskCMKRotation.js'),
         'vmDiskPublicAccess'            : require(__dirname + '/plugins/azure/virtualmachines/vmDiskPublicAccess.js'),
         'computeGalleryRbacSharing'     : require(__dirname + '/plugins/azure/virtualmachines/computeGalleryRbacSharing.js'),
+        'vmPrivilegeAnalysis'           : require(__dirname + '/plugins/azure/virtualmachines/vmPrivilegeAnalysis.js'),
         'vmNetworkExposure'             : require(__dirname + '/plugins/azure/virtualmachines/vmNetworkExposure.js'),
 
         'bastionHostExists'             : require(__dirname + '/plugins/azure/bastion/bastionHostExists.js'),
@@ -895,7 +896,7 @@ module.exports = {
         'azureServicesAccessDisabled'   : require(__dirname + '/plugins/azure/postgresqlserver/azureServicesAccessDisabled.js'),
         'postgresqlTlsVersion'          : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlTlsVersion.js'),
         'postgresqlServerPublicAccess'  : require(__dirname + '/plugins/azure/postgresqlserver/postgresqlServerPublicAccess.js'),
-
+        'postgresqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlFlexibleServerPublicAccess.js'),
         'flexibleServerPrivateAccess'   : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerPrivateAccess'),
         'diagnosticLoggingEnabled'      : require(__dirname + '/plugins/azure/postgresqlserver/diagnosticLoggingEnabled.js'),
         'flexibleServerLogDisconnections': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerLogDisconnections.js'),
@@ -907,7 +908,6 @@ module.exports = {
         'flexibleServerLogDuration'     : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerLogDuration.js'),
         'flexibleServerConnectionThrottle': require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerConnectionThrottle.js'),
         'flexibleServerATP'             : require(__dirname + '/plugins/azure/postgresqlserver/flexibleServerATP.js'),
-        'postgresqlFlexibleServerPublicAccess': require(__dirname + '/plugins/azure/postgresqlserver/postgresqlFlexibleServerPublicAccess.js'),
 
         'openOracleAutoDataWarehouse'   : require(__dirname + '/plugins/azure/networksecuritygroups/openOracleAutoDataWarehouse.js'),
         'nsgFlowLogsEnabled'            : require(__dirname + '/plugins/azure/networksecuritygroups/nsgFlowLogsEnabled.js'),
@@ -1012,6 +1012,7 @@ module.exports = {
         'disableFTPDeployments'         : require(__dirname + '/plugins/azure/appservice/disableFTPDeployments.js'),
         'accessControlAllowCredential'  : require(__dirname + '/plugins/azure/appservice/accessControlAllowCredential.js'),
         'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
+        'functionPrivilegeAnalysis'     : require(__dirname + '/plugins/azure/appservice/functionPrivilegeAnalysis.js'),
         'functionAppNetworkExposure'    : require(__dirname + '/plugins/azure/appservice/functionAppNetworkExposure.js'),
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
@@ -1025,6 +1026,7 @@ module.exports = {
         'aksHostBasedEncryption'        : require(__dirname + '/plugins/azure/kubernetesservice/aksHostBasedEncryption.js'),
         'aksApiAuthorizedIpRanges'      : require(__dirname + '/plugins/azure/kubernetesservice/aksApiAuthorizedIpRanges.js'),
         'aksNetworkExposure'            : require(__dirname + '/plugins/azure/kubernetesservice/aksNetworkExposure.js'),
+        'aksPrivilegeAnalysis'          : require(__dirname + '/plugins/azure/kubernetesservice/aksPrivilegeAnalysis.js'),
 
         'acrAdminUser'                  : require(__dirname + '/plugins/azure/containerregistry/acrAdminUser.js'),
         'acrHasTags'                    : require(__dirname + '/plugins/azure/containerregistry/acrHasTags.js'),
@@ -1087,7 +1089,7 @@ module.exports = {
         'keyVaultsPrivateEndpoint'      : require(__dirname + '/plugins/azure/keyvaults/keyVaultsPrivateEndpoint.js'),
         'kvLogAnalyticsEnabled'         : require(__dirname + '/plugins/azure/keyvaults/kvLogAnalyticsEnabled.js'),
         'keyVaultPublicAccess'          : require(__dirname + '/plugins/azure/keyvaults/keyVaultPublicAccess.js'),
-        
+
         'advancedThreatProtection'      : require(__dirname + '/plugins/azure/cosmosdb/advancedThreatProtection.js'),
         'cosmosdbDiagnosticLogs'        : require(__dirname + '/plugins/azure/cosmosdb/cosmosdbDiagnosticLogs.js'),
         'cosmosPublicAccessDisabled'    : require(__dirname + '/plugins/azure/cosmosdb/cosmosPublicAccessDisabled.js'),
@@ -1750,5 +1752,5 @@ module.exports = {
         'securityAgentInstalled'        : require(__dirname + '/plugins/alibaba/securitycenter/securityAgentInstalled.js'),
         'securityNotificationsEnabled'  : require(__dirname + '/plugins/alibaba/securitycenter/securityNotificationsEnabled.js'),
         'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
-    } 
+    }
 };

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Content Delivery',
     severity: 'Low',
     description: 'Ensures local authentication is disabled for Event Hub namespace.',
-    more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication in Azure Event Hubs namespaces.',
+    more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Entra ID and disable local authentication in Azure Event Hubs namespaces.',
     recommended_action: 'Ensure that Azure Event Hubs namespaces have local authentication disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/event-hubs/authenticate-shared-access-signature#disabling-localsas-key-authentication',
     apis: ['eventHub:listEventHub'],

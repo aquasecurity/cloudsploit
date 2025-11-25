@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Scale Sets AD Authentication Enabled',
+    title: 'Scale Sets Entra ID Authentication Enabled',
     category: 'Virtual Machine Scale Set',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for Virtual Machine Scale Sets.',
-    more_info: 'Enabling Azure Active Directory (AD) authentication for VM Scale Sets ensures access from one central point and simplifies access permission management. It allows conditional access by using Role-Based Access Control (RBAC) policies, and enable MFA.',
-    recommended_action: 'Enable Active Directory authentication for all Virtual Machines scale sets.',
+    description: 'Ensures that Azure Entra ID authentication is enabled for Virtual Machine Scale Sets.',
+    more_info: 'Enabling Azure Entra ID authentication for VM Scale Sets ensures access from one central point and simplifies access permission management. It allows conditional access by using Role-Based Access Control (RBAC) policies, and enable MFA.',
+    recommended_action: 'Enable Entra ID authentication for all Virtual Machines scale sets.',
     link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-linux',
     apis: ['virtualMachineScaleSets:listAll'],
     realtime_triggers: ['microsoftcompute:virtualmachinescalesets:write', 'microsoftcompute:virtualmachinescalesets:delete', 'microsoftcompute:virtualmachinescalesets:extensions:write', 'microsoftcompute:virtualmachinescalesets:extensions:delete'],
@@ -51,10 +51,10 @@ module.exports = {
 
                 if (adAuthentication) {
                     helpers.addResult(results, 0,
-                        'Virtual Machine Scale Set has Active Directory authentication enabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Entra ID authentication enabled', location, virtualMachineScaleSet.id);
                 } else {
                     helpers.addResult(results, 2,
-                        'Virtual Machine Scale Set has Active Directory authentication disabled', location, virtualMachineScaleSet.id);
+                        'Virtual Machine Scale Set has Entra ID authentication disabled', location, virtualMachineScaleSet.id);
                 }
             }
             rcb();

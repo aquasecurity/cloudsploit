@@ -3,12 +3,12 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Password Requires Symbols',
-    category: 'Active Directory',
+    category: 'Entra ID',
     domain: 'Identity and Access Management',
     severity: 'Low',
     description: 'Ensures that all Azure passwords require symbol characters',
     more_info: 'Azure handles most password policy settings, including which character types are required. Azure requires 3 out of 4 of the following character types: lowercase, uppercase, special characters, and numbers.',
-    link: 'Entra ID',
+    link: 'https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-policy#password-policies-that-only-apply-to-cloud-user-accounts',
     recommended_action: 'No action necessary. Azure handles password requirement settings.',
     apis: ['resources:list'],
 

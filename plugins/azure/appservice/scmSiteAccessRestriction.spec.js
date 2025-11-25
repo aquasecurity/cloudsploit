@@ -39,6 +39,24 @@ const configurations = [
                 'description': 'Deny all access'
             }
         ]
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Disabled',
+        'scmIpSecurityRestrictions': []
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Disabled',
+        'scmIpSecurityRestrictions': [
+            {
+                'ipAddress': 'Any',
+                'action': 'Allow',
+                'priority': 1,
+                'name': 'Allow all',
+                'description': 'Allow all access'
+            }
+        ]
     }
 ];
 
@@ -140,6 +158,28 @@ describe('scmSiteAccessRestriction', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('App Service does not have access restriction enabled for scm site');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if App Service has public network access disabled with no IP restrictions', function(done) {
+            const cache = createCache([webApps[0]], [configurations[2]]);
+            scmSiteAccessRestriction.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('App Service has access restriction enabled for scm site');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if App Service has public network access disabled even with allow all IP restrictions', function(done) {
+            const cache = createCache([webApps[0]], [configurations[3]]);
+            scmSiteAccessRestriction.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('App Service has access restriction enabled for scm site');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

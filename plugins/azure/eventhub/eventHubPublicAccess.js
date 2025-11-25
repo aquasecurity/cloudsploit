@@ -55,18 +55,18 @@ module.exports = {
                     if (eventHub.publicNetworkAccess && eventHub.publicNetworkAccess.toLowerCase() === 'enabled') {
                         if (config.check_selected_networks) {
                             const listNetworkRuleSet = helpers.addSource(cache, source,
-                                ['eventHub', 'listNetworkRuleSet', eventHub.id, location]);
+                                ['eventHub', 'listNetworkRuleSet', location, eventHub.id]);
                             if (!listNetworkRuleSet || listNetworkRuleSet.err || !listNetworkRuleSet.data) {
                                 helpers.addResult(results, 3,
                                     'Unable to query Event Hubs network rule set: ' + helpers.addError(listNetworkRuleSet), location, eventHub.id);
                                 continue;
                             }
                             if ((listNetworkRuleSet.data.ipRules && listNetworkRuleSet.data.ipRules.length > 0) || (listNetworkRuleSet.data.virtualNetworkRules && listNetworkRuleSet.data.virtualNetworkRules.length > 0)) {
-                                helpers.addResult(results, 2,
-                                    'Event Hubs namespace is publicly accessible', location, eventHub.id);
-                            } else {
                                 helpers.addResult(results, 0,
                                     'Event Hubs namespace is not publicly accessible', location, eventHub.id);
+                            } else {
+                                helpers.addResult(results, 2,
+                                    'Event Hubs namespace is publicly accessible', location, eventHub.id);
                             }
                         } else {
                             helpers.addResult(results, 2,

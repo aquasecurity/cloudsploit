@@ -21,7 +21,7 @@ const getBucketPolicy = [
         Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[{"Sid":"","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00000011111:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::staging-01-sd-logs/*"]},{"Sid":"","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::staging-01-sd-logs/*","arn:aws:s3:::staging-01-sd-logs"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
     },
     {
-        Policy: '{"Version":"2008-10-17","Statement":[{"Sid":"Stmt1537431944913","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00001111122:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::alqemy-upwork/*"]},{"Sid":"Stmt1537431944211","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::alqemy-upwork/*","arn:aws:s3:::alqemy-upwork"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
+        Policy: '{"Version":"2008-10-17","Statement":[{"Sid":"Stmt1537431944913","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::00001111122:root"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::cloudsploit-test-secure-transport/*"]},{"Sid":"Stmt1537431944211","Effect":"Deny","Principal":"*","Action":"s3:*","Resource":["arn:aws:s3:::cloudsploit-test-secure-transport/*","arn:aws:s3:::cloudsploit-test-secure-transport"],"Condition":{"Bool":{"aws:SecureTransport":"false"}}}]}'
     },
     {
         Policy: '{"Version":"2012-10-17","Id":"ExamplePolicy","Statement":[]}'

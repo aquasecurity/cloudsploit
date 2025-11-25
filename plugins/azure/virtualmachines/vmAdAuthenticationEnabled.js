@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'VM Active Directory (AD) Authentication Enabled',
+    title: 'VM Entra ID Authentication Enabled',
     category: 'Virtual Machines',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensures that Azure Active Directory (AD) authentication is enabled for virtual machines.',
-    more_info: 'Organizations can now improve the security of virtual machines (VMs) in Azure by integrating with Azure Active Directory (AD) authentication. Enabling Azure Active Directory (AD) authentication for Azure virtual machines (VMs) ensures access to VMs from one central point and simplifies access permission management.',
-    recommended_action: 'Enable Azure Active Directory (AD) authentication for Azure virtual machines',
-    link: 'https://learn.microsoft.com/en-us/azure/active-directory/devices/howto-vm-sign-in-azure-ad-windows',
+    description: 'Ensures that Azure Entra ID authentication is enabled for virtual machines.',
+    more_info: 'Organizations can now improve the security of virtual machines (VMs) in Azure by integrating with Azure Entra ID authentication. Enabling Azure Entra ID authentication for Azure virtual machines (VMs) ensures access to VMs from one central point and simplifies access permission management.',
+    recommended_action: 'Enable Azure Entra ID authentication for Azure virtual machines',
+    link: 'https://learn.microsoft.com/en-us/entra/identity/devices/howto-vm-sign-in-azure-ad-windows',
     apis: ['virtualMachines:listAll', 'virtualMachineExtensions:list'],
     realtime_triggers: ['microsoftcompute:virtualmachines:write', 'microsoftcompute:virtualmachines:delete', 'microsoftcompute:virtualmachines:extensions:write', 'microsoftcompute:virtualmachines:extensions:delete'],
 
@@ -44,7 +44,7 @@ module.exports = {
                 }
 
                 if (!virtualMachineExtensions.data.length) {
-                    helpers.addResult(results, 2, 'Azure Active Directory (AD) authentication is disabled for the virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Azure Entra ID authentication is disabled for the virtual machine', location, virtualMachine.id);
                     return scb();
                 }
 
@@ -65,9 +65,9 @@ module.exports = {
                         (!windowsImg && virtualMachineExtension.name && virtualMachineExtension.name === 'AADSSHLoginForLinux')));
 
                 if (adEnabled) {
-                    helpers.addResult(results, 0, 'Azure Active Directory (AD) authentication is enabled for the virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 0, 'Azure Entra ID authentication is enabled for the virtual machine', location, virtualMachine.id);
                 } else {
-                    helpers.addResult(results, 2, 'Azure Active Directory (AD) authentication is disabled for the virtual machine', location, virtualMachine.id);
+                    helpers.addResult(results, 2, 'Azure Entra ID authentication is disabled for the virtual machine', location, virtualMachine.id);
                 }
 
                 scb();

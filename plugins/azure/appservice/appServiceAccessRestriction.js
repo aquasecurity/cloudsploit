@@ -7,8 +7,7 @@ module.exports = {
     domain: 'Application Integration',
     severity: 'Medium',
     description: 'Ensure that Azure App Services have access restriction configured to control network access to your app.',
-    more_info: 'By setting up access restrictions, you can define a priority-ordered allow/deny list that controls network access to your app. ' + 
-        'The list can include IP addresses or Azure Virtual Network subnets. When there are one or more entries, an implicit deny all exists at the end of the list.',
+    more_info: 'By setting up access restrictions, you can define a priority-ordered allow/deny list that controls network access to your app. The list can include IP addresses or Azure Virtual Network subnets. When there are one or more entries, an implicit deny all exists at the end of the list. The most secure configuration is to disable public network access entirely. If public access is enabled, this plugin checks for explicit access restrictions with an "Any" IP address and "Deny" action rule.',
     recommended_action: 'Add access restriction rules under network settings for the app services',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/app-service-ip-restrictions#set-up-azure-functions-access-restrictions',
     apis: ['webApps:list', 'webApps:listConfigurations'],
@@ -50,20 +49,30 @@ module.exports = {
                         'Unable to query App Service configuration: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                 } else {
-                    let denyAllIp;
-                    if (webConfigs.data[0].ipSecurityRestrictions && webConfigs.data[0].ipSecurityRestrictions.length) {
-                        denyAllIp = webConfigs.data[0].ipSecurityRestrictions.find(ipSecurityRestriction =>
-                            ipSecurityRestriction.ipAddress && ipSecurityRestriction.ipAddress.toUpperCase() === 'ANY' &&
-                            ipSecurityRestriction.action && ipSecurityRestriction.action.toUpperCase() === 'DENY'
-                        );
-                    }
+                    const config = webConfigs.data[0];
 
-                    if (denyAllIp) {
+                    if (config.publicNetworkAccess && config.publicNetworkAccess.toLowerCase() === 'disabled') {
                         helpers.addResult(results, 0,
                             'App Service has access restriction enabled',
                             location, webApp.id);
                     } else {
-                        helpers.addResult(results, 2, 'App Service does not have access restriction enabled', location, webApp.id);
+                        let denyAllIp;
+                        if (config.ipSecurityRestrictions && config.ipSecurityRestrictions.length) {
+                            denyAllIp = config.ipSecurityRestrictions.find(ipSecurityRestriction =>
+                                ipSecurityRestriction.ipAddress && ipSecurityRestriction.ipAddress.toUpperCase() === 'ANY' &&
+                                ipSecurityRestriction.action && ipSecurityRestriction.action.toUpperCase() === 'DENY'
+                            );
+                        }
+
+                        if (denyAllIp) {
+                            helpers.addResult(results, 0,
+                                'App Service has access restriction enabled',
+                                location, webApp.id);
+                        } else {
+                            helpers.addResult(results, 2, 
+                                'App Service does not have access restriction enabled', 
+                                location, webApp.id);
+                        }
                     }
                 }
             });

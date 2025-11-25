@@ -66,11 +66,11 @@ describe('activeDirectoryAdminEnabled', function() {
             activeDirectoryAdminEnabled.run(cache, {}, callback);
         })
 
-        it('should give failing result if Active Directory admin is not enabled on the PostgreSQL server', function(done) {
+        it('should give failing result if Entra ID admin is not enabled on the PostgreSQL server', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Active Directory admin is not enabled on the PostgreSQL server');
+                expect(results[0].message).to.include('Entra ID admin is not enabled on the PostgreSQL server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -84,11 +84,11 @@ describe('activeDirectoryAdminEnabled', function() {
             activeDirectoryAdminEnabled.run(cache, {}, callback);
         });
 
-        it('should give failing result if No Active Directory admin found for the server', function(done) {
+        it('should give failing result if No Entra ID admin found for the server', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No Active Directory admin found for the server');
+                expect(results[0].message).to.include('No Entra ID admin found for the server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
@@ -102,11 +102,11 @@ describe('activeDirectoryAdminEnabled', function() {
             activeDirectoryAdminEnabled.run(cache, {}, callback);
         });
 
-        it('should give passing result if Active Directory admin is enabled on the PostgreSQL server', function(done) {
+        it('should give passing result if Entra ID admin is enabled on the PostgreSQL server', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Active Directory admin is enabled on the PostgreSQL server');
+                expect(results[0].message).to.include('Entra ID admin is enabled on the PostgreSQL server');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };

@@ -160,8 +160,36 @@ let collect = function(AzureConfig, settings, callback, fargateFlag) {
                         return retryAfter;
                     },
                     errorFilter: function(err) {
-                        const errorMessage = typeof err === 'string' ? err : err.message || err.toString();
-                        return errorMessage.includes('TooManyRequests');
+                        const errorMessage = typeof err === 'string' ? err : err.message || err.toString();                        
+                        
+                        // Azure throttling patterns
+                        const throttlingPatterns = [
+                            'TooManyRequests',
+                            'RateLimitExceeded',
+                            'Throttling',
+                            'Throttled',
+                            'RequestThrottled',
+                            'RequestLimitExceeded',
+                            'ServerBusy',
+                            'ServiceBusy',
+                            'toomanyrequests',
+                            'ratelimitexceeded',
+                            'throttling',
+                            'throttled',
+                            'requestthrottled',
+                            'requestlimitexceeded',
+                            'serverbusy',
+                            'servicebusy',
+                            'too many requests',
+                            'rate limit',
+                            'retry after',
+                            'the request is being throttled',
+                            'request rate is large',
+                            'rate exceeded'
+                        ];
+                        
+                        const errorMatch = throttlingPatterns.some(pattern => errorMessage.includes(pattern));                        
+                        return errorMatch;
                     }
                 }, function(retryCallback) {
                     let localUrl = obj.nextUrl || obj.url.replace(/\{subscriptionId\}/g, AzureConfig.SubscriptionID);

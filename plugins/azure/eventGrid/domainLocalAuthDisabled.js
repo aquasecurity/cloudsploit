@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Management and Governance',
     severity: 'Low',
     description: 'Ensures that local authentication is disabled for Event Grid domains.',
-    more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication (shared access policies) for Azure Event Grid.',
+    more_info: 'For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Entra ID and disable local authentication (shared access policies) for Azure Event Grid.',
     recommended_action: 'Ensure that Event Grid domains have local authentication disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/event-grid/authenticate-with-microsoft-entra-id#disable-key-and-shared-access-signature-authentication',
     apis: ['eventGrid:listDomains'],

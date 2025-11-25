@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Databases',
     severity: 'Low',
     description: 'Ensures that local authentication is disabled for Cosmos DB accounts.',
-    more_info: 'For enhanced security, centralized identity management and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication for Azure Cosmos DB accounts.',
+    more_info: 'For enhanced security, centralized identity management and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Entra ID and disable local authentication for Azure Cosmos DB accounts.',
     recommended_action: 'Ensure that Cosmos DB accounts have local authentication disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-setup-rbac#disable-local-auth',
     apis: ['databaseAccounts:list'],

@@ -48,7 +48,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No existing AAD applications found');
+                expect(results[0].message).to.include('No existing Entra ID applications found');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -64,7 +64,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for AAD applications:');
+                expect(results[0].message).to.include('Unable to query for Entra ID applications:');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -81,7 +81,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('AAD application has multi-tenant access enabled');
+                expect(results[0].message).to.include('Entra ID application has multi-tenant access enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };
@@ -95,7 +95,7 @@ describe('appOrgnaizationalDirectoryAccess', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('AAD application has single-tenant access enabled');
+                expect(results[0].message).to.include('Entra ID application has single-tenant access enabled');
                 expect(results[0].region).to.equal('global');
                 done()
             };

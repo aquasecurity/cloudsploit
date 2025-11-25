@@ -72,23 +72,23 @@ describe('webAppsADEnabled', function() {
             });
         });
 
-        it('should give passing result if Registration with Azure Active Directory is enabled', function(done) {
+        it('should give passing result if Registration with Azure Entra ID is enabled', function(done) {
             const cache = createCache([webApps[1]]);
             webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Registration with Azure Active Directory is enabled for the Web App');
+                expect(results[0].message).to.include('Registration with Azure Entra ID is enabled for the Web App');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Registration with Azure Active Directory is disabled', function(done) {
+        it('should give failing result if Registration with Azure Entra ID is disabled', function(done) {
             const cache = createCache([webApps[0]]);
             webAppsADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Registration with Azure Active Directory is disabled for the Web App');
+                expect(results[0].message).to.include('Registration with Azure Entra ID is disabled for the Web App');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

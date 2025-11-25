@@ -1,7 +1,7 @@
 var expect = require('chai').expect;
 var s3BucketHasTags = require('./s3BucketHasTags');
 
-const createCache = (bucketData, bucketDataErr, rgData, rgDataErr) => {
+const createCache = (bucketData, bucketDataErr, bucketTaggingData, bucketTaggingErr) => {
     var bucketName = (bucketData && bucketData.length) ? bucketData[0].Name : null;
     return {
         s3: {
@@ -19,13 +19,13 @@ const createCache = (bucketData, bucketDataErr, rgData, rgDataErr) => {
                         }
                     }
                 }
-            }
-        },
-        resourcegroupstaggingapi: {
-            getResources: {
-                'us-east-1':{
-                    err: rgDataErr,
-                    data: rgData
+            },
+            getBucketTagging: {
+                'us-east-1': {
+                    [bucketName]: {
+                        err: bucketTaggingErr,
+                        data: bucketTaggingData
+                    }
                 }
             }
         }
@@ -58,19 +58,46 @@ describe('s3BucketHasTags', function () {
             s3BucketHasTags.run(cache, {}, callback);
         });
 
-        it('should give unknown result if unable to query resource group tagging api', function (done) {
+        it('should give unknown result if unable to query bucket tagging', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query all resources from group tagging api:');
+                expect(results[0].message).to.include('Unable to query S3 bucket tags:');
                 done();
             };
-            const cache = createCache([{
-                "Name": "test-bucket",
-                "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-            }], null, [],{
-                message: "Unable to query for Resource group tags"
-            });
+            // Create cache with error in both potential lookup locations (bucket region and default region)
+            const cache = {
+                s3: {
+                    listBuckets: {
+                        'us-east-1': {
+                            err: null,
+                            data: [{
+                                "Name": "test-bucket",
+                                "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
+                            }]
+                        }
+                    },
+                    getBucketLocation: {
+                        'us-east-1': {
+                            'test-bucket': {
+                                data: {
+                                    LocationConstraint: null // us-east-1
+                                }
+                            }
+                        }
+                    },
+                    getBucketTagging: {
+                        'us-east-1': {
+                            'test-bucket': {
+                                err: {
+                                    message: "Unable to query bucket tags"
+                                },
+                                data: null
+                            }
+                        }
+                    }
+                }
+            };
             s3BucketHasTags.run(cache, {}, callback);
         });
 
@@ -86,11 +113,13 @@ describe('s3BucketHasTags', function () {
                 [{
                     "Name": "test-bucket",
                     "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-                }],null,
-                [{
-                    "ResourceARN": "arn:aws:s3:::test-bucket",
-                    "Tags": [{key:"key1", value:"value"}],
-                }],null
+                }], null,
+                {
+                    "TagSet": [
+                        {"Key": "key1", "Value": "value1"},
+                        {"Key": "key2", "Value": "value2"}
+                    ]
+                }, null
             );
             s3BucketHasTags.run(cache, {}, callback);
         });
@@ -107,11 +136,32 @@ describe('s3BucketHasTags', function () {
                 [{
                     "Name": "test-bucket",
                     "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
-                }],null,
+                }], null,
+                null, {
+                    code: "NoSuchTagSet",
+                    message: "The TagSet does not exist"
+                }
+            );
+
+            s3BucketHasTags.run(cache, {}, callback);
+        });
+
+        it('should give failing result if s3 has empty tag set', function (done) {
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('S3 bucket does not have any tags');
+                done();
+            };
+
+            const cache = createCache(
                 [{
-                    "ResourceARN": "arn:aws:s3:::test-bucket",
-                    "Tags": [],
-                }],null
+                    "Name": "test-bucket",
+                    "CreationDate": "November 22, 2021, 15:51:19 (UTC+05:00)",
+                }], null,
+                {
+                    "TagSet": []
+                }, null
             );
 
             s3BucketHasTags.run(cache, {}, callback);
