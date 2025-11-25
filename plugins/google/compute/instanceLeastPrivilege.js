@@ -38,7 +38,7 @@ module.exports = {
 
         var serviceAccountRoles = {};
 
-        async.each(regions.projects, function (region, rcb) {
+        async.each(regions.projects, function(region, rcb) {
             let iamPolicy = helpers.addSource(cache, source,
                 ['projects', 'getIamPolicy', region]);
 
@@ -72,12 +72,12 @@ module.exports = {
             }
 
             rcb();
-        }, function () {
+        }, function() {
             async.each(regions.compute, (computeRegion, computeRcb) => {
                 var zones = regions.zones;
                 var noInstances = [];
 
-                async.each(zones[computeRegion], function (zone, zcb) {
+                async.each(zones[computeRegion], function(zone, zcb) {
                     var instances = helpers.addSource(cache, source,
                         ['compute', 'list', zone]);
 
@@ -116,25 +116,16 @@ module.exports = {
                             });
                         }
 
-                        if (hasBroadRole && instanceServiceAccountEmail) {
-                            var roles = serviceAccountRoles[instanceServiceAccountEmail] || [];
-                            var broadRoles = roles.filter(role =>
-                                role === 'roles/owner' ||
-                                role === 'roles/editor' ||
-                                role.endsWith('.admin')
-                            );
-                            var roleStr = broadRoles.join(', ');
-                            var isDefault = instanceServiceAccountEmail === defaultServiceAccount;
-                            var serviceAccountType = isDefault ? 'default service account' : 'service account';
+                        if (hasBroadRole && instanceServiceAccountEmail) { 
                             helpers.addResult(results, 2,
-                                `Instance Service account has full access`, computeRegion, resource);
+                                'Instance Service account has full access', computeRegion, resource);
                         } else {
                             helpers.addResult(results, 0,
                                 'Instance service account follows least privilege', computeRegion, resource);
                         }
                     });
                     return zcb();
-                }, function () {
+                }, function() {
                     if (noInstances.length) {
                         helpers.addResult(results, 0, `No instances found in following zones: ${noInstances.join(', ')}`, computeRegion);
                     }
