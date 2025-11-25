@@ -144,15 +144,6 @@ var serviceMap = {
             BridgeResourceNameIdentifier: 'DomainName', BridgeExecutionService: 'ES',
             BridgeCollectionService: 'es', DataIdentifier: 'DomainStatus',
         },
-    'QLDB':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'ledger', InvService: 'qldb',
-            InvResourceCategory: 'database', InvResourceType: 'qldb_ledger', BridgeServiceName: 'qldb',
-            BridgePluginCategoryName: 'QLDB', BridgeProvider: 'aws', BridgeCall: 'describeLedger',
-            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'ledger',
-            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'QLDB',
-            BridgeCollectionService: 'qldb', DataIdentifier: 'data',
-        },
     'DynamoDB':
         {
             enabled: true, isSingleSource: true, InvAsset: 'table', InvService: 'dynamodb',
@@ -470,15 +461,6 @@ var serviceMap = {
             BridgeArnIdentifier: 'EnvironmentArn', BridgeIdTemplate: '', BridgeResourceType: 'environment',
             BridgeResourceNameIdentifier: 'EnvironmentName', BridgeExecutionService: 'ElasticBeanstalk',
             BridgeCollectionService: 'elasticbeanstalk', BridgeCall: 'describeEnvironments', DataIdentifier: 'data',
-        },
-    'Elastic Transcoder':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'transcoder', InvService: 'elasticTranscoder',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'transcoder pipeline',
-            BridgeProvider: 'aws', BridgeServiceName: 'elastictranscoder', BridgePluginCategoryName: 'Elastic Transcoder',
-            BridgeArnIdentifier: 'Arn', BridgeIdTemplate: '', BridgeResourceType: 'pipeline',
-            BridgeResourceNameIdentifier: 'Name', BridgeExecutionService: 'Elastic Transcoder',
-            BridgeCollectionService: 'elastictranscoder', BridgeCall: 'listPipelines', DataIdentifier: 'data',
         },
     'ELBv2':
         {
@@ -1273,14 +1255,6 @@ var calls = {
             paginate: 'NextToken'
         }
     },
-    ElasticTranscoder: {
-        // TODO: Pagination via NextPageToken and PageToken
-        listPipelines: {
-            property: 'Pipelines',
-            paginate: 'NextPageToken',
-            paginateReqProp: 'PageToken'
-        }
-    },
     ELB: {
         describeLoadBalancers: {
             property: 'LoadBalancerDescriptions',
@@ -1604,12 +1578,6 @@ var calls = {
         listEnvironmentTemplates: {
             property: 'templates',
             paginate: 'nextToken'
-        }
-    },
-    QLDB: {
-        listLedgers: {
-            property: 'Ledgers',
-            paginate: 'NextToken'
         }
     },
     RDS: {
@@ -2584,15 +2552,6 @@ var postcalls = [
             },
             sendIntegration: serviceMap['ElasticBeanstalk']
         },
-        ElasticTranscoder: {
-            listJobsByPipeline:  {
-                reliesOnService: 'elastictranscoder',
-                reliesOnCall: 'listPipelines',
-                filterKey: 'PipelineId',
-                filterValue: 'Id'
-            },
-            sendIntegration: serviceMap['Elastic Transcoder']
-        },
         ELB: {
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
@@ -2913,15 +2872,6 @@ var postcalls = [
                 filterKey: 'resourceArn',
                 filterValue: 'botAliasId'
             }
-        },
-        QLDB: {
-            describeLedger: {
-                reliesOnService: 'qldb',
-                reliesOnCall: 'listLedgers',
-                filterKey: 'Name',
-                filterValue: 'Name'
-            },
-            sendIntegration: serviceMap['QLDB']
         },
         ManagedBlockchain: {
             listMembers: {

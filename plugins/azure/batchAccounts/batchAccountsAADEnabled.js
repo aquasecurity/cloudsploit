@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure/');
 
 module.exports = {
-    title: 'Batch Account AAD Auth Enabled',
+    title: 'Batch Account Entra ID Auth Enabled',
     category: 'Batch',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensures that Batch account has Azure Active Directory (AAD) authentication mode enabled.',
-    more_info: 'Enabling Azure Active Directory (AAD) authentication for Batch account ensures enhanced security by restricting the service API authentication to Microsoft Entra ID that prevents access through less secure shared key methods, thereby safeguarding batch resources from unauthorized access.',
-    recommended_action: 'Enable Active Directory authentication mode for all Batch accounts.',
+    description: 'Ensures that Batch account has Azure Entra ID authentication mode enabled.',
+    more_info: 'Enabling Azure Entra ID authentication for Batch account ensures enhanced security by restricting the service API authentication to Microsoft Entra ID that prevents access through less secure shared key methods, thereby safeguarding batch resources from unauthorized access.',
+    recommended_action: 'Enable Entra ID authentication mode for all Batch accounts.',
     link: 'https://learn.microsoft.com/en-us/azure/batch/batch-aad-auth',
     apis: ['batchAccounts:list'],
     realtime_triggers: ['microsoftbatch:batchaccounts:write', 'microsoftbatch:batchaccounts:delete'],
@@ -42,9 +42,9 @@ module.exports = {
                     batchAccount.allowedAuthenticationModes.some(mode => mode.toUpperCase() === 'AAD') : false;
 
                 if (found) {
-                    helpers.addResult(results, 0, 'Batch account has Active Directory authentication enabled', location, batchAccount.id);
+                    helpers.addResult(results, 0, 'Batch account has Entra ID authentication enabled', location, batchAccount.id);
                 } else {
-                    helpers.addResult(results, 2, 'Batch account does not have Active Directory authentication enabled', location, batchAccount.id);
+                    helpers.addResult(results, 2, 'Batch account does not have Entra ID authentication enabled', location, batchAccount.id);
                 }
 
             }

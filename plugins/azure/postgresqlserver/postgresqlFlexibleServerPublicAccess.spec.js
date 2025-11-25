@@ -57,7 +57,7 @@ const firewallRules = [
 
 const createCache = (servers, rules1) => {
     const serverId1 = (servers && servers.length > 0) ? servers[0].id : null;
-    
+
     const cache = {
         servers: {
             listPostgresFlexibleServer: {

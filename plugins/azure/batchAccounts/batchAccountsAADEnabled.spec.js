@@ -69,23 +69,23 @@ describe('batchAccountsAADEnabled', function () {
             });
         });
 
-        it('should give passing result if Batch account is configured with AAD Authentication', function (done) {
+        it('should give passing result if Batch account is configured with Entra ID Authentication', function (done) {
             const cache = createCache([batchAccounts[0]]);
             batchAccountsAADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Batch account has Active Directory authentication enabled');
+                expect(results[0].message).to.include('Batch account has Entra ID authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Batch account is not configured with AAD Authentication', function (done) {
+        it('should give failing result if Batch account is not configured with Entra ID Authentication', function (done) {
             const cache = createCache([batchAccounts[1]]);
             batchAccountsAADEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Batch account does not have Active Directory authentication enabled');
+                expect(results[0].message).to.include('Batch account does not have Entra ID authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

@@ -262,7 +262,7 @@ var serviceMap = {
     ],
     'Entra ID': [
         {
-            enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
+            enabled: true, isSingleSource: true, InvAsset: 'entraId', InvService: 'entraId',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Roles', BridgeServiceName: 'roledefinitions',
             BridgePluginCategoryName: 'Entra ID', BridgeProvider: 'Azure', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'roleDefinitions',
@@ -270,7 +270,7 @@ var serviceMap = {
             BridgeCollectionService: 'roledefinitions', DataIdentifier: 'data',
         },
         {
-            enabled: true, isSingleSource: true, InvAsset: 'activeDirectory', InvService: 'activeDirectory',
+            enabled: true, isSingleSource: true, InvAsset: 'entraId', InvService: 'entraId',
             InvResourceCategory: 'cloud_resources', InvResourceType: 'Application', BridgeServiceName: 'applications',
             BridgePluginCategoryName: 'Entra ID', BridgeProvider: 'Azure', BridgeCall: 'list',
             BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: '',
@@ -1011,6 +1011,11 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/config/backup/list?api-version=2021-02-01',
             post: true
         },
+        getWebAppDetails: {
+            reliesOnPath: 'webApps.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2022-03-01'
+        },
         sendIntegration: {
             enabled: true
         }
@@ -1266,7 +1271,6 @@ var postcalls = {
             url: 'https://management.azure.com/{id}/networkRuleSets/default?api-version=2022-10-01-preview'
         }
     }
-
 };
 
 var tertiarycalls = {

@@ -73,6 +73,182 @@ var parse = function(obj, path, region, cloud, accountId, resourceId) {
         return obj;
     }
 };
+
+var inCidr = function(ip, cidr) {
+    if (!ip || !cidr || typeof ip !== 'string' || typeof cidr !== 'string') {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    ip = ip.trim();
+    cidr = cidr.trim();
+    
+    var isIpv6Cidr = cidr.includes(':');
+    var isIpv6Ip = ip.includes(':');
+    
+    if (isIpv6Cidr && !isIpv6Ip) {
+        return { result: false, error: 'Cannot check IPv4 address against IPv6 CIDR' };
+    }
+    if (!isIpv6Cidr && isIpv6Ip) {
+        return { result: false, error: 'Cannot check IPv6 address against IPv4 CIDR' };
+    }
+    
+    if (isIpv6Cidr && isIpv6Ip) {
+        return inCidrIPv6(ip, cidr);
+    } else {
+        return inCidrIPv4(ip, cidr);
+    }
+};
+
+var inCidrIPv4 = function(ip, cidr) {
+    var cidrMatch = cidr.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/(\d{1,2})$/);
+    if (!cidrMatch) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var cidrIp = cidrMatch[1];
+    var prefixLength = parseInt(cidrMatch[2]);
+    
+    var cidrParts = cidrIp.split('.').map(function(part) { return parseInt(part); });
+    if (cidrParts.some(function(part) { return isNaN(part) || part < 0 || part > 255; }) || prefixLength < 0 || prefixLength > 32) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var ipMatch = ip.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(\/\d{1,2})?$/);
+    if (!ipMatch) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var ipParts = ipMatch.slice(1, 5).map(function(part) { return parseInt(part); });
+    if (ipParts.some(function(part) { return isNaN(part) || part < 0 || part > 255; })) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var cidrInt = ((cidrParts[0] << 24) + (cidrParts[1] << 16) + (cidrParts[2] << 8) + cidrParts[3]) >>> 0;
+    var ipInt = ((ipParts[0] << 24) + (ipParts[1] << 16) + (ipParts[2] << 8) + ipParts[3]) >>> 0;
+    
+    var mask = (0xFFFFFFFF << (32 - prefixLength)) >>> 0;
+    var networkInt = (cidrInt & mask) >>> 0;
+    var broadcastInt = (networkInt | (0xFFFFFFFF >>> prefixLength)) >>> 0;
+    
+    var isInRange = ipInt >= networkInt && ipInt <= broadcastInt;
+    
+    var result = {
+        result: isInRange,
+        error: null,
+        message: isInRange ? 'IP in range' : 'IP not in range'
+    };
+    
+    return result;
+};
+
+var inCidrIPv6 = function(ip, cidr) {
+    var cidrMatch = cidr.match(/^([0-9a-fA-F:]+)\/(\d{1,3})$/);
+    if (!cidrMatch) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var cidrIp = cidrMatch[1];
+    var prefixLength = parseInt(cidrMatch[2]);
+    
+    if (prefixLength < 0 || prefixLength > 128) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    var ipv6Pattern = /^[0-9a-fA-F:]+$/;
+    if (!ipv6Pattern.test(ip) || !ipv6Pattern.test(cidrIp)) {
+        return { result: false, error: 'Malformed IP' };
+    }
+    
+    try {
+        var expandedCidr = expandIPv6Simple(cidrIp);
+        var expandedIp = expandIPv6Simple(ip);
+        
+        if (!expandedCidr || !expandedIp) {
+            return { result: false, error: 'Malformed IP' };
+        }
+        
+        var prefixChars = Math.floor(prefixLength / 4);
+        var cidrPrefix = expandedCidr.substring(0, prefixChars);
+        var ipPrefix = expandedIp.substring(0, prefixChars);
+        
+        var isInRange = ipPrefix === cidrPrefix;
+        
+        var result = {
+            result: isInRange,
+            error: null,
+            message: isInRange ? 'IP in range' : 'IP not in range'
+        };
+        
+        return result;
+    } catch (e) {
+        return { result: false, error: 'Malformed IP' };
+    }
+};
+
+var expandIPv6Simple = function(ip) {
+    try {
+        // Handle :: notation (simplified)
+        if (ip.includes('::')) {
+            var parts = ip.split('::');
+            if (parts.length > 2) return null;
+            
+            var left = parts[0] ? parts[0].split(':') : [];
+            var right = parts[1] ? parts[1].split(':') : [];
+            
+            var totalParts = left.length + right.length;
+            var missingParts = 8 - totalParts;
+            
+            if (missingParts < 0) return null;
+            
+            var expanded = left.concat(Array(missingParts).fill('0000')).concat(right);
+            return expanded.map(function(part) { return part.padStart(4, '0'); }).join('');
+        } else {
+            var ipParts = ip.split(':');
+            if (ipParts.length !== 8) return null;
+            return ipParts.map(function(part) { return part.padStart(4, '0'); }).join('');
+        }
+    } catch (e) {
+        return null;
+    }
+};
+
+var transformToIpRange = function(val) {
+    if (typeof val !== 'string') {
+        return { error: 'Value must be a string for IPRANGE transformation' };
+    }
+    
+    var trimmedVal = val.trim();
+    
+    var ipv4CidrPattern = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/(\d{1,2})$/;
+    var ipv4SinglePattern = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/;
+    var ipv6CidrPattern = /^([0-9a-fA-F:]+)\/(\d{1,3})$/;
+    var ipv6SinglePattern = /^[0-9a-fA-F:]+$/;
+    
+    var isValidFormat = ipv4CidrPattern.test(trimmedVal) || 
+                       ipv4SinglePattern.test(trimmedVal) ||
+                       ipv6CidrPattern.test(trimmedVal) || 
+                       ipv6SinglePattern.test(trimmedVal);
+    
+    if (!isValidFormat) {
+        return { error: 'Value must be a valid IP or CIDR format (e.g., "192.168.1.100" or "192.168.1.0/24")' };
+    }
+    
+    var processedVal = trimmedVal;
+    if (ipv4SinglePattern.test(trimmedVal)) {
+        processedVal = trimmedVal + '/32';
+    } else if (ipv6SinglePattern.test(trimmedVal) && !trimmedVal.includes('/')) {
+        processedVal = trimmedVal + '/128';
+    }
+    
+    var result = {
+        type: 'iprange',
+        original: val,
+        cidr: processedVal
+    };
+    
+    return result;
+};
+
 var transform = function(val, transformation) {
     if (transformation == 'DATE') {
         return new Date(val);
@@ -93,6 +269,8 @@ var transform = function(val, transformation) {
         return val;
     } else if (transformation == 'TOLOWERCASE') {
         return val.toLowerCase();
+    } else if (transformation == 'IPRANGE') {
+        return transformToIpRange(val);
     } else {
         return val;
     }
@@ -228,9 +406,9 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr, r
             condition.parsed = ['not set'];
         }
 
-        // Transform the property if required
-        if (condition.transform) {
-            try {
+        // Transform the property if required (except for IPRANGE which transforms the value)
+        if (condition.transform && condition.transform !== 'IPRANGE') {
+            try { 
                 condition.parsed = transform(condition.parsed, condition.transform);
             } catch (e) {
                 conditionResult = 2;
@@ -240,7 +418,7 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr, r
                     message: message.join(', ')
                 };
 
-                inputResultsArr.push(resultObj);
+                inputResultsArr.push(resultObj); 
                 return resultObj;
             }
         }
@@ -280,7 +458,25 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr, r
                         } else if (condition.op == 'NE') {
                             itemMatch = (item !== condition.value);
                         } else if (condition.op == 'CONTAINS') {
-                            itemMatch = (item && item.includes && item.includes(condition.value));
+                            if (condition.transform == 'IPRANGE') {
+                                var valueRange = transformToIpRange(condition.value);
+                                if (valueRange.error) {
+                                    arrayMessages.push('Item ' + index + ': ' + valueRange.error);
+                                    itemMatch = false;
+                                } else {
+                                    var cidrResult = inCidr(condition.value, item);
+                                    if (cidrResult.error) {
+                                        arrayMessages.push('Item ' + index + ': ' + cidrResult.error);
+                                        itemMatch = false;
+                                    } else {
+                                        itemMatch = cidrResult.result;
+                                        var resultMsg = cidrResult.result ? 'allows access from ' + condition.value : 'does not allow access from ' + condition.value;
+                                        arrayMessages.push('Item ' + index + ': ' + item + ' ' + resultMsg);
+                                    }
+                                }
+                            } else {
+                                itemMatch = (item && item.includes && item.includes(condition.value));
+                            }
                         } else if (condition.op == 'MATCHES') {
                             let userRegex = RegExp(condition.value);
                             itemMatch = userRegex.test(item);
@@ -290,6 +486,17 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr, r
                             itemMatch = !!item;
                         } else if (condition.op == 'ISFALSE') {
                             itemMatch = !item;
+                        } else if (condition.op == 'ISEMPTY') {
+                            if (item === 'not set') {
+                                itemMatch = false;
+                                arrayMessages.push(`Item ${index}: not set`);
+                            } else if (typeof item === 'boolean' || typeof item === 'number') {
+                                itemMatch = false;
+                                arrayMessages.push(`Item ${index}: is of type ${typeof item}, which cannot be empty`);
+                            } else {
+                                itemMatch = (item === '' || (Array.isArray(item) && item.length === 0) || 
+                                          (typeof item === 'object' && item !== null && Object.keys(item).length === 0));
+                            }
                         }
                     }
                     if (itemMatch) {
@@ -501,6 +708,46 @@ var runValidation = function(obj, condition, inputResultsArr, nestedResultArr, r
                 } else {
                     message.push(`${property} is not a boolean value`);
                     conditionResult = 2;
+                }
+            } else if (condition.op == 'ISEMPTY') {
+                if (condition.parsed === 'not set') {
+                    message.push(`${property} is not set`);
+                    conditionResult = 2;
+                } else if (typeof condition.parsed === 'boolean' || typeof condition.parsed === 'number') {
+                    message.push(`${property} is of type ${typeof condition.parsed}, which cannot be empty`);
+                    conditionResult = 2;
+                } else if (condition.parsed === '' || 
+                    (Array.isArray(condition.parsed) && condition.parsed.length === 0) ||
+                    (typeof condition.parsed === 'object' && condition.parsed !== null && Object.keys(condition.parsed).length === 0)) {
+                    message.push(`${property} is empty`);
+                    conditionResult = 0;
+                } else {
+                    message.push(`${property} is not empty`);
+                    conditionResult = 2;
+                }
+            } else if (condition.op == 'CONTAINS' && condition.transform == 'IPRANGE') {
+                if (typeof condition.parsed !== 'string') {
+                    message.push(property + ': IPRANGE requires property to be an IP address string, got ' + typeof condition.parsed);
+                    conditionResult = 2;
+                } else {
+                    var valueRange = transformToIpRange(condition.value);
+                    if (valueRange.error) {
+                        message.push(property + ': ' + valueRange.error);
+                        conditionResult = 2;
+                    } else {
+                        var cidrResult = inCidr(condition.value, condition.parsed);
+                        
+                        if (cidrResult.error) {
+                            message.push(property + ': ' + cidrResult.error);
+                            conditionResult = 2;
+                        } else if (cidrResult.result) {
+                            message.push(property + ': ' + cidrResult.message + ' (' + condition.parsed + ' allows access from ' + condition.value + ')');
+                            conditionResult = 0;
+                        } else {
+                            message.push(property + ': ' + cidrResult.message + ' (' + condition.parsed + ' does not allow access from ' + condition.value + ')');
+                            conditionResult = 2;
+                        }
+                    }
                 }
             } else if (condition.op == 'CONTAINS') {
                 if (condition.parsed && condition.parsed.length && condition.parsed.includes(condition.value)) {
@@ -859,7 +1106,7 @@ var asl = function(source, input, resourceMap, cloud, accountId, callback) {
                 message: regionVal.err.message || 'Error',
                 region: region
             });
-        } else if (regionVal.data && regionVal.data.length) {
+        } else if (regionVal.data && regionVal.data.length) {  
             regionVal.data.forEach(function(regionData) {
                 var resourceName = parse(regionData, resourcePath, region, cloud, accountId)[0];
                 runConditions(input, regionData, results, resourcePath, resourceName, region, cloud, accountId);

@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Synapse Workspace AD Auth Enabled',
+    title: 'Synapse Workspace Entra ID Auth Enabled',
     category: 'AI & ML',
     domain: 'Machine Learning',
     severity: 'Medium',
-    description: 'Ensures that Azure Synapse workspace has Active Directory (AD) authentication enabled.',
-    more_info: 'Enabling Azure Active Directory authentication for Synapse workspace enhances security by ensuring that only authenticated and authorized users can access resources and eliminating the need for password storage. This integration simplifies permission management and secure access.',
-    recommended_action: 'Enable Active Directory (AD) authentication mode for all Synapse workspace.',
+    description: 'Ensures that Azure Synapse workspace has Entra ID authentication enabled.',
+    more_info: 'Enabling Azure Entra ID authentication for Synapse workspace enhances security by ensuring that only authenticated and authorized users can access resources and eliminating the need for password storage. This integration simplifies permission management and secure access.',
+    recommended_action: 'Enable Entra ID authentication mode for all Synapse workspace.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/sql/active-directory-authentication',
     apis: ['synapse:listWorkspaces'],
     realtime_triggers: ['microsoftsynapse:workspaces:write','microsoftsynapse:workspaces:delete'],
@@ -39,12 +39,11 @@ module.exports = {
                 if (!workspace.id) continue;
                 
                 if (workspace.azureADOnlyAuthentication) {
-                    helpers.addResult(results, 0, 'Synapse workspace has Active Directory authentication enabled', location, workspace.id);
+                    helpers.addResult(results, 0, 'Synapse workspace has Entra ID authentication enabled', location, workspace.id);
                 } else {
-                    helpers.addResult(results, 2, 'Synapse workspace does not have Active Directory authentication enabled', location, workspace.id);
+                    helpers.addResult(results, 2, 'Synapse workspace does not have Entra ID authentication enabled', location, workspace.id);
                 }
             }
-
             rcb();
         }, function() {
             // Global checking goes here

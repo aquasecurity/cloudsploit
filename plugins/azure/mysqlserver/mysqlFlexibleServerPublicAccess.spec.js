@@ -116,7 +116,7 @@ describe('mysqlFlexibleServerPublicAccess', function() {
 
             mysqlFlexibleServerPublicAccess.run(cache, {}, callback);
         });
-        
+
         it('should give passing result if SQL Server has private network access disabled', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);

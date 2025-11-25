@@ -177,9 +177,7 @@ module.exports = {
                     }
                 }
 
-                if (response &&
-                    response.statusCode &&
-                    response.statusCode === 429 &&
+                if (response && ((response.statusCode && response.statusCode === 429) || (response.status && response.status === 429)) &&
                     body &&
                     body.error &&
                     body.error.message &&
@@ -223,9 +221,7 @@ module.exports = {
                         return callback(`Error parsing error response string from Azure API: ${e}`);
                     }
                 }
-                if (response &&
-                    response.status &&
-                    response.status === 429 &&
+                if (response && ((response.statusCode && response.statusCode === 429) || (response.status && response.status === 429)) &&
                     body &&
                     body.error &&
                     body.error.message &&

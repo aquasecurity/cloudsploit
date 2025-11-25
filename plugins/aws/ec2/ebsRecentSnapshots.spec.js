@@ -7,6 +7,9 @@ snapshotPass.setDate(snapshotPass.getDate() - 1);
 var snapshotFail = new Date();
 snapshotFail.setDate(snapshotFail.getDate() - 10);
 
+var snapshotCustom = new Date();
+snapshotCustom.setDate(snapshotCustom.getDate() - 15);
+
 const describeSnapshots = [
         {
            "Description": "",
@@ -46,6 +49,18 @@ const describeSnapshots = [
         "State": "completed",
         "VolumeId": "vol-02c402f5a6a02c6e7",
         "VolumeSize": 1,
+        "Tags": []
+    },
+    {
+        "Description": "Custom test snapshot",
+        "Encrypted": false,
+        "OwnerId": "112233445566",
+        "Progress": "100%",
+        "SnapshotId": "snap-04custom567890abc",
+        "StartTime": snapshotCustom,
+        "State": "completed",
+        "VolumeId": "vol-03custom567890def",
+        "VolumeSize": 10,
         "Tags": []
     }
 ];
@@ -132,6 +147,41 @@ describe('ebsRecentSnapshots', function () {
             const cache = createNullCache();
             ebsRecentSnapshots.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(0);
+                done();
+            });
+        });
+
+        it('should use custom snapshot age threshold when setting is provided', function (done) {
+            const cache = createCache([describeSnapshots[3]]); // 15-day old snapshot
+            const settings = { ebs_recent_snapshot_days: '20' };
+            ebsRecentSnapshots.run(cache, settings, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS volume has a recent snapshot');
+                done();
+            });
+        });
+
+        it('should FAIL when snapshot is older than custom threshold', function (done) {
+            const cache = createCache([describeSnapshots[3]]); // 15-day old snapshot
+            const settings = { ebs_recent_snapshot_days: '10' };
+            ebsRecentSnapshots.run(cache, settings, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS volume does not have a recent snapshot');
+                done();
+            });
+        });
+
+        it('should use default 7 days when no setting is provided', function (done) {
+            const cache = createCache([describeSnapshots[1]]); // 10-day old snapshot
+            ebsRecentSnapshots.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('EBS volume does not have a recent snapshot');
                 done();
             });
         });

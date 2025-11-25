@@ -70,16 +70,19 @@ module.exports = {
                 if (helpers.checkClusterExposure(cluster)) {
                     internetExposed = 'public endpoint access';
                 } else {
-                    let clusterNetwork = cluster.networkConfig ? cluster.networkConfig.network : cluster.network;
-                    if (!clusterNetwork.includes('/')) clusterNetwork = `${clusterNetwork}`;
-                    let firewallRules = firewalls.data.filter(rule => rule.network.endsWith(clusterNetwork));
+                    let clusterNetwork = cluster.networkConfig && cluster.networkConfig.network ? cluster.networkConfig.network : cluster.network;
+                    if (clusterNetwork && !clusterNetwork.includes('/')) clusterNetwork = `${clusterNetwork}`;
+                    let firewallRules = firewalls.data.filter(rule => {
+                        return rule.network && rule.network.endsWith(clusterNetwork);
+                    });
+
 
                     let isExposed = helpers.checkFirewallRules(firewallRules);
                     if (isExposed && isExposed.exposed && isExposed.networkName) {
                         internetExposed = isExposed.networkName;
                     } else {
                         // check node pools
-                        let exposedNodePools = cluster.nodePools.filter(nodepool => nodepool.networkConfig && !nodepool.networkConfig.enablePrivateNodes).map(nodepool => nodepool.name);
+                        let exposedNodePools = Array.isArray(cluster.nodePools) ? cluster.nodePools.filter(nodepool => nodepool.networkConfig && !nodepool.networkConfig.enablePrivateNodes).map(nodepool => nodepool.name) : [] ;
                         if (exposedNodePools.length) {
                             internetExposed = `node pools ${exposedNodePools.join(',')}`;
                         }

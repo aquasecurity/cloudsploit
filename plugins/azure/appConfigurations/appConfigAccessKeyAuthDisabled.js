@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Developer Tools',
     severity: 'Low',
     description: 'Ensures that access key authentication is disabled for App Configuration.',
-    more_info: 'By default, requests can be authenticated with either Microsoft Entra credentials, or by using an access key. For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Active Directory (Azure AD) and disable local authentication for Azure App Configurations.',
+    more_info: 'By default, requests can be authenticated with either Microsoft Entra credentials, or by using an access key. For enhanced security, centralized identity management, and seamless integration with Azure\'s authentication and authorization services, it is recommended to rely on Azure Entra ID and disable local authentication for Azure App Configurations.',
     link: 'https://learn.microsoft.com/en-us/azure/azure-app-configuration/howto-disable-access-key-authentication',
     recommended_action: 'Ensure that Azure App Configurations have access key authentication disabled.',
     apis: ['appConfigurations:list'],

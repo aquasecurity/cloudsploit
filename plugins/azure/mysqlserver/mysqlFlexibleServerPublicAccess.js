@@ -57,7 +57,7 @@ module.exports = {
                 if (!server.id) return;
 
 
-                if (server.network && 
+                if (server.network &&
                     server.network.publicNetworkAccess &&
                     server.network.publicNetworkAccess.toLowerCase() === 'disabled') {
                     helpers.addResult(results, 0, 'MySQL Flexible Server is protected from outside traffic', location, server.id);
@@ -77,7 +77,7 @@ module.exports = {
                             firewallRules.data.forEach(firewallRule => {
                                 const startIpAddr = firewallRule['startIpAddress'];
                                 const endIpAddr = firewallRule['endIpAddress'];
-                                
+
                                 if (startIpAddr && startIpAddr.toString().indexOf('0.0.0.0') > -1) {
                                     if (checkAllowedIps) {
                                         if (endIpAddr && allowedIps.includes(endIpAddr.toString())) {

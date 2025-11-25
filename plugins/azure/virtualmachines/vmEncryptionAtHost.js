@@ -6,7 +6,7 @@ module.exports = {
     category: 'Virtual Machines',
     domain: 'Compute',
     severity: 'High',
-    description: 'Ensures that encryption at host is enabled for Azure Virtual Machine disks.',
+    description: 'Encryption at host ensures that data on Azure Virtual Machine disks- including temporary and cached data- is encrypted at the physical host level before being persisted. This provides end-to-end encryption independent of the guest OS, and does not require Azure Disk Encryption (ADE). Enabling this setting can help meet certain compliance and data residency requirements.',
     more_info: 'The data for temporary disk and OS/data disk caches is stored on the VM host. Enabling encryption at host for Azure Virtual Machine disks allows the data to be end-to-end encrypted, ensuring compliance and bolstering overall security with Azure Disk Encryption.',
     recommended_action: 'Ensure that all Azure Virtual Machines have encryption at host enabled for disks.',
     link: 'https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption#encryption-at-host---end-to-end-encryption-for-your-vm-data',

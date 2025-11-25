@@ -27,7 +27,7 @@ var processIntegration = function(serviceName, settings, collection, calls, post
     localEvent.scanTriggeredFromEventsFlow = settings.scanTriggeredFromEventsFlow;
     localEvent.collection = {};
     localEvent.previousCollection = {};
-
+    localEvent.cloud_account_identifier = settings.identifier.cloud_account_identifier;
     localEvent.lastScanId = settings.lastScanId;
 
     localEvent.collection[serviceName.toLowerCase()] = {};

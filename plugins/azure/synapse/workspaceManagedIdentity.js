@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensure that Azure Synapse workspace has managed identity enabled.',
-    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Entra ID tokens.',
     recommended_action: 'Modify Synapse workspace and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/synapse-analytics/synapse-service-identity',
     apis: ['synapse:listWorkspaces'],

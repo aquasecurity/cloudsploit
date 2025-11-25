@@ -11,7 +11,7 @@ module.exports = {
     link: 'http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html',
     recommended_action: 'Avoid using the default KMS key',
     apis: ['KMS:listKeys', 'KMS:describeKey', 'KMS:listAliases', 'CloudTrail:describeTrails',
-        'EC2:describeVolumes', 'ElasticTranscoder:listPipelines', 'RDS:describeDBInstances',
+        'EC2:describeVolumes', 'RDS:describeDBInstances',
         'Redshift:describeClusters', 'S3:listBuckets', 'S3:getBucketEncryption', 
         'SES:describeActiveReceiptRuleSet', 'Workspaces:describeWorkspaces', 'Lambda:listFunctions',
         'CloudWatchLogs:describeLogGroups', 'EFS:describeFileSystems', 'STS:getCallerIdentity'],
@@ -21,7 +21,7 @@ module.exports = {
              'passwords, it is still strongly encouraged to use a ' +
              'customer-provided CMK rather than the default KMS key.'
     },
-    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','ec2:CreateVolume','ec2:DeleteVolume','elastictranscoder:UpdatePipeline','elastictranscoder:CreatePipeline','elastictranscoder:DeletePipeline','rds:CreateDBInstance','rds:ModifyDBInstance','rds:DeleteDBInstance','redshift:CreateCluster','redshift:ModifyCluster','redshift:DeleteCluster','s3:CreateBucket','s3:DeleteBucket','s3:PutBucketEncryption','ses:CreateReceiptRule','ses:DeleteReceiptRule','ses:UpdateReceiptRule','workspaces:CreateWorkspaces','workspaces:TerminateWorkspaces','lambda:UpdateFunctionConfiguration','lambda:CreateFunction','lambda:DeleteFunction','cloudwatchlogs:CreateLogGroup','cloudwatchlogs:DeleteLogGroup','cloudwatchlogs:AssociateKmsKey','efs:CreateFileSystem',':efs:DeleteFileSystem'],
+    realtime_triggers: ['cloudtrail:CreateTrail','cloudtrail:UpdateTrail','cloudtrail:DeleteTrail','ec2:CreateVolume','ec2:DeleteVolume','rds:CreateDBInstance','rds:ModifyDBInstance','rds:DeleteDBInstance','redshift:CreateCluster','redshift:ModifyCluster','redshift:DeleteCluster','s3:CreateBucket','s3:DeleteBucket','s3:PutBucketEncryption','ses:CreateReceiptRule','ses:DeleteReceiptRule','ses:UpdateReceiptRule','workspaces:CreateWorkspaces','workspaces:TerminateWorkspaces','lambda:UpdateFunctionConfiguration','lambda:CreateFunction','lambda:DeleteFunction','cloudwatchlogs:CreateLogGroup','cloudwatchlogs:DeleteLogGroup','cloudwatchlogs:AssociateKmsKey','efs:CreateFileSystem',':efs:DeleteFileSystem'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -97,28 +97,6 @@ module.exports = {
                                 resource: `arn:${awsOrGov}:ec2:` + region + ':' + accountId + ':volume/' + describeVolumes.data[j].VolumeId,
                                 KMSKey: describeVolumes.data[j].KmsKeyId
                             });
-                        }
-                    }
-                }
-            }    
-
-            // For ElasticTranscoder
-            if (region in regions.elastictranscoder) {
-                var listPipelines = helpers.addSource(cache, source, ['elastictranscoder', 'listPipelines', region]);
-
-                if (listPipelines) {
-                    if (listPipelines.err || !listPipelines.data) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for ElasticTranscoder pipelines: ' + helpers.addError(listPipelines), region);
-                    } else {
-                        for (var k in listPipelines.data){
-                            if (listPipelines.data[k].AwsKmsKeyArn) {
-                                services.push({
-                                    serviceName: 'ElasticTranscoder',
-                                    resource: listPipelines.data[k].Arn,
-                                    KMSKey: listPipelines.data[k].AwsKmsKeyArn
-                                });
-                            }
                         }
                     }
                 }
