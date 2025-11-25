@@ -34,7 +34,6 @@ module.exports = {
         }
 
         var project = projects.data[0].name;
-        var defaultServiceAccount = projects.data[0].defaultServiceAccount;
 
         var serviceAccountRoles = {};
 
