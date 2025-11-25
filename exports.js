@@ -1622,6 +1622,9 @@ module.exports = {
         'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
         'cloudFunctionNetworkExposure'  : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionNetworkExposure.js'),
         'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
+        
+        'cloudFunctionV2HttpsOnly'       : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
+
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
         'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),
