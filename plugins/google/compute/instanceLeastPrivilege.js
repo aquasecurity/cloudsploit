@@ -117,7 +117,7 @@ module.exports = {
 
                         if (hasBroadRole && instanceServiceAccountEmail) {
                             helpers.addResult(results, 2,
-                                `Instance Service account has full access`, computeRegion, resource);
+                                'Instance Service account has full access', computeRegion, resource);
                         } else {
                             helpers.addResult(results, 0,
                                 'Instance service account follows least privilege', computeRegion, resource);
