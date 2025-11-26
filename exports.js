@@ -1628,6 +1628,9 @@ module.exports = {
         'cloudFunctionV2HttpsOnly'      : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
         'cloudFunctionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2DefaultServiceAccount.js'),
         'cloudFunctionV2IngressSettings': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2IngressSettings.js'),
+        'cloudFunctionV2LabelsAdded'    : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2LabelsAdded.js'),
+        'cloudFunctionV2OldRuntime'     : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2OldRuntime.js'),
+        'cloudFunctionV2VPCConnector'   : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2VPCConnector.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
