@@ -1625,7 +1625,9 @@ module.exports = {
         'cloudFunctionNetworkExposure'  : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionNetworkExposure.js'),
         'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
         
-        'cloudFunctionV2HttpsOnly'       : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
+        'cloudFunctionV2HttpsOnly'      : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
+        'cloudFunctionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2DefaultServiceAccount.js'),
+        'cloudFunctionV2IngressSettings': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2IngressSettings.js'),
 
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
