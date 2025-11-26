@@ -36,13 +36,11 @@ module.exports = {
                 return rcb();
             }
 
-            // loop through autoscaling groups
             describeAutoScalingGroups.data.forEach(function(asg){
                 var resource = asg.AutoScalingGroupARN;
 
                 if (!resource) return;
 
-                // If ASG has no tags, it passes (nothing to propagate)
                 if (!asg.Tags || !asg.Tags.length) {
                     helpers.addResult(results, 0,
                         'Auto scaling group has no tags configured',
@@ -50,7 +48,6 @@ module.exports = {
                     return;
                 }
 
-                // Check if all tags have PropagateAtLaunch set to true
                 var tagsNotPropagating = [];
                 asg.Tags.forEach(function(tag) {
                     if (!tag.PropagateAtLaunch) {

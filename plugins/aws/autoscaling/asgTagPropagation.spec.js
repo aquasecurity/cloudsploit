@@ -255,9 +255,9 @@ describe('asgTagPropagation', function () {
             const cache = createCache([autoScalingGroups[0], autoScalingGroups[1], autoScalingGroups[2]]);
             asgTagPropagation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(3);
-                expect(results[0].status).to.equal(0); // all tags propagate
-                expect(results[1].status).to.equal(2); // some tags don't propagate
-                expect(results[2].status).to.equal(0); // no tags
+                expect(results[0].status).to.equal(0);
+                expect(results[1].status).to.equal(2);
+                expect(results[2].status).to.equal(0);
                 done();
             });
         });
