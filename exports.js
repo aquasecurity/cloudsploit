@@ -187,6 +187,7 @@ module.exports = {
         'publicAmi'                     : require(__dirname + '/plugins/aws/ec2/publicAmi.js'),
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
         'amiHasTags'                    : require(__dirname + '/plugins/aws/ec2/amiHasTags.js'),
+        'oldAmi'                        : require(__dirname + '/plugins/aws/ec2/oldAmi.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsBackupEnabled'              : require(__dirname + '/plugins/aws/ec2/ebsBackupEnabled.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
