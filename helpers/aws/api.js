@@ -1045,6 +1045,10 @@ var calls = {
                     }
                 ]
             }
+        },
+        describeDBClusterParameters: {
+            property: 'Parameters',
+            paginate: 'Marker'
         }
     },
     DynamoDB: {
@@ -2324,6 +2328,12 @@ var postcalls = [
                 reliesOnCall: 'describeDBClusters',
                 filterKey: 'ResourceName',
                 filterValue: 'DBClusterArn'
+            },
+            describeDBClusterParameters: {
+                reliesOnService: 'docdb',
+                reliesOnCall: 'describeDBClusters',
+                filterKey: 'DBClusterParameterGroupName',
+                filterValue: 'DBClusterParameterGroup'
             },
             sendIntegration: serviceMap['DocumentDB']
         },
