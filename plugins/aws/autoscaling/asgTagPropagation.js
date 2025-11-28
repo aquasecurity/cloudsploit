@@ -62,8 +62,7 @@ module.exports = {
                 } else {
                     helpers.addResult(results, 2,
                         'Auto scaling group has ' + tagsNotPropagating.length + 
-                        ' tag(s) not configured to propagate to EC2 instances: ' + 
-                        tagsNotPropagating.join(', '),
+                        ' tag(s) not configured to propagate to EC2 instances',
                         region, resource);
                 }
             });
