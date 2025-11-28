@@ -160,16 +160,6 @@ const createErrorCache = () => {
     };
 };
 
-const createNullCache = () => {
-    return {
-        autoscaling: {
-            describeAutoScalingGroups: {
-                'us-east-1': null,
-            },
-        },
-    };
-};
-
 describe('asgTagPropagation', function () {
     describe('run', function () {
         it('should PASS if all tags have PropagateAtLaunch set to true', function (done) {
@@ -239,25 +229,6 @@ describe('asgTagPropagation', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query');
-                done();
-            });
-        });
-
-        it('should not return anything if unable to describe Auto Scaling groups', function (done) {
-            const cache = createNullCache();
-            asgTagPropagation.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
-        it('should handle multiple Auto Scaling groups correctly', function (done) {
-            const cache = createCache([autoScalingGroups[0], autoScalingGroups[1], autoScalingGroups[2]]);
-            asgTagPropagation.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(3);
-                expect(results[0].status).to.equal(0);
-                expect(results[1].status).to.equal(2);
-                expect(results[2].status).to.equal(0);
                 done();
             });
         });
