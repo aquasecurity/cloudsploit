@@ -345,10 +345,6 @@ var calls = [
                         }
                     ]
                 }
-            },
-            describeDBClusterParameters: {
-                property: 'Parameters',
-                paginate: 'Marker'
             }
         },
         DynamoDB: {

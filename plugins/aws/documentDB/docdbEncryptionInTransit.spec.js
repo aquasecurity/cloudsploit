@@ -156,11 +156,11 @@ describe('docdbEncryptionInTransit', function () {
             });
         });
 
-        it('should UNKNOWN if DocumentDB cluster has no parameter group', function (done) {
+        it('should FAIL if DocumentDB cluster has no parameter group', function (done) {
             const cache = createCache([describeDBClusters[3]], null);
             docdbEncryptionInTransit.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(3);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('does not have a parameter group associated');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
@@ -195,6 +195,36 @@ describe('docdbEncryptionInTransit', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
                 expect(results[0].message).to.include('Unable to query cluster parameters');
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should FAIL if cluster parameters data is null', function (done) {
+            const cache = createCache([describeDBClusters[0]], null, {
+                'custom-docdb-param-group': {
+                    Parameters: null
+                }
+            });
+            docdbEncryptionInTransit.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('does not have TLS encryption in transit enabled');
+                expect(results[0].region).to.equal('us-east-1');
+                done();
+            });
+        });
+
+        it('should FAIL if cluster parameters array is empty', function (done) {
+            const cache = createCache([describeDBClusters[0]], null, {
+                'custom-docdb-param-group': {
+                    Parameters: []
+                }
+            });
+            docdbEncryptionInTransit.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('does not have TLS encryption in transit enabled');
                 expect(results[0].region).to.equal('us-east-1');
                 done();
             });

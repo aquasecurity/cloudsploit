@@ -43,8 +43,8 @@ module.exports = {
                 var tlsEnabled = false;
 
                 if (!cluster.DBClusterParameterGroup) {
-                    helpers.addResult(results, 3,
-                        `DocumentDB cluster "${cluster.DBClusterIdentifier}" does not have a parameter group associated`,
+                    helpers.addResult(results, 2,
+                        'DocumentDB cluster does not have a parameter group associated',
                         region, resource);
                     return ccb();
                 }
@@ -57,19 +57,18 @@ module.exports = {
 
                 if (!parameters || parameters.err || !parameters.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query cluster parameters for parameter group "${parameterGroupName}": ${helpers.addError(parameters)}`,
+                        `Unable to query cluster parameters: ${helpers.addError(parameters)}`,
                         region, resource);
                     return ccb();
                 }
 
-                if (!parameters.data.Parameters || !parameters.data.Parameters.length) {
-                    helpers.addResult(results, 3,
-                        `No parameters found for cluster parameter group "${parameterGroupName}"`,
+                if (!parameters.data.Parameters) {
+                    helpers.addResult(results, 2,
+                        'DocumentDB cluster does not have TLS encryption in transit enabled',
                         region, resource);
                     return ccb();
                 }
 
-                // Check for TLS parameter
                 for (var param of parameters.data.Parameters) {
                     if (param.ParameterName && param.ParameterName === 'tls' &&
                         param.ParameterValue && 
@@ -81,11 +80,11 @@ module.exports = {
 
                 if (tlsEnabled) {
                     helpers.addResult(results, 0,
-                        `DocumentDB cluster "${cluster.DBClusterIdentifier}" has TLS encryption in transit enabled`,
+                        'DocumentDB cluster has TLS encryption in transit enabled',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
-                        `DocumentDB cluster "${cluster.DBClusterIdentifier}" does not have TLS encryption in transit enabled in parameter group "${parameterGroupName}"`,
+                        'DocumentDB cluster does not have TLS encryption in transit enabled',
                         region, resource);
                 }
 
