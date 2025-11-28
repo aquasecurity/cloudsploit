@@ -11,11 +11,6 @@ module.exports = {
     link: 'https://cloud.google.com/functions/docs/writing/http',
     recommended_action: 'Ensure that your Google Cloud Functions V2 always require HTTPS.',
     apis: ['functionsv2:list'],
-    remediation_min_version: '202207282132',
-    remediation_description: 'All Google Cloud Functions V2 will be configured to require HTTPS for HTTP invocations.',
-    apis_remediate: ['functionsv2:list', 'projects:get'],
-    actions: {remediate:['CloudFunctionsService.UpdateFunction'], rollback:['CloudFunctionsService.UpdateFunction']},
-    permissions: {remediate: ['cloudfunctions.functions.update'], rollback: ['cloudfunctions.functions.create']},
     realtime_triggers: ['functions.CloudFunctionsService.UpdateFunction','functions.CloudFunctionsService.DeleteFunction', 'functions.CloudFunctionsService.CreateFunction'],
 
     run: function(cache, settings, callback) {
@@ -64,39 +59,6 @@ module.exports = {
             rcb();
         }, function() {
             callback(null, results, source);
-        });
-    },
-    remediate: function(config, cache, settings, resource, callback) {
-        var remediation_file = settings.remediation_file;
-
-        // inputs specific to the plugin
-        var pluginName = 'httpTriggerRequireHttps';
-        var baseUrl = 'https://cloudfunctions.googleapis.com/v2/{resource}?updateMask=serviceConfig.securityLevel';
-        var method = 'PATCH';
-        var putCall = this.actions.remediate;
-
-        // create the params necessary for the remediation
-        var body = {
-            serviceConfig: {
-                securityLevel: 'SECURE_ALWAYS'
-            }
-        };
-        // logging
-        remediation_file['pre_remediate']['actions'][pluginName][resource] = {
-            'httpTriggerRequireHttps': 'Disabled'
-        };
-
-        helpers.remediatePlugin(config, method, body, baseUrl, resource, remediation_file, putCall, pluginName, function(err, action) {
-            if (err) return callback(err);
-            if (action) action.action = putCall;
-
-
-            remediation_file['post_remediate']['actions'][pluginName][resource] = action;
-            remediation_file['remediate']['actions'][pluginName][resource] = {
-                'Action': 'Enabled'
-            };
-
-            callback(null, action);
         });
     }
 
