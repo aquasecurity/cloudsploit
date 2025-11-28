@@ -57,7 +57,7 @@ module.exports = {
 
                  if (!tagsNotPropagating.length ) {
                     helpers.addResult(results, 0,
-                        'All tags are configured to propagate to EC2 instances',
+                        'Auto scaling group has all tags configured to propagate to EC2 instances',
                         region, resource);
                 } else {
                     helpers.addResult(results, 2,
