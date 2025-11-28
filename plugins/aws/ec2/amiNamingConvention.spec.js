@@ -106,13 +106,13 @@ describe('amiNamingConvention', function () {
             });
         });
 
-        it('should return FAIL if AMI does not have a Name tag', function (done) {
+        it('should return FAIL if AMI does not have a name tag', function (done) {
             const cache = createCache([describeImages[3]]);
             amiNamingConvention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('AMI does not have a Name tag');
+                expect(results[0].message).to.include('AMI does not have a name tag');
                 done();
             });
         });
@@ -123,7 +123,7 @@ describe('amiNamingConvention', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
-                expect(results[0].message).to.include('AMI does not have a Name tag');
+                expect(results[0].message).to.include('AMI does not have a name tag');
                 done();
             });
         });

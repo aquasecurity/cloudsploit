@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     severity: 'Low',
-    description: 'Ensure that Amazon Machine Images (AMIs) follow organizational naming conventions.',
+    description: 'Ensure that Amazon Machine Images (AMIs) follow organizational naming conventions for tagging',
     more_info: 'Naming AMIs consistently has several advantages such as providing additional information about the image location and usage, promoting consistency within the selected environment, distinguishing similar resources from one another, and enhancing clarity in cases of potential ambiguity.',
     link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html',
     recommended_action: 'Update AMI Name tags to follow organizational naming conventions.',
@@ -57,7 +57,7 @@ module.exports = {
 
                 if (!ami.Tags || !ami.Tags.length) {
                     helpers.addResult(results, 2,
-                        'AMI does not have a Name tag', region, arn);
+                        'AMI does not have a name tag', region, arn);
                     continue;
                 }
 
@@ -65,7 +65,7 @@ module.exports = {
 
                 if (!nameTag || !nameTag.Value) {
                     helpers.addResult(results, 2,
-                        'AMI does not have a Name tag', region, arn);
+                        'AMI does not have a name tag', region, arn);
                 } else if (!namingPattern.test(nameTag.Value)) {
                     helpers.addResult(results, 2,
                         `AMI Name tag "${nameTag.Value}" does not follow organizational naming convention`, region, arn);
