@@ -55,7 +55,7 @@ module.exports = {
                     }
                 });
 
-                if (tagsNotPropagating.length === 0) {
+                 if (!tagsNotPropagating.length ) {
                     helpers.addResult(results, 0,
                         'All tags are configured to propagate to EC2 instances',
                         region, resource);
