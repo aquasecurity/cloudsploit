@@ -2,16 +2,16 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'DocumentDB Encryption in Transit',
+    title: 'DocumentDB Encryption In Transit',
     category: 'DocumentDB',
     domain: 'Databases',
     severity: 'High',
-    description: 'Ensure DocumentDB clusters have TLS/SSL encryption in transit enabled.',
+    description: 'Ensure that DocumentDB clusters have TLS/SSL encryption in transit enabled.',
     more_info: 'DocumentDB uses TLS/SSL to encrypt data during transit. The TLS parameter in the cluster parameter group should be set to enabled to require encrypted connections. This ensures that all data transmitted between clients and the DocumentDB cluster is encrypted.',
     recommended_action: 'Modify the cluster parameter group to set the tls parameter to enabled, or create a custom parameter group with TLS enabled and associate it with the cluster.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/security.encryption.ssl.html',
     apis: ['DocDB:describeDBClusters', 'DocDB:describeDBClusterParameters'],
-    realtime_triggers: ['docdb:ModifyDBCluster', 'docdb:ModifyDBClusterParameterGroup', 'docdb:CreateDBClusterParameterGroup'],
+    realtime_triggers: [ 'docdb:CreateDBCluster', 'docdb:ModifyDBCluster', 'docdb:ModifyDBClusterParameterGroup', 'docdb:CreateDBClusterParameterGroup','docdb:DeleteDBCluster' ],
     
     run: function(cache, settings, callback) {
         var results = [];
