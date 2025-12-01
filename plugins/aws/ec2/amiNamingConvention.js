@@ -7,8 +7,8 @@ module.exports = {
     domain: 'Compute',
     severity: 'Low',
     description: 'Ensure that Amazon Machine Images (AMIs) follow organizational naming conventions for tagging',
-    more_info: 'Naming AMIs consistently has several advantages such as providing additional information about the image location and usage, promoting consistency within the selected environment, distinguishing similar resources from one another, and enhancing clarity in cases of potential ambiguity.',
-    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html',
+    more_info: 'AMIs should follow a consistent naming convention using the Name tag to identify their purpose, environment, and region. This helps prevent accidental use of incorrect images, reduces operational errors, and improves resource management. Without proper naming conventions, teams may deploy instances with outdated or inappropriate AMIs, leading to security vulnerabilities or configuration issues.',
+    link: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html',
     recommended_action: 'Update AMI Name tags to follow organizational naming conventions.',
     apis: ['EC2:describeImages'],
     settings: {
