@@ -1014,6 +1014,7 @@ module.exports = {
         'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
         'functionPrivilegeAnalysis'     : require(__dirname + '/plugins/azure/appservice/functionPrivilegeAnalysis.js'),
         'functionAppNetworkExposure'    : require(__dirname + '/plugins/azure/appservice/functionAppNetworkExposure.js'),
+        'appServicePublicAccess'        : require(__dirname + '/plugins/azure/appservice/appServicePublicAccess.js'), 
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksManagedIdentity'            : require(__dirname + '/plugins/azure/kubernetesservice/aksManagedIdentity.js'),
