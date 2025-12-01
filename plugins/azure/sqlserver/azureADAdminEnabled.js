@@ -2,13 +2,13 @@ var async = require('async');
 var helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Active Directory Admin Enabled',
+    title: 'Azure Entra ID Admin Enabled',
     category: 'SQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures that Active Directory admin is enabled on all SQL servers.',
-    more_info: 'Enabling Active Directory admin allows users to manage account admins in a central location, allowing key rotation and permission management to be managed in one location for all servers and databases.',
-    recommended_action: 'Ensure Azure Active Directory admin is enabled on all SQL servers.',
+    description: 'Ensures that Entra ID admin is enabled on all SQL servers.',
+    more_info: 'Enabling Entra ID admin allows users to manage account admins in a central location, allowing key rotation and permission management to be managed in one location for all servers and databases.',
+    recommended_action: 'Ensure Azure Entra ID admin is enabled on all SQL servers.',
     link: 'https://learn.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure',
     apis: ['servers:listSql', 'serverAzureADAdministrators:listByServer'],
     realtime_triggers: ['microsoftsql:servers:write', 'microsoftsql:servers:delete','microsoftsql:servers:administrators:write', 'microsoftsql:servers:administrators:delete'],
@@ -42,25 +42,25 @@ module.exports = {
 
                 if (!serverAzureADAdministrators || serverAzureADAdministrators.err || !serverAzureADAdministrators.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Active Directory admins: ' + helpers.addError(serverAzureADAdministrators), location, server.id);
+                        'Unable to query for Entra ID admins: ' + helpers.addError(serverAzureADAdministrators), location, server.id);
                 } else {
                     if (!serverAzureADAdministrators.data.length) {
-                        helpers.addResult(results, 2, 'Active Directory admin is not enabled on the server', location, server.id);
+                        helpers.addResult(results, 2, 'Entra ID admin is not enabled on the server', location, server.id);
                     } else {
-                        var adAdminEnabled = false;
+                        var entraIdAdminEnabled = false;
                         serverAzureADAdministrators.data.forEach(serverAzureADAdministrator => {
                             if (serverAzureADAdministrator.name &&
                                 serverAzureADAdministrator.name.toLowerCase() === 'activedirectory') {
-                                adAdminEnabled = true;
+                                entraIdAdminEnabled = true;
                             }
                         });
 
-                        if (adAdminEnabled) {
+                        if (entraIdAdminEnabled) {
                             helpers.addResult(results, 0,
-                                'Active Directory admin is enabled on the SQL server', location, server.id);
+                                'Entra ID admin is enabled on the SQL server', location, server.id);
                         } else {
                             helpers.addResult(results, 2,
-                                'Active Directory admin is not enabled on the SQL server', location, server.id);
+                                'Entra ID admin is not enabled on the SQL server', location, server.id);
                         }
                     }
                 }

@@ -189,4 +189,4 @@ describe('keyVaultPublicAccess', function () {
             });
         });
     });
-}); 
+});

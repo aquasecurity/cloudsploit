@@ -9,7 +9,7 @@ module.exports = {
     description: 'Ensures that there are no guest users in the subscription',
     more_info: 'Guest users are usually users that are invited from outside the company structure, these users are not part of the onboarding/offboarding process and could be overlooked, causing security vulnerabilities.',
     link: 'https://learn.microsoft.com/en-us/entra/external-id/add-users-administrator',
-    recommended_action: 'Remove all guest users unless they are required to be members of the Entra ID account.',
+    recommended_action: 'Remove all guest users unless they are required to be members of the Entra ID tenant.',
     apis: ['users:list'],
 
     run: function(cache, settings, callback) {

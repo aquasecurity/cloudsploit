@@ -63,7 +63,7 @@ const createCache = (virtualMachines, virtualMachineExtension) => {
     };
 };
 
-describe('adAuthenticationEnabled', function() {
+describe('vmAdAuthenticationEnabled', function() {
     describe('run', function() {
         it('should give passing result if no virtual machines', function(done) {
             const cache = createCache([]);
@@ -92,7 +92,7 @@ describe('adAuthenticationEnabled', function() {
             adAuthenticationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Active Directory (AD) authentication is disabled for the virtual machine');
+                expect(results[0].message).to.include('Azure Entra ID authentication is disabled for the virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
@@ -109,34 +109,34 @@ describe('adAuthenticationEnabled', function() {
             });
         });
 
-        it('should give passing result if Azure Active Directory (AD) authentication is enabled for the virtual machine for windows machine', function(done) {
+        it('should give passing result if Azure Entra ID authentication is enabled for the virtual machine for windows machine', function(done) {
             const cache = createCache([virtualMachines[0]], [virtualMachineExtension[0]]);
             adAuthenticationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Active Directory (AD) authentication is enabled for the virtual machine');
+                expect(results[0].message).to.include('Azure Entra ID authentication is enabled for the virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give passing result if Azure Active Directory (AD) authentication is enabled for the virtual machine for linux machine', function(done) {
+        it('should give passing result if Azure Entra ID authentication is enabled for the virtual machine for linux machine', function(done) {
             const cache = createCache([virtualMachines[1]], [virtualMachineExtension[1]]);
             adAuthenticationEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Azure Active Directory (AD) authentication is enabled for the virtual machine');
+                expect(results[0].message).to.include('Azure Entra ID authentication is enabled for the virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if Azure Active Directory (AD) authentication is disabled for the virtual machine', function(done) {
+        it('should give failing result if Azure Entra ID authentication is disabled for the virtual machine', function(done) {
             const cache = createCache([virtualMachines[0]], [virtualMachineExtension[1]]);
             adAuthenticationEnabled.run(cache, { vm_approved_extensions: 'Extension' }, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Azure Active Directory (AD) authentication is disabled for the virtual machine');
+                expect(results[0].message).to.include('Azure Entra ID authentication is disabled for the virtual machine');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

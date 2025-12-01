@@ -82,9 +82,9 @@ module.exports = {
                 } else if (func.ingressSettings && func.ingressSettings.toUpperCase() == 'ALLOW_INTERNAL_AND_GCLB') {
                     // only check load balancer flow if it allows traffic from LBs
                     let forwardingRules = [];
-                    forwardingRules = helpers.getForwardingRules(cache, source, region, func);
-                    let firewallRules = [];
                     let networks = [];
+                    let firewallRules = [];
+                    forwardingRules = helpers.getForwardingRules(cache, source, region, func);
                     internetExposed = helpers.checkNetworkExposure(cache, source, networks, firewallRules, region, results, forwardingRules);
 
                     if (!internetExposed || !internetExposed.length) {

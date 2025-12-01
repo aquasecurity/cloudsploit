@@ -45,20 +45,28 @@ module.exports = {
                         'Unable to query App Service configuration: ' + helpers.addError(webConfigs),
                         location, webApp.id);
                 } else {
-                    let denyAllIp;
-                    if (webConfigs.data[0].scmIpSecurityRestrictions && webConfigs.data[0].scmIpSecurityRestrictions.length) {
-                        denyAllIp = webConfigs.data[0].scmIpSecurityRestrictions.find(ipSecurityRestriction =>
-                            ipSecurityRestriction.ipAddress && ipSecurityRestriction.ipAddress.toUpperCase() === 'ANY' &&
-                            ipSecurityRestriction.action && ipSecurityRestriction.action.toUpperCase() === 'DENY'
-                        );
-                    }
+                    const config = webConfigs.data[0];
 
-                    if (denyAllIp) {
+                    if (config.publicNetworkAccess && config.publicNetworkAccess.toLowerCase() === 'disabled') {
                         helpers.addResult(results, 0,
                             'App Service has access restriction enabled for scm site',
                             location, webApp.id);
                     } else {
-                        helpers.addResult(results, 2, 'App Service does not have access restriction enabled for scm site', location, webApp.id);
+                        let denyAllIp;
+                        if (config.scmIpSecurityRestrictions && config.scmIpSecurityRestrictions.length) {
+                            denyAllIp = config.scmIpSecurityRestrictions.find(ipSecurityRestriction =>
+                                ipSecurityRestriction.ipAddress && ipSecurityRestriction.ipAddress.toUpperCase() === 'ANY' &&
+                                ipSecurityRestriction.action && ipSecurityRestriction.action.toUpperCase() === 'DENY'
+                            );
+                        }
+
+                        if (denyAllIp) {
+                            helpers.addResult(results, 0,
+                                'App Service has access restriction enabled for scm site',
+                                location, webApp.id);
+                        } else {
+                            helpers.addResult(results, 2, 'App Service does not have access restriction enabled for scm site', location, webApp.id);
+                        }
                     }
                 }
             });
@@ -70,3 +78,5 @@ module.exports = {
         });
     }
 };
+
+

@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     severity: 'Medium',
     description: 'Ensure that Azure container registries have managed identity enabled.',
-    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Entra ID tokens.',
     recommended_action: 'Modify container registry and enable managed identity.',
     link: 'https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication-managed-identity?tabs=azure-cli',
     apis: ['registries:list'],

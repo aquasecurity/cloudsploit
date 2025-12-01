@@ -22,11 +22,11 @@ module.exports = {
     realtime_triggers: ['microsoftdbforpostgresql:flexibleservers:write', 'microsoftdbforpostgresql:flexibleservers:firewallrules:write', 'microsoftdbforpostgresql:flexibleservers:firewallrules:delete', 'microsoftdbforpostgresql:flexibleservers:delete'],
 
     run: function(cache, settings, callback) {
-       
+
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
-    
+
         var config = {
             server_firewall_end_ip: settings.server_firewall_end_ip || this.settings.server_firewall_end_ip.default
         };
@@ -52,14 +52,14 @@ module.exports = {
             }
 
             servers.data.forEach(function(server) {
-                
+
                 if (server.network && server.network.publicNetworkAccess && server.network.publicNetworkAccess.toLowerCase() === 'disabled') {
                     helpers.addResult(results, 0, 'The PostgreSQL flexible server has public network access disabled', location, server.id);
 
                 } else {
                     const firewallRules = helpers.addSource(cache, source,
                         ['firewallRules', 'listByFlexibleServerPostgres', location, server.id]);
-    
+
                     if (!firewallRules || firewallRules.err || !firewallRules.data) {
                         helpers.addResult(results, 3,
                             'Unable to query PostgreSQL Flexible Server Firewall Rules: ' + helpers.addError(firewallRules), location, server.id);
@@ -68,11 +68,11 @@ module.exports = {
                             helpers.addResult(results, 0, 'No existing PostgreSQL Flexible Server Firewall Rules found', location, server.id);
                         } else {
                             var publicAccess = false;
-    
+
                             firewallRules.data.forEach(firewallRule => {
                                 const startIpAddr = firewallRule['startIpAddress'];
                                 const endIpAddr = firewallRule['endIpAddress'];
-                                
+
                                 if (startIpAddr && endIpAddr) {
                                     if (checkEndIp) {
                                         if (startIpAddr.toString().indexOf('0.0.0.0') > -1 &&
@@ -85,7 +85,7 @@ module.exports = {
                                     }
                                 }
                             });
-    
+
                             if (publicAccess) {
                                 helpers.addResult(results, 2, 'The PostgreSQL flexible server is open to outside traffic', location, server.id);
                             } else {
@@ -94,7 +94,7 @@ module.exports = {
                         }
                     }
 
-                }        
+                }
             });
 
             rcb();

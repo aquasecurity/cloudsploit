@@ -2,13 +2,13 @@ const async = require('async');
 const helpers = require('../../../helpers/azure');
 
 module.exports = {
-    title: 'Azure Active Directory Admin Configured',
+    title: 'Azure Entra ID Admin Configured',
     category: 'PostgreSQL Server',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensures that Active Directory admin is set up on all PostgreSQL servers.',
-    more_info: 'Using Azure Active Directory authentication allows key rotation and permission management to be managed in one location for all servers. This can be done are configuring an Active Directory administrator.',
-    recommended_action: 'Set up an Active Directory admin for PostgreSQL database servers.',
+    description: 'Ensures that Entra ID admin is set up on all PostgreSQL servers.',
+    more_info: 'Using Azure Entra ID authentication allows key rotation and permission management to be managed in one location for all servers. This can be done are configuring an Entra ID administrator.',
+    recommended_action: 'Set up an Entra ID admin for PostgreSQL database servers.',
     link: 'https://learn.microsoft.com/en-us/azure/postgresql/howto-configure-sign-in-aad-authentication',
     apis: ['servers:listPostgres', 'serverAdministrators:list'],
     realtime_triggers: ['microsoftdbforpostgresql:servers:write','microsoftdbforpostgresql:servers:delete'],
@@ -42,25 +42,25 @@ module.exports = {
                 
                 if (!serverAdministrators || serverAdministrators.err || !serverAdministrators.data) {
                     helpers.addResult(results, 3,
-                        'Unable to query for Active Directory admins: ' + helpers.addError(serverAdministrators), location, postgresServer.id);
+                        'Unable to query for Entra ID admins: ' + helpers.addError(serverAdministrators), location, postgresServer.id);
                 } else {
                     if (!serverAdministrators.data.length) {
-                        helpers.addResult(results, 2, 'No Active Directory admin found for the server', location, postgresServer.id);
+                        helpers.addResult(results, 2, 'No Entra ID admin found for the server', location, postgresServer.id);
                     } else {
-                        var adAdminEnabled = false;
+                        var entraIdAdminEnabled = false;
                         serverAdministrators.data.forEach(serverAdministrator => {
                             if (serverAdministrator.name &&
                                 serverAdministrator.name.toLowerCase() === 'activedirectory') {
-                                adAdminEnabled = true;
+                                entraIdAdminEnabled = true;
                             }
                         });
 
-                        if (adAdminEnabled) {
+                        if (entraIdAdminEnabled) {
                             helpers.addResult(results, 0,
-                                'Active Directory admin is enabled on the PostgreSQL server', location, postgresServer.id);
+                                'Entra ID admin is enabled on the PostgreSQL server', location, postgresServer.id);
                         } else {
                             helpers.addResult(results, 2,
-                                'Active Directory admin is not enabled on the PostgreSQL server', location, postgresServer.id);
+                                'Entra ID admin is not enabled on the PostgreSQL server', location, postgresServer.id);
                         }
                     }
                 }

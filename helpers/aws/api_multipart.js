@@ -573,14 +573,6 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
-        ElasticTranscoder: {
-            // TODO: Pagination via NextPageToken and PageToken
-            listPipelines: {
-                property: 'Pipelines',
-                paginate: 'NextPageToken',
-                paginateReqProp: 'PageToken'
-            }
-        },
         ELB: {
             describeLoadBalancers: {
                 property: 'LoadBalancerDescriptions',
@@ -860,12 +852,6 @@ var calls = [
             listEnvironmentTemplates: {
                 property: 'templates',
                 paginate: 'nextToken'
-            }
-        },
-        QLDB: {
-            listLedgers: {
-                property: 'Ledgers',
-                paginate: 'NextToken'
             }
         },
         RDS: {
@@ -1666,14 +1652,6 @@ var postcalls = [
                 override: true
             }
         },
-        ElasticTranscoder: {
-            listJobsByPipeline:  {
-                reliesOnService: 'elastictranscoder',
-                reliesOnCall: 'listPipelines',
-                filterKey: 'PipelineId',
-                filterValue: 'Id'
-            }
-        },
         ELB: {
             describeLoadBalancerPolicies: {
                 reliesOnService: 'elb',
@@ -2090,14 +2068,6 @@ var postcalls = [
                 reliesOnCall: 'listBots',
                 filterKey: 'botId',
                 filterValue: 'botId'
-            }
-        },
-        QLDB: {
-            describeLedger: {
-                reliesOnService: 'qldb',
-                reliesOnCall: 'listLedgers',
-                filterKey: 'Name',
-                filterValue: 'Name'
             }
         },
         ManagedBlockchain: {

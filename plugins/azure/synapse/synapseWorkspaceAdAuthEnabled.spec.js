@@ -57,23 +57,23 @@ describe('synapseWorkspaceAdAuthEnabled', function () {
             });
         });
 
-        it('should give passing result if workspace has AAD auth enabled', function (done) {
+        it('should give passing result if workspace has Entra ID auth enabled', function (done) {
             const cache = createCache([workspaces[0]], null);
             synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Synapse workspace has Active Directory authentication enabled');
+                expect(results[0].message).to.include('Synapse workspace has Entra ID authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
         });
 
-        it('should give failing result if workspace does not have AAD auth', function (done) {
+        it('should give failing result if workspace does not have Entra ID auth', function (done) {
             const cache = createCache([workspaces[1]], null);
             synapseWorkspaceAdAuthEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Synapse workspace does not have Active Directory authentication enabled');
+                expect(results[0].message).to.include('Synapse workspace does not have Entra ID authentication enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

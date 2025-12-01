@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Developer Tools',
     severity: 'Medium',
     description: 'Ensures that Azure API Management instance has managed identity enabled.',
-    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens.',
+    more_info: 'Enabling managed identities eliminate the need for developers having to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Entra ID tokens.',
     link: 'https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-use-managed-service-identity',
     recommended_action: 'Modify API Management instance and add managed identity.',
     apis: ['apiManagementService:list'],

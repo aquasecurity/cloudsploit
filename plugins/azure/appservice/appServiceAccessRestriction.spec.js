@@ -11,6 +11,7 @@ const webApps = [
 const configurations = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Enabled',
         'ipSecurityRestrictions': [
             {
               'ipAddress': 'Any',
@@ -23,6 +24,7 @@ const configurations = [
     },
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Enabled',
         'ipSecurityRestrictions': [ 
             {
                 'ipAddress': '208.130.0.0/16',
@@ -39,6 +41,22 @@ const configurations = [
                 'description': 'Deny all access'
             }
         ]
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Disabled'
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Web/sites/app1/config/web',
+        'publicNetworkAccess': 'Enabled',
+        'ipSecurityRestrictions': [ 
+            {
+                'ipAddress': '192.168.1.0/24',
+                'action': 'Allow',
+                'priority': 100,
+                'name': 'Office Network'
+            }
+        ],
     }
 ];
 
@@ -123,7 +141,18 @@ describe('appServiceAccessRestriction', function() {
             });
         });
 
-        it('should give passing result if app Service has access restriction enabled', function(done) {
+        it('should give passing result if public network access is disabled (most secure)', function(done) {
+            const cache = createCache([webApps[0]], [configurations[2]]);
+            appServiceAccessRestriction.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('App Service has access restriction enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if app Service has explicit Any/Deny rule', function(done) {
             const cache = createCache([webApps[0]], [configurations[1]]);
             appServiceAccessRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
@@ -134,8 +163,19 @@ describe('appServiceAccessRestriction', function() {
             });
         });
 
-        it('should give failing result if App Service does not have access restriction enabled', function(done) {
+        it('should give failing result if App Service has allow all rule', function(done) {
             const cache = createCache([webApps[0]], [configurations[0]]);
+            appServiceAccessRestriction.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('App Service does not have access restriction enabled');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if App Service has specific IP restrictions but no Any/Deny rule', function(done) {
+            const cache = createCache([webApps[0]], [configurations[3]]);
             appServiceAccessRestriction.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
