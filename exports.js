@@ -1626,7 +1626,7 @@ module.exports = {
         'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
         
         'cloudFunctionV2HttpsOnly'      : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
-        'cloudFunctionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2DefaultServiceAccount.js'),
+        'functionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/functionV2DefaultServiceAccount.js'),
         'cloudFunctionV2IngressSettings': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2IngressSettings.js'),
         'cloudFunctionV2LabelsAdded'    : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2LabelsAdded.js'),
         'cloudFunctionV2OldRuntime'     : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2OldRuntime.js'),

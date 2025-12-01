@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var plugin = require('./cloudFunctionV2DefaultServiceAccount');
+var plugin = require('./functionV2DefaultServiceAccount');
 
 
 const functions = [
