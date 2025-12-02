@@ -6,7 +6,7 @@ module.exports = {
     category: 'AutoScaling',
     domain: 'Availability',
     severity: 'Medium',
-    description: 'Ensures EC2 Auto Scaling Groups propagate tags to EC2 instances that it launches.',
+    description: 'Ensure that EC2 Auto Scaling Groups propagate tags to EC2 instances that it launches.',
     more_info: 'Tags can help with managing, identifying, organizing, searching for, and filtering resources. Additionally, tags can help with security and compliance. Tags should be propagated from an Auto Scaling group to the EC2 instances that it launches.',
     link: 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-tagging.html',
     recommended_action: 'Enable tag propagation for all tags on Auto Scaling Groups by setting PropagateAtLaunch to true for each tag.',
