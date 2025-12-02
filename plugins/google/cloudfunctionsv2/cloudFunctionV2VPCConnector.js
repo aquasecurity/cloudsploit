@@ -6,7 +6,7 @@ module.exports = {
     category: 'Cloud Functions',
     domain: 'Serverless',
     severity: 'High',
-    description: 'Ensure Cloud Functions V2 are allowed to access only VPC resources.',
+    description: 'Ensure that Cloud Functions V2 are allowed to access only VPC resources.',
     more_info: 'Cloud Functions V2 may require to connect directly to Compute Engine VM instances, Memorystore instances, Cloud SQL instances, and any other resources. It is a best practice to send requests to these resources using an internal IP address by connecting to VPC network using "Serverless VPC Access" configuration.',
     link: 'https://cloud.google.com/functions/docs/networking/connecting-vpc#create-connector',
     recommended_action: 'Ensure all Cloud Functions V2 are using serverless VPC connectors.',

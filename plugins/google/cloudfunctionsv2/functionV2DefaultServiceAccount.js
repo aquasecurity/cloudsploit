@@ -6,7 +6,7 @@ module.exports = {
     category: 'Cloud Functions',
     domain: 'Serverless',
     severity: 'Medium',
-    description: 'Ensures that Cloud Functions V2 are not using the default service account.',
+    description: 'Ensure that Cloud Functions V2 are not using the default service account.',
     more_info: 'Using the default service account for Cloud Functions V2 can lead to privilege escalation and overly permissive access. It is recommended to use a user-managed service account for each function in a project instead of the default service account. A managed service account allows more precise access control by granting only the necessary permissions through Identity and Access Management (IAM).',
     link: 'https://cloud.google.com/functions/docs/securing/function-identity',
     recommended_action: 'Ensure that no Cloud Functions V2 are using the default service account.',

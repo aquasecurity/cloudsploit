@@ -6,7 +6,7 @@ module.exports = {
     category: 'Cloud Functions',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensure Cloud Functions V2 are not using deprecated runtime versions.',
+    description: 'Ensure that Cloud Functions V2 are not using deprecated runtime versions.',
     more_info: 'Cloud Functions V2 runtimes should be kept current with recent versions of the underlying codebase. It is recommended to update to the latest supported versions to avoid potential security risks and ensure compatibility.',
     link: 'https://cloud.google.com/functions/docs/concepts/execution-environment',
     recommended_action: 'Modify Cloud Functions V2 to use latest versions.',
