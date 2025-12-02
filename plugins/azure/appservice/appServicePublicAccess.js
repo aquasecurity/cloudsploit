@@ -13,12 +13,12 @@ module.exports = {
     apis: ['webApps:list', 'webApps:listConfigurations'],
     realtime_triggers: ['microsoftweb:sites:write', 'microsoftweb:sites:delete', 'microsoftweb:sites:config:write', 'microsoftweb:sites:config:delete'],
 
-    run: function (cache, settings, callback) {
+    run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.webApps, function (location, rcb) {
+        async.each(locations.webApps, function(location, rcb) {
             var webApps = helpers.addSource(cache, source,
                 ['webApps', 'list', location]);
 
@@ -35,7 +35,7 @@ module.exports = {
                 return rcb();
             }
 
-            webApps.data.forEach(function (webApp) {
+            webApps.data.forEach(function(webApp) {
                 if (!webApp.id) return;
 
                 var webConfigs = helpers.addSource(cache, source,
@@ -62,7 +62,7 @@ module.exports = {
             });
 
             rcb();
-        }, function () {
+        }, function() {
             callback(null, results, source);
         });
     }
