@@ -23,8 +23,8 @@ module.exports = {
         if (!listProtections) return callback(null, results, source);
 
         if (listProtections.err &&
-            listProtections.err.code &&
-            listProtections.err.code == 'ResourceNotFoundException') {
+            listProtections.err.name &&
+            listProtections.err.name == 'ResourceNotFoundException') {
             helpers.addResult(results, 2, 'Shield subscription is not enabled');
             return callback(null, results, source);
         }

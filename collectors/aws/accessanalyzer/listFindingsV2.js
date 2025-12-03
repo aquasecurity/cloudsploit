@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    AccessAnalyzer
+} = require('@aws-sdk/client-accessanalyzer');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var accessanalyzer = new AWS.AccessAnalyzer(AWSConfig);
+    var accessanalyzer = new AccessAnalyzer(AWSConfig);
     async.eachLimit(collection.accessanalyzer.listAnalyzers[AWSConfig.region].data, 15, function(analyzer, cb) {
         collection.accessanalyzer.listFindingsV2[AWSConfig.region][analyzer.arn] = {};
         var params = {
