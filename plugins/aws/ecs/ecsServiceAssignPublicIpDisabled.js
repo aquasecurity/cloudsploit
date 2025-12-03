@@ -35,20 +35,21 @@ module.exports = {
                 return rcb();
             }
 
-            var servicesWithIssues = [];
-            var hasServices = false;
-
             for (var clusterArn of listClusters.data) {
                 var listServices = helpers.addSource(cache, source,
                     ['ecs', 'listServices', region, clusterArn]);
 
-                if (!listServices || listServices.err || !listServices.data || !listServices.data.length) {
-                    helpers.addResult(results, 0,
-                        'No ECS services found in cluster ', region, clusterArn);
+                if (!listServices || listServices.err || !listServices.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for ECS services: ' + helpers.addError(listServices), region, clusterArn);
                     continue;
                 }
 
-                hasServices = true;
+                if (!listServices.data.length) {
+                    helpers.addResult(results, 0,
+                        'No ECS services found in cluster', region, clusterArn);
+                    continue;
+                }
 
                 for (var serviceArn of listServices.data) {
                     var describeServices = helpers.addSource(cache, source,
@@ -60,19 +61,7 @@ module.exports = {
                         continue;
                     }
 
-                    if (!describeServices.data.services || !describeServices.data.services.length) {
-                        helpers.addResult(results, 3,
-                            'Unable to describe ECS service: no service data returned', region, serviceArn);
-                        continue;
-                    }
-
                     var service = describeServices.data.services[0];
-                    if (!service) {
-                        helpers.addResult(results, 3,
-                            'Unable to describe ECS service: service object is empty', region, serviceArn);
-                        continue;
-                    }
-
                     var networkMode = service.networkConfiguration;
                     var assignPublicIp = null;
 
@@ -80,27 +69,16 @@ module.exports = {
                         assignPublicIp = networkMode.awsvpcConfiguration.assignPublicIp;
                         var assignPublicIpLower = assignPublicIp ? assignPublicIp.toLowerCase() : '';
                         if (assignPublicIpLower !== 'disabled') {
-                            servicesWithIssues.push({
-                                serviceArn: serviceArn,
-                                serviceName: service.serviceName,
-                                clusterArn: clusterArn,
-                                assignPublicIp: assignPublicIp || 'not set (defaults to ENABLED)'
-                            });
+                            helpers.addResult(results, 2,
+                                'ECS service does not have assignPublicIp set to DISABLED',
+                                region, serviceArn);
+                        } else {
+                            helpers.addResult(results, 0,
+                                'ECS service has assignPublicIp set to DISABLED',
+                                region, serviceArn);
                         }
                     }
                 }
-            }
-
-            if (servicesWithIssues.length > 0) {
-                for (var item of servicesWithIssues) {
-                    helpers.addResult(results, 2,
-                        `ECS service "${item.serviceName}" has assignPublicIp set to ${item.assignPublicIp} instead of DISABLED`,
-                        region, item.serviceArn);
-                }
-            } else if (hasServices) {
-                helpers.addResult(results, 0,
-                    'All ECS services with awsvpcConfiguration have assignPublicIp set to DISABLED',
-                    region);
             }
             rcb();
         }, function() {
@@ -108,4 +86,5 @@ module.exports = {
         });
     }
 };
+
 
