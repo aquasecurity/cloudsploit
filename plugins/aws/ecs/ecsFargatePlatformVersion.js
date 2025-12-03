@@ -50,6 +50,8 @@ module.exports = {
                     continue;
                 }
 
+                var hasFargateServices = false;
+
                 for (var serviceArn of listServices.data) {
                     var describeServices = helpers.addSource(cache, source,
                         ['ecs', 'describeServices', region, serviceArn]);
@@ -60,16 +62,8 @@ module.exports = {
                         continue;
                     }
 
-                    if (!describeServices.data.services || !describeServices.data.services.length) {
-                        helpers.addResult(results, 3,
-                            'Unable to describe ECS service: no service data returned', region, serviceArn);
-                        continue;
-                    }
-
                     var service = describeServices.data.services[0];
-
-                    if (!service) continue;
-
+                    
                     var isFargate = false;
                     if (service.launchType && service.launchType.toLowerCase() === 'fargate') {
                         isFargate = true;
@@ -84,13 +78,9 @@ module.exports = {
                         }
                     }
 
-                    if (!isFargate) {
-                        helpers.addResult(results, 0,
-                            'ECS service is not a Fargate service',
-                            region, serviceArn);
-                        continue;
-                    }
+                    if (!isFargate) continue;
 
+                    hasFargateServices = true;
                     var platformVersion = service.platformVersion;
                     var platformVersionLower = platformVersion ? platformVersion.toLowerCase() : '';
 
@@ -103,6 +93,12 @@ module.exports = {
                             'ECS Fargate service is using the latest platform version (LATEST)',
                             region, serviceArn);
                     }
+                }
+
+                if (!hasFargateServices) {
+                    helpers.addResult(results, 0,
+                        'No ECS Fargate services found in cluster',
+                        region, clusterArn);
                 }
             }
             rcb();

@@ -23,11 +23,15 @@ const createCache = (clusters, servicesMap, describeServicesMap) => {
         }
     };
 
-    if (clusters && clusters.length && servicesMap) {
+    if (clusters && clusters.length) {
         for (var clusterArn of clusters) {
-            if (servicesMap[clusterArn]) {
+            if (servicesMap && servicesMap[clusterArn]) {
                 cache.ecs.listServices['us-east-1'][clusterArn] = {
                     data: servicesMap[clusterArn]
+                };
+            } else {
+                cache.ecs.listServices['us-east-1'][clusterArn] = {
+                    data: []
                 };
             }
         }
@@ -65,7 +69,7 @@ describe('ecsFargatePlatformVersion', function () {
             ecsFargatePlatformVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No ECS clusters found');
+                expect(results[0].message).to.include('No ECS clusters present');
                 done();
             });
         });
@@ -141,7 +145,7 @@ describe('ecsFargatePlatformVersion', function () {
             ecsFargatePlatformVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('requires LATEST');
+                expect(results[0].message).to.include('is not using the latest platform version');
                 done();
             });
         });
@@ -192,8 +196,7 @@ describe('ecsFargatePlatformVersion', function () {
             ecsFargatePlatformVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('not set');
-                expect(results[0].message).to.include('requires LATEST');
+                expect(results[0].message).to.include('is not using the latest platform version');
                 done();
             });
         });
