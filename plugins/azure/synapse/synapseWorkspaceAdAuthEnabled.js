@@ -4,6 +4,7 @@ var helpers = require('../../../helpers/azure');
 module.exports = {
     title: 'Synapse Workspace Entra ID Auth Enabled',
     category: 'AI & ML',
+    owasp: ['LLM07'],
     domain: 'Machine Learning',
     severity: 'Medium',
     description: 'Ensures that Azure Synapse workspace has Entra ID authentication enabled.',
