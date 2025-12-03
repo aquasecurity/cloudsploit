@@ -6,7 +6,7 @@ module.exports = {
     category: 'App Service',
     domain: 'Application Integration',
     severity: 'High',
-    description: 'Ensures that Azure App Services have public network access disabled to prevent exposure of the application to the internet.',
+    description: 'Ensure that Azure App Services have public network access disabled to prevent exposure of the application to the internet.',
     more_info: 'By default, App Services may allow public network traffic unless explicitly disabled. Public network access can be disabled using the publicNetworkAccess property or by configuring a private endpoint. Disabling public network access ensures that your applications are only reachable through secure private endpoints and not exposed to the public internet.',
     recommended_action: 'Set the Public network access setting to Disabled in the App Service Networking configuration, or configure a private endpoint to restrict access. You can do this via the Azure Portal, CLI, or ARM template.',
     link: 'https://learn.microsoft.com/en-us/azure/app-service/overview-access-restrictions#ip-based-access-restriction-rules',
