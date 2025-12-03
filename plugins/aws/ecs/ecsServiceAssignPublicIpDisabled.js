@@ -54,15 +54,24 @@ module.exports = {
                     var describeServices = helpers.addSource(cache, source,
                         ['ecs', 'describeServices', region, serviceArn]);
 
-                    if (!describeServices) continue;
+                    if (!describeServices || describeServices.err || !describeServices.data) {
+                        helpers.addResult(results, 3,
+                            'Unable to describe ECS service: ' + helpers.addError(describeServices), region, serviceArn);
+                        continue;
+                    }
 
-                    if (describeServices.err || !describeServices.data ||
-                        !describeServices.data.services || !describeServices.data.services.length) {
+                    if (!describeServices.data.services || !describeServices.data.services.length) {
+                        helpers.addResult(results, 3,
+                            'Unable to describe ECS service: no service data returned', region, serviceArn);
                         continue;
                     }
 
                     var service = describeServices.data.services[0];
-                    if (!service) continue;
+                    if (!service) {
+                        helpers.addResult(results, 3,
+                            'Unable to describe ECS service: service object is empty', region, serviceArn);
+                        continue;
+                    }
 
                     var networkMode = service.networkConfiguration;
                     var assignPublicIp = null;
