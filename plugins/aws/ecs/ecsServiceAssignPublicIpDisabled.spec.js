@@ -23,11 +23,15 @@ const createCache = (clusters, servicesMap, describeServicesMap) => {
         }
     };
 
-    if (clusters && clusters.length && servicesMap) {
+    if (clusters && clusters.length) {
         for (var clusterArn of clusters) {
-            if (servicesMap[clusterArn]) {
+            if (servicesMap && servicesMap[clusterArn]) {
                 cache.ecs.listServices['us-east-1'][clusterArn] = {
                     data: servicesMap[clusterArn]
+                };
+            } else {
+                cache.ecs.listServices['us-east-1'][clusterArn] = {
+                    data: []
                 };
             }
         }
@@ -105,7 +109,7 @@ describe('ecsServiceAssignPublicIpDisabled', function () {
             ecsServiceAssignPublicIpDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('assignPublicIp set to DISABLED');
+                expect(results[0].message).to.include('has assignPublicIp set to DISABLED');
                 done();
             });
         });
@@ -135,7 +139,7 @@ describe('ecsServiceAssignPublicIpDisabled', function () {
             ecsServiceAssignPublicIpDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('assignPublicIp set to ENABLED');
+                expect(results[0].message).to.include('does not have assignPublicIp set to DISABLED');
                 done();
             });
         });
