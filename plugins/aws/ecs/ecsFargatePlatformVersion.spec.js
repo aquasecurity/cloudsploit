@@ -176,7 +176,7 @@ describe('ecsFargatePlatformVersion', function () {
             });
         });
 
-        it('should FAIL if Fargate service has no platform version set', function (done) {
+        it('should FAIL if Fargate service has no platform version configured', function (done) {
             const servicesMap = {
                 'arn:aws:ecs:us-east-1:112233445566:cluster/test-cluster': [
                     'arn:aws:ecs:us-east-1:112233445566:service/test-cluster/my-service'
