@@ -23,8 +23,8 @@ module.exports = {
         if (!describeSubscription) return callback(null, results, source);
 
         if (describeSubscription.err &&
-            describeSubscription.err.code &&
-            describeSubscription.err.code == 'ResourceNotFoundException') {
+            describeSubscription.err.name &&
+            describeSubscription.err.name == 'ResourceNotFoundException') {
             helpers.addResult(results, 2, 'Shield subscription is not enabled');
             return callback(null, results, source);
         }
