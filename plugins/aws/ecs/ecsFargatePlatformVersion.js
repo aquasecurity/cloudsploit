@@ -84,7 +84,12 @@ module.exports = {
                         }
                     }
 
-                    if (!isFargate) continue;
+                    if (!isFargate) {
+                        helpers.addResult(results, 0,
+                            'ECS service is not a Fargate service',
+                            region, serviceArn);
+                        continue;
+                    }
 
                     var platformVersion = service.platformVersion;
                     var platformVersionLower = platformVersion ? platformVersion.toLowerCase() : '';
