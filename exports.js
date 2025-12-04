@@ -707,6 +707,7 @@ module.exports = {
         'ecsClustersHaveTags'           : require(__dirname + '/plugins/aws/ecs/ecsClustersHaveTags.js'),
         'ecsClusterWithActiveTask'      : require(__dirname + '/plugins/aws/ecs/ecsClusterWithActiveTask.js'),
         'ecsClusterActiveService'       : require(__dirname + '/plugins/aws/ecs/ecsClusterActiveService.js'),
+        'ecsServicePublicIpDisabled'    : require(__dirname + '/plugins/aws/ecs/ecsServicePublicIpDisabled.js'),
         'ecsFargatePlatformVersion'     : require(__dirname + '/plugins/aws/ecs/ecsFargatePlatformVersion.js'),
 
         'cognitoHasWafEnabled'          : require(__dirname + '/plugins/aws/cognito/cognitoHasWafEnabled.js'),
