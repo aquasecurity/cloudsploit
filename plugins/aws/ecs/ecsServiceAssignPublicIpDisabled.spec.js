@@ -84,7 +84,7 @@ describe('ecsServiceAssignPublicIpDisabled', function () {
             });
         });
 
-        it('should PASS if service has assignPublicIp set to DISABLED', function (done) {
+        it('should PASS if service has assignPublicIp set to disabled', function (done) {
             const servicesMap = {
                 'arn:aws:ecs:us-east-1:112233445566:cluster/test-cluster': [
                     'arn:aws:ecs:us-east-1:112233445566:service/test-cluster/my-service'
@@ -109,7 +109,7 @@ describe('ecsServiceAssignPublicIpDisabled', function () {
             ecsServiceAssignPublicIpDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('has assignPublicIp set to DISABLED');
+                expect(results[0].message).to.include('has assignPublicIp set to disabled');
                 done();
             });
         });
@@ -139,7 +139,7 @@ describe('ecsServiceAssignPublicIpDisabled', function () {
             ecsServiceAssignPublicIpDisabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('does not have assignPublicIp set to DISABLED');
+                expect(results[0].message).to.include('does not have assignPublicIp set to disabled');
                 done();
             });
         });

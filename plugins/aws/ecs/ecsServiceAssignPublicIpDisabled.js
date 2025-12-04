@@ -2,11 +2,11 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ECS Service Assign Public IP Disabled',
+    title: 'ECS Service Public IP Disabled',
     category: 'ECS',
     domain: 'Containers',
     severity: 'High',
-    description: 'Ensures that assignPublicIp is set to disabled for Amazon ECS services to restrict direct exposure of containers to the public internet.',
+    description: 'Ensure that assignPublicIp is set to disabled for Amazon ECS services.',
     more_info: 'Enabling public IP assignment could expose container application servers to unintended or unauthorized access. Services should use private networking with NAT gateways or VPC endpoints for outbound internet access.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html',
     recommended_action: 'Modify ECS services to set assignPublicIp to disabled in the network configuration.',
@@ -70,11 +70,11 @@ module.exports = {
                         var assignPublicIpLower = assignPublicIp ? assignPublicIp.toLowerCase() : '';
                         if (assignPublicIpLower !== 'disabled') {
                             helpers.addResult(results, 2,
-                                'ECS service does not have assignPublicIp set to DISABLED',
+                                'ECS service does not have assignPublicIp set to disabled',
                                 region, serviceArn);
                         } else {
                             helpers.addResult(results, 0,
-                                'ECS service has assignPublicIp set to DISABLED',
+                                'ECS service has assignPublicIp set to disabled',
                                 region, serviceArn);
                         }
                     }
