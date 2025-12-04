@@ -7,10 +7,18 @@ module.exports = {
     domain: 'Identity and Access Management',
     severity: 'High',
     description: 'Ensure that there are no unused AWS WorkSpaces instances available within your AWS account.',
-    more_info: 'An AWS WorkSpaces instance is considered unused if it has 0 known user connections registered within the past 30 days. Remove these instances to avoid unnecessary billing.',
+    more_info: 'An AWS WorkSpaces instance is considered unused if it has 0 known user connections registered within the configured inactivity threshold. Remove these instances to avoid unnecessary billing.',
     link: 'https://aws.amazon.com/workspaces/pricing/',
     recommended_action: 'Identify and remove unused Workspaces instance',
     apis: ['WorkSpaces:describeWorkspacesConnectionStatus','STS:getCallerIdentity'],
+    settings: {
+        workspaces_inactivity_threshold_days: {
+            name: 'WorkSpaces Inactivity Threshold (Days)',
+            description: 'Number of days of inactivity before a WorkSpace is considered unused',
+            regex: '^[0-9]{1,4}$',
+            default: '30'
+        }
+    },
     realtime_triggers: ['workspace:CreateWorkSpaces','workspace:TerminateWorkspaces'],
 
     run: function(cache, settings, callback) {
@@ -18,6 +26,10 @@ module.exports = {
         var source = {};
         var regions = helpers.regions(settings);
        
+        var config = {
+            workspaces_inactivity_threshold_days: parseInt(settings.workspaces_inactivity_threshold_days || this.settings.workspaces_inactivity_threshold_days.default)
+        };
+
         var awsOrGov = helpers.defaultPartition(settings);
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion , 'data']);
@@ -47,14 +59,16 @@ module.exports = {
                 if (!workspace.LastKnownUserConnectionTimestamp) {
                     helpers.addResult(results, 2,
                         'WorkSpace does not have any known user connection', region, resource);
-                } else if (workspace.LastKnownUserConnectionTimestamp &&
-                    (helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp)) > 30) {
-                    helpers.addResult(results, 2,
-                        `WorkSpace is not in use for last ${helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp)}`,
-                        region, resource);
                 } else {
-                    helpers.addResult(results, 0,
-                        'WorkSpace is in use', region, resource);
+                    var daysSinceLastConnection = helpers.daysBetween(new Date(), workspace.LastKnownUserConnectionTimestamp);
+                    if (daysSinceLastConnection > config.workspaces_inactivity_threshold_days) {
+                        helpers.addResult(results, 2,
+                            `WorkSpace is not in use for last ${daysSinceLastConnection} days (threshold: ${config.workspaces_inactivity_threshold_days} days)`,
+                            region, resource);
+                    } else {
+                        helpers.addResult(results, 0,
+                            'WorkSpace is in use', region, resource);
+                    }
                 }
             });
 
