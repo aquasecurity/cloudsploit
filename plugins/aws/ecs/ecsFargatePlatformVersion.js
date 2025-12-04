@@ -2,14 +2,14 @@ var async = require('async');
 var helpers = require('../../../helpers/aws');
 
 module.exports = {
-    title: 'ECS Fargate Platform Version',
+    title: 'ECS Fargate Latest Platform Version',
     category: 'ECS',
     domain: 'Containers',
     severity: 'Medium',
-    description: 'Ensures that Amazon ECS Fargate services are using the latest Fargate platform version.',
+    description: 'Ensure that Amazon ECS Fargate services are using the latest Fargate platform version.',
     more_info: 'Using the latest Fargate platform version ensures services benefit from up-to-date security patches, performance improvements, and feature updates. Services should use LATEST to automatically receive the most recent platform version.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html',
-    recommended_action: 'Update ECS Fargate services to use the latest platform version (LATEST) to ensure they benefit from the latest security enhancements and features.',
+    recommended_action: 'Update ECS Fargate services to use the latest platform version.',
     apis: ['ECS:listClusters', 'ECS:listServices', 'ECS:describeServices'],
     realtime_triggers: ['ecs:CreateCluster', 'ecs:CreateService', 'ecs:UpdateService', 'ecs:DeleteService', 'ecs:DeleteCluster'],
     run: function(cache, settings, callback){
@@ -30,7 +30,7 @@ module.exports = {
             }
 
             if (!listClusters.data.length) {
-                helpers.addResult(results, 0, 'No ECS clusters present', region);
+                helpers.addResult(results, 0, 'No ECS clusters found', region);
                 return rcb();
             }
 
@@ -46,7 +46,7 @@ module.exports = {
 
                 if (!listServices.data.length) {
                     helpers.addResult(results, 0,
-                        'No ECS services found in cluster', region, clusterArn);
+                        'No ECS Fargate services found in cluster', region, clusterArn);
                     continue;
                 }
 
@@ -63,13 +63,14 @@ module.exports = {
                     }
 
                     var service = describeServices.data.services[0];
+                    if (!service) continue;
                     
                     var isFargate = false;
+                    
                     if (service.launchType && service.launchType.toLowerCase() === 'fargate') {
                         isFargate = true;
-                    } else if (service.platformVersion) {
-                        isFargate = true;
-                    } else if (service.capacityProviderStrategy && service.capacityProviderStrategy.length > 0) {
+                    }
+                    else if (service.capacityProviderStrategy && service.capacityProviderStrategy.length > 0) {
                         for (var cp of service.capacityProviderStrategy) {
                             if (cp.capacityProvider && cp.capacityProvider.toLowerCase().indexOf('fargate') !== -1) {
                                 isFargate = true;
@@ -90,7 +91,7 @@ module.exports = {
                             region, serviceArn);
                     } else {
                         helpers.addResult(results, 0,
-                            'ECS Fargate service is using the latest platform version (LATEST)',
+                            'ECS Fargate service is using the latest platform version',
                             region, serviceArn);
                     }
                 }

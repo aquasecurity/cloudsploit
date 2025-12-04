@@ -69,7 +69,7 @@ describe('ecsFargatePlatformVersion', function () {
             ecsFargatePlatformVersion.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('No ECS clusters present');
+                expect(results[0].message).to.include('No ECS clusters found');
                 done();
             });
         });
