@@ -51,6 +51,7 @@ module.exports = {
         'webTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/webTierIamRole.js'),
         'appTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/appTierIamRole.js'),
         'asgUnusedLaunchConfiguration'  : require(__dirname + '/plugins/aws/autoscaling/asgUnusedLaunchConfiguration.js'),
+        'asgTagPropagation'             : require(__dirname + '/plugins/aws/autoscaling/asgTagPropagation.js'),
 
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
@@ -187,6 +188,8 @@ module.exports = {
         'publicAmi'                     : require(__dirname + '/plugins/aws/ec2/publicAmi.js'),
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
         'amiHasTags'                    : require(__dirname + '/plugins/aws/ec2/amiHasTags.js'),
+        'amiNamingConvention'           : require(__dirname + '/plugins/aws/ec2/amiNamingConvention.js'),
+        'oldAmi'                        : require(__dirname + '/plugins/aws/ec2/oldAmi.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsBackupEnabled'              : require(__dirname + '/plugins/aws/ec2/ebsBackupEnabled.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
@@ -657,6 +660,8 @@ module.exports = {
         'docdbCertificateRotated'       : require(__dirname + '/plugins/aws/documentDB/docdbCertificateRotated.js'),
         'docdbClusterProfilerEnabled'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterProfilerEnabled.js'),
         'docdbEncryptionInTransit'      : require(__dirname + '/plugins/aws/documentDB/docdbEncryptionInTransit.js'),
+        'docdbAuditLoggingEnabled'      : require(__dirname + '/plugins/aws/documentDB/docdbAuditLoggingEnabled.js'),
+
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
         'instanceReportsEncrypted'      : require(__dirname + '/plugins/aws/connect/instanceReportsEncrypted.js'),
@@ -1014,6 +1019,7 @@ module.exports = {
         'appServiceDiagnosticLogs'      : require(__dirname + '/plugins/azure/appservice/appServiceDiagnosticLogs.js'),
         'functionPrivilegeAnalysis'     : require(__dirname + '/plugins/azure/appservice/functionPrivilegeAnalysis.js'),
         'functionAppNetworkExposure'    : require(__dirname + '/plugins/azure/appservice/functionAppNetworkExposure.js'),
+        'appServicePublicAccess'        : require(__dirname + '/plugins/azure/appservice/appServicePublicAccess.js'), 
 
         'rbacEnabled'                   : require(__dirname + '/plugins/azure/kubernetesservice/rbacEnabled.js'),
         'aksManagedIdentity'            : require(__dirname + '/plugins/azure/kubernetesservice/aksManagedIdentity.js'),
@@ -1624,6 +1630,14 @@ module.exports = {
         'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
         'cloudFunctionNetworkExposure'  : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionNetworkExposure.js'),
         'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
+        
+        'cloudFunctionV2HttpsOnly'      : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
+        'functionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/functionV2DefaultServiceAccount.js'),
+        'cloudFunctionV2IngressSettings': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2IngressSettings.js'),
+        'cloudFunctionV2LabelsAdded'    : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2LabelsAdded.js'),
+        'cloudFunctionV2OldRuntime'     : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2OldRuntime.js'),
+        'cloudFunctionV2VPCConnector'   : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2VPCConnector.js'),
+
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
         'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),

@@ -52,6 +52,10 @@ module.exports = {
     functions: {
         list: 'name'
     },
+    functionsv2: {
+        list: 'name',
+        getIamPolicy: 'name'
+    },
     instanceGroups: {
         aggregatedList: ''
     },
