@@ -659,6 +659,7 @@ module.exports = {
         'docdbClusterBackupRetention'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterBackupRetention.js'),
         'docdbCertificateRotated'       : require(__dirname + '/plugins/aws/documentDB/docdbCertificateRotated.js'),
         'docdbClusterProfilerEnabled'   : require(__dirname + '/plugins/aws/documentDB/docdbClusterProfilerEnabled.js'),
+        'docdbAuditLoggingEnabled'      : require(__dirname + '/plugins/aws/documentDB/docdbAuditLoggingEnabled.js'),
 
         'instanceMediaStreamsEncrypted' : require(__dirname + '/plugins/aws/connect/instanceMediaStreamsEncrypted.js'),
         'instanceTranscriptsEncrypted'  : require(__dirname + '/plugins/aws/connect/instanceTranscriptsEncrypted.js'),
