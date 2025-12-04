@@ -6,7 +6,7 @@ module.exports = {
     category: 'DocumentDB',
     domain: 'Databases',
     severity: 'Medium',
-    description: 'Ensure that audit logging is enabled for DocumentDB clusters ',
+    description: 'Ensure that audit logging is enabled for DocumentDB clusters.',
     more_info: 'Audit logging in Amazon DocumentDB provides visibility into authentication events, queries, and data changes. It helps detect unauthorized access, supports troubleshooting, and meets compliance requirements. Logs should be sent to CloudWatch or a SIEM for centralized monitoring and alerting.',
     recommended_action: 'Modify DocumentDB cluster and enable audit logging feature.',
     link: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/profiling.html',
