@@ -72,8 +72,7 @@ module.exports = {
                     
                     if (service.launchType && service.launchType.toLowerCase() === 'fargate') {
                         isFargate = true;
-                    }
-                    else if (service.capacityProviderStrategy && service.capacityProviderStrategy.length > 0) {
+                    } else if (service.capacityProviderStrategy && service.capacityProviderStrategy.length > 0) {
                         for (var cp of service.capacityProviderStrategy) {
                             if (cp.capacityProvider && cp.capacityProvider.toLowerCase().indexOf('fargate') !== -1) {
                                 isFargate = true;
