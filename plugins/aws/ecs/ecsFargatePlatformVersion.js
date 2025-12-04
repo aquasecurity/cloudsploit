@@ -7,7 +7,7 @@ module.exports = {
     domain: 'Containers',
     severity: 'Medium',
     description: 'Ensure that Amazon ECS Fargate services are using the latest Fargate platform version.',
-    more_info: 'Using the latest Fargate platform version ensures services benefit from up-to-date security patches, performance improvements, and feature updates. Services should use LATEST to automatically receive the most recent platform version.',
+    more_info: 'Using the latest Fargate platform version ensures services benefit from up-to-date security patches, performance improvements, and feature updates.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform_versions.html',
     recommended_action: 'Update ECS Fargate services to use the latest platform version.',
     apis: ['ECS:listClusters', 'ECS:listServices', 'ECS:describeServices'],
