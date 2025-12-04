@@ -390,6 +390,18 @@ var calls = {
             enabled: true
         }
     },
+    functionsv2: {
+        list: {
+            url: 'https://cloudfunctions.googleapis.com/v2/projects/{projectId}/locations/{locationId}/functions',
+            location: 'region',
+            paginationKey: 'pageSize',
+            pagination: true,
+            dataFilterKey: 'functions'
+        },
+        sendIntegration: {
+            enabled: true
+        }
+    },
     keyRings: {
         list: {
             url: 'https://cloudkms.googleapis.com/v1/projects/{projectId}/locations/{locationId}/keyRings',
@@ -848,6 +860,17 @@ var postcalls = {
             reliesOnService: ['functions'],
             reliesOnCall: ['list'],
             properties: ['name']
+        }
+    },
+    functionsv2: {
+        getIamPolicy: {
+            url: 'https://cloudfunctions.googleapis.com/v2/{name}:getIamPolicy',
+            location: null,
+            method: 'POST',
+            reliesOnService: ['functionsv2'],
+            reliesOnCall: ['list'],
+            properties: ['name'],
+            body: { options: { requestedPolicyVersion: 3 } }
         }
     },
     jobs: {
