@@ -6,7 +6,7 @@ module.exports = {
     category: 'ECS',
     domain: 'Containers',
     severity: 'High',
-    description: 'Ensure that Amazon ECS services have assignPublicIp set to disabled. ',
+    description: 'Ensure that Amazon ECS services have assignPublicIp set to disabled.',
     more_info: 'Enabling public IP assignment could expose container application servers to unintended or unauthorized access. Services should use private networking with NAT gateways or VPC endpoints for outbound internet access.',
     link: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html',
     recommended_action: 'Modify ECS services to set assignPublicIp to disabled in the network configuration.',
