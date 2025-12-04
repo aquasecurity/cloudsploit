@@ -12,10 +12,16 @@ const describeWorkspacesConnectionStatus = [
         WorkspaceId: "test02",
         ConnectionState:"DISCONNECTED",
         ConnectionStateCheckTimestamp:"2021-10-04T08:56:18.935Z",
-        LastKnownUserConnectionTimestamp: "2020-10-04T08:56:18.935Z"
+        LastKnownUserConnectionTimestamp: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString()
     },
     {
-        WorkspaceId: "test02",
+        WorkspaceId: "test03",
+        ConnectionState:"DISCONNECTED",
+        ConnectionStateCheckTimestamp:"2021-10-04T08:56:18.935Z",
+        LastKnownUserConnectionTimestamp: new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+        WorkspaceId: "test04",
         ConnectionState:"DISCONNECTED",
         ConnectionStateCheckTimestamp:"2021-10-04T08:56:18.935Z"
     },
@@ -70,12 +76,27 @@ describe('unusedWorkspaces', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('threshold: 30 days');
+                done();
+            });
+        });
+
+        it('should FAIL if Workspace is not in use for 150 days with 120 day threshold', function (done) {
+            const cache = createCache([describeWorkspacesConnectionStatus[2]]);
+            const settings = {
+                workspaces_inactivity_threshold_days: '120'
+            };
+            unusedWorkspaces.run(cache, settings, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('threshold: 120 days');
                 done();
             });
         });
 
         it('should FAIL if WorkSpace does not have any known user connection', function (done) {
-            const cache = createCache([describeWorkspacesConnectionStatus[2]]);
+            const cache = createCache([describeWorkspacesConnectionStatus[3]]);
             unusedWorkspaces.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
