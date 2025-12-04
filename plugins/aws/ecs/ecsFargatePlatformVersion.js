@@ -62,7 +62,10 @@ module.exports = {
                         continue;
                     }
 
-                    var service = describeServices.data.services[0];
+                    var service = null;
+                    if (describeServices.data.services && describeServices.data.services.length > 0) {
+                        service = describeServices.data.services[0];
+                    }
                     if (!service) continue;
                     
                     var isFargate = false;
