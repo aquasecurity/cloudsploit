@@ -51,6 +51,7 @@ module.exports = {
         'webTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/webTierIamRole.js'),
         'appTierIamRole'                : require(__dirname + '/plugins/aws/autoscaling/appTierIamRole.js'),
         'asgUnusedLaunchConfiguration'  : require(__dirname + '/plugins/aws/autoscaling/asgUnusedLaunchConfiguration.js'),
+        'asgTagPropagation'             : require(__dirname + '/plugins/aws/autoscaling/asgTagPropagation.js'),
 
         'workgroupEncrypted'            : require(__dirname + '/plugins/aws/athena/workgroupEncrypted.js'),
         'workgroupEnforceConfiguration' : require(__dirname + '/plugins/aws/athena/workgroupEnforceConfiguration.js'),
@@ -188,6 +189,7 @@ module.exports = {
         'encryptedAmi'                  : require(__dirname + '/plugins/aws/ec2/encryptedAmi.js'),
         'amiHasTags'                    : require(__dirname + '/plugins/aws/ec2/amiHasTags.js'),
         'amiNamingConvention'           : require(__dirname + '/plugins/aws/ec2/amiNamingConvention.js'),
+        'oldAmi'                        : require(__dirname + '/plugins/aws/ec2/oldAmi.js'),
         'instanceIamRole'               : require(__dirname + '/plugins/aws/ec2/instanceIamRole.js'),
         'ebsBackupEnabled'              : require(__dirname + '/plugins/aws/ec2/ebsBackupEnabled.js'),
         'ebsEncryptionEnabled'          : require(__dirname + '/plugins/aws/ec2/ebsEncryptionEnabled.js'),
@@ -1625,6 +1627,14 @@ module.exports = {
         'serverlessVPCAccess'           : require(__dirname + '/plugins/google/cloudfunctions/serverlessVPCAccess.js'),
         'cloudFunctionNetworkExposure'  : require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionNetworkExposure.js'),
         'cloudFunctionsPrivilegeAnalysis': require(__dirname + '/plugins/google/cloudfunctions/cloudFunctionsPrivilegeAnalysis.js'),
+        
+        'cloudFunctionV2HttpsOnly'      : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2HttpsOnly.js'),
+        'functionV2DefaultServiceAccount': require(__dirname + '/plugins/google/cloudfunctionsv2/functionV2DefaultServiceAccount.js'),
+        'cloudFunctionV2IngressSettings': require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2IngressSettings.js'),
+        'cloudFunctionV2LabelsAdded'    : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2LabelsAdded.js'),
+        'cloudFunctionV2OldRuntime'     : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2OldRuntime.js'),
+        'cloudFunctionV2VPCConnector'   : require(__dirname + '/plugins/google/cloudfunctionsv2/cloudFunctionV2VPCConnector.js'),
+
         'computeAllowedExternalIPs'     : require(__dirname + '/plugins/google/cloudresourcemanager/computeAllowedExternalIPs.js'),
         'disableAutomaticIAMGrants'     : require(__dirname + '/plugins/google/cloudresourcemanager/disableAutomaticIAMGrants.js'),
         'disableGuestAttributes'        : require(__dirname + '/plugins/google/cloudresourcemanager/disableGuestAttributes.js'),
