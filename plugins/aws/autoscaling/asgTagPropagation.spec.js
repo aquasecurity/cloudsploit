@@ -167,7 +167,7 @@ describe('asgTagPropagation', function () {
             asgTagPropagation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('All tags are configured to propagate');
+                expect(results[0].message).to.include('all tags configured to propagate');
                 done();
             });
         });
@@ -177,8 +177,7 @@ describe('asgTagPropagation', function () {
             asgTagPropagation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('not configured to propagate');
-                expect(results[0].message).to.include('Owner');
+                expect(results[0].message).to.include('1 tag(s) not configured to propagate');
                 done();
             });
         });
@@ -208,7 +207,7 @@ describe('asgTagPropagation', function () {
             asgTagPropagation.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('not configured to propagate');
+                expect(results[0].message).to.include('2 tag(s) not configured to propagate');
                 done();
             });
         });
