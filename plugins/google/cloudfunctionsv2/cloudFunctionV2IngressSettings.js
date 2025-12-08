@@ -38,13 +38,11 @@ module.exports = {
             functions.data.forEach(func => {
                 if (!func.name) return;
 
-                if (!func.environment || func.environment !== 'GEN_2') return;
+                if (!func.buildConfig || !func.buildConfig.functionTarget) return;
 
-                let ingressSettings = func.serviceConfig && func.serviceConfig.ingressSettings 
-                    ? func.serviceConfig.ingressSettings 
-                    : null;
+                let ingressSettings = func.ingress || null;
 
-                if (ingressSettings && ingressSettings.toUpperCase() == 'ALLOW_ALL') {
+                if (ingressSettings && ingressSettings.toUpperCase() == 'INGRESS_TRAFFIC_ALL') {
                     helpers.addResult(results, 2,
                         'Cloud Function is configured to allow all traffic', region, func.name);
                 } else if (ingressSettings) {

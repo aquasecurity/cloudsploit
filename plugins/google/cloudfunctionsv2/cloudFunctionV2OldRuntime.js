@@ -85,10 +85,9 @@ module.exports = {
             functions.data.forEach(func => {
                 if (!func.name) return;
 
-                if (!func.environment || func.environment !== 'GEN_2') return;
+                if (!func.buildConfig || !func.buildConfig.functionTarget) return;
 
-                let buildConfig = func.buildConfig || {};
-                let runtime = buildConfig.runtime;
+                let runtime = func.labels && func.labels['goog-cloudfunctions-runtime'] ? func.labels['goog-cloudfunctions-runtime'] : null;
 
                 if (!runtime) {
                     helpers.addResult(results, 2,

@@ -38,11 +38,13 @@ module.exports = {
             functions.data.forEach(func => {
                 if (!func.name) return;
 
-                if (!func.environment || func.environment !== 'GEN_2') return;
+                if (!func.buildConfig || !func.buildConfig.functionTarget) return;
 
-                if (func.labels && Object.keys(func.labels).length) {
+                let userLabels = func.labels ? Object.keys(func.labels).filter(key => !key.startsWith('goog-')) : [];
+                
+                if (userLabels.length) {
                     helpers.addResult(results, 0,
-                        `${Object.keys(func.labels).length} labels found for Cloud Function`, region, func.name);
+                        `${userLabels.length} labels found for Cloud Function`, region, func.name);
                 } else {
                     helpers.addResult(results, 2,
                         'Cloud Function does not have any labels', region, func.name);

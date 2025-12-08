@@ -4,52 +4,43 @@ var plugin = require('./cloudFunctionV2IngressSettings');
 
 const functions = [
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-1",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
-        "buildConfig": {
-            "runtime": "nodejs20",
-            "entryPoint": "helloWorld"
+        "name": "projects/my-test-project/locations/us-central1/services/function-1",
+        "labels": {
+            "goog-managed-by": "cloudfunctions",
+            "goog-cloudfunctions-runtime": "nodejs20"
         },
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com",
-            "ingressSettings": "ALLOW_ALL"
+        "ingress": "INGRESS_TRAFFIC_ALL",
+        "buildConfig": {
+            "functionTarget": "helloHttp"
         }
     },
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-2",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
-        "buildConfig": {
-            "runtime": "nodejs20",
-            "entryPoint": "helloWorld"
+        "name": "projects/my-test-project/locations/us-central1/services/function-2",
+        "labels": {
+            "goog-managed-by": "cloudfunctions",
+            "goog-cloudfunctions-runtime": "nodejs20"
         },
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com",
-            "ingressSettings": "ALLOW_INTERNAL_AND_GCLB"
+        "ingress": "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER",
+        "buildConfig": {
+            "functionTarget": "helloHttp"
         }
     },
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-3",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
-        "buildConfig": {
-            "runtime": "nodejs20",
-            "entryPoint": "helloWorld"
+        "name": "projects/my-test-project/locations/us-central1/services/function-3",
+        "labels": {
+            "goog-managed-by": "cloudfunctions",
+            "goog-cloudfunctions-runtime": "nodejs20"
         },
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com"
+        "buildConfig": {
+            "functionTarget": "helloHttp"
         }
     },
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-4",
-        "environment": "GEN_1",
-        "state": "ACTIVE",
-        "runtime": "nodejs14",
-        "ingressSettings": "ALLOW_ALL"
+        "name": "projects/my-test-project/locations/us-central1/services/regular-service",
+        "labels": {
+            "app": "my-app"
+        },
+        "ingress": "INGRESS_TRAFFIC_ALL"
     }
 ];
 
@@ -153,7 +144,7 @@ describe('ingressAllTrafficDisabled', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should not check Gen 1 functions in v2 API response', function (done) {
+        it('should not check non-Cloud Functions services in Cloud Run API response', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
@@ -169,4 +160,3 @@ describe('ingressAllTrafficDisabled', function () {
 
     })
 });
-
