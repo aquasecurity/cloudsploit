@@ -375,7 +375,8 @@ var calls = [
                 paginate: 'NextToken'
             },
             describeAddresses: {
-                property: 'Addresses'
+                property: 'Addresses',
+                override: true
             },
             describeVolumes: {
                 property: 'Volumes'

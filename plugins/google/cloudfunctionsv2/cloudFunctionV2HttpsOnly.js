@@ -38,12 +38,12 @@ module.exports = {
             functions.data.forEach(funct => {
                 if (!funct.name) return;
 
-                if (!funct.environment || funct.environment !== 'GEN_2') return;
+                if (!funct.buildConfig || !funct.buildConfig.functionTarget) return;
 
-                let serviceConfig = funct.serviceConfig || {};
+                let triggerType = funct.template && funct.template.annotations ? funct.template.annotations['cloudfunctions.googleapis.com/trigger-type'] : null;
 
-                if (serviceConfig.uri) {
-                    if (serviceConfig.securityLevel && serviceConfig.securityLevel == 'SECURE_ALWAYS') {
+                if (triggerType === 'HTTP_TRIGGER' || funct.uri) {
+                    if (funct.uri && funct.uri.startsWith('https://')) {
                         helpers.addResult(results, 0,
                             'Cloud Function is configured to require HTTPS for HTTP invocations', region, funct.name);
                     } else {
@@ -61,6 +61,5 @@ module.exports = {
             callback(null, results, source);
         });
     }
-
 };
 

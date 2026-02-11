@@ -81,7 +81,15 @@ module.exports = {
             var eips = 0;
 
             for (var i in describeAddresses.data) {
-                if (describeAddresses.data[i].Domain === 'vpc') { eips++; }
+                if (describeAddresses.data[i].Domain === 'vpc') {
+                    if (describeAddresses.data[i].ServiceManaged) {
+                        if (describeAddresses.data[i].ServiceManaged !== 'alb') {
+                            eips++;
+                        }
+                    } else {
+                        eips++;
+                    }
+                }
             }
 
             var percentage = Math.ceil((eips / limits['vpc-max-elastic-ips'])*100);

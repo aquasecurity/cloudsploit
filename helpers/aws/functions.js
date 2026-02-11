@@ -1050,6 +1050,43 @@ function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAtt
     });
 }
 
+function buildV3ClientConfig(AWSConfig) {
+    return {
+        region: AWSConfig.region,
+        credentials: AWSConfig
+    };
+}
+
+function makeCustomCollectorCallV3(client, Command, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
+    async.retry({
+        times: apiRetryAttempts,
+        interval: function(retryCount){
+            let retryExponential = 3;
+            let retryLeveler = 3;
+            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+            console.log(`Trying ${Command.name} again in: ${retry_seconds/1000} seconds`);
+            retries.push({seconds: Math.round(retry_seconds/1000)});
+            return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
+        }
+    }, function(cb) {
+        var command = new Command(params);
+        client.send(command).then(function(data) {
+            return cb(null, data);
+        }).catch(function(err) {
+            return cb(err, null);
+        });
+    }, function(err, result) {
+        callback(err, result);
+    });
+}
+
+
 var debugApiCalls = function(call, service, debugMode, finished) {
     if (!debugMode) return;
     finished ? console.log(`[INFO] ${service}:${call} returned`) : console.log(`[INFO] ${service}:${call} invoked`);
@@ -1644,6 +1681,8 @@ module.exports = {
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap,
     makeCustomCollectorCall: makeCustomCollectorCall,
+    makeCustomCollectorCallV3: makeCustomCollectorCallV3,
+    buildV3ClientConfig: buildV3ClientConfig,
     debugApiCalls: debugApiCalls,
     logError: logError,
     collectRateError: collectRateError,

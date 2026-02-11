@@ -38,10 +38,10 @@ module.exports = {
             functions.data.forEach(func => {
                 if (!func.name) return;
 
-                if (!func.environment || func.environment !== 'GEN_2') return;
+                if (!func.buildConfig || !func.buildConfig.functionTarget) return;
 
-                let serviceAccountEmail = func.serviceConfig && func.serviceConfig.serviceAccountEmail 
-                    ? func.serviceConfig.serviceAccountEmail 
+                let serviceAccountEmail = func.template && func.template.serviceAccount 
+                    ? func.template.serviceAccount 
                     : null;
 
                 if (serviceAccountEmail && serviceAccountEmail.endsWith('@appspot.gserviceaccount.com')) {

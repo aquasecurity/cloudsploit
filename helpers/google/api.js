@@ -391,12 +391,12 @@ var calls = {
         }
     },
     functionsv2: {
-        list: {
-            url: 'https://cloudfunctions.googleapis.com/v2/projects/{projectId}/locations/{locationId}/functions',
+        list : {
+            url: 'https://run.googleapis.com/v2/projects/{projectId}/locations/{locationId}/services',
             location: 'region',
             paginationKey: 'pageSize',
             pagination: true,
-            dataFilterKey: 'functions'
+            dataFilterKey: 'services'
         },
         sendIntegration: {
             enabled: true
@@ -864,7 +864,7 @@ var postcalls = {
     },
     functionsv2: {
         getIamPolicy: {
-            url: 'https://cloudfunctions.googleapis.com/v2/{name}:getIamPolicy',
+            url: 'https://run.googleapis.com/v2/{name}:getIamPolicy',
             location: null,
             method: 'POST',
             reliesOnService: ['functionsv2'],

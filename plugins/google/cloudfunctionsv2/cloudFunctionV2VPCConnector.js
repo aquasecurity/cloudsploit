@@ -38,14 +38,13 @@ module.exports = {
             functions.data.forEach(func => {
                 if (!func.name) return;
 
-                if (!func.environment || func.environment !== 'GEN_2') return;
+                if (!func.buildConfig || !func.buildConfig.functionTarget) return;
 
-                let serviceConfig = func.serviceConfig || {};
-                let vpcConnector = serviceConfig.vpcConnector;
-                let vpcConnectorEgressSettings = serviceConfig.vpcConnectorEgressSettings;
+                let vpcAccess = func.template && func.template.vpcAccess ? func.template.vpcAccess : null;
+                let egress = vpcAccess ? vpcAccess.egress : null;
 
-                if (vpcConnector) {
-                    if (vpcConnectorEgressSettings && vpcConnectorEgressSettings.toUpperCase() === 'ALL_TRAFFIC') {
+                if (vpcAccess && (vpcAccess.connector || (vpcAccess.networkInterfaces && vpcAccess.networkInterfaces.length))) {
+                    if (egress && egress.toUpperCase() === 'ALL_TRAFFIC') {
                         helpers.addResult(results, 0,
                             'Cloud Function is using a VPC Connector to route all traffic', region, func.name);
                     } else {

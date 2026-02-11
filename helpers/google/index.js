@@ -371,11 +371,52 @@ var isRateError = function(err) {
     return isError;
 };
 
+var isQuotaError = function(err) {
+    if (!err) return false;
+    
+    // Check status code (429 is used for both rate limits and quota limits)
+    let statusCode = err.code || (err.response && err.response.status) || (err.response && err.response.statusCode);
+    
+    // Check for RESOURCE_EXHAUSTED status code or quota-related error messages
+    if (statusCode === 429 || statusCode === 'RESOURCE_EXHAUSTED' || err.code === 'RESOURCE_EXHAUSTED') {
+        // Check error message for quota-related keywords
+        let errorMessage = '';
+        if (err.message) {
+            errorMessage = err.message.toLowerCase();
+        } else if (err.response && err.response.data && err.response.data.error) {
+            if (typeof err.response.data.error === 'string') {
+                errorMessage = err.response.data.error.toLowerCase();
+            } else if (err.response.data.error.message) {
+                errorMessage = err.response.data.error.message.toLowerCase();
+            } else if (err.response.data.error.status) {
+                errorMessage = err.response.data.error.status.toLowerCase();
+            }
+        }
+        
+        // Check for quota-related keywords (quota limit errors typically mention "quota", "exceeded limit", or "resource_exhausted")
+        if (errorMessage.indexOf('quota') > -1 || 
+            errorMessage.indexOf('resource_exhausted') > -1 ||
+            errorMessage.indexOf('quota limit') > -1 ||
+            errorMessage.indexOf('exceeded limit') > -1) {
+            return true;
+        }
+        
+        // Also check if status is RESOURCE_EXHAUSTED in response data
+        if (err.response && err.response.data && err.response.data.error && 
+            err.response.data.error.status === 'RESOURCE_EXHAUSTED') {
+            return true;
+        }
+    }
+    
+    return false;
+};
+
 function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     let retries = [];
     var apiRetryAttempts = 3;
     var apiRetryBackoff = 500;
     var apiRetryCap = 1000;
+    var quotaRetryDelay = 60000; // 60 seconds (1 minute) for quota limit errors
 
     let url = originalUrl;
     let queryParams = '';
@@ -386,9 +427,21 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
         queryParams = queryParams ? `${queryParams}&${config.reqParams}` : `?${config.reqParams}`;
     }
     url = `${originalUrl}${queryParams}`;
+    
+    // Track the last error to determine retry strategy
+    let lastError = null;
+    
     async.retry({
         times: apiRetryAttempts,
         interval: function(retryCount){
+            // Check if last error was a quota error - apply 1 minute delay for all quota errors
+            if (lastError && isQuotaError(lastError)) {
+                console.log(`[Quota Limit] Detected quota limit error. Retrying after ${quotaRetryDelay/1000} seconds...`);
+                retries.push({seconds: quotaRetryDelay/1000, type: 'quota_limit'});
+                return quotaRetryDelay;
+            }
+            
+            // Default exponential backoff for rate limit errors
             let retryExponential = 3;
             let retryLeveler = 3;
             let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
@@ -400,7 +453,9 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
             return retry_seconds;
         },
         errorFilter: function(err) {
-            return isRateError(err);
+            lastError = err;
+            // Retry on rate errors or quota errors (for all API calls)
+            return isRateError(err) || isQuotaError(err);
         }
     }, function(cb) {
 

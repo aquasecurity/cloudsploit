@@ -18,6 +18,16 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
+        function isOpenCidrRange(cidr) {
+            if (!cidr || typeof cidr !== 'string') return false;
+            
+            const trimmed = cidr.trim();
+            // Check for exact matches that indicate fully open access
+            return trimmed === '0.0.0.0/0' || 
+                   trimmed === '::/0' || 
+                   trimmed === '0.0.0.0';
+        }
+
         async.each(locations.databaseAccounts, function(location, rcb) {
             var databaseAccounts = helpers.addSource(cache, source,
                 ['databaseAccounts', 'list', location]);
@@ -35,16 +45,46 @@ module.exports = {
                 return rcb();
             }
 
+            
             databaseAccounts.data.forEach(account => {
                 if (!account.id) return;
 
-                if (account.isVirtualNetworkFilterEnabled && account.ipRules && account.ipRules.length) {
+                const isPublicAccessEnabled = account.publicNetworkAccess &&
+                    account.publicNetworkAccess.toLowerCase() === 'enabled';
+
+                if (!isPublicAccessEnabled) {
+                    helpers.addResult(results, 0,
+                        'Cosmos DB account has public network access disabled', location, account.id);
+                    return;
+                }
+
+                const hasIpRules = account.ipRules && account.ipRules.length > 0;
+                const hasVnetRules = account.virtualNetworkRules && account.virtualNetworkRules.length > 0;
+                let hasOpenCidr = false;
+                if (hasIpRules) {
+                    for (let rule of account.ipRules) {
+                        if (isOpenCidrRange(rule.ipAddressOrRange)) {
+                            hasOpenCidr = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (hasOpenCidr) {
+                    helpers.addResult(results, 2,
+                        'Cosmos DB account allows unrestricted public access', location, account.id);
+                    return;
+                }
+
+                if (hasIpRules || hasVnetRules || account.isVirtualNetworkFilterEnabled === true) {
                     helpers.addResult(results, 0,
                         'Cosmos DB account denies public access', location, account.id);
-                } else {
-                    helpers.addResult(results, 2,
-                        'Cosmos DB account allows public access', location, account.id);
+                    return;
                 }
+
+
+                helpers.addResult(results, 2,
+                    'Cosmos DB account allows public access', location, account.id);
             });
 
             rcb();

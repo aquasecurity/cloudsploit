@@ -51,7 +51,6 @@ module.exports = {
 
                 var parameterGroupName = cluster.DBClusterParameterGroup;
 
-
                 var parameters = helpers.addSource(cache, source,
                     ['docdb', 'describeDBClusterParameters', region, parameterGroupName]);
 

@@ -4,48 +4,41 @@ var plugin = require('./cloudFunctionV2OldRuntime');
 
 const functions = [
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-1",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
-        "buildConfig": {
-            "runtime": "nodejs14",
-            "entryPoint": "helloWorld"
+        "name": "projects/my-test-project/locations/us-central1/services/function-1",
+        "labels": {
+            "goog-managed-by": "cloudfunctions",
+            "goog-cloudfunctions-runtime": "nodejs14"
         },
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com",
-            "ingressSettings": "ALLOW_ALL"
+        "buildConfig": {
+            "functionTarget": "helloHttp"
         }
     },
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-2",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
+        "name": "projects/my-test-project/locations/us-central1/services/function-2",
+        "labels": {
+            "goog-managed-by": "cloudfunctions",
+            "goog-cloudfunctions-runtime": "python312",
+            "deployment-tool": "console-cloud"
+        },
         "buildConfig": {
-            "runtime": "python312",
-            "entryPoint": "main"
-        },
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com",
-            "ingressSettings": "ALLOW_INTERNAL_AND_GCLB"
-        },
-        "labels": { 'deployment-tool': 'console-cloud' }
-    },
-    {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-3",
-        "environment": "GEN_2",
-        "state": "ACTIVE",
-        "updateTime": "2021-09-24T06:18:15.265Z",
-        "serviceConfig": {
-            "serviceAccountEmail": "test@test-project.iam.gserviceaccount.com"
+            "functionTarget": "main"
         }
     },
     {
-        "name": "projects/my-test-project/locations/us-central1/functions/function-4",
-        "environment": "GEN_1",
-        "state": "ACTIVE",
-        "runtime": "nodejs14"
+        "name": "projects/my-test-project/locations/us-central1/services/function-3",
+        "labels": {
+            "goog-managed-by": "cloudfunctions"
+        },
+        "buildConfig": {
+            "functionTarget": "handler"
+        }
+    },
+    {
+        "name": "projects/my-test-project/locations/us-central1/services/regular-service",
+        "labels": {
+            "app": "my-app",
+            "runtime": "nodejs14"
+        }
     }
 ];
 
@@ -149,7 +142,7 @@ describe('cloudFunctionOldRuntime', function () {
             plugin.run(cache, {}, callback);
         });
 
-        it('should not check Gen 1 functions in v2 API response', function (done) {
+        it('should not check non-Cloud Functions services in Cloud Run API response', function (done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(0);
                 done();
@@ -165,4 +158,3 @@ describe('cloudFunctionOldRuntime', function () {
 
     })
 });
-
