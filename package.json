@@ -43,6 +43,7 @@
     "@azure/data-tables": "^13.2.2",
     "@azure/storage-file-share": "^12.14.0",
     "@azure/storage-queue": "^12.13.0",
+    "@aws-sdk/client-ec2": "^3.876.0",
     "@azure/storage-blob": "^12.14.0",
     "@octokit/auth-app": "^6.0.3",
     "@octokit/request": "^8.1.6",
