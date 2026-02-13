@@ -48,6 +48,11 @@ module.exports = {
                 } else if (!blobContainers.data.length) {
                     helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
                 } else {
+                    var accountLevelCMK =
+                        storageAccount.encryption &&
+                        storageAccount.encryption.keySource &&
+                        storageAccount.encryption.keySource.toLowerCase() === 'microsoft.keyvault';
+
                     const encryptionScopes = helpers.addSource(
                         cache, source, ['encryptionScopes', 'listByStorageAccounts', location, storageAccount.id]);
 
@@ -55,18 +60,20 @@ module.exports = {
                         helpers.addResult(results, 3,
                             'Unable to query encryption scopes for Storage Accounts: ' + helpers.addError(encryptionScopes),
                             location, storageAccount.id);
-                        break;
                     } else {
                         var cmkEncryptionScopes = encryptionScopes.data.filter(function(scope) {
                             return scope.keyVaultProperties && scope.keyVaultProperties.keyUri;
                         }).map(function(scope) {
                             return scope.name;
                         });
+
                         blobContainers.data.forEach(function(blob) {
-                            if (!cmkEncryptionScopes.includes(blob.defaultEncryptionScope)) {
-                                helpers.addResult(results, 2, 'Blob container does not have CMK encryption enabled', location, blob.id);
+                            if (blob.defaultEncryptionScope && cmkEncryptionScopes.includes(blob.defaultEncryptionScope)) {
+                                helpers.addResult(results, 0, 'Blob container has CMK encryption enabled via container-level encryption scope', location, blob.id);
+                            } else if (accountLevelCMK) {
+                                helpers.addResult(results, 0, 'Blob container has CMK encryption enabled via storage account-level configuration', location, blob.id);
                             } else {
-                                helpers.addResult(results, 0, 'Blob container has CMK encryption enabled', location, blob.id);
+                                helpers.addResult(results, 2, 'Blob container does not have CMK encryption enabled', location, blob.id);
                             }
                         });
                     }

@@ -1,5 +1,11 @@
-// Export all available scans
+// // Export all available scans
 
+module.export = {
+    aws: {
+              'bucketVersioning'              : require(__dirname + '/plugins/aws/s3/bucketVersioning.js'),
+
+    }
+}
 module.exports = {
     aws : {
         'accessAnalyzerEnabled'         : require(__dirname + '/plugins/aws/accessanalyzer/accessAnalyzerEnabled.js'),
@@ -523,6 +529,8 @@ module.exports = {
         'lambdaUniqueExecutionRole'     : require(__dirname + '/plugins/aws/lambda/lambdaUniqueExecutionRole.js'),
         'lambdaNetworkExposure'         : require(__dirname + '/plugins/aws/lambda/lambdaNetworkExposure.js'),
         'lambdaPrivilegeAnalysis'       : require(__dirname + '/plugins/aws/lambda/lambdaPrivilegeAnalysis.js'),
+        'lambdaFunctionalUrl'           : require(__dirname + '/plugins/aws/lambda/lambdaFunctionalUrl.js'),
+
 
         'webServerPublicAccess'         : require(__dirname + '/plugins/aws/mwaa/webServerPublicAccess.js'),
         'environmentAdminPrivileges'    : require(__dirname + '/plugins/aws/mwaa/environmentAdminPrivileges.js'),
