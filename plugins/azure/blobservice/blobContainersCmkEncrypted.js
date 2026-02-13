@@ -60,6 +60,7 @@ module.exports = {
                         helpers.addResult(results, 3,
                             'Unable to query encryption scopes for Storage Accounts: ' + helpers.addError(encryptionScopes),
                             location, storageAccount.id);
+                            break;
                     } else {
                         var cmkEncryptionScopes = encryptionScopes.data.filter(function(scope) {
                             return scope.keyVaultProperties && scope.keyVaultProperties.keyUri;
