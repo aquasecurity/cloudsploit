@@ -260,6 +260,5 @@ describe('blobContainersCmkEncrypted', function() {
                 done();
             });
         });
-        
     });
 }); 
