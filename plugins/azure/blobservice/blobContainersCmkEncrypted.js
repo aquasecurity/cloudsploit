@@ -48,14 +48,11 @@ module.exports = {
                 } else if (!blobContainers.data.length) {
                     helpers.addResult(results, 0, 'Storage Account does not contain blob containers', location, storageAccount.id);
                 } else {
-                    // Check if CMK is enabled at the storage account level
                     var accountLevelCMK =
                         storageAccount.encryption &&
                         storageAccount.encryption.keySource &&
                         storageAccount.encryption.keySource.toLowerCase() === 'microsoft.keyvault';
 
-
-                    // Get encryption scopes to check for container-level encryption
                     const encryptionScopes = helpers.addSource(
                         cache, source, ['encryptionScopes', 'listByStorageAccounts', location, storageAccount.id]);
 
