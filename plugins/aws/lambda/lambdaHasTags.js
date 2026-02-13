@@ -9,9 +9,9 @@ module.exports = {
     description: 'Ensure that AWS Lambda functions have tags associated.',
     more_info: 'Tags help you to group resources together that are related to or associated with each other. It is a best practice to tag cloud resources to better organize and gain visibility into their usage.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/configuration-tags.html',
-    recommended_action: 'Modify Lambda function configurations and  add new tags',
+    recommended_action: 'Modify Lambda function configurations and add new tags',
     apis: ['Lambda:listFunctions', 'ResourceGroupsTaggingAPI:getResources'],
-    realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:DeleteFunction'],
+    realtime_triggers: ['lambda:CreateFunction', 'lambda:UpdateFunctionConfiguration', 'lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
@@ -35,15 +35,16 @@ module.exports = {
                 return rcb();
             }
 
-            let existingLambdaARNList = [];
+            var existingLambdaARNList = [];
             for (var lambdaFunc of listFunctions.data) {
                 if (!lambdaFunc.FunctionArn) continue;
                 existingLambdaARNList.push(lambdaFunc.FunctionArn);
             }
-            if (existingLambdaARNList.length){
+
+            if (existingLambdaARNList.length) {
                 helpers.checkTags(cache, 'Lambda function', existingLambdaARNList, region, results, settings);
             }
-            
+
             rcb();
         }, function(){
             callback(null, results, source);
