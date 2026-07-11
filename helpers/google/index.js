@@ -2,7 +2,7 @@ var shared        = require(__dirname + '/../shared.js');
 var functions     = require('./functions.js');
 var regRegions    = require('./regions.js');
 
-const {JWT}       = require('google-auth-library');
+const {JWT, Impersonated} = require('google-auth-library');
 
 var async         = require('async');
 
@@ -10,12 +10,21 @@ var regions = function() {
     return regRegions;
 };
 
-var authenticate = async function(GoogleConfig) {
-    const client = new JWT({
+var authenticate = async function (GoogleConfig) {
+    let client = new JWT({
         email: GoogleConfig.client_email,
         key: GoogleConfig.private_key,
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
+
+    if (GoogleConfig.impersonate_service_account) {
+        client = new Impersonated({
+            sourceClient: client,
+            targetPrincipal: GoogleConfig.impersonate_service_account,
+            targetScopes: ['https://www.googleapis.com/auth/cloud-platform'],
+            lifetime: 43200
+        });
+    }
     return client;
 };
 
