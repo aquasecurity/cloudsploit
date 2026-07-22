@@ -69,7 +69,8 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [3389]
+            'tcp': [3389],
+            'udp': [3389]
         };
 
         var service = 'RDP';

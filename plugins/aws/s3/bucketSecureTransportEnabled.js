@@ -64,35 +64,24 @@ module.exports = {
                     return;
                 }
 
-                statements.forEach(statement => {
-                    if (!statement.Sid || !statement.Sid.length) statement.Sid = Math.random().toString(36).substring(2,7);
-                });
-
-                var denyPermissionsMap = helpers.getDenyPermissionsMap(statements);
-                var sslEnforced = true;
+                var sslEnforced = false;
 
                 for (var statement of statements) {
-                    if (statement.Effect && statement.Effect === 'Allow' && statement.Principal && !statement.Principal.Service) {
-                        if (!helpers.isEffectiveStatement(statement, denyPermissionsMap)) continue;
+                    if (!statement.Effect || statement.Effect !== 'Deny') continue;
+                    if (!statement.Principal || !helpers.globalPrincipal(statement.Principal, settings)) continue;
 
-                        if (!statement.Condition ||
-                                !statement.Condition.Bool ||
-                                !statement.Condition.Bool['aws:SecureTransport'] ||
-                                statement.Condition.Bool['aws:SecureTransport'] === 'false') {
-                            sslEnforced = false;
-                            break;
-                        }
-                    } else if (statement.Effect && statement.Effect === 'Deny' && statement.Principal && !statement.Principal.Service && statement.Sid) {
-                        var denyActionResourceMap = helpers.getDenyPermissionsMap(statements, statement.Sid);
-                        if (!helpers.isEffectiveStatement(statement, denyActionResourceMap)) continue;
+                    if (statement.Condition &&
+                        statement.Condition.Bool &&
+                        statement.Condition.Bool['aws:SecureTransport'] === 'false') {
+                        sslEnforced = true;
+                        break;
+                    }
 
-                        if (!statement.Condition ||
-                                !statement.Condition.Bool ||
-                                !statement.Condition.Bool['aws:SecureTransport'] ||
-                                statement.Condition.Bool['aws:SecureTransport'] === 'true') {
-                            sslEnforced = false;
-                            break;
-                        }
+                    var tlsCondition = statement.Condition && statement.Condition.NumericLessThan;
+                    if (tlsCondition &&
+                        (tlsCondition['s3:TlsVersion'] === '1.2' || tlsCondition['s3:TlsVersion'] === 1.2)) {
+                        sslEnforced = true;
+                        break;
                     }
                 }
 

@@ -21,8 +21,19 @@ module.exports = {
         var getAccountSummary = helpers.addSource(cache, source,
             ['iam', 'getAccountSummary', region]);
 
-        if (!getAccountSummary || !getAccountSummary.data ||
-            !getAccountSummary.data.AccountMFAEnabled) {
+        if (!getAccountSummary || !getAccountSummary.data) {
+            helpers.addResult(results, 2,
+                'Root account is not using an MFA device');
+            return callback(null, results, source);
+        }
+
+        if (getAccountSummary.data.AccountPasswordPresent === 0) {
+            helpers.addResult(results, 0,
+                'Root account password is not enabled');
+            return callback(null, results, source);
+        }
+
+        if (!getAccountSummary.data.AccountMFAEnabled) {
             helpers.addResult(results, 2,
                 'Root account is not using an MFA device');
             return callback(null, results, source);

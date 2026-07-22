@@ -17,7 +17,7 @@ const describeSecurityGroups = [
         "IpPermissions": [
             {
                 "FromPort": 0,
-                "IpProtocol": "udp",
+                "IpProtocol": "tcp",
                 "IpRanges": [
                     {
                         "CidrIp": "0.0.0.0/0"
@@ -219,7 +219,7 @@ describe('openCIFS', function () {
             });
         });
 
-        it('should FAIL if security group has CIFS UDP port open to public', function (done) {
+        it('should FAIL if security group has CIFS TCP port open to public', function (done) {
             const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
             openCIFS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);

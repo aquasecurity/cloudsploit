@@ -206,12 +206,33 @@ describe('bucketPublicAccessBlock', function() {
             });
         });
 
-        it('should FAIL if public access block not found', function(done) {
+        it('should PASS if account public access block is enabled when bucket has none', function(done) {
             const cache = createCacheNoPublicAccessBlock();
+            cache.s3control = {
+                getPublicAccessBlock: {
+                    'us-east-1': {
+                        '111122223333': {
+                            data: {
+                                PublicAccessBlockConfiguration: {
+                                    BlockPublicAcls: true,
+                                    IgnorePublicAcls: true,
+                                    BlockPublicPolicy: true,
+                                    RestrictPublicBuckets: true
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            cache.sts = {
+                getCallerIdentity: {
+                    'us-east-1': { data: '111122223333' }
+                }
+            };
             bucketPublicAccessBlock.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('AWS account has public access block fully enabled');
                 done();
             });
         });

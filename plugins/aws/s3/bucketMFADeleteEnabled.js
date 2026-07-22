@@ -70,14 +70,21 @@ module.exports = {
                     'Error querying bucket versioning for : ' + bucket.Name +
                     ': ' + helpers.addError(getBucketVersioning),
                     bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
-            } else if (getBucketVersioning.data.MFADelete && getBucketVersioning.data.MFADelete.toUpperCase() === 'ENABLED') {
-                helpers.addResult(results, 0,
-                    'Bucket : ' + bucket.Name + ' has MFA Delete enabled',
-                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
             } else {
-                helpers.addResult(results, 2,
-                    'Bucket : ' + bucket.Name + ' has MFA Delete disabled',
-                    bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
+                var versioningEnabled = getBucketVersioning.data.Status &&
+                    getBucketVersioning.data.Status.toUpperCase() === 'ENABLED';
+                var mfaDeleteEnabled = getBucketVersioning.data.MFADelete &&
+                    getBucketVersioning.data.MFADelete.toUpperCase() === 'ENABLED';
+
+                if (versioningEnabled && mfaDeleteEnabled) {
+                    helpers.addResult(results, 0,
+                        'Bucket : ' + bucket.Name + ' has versioning and MFA Delete enabled',
+                        bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
+                } else {
+                    helpers.addResult(results, 2,
+                        'Bucket : ' + bucket.Name + ' does not have versioning and MFA Delete enabled',
+                        bucketLocation, `arn:${awsOrGov}:s3:::` + bucket.Name);
+                }
             }
         });
         callback(null, results, source);

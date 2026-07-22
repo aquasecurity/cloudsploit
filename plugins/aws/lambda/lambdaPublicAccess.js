@@ -10,13 +10,25 @@ module.exports = {
     more_info: 'The Lambda function execution policy should not allow public invocation of the function.',
     link: 'https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html',
     recommended_action: 'Update the Lambda policy to prevent access from the public.',
-    apis: ['Lambda:listFunctions', 'Lambda:getPolicy'],
+    apis: ['Lambda:listFunctions', 'Lambda:getPolicy', 'STS:getCallerIdentity'],
+    settings: {
+        lambda_policy_condition_keys: {
+            name: 'Lambda Policy Allowed Condition Keys',
+            description: 'Comma separated list of AWS IAM condition keys that restrict wildcard principals i.e. aws:SourceAccount.',
+            regex: '^.*$',
+            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
+        }
+    },
     realtime_triggers: ['lambda:CreateFunction','lambda:UpdateFunctionConfiguration','lambda:AddPermission', 'lambda:RemovePermission','lambda:DeleteFunction'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var regions = helpers.regions(settings);
+        var acctRegion = helpers.defaultRegion(settings);
+        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+        var allowedConditionKeys = (settings.lambda_policy_condition_keys ||
+            this.settings.lambda_policy_condition_keys.default).split(',');
 
         async.each(regions.lambda, function(region, rcb){
             var listFunctions = helpers.addSource(cache, source,
@@ -58,14 +70,17 @@ module.exports = {
                     var found = [];
                     for (var n in normalized) {
                         var statement = normalized[n];
-                        if (statement.Principal) {
-                            var isGlobal = helpers.globalPrincipal(statement.Principal, settings);
-                            if (isGlobal) {
-                                for (var s in statement.Action) {
-                                    if (found.indexOf(statement.Action[s]) == -1) {
-                                        found.push(statement.Action[s]);
-                                    }
-                                }
+                        if (statement.Condition &&
+                            helpers.isValidCondition(statement, allowedConditionKeys,
+                                helpers.IAM_CONDITION_OPERATORS, false, accountId, settings)) continue;
+
+                        if (statement.Effect && statement.Effect === 'Allow' &&
+                            statement.Principal &&
+                            helpers.globalPrincipal(statement.Principal, settings)) {
+                            var actions = statement.Action;
+                            if (!Array.isArray(actions)) actions = [actions];
+                            for (var action of actions) {
+                                if (found.indexOf(action) === -1) found.push(action);
                             }
                         }
                     }

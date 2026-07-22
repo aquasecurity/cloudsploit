@@ -99,6 +99,20 @@ describe('rootMfaEnabled', function () {
             });
         });
 
+        it('should PASS if root account password is not enabled', function (done) {
+            const cache = createCache([{
+                user: '<root_account>',
+                arn: 'arn:aws:iam::111122223333:root',
+                password_enabled: false,
+                mfa_active: false
+            }]);
+            rootMfaEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if an MFA device was not found for the root account', function (done) {
             const cache = createCache([generateCredentialReport[1]]);
             rootMfaEnabled.run(cache, {}, (err, results) => {

@@ -54,7 +54,7 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var config = {
-            ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups,
+            ec2_skip_unused_groups: settings.ec2_skip_unused_groups || this.settings.ec2_skip_unused_groups.default,
             check_network_interface: settings.check_network_interface || this.settings.check_network_interface.default,
         };
 

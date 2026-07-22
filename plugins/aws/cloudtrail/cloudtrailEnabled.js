@@ -29,6 +29,7 @@ module.exports = {
 
         var globalServicesMonitored = false;
         var globalEnabled = false;
+        var multiRegionLogging = false;
 
         async.each(regions.cloudtrail, function(region, rcb){
             var describeTrails = helpers.addSource(cache, source,
@@ -59,7 +60,9 @@ module.exports = {
                         ['cloudtrail', 'getTrailStatus', region, trail.TrailARN]);
 
                     if (getTrailStatus && getTrailStatus.data &&
-                        getTrailStatus.data.IsLogging) {
+                        getTrailStatus.data.IsLogging && trail.IsMultiRegionTrail) {
+
+                        multiRegionLogging = true;
 
                         if (trail.IncludeGlobalServiceEvents) {
                             globalEnabled = true;
@@ -83,7 +86,9 @@ module.exports = {
 
             rcb();
         }, function(){
-            if (!globalServicesMonitored) {
+            if (!multiRegionLogging) {
+                helpers.addResult(results, 2, 'CloudTrail is not enabled with a multi-region trail');
+            } else if (!globalServicesMonitored) {
                 helpers.addResult(results, 2, 'CloudTrail is not configured to monitor global services');
             } else {
                 if (globalEnabled){

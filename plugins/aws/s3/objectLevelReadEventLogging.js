@@ -53,9 +53,11 @@ module.exports = {
                 return rcb();
             }
 
-            describeTrails.data.forEach(event => {
+            describeTrails.data.forEach(trail => {
+                if (!trail.IsMultiRegionTrail) return;
+
                 var describeEventsSelectors = helpers.addSource(cache, source,
-                    ['cloudtrail', 'getEventSelectors', region, event.TrailARN]);
+                    ['cloudtrail', 'getEventSelectors', region, trail.TrailARN]);
 
                 if (!describeEventsSelectors || describeEventsSelectors.err || !describeEventsSelectors.data ) {
                     return;
@@ -72,12 +74,15 @@ module.exports = {
 
                             if (dataResource.Type === 'AWS::S3::Object') {
                                 if (event.ReadWriteType === 'All' || event.ReadWriteType === 'ReadOnly') {
-                                    if (dataResource.Values.includes(`arn:${awsOrGov}:s3`)) {
+                                    if (dataResource.Values.some(function(value) {
+                                        return value === `arn:${awsOrGov}:s3` || value === `arn:${awsOrGov}:s3:::`;
+                                    })) {
                                         isall = true;
                                     } else {
-                                        buckets = dataResource.Values.map((value) => value.split(':::')[1]);
-                                        buckets = buckets.map((name) => name.slice(0, -1));
-                                    } 
+                                        var trailBuckets = dataResource.Values.map(function(value) { return value.split(':::')[1]; });
+                                        trailBuckets = trailBuckets.map(function(name) { return name.slice(0, -1); });
+                                        buckets = buckets.concat(trailBuckets);
+                                    }
                                 }
                             }
                         }

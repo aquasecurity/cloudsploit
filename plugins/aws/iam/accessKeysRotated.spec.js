@@ -147,14 +147,20 @@ describe('accessKeysRotated', function () {
     describe('run', function () {
         it('should PASS if the user access key was last rotated within the pass limit', function (done) {
             const cache = createCache([generateCredentialReport[0], generateCredentialReport[2]]);
-            var settings = {
-                access_keys_rotated_fail: 180,
-                access_keys_rotated_warn: 90
-            };
-            accessKeysRotated.run(cache, settings, (err, results) => {
+            accessKeysRotated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
                 expect(results[1].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should FAIL if the user access key was last rotated more than 90 days ago', function (done) {
+            const cache = createCache([generateCredentialReport[0], generateCredentialReport[1]]);
+            accessKeysRotated.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(2);
+                expect(results[1].status).to.equal(2);
                 done();
             });
         });
@@ -175,11 +181,7 @@ describe('accessKeysRotated', function () {
 
         it('should FAIL if the user access key was last rotated more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
-            var settings = {
-                access_keys_rotated_fail: 180,
-                access_keys_rotated_warn: 90
-            };
-            accessKeysRotated.run(cache, settings, (err, results) => {
+            accessKeysRotated.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 expect(results[1].status).to.equal(2);

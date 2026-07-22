@@ -39,7 +39,7 @@ module.exports = {
             name: 'Min Password Length Fail',
             description: 'Return a failing result when min password length is fewer than this number of characters',
             regex: '^[1-9]{1}[0-9]{0,2}$',
-            default: 10
+            default: 14
         },
         min_password_length_warn: {
             name: 'Min Password Length Warn',
