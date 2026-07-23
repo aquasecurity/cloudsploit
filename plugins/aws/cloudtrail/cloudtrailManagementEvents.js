@@ -42,22 +42,48 @@ module.exports = {
                 var getEventSelectors = helpers.addSource(cache, source,
                     ['cloudtrail', 'getEventSelectors', region, trail.TrailARN]);
 
-                if (!getEventSelectors || getEventSelectors.err ||
-                    !getEventSelectors.data || !getEventSelectors.data.EventSelectors) {
+                if (!getEventSelectors || getEventSelectors.err || !getEventSelectors.data ||
+                    (!getEventSelectors.data.EventSelectors && !getEventSelectors.data.AdvancedEventSelectors)) {
                     helpers.addResult(results, 3,
                         `Unable to query for event selectors: ${helpers.addError(getEventSelectors)}`, region, resource);
                     return cb();
                 }
 
-                var managementResourceFound = false;
-                for (var eventSelector of getEventSelectors.data.EventSelectors){
-                    if (eventSelector.IncludeManagementEvents) {
-                        managementResourceFound = true;
-                        break;
+                var managementEventsConfigured = false;
+
+                if (getEventSelectors.data.AdvancedEventSelectors &&
+                    getEventSelectors.data.AdvancedEventSelectors.length) {
+                    for (var advancedSelector of getEventSelectors.data.AdvancedEventSelectors) {
+                        var hasManagementCategory = false;
+                        var hasReadOnlyField = false;
+
+                        if (advancedSelector.FieldSelectors) {
+                            for (var fieldSelector of advancedSelector.FieldSelectors) {
+                                if (fieldSelector.Field === 'readOnly') hasReadOnlyField = true;
+                                if (fieldSelector.Field === 'eventCategory' &&
+                                    fieldSelector.Equals &&
+                                    fieldSelector.Equals.indexOf('Management') > -1) {
+                                    hasManagementCategory = true;
+                                }
+                            }
+                        }
+
+                        if (hasManagementCategory && !hasReadOnlyField) {
+                            managementEventsConfigured = true;
+                            break;
+                        }
+                    }
+                } else if (getEventSelectors.data.EventSelectors) {
+                    for (var eventSelector of getEventSelectors.data.EventSelectors) {
+                        if (eventSelector.IncludeManagementEvents &&
+                            eventSelector.ReadWriteType === 'All') {
+                            managementEventsConfigured = true;
+                            break;
+                        }
                     }
                 }
 
-                if (managementResourceFound) {
+                if (managementEventsConfigured) {
                     helpers.addResult(results, 0,
                         `CloudTrail trail "${trail.Name}" is configured to log management events`,
                         region, resource);

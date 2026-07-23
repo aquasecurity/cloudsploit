@@ -6,10 +6,10 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     severity: 'High',
-    description: 'Determine if UDP port 445 for CIFS is open to the public',
+    description: 'Determine if TCP port 445 for CIFS is open to the public',
     more_info: 'While some ports such as HTTP and HTTPS are required to be open to the public to function properly, more sensitive services such as CIFS should be restricted to known IP addresses.',
     link: 'http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/authorizing-access-to-an-instance.html',
-    recommended_action: 'Restrict UDP port 445 to known IP addresses',
+    recommended_action: 'Restrict TCP port 445 to known IP addresses',
     apis: ['EC2:describeSecurityGroups', 'EC2:describeNetworkInterfaces', 'Lambda:listFunctions'],
     settings: {
         ec2_skip_unused_groups: {
@@ -66,7 +66,7 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'udp': [445]
+            'tcp': [445]
         };
 
         var service = 'CIFS';

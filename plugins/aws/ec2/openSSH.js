@@ -69,7 +69,8 @@ module.exports = {
         var regions = helpers.regions(settings);
 
         var ports = {
-            'tcp': [22]
+            'tcp': [22],
+            'udp': [22]
         };
 
         var service = 'SSH';

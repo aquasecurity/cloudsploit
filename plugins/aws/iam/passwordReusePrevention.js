@@ -39,7 +39,7 @@ module.exports = {
             name: 'Password Reuse Fail',
             description: 'Return a failing result when password reuse policy remembers fewer than this many past passwords',
             regex: '^[1-9]{1}[0-9]{0,2}$',
-            default: 5
+            default: 24
         },
         password_reuse_warn: {
             name: 'Password Reuse Warn',

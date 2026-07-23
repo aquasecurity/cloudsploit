@@ -4,15 +4,15 @@ var helpers = require('../../../helpers/aws');
 var filterPatterns = [
     {
         name: 'Unauthorized API Calls',
-        pattern: '{ ($.errorCode = *UnauthorizedOperation) || ($.errorCode = AccessDenied*) }'
+        pattern: '{ ($.errorCode ="*UnauthorizedOperation") || ($.errorCode ="AccessDenied*") && ($.sourceIPAddress!="delivery.logs.amazonaws.com") && ($.eventName!="HeadBucket") }'
     },
     {
         name: 'Sign In Without MFA',
-        pattern: '{ ($.eventName = ConsoleLogin) && ($.additionalEventData.MFAUsed != Yes) }'
+        pattern: '{ ($.eventName = "ConsoleLogin") && ($.additionalEventData.MFAUsed != "Yes") }'
     },
     {
         name: 'Root Account Usage',
-        pattern: '{ $.userIdentity.type = Root && $.userIdentity.invokedBy NOT EXISTS && $.eventType != AwsServiceEvent }'
+        pattern: '{ $.userIdentity.type = "Root" && $.userIdentity.invokedBy NOT EXISTS && $.eventType != "AwsServiceEvent" }'
     },
     {
         name: 'IAM Policy Changes',
@@ -40,7 +40,7 @@ var filterPatterns = [
     },
     {
         name: 'Security Group Changes',
-        pattern: '{ ($.eventName = AuthorizeSecurityGroupIngress) || ($.eventName = AuthorizeSecurityGroupEgress) || ($.eventName = RevokeSecurityGroupIngress) || ($.eventName = RevokeSecurityGroupEgress) || ($.eventName = CreateSecurityGroup) || ($.eventName = DeleteSecurityGroup)}'
+        pattern: '{ ($.eventName = AuthorizeSecurityGroupIngress) || ($.eventName = AuthorizeSecurityGroupEgress) || ($.eventName = RevokeSecurityGroupIngress) || ($.eventName = RevokeSecurityGroupEgress) || ($.eventName = CreateSecurityGroup) || ($.eventName = DeleteSecurityGroup) || ($.eventName = ModifySecurityGroupRules)}'
     },
     {
         name: 'Network ACL Changes',
@@ -147,7 +147,12 @@ module.exports = {
             }
 
             async.each(trailsInRegion, function(trail, tcb){
-                if (!trail.CloudWatchLogsLogGroupArn) return tcb();
+                if (!trail.CloudWatchLogsLogGroupArn) {
+                    helpers.addResult(results, 2,
+                        'Trail is not integrated with CloudWatch Logs', region,
+                        trail.TrailARN);
+                    return tcb();
+                }
 
                 // CloudTrail stores the CloudWatch Log Group as a full ARN
                 // while CloudWatch Logs just stores the group name.
@@ -167,18 +172,15 @@ module.exports = {
                 var missing = [];
 
                 // If there is a filter setup, check for all strings.
+                var trailFilters = filters[logGroupName];
+
                 for (var p in filterPatterns) {
                     var found = false;
                     var pattern = filterPatterns[p];
                     var patternSearch = pattern.pattern.replace(/\s+/g, '').toLowerCase();
 
-                    for (var f in filters) {
-                        var filter = filters[f];
-
-                        if (filter.indexOf(patternSearch) > - 1) {
-                            found = true;
-                            break;
-                        }
+                    if (trailFilters.indexOf(patternSearch) > - 1) {
+                        found = true;
                     }
 
                     if (!found) {
