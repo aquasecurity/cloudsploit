@@ -39,22 +39,6 @@ const createCache = (routeTables, peerings) => {
 
 describe('vpcPeeringLeastAccessRoutes', function() {
     describe('run', function() {
-        it('should do nothing when all policy settings are disabled', function(done) {
-            const cache = createCache([{
-                RouteTableId: 'rtb-1',
-                VpcId: 'vpc-local',
-                Routes: [{
-                    DestinationCidrBlock: '10.1.0.0/16',
-                    VpcPeeringConnectionId: 'pcx-abc123'
-                }]
-            }], describeVpcPeeringConnections);
-
-            vpcPeeringLeastAccessRoutes.run(cache, { fail_on_full_vpc_cidr: 'false' }, (err, results) => {
-                expect(results.length).to.equal(0);
-                done();
-            });
-        });
-
         it('should PASS when no VPC peering routes exist', function(done) {
             const cache = createCache([{
                 RouteTableId: 'rtb-1',
@@ -72,7 +56,7 @@ describe('vpcPeeringLeastAccessRoutes', function() {
             });
         });
 
-        it('should FAIL when peering route uses full peer VPC CIDR by default', function(done) {
+        it('should FAIL when peering route uses full peer VPC CIDR', function(done) {
             const cache = createCache([{
                 RouteTableId: 'rtb-1',
                 VpcId: 'vpc-local',
@@ -106,27 +90,7 @@ describe('vpcPeeringLeastAccessRoutes', function() {
             });
         });
 
-        it('should FAIL when route is broader than max_peering_route_prefix_length', function(done) {
-            const cache = createCache([{
-                RouteTableId: 'rtb-1',
-                VpcId: 'vpc-local',
-                Routes: [{
-                    DestinationCidrBlock: '10.1.0.0/16',
-                    VpcPeeringConnectionId: 'pcx-abc123'
-                }]
-            }], describeVpcPeeringConnections);
-
-            vpcPeeringLeastAccessRoutes.run(cache, {
-                fail_on_full_vpc_cidr: 'false',
-                max_peering_route_prefix_length: '24'
-            }, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should PASS when route matches allowed_peering_destinations', function(done) {
+        it('should PASS when peering route targets a single host', function(done) {
             const cache = createCache([{
                 RouteTableId: 'rtb-1',
                 VpcId: 'vpc-local',
@@ -136,10 +100,7 @@ describe('vpcPeeringLeastAccessRoutes', function() {
                 }]
             }], describeVpcPeeringConnections);
 
-            vpcPeeringLeastAccessRoutes.run(cache, {
-                fail_on_full_vpc_cidr: 'false',
-                allowed_peering_destinations: '10.1.2.5/32'
-            }, (err, results) => {
+            vpcPeeringLeastAccessRoutes.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
