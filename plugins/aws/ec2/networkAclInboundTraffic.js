@@ -49,8 +49,7 @@ module.exports = {
 
                 if (acl.Entries && acl.Entries.length) {
                     for (var entry of acl.Entries) {
-                        if (!entry.Egress && disAllowedPortRange(entry.PortRange) && entry.RuleAction.toUpperCase() === 'ALLOW' &&
-                            (entry.CidrBlock === '0.0.0.0/0' || entry.Ipv6CidrBlock === '::/0')) {
+                        if (!entry.Egress && disAllowedPorRange(entry.PortRange) && entry.RuleAction.toUpperCase() === 'ALLOW' && entry.CidrBlock==='0.0.0.0/0') {
                             unrestrictedAcl = true;
                             break;
                         }
@@ -75,12 +74,12 @@ module.exports = {
     }
 };
 
-function disAllowedPortRange(range) {
-    const adminPorts = [22, 3389];
+function disAllowedPorRange(range) {
+    const allowedPorts = [22, 3389, 80, 443, 53];
 
     if (!range) return true;
 
-    for (const port of adminPorts) {
+    for (const port of allowedPorts) {
         if (port >= range.From && port <= range.To) return true;
     }
 

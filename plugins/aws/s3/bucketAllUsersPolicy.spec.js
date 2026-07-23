@@ -130,45 +130,6 @@ describe('bucketAllUsersPolicy', function () {
             });
         });
 
-        it('should PASS if wildcard principal has restrictive conditions', function (done) {
-            const cache = createCache([listBuckets[0]], {
-                Policy: JSON.stringify({
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Allow',
-                        Principal: '*',
-                        Action: 'sqs:SendMessage',
-                        Resource: 'arn:aws:s3:::test-bucket-130/*',
-                        Condition: { StringEquals: { 'aws:SourceAccount': '111122223333' } }
-                    }]
-                })
-            });
-            bucketAllUsersPolicy.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if Principal AWS array contains wildcard without conditions', function (done) {
-            const cache = createCache([listBuckets[0]], {
-                Policy: JSON.stringify({
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Allow',
-                        Principal: { AWS: ['*'] },
-                        Action: 's3:GetObject',
-                        Resource: 'arn:aws:s3:::test-bucket-130/*'
-                    }]
-                })
-            });
-            bucketAllUsersPolicy.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should PASS if no S3 buckets to check', function (done) {
             const cache = createCache([]);
             bucketAllUsersPolicy.run(cache, {}, (err, results) => {

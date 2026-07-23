@@ -9,15 +9,7 @@ module.exports = {
     more_info: 'S3 buckets can be configured to allow the global principal to access the bucket via the bucket policy. This policy should be restricted only to known users or accounts.',
     recommended_action: 'Remove wildcard principals from the bucket policy statements.',
     link: 'https://docs.aws.amazon.com/AmazonS3/latest/dev/using-iam-policies.html',
-    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation', 'STS:getCallerIdentity'],
-    settings: {
-        s3_bucket_policy_condition_keys: {
-            name: 'S3 Bucket Policy Allowed Condition Keys',
-            description: 'Comma separated list of AWS IAM condition keys that restrict wildcard principals i.e. aws:SourceAccount.',
-            regex: '^.*$',
-            default: 'aws:PrincipalArn,aws:PrincipalAccount,aws:PrincipalOrgID,aws:SourceAccount,aws:SourceArn,aws:SourceOwner'
-        }
-    },
+    apis: ['S3:listBuckets', 'S3:getBucketPolicy', 'S3:getBucketLocation'],
     compliance: {
         pci: 'PCI requires that cardholder data can only be accessed by those with ' +
              'a legitimate business need. If PCI-restricted data is stored in S3, ' +
@@ -42,9 +34,6 @@ module.exports = {
 
         var region = helpers.defaultRegion(settings);
         var awsOrGov = helpers.defaultPartition(settings);
-        var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', region, 'data']);
-        var allowedConditionKeys = (settings.s3_bucket_policy_condition_keys ||
-            this.settings.s3_bucket_policy_condition_keys.default).split(',');
 
         var listBuckets = helpers.addSource(cache, source,
             ['s3', 'listBuckets', region]);
@@ -101,17 +90,41 @@ module.exports = {
                     } else {
                         var policyMessage = [];
                         var policyResult = 0;
-                        var statements = helpers.normalizePolicyDocument(policyJson);
 
-                        for (var statement of statements) {
-                            if (statement.Condition &&
-                                helpers.isValidCondition(statement, allowedConditionKeys,
-                                    helpers.IAM_CONDITION_OPERATORS, false, accountId, settings)) continue;
+                        for (var s in policyJson.Statement) {
+                            var statement = policyJson.Statement[s];
 
-                            if (statement.Effect && statement.Effect === 'Allow' &&
-                                helpers.globalPrincipal(statement.Principal, settings)) {
-                                if (policyResult < 2) policyResult = 2;
-                                policyMessage.push('Principal * allowed to perform: ' + statement.Action);
+                            if (statement.Effect && statement.Effect === 'Allow') {
+                                if (statement.Principal) {
+                                    var starPrincipal = false;
+
+                                    if (typeof statement.Principal === 'string') {
+                                        if (statement.Principal === '*') {
+                                            starPrincipal = true;
+                                        }
+                                    } else if (typeof statement.Principal === 'object') {
+                                        if (statement.Principal.Service &&
+                                            statement.Principal.Service === '*') {
+                                            starPrincipal = true;
+                                        } else if (statement.Principal.AWS &&
+                                            statement.Principal.AWS === '*') {
+                                            starPrincipal = true;
+                                        } else if (statement.Principal.length &&
+                                            statement.Principal.indexOf('*') > -1) {
+                                            starPrincipal = true;
+                                        }
+                                    }
+
+                                    if (starPrincipal) {
+                                        if (statement.Condition) {
+                                            if (policyResult < 1) policyResult = 1;
+                                            policyMessage.push('Principal * allowed to conditionally perform: ' + statement.Action);
+                                        } else {
+                                            if (policyResult < 2) policyResult = 2;
+                                            policyMessage.push('Principal * allowed to perform: ' + statement.Action);
+                                        }   
+                                    }
+                                }
                             }
                         }
 

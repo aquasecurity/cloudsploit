@@ -46,9 +46,6 @@ module.exports = {
                 if (obj.mfa_active) {
                     helpers.addResult(results, 0,
                         'An MFA device was found for the root account', 'global', obj.arn);
-                } else if (obj.password_enabled === false) {
-                    helpers.addResult(results, 0,
-                        'Root account password is not enabled', 'global', obj.arn);
                 } else {
                     helpers.addResult(results, 2,
                         'An MFA device was not found for the root account', 'global', obj.arn);

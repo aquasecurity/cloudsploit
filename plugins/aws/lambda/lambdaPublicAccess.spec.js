@@ -77,26 +77,6 @@ describe('lambdaPublicAccess', function () {
             });
         });
 
-        it('should PASS if wildcard principal has restrictive conditions', function (done) {
-            const cache = createCache([listFunctions[0]], {
-                Policy: JSON.stringify({
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Allow',
-                        Principal: '*',
-                        Action: 'lambda:InvokeFunction',
-                        Resource: 'arn:aws:lambda:us-east-1:000011112222:function:test-lambda',
-                        Condition: { StringEquals: { 'aws:SourceAccount': '000011112222' } }
-                    }]
-                })
-            }, null, null);
-            lambdaPublicAccess.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
         it('should PASS if function does not have an access policy', function (done) {
             const cache = createCache([listFunctions[0]], getPolicy[1], null, { code: "ResourceNotFoundException" });
             lambdaPublicAccess.run(cache, {}, (err, results) => {

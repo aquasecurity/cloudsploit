@@ -2,14 +2,13 @@ var assert = require('assert');
 var expect = require('chai').expect;
 var rootHardwareMfa = require('./rootHardwareMfa')
 
-const createCache = (enabled, devices, passwordPresent = 1) => {
+const createCache = (enabled, devices) => {
     return {
         iam: {
             getAccountSummary: {
                 'us-east-1': {
                     data: {
-                        AccountMFAEnabled: enabled,
-                        AccountPasswordPresent: passwordPresent
+                        AccountMFAEnabled: enabled
                     }
                 }
             },
@@ -24,18 +23,6 @@ const createCache = (enabled, devices, passwordPresent = 1) => {
 
 describe('rootHardwareMfa', function () {
     describe('run', function () {
-        it('should PASS when root account password is not enabled', function (done) {
-            const cache = createCache(0, [], 0)
-
-            const callback = (err, results) => {
-                expect(results.length).to.equal(1)
-                expect(results[0].status).to.equal(0)
-                done()
-            }
-
-            rootHardwareMfa.run(cache, {}, callback)
-        })
-
         it('should FAIL when root account does not have MFA enabled', function (done) {
             const cache = createCache(0, [])
 

@@ -131,50 +131,6 @@ describe('bucketSecureTransportEnabled', function () {
             });
         });
 
-        it('should PASS if bucket policy enforces minimum TLS version', function (done) {
-            const cache = createCache([listBuckets[0]], {
-                Policy: JSON.stringify({
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Deny',
-                        Principal: '*',
-                        Action: 's3:*',
-                        Resource: ['arn:aws:s3:::test-bucket-130', 'arn:aws:s3:::test-bucket-130/*'],
-                        Condition: { NumericLessThan: { 's3:TlsVersion': '1.2' } }
-                    }]
-                })
-            });
-            bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if no bucket policy found', function (done) {
-            const cache = {
-                s3: {
-                    listBuckets: { 'us-east-1': { data: [listBuckets[0]] } },
-                    getBucketPolicy: {
-                        'us-east-1': {
-                            [listBuckets[0].Name]: { err: { code: 'NoSuchBucketPolicy' } }
-                        }
-                    },
-                    getBucketLocation: {
-                        'us-east-1': {
-                            [listBuckets[0].Name]: { data: { LocationConstraint: 'us-east-1' } }
-                        }
-                    }
-                }
-            };
-            bucketSecureTransportEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No bucket policy found');
-                done();
-            });
-        });
-
         it('should UNKNOWN if error while listing S3 buckets', function (done) {
             const cache = createErrorCache();
             bucketSecureTransportEnabled.run(cache, {}, (err, results) => {

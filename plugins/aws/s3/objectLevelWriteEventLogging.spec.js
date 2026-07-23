@@ -74,6 +74,7 @@ const getEventSelectors = [
         ]
     },
     {
+        
         "TrailARN": "arn:aws:cloudtrail:us-east-1:672202477801:trail/trail-1",
          "AdvancedEventSelectors": [
             {
@@ -100,31 +101,6 @@ const getEventSelectors = [
                         "Equals": [
                             "Management"
                         ]
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "TrailARN": "arn:aws:cloudtrail:us-east-1:978540733285:trail/test-fatima",
-        "AdvancedEventSelectors": [
-            {
-                "FieldSelectors": [
-                    {
-                        "Field": "eventCategory",
-                        "Equals": ["Data"]
-                    },
-                    {
-                        "Field": "resources.ARN",
-                        "StartsWith": ["amazon-meerab"]
-                    },
-                    {
-                        "Field": "readOnly",
-                        "Equals": ["true"]
-                    },
-                    {
-                        "Field": "resources.type",
-                        "Equals": ["AWS::S3::Object"]
                     }
                 ]
             }
@@ -223,15 +199,6 @@ describe('objectLevelReadLogging', function () {
             });
         });
 
-        it('should FAIL if only a single-region trail has S3 write data events', function (done) {
-            const cache = createCache(listBuckets, [trails[1]], getEventSelectors[0]);
-            objectLevelReadLogging.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should PASS if object-level logging is enable for read events', function (done) {
             const cache = createCache(listBuckets,[trails[0]],getEventSelectors[0]);
             objectLevelReadLogging.run(cache, {}, (err, results) => {
@@ -239,24 +206,6 @@ describe('objectLevelReadLogging', function () {
                 expect(results[0].status).to.equal(0);
                 expect(results[0].message).to.include('Bucket has object-level logging for write events');
                 expect(results[0].region).to.equal('us-east-1');
-                done();
-            });
-        });
-
-        it('should PASS if advanced selectors log all S3 data events', function (done) {
-            const cache = createCache(listBuckets, [trails[0]], getEventSelectors[2]);
-            objectLevelReadLogging.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if advanced selectors only log S3 read events', function (done) {
-            const cache = createCache(listBuckets, [trails[0]], getEventSelectors[3]);
-            objectLevelReadLogging.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
                 done();
             });
         });

@@ -56,11 +56,8 @@ module.exports = {
                     describeLoadBalancerAttributes.data &&
                     describeLoadBalancerAttributes.data.Attributes &&
                     describeLoadBalancerAttributes.data.Attributes.length) {
-                    var accessLogsFound = false;
-
                     for (let attribute of describeLoadBalancerAttributes.data.Attributes) {
                         if (attribute.Key && attribute.Key === 'access_logs.s3.enabled') {
-                            accessLogsFound = true;
                             if (attribute.Value === 'false') {
                                 helpers.addResult(results, 2,
                                     'Logging not enabled for ' + lb.DNSName, region, lb.LoadBalancerArn);
@@ -70,11 +67,6 @@ module.exports = {
                             }
                             break;
                         }
-                    }
-
-                    if (!accessLogsFound) {
-                        helpers.addResult(results, 2,
-                            'Logging not enabled for ' + lb.DNSName, region, lb.LoadBalancerArn);
                     }
                 } else {
                     helpers.addResult(results, 2,
