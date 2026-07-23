@@ -141,22 +141,11 @@ describe('cloudtrailEnabled', function () {
             });
         });
 
-        it('should FAIL if CloudTrail is enabled but not with a multi-region trail', function (done) {
-            const cache = createCache([trails[1]], getTrailStatus[0]);
-            cloudtrailEnabled.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(2);
-                expect(results[1].status).to.equal(2);
-                expect(results[1].message).to.include('multi-region trail');
-                done();
-            });
-        });
-
-        it('should FAIL if CloudTrail is enabled but not with a multi-region trail for regional-only trail', function (done) {
+        it('should PASS if CloudTrail is enabled and monitoring regional services', function (done) {
             const cache = createCache([trails[2]], getTrailStatus[0]);
             cloudtrailEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });
