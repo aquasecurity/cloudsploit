@@ -388,11 +388,12 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should PASS if role policy allows all actions on selected resources (not full *:* admin per CIS 2.14)', function (done) {
+        it('should FAIL if role policy allows all actions on selected resources', function (done) {
             const cache = createCache([listRoles[0]],getRole[0], {}, listRolePolicies[1], getRolePolicy[4]);
             iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('allows all actions on selected resources');
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -403,15 +404,6 @@ describe('iamRolePolicies', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('allows all actions on all resources');
                 expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should PASS if role policy allows wildcard actions but ignore service specific roles setting is enabled', function (done) {
-            const cache = createCache([listRoles[0]],getRole[0], listAttachedRolePolicies[2], null, null, getPolicy[0], getPolicyVersion[0]);
-            iamRolePolicies.run(cache, { ignore_service_specific_wildcards: 'true'}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
                 done();
             });
         });
@@ -472,9 +464,9 @@ describe('iamRolePolicies', function () {
             });
         });
        
-        it('should PASS if role policy allows resources which do not match regex (not full *:* admin per CIS 2.14)', function (done) {
+        it('should PASS if role policy has scoped actions on specific resources', function (done) {
             const cache = createCache([listRoles[2]],getRole[1], listAttachedRolePolicies[3], null, null, getPolicy[1], getPolicyVersion[1]);
-            iamRolePolicies.run(cache, {ignore_service_specific_wildcards: 'true',iam_policy_resource_specific_wildcards: '^[a-z]+:[a-z]+:[a-z0-9]+:::[a-z]+$'}, (err, results) => {
+            iamRolePolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -497,66 +489,6 @@ describe('iamRolePolicies', function () {
                 expect(results.length).to.equal(1);
                 expect(results[0].message).to.include('allows all actions on all resources');
                 expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if user inline policy allows all actions on all resources', function (done) {
-            const cache = {
-                iam: {
-                    listRoles: { 'us-east-1': { data: [] } },
-                    listUsers: {
-                        'us-east-1': {
-                            data: [{ UserName: 'admin-user', Arn: 'arn:aws:iam::000011112222:user/admin-user' }]
-                        }
-                    },
-                    listAttachedUserPolicies: { 'us-east-1': { 'admin-user': { data: { AttachedPolicies: [] } } } },
-                    listUserPolicies: { 'us-east-1': { 'admin-user': { data: { PolicyNames: ['AdminInline'] } } } },
-                    getUserPolicy: {
-                        'us-east-1': {
-                            'admin-user': {
-                                AdminInline: { data: { PolicyDocument: [{ Effect: 'Allow', Action: ['*'], Resource: ['*'] }] } }
-                            }
-                        }
-                    }
-                }
-            };
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                const r = results.find(x => x.resource && x.resource.includes('user/admin-user'));
-                expect(r).to.exist;
-                expect(r.status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if group has managed AdministratorAccess policy', function (done) {
-            const cache = {
-                iam: {
-                    listRoles: { 'us-east-1': { data: [] } },
-                    listGroups: {
-                        'us-east-1': {
-                            data: [{ GroupName: 'admin-group', Arn: 'arn:aws:iam::000011112222:group/admin-group' }]
-                        }
-                    },
-                    listAttachedGroupPolicies: {
-                        'us-east-1': {
-                            'admin-group': {
-                                data: {
-                                    AttachedPolicies: [{
-                                        PolicyName: 'AdministratorAccess',
-                                        PolicyArn: 'arn:aws:iam::aws:policy/AdministratorAccess'
-                                    }]
-                                }
-                            }
-                        }
-                    },
-                    listGroupPolicies: { 'us-east-1': { 'admin-group': { data: { PolicyNames: [] } } } }
-                }
-            };
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                const r = results.find(x => x.resource && x.resource.includes('group/admin-group'));
-                expect(r).to.exist;
-                expect(r.status).to.equal(2);
                 done();
             });
         });
