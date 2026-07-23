@@ -170,6 +170,7 @@ module.exports = {
                     }
                 });
                 if (ignoreRole) return cb();
+                
             }
 
             if (config.ignore_identity_federation_roles &&
