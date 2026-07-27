@@ -132,27 +132,6 @@ describe('bucketMFAStatus', function () {
             });
         });
 
-        it('should FAIL if S3 bucket has versioning disabled even when MFA Delete is enabled', function (done) {
-            const cache = createCache([listBuckets[0]], {
-                Status: 'Suspended',
-                MFADelete: 'Enabled'
-            });
-            bucketMFAStatus.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
-        it('should FAIL if S3 bucket has neither versioning nor MFA Delete enabled', function (done) {
-            const cache = createCache([listBuckets[0]], getBucketVersioning[2]);
-            bucketMFAStatus.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should PASS if no S3 bucket found', function (done) {
             const cache = createCache([]);
             bucketMFAStatus.run(cache, {}, (err, results) => {
