@@ -116,7 +116,6 @@ describe('ec2MetadataOptions', function () {
                 MetadataOptions: {
                     HttpTokens: 'required',
                     HttpEndpoint: 'enabled',
-                    State: 'applied',
                 },
             }]);
             ec2MetadataOptions.run(cache, {}, (err, results) => {
@@ -130,27 +129,11 @@ describe('ec2MetadataOptions', function () {
             const cache = createCache([{
                 MetadataOptions: {
                     HttpEndpoint: 'disabled',
-                    State: 'applied',
                 },
             }]);
             ec2MetadataOptions.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if HttpTokens required but State is pending', function (done) {
-            const cache = createCache([{
-                MetadataOptions: {
-                    HttpTokens: 'required',
-                    HttpEndpoint: 'enabled',
-                    State: 'pending',
-                },
-            }]);
-            ec2MetadataOptions.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
                 done();
             });
         });

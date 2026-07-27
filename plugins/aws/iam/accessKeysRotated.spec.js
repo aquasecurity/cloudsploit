@@ -4,7 +4,7 @@ const accessKeysRotated = require('./accessKeysRotated');
 var warnDate = new Date();
 warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
-passDate.setMonth(passDate.getMonth() - 2);
+passDate.setMonth(passDate.getMonth() - 1);
 var failDate = new Date();
 failDate.setMonth(failDate.getMonth() - 7);
 

@@ -31,7 +31,7 @@ module.exports = {
             name: 'Access Keys Rotated Warn',
             description: 'Return a warning result when access keys exceed this number of days without being rotated',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 90
+            default: 45
         }
     },
     realtime_triggers: ['iam:CreateAccessKey','iam:DeleteAccessKey'],

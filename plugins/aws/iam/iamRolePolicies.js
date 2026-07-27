@@ -7,18 +7,44 @@ module.exports = {
     category: 'IAM',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensures IAM role policies are properly scoped with specific permissions',
-    more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
+    description: 'Ensures IAM role, user, and group policies are properly scoped with specific permissions',
+    more_info: 'Policies attached to IAM roles, users, and groups should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies', 'IAM:listPolicies',
-        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'IAM:getRole'],
+        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'IAM:getRole',
+        'IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getUserPolicy',
+        'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies', 'IAM:getGroupPolicy'],
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
             description: 'A comma-separated list indicating role paths which should PASS without checking',
             regex: '^[0-9A-Za-z/._-]{3,512}$',
             default: ''
+        },
+        ignore_service_specific_wildcards: {
+            name: 'Ignore Service Specific Wildcards',
+            description: 'This allows enables you to allow attached policies (inline and managed) to use service specific wildcards in Action. ' +
+                'Example: Consider a role has following inline policy' +
+                `{
+                "Version": "2012-10-17",
+                "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "cognito-sync:*",
+                                "cognito-identity:*"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                ]
+            }` +
+                'If ignore_service_specific_wildcards is true, a PASS result will be generated. ' +
+                'If ignore_service_specific_wildcards is false, a FAIL result will be generated.',
+            regex: '^(true|false)$',
+            default: 'false'
         },
         ignore_identity_federation_roles: {
             name: 'Ignore Identity Federation Roles',
@@ -46,6 +72,18 @@ module.exports = {
             regex: '^.*$',
             default: ''
         },
+        iam_policy_resource_specific_wildcards: {
+            name: 'IAM Policy Resource Specific Wildcards',
+            description: 'Allows policy resources to flag based on regular expression. All the resources in IAM policy, inline or managed, will be tested against this regex and if they don\'t pass the regex, they will be flagged by the plugin.',
+            regex: '^.*$',
+            default: '^.*$',
+        },
+        ignore_iam_policy_resource_wildcards: {
+            name: 'IAM Role Policies Ignore Resource Specific Wildcards',
+            description: 'Enable this setting to ignore resource wildcards i.e. \'"Resource": "*"\' in the IAM policy, which by default, are being flagged.',
+            regex: '^(true|false)$',
+            default: 'false'
+        },
         iam_policy_message_format: {
             name: 'IAM Policy Message Format',
             description: 'Enable this setting to include policy names in the failure messages',
@@ -53,23 +91,32 @@ module.exports = {
             default: 'false'
         }
     },
-    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy',
+        'iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy',
+        'iam:CreateGroup','iam:DeleteGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var config = {
             iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
+            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
             ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
             ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
             ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
             iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default,
+            iam_policy_resource_specific_wildcards: settings.iam_policy_resource_specific_wildcards || this.settings.iam_policy_resource_specific_wildcards.default,
+            ignore_iam_policy_resource_wildcards: settings.ignore_iam_policy_resource_wildcards || this.settings.ignore_iam_policy_resource_wildcards.default,
             iam_policy_message_format: settings.iam_policy_message_format || this.settings.iam_policy_message_format.default
         };
 
+        config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
         config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
         config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
         config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
+        config.ignore_iam_policy_resource_wildcards = (config.ignore_iam_policy_resource_wildcards === 'true');
         config.iam_policy_message_format = (config.iam_policy_message_format === 'true');
 
+
+        var allowedRegex = RegExp(config.iam_policy_resource_specific_wildcards);
         var custom = helpers.isCustom(settings, this.settings);
 
         var results = [];
@@ -79,248 +126,318 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
+        function processRoles(cb) {
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
 
-        if (!listRoles) return callback(null, results, source);
+        if (!listRoles) return cb();
 
         if (listRoles.err || !listRoles.data) {
             helpers.addResult(results, 3,
                 'Unable to query for IAM roles: ' + helpers.addError(listRoles));
-            return callback(null, results, source);
+            return cb();
         }
 
         if (!listRoles.data.length) {
             helpers.addResult(results, 0, 'No IAM roles found');
-            return callback(null, results, source);
+            return cb();
         }
 
         async.each(listRoles.data, function(role, cb){
             if (!role.RoleName) return cb();
 
-                    // Skip roles with user-defined paths
-                    if (config.iam_role_policies_ignore_path &&
-                        config.iam_role_policies_ignore_path.length &&
-                        role.Path &&
-                        role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
-                        return cb();
+            // Skip roles with user-defined paths
+            if (config.iam_role_policies_ignore_path &&
+                config.iam_role_policies_ignore_path.length &&
+                role.Path &&
+                role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
+                return cb();
+            }
+            // Get role details
+            var getRole = helpers.addSource(cache, source,
+                ['iam', 'getRole', region, role.RoleName]);
+
+            if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
+                return cb();
+            }
+
+            //Skip roles with user defined tags
+            if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
+                var tagList = config.iam_role_policies_ignore_tag.split(',');
+                var ignoreRole = tagList.some(tag => {
+                    var key = tag.split(/:(?!.*:)/)[0].trim();
+                    var value = new RegExp(tag.split(/:(?!.*:)/)[1].trim());
+                    if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
+                        return getRole.data.Role.Tags.find(tag =>
+                            tag.Key == key && value.test(tag.Value));
                     }
-                    // Get role details
-                    var getRole = helpers.addSource(cache, source,
-                        ['iam', 'getRole', region, role.RoleName]);
+                });
+                if (ignoreRole) return cb();
+            }
 
-                    if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
-                        return cb();
-                    }
+            if (config.ignore_identity_federation_roles &&
+                helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
+                helpers.addResult(results, 0,
+                    'Role is federated user role',
+                    'global', role.Arn, custom);
+                return cb();
+            }
 
-                    //Skip roles with user defined tags
-                    if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
-                        var tagList = config.iam_role_policies_ignore_tag.split(',');
-                        var ignoreRole = tagList.some(tag => {
-                            var key = tag.split(/:(?!.*:)/)[0].trim();
-                            var value = new RegExp(tag.split(/:(?!.*:)/)[1].trim());
-                            if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
-                                return getRole.data.Role.Tags.find(tag =>
-                                    tag.Key == key && value.test(tag.Value));
-                            }
-                        });
-                        if (ignoreRole) return cb();
-                    }
+            // Get managed policies attached to role
+            var listAttachedRolePolicies = helpers.addSource(cache, source,
+                ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
 
-                    if (config.ignore_identity_federation_roles &&
-                        helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
-                        helpers.addResult(results, 0,
-                            'Role is federated user role',
-                            'global', role.Arn, custom);
-                        return cb();
-                    }
+            // Get inline policies attached to role
+            var listRolePolicies = helpers.addSource(cache, source,
+                ['iam', 'listRolePolicies', region, role.RoleName]);
 
-                    // Get managed policies attached to role
-                    var listAttachedRolePolicies = helpers.addSource(cache, source,
-                        ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
+            var getRolePolicy = helpers.addSource(cache, source,
+                ['iam', 'getRolePolicy', region, role.RoleName]);
 
-                    // Get inline policies attached to role
-                    var listRolePolicies = helpers.addSource(cache, source,
-                        ['iam', 'listRolePolicies', region, role.RoleName]);
+            if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
+                return cb();
+            }
 
-                    var getRolePolicy = helpers.addSource(cache, source,
-                        ['iam', 'getRolePolicy', region, role.RoleName]);
+            if (!listRolePolicies || listRolePolicies.err) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
+                return cb();
+            }
 
-                    if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
-                        return cb();
-                    }
-
-                    if (!listRolePolicies || listRolePolicies.err) {
-                        helpers.addResult(results, 3,
-                            'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
-                        return cb();
-                    }
-
-                    var roleFailures = config.iam_policy_message_format ? {} : [];
+            var roleFailures = config.iam_policy_message_format ? {} : [];
 
 
-                    // See if role has admin managed policy
-                    if (listAttachedRolePolicies.data &&
-                        listAttachedRolePolicies.data.AttachedPolicies) {
+            // See if role has admin managed policy
+            if (listAttachedRolePolicies.data &&
+                listAttachedRolePolicies.data.AttachedPolicies) {
 
-                        for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
-                            if (policy.PolicyArn === managedAdminPolicy) {
-                                if (config.iam_policy_message_format) {
-                                    roleFailures.admin = 'managedAdminPolicy';
-                                } else {
-                                    roleFailures.push('Role has managed AdministratorAccess policy');
-                                }
-                                break;
-                            }
-
-                            if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(policy.PolicyArn)) continue;
-
-                            if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(policy.PolicyArn)) continue;
-
-                            var getPolicy = helpers.addSource(cache, source,
-                                ['iam', 'getPolicy', region, policy.PolicyArn]);
-
-                            if (getPolicy &&
-                                getPolicy.data &&
-                                getPolicy.data.Policy &&
-                                getPolicy.data.Policy.DefaultVersionId) {
-                                var getPolicyVersion = helpers.addSource(cache, source,
-                                    ['iam', 'getPolicyVersion', region, policy.PolicyArn]);
-
-                                if (getPolicyVersion &&
-                                    getPolicyVersion.data &&
-                                    getPolicyVersion.data.PolicyVersion &&
-                                    getPolicyVersion.data.PolicyVersion.Document) {
-                                    let statements = helpers.normalizePolicyDocument(
-                                        getPolicyVersion.data.PolicyVersion.Document);
-                                    if (!statements) break;
-
-                                    if (config.iam_policy_message_format) {
-                                        addRoleFailuresPolicyName(roleFailures, statements, 'managed', policy.PolicyName);
-                                    } else {
-                                        addRoleFailures(roleFailures, statements, 'managed');
-                                    }
-                                }
-                            }
+                for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
+                    if (policy.PolicyArn === managedAdminPolicy) {
+                        if (config.iam_policy_message_format) {
+                            roleFailures.admin = 'managedAdminPolicy';
+                        } else {
+                            roleFailures.push('Role has managed AdministratorAccess policy');
                         }
+                        break;
                     }
 
-                    if (role.attachedPolicies && Array.isArray(role.attachedPolicies) && role.attachedPolicies.length) {
-                        for (var enrichedPolicy of role.attachedPolicies) {
-                            if (enrichedPolicy.PolicyArn === managedAdminPolicy) {
-                                if (config.iam_policy_message_format) {
-                                    roleFailures.admin = 'managedAdminPolicy';
-                                } else {
-                                    roleFailures.push('Role has managed AdministratorAccess policy');
-                                }
-                                break;
-                            }
+                    if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(policy.PolicyArn)) continue;
 
-                            if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(enrichedPolicy.PolicyArn)) continue;
+                    if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(policy.PolicyArn)) continue;
 
-                            if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(enrichedPolicy.PolicyArn)) continue;
+                    var getPolicy = helpers.addSource(cache, source,
+                        ['iam', 'getPolicy', region, policy.PolicyArn]);
 
-                            var enrichedGetPolicy = helpers.addSource(cache, source,
-                                ['iam', 'getPolicy', region, enrichedPolicy.PolicyArn]);
+                    if (getPolicy &&
+                        getPolicy.data &&
+                        getPolicy.data.Policy &&
+                        getPolicy.data.Policy.DefaultVersionId) {
+                        var getPolicyVersion = helpers.addSource(cache, source,
+                            ['iam', 'getPolicyVersion', region, policy.PolicyArn]);
 
-                            if (enrichedGetPolicy &&
-                                enrichedGetPolicy.data &&
-                                enrichedGetPolicy.data.Policy &&
-                                enrichedGetPolicy.data.Policy.DefaultVersionId) {
-                                var enrichedGetPolicyVersion = helpers.addSource(cache, source,
-                                    ['iam', 'getPolicyVersion', region, enrichedPolicy.PolicyArn]);
+                        if (getPolicyVersion &&
+                            getPolicyVersion.data &&
+                            getPolicyVersion.data.PolicyVersion &&
+                            getPolicyVersion.data.PolicyVersion.Document) {
+                            let statements = helpers.normalizePolicyDocument(
+                                getPolicyVersion.data.PolicyVersion.Document);
+                            if (!statements) break;
 
-                                if (enrichedGetPolicyVersion &&
-                                    enrichedGetPolicyVersion.data &&
-                                    enrichedGetPolicyVersion.data.PolicyVersion &&
-                                    enrichedGetPolicyVersion.data.PolicyVersion.Document) {
-                                    let enrichedStatements = helpers.normalizePolicyDocument(
-                                        enrichedGetPolicyVersion.data.PolicyVersion.Document);
-                                    if (!enrichedStatements) break;
-
-                                    if (config.iam_policy_message_format) {
-                                        addRoleFailuresPolicyName(roleFailures, enrichedStatements, 'managed', enrichedPolicy.PolicyName);
-                                    } else {
-                                        addRoleFailures(roleFailures, enrichedStatements, 'managed');
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    var processedInlinePolicies = new Set();
-
-                    if (listRolePolicies.data &&
-                        listRolePolicies.data.PolicyNames &&
-                        listRolePolicies.data.PolicyNames.length) {
-
-                        for (var p in listRolePolicies.data.PolicyNames) {
-                            var policyName = listRolePolicies.data.PolicyNames[p];
-
-                            if (getRolePolicy &&
-                                getRolePolicy[policyName] &&
-                                getRolePolicy[policyName].data &&
-                                getRolePolicy[policyName].data.PolicyDocument) {
-
-                                processedInlinePolicies.add(policyName);
-                                var policyDoc = getRolePolicy[policyName].data.PolicyDocument;
-                                var statements = Array.isArray(policyDoc) ? policyDoc : helpers.normalizePolicyDocument(policyDoc);
-                                if (!statements) continue;
-                                if (config.iam_policy_message_format) {
-                                    addRoleFailuresPolicyName(roleFailures, statements, 'inline', policyName);
-                                } else {
-                                    addRoleFailures(roleFailures, statements, 'inline');
-                                }
-                            }
-                        }
-                    }
-
-                    if (role.inlinePolicies && Array.isArray(role.inlinePolicies) && role.inlinePolicies.length) {
-                        for (var enrichedInlinePolicy of role.inlinePolicies) {
-                            if (!enrichedInlinePolicy || !enrichedInlinePolicy.PolicyDocument) continue;
-
-                            var enrichedPolicyName = enrichedInlinePolicy.PolicyName;
-                            if (processedInlinePolicies.has(enrichedPolicyName)) continue;
-
-                            var enrichedPolicyDoc = enrichedInlinePolicy.PolicyDocument;
-                            var enrichedStatementsInline = Array.isArray(enrichedPolicyDoc) ? enrichedPolicyDoc : helpers.normalizePolicyDocument(enrichedPolicyDoc);
-                            if (!enrichedStatementsInline) continue;
                             if (config.iam_policy_message_format) {
-                                addRoleFailuresPolicyName(roleFailures, enrichedStatementsInline, 'inline', enrichedPolicyName);
+                                addRoleFailuresPolicyName(roleFailures, statements, 'managed', policy.PolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                             } else {
-                                addRoleFailures(roleFailures, enrichedStatementsInline, 'inline');
+                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                             }
                         }
                     }
+                }
+            }
 
-                    if (config.iam_policy_message_format) {
-                        compileFormattedResults(roleFailures, role, results, custom);
-                    } else {
-                        compileSimpleResults(roleFailures, role, results, custom);
+            if (listRolePolicies.data &&
+                listRolePolicies.data.PolicyNames) {
+
+                for (var p in listRolePolicies.data.PolicyNames) {
+                    var policyName = listRolePolicies.data.PolicyNames[p];
+
+                    if (getRolePolicy &&
+                        getRolePolicy[policyName] &&
+                        getRolePolicy[policyName].data &&
+                        getRolePolicy[policyName].data.PolicyDocument) {
+
+                        var statements = getRolePolicy[policyName].data.PolicyDocument;
+                        if (!statements) break;
+                        if (config.iam_policy_message_format) {
+                            addRoleFailuresPolicyName(roleFailures, statements, 'inline', policyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                        } else {
+                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                        }
                     }
+                }
+            }
+
+            if (config.iam_policy_message_format) {
+                compileFormattedResults(roleFailures, role, results, custom);
+            } else {
+                compileSimpleResults(roleFailures, role, results, custom);
+            }
+
 
             cb();
-        }, function() {
+        }, cb);
+        }
+
+        function processIamPrincipals(principals, principalType, listAttachedKey, listInlineKey, getInlineKey, nameKey, cb) {
+            if (!principals) return cb();
+            if (principals.err || !principals.data) {
+                helpers.addResult(results, 3,
+                    'Unable to query for IAM ' + principalType.toLowerCase() + 's: ' + helpers.addError(principals));
+                return cb();
+            }
+            if (!principals.data.length) return cb();
+
+            async.each(principals.data, function(principal, pcb) {
+                var principalName = principal[nameKey];
+                if (!principalName) return pcb();
+
+                var listAttached = helpers.addSource(cache, source,
+                    ['iam', listAttachedKey, region, principalName]);
+                var listInline = helpers.addSource(cache, source,
+                    ['iam', listInlineKey, region, principalName]);
+                var getInlinePolicy = helpers.addSource(cache, source,
+                    ['iam', getInlineKey, region, principalName]);
+
+                if (!listAttached || listAttached.err) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for IAM attached policy for ' + principalType.toLowerCase() + ': ' + principalName + ': ' + helpers.addError(listAttached),
+                        'global', principal.Arn);
+                    return pcb();
+                }
+
+                if (!listInline || listInline.err) {
+                    helpers.addResult(results, 3,
+                        'Unable to query for IAM ' + principalType.toLowerCase() + ' policy for ' + principalType.toLowerCase() + ': ' + principalName + ': ' + helpers.addError(listInline),
+                        'global', principal.Arn);
+                    return pcb();
+                }
+
+                var failures = [];
+
+                if (listAttached.data && listAttached.data.AttachedPolicies) {
+                    for (var policy of listAttached.data.AttachedPolicies) {
+                        if (policy.PolicyArn === managedAdminPolicy) {
+                            failures.push(principalType + ' has managed AdministratorAccess policy');
+                            break;
+                        }
+                    }
+                }
+
+                if (listInline.data && listInline.data.PolicyNames) {
+                    for (var p in listInline.data.PolicyNames) {
+                        var policyName = listInline.data.PolicyNames[p];
+
+                        if (getInlinePolicy &&
+                            getInlinePolicy[policyName] &&
+                            getInlinePolicy[policyName].data &&
+                            getInlinePolicy[policyName].data.PolicyDocument &&
+                            allowsAllActionsOnAllResources(getInlinePolicy[policyName].data.PolicyDocument)) {
+                            failures.push(principalType + ' inline policy allows all actions on all resources');
+                        }
+                    }
+                }
+
+                compilePrincipalAdminResults(failures, principalType, principal.Arn, results, custom);
+                pcb();
+            }, cb);
+        }
+
+        function processUsers(cb) {
+            var listUsers = helpers.addSource(cache, source, ['iam', 'listUsers', region]);
+            processIamPrincipals(listUsers, 'User', 'listAttachedUserPolicies', 'listUserPolicies', 'getUserPolicy', 'UserName', cb);
+        }
+
+        function processGroups(cb) {
+            var listGroups = helpers.addSource(cache, source, ['iam', 'listGroups', region]);
+            processIamPrincipals(listGroups, 'Group', 'listAttachedGroupPolicies', 'listGroupPolicies', 'getGroupPolicy', 'GroupName', cb);
+        }
+
+        async.parallel([processRoles, processUsers, processGroups], function() {
             callback(null, results, source);
         });
     }
 };
 
-function addRoleFailures(roleFailures, statements, policyType) {
+function allowsAllActionsOnAllResources(statements) {
+    if (Array.isArray(statements)) {
+        statements = statements.filter(function(statement) {
+            return statement && statement.Effect;
+        });
+    } else {
+        statements = helpers.normalizePolicyDocument(statements);
+    }
+    if (!statements || !statements.length) return false;
+
     for (var statement of statements) {
-        if (statement.Effect === 'Allow') {
+        if (statement.Effect !== 'Allow') continue;
+
+        var actions = statement.Action;
+        var resources = statement.Resource;
+        if (!actions || !resources) continue;
+
+        if (!Array.isArray(actions)) actions = [actions];
+        if (!Array.isArray(resources)) resources = [resources];
+
+        if (actions.indexOf('*') > -1 && resources.indexOf('*') > -1) return true;
+    }
+
+    return false;
+}
+
+function compilePrincipalAdminResults(failures, entityType, arn, results, custom) {
+    if (failures.length) {
+        helpers.addResult(results, 2, failures.join(', '), 'global', arn, custom);
+    } else {
+        helpers.addResult(results, 0,
+            entityType + ' does not have full administrative policy',
+            'global', arn, custom);
+    }
+}
+
+function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
+    for (var statement of statements) {
+        if (statement.Effect === 'Allow' &&
+            !statement.Condition) {
             let failMsg;
             if (statement.Action &&
                 statement.Action.indexOf('*') > -1 &&
                 statement.Resource &&
                 statement.Resource.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on all resources`;
-            } else if (statement.Action && statement.Action.indexOf('*') > -1) {
+            } else if (statement.Action.indexOf('*') > -1) {
                 failMsg = `Role ${policyType} policy allows all actions on selected resources`;
+            } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*' ){
+                failMsg = `Role ${policyType} policy allows actions on all resources`;
+            } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
+                // Check each action for wildcards
+                let wildcards = [];
+                for (var a in statement.Action) {
+                    if (/^.+:[a-zA-Z]?\*.?$/.test(statement.Action[a])) {
+                        wildcards.push(statement.Action[a]);
+                    }
+                }
+                if (wildcards.length) failMsg = `Role ${policyType} policy allows wildcard actions: ${wildcards.join(', ')}`;
+            } else if (statement.Resource && statement.Resource.length) {
+                // Check each resource for wildcard
+                let wildcards = [];
+                for (var resource of statement.Resource) {
+                    if (!regResource.test(resource)) {
+                        wildcards.push(resource);
+                    }
+                }
+                if (wildcards.length) failMsg = `Role ${policyType} policy does not match provided regex: ${wildcards.join(', ')}`;
             }
 
             if (failMsg && roleFailures.indexOf(failMsg) === -1) roleFailures.push(failMsg);
@@ -328,23 +445,30 @@ function addRoleFailures(roleFailures, statements, policyType) {
     }
 }
 
-function addRoleFailuresPolicyName(roleFailures, statements, policyType, policyName) {
+function addRoleFailuresPolicyName(roleFailures, statements, policyType, policyName, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
+    // Initialize roleFailures as an object for the first time
     if (!roleFailures.managed) {
         roleFailures.managed = {
             allActionsAllResources: [],
             allActionsSelectedResources: [],
+            actionsAllResources: [],
+            wildcardActions: {},
+            regexMismatch: {}
         };
     }
     if (!roleFailures.inline) {
         roleFailures.inline = {
             allActionsAllResources: [],
             allActionsSelectedResources: [],
+            actionsAllResources: [],
+            wildcardActions: {},
+            regexMismatch: {}
         };
     }
     if (!roleFailures.admin) roleFailures.admin = false;
 
     for (var statement of statements) {
-        if (statement.Effect === 'Allow') {
+        if (statement.Effect === 'Allow' && !statement.Condition) {
             let targetObj = roleFailures[policyType];
 
             if (statement.Action &&
@@ -352,8 +476,42 @@ function addRoleFailuresPolicyName(roleFailures, statements, policyType, policyN
                 statement.Resource &&
                 statement.Resource.indexOf('*') > -1) {
                 targetObj.allActionsAllResources.push(policyName);
-            } else if (statement.Action && statement.Action.indexOf('*') > -1) {
+            } else if (statement.Action.indexOf('*') > -1) {
                 targetObj.allActionsSelectedResources.push(policyName);
+            } else if (!ignoreResourceSpecific && statement.Resource && statement.Resource == '*') {
+                targetObj.actionsAllResources.push(policyName);
+            } else if (!ignoreServiceSpecific && statement.Action && statement.Action.length) {
+                // Check each action for wildcards
+                let wildcards = [];
+                for (var a in statement.Action) {
+                    if (/^.+:[a-zA-Z]?\*.?$/.test(statement.Action[a])) {
+                        wildcards.push(statement.Action[a]);
+                    }
+                }
+                if (wildcards.length) {
+                    if (!targetObj.wildcardActions[wildcards.join(', ')]) {
+                        targetObj.wildcardActions[wildcards.join(', ')] = [];
+                    }
+                    if (!targetObj.wildcardActions[wildcards.join(', ')].includes(policyName)) {
+                        targetObj.wildcardActions[wildcards.join(', ')].push(policyName);
+                    }
+                }
+            } else if (statement.Resource && statement.Resource.length) {
+                // Check each resource for wildcard
+                let wildcards = [];
+                for (var resource of statement.Resource) {
+                    if (!regResource.test(resource)) {
+                        wildcards.push(resource);
+                    }
+                }
+                if (wildcards.length) {
+                    if (!targetObj.regexMismatch[wildcards.join(', ')]) {
+                        targetObj.regexMismatch[wildcards.join(', ')] = [];
+                    }
+                    if (!targetObj.regexMismatch[wildcards.join(', ')].includes(policyName)) {
+                        targetObj.regexMismatch[wildcards.join(', ')].push(policyName);
+                    }
+                }
             }
         }
     }
@@ -361,12 +519,23 @@ function addRoleFailuresPolicyName(roleFailures, statements, policyType, policyN
 
 function hasFailures(roleFailures) {
     if (roleFailures.admin) return true;
-
-    if (roleFailures.managed && roleFailures.managed.allActionsAllResources.length) return true;
-    if (roleFailures.managed && roleFailures.managed.allActionsSelectedResources.length) return true;
-    if (roleFailures.inline && roleFailures.inline.allActionsAllResources.length) return true;
-    if (roleFailures.inline && roleFailures.inline.allActionsSelectedResources.length) return true;
-
+    
+    if (roleFailures.managed) {
+        if (roleFailures.managed.allActionsAllResources.length) return true;
+        if (roleFailures.managed.allActionsSelectedResources.length) return true;
+        if (roleFailures.managed.actionsAllResources.length) return true;
+        if (Object.keys(roleFailures.managed.wildcardActions).length) return true;
+        if (roleFailures.managed.regexMismatch.length) return true;
+    }
+    
+    if (roleFailures.inline) {
+        if (roleFailures.inline.allActionsAllResources.length) return true;
+        if (roleFailures.inline.allActionsSelectedResources.length) return true;
+        if (roleFailures.inline.actionsAllResources.length) return true;
+        if (Object.keys(roleFailures.inline.wildcardActions).length) return true;
+        if (roleFailures.inline.regexMismatch.length) return true;
+    }
+    
     return false;
 }
 
@@ -392,25 +561,47 @@ function compileSimpleResults(roleFailures, role, results, custom) {
 function compileFormattedResults(roleFailures, role, results, custom) {
     if (hasFailures(roleFailures)) {
         let messages = [];
-
+        
         if (roleFailures.admin == 'managedAdminPolicy') {
             messages.push('Role has managed AdministratorAccess policy');
         }
 
-        if (roleFailures.managed && roleFailures.managed.allActionsAllResources.length) {
-            messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsAllResources)}" allows all actions on all resources`);
+        // Format managed policies
+        if (roleFailures.managed) {
+            if (roleFailures.managed.allActionsAllResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsAllResources)}" allows all actions on all resources`);
+            }
+            if (roleFailures.managed.allActionsSelectedResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsSelectedResources)}" allows all actions on selected resources`);
+            }
+            if (roleFailures.managed.actionsAllResources.length) {
+                messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.actionsAllResources)}" allows actions on all resources`);
+            }
+            for (let action in roleFailures.managed.wildcardActions) {
+                messages.push(`Role managed policy "${roleFailures.managed.wildcardActions[action].join('", "')}" allows wildcard actions: ${action}`);
+            }
+            for (let resource in roleFailures.managed.regexMismatch) {
+                messages.push(`Role managed policy "${roleFailures.managed.regexMismatch[resource].join('", "')}" does not match provided regex: ${resource}`);
+            }
         }
 
-        if (roleFailures.managed && roleFailures.managed.allActionsSelectedResources.length) {
-            messages.push(`Role managed policy "${formatPolicyNames(roleFailures.managed.allActionsSelectedResources)}" allows all actions on selected resources`);
-        }
-
-        if (roleFailures.inline && roleFailures.inline.allActionsAllResources.length) {
-            messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsAllResources)}" allows all actions on all resources`);
-        }
-
-        if (roleFailures.inline && roleFailures.inline.allActionsSelectedResources.length) {
-            messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsSelectedResources)}" allows all actions on selected resources`);
+        // Format inline policies
+        if (roleFailures.inline) {
+            if (roleFailures.inline.allActionsAllResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsAllResources)}" allows all actions on all resources`);
+            }
+            if (roleFailures.inline.allActionsSelectedResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.allActionsSelectedResources)}" allows all actions on selected resources`);
+            }
+            if (roleFailures.inline.actionsAllResources.length) {
+                messages.push(`Role inline policy "${formatPolicyNames(roleFailures.inline.actionsAllResources)}" allows actions on all resources`);
+            }
+            for (let action in roleFailures.inline.wildcardActions) {
+                messages.push(`Role inline policy "${roleFailures.inline.wildcardActions[action].join('", "')}" allows wildcard actions: ${action}`);
+            }
+            for (let resource in roleFailures.inline.regexMismatch) {
+                messages.push(`Role inline policy "${roleFailures.inline.regexMismatch[resource].join('", "')}" does not match provided regex: ${resource}`);
+            }
         }
 
         helpers.addResult(results, 2,
@@ -418,7 +609,7 @@ function compileFormattedResults(roleFailures, role, results, custom) {
             'global', role.Arn, custom);
     } else {
         helpers.addResult(results, 0,
-            'Role does not have full "*:*" administrative policy',
+            'Role does not have overly-permissive policy',
             'global', role.Arn, custom);
     }
 }

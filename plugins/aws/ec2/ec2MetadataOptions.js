@@ -46,12 +46,10 @@ module.exports = {
                     }
 
                     if (instance.MetadataOptions.HttpTokens &&
-                        instance.MetadataOptions.HttpTokens === 'required' &&
-                        instance.MetadataOptions.State === 'applied') {
+                        instance.MetadataOptions.HttpTokens === 'required') {
                         instancesTokensRequired.push(arn);
                     } else if (instance.MetadataOptions.HttpEndpoint &&
-                        instance.MetadataOptions.HttpEndpoint === 'disabled' &&
-                        instance.MetadataOptions.State === 'applied') {
+                        instance.MetadataOptions.HttpEndpoint === 'disabled') {
                         instancesEndpointDisabled.push(arn);
                     } else {
                         instancesInsecure.push(arn);
@@ -74,7 +72,7 @@ module.exports = {
                 }
 
                 for (var kArn of instancesInsecure) {
-                    helpers.addResult(results, 2, 'Instance does not require IMDSv2 (HttpTokens required and State applied)', region, kArn);
+                    helpers.addResult(results, 2, 'Instance has instance metadata endpoint enabled and does not require HttpTokens', region, kArn);
                 }
             }
 
