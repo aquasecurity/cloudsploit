@@ -7,14 +7,12 @@ module.exports = {
     category: 'IAM',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensures IAM role, user, and group policies are properly scoped with specific permissions',
-    more_info: 'Policies attached to IAM roles, users, and groups should be scoped to least-privileged access and avoid the use of wildcards.',
+    description: 'Ensures IAM role policies are properly scoped with specific permissions',
+    more_info: 'Policies attached to IAM roles should be scoped to least-privileged access and avoid the use of wildcards.',
     link: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html',
     recommended_action: 'Ensure that all IAM roles are scoped to specific services and API calls.',
     apis: ['IAM:listRoles', 'IAM:listRolePolicies', 'IAM:listAttachedRolePolicies', 'IAM:listPolicies',
-        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'IAM:getRole',
-        'IAM:listUsers', 'IAM:listUserPolicies', 'IAM:listAttachedUserPolicies', 'IAM:getUserPolicy',
-        'IAM:listGroups', 'IAM:listGroupPolicies', 'IAM:listAttachedGroupPolicies', 'IAM:getGroupPolicy'],
+        'IAM:getPolicy', 'IAM:getPolicyVersion', 'IAM:getRolePolicy', 'IAM:getRole'],
     settings: {
         iam_role_policies_ignore_path: {
             name: 'IAM Role Policies Ignore Path',
@@ -91,9 +89,7 @@ module.exports = {
             default: 'false'
         }
     },
-    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy',
-        'iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:PutUserPolicy','iam:DeleteUserPolicy',
-        'iam:CreateGroup','iam:DeleteGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy','iam:PutGroupPolicy','iam:DeleteGroupPolicy'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy','iam:PutRolePolicy','iam:DeleteRolePolicy'],
 
     run: function(cache, settings, callback) {
         var config = {
@@ -126,21 +122,20 @@ module.exports = {
         var awsOrGov = helpers.defaultPartition(settings);
         var managedAdminPolicy = `arn:${awsOrGov}:iam::aws:policy/AdministratorAccess`;
 
-        function processRoles(cb) {
         var listRoles = helpers.addSource(cache, source,
             ['iam', 'listRoles', region]);
 
-        if (!listRoles) return cb();
+        if (!listRoles) return callback(null, results, source);
 
         if (listRoles.err || !listRoles.data) {
             helpers.addResult(results, 3,
                 'Unable to query for IAM roles: ' + helpers.addError(listRoles));
-            return cb();
+            return callback(null, results, source);
         }
 
         if (!listRoles.data.length) {
             helpers.addResult(results, 0, 'No IAM roles found');
-            return cb();
+            return callback(null, results, source);
         }
 
         async.each(listRoles.data, function(role, cb){
@@ -287,124 +282,11 @@ module.exports = {
 
 
             cb();
-        }, cb);
-        }
-
-        function processIamPrincipals(principals, principalType, listAttachedKey, listInlineKey, getInlineKey, nameKey, cb) {
-            if (!principals) return cb();
-            if (principals.err || !principals.data) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM ' + principalType.toLowerCase() + 's: ' + helpers.addError(principals));
-                return cb();
-            }
-            if (!principals.data.length) return cb();
-
-            async.each(principals.data, function(principal, pcb) {
-                var principalName = principal[nameKey];
-                if (!principalName) return pcb();
-
-                var listAttached = helpers.addSource(cache, source,
-                    ['iam', listAttachedKey, region, principalName]);
-                var listInline = helpers.addSource(cache, source,
-                    ['iam', listInlineKey, region, principalName]);
-                var getInlinePolicy = helpers.addSource(cache, source,
-                    ['iam', getInlineKey, region, principalName]);
-
-                if (!listAttached || listAttached.err) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for IAM attached policy for ' + principalType.toLowerCase() + ': ' + principalName + ': ' + helpers.addError(listAttached),
-                        'global', principal.Arn);
-                    return pcb();
-                }
-
-                if (!listInline || listInline.err) {
-                    helpers.addResult(results, 3,
-                        'Unable to query for IAM ' + principalType.toLowerCase() + ' policy for ' + principalType.toLowerCase() + ': ' + principalName + ': ' + helpers.addError(listInline),
-                        'global', principal.Arn);
-                    return pcb();
-                }
-
-                var failures = [];
-
-                if (listAttached.data && listAttached.data.AttachedPolicies) {
-                    for (var policy of listAttached.data.AttachedPolicies) {
-                        if (policy.PolicyArn === managedAdminPolicy) {
-                            failures.push(principalType + ' has managed AdministratorAccess policy');
-                            break;
-                        }
-                    }
-                }
-
-                if (listInline.data && listInline.data.PolicyNames) {
-                    for (var p in listInline.data.PolicyNames) {
-                        var policyName = listInline.data.PolicyNames[p];
-
-                        if (getInlinePolicy &&
-                            getInlinePolicy[policyName] &&
-                            getInlinePolicy[policyName].data &&
-                            getInlinePolicy[policyName].data.PolicyDocument &&
-                            allowsAllActionsOnAllResources(getInlinePolicy[policyName].data.PolicyDocument)) {
-                            failures.push(principalType + ' inline policy allows all actions on all resources');
-                        }
-                    }
-                }
-
-                compilePrincipalAdminResults(failures, principalType, principal.Arn, results, custom);
-                pcb();
-            }, cb);
-        }
-
-        function processUsers(cb) {
-            var listUsers = helpers.addSource(cache, source, ['iam', 'listUsers', region]);
-            processIamPrincipals(listUsers, 'User', 'listAttachedUserPolicies', 'listUserPolicies', 'getUserPolicy', 'UserName', cb);
-        }
-
-        function processGroups(cb) {
-            var listGroups = helpers.addSource(cache, source, ['iam', 'listGroups', region]);
-            processIamPrincipals(listGroups, 'Group', 'listAttachedGroupPolicies', 'listGroupPolicies', 'getGroupPolicy', 'GroupName', cb);
-        }
-
-        async.parallel([processRoles, processUsers, processGroups], function() {
+        }, function(){
             callback(null, results, source);
         });
     }
 };
-
-function allowsAllActionsOnAllResources(statements) {
-    if (Array.isArray(statements)) {
-        statements = statements.filter(function(statement) {
-            return statement && statement.Effect;
-        });
-    } else {
-        statements = helpers.normalizePolicyDocument(statements);
-    }
-    if (!statements || !statements.length) return false;
-
-    for (var statement of statements) {
-        if (statement.Effect !== 'Allow') continue;
-
-        var actions = statement.Action;
-        var resources = statement.Resource;
-        if (!actions || !resources) continue;
-
-        if (!Array.isArray(actions)) actions = [actions];
-        if (!Array.isArray(resources)) resources = [resources];
-
-        if (actions.indexOf('*') > -1 && resources.indexOf('*') > -1) return true;
-    }
-
-    return false;
-}
-
-function compilePrincipalAdminResults(failures, entityType, arn, results, custom) {
-    if (failures.length) {
-        helpers.addResult(results, 2, failures.join(', '), 'global', arn, custom);
-    } else {
-        helpers.addResult(results, 0,
-            entityType + ' does not have full administrative policy',
-            'global', arn, custom);
-    }
-}
 
 function addRoleFailures(roleFailures, statements, policyType, ignoreServiceSpecific, regResource, ignoreResourceSpecific) {
     for (var statement of statements) {

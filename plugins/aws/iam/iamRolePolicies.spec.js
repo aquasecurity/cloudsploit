@@ -484,32 +484,5 @@ describe('iamRolePolicies', function () {
             });
         });
 
-        it('should FAIL if user has managed AdministratorAccess policy', function (done) {
-            const cache = createCache([]);
-            cache.iam.listUsers = { 'us-east-1': { data: [{ UserName: 'cloudsploit', Arn: 'arn:aws:iam::111122223333:user/cloudsploit' }] } };
-            cache.iam.listAttachedUserPolicies = { 'us-east-1': { cloudsploit: { data: { AttachedPolicies: [{ PolicyName: 'AdministratorAccess', PolicyArn: 'arn:aws:iam::aws:policy/AdministratorAccess' }] } } } };
-            cache.iam.listUserPolicies = { 'us-east-1': { cloudsploit: { data: { PolicyNames: [] } } } };
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                const userResult = results.find(r => r.resource && r.resource.includes('user/cloudsploit'));
-                expect(userResult.status).to.equal(2);
-                expect(userResult.message).to.include('AdministratorAccess');
-                done();
-            });
-        });
-
-        it('should FAIL if group inline policy allows all actions on all resources', function (done) {
-            const cache = createCache([]);
-            cache.iam.listGroups = { 'us-east-1': { data: [{ GroupName: 'admins', Arn: 'arn:aws:iam::111122223333:group/admins' }] } };
-            cache.iam.listAttachedGroupPolicies = { 'us-east-1': { admins: { data: { AttachedPolicies: [] } } } };
-            cache.iam.listGroupPolicies = { 'us-east-1': { admins: { data: { PolicyNames: ['AdminPolicy'] } } } };
-            cache.iam.getGroupPolicy = { 'us-east-1': { admins: { AdminPolicy: { data: { PolicyDocument: [{ Effect: 'Allow', Action: ['*'], Resource: ['*'] }] } } } } };
-            iamRolePolicies.run(cache, {}, (err, results) => {
-                const groupResult = results.find(r => r.resource && r.resource.includes('group/admins'));
-                expect(groupResult.status).to.equal(2);
-                expect(groupResult.message).to.include('allows all actions on all resources');
-                done();
-            });
-        });
-
     });
 });
