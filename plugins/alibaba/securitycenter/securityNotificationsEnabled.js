@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensure that notifications are enabled for all risk items in Vulnerability, Baseline Risks, Alerts and Accesskey Leak event detection categories.',
     more_info: 'Alibaba Cloud sends notification via email, SMS or internal message whenever security events happen. ' +
-        'Enable notifications for security aletrs in order to receive notifications as soon as security events happens.',
+        'Enable notifications for security alerts in order to receive notifications as soon as security events happens.',
     link: 'https://www.alibabacloud.com/help/doc-detail/111648.htm',
     recommended_action: 'Enable email, SMS or internal message notifications under Security Center settings.',
     apis: ['TDS:DescribeNoticeConfig'],
