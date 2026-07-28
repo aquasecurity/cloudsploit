@@ -9,12 +9,9 @@ module.exports = {
     more_info: 'Access to the AWSCloudShellFullAccess policy should be restricted, as it presents a potential channel for data exfiltration by privileged users.',
     link: 'https://docs.aws.amazon.com/cloudshell/latest/userguide/sec-auth-with-identities.html',
     recommended_action: 'Detach the AWSCloudShellFullAccess policy from all IAM users, groups, and roles, and replace with a more restrictive policy if CloudShell access is required.',
-    apis: ['IAM:listUsers', 'IAM:listAttachedUserPolicies',
-        'IAM:listGroups', 'IAM:listAttachedGroupPolicies',
-        'IAM:listRoles', 'IAM:listAttachedRolePolicies'],
-    realtime_triggers: ['iam:AttachUserPolicy','iam:DetachUserPolicy',
-        'iam:AttachGroupPolicy','iam:DetachGroupPolicy',
-        'iam:AttachRolePolicy','iam:DetachRolePolicy'],
+    apis: ['IAM:listUsers', 'IAM:listAttachedUserPolicies', 'IAM:listGroups',
+        'IAM:listAttachedGroupPolicies', 'IAM:listRoles', 'IAM:listAttachedRolePolicies'],
+    realtime_triggers: ['iam:AttachUserPolicy','iam:DetachUserPolicy','iam:AttachGroupPolicy','iam:DetachGroupPolicy','iam:AttachRolePolicy','iam:DetachRolePolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
