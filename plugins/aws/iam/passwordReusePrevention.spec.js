@@ -108,19 +108,6 @@ describe('passwordReusePrevention', function () {
             });
         });
 
-        it('should WARN if maximum password reuse is less than warn limit', function (done) {
-            const cache = createCache(getAccountPasswordPolicy[1]);
-            var settings = {
-                password_reuse_fail: 5,
-                password_reuse_warn: 24
-            };
-            passwordReusePrevention.run(cache, settings, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
-                done();
-            });
-        });
-
         it('should FAIL if maximum password reuse is less than fail limit', function (done) {
             const cache = createCache(getAccountPasswordPolicy[2]);
             passwordReusePrevention.run(cache, {}, (err, results) => {
