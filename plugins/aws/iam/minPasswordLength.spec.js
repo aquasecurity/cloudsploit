@@ -89,18 +89,23 @@ describe('minPasswordLength', function () {
     describe('run', function () {
         it('should PASS if minimum password length is suitable', function (done) {
             const cache = createCache(getAccountPasswordPolicy[0]);
-            var settings = {
-                min_password_length_fail: 10,
-                min_password_length_warn: 14
-            };
-            minPasswordLength.run(cache, settings, (err, results) => {
+            minPasswordLength.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should WARN if minimum password length is less than 14 characters', function (done) {
+        it('should FAIL if minimum password length is less than 14 characters', function (done) {
+            const cache = createCache(getAccountPasswordPolicy[1]);
+            minPasswordLength.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should WARN if minimum password length is less than warn limit', function (done) {
             const cache = createCache(getAccountPasswordPolicy[1]);
             var settings = {
                 min_password_length_fail: 10,
@@ -113,13 +118,9 @@ describe('minPasswordLength', function () {
             });
         });
 
-        it('should FAIL if minimum password length is less than 10 characters', function (done) {
+        it('should FAIL if minimum password length is less than fail limit', function (done) {
             const cache = createCache(getAccountPasswordPolicy[2]);
-            var settings = {
-                min_password_length_fail: 10,
-                min_password_length_warn: 14
-            };
-            minPasswordLength.run(cache, settings, (err, results) => {
+            minPasswordLength.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();

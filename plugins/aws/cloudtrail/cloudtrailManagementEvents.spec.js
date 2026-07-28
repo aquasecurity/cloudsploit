@@ -104,6 +104,41 @@ describe('cloudtrailManagementEvents', function () {
             });
         });
 
+        it('should FAIL if management events are read-only only', function (done) {
+            const cache = createCache([describeTrails[0]], {
+                TrailARN: describeTrails[0].TrailARN,
+                EventSelectors: [{
+                    ReadWriteType: 'ReadOnly',
+                    IncludeManagementEvents: true,
+                    DataResources: [],
+                    ExcludeManagementEventSources: []
+                }]
+            });
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
+        it('should PASS if advanced event selectors log all management events', function (done) {
+            const cache = createCache([describeTrails[0]], {
+                TrailARN: describeTrails[0].TrailARN,
+                AdvancedEventSelectors: [{
+                    Name: 'Management events selector',
+                    FieldSelectors: [{
+                        Field: 'eventCategory',
+                        Equals: ['Management']
+                    }]
+                }]
+            });
+            cloudtrailManagementEvents.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                done();
+            });
+        });
+
         it('should FAIL if CloudTrail trail is not configured to log management events', function (done) {
             const cache = createCache([describeTrails[1]], getEventSelectors[1]);
             cloudtrailManagementEvents.run(cache, {}, (err, results) => {
