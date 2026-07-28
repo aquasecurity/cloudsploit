@@ -334,7 +334,62 @@ module.exports = {
                 if (listAttachedRolePolicies.data &&
                     listAttachedRolePolicies.data.AttachedPolicies) {
 
-                    for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
+                    for (var attachedPolicy of listAttachedRolePolicies.data.AttachedPolicies) {
+                        if (attachedPolicy.PolicyArn === managedAdminPolicy) {
+                            roleFailures.push('Role has managed AdministratorAccess policy');
+                            break;
+                        }
+
+                        if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(attachedPolicy.PolicyArn)) continue;
+
+                        if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(attachedPolicy.PolicyArn)) continue;
+
+                        var managedGetPolicy = helpers.addSource(cache, source,
+                            ['iam', 'getPolicy', iamRegion, attachedPolicy.PolicyArn]);
+
+                        if (managedGetPolicy &&
+                            managedGetPolicy.data &&
+                            managedGetPolicy.data.Policy &&
+                            managedGetPolicy.data.Policy.DefaultVersionId) {
+                            var managedGetPolicyVersion = helpers.addSource(cache, source,
+                                ['iam', 'getPolicyVersion', iamRegion, attachedPolicy.PolicyArn]);
+
+                            if (managedGetPolicyVersion &&
+                                managedGetPolicyVersion.data &&
+                                managedGetPolicyVersion.data.PolicyVersion &&
+                                managedGetPolicyVersion.data.PolicyVersion.Document) {
+                                let managedStatements = helpers.normalizePolicyDocument(
+                                    managedGetPolicyVersion.data.PolicyVersion.Document);
+                                if (!managedStatements) break;
+                                for (let statement of managedStatements) {
+                                    if (statement.Action && statement.Action.length) {
+
+                                        for (let action of statement.Action) {
+                                            if (config.whitelist_unused_actions_for_resources.includes(action.toLowerCase())) continue;
+                                            let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
+                                            let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
+
+                                            if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
+                                                for (let supportedResource of allServices[service]) {
+                                                    if (resourceAction.includes(supportedResource)) {
+                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                addRoleFailures(roleFailures, managedStatements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            }
+                        }
+                    }
+                }
+
+                if (role.attachedPolicies && Array.isArray(role.attachedPolicies) && role.attachedPolicies.length) {
+                    for (var policy of role.attachedPolicies) {
                         if (policy.PolicyArn === managedAdminPolicy) {
                             roleFailures.push('Role has managed AdministratorAccess policy');
                             break;
@@ -391,8 +446,52 @@ module.exports = {
                 if (listRolePolicies.data &&
                     listRolePolicies.data.PolicyNames) {
                     for (var p in listRolePolicies.data.PolicyNames) {
-                        var policyName = listRolePolicies.data.PolicyNames[p];
+                        var rolePolicyName = listRolePolicies.data.PolicyNames[p];
 
+                        if (getRolePolicy &&
+                            getRolePolicy[rolePolicyName] &&
+                            getRolePolicy[rolePolicyName].data &&
+                            getRolePolicy[rolePolicyName].data.PolicyDocument) {
+                            var inlinePolicyStatements = getRolePolicy[rolePolicyName].data.PolicyDocument;
+
+                            if (!inlinePolicyStatements) break;
+
+                            for (let statement of inlinePolicyStatements) {
+                                if ((statement.Action && statement.Action.length && statement.Action[0] === '*') ||
+                                    (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
+                                    continue;
+                                }
+                             
+                                if (statement.Action && statement.Action.length &&
+                                    statement.Resource && statement.Resource.length) {
+                                    let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
+                                        statement.Action[0].split(':')[1].toLowerCase();
+                                    if (statement.Action.length > 1 || statement.Action[0] !== '*') {
+                                        for (let action of statement.Action) {
+                                            if (config.whitelist_unused_actions_for_resources.includes(action)) continue;
+                                            let resourceAction = action.split(':')[1].toLowerCase();
+
+                                            if (allServices[service] && !config.whitelist_unused_services.includes(service)) {
+                                                for (let supportedResource of allServices[service]) {
+                                                    if (resourceAction.includes(supportedResource)) {
+                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            addRoleFailures(roleFailures, inlinePolicyStatements, 'inline', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                        }
+                    }
+                }
+
+                if (role.inlinePolicies && Array.isArray(role.inlinePolicies) && role.inlinePolicies.length) {
+                    for (var policyName of role.inlinePolicies) {
                         if (getRolePolicy &&
                             getRolePolicy[policyName] &&
                             getRolePolicy[policyName].data &&
@@ -446,6 +545,7 @@ module.exports = {
                 }
 
                 cb();
+                
             }, function() {
                 callback(null, results, source);
             });

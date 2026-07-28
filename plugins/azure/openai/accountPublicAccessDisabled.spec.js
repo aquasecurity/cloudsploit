@@ -5,6 +5,7 @@ const accounts = [
     {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc1",
         "name": "acc1",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
         "publicNetworkAccess": 'Disabled'
@@ -12,6 +13,7 @@ const accounts = [
       {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc2",
         "name": "acc2",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
         "publicNetworkAccess": 'Enabled'
@@ -19,6 +21,7 @@ const accounts = [
       {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc4",
         "name": "acc4",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
         "publicNetworkAccess": 'Enabled',
@@ -30,6 +33,7 @@ const accounts = [
       {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc5",
         "name": "acc5",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
         "publicNetworkAccess": 'Enabled',

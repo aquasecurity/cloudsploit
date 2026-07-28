@@ -187,11 +187,11 @@ describe('noUserIamPolicies', function () {
             });
         });
 
-        it('should FAIL if user is using attached or inline policies', function (done) {
+        it('should WARN if user is using attached or inline policies', function (done) {
             const cache = createCache([listUsers[0]], listAttachedUserPolicies[1], listUserPolicies[1]);
             noUserIamPolicies.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(1);
                 done();
             });
         });

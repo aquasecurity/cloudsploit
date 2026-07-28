@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
 
     if (!collection.guardduty ||
@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId] = {};
 
             // Make the describe destinations call
-            helpers.makeCustomCollectorCall(guardduty, 'describePublishingDestination', {DestinationId: destination.DestinationId, DetectorId: detectorId}, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(guardduty, 'describePublishingDestination', {DestinationId: destination.DestinationId, DetectorId: detectorId}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.guardduty.describePublishingDestination[AWSConfig.region][destination.DestinationId].err = err;
                 }

@@ -1,107 +1,50 @@
 var expect = require('chai').expect;
 var logProfileArchiveData = require('./logProfileArchiveData');
 
-const logProfile = [
+const diagnosticSettings = [
     {
-        "id": "/subscriptions/1234/providers/microsoft.insights/logprofiles/test",
-        "type": null,
-        "name": "default",
-        "location": null,
-        "kind": null,
-        "tags": null,
-        "identity": null,
-        "storageAccountId": "/subscriptions/1234/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Storage/storageAccounts/devstoragetwo",
-        "serviceBusRuleId": null,
-        "locations": [
-          "australiacentral",
-          "australiacentral2",
-          "australiaeast",
-          "australiasoutheast",
-          "brazilsouth",
-          "canadacentral",
-          "canadaeast",
-          "centralindia",
-          "centralus",
-          "eastasia",
-          "eastus",
-          "eastus2",
-          "francecentral",
-          "francesouth",
-          "japaneast",
-          "japanwest",
-          "koreacentral",
-          "koreasouth",
-          "northcentralus",
-          "northeurope",
-          "southafricanorth",
-          "southafricawest",
-          "southcentralus",
-          "southindia",
-          "southeastasia",
-          "uaecentral",
-          "uaenorth",
-          "uksouth",
-          "ukwest",
-          "westcentralus",
-          "westeurope",
-          "westindia",
-          "westus",
-          "westus2",
-          "westus3",
-          "eastus2euap",
-          "centraluseuap",
-          "jioindiawest",
-          "jioindiacentral",
-          "swedencentral",
-          "germanywestcentral",
-          "germanycentral",
-          "germanynortheast",
-          "germanynorth",
-          "norwayeast",
-          "switzerlandnorth",
-          "norwaywest",
-          "switzerlandwest",
-          "brazilsoutheast",
-          "global",
-          "qatarcentral",
-          "polandcentral",
-          "italynorth",
-          "israelcentral"
-        ],
-        "categories": [
-          "Write",
-          "Delete",
-          "Action"
-        ],
-        "retentionPolicy": {
-          "enabled": true,
-          "days": 82
-        }
+        'id': '/subscriptions/123/providers/microsoft.insights/diagnosticSettings/test-setting',
+        'type': 'Microsoft.Insights/diagnosticSettings',
+        'name': 'test-setting',
+        'location': 'global',
+        'storageAccountId': '/subscriptions/123/resourceGroups/devresourcegroup/providers/Microsoft.Storage/storageAccounts/test-storage-account',
+        'logs': [
+            { 'category': 'Administrative', 'enabled': true },
+            { 'category': 'Security', 'enabled': true }
+        ]
     },
     {
-        "id": "/subscriptions/1234/providers/microsoft.insights/logprofiles/default",
-        "type": null,
-        "name": "default",
-        "location": null,
-        "kind": null,
-        "tags": null,
-        "identity": null,
-        "storageAccountId": "/subscriptions/1234/resourceGroups/Default-ActivityLogAlerts/providers/Microsoft.Storage/storageAccounts/devstoragetwo",
-        "serviceBusRuleId": null,
-        "retentionPolicy": {
-          "enabled": true,
-          "days": 82
-        }
+        'id': '/subscriptions/123/providers/microsoft.insights/diagnosticSettings/test-setting-eventhub',
+        'type': 'Microsoft.Insights/diagnosticSettings',
+        'name': 'test-setting-eventhub',
+        'location': 'global',
+        'eventHubAuthorizationRuleId': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.EventHub/namespaces/test-setting/authorizationrules/RootManageSharedAccessKey',
+        'eventHubName': '',
+        'logs': [
+            { 'category': 'Administrative', 'enabled': true },
+            { 'category': 'Security', 'enabled': true }
+        ]
+    },
+    {
+        'id': '/subscriptions/123/providers/microsoft.insights/diagnosticSettings/test-setting-disabled',
+        'type': 'Microsoft.Insights/diagnosticSettings',
+        'name': 'test-setting-disabled',
+        'location': 'global',
+        'storageAccountId': '/subscriptions/123/resourceGroups/devresourcegroup/providers/Microsoft.Storage/storageAccounts/test-storage-account',
+        'logs': [
+            { 'category': 'Administrative', 'enabled': false },
+            { 'category': 'Security', 'enabled': false }
+        ]
     }
 ];
 
-const createCache = (logProfile) => {
+const createCache = (diagnosticSettings) => {
     let settings = {};
-    if (logProfile) {
-        settings['data'] = logProfile;
+    if (diagnosticSettings) {
+        settings['data'] = diagnosticSettings;
     }
     return {
-        logProfiles: {
+        diagnosticSettingsOperations: {
             list: {
                 'global': settings
             }
@@ -111,45 +54,56 @@ const createCache = (logProfile) => {
 
 describe('logProfileArchiveData', function() {
     describe('run', function() {
-        it('should give passing result if No existing Log Profiles found', function(done) {
+        it('should give failing result if no diagnostic settings found', function(done) {
             const cache = createCache([]);
             logProfileArchiveData.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('No existing Log Profiles found');
+                expect(results[0].message).to.include('No existing Diagnostic Settings found');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give unknown result if Unable to query for Log Profiles', function(done) {
+        it('should give unknown result if unable to query for diagnostic settings', function(done) {
             const cache = createCache();
             logProfileArchiveData.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
-                expect(results[0].message).to.include('Unable to query for Log Profiles');
+                expect(results[0].message).to.include('Unable to query for Diagnostic Settings');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give passing result if Log Profile is archiving all activities in all regions', function(done) {
-            const cache = createCache([logProfile[0]]);
+        it('should give passing result if a diagnostic setting archives activity logs to a storage account', function(done) {
+            const cache = createCache([diagnosticSettings[0]]);
             logProfileArchiveData.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Log Profile is archiving all activities in all regions');
+                expect(results[0].message).to.include('Diagnostic Setting is archiving Activity Logs to a storage account');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give failing result if Log Profile has the following issues', function(done) {
-            const cache = createCache([logProfile[1]]);
+        it('should give failing result if no diagnostic setting archives activity logs to a storage account', function(done) {
+            const cache = createCache([diagnosticSettings[1]]);
             logProfileArchiveData.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Log Profile has the following issues');
+                expect(results[0].message).to.include('No Diagnostic Setting is archiving Activity Logs to a storage account');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
+        it('should give failing result if diagnostic setting has a storage account but no enabled logs', function(done) {
+            const cache = createCache([diagnosticSettings[2]]);
+            logProfileArchiveData.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('No Diagnostic Setting is archiving Activity Logs to a storage account');
                 expect(results[0].region).to.equal('global');
                 done();
             });

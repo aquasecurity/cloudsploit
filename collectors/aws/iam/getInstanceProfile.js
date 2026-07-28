@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
     if (!collection.ec2 ||
@@ -28,7 +28,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
 
             collection.iam.getInstanceProfile[AWSConfig.region][instance.IamInstanceProfile.Arn] = {};
 
-            helpers.makeCustomCollectorCall(iam, 'getInstanceProfile', {InstanceProfileName: iamInstanceProfileName}, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(iam, 'getInstanceProfile', {InstanceProfileName: iamInstanceProfileName}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.iam.getInstanceProfile[AWSConfig.region][instance.IamInstanceProfile.Arn].err = err;
                 }

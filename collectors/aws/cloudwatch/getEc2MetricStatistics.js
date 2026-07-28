@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require('../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var cloudwatch = new AWS.CloudWatch(AWSConfig);
 
     async.eachLimit(collection.ec2.describeInstances[AWSConfig.region].data, 10, function(reservation, cb) {
@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 ]
             };
 
-            helpers.makeCustomCollectorCall(cloudwatch, 'getMetricStatistics', params,retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(cloudwatch, 'getMetricStatistics', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].err = err;
                 if (data) collection.cloudwatch.getEc2MetricStatistics[AWSConfig.region][instance.InstanceId].data = data;
             });

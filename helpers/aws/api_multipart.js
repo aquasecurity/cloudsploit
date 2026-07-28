@@ -375,7 +375,8 @@ var calls = [
                 paginate: 'NextToken'
             },
             describeAddresses: {
-                property: 'Addresses'
+                property: 'Addresses',
+                override: true
             },
             describeVolumes: {
                 property: 'Volumes'
@@ -1133,11 +1134,6 @@ var calls = [
                 paginateReqProp: 'Marker'
             },
             describeTargetGroups: {
-                property: 'TargetGroups',
-                paginate: 'NextMarker',
-                paginateReqProp: 'Marker'
-            },
-            describeTargetHealth: {
                 property: 'TargetGroups',
                 paginate: 'NextMarker',
                 paginateReqProp: 'Marker'

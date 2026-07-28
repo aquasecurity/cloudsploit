@@ -41,13 +41,17 @@ module.exports = {
                 var arn = repository.repositoryArn;
                 var immutability = repository.imageTagMutability;
 
-                if (immutability == 'IMMUTABLE') {
+                if (immutability === 'IMMUTABLE') {
                     helpers.addResult(results, 0,
                         'ECR repository mutability setting is set to IMMUTABLE',
                         region, arn);
+                } else if (immutability === 'IMMUTABLE_WITH_EXCLUSION') {
+                    helpers.addResult(results, 0,
+                        'ECR repository mutability setting is set to IMMUTABLE_WITH_EXCLUSION',
+                        region, arn);
                 } else {
                     helpers.addResult(results, 2,
-                        'ECR repository mutability setting is set to MUTABLE',
+                        'ECR repository mutability setting is set to ' + immutability,
                         region, arn);
                 }
             }

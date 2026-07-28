@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var ses = new AWS.SES(AWSConfig);
     collection.ses.getIdentityDkimAttributes[AWSConfig.region] = {};
 
@@ -23,7 +23,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         };
 
         setTimeout(function() {
-            helpers.makeCustomCollectorCall(ses, 'getIdentityDkimAttributes', params, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(ses, 'getIdentityDkimAttributes', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.ses.getIdentityDkimAttributes[AWSConfig.region].err = err;
                 } else if (data && data.DkimAttributes) {

@@ -1057,7 +1057,8 @@ var calls = {
             paginate: 'NextToken'
         },
         describeAddresses: {
-            property: 'Addresses'
+            property: 'Addresses',
+            override: true
         },
         describeVolumes: {
             property: 'Volumes'
@@ -1274,11 +1275,6 @@ var calls = {
             property: 'TargetGroups',
             paginate: 'NextMarker',
             paginateReqProp: 'Marker'
-        },
-        describeTargetHealth: {
-            property: 'TargetGroups',
-            paginate: 'NextMarker',
-            paginateReqProp: 'Marker'
         }
     },
     EMR: {
@@ -1456,6 +1452,9 @@ var calls = {
             property: 'DetectorIds',
             paginate: 'NextToken',
         }
+    },
+    Macie2: {
+        getAutomatedDiscoveryConfiguration: {},
     },
     Kendra: {
         listIndices: {

@@ -9,61 +9,37 @@ module.exports = {
     more_info: 'AWS provides a support center that can be used for incident notification and response, as well as technical support and customer services. An IAM Role should be present to allow authorized users to manage incidents with AWS Support.',
     link: 'https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html',
     recommended_action: 'Ensure that an IAM role has permission to access support center.',
-    apis: ['IAM:listRoles', 'IAM:listAttachedRolePolicies'],
-    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy','iam:DetachRolePolicy'],
+    apis: ['IAM:listPolicies'],
+    realtime_triggers: ['iam:CreateRole','iam:DeleteRole','iam:AttachRolePolicy', 'iam:DetachRolePolicy','iam:CreateUser','iam:DeleteUser','iam:AttachUserPolicy','iam:DetachUserPolicy','iam:CreateGroup','iam:DeleteGroup','iam:AttachGroupPolicy','iam:DetachGroupPolicy'],
 
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var region = helpers.defaultRegion(settings);
-        var supportPolicyArn = `arn:${helpers.defaultPartition(settings)}:iam::aws:policy/AWSSupportAccess`;
 
-        var listRoles = helpers.addSource(cache, source, ['iam', 'listRoles', region]);
+        const listPolicies = helpers.addSource(cache, source,
+            ['iam', 'listPolicies', region]);
 
-        if (!listRoles) return callback(null, results, source);
+        if (!listPolicies) return callback(null, results, source);
 
-        if (listRoles.err || !listRoles.data) {
+        if (listPolicies.err || !listPolicies.data) {
             helpers.addResult(results, 3,
-                'Unable to query for IAM roles: ' + helpers.addError(listRoles));
+                'Unable to query for IAM policies: ' + helpers.addError(listPolicies));
             return callback(null, results, source);
         }
 
-        if (!listRoles.data.length) {
+        if (!listPolicies.data.length) {
             helpers.addResult(results, 0,
                 'No IAM policies found');
             return callback(null, results, source);
         }
 
-        var supportRoleArn = null;
+        var found = listPolicies.data.find(policy => policy.PolicyName == 'AWSSupportAccess');
 
-        for (var role of listRoles.data) {
-            if (!role.RoleName || supportRoleArn) continue;
-
-            var listAttachedRolePolicies = helpers.addSource(cache, source,
-                ['iam', 'listAttachedRolePolicies', region, role.RoleName]);
-
-            if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
-                helpers.addResult(results, 3,
-                    'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' +
-                    helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
-                continue;
-            }
-
-            if (listAttachedRolePolicies.data &&
-                listAttachedRolePolicies.data.AttachedPolicies) {
-                for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
-                    if (policy.PolicyArn === supportPolicyArn) {
-                        supportRoleArn = role.Arn;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (supportRoleArn) {
+        if (found) {
             helpers.addResult(results, 0,
-                'AWSSupportAccess policy is attached to a user, role or group', 'global', supportRoleArn);
-        } else if (!results.length) {
+                'AWSSupportAccess policy is attached to a user, role or group', 'global', found.Arn);
+        } else {
             helpers.addResult(results, 2,
                 'No role, user or group attached to the AWSSupportAccess policy', 'global');
         }
