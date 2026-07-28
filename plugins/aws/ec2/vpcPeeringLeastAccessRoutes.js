@@ -6,7 +6,7 @@ module.exports = {
     category: 'EC2',
     domain: 'Compute',
     severity: 'Medium',
-    description: 'Ensure routing tables for VPC peering are least access',
+    description: 'Ensures routing tables for VPC peering are least access.',
     more_info: 'Routing traffic to the entire peered VPC exposes all resources in that network. VPC peering routes should only allow access to the subnets that are actually needed.',
     link: 'https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-routing.html',
     recommended_action: 'Replace broad VPC peering routes with more specific destination CIDR blocks',
