@@ -5,7 +5,7 @@ module.exports = {
     category: 'IAM',
     domain: 'Identity and Access Management',
     severity: 'High',
-    description: 'Ensure access to AWSCloudShellFullAccess is restricted',
+    description: 'Ensures that access to AWSCloudShellFullAccess is restricted.',
     more_info: 'Access to the AWSCloudShellFullAccess policy should be restricted, as it presents a potential channel for data exfiltration by privileged users.',
     link: 'https://docs.aws.amazon.com/cloudshell/latest/userguide/sec-auth-with-identities.html',
     recommended_action: 'Detach the AWSCloudShellFullAccess policy from all IAM users, groups, and roles, and replace with a more restrictive policy if CloudShell access is required.',
