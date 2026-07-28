@@ -21,8 +21,8 @@ var authenticate = async function (GoogleConfig) {
         client = new Impersonated({
             sourceClient: client,
             targetPrincipal: GoogleConfig.impersonate_service_account,
-            targetScopes: ['https://www.googleapis.com/auth/cloud-platform'],
-            lifetime: 43200
+            targetScopes: ['https://www.googleapis.com/auth/cloud-platform']
+            // lifetime: 3600
         });
     }
     return client;
