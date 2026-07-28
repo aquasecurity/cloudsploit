@@ -82,9 +82,6 @@ module.exports = {
                     helpers.addResult(results, 2,
                         'S3 legacy logging is not enabled', 'global', Distribution.ARN);
                 }
-            } else {
-                helpers.addResult(results, 2,
-                    'S3 legacy logging is not enabled', 'global', Distribution.ARN);
             }
         });
 

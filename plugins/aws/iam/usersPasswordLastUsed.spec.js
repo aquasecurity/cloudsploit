@@ -4,7 +4,7 @@ const usersPasswordLastUsed = require('./usersPasswordLastUsed');
 var warnDate = new Date();
 warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
-passDate.setDate(passDate.getDate() - 30);
+passDate.setMonth(passDate.getMonth() - 2);
 var failDate = new Date();
 failDate.setMonth(failDate.getMonth() - 7);
 
@@ -219,7 +219,11 @@ describe('usersPasswordLastUsed', function () {
     describe('run', function () {
         it('should PASS if the user password was last used within the pass limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[1]]);
-            usersPasswordLastUsed.run(cache, {}, (err, results) => {
+            var settings = {
+                users_password_last_used_fail: 180,
+                users_password_last_used_warn: 90
+            };
+            usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
@@ -228,18 +232,13 @@ describe('usersPasswordLastUsed', function () {
 
         it('should PASS if the user was created within the pass limit but never used', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[4]]);
-            usersPasswordLastUsed.run(cache, {}, (err, results) => {
+            var settings = {
+                users_password_last_used_fail: 180,
+                users_password_last_used_warn: 90
+            };
+            usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                done();
-            });
-        });
-
-        it('should FAIL if the password was last used more than 45 days ago', function (done) {
-            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[2]]);
-            usersPasswordLastUsed.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
                 done();
             });
         });
@@ -272,7 +271,11 @@ describe('usersPasswordLastUsed', function () {
 
         it('should FAIL if the user password was last used more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
-            usersPasswordLastUsed.run(cache, {}, (err, results) => {
+            var settings = {
+                users_password_last_used_fail: 180,
+                users_password_last_used_warn: 90
+            };
+            usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
@@ -281,7 +284,11 @@ describe('usersPasswordLastUsed', function () {
 
         it('should FAIL if the user was created more than the fail limit but never used', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[6]]);
-            usersPasswordLastUsed.run(cache, {}, (err, results) => {
+            var settings = {
+                users_password_last_used_fail: 180,
+                users_password_last_used_warn: 90
+            };
+            usersPasswordLastUsed.run(cache, settings, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();

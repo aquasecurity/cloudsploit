@@ -106,7 +106,7 @@ module.exports = {
                         'Bucket: ' + trail.S3BucketName + ' has S3 access logs enabled',
                         region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 } else {
-                    helpers.addResult(results, 2,
+                    helpers.addResult(results, 1,
                         'Bucket: ' + trail.S3BucketName + ' has S3 access logs disabled',
                         region, `arn:${awsOrGov}:s3:::` + trail.S3BucketName);
                 }

@@ -5,7 +5,7 @@ var helpers = require(__dirname + '/../../../helpers/aws');
 // default call retrieves every snapshot
 // available, including public ones
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var ec2 = new AWS.EC2(AWSConfig);
     var sts = new AWS.STS(AWSConfig);
     var paginating = false;
@@ -13,7 +13,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     var createdTime = new Date();
     createdTime.setDate(createdTime.getDate() - 30);
 
-    helpers.makeCustomCollectorCall(sts, 'getCallerIdentity', {}, retries, null, null, null, function(stsErr, stsData) {
+    helpers.makeCustomCollectorCall(sts, 'getCallerIdentity', {}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(stsErr, stsData) {
         if (stsErr || !stsData.Account) {
             collection.ec2.describeSnapshots[AWSConfig.region].err = 'Unable to filter by owner ID';
             return callback();
@@ -68,9 +68,9 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             var localParams = JSON.parse(JSON.stringify(params || {}));
             if (nextToken) localParams['NextToken'] = nextToken;
             if (nextToken) {
-                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', localParams, retries, null, null, null, paginateCb);
+                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', localParams, retries, null, null, null, settings, scanAWSConfig, AWSConfig, paginateCb);
             } else {
-                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', params, retries, null, null, null, paginateCb);
+                helpers.makeCustomCollectorCall(ec2, 'describeSnapshots', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, paginateCb);
             }
         }
         execute();

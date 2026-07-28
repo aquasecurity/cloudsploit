@@ -82,7 +82,6 @@ module.exports = {
                     return;
                 }
 
-
                 helpers.addResult(results, 2,
                     'Cosmos DB account allows public access', location, account.id);
             });

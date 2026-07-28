@@ -16,7 +16,7 @@ module.exports = {
         ec2_app_tier_tag_key: {
             name: 'EC2 App-Tier Tag Key',
             description: 'Tag key to indicate App-Tier EC2 instances',
-            regex: '^.*$s',
+            regex: '^.*$',
             default: ''
         },
     },

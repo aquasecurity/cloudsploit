@@ -77,6 +77,7 @@ module.exports = {
     directoryservice: [],
     organizations: regions,
     guardduty: regions,
+    macie2: regions,
     wafregional: [],
     wafv2: regions,
     waf: regions,

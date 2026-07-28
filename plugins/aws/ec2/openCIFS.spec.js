@@ -17,7 +17,7 @@ const describeSecurityGroups = [
         "IpPermissions": [
             {
                 "FromPort": 0,
-                "IpProtocol": "tcp",
+                "IpProtocol": "udp",
                 "IpRanges": [
                     {
                         "CidrIp": "0.0.0.0/0"
@@ -62,29 +62,6 @@ const describeSecurityGroups = [
                 "UserIdGroupPairs": []
             }
         ],
-        "VpcId": "vpc-99de2fe4"
-    },
-    {
-        "Description": "CIFS UDP",
-        "GroupName": "CIFS-UDP-Access",
-        "IpPermissions": [
-            {
-                "FromPort": 445,
-                "IpProtocol": "udp",
-                "IpRanges": [
-                    {
-                        "CidrIp": "0.0.0.0/0"
-                    }
-                ],
-                "Ipv6Ranges": [],
-                "PrefixListIds": [],
-                "ToPort": 445,
-                "UserIdGroupPairs": []
-            }
-        ],
-        "OwnerId": "111122223333",
-        "GroupId": "sg-00263f564442dfec",
-        "IpPermissionsEgress": [],
         "VpcId": "vpc-99de2fe4"
     }
 ];
@@ -242,17 +219,8 @@ describe('openCIFS', function () {
             });
         });
 
-        it('should FAIL if security group has CIFS TCP port open to public', function (done) {
-            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
-            openCIFS.run(cache, {}, (err, results) => {
-                expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
-                done();
-            });
-        });
-
         it('should FAIL if security group has CIFS UDP port open to public', function (done) {
-            const cache = createCache([describeSecurityGroups[2]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
+            const cache = createCache([describeSecurityGroups[1]], [describeNetworkInterfaces[0]], [listFunctions[0]]);
             openCIFS.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

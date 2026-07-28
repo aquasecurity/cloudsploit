@@ -374,6 +374,9 @@ module.exports = {
         listModels: 'ModelArn',
         describeModel: 'ModelDescription.ModelArn'
     },
+    macie2: {
+        getAutomatedDiscoveryConfiguration: '',
+    },
     managedblockchain: {
         listMembers: 'Arn',
         listNetworks: 'Arn',

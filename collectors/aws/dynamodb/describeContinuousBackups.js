@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var dynamodb = new AWS.DynamoDB(AWSConfig);
 
     async.eachLimit(collection.dynamodb.listTables[AWSConfig.region].data, 15, function(table, cb){
@@ -11,7 +11,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             'TableName': table
         };
 
-        helpers.makeCustomCollectorCall(dynamodb, 'describeContinuousBackups', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(dynamodb, 'describeContinuousBackups', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.dynamodb.describeContinuousBackups[AWSConfig.region][table].err = err;
             }

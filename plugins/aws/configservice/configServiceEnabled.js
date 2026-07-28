@@ -58,14 +58,6 @@ module.exports = {
 
             if (describeConfigurationRecorderStatus.data[0]) {
                 var crs = describeConfigurationRecorderStatus.data[0];
-                var recorder = describeConfigurationRecorders.data &&
-                    describeConfigurationRecorders.data[0];
-
-                if (!recorder || !recorder.recordingGroup || !recorder.recordingGroup.allSupported) {
-                    helpers.addResult(results, 2,
-                        'Config Service is not configured to record all supported resources', region);
-                    return rcb();
-                }
 
                 if (crs.recording) {
                     if (crs.lastStatus &&

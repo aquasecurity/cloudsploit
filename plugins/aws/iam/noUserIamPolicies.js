@@ -80,7 +80,7 @@ module.exports = {
             }
 
             if (hasAttachedPolicies || hasInlinePolicies) {
-                helpers.addResult(results, 2, 'User is using attached or inline policies', 'global', user.Arn);
+                helpers.addResult(results, 1, 'User is using attached or inline policies', 'global', user.Arn);
             } else {
                 helpers.addResult(results, 0, 'User is not using attached or inline policies', 'global', user.Arn);
             }

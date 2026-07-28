@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var appmesh = new AWS.AppMesh(AWSConfig);
 
     if (!collection.appmesh ||
@@ -24,7 +24,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         async.eachLimit(collection.appmesh.listVirtualGateways[AWSConfig.region][mesh.meshName].data.virtualGateways, 3, function(gateway, pCb){
             collection.appmesh.describeVirtualGateway[AWSConfig.region][gateway.virtualGatewayName] = {};
 
-            helpers.makeCustomCollectorCall(appmesh, 'describeVirtualGateway', {virtualGatewayName: gateway.virtualGatewayName,meshName: mesh.meshName}, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(appmesh, 'describeVirtualGateway', {virtualGatewayName: gateway.virtualGatewayName,meshName: mesh.meshName}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.appmesh.describeVirtualGateway[AWSConfig.region][gateway.virtualGatewayName].err = err;
                 }

@@ -131,11 +131,11 @@ describe('cloudtrailBucketAccessLogging', function () {
             });
         });
 
-        it('should FAIL if bucket has S3 access logs disabled', function (done) {
+        it('should WARN if bucket has S3 access logs disabled', function (done) {
             const cache = createCache([trails[1]], [listBuckets[1]], getBucketLogging[1]);
             cloudtrailBucketAccessLogging.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(2);
+                expect(results[0].status).to.equal(1);
                 done();
             });
         });
