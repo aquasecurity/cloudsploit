@@ -147,14 +147,20 @@ describe('accessKeysLastUsed', function () {
     describe('run', function () {
         it('should PASS if the user access key was last used within the pass limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[1]]);
-            var settings = {
-                access_keys_last_used_fail: 180,
-                access_keys_last_used_warn: 90
-            };
-            accessKeysLastUsed.run(cache, settings, (err, results) => {
+            accessKeysLastUsed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].status).to.equal(0);
+                expect(results[1].status).to.equal(0);
+                done();
+            });
+        });
+
+        it('should FAIL if the user access key was last used more than 45 days ago', function (done) {
+            const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[2]]);
+            accessKeysLastUsed.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(2);
+                expect(results[1].status).to.equal(2);
                 done();
             });
         });
@@ -175,11 +181,7 @@ describe('accessKeysLastUsed', function () {
 
         it('should FAIL if the user access key was last used more than the fail limit', function (done) {
             const cache = createCache([generateCredentialReport[0],generateCredentialReport[0],generateCredentialReport[3]]);
-            var settings = {
-                access_keys_last_used_fail: 180,
-                access_keys_last_used_warn: 90
-            };
-            accessKeysLastUsed.run(cache, settings, (err, results) => {
+            accessKeysLastUsed.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(2);
                 expect(results[0].status).to.equal(2);
                 expect(results[1].status).to.equal(2);

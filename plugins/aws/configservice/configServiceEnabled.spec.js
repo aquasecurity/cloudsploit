@@ -19,6 +19,15 @@ const describeConfigurationRecorders = [
             "includeGlobalResourceTypes": false,
             "resourceTypes": []
         }
+    },
+    {   // not recording all supported resources
+        "name": "default",
+        "roleARN": "arn:aws:iam::111111111111:role/aws-service-role/config.amazonaws.com/AWSServiceRoleForConfig",
+        "recordingGroup": {
+            "allSupported": false,
+            "includeGlobalResourceTypes": true,
+            "resourceTypes": ["AWS::EC2::Instance"]
+        }
     }
 ]
 
@@ -157,6 +166,15 @@ describe('configServiceEnabled', () => {
                 done();
             });
         });
+        it('should FAIL if configuration recorders are not recording all supported resources', (done) => {
+            const cache = createCache([describeConfigurationRecorders[2]], [describeConfigurationRecorderStatus[0]]);
+            configServiceEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(2);
+                expect(results[0].status).to.equal(2);
+                done();
+            });
+        });
+
         it('should FAIL if configuration recorders does not have last status property', (done) => {
             const cache = createCache([describeConfigurationRecorders[0]], [describeConfigurationRecorderStatus[3]]);
             configServiceEnabled.run(cache, {}, (err, results) => {

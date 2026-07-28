@@ -24,13 +24,13 @@ module.exports = {
             name: 'Users Password Last Used Fail',
             description: 'Return a failing result when users with password logins exceed this number of days without being used',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 180
+            default: 45
         },
         users_password_last_used_warn: {
             name: 'Users Password Last Used Warn',
             description: 'Return a warning result when users with password logins exceed this number of days without being used',
             regex: '^[1-9]{1}[0-9]{0,3}$',
-            default: 90
+            default: 30
         }
     },
     realtime_triggers: ['iam:CreateUser','iam:DeleteUser'],

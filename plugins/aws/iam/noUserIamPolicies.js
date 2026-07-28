@@ -68,11 +68,19 @@ module.exports = {
                 return cb();
             }
 
-            if ((listAttachedUserPolicies.data.AttachedPolicies &&
-                listAttachedUserPolicies.data.AttachedPolicies.length) ||
-               (listUserPolicies.data.PolicyNames &&
-                listUserPolicies.data.PolicyNames.length)) {
-                helpers.addResult(results, 1, 'User is using attached or inline policies', 'global', user.Arn);
+            var hasAttachedPolicies = listAttachedUserPolicies.data.AttachedPolicies && listAttachedUserPolicies.data.AttachedPolicies.length;
+            var hasInlinePolicies = listUserPolicies.data.PolicyNames && listUserPolicies.data.PolicyNames.length;
+
+            if (!hasAttachedPolicies && user.attachedPolicies && Array.isArray(user.attachedPolicies) && user.attachedPolicies.length) {
+                hasAttachedPolicies = true;
+            }
+
+            if (!hasInlinePolicies && user.inlinePolicies && Array.isArray(user.inlinePolicies) && user.inlinePolicies.length) {
+                hasInlinePolicies = true;
+            }
+
+            if (hasAttachedPolicies || hasInlinePolicies) {
+                helpers.addResult(results, 2, 'User is using attached or inline policies', 'global', user.Arn);
             } else {
                 helpers.addResult(results, 0, 'User is not using attached or inline policies', 'global', user.Arn);
             }
