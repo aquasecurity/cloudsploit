@@ -39,12 +39,6 @@ module.exports = {
             name: 'Password Reuse Fail',
             description: 'Return a failing result when password reuse policy remembers fewer than this many past passwords',
             regex: '^[1-9]{1}[0-9]{0,2}$',
-            default: 5
-        },
-        password_reuse_warn: {
-            name: 'Password Reuse Warn',
-            description: 'Return a warning result when password reuse policy remembers fewer than this many past passwords',
-            regex: '^[1-9]{1}[0-9]{0,2}$',
             default: 24
         }
     },
@@ -52,8 +46,7 @@ module.exports = {
 
     run: function(cache, settings, callback) {
         var config = {
-            password_reuse_fail: settings.password_reuse_fail || this.settings.password_reuse_fail.default,
-            password_reuse_warn: settings.password_reuse_warn || this.settings.password_reuse_warn.default
+            password_reuse_fail: settings.password_reuse_fail || this.settings.password_reuse_fail.default
         };
 
         var custom = helpers.isCustom(settings, this.settings);
@@ -89,9 +82,6 @@ module.exports = {
         } else if (passwordPolicy.PasswordReusePrevention < config.password_reuse_fail) {
             helpers.addResult(results, 2,
                 'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is less than ' + config.password_reuse_fail, 'global', null, custom);
-        } else if (passwordPolicy.PasswordReusePrevention < config.password_reuse_warn) {
-            helpers.addResult(results, 1,
-                'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is less than ' + config.password_reuse_warn, 'global', null, custom);
         } else {
             helpers.addResult(results, 0,
                 'Maximum password reuse of: ' + passwordPolicy.PasswordReusePrevention + ' passwords is suitable', 'global', null, custom);

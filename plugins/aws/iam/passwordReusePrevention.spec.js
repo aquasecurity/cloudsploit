@@ -92,37 +92,25 @@ describe('passwordReusePrevention', function () {
     describe('run', function () {
         it('should PASS if maximum password reuse is suitable', function (done) {
             const cache = createCache(getAccountPasswordPolicy[0]);
-            var settings = {
-                password_reuse_fail: 5,
-                password_reuse_warn: 24
-            };
-            passwordReusePrevention.run(cache, settings, (err, results) => {
+            passwordReusePrevention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
                 done();
             });
         });
 
-        it('should WARN if maximum password reuse is less than warn limit', function (done) {
+        it('should FAIL if maximum password reuse is less than 24 passwords', function (done) {
             const cache = createCache(getAccountPasswordPolicy[1]);
-            var settings = {
-                password_reuse_fail: 5,
-                password_reuse_warn: 24
-            };
-            passwordReusePrevention.run(cache, settings, (err, results) => {
+            passwordReusePrevention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(1);
+                expect(results[0].status).to.equal(2);
                 done();
             });
         });
 
         it('should FAIL if maximum password reuse is less than fail limit', function (done) {
             const cache = createCache(getAccountPasswordPolicy[2]);
-            var settings = {
-                password_reuse_fail: 5,
-                password_reuse_warn: 24
-            };
-            passwordReusePrevention.run(cache, settings, (err, results) => {
+            passwordReusePrevention.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 done();
