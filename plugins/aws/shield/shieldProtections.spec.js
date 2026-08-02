@@ -28,7 +28,7 @@ describe('shieldProtections', function () {
             const cache = createCache(
                 {
                     "message": "The subscription does not exist.",
-                    "code": "ResourceNotFoundException",
+                    "name": "ResourceNotFoundException",
                     "time": "2019-07-14T03:22:22.346Z",
                     "requestId": "d88682d6-a71c-4529-9f8d-0370e2fe5be5",
                     "statusCode": 400,

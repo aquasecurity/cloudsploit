@@ -1,8 +1,10 @@
-var AWS = require('aws-sdk');
+const {
+    SES
+} = require('@aws-sdk/client-ses');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ses = new AWS.SES(AWSConfig);
+    var ses = new SES(AWSConfig);
     collection.ses.getIdentityDkimAttributes[AWSConfig.region] = {};
 
     var identities = collection.ses.listIdentities[AWSConfig.region].data;

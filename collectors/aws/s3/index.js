@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    S3
+} = require('@aws-sdk/client-s3');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retries, callback) {
-    var s3 = new AWS.S3(AWSConfig);
+    var s3 = new S3(AWSConfig);
 
     var knownBuckets = [];
 
@@ -51,7 +53,7 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retri
                         
                         var altAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         altAWSConfig.region = locData.LocationConstraint;
-                        var s3Alt = new AWS.S3(altAWSConfig);
+                        var s3Alt = new S3(altAWSConfig);
 
                         s3Alt[callKey]({Bucket:bucket}, function(altErr, altData){
                             if (altErr) {

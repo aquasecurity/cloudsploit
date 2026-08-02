@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    Connect
+} = require('@aws-sdk/client-connect');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var connect = new AWS.Connect(AWSConfig);
+    var connect = new Connect(AWSConfig);
 
     async.eachLimit(collection.connect.listInstances[AWSConfig.region].data, 15, function(instance, cb){
         collection.connect.listInstanceExportedReportStorageConfigs[AWSConfig.region][instance.Id] = {};

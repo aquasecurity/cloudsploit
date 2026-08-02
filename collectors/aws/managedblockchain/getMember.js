@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    ManagedBlockchain
+} = require('@aws-sdk/client-managedblockchain');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var managedblockchain = new AWS.ManagedBlockchain(AWSConfig);
+    var managedblockchain = new ManagedBlockchain(AWSConfig);
 
     if (!collection.managedblockchain ||
         !collection.managedblockchain.listNetworks ||

@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    OpenSearchServerless
+} = require('@aws-sdk/client-opensearchserverless');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var ecs = new AWS.OpenSearchServerless(AWSConfig);
+    var ecs = new OpenSearchServerless(AWSConfig);
     async.eachLimit(collection.opensearchserverless.listNetworkSecurityPolicies[AWSConfig.region].data, 10, function(policy, cb){
         collection.opensearchserverless.getNetworkSecurityPolicy[AWSConfig.region][policy.name] = {};
         var params = {

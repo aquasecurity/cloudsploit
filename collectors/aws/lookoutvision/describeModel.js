@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    LookoutVision
+} = require('@aws-sdk/client-lookoutvision');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var lookoutvision = new AWS.LookoutVision(AWSConfig);
+    var lookoutvision = new LookoutVision(AWSConfig);
 
     if (!collection.lookoutvision ||
         !collection.lookoutvision.listProjects ||

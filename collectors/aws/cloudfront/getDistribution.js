@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    CloudFront
+} = require('@aws-sdk/client-cloudfront');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var cloudfront = new AWS.CloudFront(AWSConfig);
+    var cloudfront = new CloudFront(AWSConfig);
 
     async.eachLimit(collection.cloudfront.listDistributions[AWSConfig.region].data, 15, function(distribution, cb){        
         collection.cloudfront.getDistribution[AWSConfig.region][distribution.Id] = {};
