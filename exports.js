@@ -631,9 +631,6 @@ module.exports = {
         'buildProjectEnvPriviligedMode' : require(__dirname + '/plugins/aws/codebuild/buildProjectEnvPriviligedMode.js'),
         'codebuildProjectLoggingEnabled': require(__dirname + '/plugins/aws/codebuild/codebuildProjectLoggingEnabled.js'),
 
-        'codestarValidRepoProviders'    : require(__dirname + '/plugins/aws/codestar/codestarValidRepoProviders.js'),
-        'codestarHasTags'               : require(__dirname + '/plugins/aws/codestar/codestarHasTags.js'),
-
         'pipelineArtifactsEncrypted'    : require(__dirname + '/plugins/aws/codepipeline/pipelineArtifactsEncrypted.js'),
 
         'dataStoreEncrypted'            : require(__dirname + '/plugins/aws/healthlake/dataStoreEncrypted.js'),
@@ -1772,3 +1769,4 @@ module.exports = {
         'vulnerabilityScanEnabled'      : require(__dirname + '/plugins/alibaba/securitycenter/vulnerabilityScanEnabled.js')
     }
 };
+

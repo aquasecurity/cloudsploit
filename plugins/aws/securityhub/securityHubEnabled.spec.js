@@ -40,7 +40,7 @@ describe('securityHubEnabled', function () {
 
         it('should FAIL if Security Hub is not enabled', function (done) {
             const errorMessage = 'InvalidAccessException';
-            const cache = createCache(describeHub, { code: 'InvalidAccessException' });
+            const cache = createCache(describeHub, { name: 'InvalidAccessException' });
             securityHubEnabled.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

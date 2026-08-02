@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    APIGateway
+} = require('@aws-sdk/client-api-gateway');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var apigateway = new AWS.APIGateway(AWSConfig);
+    var apigateway = new APIGateway(AWSConfig);
 
     async.eachLimit(collection.apigateway.getRestApis[AWSConfig.region].data, 5, function(api, cb){
         if (!collection.apigateway.getResources ||

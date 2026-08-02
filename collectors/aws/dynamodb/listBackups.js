@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    DynamoDB
+} = require('@aws-sdk/client-dynamodb');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var dynamodb = new AWS.DynamoDB(AWSConfig);
+    var dynamodb = new DynamoDB(AWSConfig);
 
     async.eachLimit(collection.dynamodb.listTables[AWSConfig.region].data, 15, function(table, cb){
         collection.dynamodb.listBackups[AWSConfig.region][table] = {};

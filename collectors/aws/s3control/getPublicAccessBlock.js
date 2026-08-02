@@ -1,8 +1,10 @@
-var AWS = require('aws-sdk');
+const {
+    S3Control
+} = require('@aws-sdk/client-s3-control');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var s3control = new AWS.S3Control(AWSConfig);
+    var s3control = new S3Control(AWSConfig);
 
     var accountId = collection.sts.getCallerIdentity[AWSConfig.region].data;
     collection.s3control.getPublicAccessBlock[AWSConfig.region][accountId] = {};

@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    MWAA
+} = require('@aws-sdk/client-mwaa');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var mwaa = new AWS.MWAA(AWSConfig);
+    var mwaa = new MWAA(AWSConfig);
 
     async.eachLimit(collection.mwaa.listEnvironments[AWSConfig.region].data, 15, function(env, cb){
         collection.mwaa.getEnvironment[AWSConfig.region][env] = {};

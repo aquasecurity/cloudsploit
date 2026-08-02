@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    EMR
+} = require('@aws-sdk/client-emr');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var emr = new AWS.EMR(AWSConfig);
+    var emr = new EMR(AWSConfig);
 
     async.eachLimit(collection.emr.listClusters[AWSConfig.region].data, 15, function(cluster, cb){
         if (!collection.emr.describeCluster ||

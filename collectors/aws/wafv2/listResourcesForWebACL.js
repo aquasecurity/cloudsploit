@@ -1,9 +1,11 @@
-var AWS = require('aws-sdk');
+const {
+    WAFV2
+} = require('@aws-sdk/client-wafv2');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
 module.exports = function(AWSConfig, collection, retries, callback) {
-    var wafv2 = new AWS.WAFV2(AWSConfig);
+    var wafv2 = new WAFV2(AWSConfig);
     async.eachLimit(collection.wafv2.listWebACLs[AWSConfig.region].data, 15, function(dep, depCb){
         async.eachLimit(['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'], 1,  function(thisCheck, tcCb){
             if (!collection['wafv2']['listResourcesForWebACL'][AWSConfig.region][dep['ARN']]) collection['wafv2']['listResourcesForWebACL'][AWSConfig.region][dep['ARN']] = {};
