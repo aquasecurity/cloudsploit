@@ -69,13 +69,18 @@ module.exports = {
                         retentionDays = flowLog.retentionPolicy.days;
                     }
 
-                    if (retentionDays >= config.retentionDays) {
+                    // A retention period of 0 means the logs are retained indefinitely with no retention policy
+                    if (!retentionDays) {
                         helpers.addResult(results, 0,
-                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            'Flow log is retained indefinitely as no retention policy is set',
+                            location, flowLog.id);
+                    } else if (retentionDays >= config.retentionDays) {
+                        helpers.addResult(results, 0,
+                            `Flow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            `Flow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     }
                 }

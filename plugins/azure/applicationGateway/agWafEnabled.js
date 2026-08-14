@@ -42,8 +42,12 @@ module.exports = {
                     continue;
                 }
 
-                if (appGateway.webApplicationFirewallConfiguration && appGateway.webApplicationFirewallConfiguration.enabled 
-                    && appGateway.webApplicationFirewallConfiguration.enabled === true) {
+                // WAF can either be attached as a separate firewall policy or configured inline on the gateway
+                let firewallPolicyAttached = appGateway.firewallPolicy && appGateway.firewallPolicy.id;
+                let inlineWafEnabled = appGateway.webApplicationFirewallConfiguration &&
+                    appGateway.webApplicationFirewallConfiguration.enabled === true;
+
+                if (firewallPolicyAttached || inlineWafEnabled) {
                     helpers.addResult(results, 0, 'Web Application Firewall is enabled for Application Gateway', location, appGateway.id);
                 } else {
                     helpers.addResult(results, 2, 'Web Application Firewall is not enabled for Application Gateway', location, appGateway.id);

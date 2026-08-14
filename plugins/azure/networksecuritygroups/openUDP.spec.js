@@ -69,6 +69,87 @@ const networkSecurityGroups = [
                 "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkInterfaces/test-vm-1969"
             }
         ]
+    },
+    {
+        "name": "test-vm-2-nsg",
+        "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-2-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "location": "eastus",
+        "provisioningState": "Succeeded",
+        "securityRules": [
+            {
+                "name": "AllowAnyProtocolDns",
+                "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-2-nsg/securityRules/AllowAnyProtocolDns",
+                "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "53",
+                    "sourceAddressPrefix": "0.0.0.0/0",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 301,
+                    "direction": "Inbound",
+                }
+            }
+        ],
+        "defaultSecurityRules": []
+    },
+    {
+        "name": "test-vm-3-nsg",
+        "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-3-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "location": "eastus",
+        "provisioningState": "Succeeded",
+        "securityRules": [
+            {
+                "name": "AllowNtpFromAnyIpv6",
+                "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-3-nsg/securityRules/AllowNtpFromAnyIpv6",
+                "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "protocol": "Udp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "123",
+                    "sourceAddressPrefix": "::/0",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 302,
+                    "direction": "Inbound",
+                }
+            }
+        ],
+        "defaultSecurityRules": []
+    },
+    {
+        "name": "test-vm-4-nsg",
+        "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-4-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "location": "eastus",
+        "provisioningState": "Succeeded",
+        "securityRules": [
+            {
+                "name": "AllowSsdpFromPrefixes",
+                "id": "/subscriptions/ab12c345-def7-890g-a1b2-28fc0d22117e/resourceGroups/test-rg/providers/Microsoft.Network/networkSecurityGroups/test-vm-4-nsg/securityRules/AllowSsdpFromPrefixes",
+                "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                "properties": {
+                    "provisioningState": "Succeeded",
+                    "protocol": "Udp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "1900",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 303,
+                    "direction": "Inbound",
+                    "sourceAddressPrefixes": [
+                        "10.0.0.0/24",
+                        "0.0.0.0/0"
+                    ]
+                }
+            }
+        ],
+        "defaultSecurityRules": []
     }
 ];
 
@@ -131,6 +212,39 @@ describe('openUDP', function() {
 
         it('should give failing result if the security group has open UDP ports for internet access', function(done) {
             const cache = createCache([networkSecurityGroups[1]]);
+            openUDP.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('has open UDP ports for internet access');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if the security group allows any protocol from 0.0.0.0/0', function(done) {
+            const cache = createCache([networkSecurityGroups[2]]);
+            openUDP.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('has open UDP ports for internet access');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if the security group allows UDP from any IPv6 address', function(done) {
+            const cache = createCache([networkSecurityGroups[3]]);
+            openUDP.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('has open UDP ports for internet access');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if the security group allows UDP from an open source address prefix in sourceAddressPrefixes', function(done) {
+            const cache = createCache([networkSecurityGroups[4]]);
             openUDP.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);

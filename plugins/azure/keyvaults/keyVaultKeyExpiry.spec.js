@@ -115,11 +115,11 @@ describe('keyVaultKeyExpiryRbac', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give passing result if expiration is not set on keys', function(done) {
+        it('should give failing result if expiration is not set on keys', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('Key expiration is not enabled in RBAC vault');
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Key does not have an expiration date set in RBAC vault');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
