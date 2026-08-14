@@ -47,7 +47,7 @@ module.exports = {
                         if (lbBackend &&
                             lbBackend.backends &&
                             lbBackend.backends.length) {
-                            helpers.addResult(results, 0, 'LB has ' + lb[lb.displayName].backends.length + ' backend instances', region, lb.id);
+                            helpers.addResult(results, 0, 'LB has ' + lbBackend.backends.length + ' backend instances', region, lb.id);
                         } else {
                             helpers.addResult(results, 1, 'LB does not have backend instances', region, lb.id);
                         }
