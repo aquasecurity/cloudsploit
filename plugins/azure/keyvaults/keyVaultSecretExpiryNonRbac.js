@@ -81,7 +81,7 @@ module.exports = {
                             }
                         } else {
                             helpers.addResult(results, 2,
-                                'Secret does not have an expiration date set in non RBAC vault', location, secretId);
+                                'Secret expiration is not enabled in non RBAC vault', location, secretId);
                         }
                     });
                 }

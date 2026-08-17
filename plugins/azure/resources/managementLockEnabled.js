@@ -47,7 +47,7 @@ module.exports = {
                 var resourceLength = myLockedResource.length;
                 var resType = myLockedResource[resourceLength - 6];
                 var resName = myLockedResource[resourceLength - 5];
-                var lockLevel = managementLock.properties && managementLock.properties.level;
+                var lockLevel = managementLock.level;
 
                 if (!myLockedResourceObj[resType]) {
                     myLockedResourceObj[resType] = {};

@@ -80,7 +80,7 @@ module.exports = {
                             }
                         } else {
                             helpers.addResult(results, 2,
-                                'Key does not have an expiration date set in RBAC vault', location, keyId);
+                                'Key expiration is not enabled in RBAC vault', location, keyId);
                         }
                     });
                 }

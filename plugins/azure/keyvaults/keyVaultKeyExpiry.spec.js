@@ -119,7 +119,7 @@ describe('keyVaultKeyExpiryRbac', function() {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Key does not have an expiration date set in RBAC vault');
+                expect(results[0].message).to.include('Key expiration is not enabled in RBAC vault');
                 expect(results[0].region).to.equal('eastus');
                 done()
             };
