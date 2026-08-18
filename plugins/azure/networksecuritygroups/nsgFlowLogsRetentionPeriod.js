@@ -64,6 +64,12 @@ module.exports = {
 
                 for (const flowLog of flowLogs.data) {
                     if (!flowLog.id) continue;
+
+                    if (!flowLog.enabled) {
+                        helpers.addResult(results, 2, 'Flow log is not enabled', location, flowLog.id);
+                        continue;
+                    }
+
                     let retentionDays = 0;
                     if (flowLog.retentionPolicy && flowLog.retentionPolicy.days) {
                         retentionDays = flowLog.retentionPolicy.days;
