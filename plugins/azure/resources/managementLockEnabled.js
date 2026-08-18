@@ -45,14 +45,11 @@ module.exports = {
             managementLocks.data.forEach(managementLock => {
                 var myLockedResource = managementLock.id.split('/');
                 var resourceLength = myLockedResource.length;
-                var resType = myLockedResource[resourceLength - 6];
-                var resName = myLockedResource[resourceLength - 5];
-                var lockLevel = managementLock.level;
 
-                if (!myLockedResourceObj[resType]) {
-                    myLockedResourceObj[resType] = {};
+                if (!myLockedResourceObj[myLockedResource[resourceLength - 6]]) {
+                    myLockedResourceObj[myLockedResource[resourceLength - 6]] = {};
                 }
-                myLockedResourceObj[resType][resName] = lockLevel;
+                myLockedResourceObj[myLockedResource[resourceLength - 6]][myLockedResource[resourceLength - 5]] = managementLock.level;
             });
 
             async.each(locations.resources, (loc, lcb) => {
@@ -74,22 +71,17 @@ module.exports = {
                     if (!resource.tags[config.tag]) return resCb();
                     taggedResourceCount++;
                     var myResource = resource.id.split('/');
-                    var resType = myResource[myResource.length - 2];
-                    var resName = myResource[myResource.length - 1];
-                    var lockLevel = myLockedResourceObj[resType] && myLockedResourceObj[resType][resName];
-                    var validLevels = ['cannotdelete', 'readonly'];
-
-                    if (lockLevel && validLevels.includes(lockLevel.toLowerCase())) {
+                    var lockLevel = myLockedResourceObj[myResource[myResource.length-2]] &&
+                        myLockedResourceObj[myResource[myResource.length-2]][myResource[myResource.length-1]];
+                    if (lockLevel && ['cannotdelete', 'readonly'].includes(lockLevel.toLowerCase())) {
                         helpers.addResult(results, 0,
-                            `Resource has Management Lock Enabled with level: ${lockLevel}`, loc, resource.id);
-                    } else if (lockLevel) {
-                        helpers.addResult(results, 2,
-                            `Resource lock level "${lockLevel}" is not CanNotDelete or ReadOnly`, loc, resource.id);
+                            'Resource has Management Lock Enabled', loc, resource.id);
+                        return resCb();        
                     } else {
                         helpers.addResult(results, 2,
                             'Resource does not have Management Lock Enabled', loc, resource.id);
+                        return resCb();        
                     }
-                    return resCb();
 
                 }, function() {
                     lcb();
@@ -97,7 +89,7 @@ module.exports = {
             });
 
             if (!taggedResourceCount) {
-                helpers.addResult(results, 0, 'No Management Locks', location);
+                helpers.addResult(results, 0, 'No resources tagged for lock verification', location);
             }
 
             rcb();

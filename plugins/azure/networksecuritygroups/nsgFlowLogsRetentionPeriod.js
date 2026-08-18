@@ -82,11 +82,11 @@ module.exports = {
                             location, flowLog.id);
                     } else if (retentionDays >= config.retentionDays) {
                         helpers.addResult(results, 0,
-                            `Flow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `Flow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
+                            `NSG fLow log has retention period set to ${retentionDays} of ${config.retentionDays} days desired limit`,
                             location, flowLog.id);
                     }
                 }
