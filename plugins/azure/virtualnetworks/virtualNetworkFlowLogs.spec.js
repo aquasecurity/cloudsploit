@@ -3,92 +3,64 @@ var virtualNetworkFlowLogs = require('./virtualNetworkFlowLogs');
 
 const networkWatchers = [
     {
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus',
-        name: 'NetworkWatcher_eastus'
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus',
+        "name": 'NetworkWatcher_eastus'
     }
 ];
 
 const flowLogs = [
     {
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
-        name: 'test-flowlog',
-        targetResourceId: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
-        enabled: true,
-        flowAnalyticsConfiguration: {
-            networkWatcherFlowAnalyticsConfiguration: {
-                enabled: true,
-                workspaceId: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.OperationalInsights/workspaces/test-law'
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
+        "name": 'test-flowlog',
+        "targetResourceId": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "enabled": true,
+        "flowAnalyticsConfiguration": {
+            "networkWatcherFlowAnalyticsConfiguration": {
+                "enabled": true,
+                "workspaceId": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.OperationalInsights/workspaces/test-law'
             }
         }
     },
     {
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog-nolaw',
-        name: 'test-flowlog-nolaw',
-        targetResourceId: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet-nolaw',
-        enabled: true,
-        flowAnalyticsConfiguration: {
-            networkWatcherFlowAnalyticsConfiguration: {
-                enabled: false,
-                workspaceId: null
-            }
-        }
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
+        "name": 'test-flowlog',
+        "targetResourceId": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "enabled": true
     }
 ];
 
 const virtualNetworks = [
     {
-        name: 'test-vnet',
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
-        type: 'Microsoft.Network/virtualNetworks',
-        tags: { key: 'value' },
-        location: 'eastus',
-        provisioningState: 'Succeeded',
-        virtualNetworkPeerings: [],
-        enableDdosProtection: true,
-        flowLogs: [
-            {
-                id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog'
-            }
-        ]
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "type": 'Microsoft.Network/virtualNetworks',
+        "tags": { "key": "value" },
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": true
     },
     {
-        name: 'test-vnet-nolaw',
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet-nolaw',
-        type: 'Microsoft.Network/virtualNetworks',
-        tags: {},
-        location: 'eastus',
-        provisioningState: 'Succeeded',
-        virtualNetworkPeerings: [],
-        enableDdosProtection: false,
-        flowLogs: [
-            {
-                id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog-nolaw'
-            }
-        ]
-    },
-    {
-        name: 'test-vnet-no-logs',
-        id: '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet-no-logs',
-        type: 'Microsoft.Network/virtualNetworks',
-        tags: {},
-        location: 'eastus',
-        provisioningState: 'Succeeded',
-        virtualNetworkPeerings: [],
-        enableDdosProtection: false
+        "name": 'test-vnet',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/virtualNetworks/test-vnet',
+        "type": 'Microsoft.Network/virtualNetworks',
+        "tags": {},
+        "location": 'eastus',
+        "provisioningState": 'Succeeded',
+        "virtualNetworkPeerings": [],
+        "enableDdosProtection": false
     }
 ];
 
-const createCache = (vnets, logs) => {
+const createCache = (virtualNetworks, flowLogs) => {
     var logData = {};
-    if (networkWatchers.length) {
-        logData[networkWatchers[0].id] = { data: logs || [] };
-    }
+    logData[networkWatchers[0].id] = { data: flowLogs || [] };
 
     return {
         virtualNetworks: {
             listAll: {
                 'eastus': {
-                    data: vnets
+                    data: virtualNetworks
                 }
             }
         },
@@ -155,7 +127,7 @@ describe('virtualNetworkFlowLogs', function() {
         });
 
         it('should give failing result if virtual Network does not have flow logs enabled', function(done) {
-            const cache = createCache([virtualNetworks[2]], []);
+            const cache = createCache([virtualNetworks[1]], []);
             virtualNetworkFlowLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
@@ -188,7 +160,7 @@ describe('virtualNetworkFlowLogs', function() {
         });
 
         it('should give failing result if virtual Network flow logs are not configured to send logs to Log Analytics', function(done) {
-            const cache = createCache([virtualNetworks[1]], [flowLogs[1]]);
+            const cache = createCache([virtualNetworks[0]], [flowLogs[1]]);
             virtualNetworkFlowLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
