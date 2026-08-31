@@ -730,6 +730,14 @@ module.exports = {
         'blobServiceEncryption'         : require(__dirname + '/plugins/azure/storageaccounts/blobServiceEncryption.js'),
         'trustedMsAccessEnabled'        : require(__dirname + '/plugins/azure/storageaccounts/trustedMsAccessEnabled.js'),
         'blobSoftDeletionEnabled'       : require(__dirname + '/plugins/azure/storageaccounts/blobSoftDeletionEnabled.js'),
+        'storageAccountKeyRotationReminder': require(__dirname + '/plugins/azure/storageaccounts/storageAccountKeyRotationReminder.js'),
+        'storageAccountKeyRotation'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountKeyRotation.js'),
+        'sharedKeyAccessDisabled'       : require(__dirname + '/plugins/azure/storageaccounts/sharedKeyAccessDisabled.js'),
+        'storageAccountEntraIdAuthDefault': require(__dirname + '/plugins/azure/storageaccounts/storageAccountEntraIdAuthDefault.js'),
+        'geoRedundantStorage'           : require(__dirname + '/plugins/azure/storageaccounts/geoRedundantStorage.js'),
+        'fileShareSoftDeletionEnabled'  : require(__dirname + '/plugins/azure/storageaccounts/fileShareSoftDeletionEnabled.js'),
+        'fileShareSmbProtocolVersion'   : require(__dirname + '/plugins/azure/storageaccounts/fileShareSmbProtocolVersion.js'),
+        'fileShareSmbChannelEncryption' : require(__dirname + '/plugins/azure/storageaccounts/fileShareSmbChannelEncryption.js'),
         'storageAccountsTlsVersion'     : require(__dirname + '/plugins/azure/storageaccounts/storageAccountsTlsVersion.js'),
         'storageAccountHasTags'         : require(__dirname + '/plugins/azure/storageaccounts/storageAccountHasTags.js'),
         'storageAccountPrivateEndpoint' : require(__dirname + '/plugins/azure/storageaccounts/storageAccountPrivateEndpoint.js'),
@@ -1055,6 +1063,8 @@ module.exports = {
         'passwordRequiresUppercase'     : require(__dirname + '/plugins/azure/entraid/passwordRequiresUppercase.js'),
         'minPasswordLength'             : require(__dirname + '/plugins/azure/entraid/minPasswordLength.js'),
         'ensureNoGuestUser'             : require(__dirname + '/plugins/azure/entraid/ensureNoGuestUser.js'),
+        'userAccessAdminRestricted'     : require(__dirname + '/plugins/azure/entraid/userAccessAdminRestricted.js'),
+        'subscriptionOwnerCount'        : require(__dirname + '/plugins/azure/entraid/subscriptionOwnerCount.js'),
         'noCustomOwnerRoles'            : require(__dirname + '/plugins/azure/entraid/noCustomOwnerRoles.js'),
         'appOrgnaizationalDirectoryAccess'         : require(__dirname + '/plugins/azure/entraid/appOrgnaizationalDirectoryAccess.js'),
 
@@ -1148,6 +1158,7 @@ module.exports = {
         'agHttpsListenerOnly'           : require(__dirname + '/plugins/azure/applicationGateway/agHttpsListenerOnly.js'),
 
         'subscriptionHasTags'           : require(__dirname + '/plugins/azure/subscription/subscriptionHasTags.js'),
+        'subscriptionTenantPolicy'      : require(__dirname + '/plugins/azure/subscription/subscriptionTenantPolicy.js'),
 
         'rgHasTags'                     : require(__dirname + '/plugins/azure/resourceGroup/rgHasTags.js'),
 
@@ -1254,6 +1265,9 @@ module.exports = {
         'workspaceManagedServicesCmk'   : require(__dirname + '/plugins/azure/databricks/workspaceManagedServicesCmk.js'),
         'workspaceManagedDiskCmk'       : require(__dirname + '/plugins/azure/databricks/workspaceManagedDiskCmk.js'),
         'workspaceHasTags'              : require(__dirname + '/plugins/azure/databricks/workspaceHasTags.js'),
+        'workspaceVnetInjection'        : require(__dirname + '/plugins/azure/databricks/workspaceVnetInjection.js'),
+        'workspacePublicAccess'         : require(__dirname + '/plugins/azure/databricks/workspacePublicAccess.js'),
+        'workspacePrivateEndpoints'     : require(__dirname + '/plugins/azure/databricks/workspacePrivateEndpoints.js'),
 
         'workspaceManagedIdentity'      : require(__dirname + '/plugins/azure/synapse/workspaceManagedIdentity.js'),
         'synapseWorkspaceAdAuthEnabled' : require(__dirname + '/plugins/azure/synapse/synapseWorkspaceAdAuthEnabled.js'),
