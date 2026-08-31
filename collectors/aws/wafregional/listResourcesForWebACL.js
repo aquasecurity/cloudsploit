@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var wafregional = new AWS.WAFRegional(AWSConfig);
     async.eachLimit(collection.wafregional.listWebACLs[AWSConfig.region].data, 15, function(dep, depCb){
         async.eachLimit(['APPLICATION_LOAD_BALANCER', 'API_GATEWAY'], 1, function(thisCheck, tcCb){
@@ -11,7 +11,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             var filter = {};
             filter['WebACLId'] = dep['WebACLId'];
             filter['ResourceType'] = thisCheck;
-            helpers.makeCustomCollectorCall(wafregional, 'listResourcesForWebACL', filter, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(wafregional, 'listResourcesForWebACL', filter, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection['wafregional']['listResourcesForWebACL'][AWSConfig.region][dep['WebACLId']].err = err;
                     return tcCb();

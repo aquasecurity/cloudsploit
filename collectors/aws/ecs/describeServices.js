@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var ecs = new AWS.ECS(AWSConfig);
 
     async.eachOfLimit(collection.ecs.listServices[AWSConfig.region], 10, function(servicesData,instance, cb){
@@ -17,7 +17,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
                 cluster : clusterName,
             };
 
-            helpers.makeCustomCollectorCall(ecs, 'describeServices', params, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(ecs, 'describeServices', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.ecs.describeServices[AWSConfig.region][service].err = err;
                 }

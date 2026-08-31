@@ -84,6 +84,44 @@ describe('Lambda Enhanced Monitoring Enabled', function () {
             lambdaEnableEnhancedMonitoring.run(cache, {}, callback);
         });
 
+        it('should return failing result if lambda function has only unrelated layers', function (done) {
+            const lambdaData = [
+                {
+                    "FunctionName": "test-lambda",
+                    "FunctionArn": "arn:aws:lambda:us-east-1:000011112222:function:test-lambda"
+                }
+            ];
+
+            const functionInfoData = {
+                "us-east-1": {
+                    "test-lambda": {
+                        "err": null,
+                        "data": {
+                            "Configuration": {
+                                "Layers": [
+                                    {
+                                        "Arn": "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39:6"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            };
+
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].region).to.equal('us-east-1');
+                expect(results[0].message).to.include('Lambda function does not have enhanced monitoring enabled');
+                done();
+            };
+
+            const cache = createCache(lambdaData, functionInfoData);
+
+            lambdaEnableEnhancedMonitoring.run(cache, {}, callback);
+        });
+
         it('should return failing result if lambda function does not have enhanced monitoring enabled', function (done) {
             const lambdaData = [
                 {

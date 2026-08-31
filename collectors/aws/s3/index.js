@@ -2,8 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retries, callback) {
-    var s3 = new AWS.S3(AWSConfig);
+module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
 
     var knownBuckets = [];
 
@@ -26,7 +25,7 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retri
 
             for (var t in collection.cloudtrail.describeTrails[region].data) {
                 var trail = collection.cloudtrail.describeTrails[region].data[t];
-                
+
                 if (knownBuckets.indexOf(trail.S3BucketName) === -1) {
                     knownBuckets.push(trail.S3BucketName);
                 }
@@ -37,18 +36,19 @@ module.exports = function(callKey, forceCloudTrail, AWSConfig, collection, retri
     if (!knownBuckets || !knownBuckets.length) return callback();
 
     async.eachLimit(knownBuckets, 10, function(bucket, bcb){
+        var s3 = new AWS.S3(AWSConfig);
         collection['s3'][callKey][AWSConfig.region][bucket] = {};
 
-        helpers.makeCustomCollectorCall(s3, callKey, {Bucket:bucket}, retries, null, null, null, function(bErr, bData) {
+        helpers.makeCustomCollectorCall(s3, callKey, {Bucket:bucket}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(bErr, bData) {
             if (bErr) {
                 collection['s3'][callKey][AWSConfig.region][bucket].err = bErr;
 
                 if (bErr.statusCode && bErr.statusCode == 301) {
-                    helpers.makeCustomCollectorCall(s3, 'getBucketLocation', {Bucket:bucket}, retries, null, null, null, function(locErr, locData) {
+                    helpers.makeCustomCollectorCall(s3, 'getBucketLocation', {Bucket:bucket}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(locErr, locData) {
                         if (locErr || !locData || !locData.LocationConstraint) return bcb();
                         // Special case where location constraint is EU - rewrite as eu-west-1
                         if (locData.LocationConstraint == 'EU') locData.LocationConstraint = 'eu-west-1';
-                        
+
                         var altAWSConfig = JSON.parse(JSON.stringify(AWSConfig));
                         altAWSConfig.region = locData.LocationConstraint;
                         var s3Alt = new AWS.S3(altAWSConfig);

@@ -55,8 +55,12 @@ module.exports = {
                     }
 
                     const restricted = account.networkAcls && account.networkAcls.defaultAction && account.networkAcls.defaultAction.toLowerCase() === 'deny';
+                    
+                    const hasVirtualNetworks = account.networkAcls && account.networkAcls.virtualNetworkRules && account.networkAcls.virtualNetworkRules.length > 0;
 
                     if ( restricted && !hasOpenCidr) {
+                        helpers.addResult(results, 0, 'Storage account has public network access disabled', location, account.id);
+                    } else if (hasVirtualNetworks) {
                         helpers.addResult(results, 0, 'Storage account has public network access disabled', location, account.id);
                     } else {
                         helpers.addResult(results, 2, 'Storage account has public network access enabled for all networks', location, account.id);
