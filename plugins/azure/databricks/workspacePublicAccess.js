@@ -8,7 +8,7 @@ module.exports = {
     severity: 'Medium',
     description: 'Ensures that Azure Databricks Workspace has public network access disabled.',
     more_info: 'Disabling public network access ensures that the Databricks workspace is not reachable over the public internet and can only be accessed through private endpoints within trusted networks. This reduces the attack surface and the risk of unauthorized access.',
-    recommended_action: 'Modify Databricks workspace networking settings and set Allow Public Network Access to Disabled.',
+    recommended_action: 'Modify Databricks workspace networking settings and set Allow Public Network Access to disabled.',
     link: 'https://learn.microsoft.com/en-us/azure/databricks/security/network/front-end/front-end-private-connect',
     apis: ['databricks:listWorkspaces'],
     realtime_triggers: ['microsoftdatabricks:workspaces:write','microsoftdatabricks:workspaces:delete'],
