@@ -5,7 +5,7 @@ module.exports = {
     title: 'Subscription Owner Count',
     category: 'Entra ID',
     domain: 'Identity and Access Management',
-    severity: 'Medium',
+    severity: 'Low',
     description: 'Ensures that the number of subscription owners is within the desired range.',
     more_info: 'The Owner role grants full control over all resources in a subscription, including the ability to assign roles to others. Keeping the number of owners low limits privilege sprawl, while keeping more than one avoids losing administrative access. All principal types count towards the total, including users, groups, service principals and managed identities.',
     recommended_action: 'Remove unnecessary Owner role assignments, or add an additional owner if only one exists.',
