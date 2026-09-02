@@ -6,9 +6,9 @@ module.exports = {
     category: 'Entra ID',
     domain: 'Identity and Access Management',
     severity: 'Medium',
-    description: 'Ensures that the User Access Administrator role is not assigned.',
-    more_info: 'The User Access Administrator role allows viewing all resources and managing access assignments across the tenant. Because of its high privilege level, the role assignment should be removed once the required changes are complete to reduce the risk of privilege escalation and unauthorized access.',
-    recommended_action: 'Remove User Access Administrator role assignments that are no longer required.',
+    description: 'Ensures that the User Access Administrator role is not assigned at the root scope.',
+    more_info: 'Assigning the User Access Administrator role at the root scope allows viewing all resources and managing access assignments across every subscription and management group in the tenant. This elevated access is intended to be temporary and should be removed once the required changes are complete, to reduce the risk of privilege escalation and unauthorized access.',
+    recommended_action: 'Remove User Access Administrator role assignments at the root scope that are no longer required.',
     link: 'https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#user-access-administrator',
     apis: ['roleDefinitions:list', 'aad:listRoleAssignments'],
 
@@ -49,15 +49,16 @@ module.exports = {
             }
 
             var adminAssignments = roleAssignments.data.filter(roleAssignment => roleAssignment.roleDefinitionId &&
-                adminRoleIds.includes(roleAssignment.roleDefinitionId.split('/').pop()));
+                adminRoleIds.includes(roleAssignment.roleDefinitionId.split('/').pop()) &&
+                roleAssignment.scope === '/');
 
             if (!adminAssignments.length) {
-                helpers.addResult(results, 0, 'User Access Administrator role is not assigned', location);
+                helpers.addResult(results, 0, 'User Access Administrator role is not assigned at root scope', location);
                 return rcb();
             }
 
             adminAssignments.forEach(roleAssignment => {
-                helpers.addResult(results, 2, 'User Access Administrator role is assigned', location, roleAssignment.id);
+                helpers.addResult(results, 2, 'User Access Administrator role is assigned at root scope', location, roleAssignment.id);
             });
 
             rcb();

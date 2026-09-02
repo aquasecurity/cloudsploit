@@ -36,6 +36,15 @@ const roleAssignments = [
         "principalId": "258a9a70-2e04-4def-829c-239922b43dc9",
         "principalType": "User",
         "scope": "/subscriptions/123"
+    },
+    {
+        "id": "/providers/Microsoft.Authorization/roleAssignments/2b45e3ef-59f3-4a95-9c4f-471b97cdeaf1",
+        "type": "Microsoft.Authorization/roleAssignments",
+        "name": "2b45e3ef-59f3-4a95-9c4f-471b97cdeaf1",
+        "roleDefinitionId": "/subscriptions/123/providers/Microsoft.Authorization/roleDefinitions/18d7d88d-d35e-4fb5-a5c3-7773c20a72d9",
+        "principalId": "358a9a70-2e04-4def-829c-239922b43dd0",
+        "principalType": "User",
+        "scope": "/"
     }
 ];
 
@@ -101,18 +110,29 @@ describe('userAccessAdminRestricted', function () {
             userAccessAdminRestricted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
-                expect(results[0].message).to.include('User Access Administrator role is not assigned');
+                expect(results[0].message).to.include('User Access Administrator role is not assigned at root scope');
                 expect(results[0].region).to.equal('global');
                 done();
             });
         });
 
-        it('should give failing result if User Access Administrator role is assigned', function (done) {
-            const cache = createCache(roleDefinitions, roleAssignments, null, null);
+        it('should give passing result if User Access Administrator role is assigned below root scope', function (done) {
+            const cache = createCache(roleDefinitions, [roleAssignments[0]], null, null);
+            userAccessAdminRestricted.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('User Access Administrator role is not assigned at root scope');
+                expect(results[0].region).to.equal('global');
+                done();
+            });
+        });
+
+        it('should give failing result if User Access Administrator role is assigned at root scope', function (done) {
+            const cache = createCache(roleDefinitions, [roleAssignments[2]], null, null);
             userAccessAdminRestricted.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('User Access Administrator role is assigned');
+                expect(results[0].message).to.include('User Access Administrator role is assigned at root scope');
                 expect(results[0].region).to.equal('global');
                 done();
             });
