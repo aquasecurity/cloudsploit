@@ -6,7 +6,7 @@ module.exports = {
     category: 'Storage Accounts',
     domain: 'Storage',
     severity: 'Medium',
-    description: 'Ensures that the Azure portal defaults to Microsoft Entra authorization for Microsoft Azure Storage Accounts.',
+    description: 'Ensures that the Azure portal defaults to Microsoft Entra Authorization for Microsoft Azure Storage Accounts.',
     more_info: 'When this property is enabled, the Azure portal authorizes requests to blobs, files, queues, and tables with Microsoft Entra ID by default, which provides superior security and ease of use over Shared Key.',
     recommended_action: 'Enable Default to Microsoft Entra authorization in the Azure portal from the configuration settings of the storage account.',
     link: 'https://learn.microsoft.com/en-us/azure/storage/common/authorize-data-access',
