@@ -89,9 +89,19 @@ module.exports = {
                         `Unable to get image Recipe description: ${helpers.addError(getImageRecipe)}`,
                         region, resource);
                     continue;
-                } 
+                }
+
+                let blockDeviceMappings = getImageRecipe.data.imageRecipe.blockDeviceMappings;
+
+                if (!blockDeviceMappings || !blockDeviceMappings.length) {
+                    helpers.addResult(results, 0,
+                        'Image recipe does not have any block device mappings',
+                        region, resource);
+                    continue;
+                }
+
                 let poorlyEncrypted = [];
-                for (let mapping of getImageRecipe.data.imageRecipe.blockDeviceMappings){
+                for (let mapping of blockDeviceMappings){
                     if (mapping.ebs && !mapping.ebs.encrypted){
                         poorlyEncrypted.push(mapping.ebs);
                         continue;

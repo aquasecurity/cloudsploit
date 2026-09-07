@@ -65,14 +65,14 @@ module.exports = {
 
                     destinations.forEach(function(destination) {
                         if (peerCidrs.indexOf(destination.toLowerCase()) > -1) {
-                            violations.push(`${destination} via ${peeringId}: routes full peer VPC CIDR`);
+                            violations.push(`${destination} via ${peeringId}`);
                         }
                     });
                 });
 
                 if (violations.length) {
                     helpers.addResult(results, 2,
-                        `Route table "${routeTable.RouteTableId}" has non-compliant VPC peering routes: ${violations.join('; ')}`,
+                        `Route table "${routeTable.RouteTableId}" routes full peer VPC CIDR via VPC peering: ${violations.join(', ')}`,
                         region, resource);
                 } else {
                     helpers.addResult(results, 0,

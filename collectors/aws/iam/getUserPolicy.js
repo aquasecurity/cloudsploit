@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
     if (!collection.iam ||
@@ -49,7 +49,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         async.each(collection.iam.listUserPolicies[AWSConfig.region][user.UserName].data.PolicyNames, function(policyName, pCb){
             collection.iam.getUserPolicy[AWSConfig.region][user.UserName][policyName] = {};
 
-            helpers.makeCustomCollectorCall(iam, 'getUserPolicy', {PolicyName: policyName,UserName: user.UserName}, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(iam, 'getUserPolicy', {PolicyName: policyName,UserName: user.UserName}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.iam.getUserPolicy[AWSConfig.region][user.UserName][policyName].err = err;
                     return pCb();
