@@ -81,9 +81,7 @@ const createCache = (list, listKeys, segments, acl, keysErr) => {
         tableService: {
             listTablesSegmented: {
                 'eastus': {
-                    [id]: {
-                        data: segments     
-                    }
+                    [id]: { data: segments }
                 }
             },
             getTableAcl: {
@@ -197,6 +195,16 @@ describe('tableServiceAllAccessAcl', function () {
             tableServiceAllAccessAcl.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(3);
+                done();
+            });
+        });
+
+        it('should PASS if storage account public network access is disabled', function (done) {
+            const disabledAccount = Object.assign({}, storageAccounts[0], { publicNetworkAccess: 'Disabled' });
+            const cache = createCache([disabledAccount], listKeys);
+            tableServiceAllAccessAcl.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
                 done();
             });
         });

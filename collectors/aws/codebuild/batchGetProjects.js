@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var codebuild = new AWS.CodeBuild(AWSConfig);
 
     async.eachLimit(collection.codebuild.listProjects[AWSConfig.region].data, 15, function(project, cb){
@@ -12,7 +12,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             names: [project],
         };
 
-        helpers.makeCustomCollectorCall(codebuild, 'batchGetProjects', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(codebuild, 'batchGetProjects', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.codebuild.batchGetProjects[AWSConfig.region][project].err = err;
             }

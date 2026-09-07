@@ -162,5 +162,18 @@ describe('keyVaultKeyExpiryRbac', function() {
 
             auth.run(createCache(null, [listKeyVaults[0]], [getKeys[2]]), { key_vault_key_expiry_fail: '40' }, callback);
         });
+
+        it('should give passing result if Key Vault public network access is disabled', function(done) {
+            const disabledVault = Object.assign({}, listKeyVaults[0], { publicNetworkAccess: 'Disabled' });
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Key Vault public network access is disabled');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            auth.run(createCache(null, [disabledVault], []), {}, callback);
+        });
     });
 });

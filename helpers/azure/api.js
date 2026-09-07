@@ -199,12 +199,12 @@ var serviceMap = {
         },
     'Virtual Machines':
         {
-            enabled: true, isSingleSource: true, InvAsset: 'vm_scaleset', InvService: 'virtualmachines',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'VM_ScaleSet', BridgeServiceName: 'virtualmachinescalesets',
-            BridgePluginCategoryName: 'Virtual Machines', BridgeProvider: 'Azure', BridgeCall: 'listAll',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualMachineScaleSets',
+            enabled: true, isSingleSource: true, InvAsset: 'vm_scaleset_vm', InvService: 'virtualmachines',
+            InvResourceCategory: 'cloud_resources', InvResourceType: 'VM_ScaleSet_VM', BridgeServiceName: 'virtualmachinescalesetvms',
+            BridgePluginCategoryName: 'Virtual Machines', BridgeProvider: 'Azure', BridgeCall: 'list',
+            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'virtualMachines',
             BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'Virtual Machines',
-            BridgeCollectionService: 'virtualmachinescalesets', DataIdentifier: 'data',
+            BridgeCollectionService: 'virtualmachinescalesetvms', DataIdentifier: 'data',
         },
     'Event Grid':
         {
@@ -545,8 +545,7 @@ var calls = {
     virtualMachineScaleSets: {
         listAll: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2023-07-01'
-        },
-        sendIntegration: serviceMap['Virtual Machines']
+        }
     },
     bastionHosts: {
         listAll: {
@@ -909,8 +908,9 @@ var postcalls = {
         list: {
             reliesOnPath: 'virtualMachineScaleSets.listAll',
             properties: ['id'],
-            url: 'https://management.azure.com/{id}/virtualMachines?api-version=2020-12-01'
-        }
+            url: 'https://management.azure.com/{id}/virtualMachines?api-version=2025-11-01'
+        },
+        sendIntegration: serviceMap['Virtual Machines']
     },
     virtualNetworkGateways: {
         listByResourceGroup: {

@@ -50,6 +50,14 @@ module.exports = {
                     return;
                 }
 
+                if (vault.publicNetworkAccess &&
+                    vault.publicNetworkAccess.toLowerCase() === 'disabled') {
+                    helpers.addResult(results, 0,
+                        'Key Vault public network access is disabled; unable to query Key Vault keys',
+                        location, vault.id);
+                    return;
+                }
+
                 var keys = helpers.addSource(cache, source,
                     ['vaults', 'getKeys', location, vault.id]);
 

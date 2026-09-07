@@ -37,6 +37,10 @@ module.exports = {
 
             for (let account of accounts.data) {
 
+                if (!account.id) continue;
+
+                if (!account.kind || account.kind.toLowerCase() !== 'openai') continue;
+
                 if (account.tags && Object.entries(account.tags).length > 0) {
                     helpers.addResult(results, 0,
                         'OpenAI Account has tags associated', location, account.id);

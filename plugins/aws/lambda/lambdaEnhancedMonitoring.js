@@ -49,11 +49,12 @@ module.exports = {
                     continue;
                 }
                 
-                if (functionInfo.data && 
-                    functionInfo.data.Configuration && 
-                    functionInfo.data.Configuration.Layers && 
-                    functionInfo.data.Configuration.Layers[0] &&
-                    functionInfo.data.Configuration.Layers[0].Arn) {
+                var layers = functionInfo.data && functionInfo.data.Configuration && functionInfo.data.Configuration.Layers;
+                var hasInsightsLayer = layers && layers.some(function(layer) {
+                    return layer.Arn && layer.Arn.includes('LambdaInsightsExtension');
+                });
+
+                if (hasInsightsLayer) {
                     helpers.addResult(results, 0, 'Lambda function has enhanced monitoring enabled', region, resource);
                 } else {
                     helpers.addResult(results, 2, 'Lambda function does not have enhanced monitoring enabled', region, resource);

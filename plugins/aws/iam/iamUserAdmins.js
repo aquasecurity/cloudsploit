@@ -119,8 +119,50 @@ module.exports = {
             if (listAttachedUserPolicies.data &&
                 listAttachedUserPolicies.data.AttachedPolicies) {
                 for (var a in listAttachedUserPolicies.data.AttachedPolicies) {
-                    var policy = listAttachedUserPolicies.data.AttachedPolicies[a];
+                    var attachedPolicy = listAttachedUserPolicies.data.AttachedPolicies[a];
                     
+                    if (!attachedPolicy.PolicyArn) continue;
+
+                    if (attachedPolicy.PolicyArn === managedAdminPolicy) {
+                        userAdmins.push({name: user.UserName, arn: user.Arn});
+                        return cb();
+                    }
+
+                    var managedGetPolicy = helpers.addSource(cache, source,
+                        ['iam', 'getPolicy', region, attachedPolicy.PolicyArn]);
+
+                    if (managedGetPolicy &&
+                        managedGetPolicy.data &&
+                        managedGetPolicy.data.Policy &&
+                        managedGetPolicy.data.Policy.DefaultVersionId) {
+                        var managedGetPolicyVersion = helpers.addSource(cache, source,
+                            ['iam', 'getPolicyVersion', region, attachedPolicy.PolicyArn]);
+
+                        if (managedGetPolicyVersion &&
+                            managedGetPolicyVersion.data &&
+                            managedGetPolicyVersion.data.PolicyVersion &&
+                            managedGetPolicyVersion.data.PolicyVersion.Document) {
+                            let managedStatements = helpers.normalizePolicyDocument(
+                                managedGetPolicyVersion.data.PolicyVersion.Document);
+                            if (!managedStatements) break;
+
+                            // Loop through statements to see if admin privileges
+                            for (let managedStmt of managedStatements) {
+                                if (managedStmt.Effect && managedStmt.Effect.toUpperCase() === 'ALLOW' &&
+                                managedStmt.Action && managedStmt.Action.indexOf('*') > -1 &&
+                                managedStmt.Resource && managedStmt.Resource.indexOf('*') > -1) {
+                                    userAdmins.push({name: user.UserName, arn: user.Arn});
+                                    return cb();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // See if user has admin managed policy (enriched)
+            if (user.attachedPolicies && Array.isArray(user.attachedPolicies) && user.attachedPolicies.length) {
+                for (var policy of user.attachedPolicies) {
                     if (!policy.PolicyArn) continue;
 
                     if (policy.PolicyArn === managedAdminPolicy) {
@@ -146,7 +188,6 @@ module.exports = {
                                 getPolicyVersion.data.PolicyVersion.Document);
                             if (!statements) break;
 
-                            // Loop through statements to see if admin privileges
                             for (let statement of statements) {
                                 if (statement.Effect && statement.Effect.toUpperCase() === 'ALLOW' &&
                                 statement.Action && statement.Action.indexOf('*') > -1 &&
@@ -165,8 +206,36 @@ module.exports = {
                 listUserPolicies.data.PolicyNames) {
 
                 for (var p in listUserPolicies.data.PolicyNames) {
-                    var policyName = listUserPolicies.data.PolicyNames[p];
+                    var userPolicyName = listUserPolicies.data.PolicyNames[p];
 
+                    if (getUserPolicy &&
+                        getUserPolicy[userPolicyName] &&
+                        getUserPolicy[userPolicyName].data &&
+                        getUserPolicy[userPolicyName].data.PolicyDocument) {
+
+                        var userPolicyStatements = helpers.normalizePolicyDocument(
+                            getUserPolicy[userPolicyName].data.PolicyDocument);
+                        if (!userPolicyStatements) break;
+
+                        // Loop through statements to see if admin privileges
+                        for (var sp in userPolicyStatements) {
+                            var userStmt = userPolicyStatements[sp];
+
+                            if (userStmt.Effect === 'Allow' &&
+                                userStmt.Action.indexOf('*') > -1 &&
+                                userStmt.Resource &&
+                                userStmt.Resource.indexOf('*') > -1) {
+                                userAdmins.push({name: user.UserName, arn: user.Arn});
+                                return cb();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // See if user has admin inline policy (enriched)
+            if (user.inlinePolicies && Array.isArray(user.inlinePolicies) && user.inlinePolicies.length) {
+                for (var policyName of user.inlinePolicies) {
                     if (getUserPolicy &&
                         getUserPolicy[policyName] &&
                         getUserPolicy[policyName].data &&
@@ -176,7 +245,6 @@ module.exports = {
                             getUserPolicy[policyName].data.PolicyDocument);
                         if (!statements) break;
 
-                        // Loop through statements to see if admin privileges
                         for (var s in statements) {
                             var statement = statements[s];
 
@@ -210,6 +278,12 @@ module.exports = {
                     var getGroupPolicy = helpers.addSource(cache, source,
                         ['iam', 'getGroupPolicy', region, group.GroupName]);
 
+                    var listGroups = helpers.addSource(cache, source, ['iam', 'listGroups', region]);
+                    var enrichedGroup = null;
+                    if (listGroups && listGroups.data && Array.isArray(listGroups.data)) {
+                        enrichedGroup = listGroups.data.find(g => g.GroupName === group.GroupName);
+                    }
+
                     // See if group has admin managed policy
                     if (listAttachedGroupPolicies &&
                         listAttachedGroupPolicies.data &&
@@ -219,6 +293,16 @@ module.exports = {
                             var policyAttached = listAttachedGroupPolicies.data.AttachedPolicies[a];
 
                             if (policyAttached.PolicyArn === managedAdminPolicy) {
+                                userAdmins.push({name: user.UserName, arn: user.Arn});
+                                return cb();
+                            }
+                        }
+                    }
+
+                    // See if group has admin managed policy (enriched)
+                    if (enrichedGroup && enrichedGroup.attachedPolicies && Array.isArray(enrichedGroup.attachedPolicies) && enrichedGroup.attachedPolicies.length) {
+                        for (var enrichedPolicy of enrichedGroup.attachedPolicies) {
+                            if (enrichedPolicy.PolicyArn === managedAdminPolicy) {
                                 userAdmins.push({name: user.UserName, arn: user.Arn});
                                 return cb();
                             }
@@ -238,11 +322,37 @@ module.exports = {
                                 getGroupPolicy[policyGroupName].data &&
                                 getGroupPolicy[policyGroupName].data.PolicyDocument) {
 
-                                var statementsGroup = helpers.normalizePolicyDocument(
+                                var groupPolicyStatements = helpers.normalizePolicyDocument(
                                     getGroupPolicy[policyGroupName].data.PolicyDocument);
-                                if (!statementsGroup) break;
+                                if (!groupPolicyStatements) break;
 
                                 // Loop through statements to see if admin privileges
+                                for (var sg in groupPolicyStatements) {
+                                    var groupStmt = groupPolicyStatements[sg];
+
+                                    if (groupStmt.Effect === 'Allow' &&
+                                        groupStmt.Action.indexOf('*') > -1 &&
+                                        groupStmt.Resource.indexOf('*') > -1) {
+                                        userAdmins.push({name: user.UserName, arn: user.Arn});
+                                        return cb();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // See if group has admin inline policy (enriched)
+                    if (enrichedGroup && enrichedGroup.inlinePolicies && Array.isArray(enrichedGroup.inlinePolicies) && enrichedGroup.inlinePolicies.length) {
+                        for (var enrichedPolicyName of enrichedGroup.inlinePolicies) {
+                            if (getGroupPolicy &&
+                                getGroupPolicy[enrichedPolicyName] &&
+                                getGroupPolicy[enrichedPolicyName].data &&
+                                getGroupPolicy[enrichedPolicyName].data.PolicyDocument) {
+
+                                var statementsGroup = helpers.normalizePolicyDocument(
+                                    getGroupPolicy[enrichedPolicyName].data.PolicyDocument);
+                                if (!statementsGroup) break;
+
                                 for (s in statementsGroup) {
                                     var statementGroup = statementsGroup[s];
 

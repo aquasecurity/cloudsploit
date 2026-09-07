@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var mwaa = new AWS.MWAA(AWSConfig);
 
     async.eachLimit(collection.mwaa.listEnvironments[AWSConfig.region].data, 15, function(env, cb){
@@ -12,7 +12,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             Name: env
         };
 
-        helpers.makeCustomCollectorCall(mwaa, 'getEnvironment', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(mwaa, 'getEnvironment', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.mwaa.getEnvironment[AWSConfig.region][env].err = err;
             }

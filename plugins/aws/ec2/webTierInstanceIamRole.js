@@ -16,7 +16,7 @@ module.exports = {
         ec2_web_tier_tag_key: {
             name: 'EC2 Web-Tier Tag Key',
             description: 'Tag key to indicate Web-Tier EC2 instances',
-            regex: '^.*$s',
+            regex: '^.*$',
             default: ''
         },
     },
