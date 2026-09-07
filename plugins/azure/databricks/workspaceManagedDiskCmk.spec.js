@@ -72,6 +72,24 @@ const workspaces = [
        },
        "location": "eastus",
        "tags": {}
+    },
+    {
+        "managedResourceGroupId": "/subscriptions/1234/resourceGroups/test",
+        "encryption": {
+            "entities": {
+              "managedDisk": {
+                "keySource": "Microsoft.Managed"
+              }
+            }
+        },
+       "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace",
+       "name": "test-workspace",
+       "type": "Microsoft.Databricks/workspaces",
+       "sku": {
+         "name": "premium"
+       },
+       "location": "eastus",
+       "tags": {}
     }
 ];
 
@@ -145,6 +163,16 @@ describe('workspaceManagedDiskCmk', function () {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Databricks workspace managed disk does not have CMK encryption enabled');
                 expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if managed disk encryption is not using Key Vault CMK', function (done) {
+            const cache = createCache([workspaces[3]], null);
+            workspaceManagedDiskCmk.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Databricks workspace managed disk does not have CMK encryption enabled');
                 done();
             });
         });

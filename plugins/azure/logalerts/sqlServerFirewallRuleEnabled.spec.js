@@ -20,7 +20,38 @@ const activityLogAlerts = [
                 },
                 {
                     "field": "operationName",
-                    "equals": "Microsoft.Sql/servers/delete"
+                    "equals": "Microsoft.Sql/servers/firewallRules/delete"
+                }
+            ]
+        },
+        "actions": {
+            "actionGroups": [
+                {
+                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
+                    "webhookProperties": {}
+                }
+            ]
+        }
+    },
+    {
+        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
+        "name": "NSG2",
+        "type": "Microsoft.Insights/ActivityLogAlerts",
+        "location": "global",
+        "tags": {},
+        "scopes": [
+            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
+        ],
+        "enabled": true,
+        "condition": {
+            "allOf": [
+                {
+                    "field": "category",
+                    "equals": "Security"
+                },
+                {
+                    "field": "operationName",
+                    "equals": "Microsoft.Sql/servers/firewallRules/write"
                 }
             ]
         },
@@ -52,37 +83,6 @@ const activityLogAlerts = [
                 {
                     "field": "operationName",
                     "equals": "Microsoft.Sql/servers/write"
-                }
-            ]
-        },
-        "actions": {
-            "actionGroups": [
-                {
-                    "actionGroupId": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourcegroups/default-activitylogalerts/providers/microsoft.insights/actiongroups/testactiong",
-                    "webhookProperties": {}
-                }
-            ]
-        }
-    },
-    {
-        "id": "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a/resourceGroups/Default-ActivityLogAlerts/providers/microsoft.insights/activityLogAlerts/NSG2",
-        "name": "NSG2",
-        "type": "Microsoft.Insights/ActivityLogAlerts",
-        "location": "global",
-        "tags": {},
-        "scopes": [
-            "/subscriptions/e79d9a03-3ab3-4481-bdcd-c5db1d55420a"
-        ],
-        "enabled": true,
-        "condition": {
-            "allOf": [
-                {
-                    "field": "category",
-                    "equals": "Security"
-                },
-                {
-                    "field": "operationName",
-                    "equals": "Microsoft.Sql/servers/update"
                 }
             ]
         },

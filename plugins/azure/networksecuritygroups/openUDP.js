@@ -42,14 +42,14 @@ module.exports = {
                 let openUdpPorts = false;
                 if (sg.securityRules &&
                     sg.securityRules.length) {
-                    let InvalidSourceAddressPrefixes = ['*', '0.0.0.0', '<nw>/0', '/0', 'internet', 'any'];
+                    let InvalidSourceAddressPrefixes = ['*', '0.0.0.0', '0.0.0.0/0', '<nw>/0', '<nw/0>', '/0', '::/0', 'internet', 'any'];
 
                     var accessRules = sg.securityRules.filter((rule) => {
                         return (rule.properties &&
                             rule.properties.access &&
                             rule.properties.access.toLowerCase() == 'allow' &&
                             rule.properties.direction.toLowerCase() === 'inbound' &&
-                            rule.properties.protocol.toLowerCase() === 'udp');
+                            ['udp', '*'].indexOf(rule.properties.protocol.toLowerCase()) > -1);
                     });
 
                     for (var rule in accessRules) {
@@ -57,8 +57,12 @@ module.exports = {
 
                         let dRule = accessRules[rule].properties;
 
-                        if (dRule.sourceAddressPrefix &&
-                            InvalidSourceAddressPrefixes.indexOf(dRule.sourceAddressPrefix) > -1) {
+                        let sourceAddressPrefixes = (dRule.sourceAddressPrefixes && dRule.sourceAddressPrefixes.length) ?
+                            dRule.sourceAddressPrefixes.slice() : [];
+                        if (dRule.sourceAddressPrefix) sourceAddressPrefixes.push(dRule.sourceAddressPrefix);
+
+                        if (sourceAddressPrefixes.some(prefix => prefix &&
+                            InvalidSourceAddressPrefixes.indexOf(prefix) > -1)) {
                             openUdpPorts = true;
                         }
                     }

@@ -88,7 +88,7 @@ module.exports = {
                                     `Secret in non RBAC vault expired ${Math.abs(difference)} days ago`, location, secretId);
                             }
                         } else {
-                            helpers.addResult(results, 0,
+                            helpers.addResult(results, 2,
                                 'Secret expiration is not enabled in non RBAC vault', location, secretId);
                         }
                     });

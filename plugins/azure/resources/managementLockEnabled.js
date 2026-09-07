@@ -39,21 +39,17 @@ module.exports = {
                 return rcb();
             }
 
-            if (!managementLocks.data.length) {
-                helpers.addResult(results, 0, 'No Management Locks', location);
-                return rcb();
-            }
-
             var myLockedResourceObj = {};
+            var taggedResourceCount = 0;
 
             managementLocks.data.forEach(managementLock => {
                 var myLockedResource = managementLock.id.split('/');
                 var resourceLength = myLockedResource.length;
 
                 if (!myLockedResourceObj[myLockedResource[resourceLength - 6]]) {
-                    myLockedResourceObj[myLockedResource[resourceLength - 6]] = [];
+                    myLockedResourceObj[myLockedResource[resourceLength - 6]] = {};
                 }
-                myLockedResourceObj[myLockedResource[resourceLength - 6]].push(myLockedResource[resourceLength - 5]);
+                myLockedResourceObj[myLockedResource[resourceLength - 6]][myLockedResource[resourceLength - 5]] = managementLock.level;
             });
 
             async.each(locations.resources, (loc, lcb) => {
@@ -73,9 +69,11 @@ module.exports = {
                 async.each(resources.data, (resource, resCb) => {
                     if (!resource.tags) return resCb();
                     if (!resource.tags[config.tag]) return resCb();
+                    taggedResourceCount++;
                     var myResource = resource.id.split('/');
-                    if (myLockedResourceObj[myResource[myResource.length-2]] && 
-                        myLockedResourceObj[myResource[myResource.length-2]] == myResource[myResource.length-1]) {
+                    var lockLevel = myLockedResourceObj[myResource[myResource.length-2]] &&
+                        myLockedResourceObj[myResource[myResource.length-2]][myResource[myResource.length-1]];
+                    if (lockLevel && ['cannotdelete', 'readonly'].includes(lockLevel.toLowerCase())) {
                         helpers.addResult(results, 0,
                             'Resource has Management Lock Enabled', loc, resource.id);
                         return resCb();        
@@ -89,6 +87,10 @@ module.exports = {
                     lcb();
                 });
             });
+
+            if (!taggedResourceCount) {
+                helpers.addResult(results, 0, 'No resources tagged for lock verification', location);
+            }
 
             rcb();
         }, function() {

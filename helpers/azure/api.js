@@ -533,7 +533,7 @@ var calls = {
     },
     pricings: {
         list: {
-            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/pricings?api-version=2018-06-01'
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/pricings?api-version=2024-01-01'
         },
         sendIntegration: serviceMap['Defender'][0]
     },

@@ -17,13 +17,14 @@ module.exports = {
         const results = [];
         const source = {};
         const locations = helpers.locations(settings.govcloud);
+        const requiredCategories = ['accounts', 'clusters', 'notebook', 'jobs', 'filesystem'];
 
         async.each(locations.databricks, function(location, rcb) {
             const databricks = helpers.addSource(cache, source,
                 ['databricks', 'listWorkspaces', location]);
 
             if (!databricks) return rcb();
-            
+
             if (databricks.err || !databricks.data) {
                 helpers.addResult(results, 3, 'Unable to query for Databricks Workspaces: ' + helpers.addError(databricks), location);
                 return rcb();
@@ -45,19 +46,40 @@ module.exports = {
                         location, workspace.id);
                     continue;
                 }
-    
-                var found = diagnosticSettings.data.find(ds => ds.logs && ds.logs.length);
-    
-                if (found) {
-                    helpers.addResult(results, 0, 'Databricks workspace has diagnostic logs enabled', location, workspace.id);
+
+                const hasDestination = diagnosticSettings.data.some(ds =>
+                    ds.workspaceId || ds.storageAccountId || ds.eventHubAuthorizationRuleId
+                );
+
+                if (!hasDestination) {
+                    helpers.addResult(results, 2,
+                        'Databricks workspace does not have diagnostic logs configured with a valid destination',
+                        location, workspace.id);
+                    continue;
+                }
+
+                let missingLogs = requiredCategories.slice();
+                diagnosticSettings.data.forEach(ds => {
+                    if (!ds.logs || !ds.logs.length) return;
+                    missingLogs = missingLogs.filter(requiredCategory =>
+                        !ds.logs.some(log =>
+                            (log.category && log.category.toLowerCase() === requiredCategory && log.enabled) ||
+                            (log.categoryGroup === 'allLogs' && log.enabled)
+                        )
+                    );
+                });
+
+                if (missingLogs.length) {
+                    helpers.addResult(results, 2,
+                        `Databricks workspace does not have diagnostic logs enabled for following: ${missingLogs.join(', ')}`,
+                        location, workspace.id);
                 } else {
-                    helpers.addResult(results, 2, 'Databricks workspace does not have diagnostic logs enabled', location, workspace.id);
-                }       
+                    helpers.addResult(results, 0, 'Databricks workspace has diagnostic logs enabled', location, workspace.id);
+                }
             }
 
             rcb();
         }, function() {
-            // Global checking goes here
             callback(null, results, source);
         });
     }

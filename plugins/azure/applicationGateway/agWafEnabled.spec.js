@@ -39,6 +39,17 @@ const appGateway = [
           "enabled": false,
           "firewallMode": "Detection",
         },
+    },
+    {   "sku": {
+        "tier": "WAF_v2"
+        },
+        "name": 'test-gateway-policy',
+        "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/applicationGateways/test-gateway-policy',
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "eastus",
+        "firewallPolicy": {
+          "id": '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies/test-waf-policy'
+        },
     }
 ];
 
@@ -116,6 +127,17 @@ describe('agWafEnabled', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Prevention mode is not supported for WAF Standard v2 tier');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+       });
+
+        it('should give passing result if Application Gateway has a firewall policy attached', function(done) {
+            const cache = createCache([appGateway[3]]);
+            agWafEnabled.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Web Application Firewall is enabled for Application Gateway');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

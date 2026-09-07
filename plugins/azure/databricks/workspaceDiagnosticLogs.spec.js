@@ -34,6 +34,7 @@ const diagnosticSettings = [
         serviceBusRuleId: null,
         eventHubAuthorizationRuleId: null,
         eventHubName: null,
+        workspaceId: '/subscriptions/1234/resourceGroups/test/providers/Microsoft.OperationalInsights/workspaces/test-law',
         metrics: [ [Object] ],
         logs: [
             {
@@ -57,12 +58,31 @@ const diagnosticSettings = [
         serviceBusRuleId: null,
         eventHubAuthorizationRuleId: null,
         eventHubName: null,
+        workspaceId: null,
         metrics: [ [Object] ],
         logs: [
+            {
+              category: null,
+              categoryGroup: 'allLogs',
+              enabled: true,
+              retentionPolicy: { enabled: false, days: 0 }
+            },
         ],
         logAnalyticsDestinationType: null
+    },
+    {
+        id: '/subscriptions/1234/resourcegroups/cloudsploit-dev/providers/Microsoft.Databricks/workspace/test/providers/microsoft.insights/diagnosticSettings/test-missing',
+        type: 'Microsoft.Insights/diagnosticSettings',
+        name: 'test-missing',
+        storageAccountId: null,
+        eventHubAuthorizationRuleId: null,
+        workspaceId: '/subscriptions/1234/resourceGroups/test/providers/Microsoft.OperationalInsights/workspaces/test-law',
+        logs: [
+            { category: 'accounts', categoryGroup: null, enabled: true },
+            { category: 'clusters', categoryGroup: null, enabled: true }
+        ]
     }
-]
+];
 const createCache = (workspace, diagnostics) => {
     let diagnostic = {};
     if (workspace.length) {
@@ -193,7 +213,18 @@ describe('workspaceDiagnosticLogs', function () {
             workspaceDiagnosticLogs.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('Databricks workspace does not have diagnostic logs enabled');
+                expect(results[0].message).to.include('does not have diagnostic logs configured with a valid destination');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if required log categories are missing', function (done) {
+            const cache = createCache([workspaces[0]], [diagnosticSettings[2]]);
+            workspaceDiagnosticLogs.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('does not have diagnostic logs enabled for following');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

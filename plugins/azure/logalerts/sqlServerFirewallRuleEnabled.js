@@ -26,7 +26,7 @@ module.exports = {
         const locations = helpers.locations(settings.govcloud);
 
         async.each(locations.activityLogAlerts, function(location, rcb) {
-            var conditionResource = 'microsoft.sql/servers';
+            var conditionResource = 'microsoft.sql/servers/firewallrules';
 
             var text = 'SQL Server Firewall Rule';
 

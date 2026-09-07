@@ -38,7 +38,9 @@ module.exports = {
 
                 if (workspace.sku && workspace.sku.name && workspace.sku.name.toLowerCase()!='premium') {
                     helpers.addResult(results, 0, 'Databricks workspace is not a premium workspace', location, workspace.id);
-                } else if (workspace.encryption && workspace.encryption.entities && workspace.encryption.entities.managedServices) {
+                } else if (workspace.encryption && workspace.encryption.entities && workspace.encryption.entities.managedServices &&
+                    workspace.encryption.entities.managedServices.keySource &&
+                    workspace.encryption.entities.managedServices.keySource.toLowerCase() === 'microsoft.keyvault') {
                     helpers.addResult(results, 0, 'Databricks workspace managed services has CMK encryption enabled', location, workspace.id);
                 }  else {
                     helpers.addResult(results, 2, 'Databricks workspace managed services does not have CMK encryption enabled', location, workspace.id);

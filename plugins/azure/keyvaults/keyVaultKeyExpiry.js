@@ -87,7 +87,7 @@ module.exports = {
                                     `Key in RBAC vault expired ${Math.abs(difference)} days ago`, location, keyId);
                             }
                         } else {
-                            helpers.addResult(results, 0,
+                            helpers.addResult(results, 2,
                                 'Key expiration is not enabled in RBAC vault', location, keyId);
                         }
                     });
