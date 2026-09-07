@@ -473,6 +473,13 @@ var calls = {
             hasListResponse: true
         }
     },
+    securityContactv3: {
+        listAll: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/Microsoft.Security/securityContacts?api-version=2023-12-01-preview',
+            ignoreLocation: true,
+            hasListResponse: true
+        }
+    },
     subscriptions: {
         listLocations: {
             url: 'https://management.azure.com/subscriptions/{subscriptionId}/locations?api-version=2020-01-01'
@@ -510,8 +517,27 @@ var calls = {
     },
     users: {
         list: {
-            url: 'https://graph.microsoft.com/v1.0/users',
+            url: 'https://graph.microsoft.com/v1.0/users?$select=id,displayName,userPrincipalName,mail,userType,accountEnabled',
             graph: true
+        }
+    },
+    securityDefaultsPolicy: {
+        get: {
+            url: 'https://graph.microsoft.com/v1.0/policies/identitySecurityDefaultsEnforcementPolicy',
+            graph: true,
+            getCompleteResponse: true
+        }
+    },
+    subscriptionPolicies: {
+        get: {
+            url: 'https://management.azure.com/providers/Microsoft.Subscription/policies/default?api-version=2021-10-01',
+            getCompleteResponse: true
+        }
+    },
+    appInsights: {
+        list: {
+            url: 'https://management.azure.com/subscriptions/{subscriptionId}/providers/microsoft.insights/components?api-version=2020-02-02',
+            ignoreLocation: true
         }
     },
     applications: {
@@ -958,6 +984,14 @@ var postcalls = {
             rateLimit: 3000
         }
     },
+    fileServices: {
+        getServiceProperties: {
+            reliesOnPath: 'storageAccounts.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/fileServices/default?api-version=2023-01-01',
+            rateLimit: 500
+        }
+    },
     storageAccounts: {
         listKeys: {
             reliesOnPath: 'storageAccounts.list',
@@ -1048,6 +1082,11 @@ var postcalls = {
             properties: ['vaultUri'],
             url: '{vaultUri}keys?api-version=7.0',
             vault: true
+        },
+        listKeys: {
+            reliesOnPath: 'vaults.list',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}/keys?api-version=2023-07-01'
         },
         getSecrets: {
             reliesOnPath: 'vaults.list',
@@ -1466,6 +1505,13 @@ var tertiarycalls = {
             properties: ['id'],
             url: '{id}/policy?api-version=7.3',
             vault: true
+        }
+    },
+    getKey: {
+        get: {
+            reliesOnPath: 'vaults.listKeys',
+            properties: ['id'],
+            url: 'https://management.azure.com/{id}?api-version=2023-07-01'
         }
     },
     syncGroups: {
