@@ -48,176 +48,176 @@ These fields should be according to the user and product manager, what they want
 
 var serviceMap = {
     'Pub/Sub':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Pub/Sub', InvService: 'Pub/Sub',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Pub/Sub', BridgeServiceName: 'topics',
-            BridgePluginCategoryName: 'gcp-Pub/Sub', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'topics',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Pub/Sub',
-            BridgeCollectionService: 'gcp-topics', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Pub/Sub', InvService: 'Pub/Sub',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Pub/Sub', BridgeServiceName: 'topics',
+        BridgePluginCategoryName: 'gcp-Pub/Sub', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'topics',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Pub/Sub',
+        BridgeCollectionService: 'gcp-topics', DataIdentifier: 'data',
+    },
     'DNS':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Managed Zone', InvService: 'DNS',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'DNS', BridgeServiceName: 'managedzones',
-            BridgePluginCategoryName: 'gcp-DNS', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/zones/{name}',
-            BridgeResourceType: 'zones', BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-DNS',
-            BridgeCollectionService: 'gcp-managedZones', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Managed Zone', InvService: 'DNS',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'DNS', BridgeServiceName: 'managedzones',
+        BridgePluginCategoryName: 'gcp-DNS', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/zones/{name}',
+        BridgeResourceType: 'zones', BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-DNS',
+        BridgeCollectionService: 'gcp-managedZones', DataIdentifier: 'data',
+    },
     'VPC Network':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'VPC Network', InvService: 'VPC Network',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'VPC Network', BridgeServiceName: 'networks',
-            BridgePluginCategoryName: 'gcp-VPC Network', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networks',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-VPC Network',
-            BridgeCollectionService: 'gcp-networks', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'VPC Network', InvService: 'VPC Network',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'VPC Network', BridgeServiceName: 'networks',
+        BridgePluginCategoryName: 'gcp-VPC Network', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'networks',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-VPC Network',
+        BridgeCollectionService: 'gcp-networks', DataIdentifier: 'data',
+    },
     'Cryptographic Keys':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Cryptographic Key', InvService: 'Cryptographic Keys',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Cryptographic Key', BridgeServiceName: 'cryptokeys',
-            BridgePluginCategoryName: 'gcp-Cryptographic Keys', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'cryptoKeys',
-            BridgeResourceNameIdentifier: '', BridgeExecutionService: 'gcp-Cryptographic Keys',
-            BridgeCollectionService: 'gcp-cryptoKeys', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Cryptographic Key', InvService: 'Cryptographic Keys',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Cryptographic Key', BridgeServiceName: 'cryptokeys',
+        BridgePluginCategoryName: 'gcp-Cryptographic Keys', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'cryptoKeys',
+        BridgeResourceNameIdentifier: '', BridgeExecutionService: 'gcp-Cryptographic Keys',
+        BridgeCollectionService: 'gcp-cryptoKeys', DataIdentifier: 'data',
+    },
     'CLB':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Url Map', InvService: 'CLB',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'CLB', BridgeServiceName: 'urlmaps',
-            BridgePluginCategoryName: 'gcp-CLB', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'urlMaps',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CLB',
-            BridgeCollectionService: 'gcp-urlMaps', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Url Map', InvService: 'CLB',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'CLB', BridgeServiceName: 'urlmaps',
+        BridgePluginCategoryName: 'gcp-CLB', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'urlMaps',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CLB',
+        BridgeCollectionService: 'gcp-urlMaps', DataIdentifier: 'data',
+    },
     'Deployment Manager':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Deployment', InvService: 'Deployment Manager',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Deployment Manager', BridgeServiceName: 'deployments',
-            BridgePluginCategoryName: 'gcp-Deployment Manager', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'deployments',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Deployment Manager',
-            BridgeCollectionService: 'gcp-deployments', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Deployment', InvService: 'Deployment Manager',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Deployment Manager', BridgeServiceName: 'deployments',
+        BridgePluginCategoryName: 'gcp-Deployment Manager', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'deployments',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Deployment Manager',
+        BridgeCollectionService: 'gcp-deployments', DataIdentifier: 'data',
+    },
     'Logging':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Alert Policy', InvService: 'Logging',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Logging', BridgeServiceName: 'alertpolicies',
-            BridgePluginCategoryName: 'gcp-Logging', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'alertPolicies',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Logging',
-            BridgeCollectionService: 'gcp-alertPolicies', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Alert Policy', InvService: 'Logging',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Logging', BridgeServiceName: 'alertpolicies',
+        BridgePluginCategoryName: 'gcp-Logging', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'alertPolicies',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Logging',
+        BridgeCollectionService: 'gcp-alertPolicies', DataIdentifier: 'data',
+    },
     'Dataproc':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Cluster', InvService: 'Dataproc',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataproc', BridgeServiceName: 'dataproc',
-            BridgePluginCategoryName: 'gcp-Dataproc', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/regions/{region}/clusters/{name}',
-            BridgeResourceType: 'clusters', BridgeResourceNameIdentifier: 'clusterName', BridgeExecutionService: 'gcp-Dataproc',
-            BridgeCollectionService: 'gcp-dataproc', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Cluster', InvService: 'Dataproc',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataproc', BridgeServiceName: 'dataproc',
+        BridgePluginCategoryName: 'gcp-Dataproc', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/regions/{region}/clusters/{name}',
+        BridgeResourceType: 'clusters', BridgeResourceNameIdentifier: 'clusterName', BridgeExecutionService: 'gcp-Dataproc',
+        BridgeCollectionService: 'gcp-dataproc', DataIdentifier: 'data',
+    },
     'Dataflow':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'job', InvService: 'Dataflow',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataflow Job', BridgeServiceName: 'jobs',
-            BridgePluginCategoryName: 'gcp-Dataflow', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/jobs/{id}', BridgeResourceType: 'jobs',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Dataflow',
-            BridgeCollectionService: 'gcp-jobs', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'job', InvService: 'Dataflow',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Dataflow Job', BridgeServiceName: 'jobs',
+        BridgePluginCategoryName: 'gcp-Dataflow', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/jobs/{id}', BridgeResourceType: 'jobs',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Dataflow',
+        BridgeCollectionService: 'gcp-jobs', DataIdentifier: 'data',
+    },
     'API':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'API', InvService: 'API',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'API', BridgeServiceName: 'apikeys',
-            BridgePluginCategoryName: 'gcp-API', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'keys',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-API',
-            BridgeCollectionService: 'gcp-apiKeys', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'API', InvService: 'API',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'API', BridgeServiceName: 'apikeys',
+        BridgePluginCategoryName: 'gcp-API', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'keys',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-API',
+        BridgeCollectionService: 'gcp-apiKeys', DataIdentifier: 'data',
+    },
     'BigQuery':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'dataset', InvService: 'BigQuery',
-            InvResourceCategory: 'database', InvResourceType: 'BigQuery', BridgeServiceName: 'datasets',
-            BridgePluginCategoryName: 'gcp-BigQuery', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/datasets/{name}', BridgeResourceType: 'datasets',
-            BridgeResourceNameIdentifier: 'datasetId', BridgeExecutionService: 'gcp-BigQuery',
-            BridgeCollectionService: 'gcp-datasets', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'dataset', InvService: 'BigQuery',
+        InvResourceCategory: 'database', InvResourceType: 'BigQuery', BridgeServiceName: 'datasets',
+        BridgePluginCategoryName: 'gcp-BigQuery', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/datasets/{name}', BridgeResourceType: 'datasets',
+        BridgeResourceNameIdentifier: 'datasetId', BridgeExecutionService: 'gcp-BigQuery',
+        BridgeCollectionService: 'gcp-datasets', DataIdentifier: 'data',
+    },
     'BigTable':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'BigTable',
-            InvResourceCategory: 'database', InvResourceType: 'BigTable', BridgeServiceName: 'bigtable',
-            BridgePluginCategoryName: 'gcp-BigTable', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-BigTable',
-            BridgeCollectionService: 'gcp-bigtable', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'BigTable',
+        InvResourceCategory: 'database', InvResourceType: 'BigTable', BridgeServiceName: 'bigtable',
+        BridgePluginCategoryName: 'gcp-BigTable', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-BigTable',
+        BridgeCollectionService: 'gcp-bigtable', DataIdentifier: 'data',
+    },
     'Spanner':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'Spanner',
-            InvResourceCategory: 'database', InvResourceType: 'Spanner', BridgeServiceName: 'spanner',
-            BridgePluginCategoryName: 'gcp-Spanner', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
-            BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'Instance', InvService: 'Spanner',
+        InvResourceCategory: 'database', InvResourceType: 'Spanner', BridgeServiceName: 'spanner',
+        BridgePluginCategoryName: 'gcp-Spanner', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Spanner',
+        BridgeCollectionService: 'gcp-spanner', DataIdentifier: 'data',
+    },
     'SQL':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'sql', InvService: 'sql',
-            InvResourceCategory: 'database', InvResourceType: 'sql', BridgeServiceName: 'sql',
-            BridgePluginCategoryName: 'gcp-SQL', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-SQL',
-            BridgeCollectionService: 'gcp-sql', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'sql', InvService: 'sql',
+        InvResourceCategory: 'database', InvResourceType: 'sql', BridgeServiceName: 'sql',
+        BridgePluginCategoryName: 'gcp-SQL', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'instances',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-SQL',
+        BridgeCollectionService: 'gcp-sql', DataIdentifier: 'data',
+    },
     'Storage':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'storage', InvService: 'storage',
-            InvResourceCategory: 'storage', InvResourceType: 'bucket', BridgeServiceName: 'buckets',
-            BridgePluginCategoryName: 'gcp-Storage', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'b',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Storage',
-            BridgeCollectionService: 'gcp-buckets', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'storage', InvService: 'storage',
+        InvResourceCategory: 'storage', InvResourceType: 'bucket', BridgeServiceName: 'buckets',
+        BridgePluginCategoryName: 'gcp-Storage', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'b',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Storage',
+        BridgeCollectionService: 'gcp-buckets', DataIdentifier: 'data',
+    },
     'AI & ML':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
-            InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
-            BridgePluginCategoryName: 'gcp-AI & ML', BridgeProvider: 'Google', BridgeCall: 'listModels',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '{name}', BridgeResourceType: 'models',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-AI & ML',
-            BridgeCollectionService: 'gcp-vertexai', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'models', InvService: 'vertexAI',
+        InvResourceCategory: 'ai&ml', InvResourceType: 'VertexAI models', BridgeServiceName: 'vertexAI',
+        BridgePluginCategoryName: 'gcp-AI & ML', BridgeProvider: 'Google', BridgeCall: 'listModels',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '{name}', BridgeResourceType: 'models',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-AI & ML',
+        BridgeCollectionService: 'gcp-vertexai', DataIdentifier: 'data',
+    },
     'CloudBuild':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'trigger', InvService: 'CloudBuild',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'trigger', BridgeServiceName: 'cloudbuild',
-            BridgePluginCategoryName: 'gcp-CloudBuild', BridgeProvider: 'Google', BridgeCall: 'triggers',
-            BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/locations/{region}/triggers/{name}', BridgeResourceType: 'triggers',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CloudBuild',
-            BridgeCollectionService: 'gcp-cloudbuild', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'trigger', InvService: 'CloudBuild',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'trigger', BridgeServiceName: 'cloudbuild',
+        BridgePluginCategoryName: 'gcp-CloudBuild', BridgeProvider: 'Google', BridgeCall: 'triggers',
+        BridgeArnIdentifier: '', BridgeIdTemplate: 'projects/{cloudAccount}/locations/{region}/triggers/{name}', BridgeResourceType: 'triggers',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-CloudBuild',
+        BridgeCollectionService: 'gcp-cloudbuild', DataIdentifier: 'data',
+    },
     'Cloud Composer':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'environment', InvService: 'Cloud Composer',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'composer_environment', BridgeServiceName: 'composer',
-            BridgePluginCategoryName: 'gcp-Cloud Composer', BridgeProvider: 'Google', BridgeCall: 'environments',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'environments',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Cloud Composer',
-            BridgeCollectionService: 'gcp-composer', DataIdentifier: 'data',
-        },
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'environment', InvService: 'Cloud Composer',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'composer_environment', BridgeServiceName: 'composer',
+        BridgePluginCategoryName: 'gcp-Cloud Composer', BridgeProvider: 'Google', BridgeCall: 'environments',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'environments',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Cloud Composer',
+        BridgeCollectionService: 'gcp-composer', DataIdentifier: 'data',
+    },
     'Resource Manager':
-        {
-            enabled: true, isSingleSource: true, InvAsset: 'organization', InvService: 'Resource Manager',
-            InvResourceCategory: 'cloud_resources', InvResourceType: 'Organization', BridgeServiceName: 'organizations',
-            BridgePluginCategoryName: 'gcp-Resource Manager', BridgeProvider: 'Google', BridgeCall: 'list',
-            BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'organizations',
-            BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Resource Manager',
-            BridgeCollectionService: 'gcp-organizations', DataIdentifier: 'data',
-        }
+    {
+        enabled: true, isSingleSource: true, InvAsset: 'organization', InvService: 'Resource Manager',
+        InvResourceCategory: 'cloud_resources', InvResourceType: 'Organization', BridgeServiceName: 'organizations',
+        BridgePluginCategoryName: 'gcp-Resource Manager', BridgeProvider: 'Google', BridgeCall: 'list',
+        BridgeArnIdentifier: '', BridgeIdTemplate: '', BridgeResourceType: 'organizations',
+        BridgeResourceNameIdentifier: 'name', BridgeExecutionService: 'gcp-Resource Manager',
+        BridgeCollectionService: 'gcp-organizations', DataIdentifier: 'data',
+    }
 };
 var calls = {
     disks: {
