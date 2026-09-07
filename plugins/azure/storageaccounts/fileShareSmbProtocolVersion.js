@@ -1,6 +1,8 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure');
 
+const ACCEPTED_SMB_VERSIONS = ['smb3.1.1'];
+
 module.exports = {
     title: 'File Share SMB Protocol Version',
     category: 'Storage Accounts',
@@ -51,13 +53,15 @@ module.exports = {
                     const versionList = smbVersions ?
                         smbVersions.split(';').map(version => version.trim()).filter(version => version) : [];
 
-                    if (versionList.length && versionList.every(version => version.toUpperCase() === 'SMB3.1.1')) {
+                    const acceptedList = ACCEPTED_SMB_VERSIONS.map(version => version.toUpperCase()).join(', ');
+
+                    if (versionList.length && versionList.every(version => ACCEPTED_SMB_VERSIONS.includes(version.toLowerCase()))) {
                         helpers.addResult(results, 0,
                             `File share SMB protocol version is set to ${versionList.join(', ')}`,
                             location, storageAccount.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `File share SMB protocol version is set to ${versionList.length ? versionList.join(', ') : 'all SMB versions'} instead of SMB3.1.1 only`,
+                            `File share SMB protocol version is set to ${versionList.length ? versionList.join(', ') : 'all SMB versions'} instead of ${acceptedList} only`,
                             location, storageAccount.id);
                     }
                 }

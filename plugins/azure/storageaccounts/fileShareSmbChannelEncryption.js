@@ -1,6 +1,8 @@
 const async = require('async');
 const helpers = require('../../../helpers/azure');
 
+const ACCEPTED_CHANNEL_ENCRYPTIONS = ['aes-256-gcm'];
+
 module.exports = {
     title: 'File Share SMB Channel Encryption',
     category: 'Storage Accounts',
@@ -51,13 +53,15 @@ module.exports = {
                     const encryptionList = channelEncryption ?
                         channelEncryption.split(';').map(algorithm => algorithm.trim()).filter(algorithm => algorithm) : [];
 
-                    if (encryptionList.length && encryptionList.every(algorithm => algorithm.toUpperCase() === 'AES-256-GCM')) {
+                    const acceptedList = ACCEPTED_CHANNEL_ENCRYPTIONS.map(algorithm => algorithm.toUpperCase()).join(', ');
+
+                    if (encryptionList.length && encryptionList.every(algorithm => ACCEPTED_CHANNEL_ENCRYPTIONS.includes(algorithm.toLowerCase()))) {
                         helpers.addResult(results, 0,
                             `File share SMB channel encryption is set to ${encryptionList.join(', ')}`,
                             location, storageAccount.id);
                     } else {
                         helpers.addResult(results, 2,
-                            `File share SMB channel encryption is set to ${encryptionList.length ? encryptionList.join(', ') : 'all SMB channel encryption algorithms'} instead of AES-256-GCM only`,
+                            `File share SMB channel encryption is set to ${encryptionList.length ? encryptionList.join(', ') : 'all SMB channel encryption algorithms'} instead of ${acceptedList} only`,
                             location, storageAccount.id);
                     }
                 }
