@@ -35,7 +35,7 @@ function addResult(results, status, message, region, resource, custom) {
             overrideMsg = 'Aqua does not have permission to list storage account keys. For help fixing this error, see: https://bit.ly/2AhlVP0';
             skipStatusChange = true;
         } else if (message.indexOf('list permission on key vault') > -1) {
-            overrideMsg = 'Aqua does not have permission to list objects in this Key Vault. For help fixing this error, see: https://bit.ly/3cbpFyL';
+            overrideMsg = 'Aqua does not have permission to list objects in this Key Vault. For help fixing this error, see: https://docs.aquasec.com/saas/cspm/plugins/troubleshooting-azure-key-vault-permission-errors/';
             skipStatusChange = true;
         }
 

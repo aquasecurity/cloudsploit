@@ -42,6 +42,14 @@ module.exports = {
             }
 
             storageAccounts.data.forEach(function(storageAccount) {
+                if (storageAccount.publicNetworkAccess &&
+                    storageAccount.publicNetworkAccess.toLowerCase() === 'disabled') {
+                    helpers.addResult(results, 0,
+                        'Storage account public network access is disabled; Table Service is not accessible',
+                        location, storageAccount.id);
+                    return;
+                }
+
                 // Attempt to list keys to see if future calls will succeed
                 var listKeys = helpers.addSource(cache, source,
                     ['storageAccounts', 'listKeys', location, storageAccount.id]);

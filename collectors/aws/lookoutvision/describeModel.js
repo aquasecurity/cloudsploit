@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var lookoutvision = new AWS.LookoutVision(AWSConfig);
 
     if (!collection.lookoutvision ||
@@ -26,7 +26,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn] = {};
 
             // Make the describe Models call
-            helpers.makeCustomCollectorCall(lookoutvision, 'describeModel', {ModelVersion: model.ModelVersion,ProjectName: project.ProjectName}, retries, null, null, null, function(err, data) {
+            helpers.makeCustomCollectorCall(lookoutvision, 'describeModel', {ModelVersion: model.ModelVersion,ProjectName: project.ProjectName}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
                 if (err) {
                     collection.lookoutvision.describeModel[AWSConfig.region][model.ModelArn].err = err;
                 }

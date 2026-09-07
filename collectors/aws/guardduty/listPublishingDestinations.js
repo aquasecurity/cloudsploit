@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var guardduty = new AWS.GuardDuty(AWSConfig);
     async.eachLimit(collection.guardduty.listDetectors[AWSConfig.region].data, 15, function(detectorId, cb) {
         collection.guardduty.listPublishingDestinations[AWSConfig.region][detectorId] = {};
@@ -10,7 +10,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             'DetectorId': detectorId
         };
 
-        helpers.makeCustomCollectorCall(guardduty, 'listPublishingDestinations', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(guardduty, 'listPublishingDestinations', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.guardduty.listPublishingDestinations[AWSConfig.region][detectorId].err = err;
             }
