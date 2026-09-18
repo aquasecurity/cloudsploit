@@ -2,7 +2,7 @@ var shared        = require(__dirname + '/../shared.js');
 var functions     = require('./functions.js');
 var regRegions    = require('./regions.js');
 
-const {JWT}       = require('google-auth-library');
+const {JWT, OAuth2Client} = require('google-auth-library');
 
 var async         = require('async');
 
@@ -11,6 +11,19 @@ var regions = function() {
 };
 
 var authenticate = async function(GoogleConfig) {
+    // Pre-minted access-token shortcut. Allows callers that already hold a
+    // valid Google Cloud access token (for example service-account
+    // impersonation, workload-identity federation, or OIDC flows where no
+    // service-account JSON key is available) to bypass the JWT exchange
+    // and inject the token directly. The returned OAuth2Client exposes
+    // the same .request() surface that plugins consume, so no plugin
+    // changes are required.
+    if (GoogleConfig.access_token) {
+        const client = new OAuth2Client();
+        client.setCredentials({ access_token: GoogleConfig.access_token });
+        return client;
+    }
+
     const client = new JWT({
         email: GoogleConfig.client_email,
         key: GoogleConfig.private_key,
