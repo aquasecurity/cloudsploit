@@ -6,7 +6,7 @@ module.exports = {
     category: 'Storage Accounts',
     domain: 'Storage',
     severity: 'Medium',
-    description: 'Ensure that soft delete feature is enabled for all Microsoft Storage Account containers.',
+    description: 'Ensures that soft delete feature is enabled for all Microsoft Storage Account containers.',
     more_info: 'When soft delete for containers is enabled for a storage account, deleted containers may be recovered after they are deleted, within a retention period that you specify.',
     recommended_action: 'Enable soft delete for containers and set deletion retention policy to keep containers for more than desired number of days',
     link: 'https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-overview',
