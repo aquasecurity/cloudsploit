@@ -12,6 +12,7 @@ const flowLogs = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
         'name': 'test-flowlog',
+        'enabled': true,
         'retentionPolicy': {
             'days': 100,
             'enabled': true
@@ -20,8 +21,27 @@ const flowLogs = [
     {
         'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
         'name': 'test-flowlog',
+        'enabled': true,
         'retentionPolicy': {
             'days': 45,
+            'enabled': true
+        }
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
+        'name': 'test-flowlog',
+        'enabled': true,
+        'retentionPolicy': {
+            'days': 0,
+            'enabled': false
+        }
+    },
+    {
+        'id': '/subscriptions/123/resourceGroups/aqua-resource-group/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/test-flowlog',
+        'name': 'test-flowlog',
+        'enabled': false,
+        'retentionPolicy': {
+            'days': 100,
             'enabled': true
         }
     }
@@ -142,6 +162,28 @@ describe('nsgFlowLogsRetentionPeriod', function() {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('NSG fLow log has retention period set to 45 of 90 days desired limit');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if flow logs are retained indefinitely', function(done) {
+            const cache = createCache([networkWatchers[0]], [flowLogs[2]]);
+            nsgFlowLogsRetentionPeriod.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Flow log is retained indefinitely as no retention policy is set');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if flow log is not enabled', function(done) {
+            const cache = createCache([networkWatchers[0]], [flowLogs[3]]);
+            nsgFlowLogsRetentionPeriod.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Flow log is not enabled');
                 expect(results[0].region).to.equal('eastus');
                 done();
             });

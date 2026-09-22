@@ -252,8 +252,54 @@ module.exports = {
                 }
             }
 
+            if (role.attachedPolicies && Array.isArray(role.attachedPolicies) && role.attachedPolicies.length) {
+                for (var enrichedPolicy of role.attachedPolicies) {
+                    if (enrichedPolicy.PolicyArn === managedAdminPolicy) {
+                        if (config.iam_policy_message_format) {
+                            roleFailures.admin = 'managedAdminPolicy';
+                        } else {
+                            roleFailures.push('Role has managed AdministratorAccess policy');
+                        }
+                        break;
+                    }
+
+                    if (config.ignore_aws_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::aws:.*`).test(enrichedPolicy.PolicyArn)) continue;
+
+                    if (config.ignore_customer_managed_iam_policies && new RegExp(`^arn:${awsOrGov}:iam::[0-9]{12}:.*`).test(enrichedPolicy.PolicyArn)) continue;
+
+                    var enrichedGetPolicy = helpers.addSource(cache, source,
+                        ['iam', 'getPolicy', region, enrichedPolicy.PolicyArn]);
+
+                    if (enrichedGetPolicy &&
+                        enrichedGetPolicy.data &&
+                        enrichedGetPolicy.data.Policy &&
+                        enrichedGetPolicy.data.Policy.DefaultVersionId) {
+                        var enrichedGetPolicyVersion = helpers.addSource(cache, source,
+                            ['iam', 'getPolicyVersion', region, enrichedPolicy.PolicyArn]);
+
+                        if (enrichedGetPolicyVersion &&
+                            enrichedGetPolicyVersion.data &&
+                            enrichedGetPolicyVersion.data.PolicyVersion &&
+                            enrichedGetPolicyVersion.data.PolicyVersion.Document) {
+                            let enrichedStatements = helpers.normalizePolicyDocument(
+                                enrichedGetPolicyVersion.data.PolicyVersion.Document);
+                            if (!enrichedStatements) break;
+
+                            if (config.iam_policy_message_format) {
+                                addRoleFailuresPolicyName(roleFailures, enrichedStatements, 'managed', enrichedPolicy.PolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            } else {
+                                addRoleFailures(roleFailures, enrichedStatements, 'managed', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var processedInlinePolicies = new Set();
+
             if (listRolePolicies.data &&
-                listRolePolicies.data.PolicyNames) {
+                listRolePolicies.data.PolicyNames &&
+                listRolePolicies.data.PolicyNames.length) {
 
                 for (var p in listRolePolicies.data.PolicyNames) {
                     var policyName = listRolePolicies.data.PolicyNames[p];
@@ -263,8 +309,10 @@ module.exports = {
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
 
-                        var statements = getRolePolicy[policyName].data.PolicyDocument;
-                        if (!statements) break;
+                        processedInlinePolicies.add(policyName);
+                        var policyDoc = getRolePolicy[policyName].data.PolicyDocument;
+                        var statements = Array.isArray(policyDoc) ? policyDoc : helpers.normalizePolicyDocument(policyDoc);
+                        if (!statements) continue;
                         if (config.iam_policy_message_format) {
                             addRoleFailuresPolicyName(roleFailures, statements, 'inline', policyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
                         } else {
@@ -274,12 +322,29 @@ module.exports = {
                 }
             }
 
+            if (role.inlinePolicies && Array.isArray(role.inlinePolicies) && role.inlinePolicies.length) {
+                for (var enrichedInlinePolicy of role.inlinePolicies) {
+                    if (!enrichedInlinePolicy || !enrichedInlinePolicy.PolicyDocument) continue;
+
+                    var enrichedPolicyName = enrichedInlinePolicy.PolicyName;
+                    if (processedInlinePolicies.has(enrichedPolicyName)) continue;
+
+                    var enrichedPolicyDoc = enrichedInlinePolicy.PolicyDocument;
+                    var enrichedStatementsInline = Array.isArray(enrichedPolicyDoc) ? enrichedPolicyDoc : helpers.normalizePolicyDocument(enrichedPolicyDoc);
+                    if (!enrichedStatementsInline) continue;
+                    if (config.iam_policy_message_format) {
+                        addRoleFailuresPolicyName(roleFailures, enrichedStatementsInline, 'inline', enrichedPolicyName, config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                    } else {
+                        addRoleFailures(roleFailures, enrichedStatementsInline, 'inline', config.ignore_service_specific_wildcards, allowedRegex, config.ignore_iam_policy_resource_wildcards);
+                    }
+                }
+            }
+
             if (config.iam_policy_message_format) {
                 compileFormattedResults(roleFailures, role, results, custom);
             } else {
                 compileSimpleResults(roleFailures, role, results, custom);
             }
-
 
             cb();
         }, function(){
@@ -407,7 +472,7 @@ function hasFailures(roleFailures) {
         if (roleFailures.managed.allActionsSelectedResources.length) return true;
         if (roleFailures.managed.actionsAllResources.length) return true;
         if (Object.keys(roleFailures.managed.wildcardActions).length) return true;
-        if (roleFailures.managed.regexMismatch.length) return true;
+        if (Object.keys(roleFailures.managed.regexMismatch).length) return true;
     }
     
     if (roleFailures.inline) {
@@ -415,7 +480,7 @@ function hasFailures(roleFailures) {
         if (roleFailures.inline.allActionsSelectedResources.length) return true;
         if (roleFailures.inline.actionsAllResources.length) return true;
         if (Object.keys(roleFailures.inline.wildcardActions).length) return true;
-        if (roleFailures.inline.regexMismatch.length) return true;
+        if (Object.keys(roleFailures.inline.regexMismatch).length) return true;
     }
     
     return false;

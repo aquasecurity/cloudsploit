@@ -13,10 +13,14 @@ module.exports = {
     apis: ['pricings:list'],
     realtime_triggers: ['microsoftsecurity:pricings:write','microsoftsecurity:pricings:delete'],
 
+    // Per CIS: az security pricing show --name "Containers" --query [pricingTier,extensions[*].[name,isEnabled]]
+    requiredExtensions: ['ContainerRegistriesVulnerabilityAssessments', 'AgentlessDiscoveryForKubernetes', 'AgentlessVmScanning', 'ContainerSensor'],
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
         var locations = helpers.locations(settings.govcloud);
+        var requiredExtensions = this.requiredExtensions;
 
         async.each(locations.pricings, function(location, rcb) {
             var pricings = helpers.addSource(cache, source,
@@ -35,7 +39,7 @@ module.exports = {
                 return rcb();
             }
 
-            helpers.checkMicrosoftDefender(pricings, 'containers', 'Containers', results, location);
+            helpers.checkMicrosoftDefender(pricings, 'containers', 'Containers', results, location, requiredExtensions);
 
             rcb();
         }, function(){

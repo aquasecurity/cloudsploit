@@ -37,9 +37,13 @@ module.exports = {
 
             for (let account of accounts.data) {
 
-                if (account.properties && account.properties.encryption &&
-                    account.properties.encryption.keySource &&
-                    account.properties.encryption.keySource.toLowerCase() == 'microsoft.keyvault') {
+                if (!account.id) continue;
+
+                if (!account.kind || account.kind.toLowerCase() !== 'openai') continue;
+
+                if (account.encryption &&
+                    account.encryption.keySource &&
+                    account.encryption.keySource.toLowerCase() == 'microsoft.keyvault') {
                     helpers.addResult(results, 0,
                         'OpenAI Account is encrypted using CMK', location, account.id);
                 } else {

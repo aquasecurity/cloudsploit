@@ -14,7 +14,7 @@ directories.forEach(function(directory) {
     fs
         .readdirSync(__dirname + '/' + directory)
         .filter(function(file) {
-            return (file.indexOf('.') !== 0);
+            return (file.indexOf('.') !== 0 && file.slice(-3) === '.js');
         })
         .forEach(function(file) {
             var collector = require(path.join(__dirname + '/' + directory, file));

@@ -1,0 +1,6 @@
+{
+  "source": "sdk",
+  "operation": "describeNodegroup",
+  "root": "nodegroup",
+  "description": "The collector stores data.nodegroup, from the sdk's describeNodegroup - it is filed here under describeNodegroups."
+}

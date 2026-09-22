@@ -4,7 +4,7 @@ const accessKeysLastUsed = require('./accessKeysLastUsed');
 var warnDate = new Date();
 warnDate.setMonth(warnDate.getMonth() - 4);
 var passDate = new Date();
-passDate.setMonth(passDate.getMonth() - 1);
+passDate.setDate(passDate.getDate() - 15);
 var failDate = new Date();
 failDate.setMonth(failDate.getMonth() - 7);
 

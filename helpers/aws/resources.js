@@ -84,10 +84,18 @@ module.exports = {
     },
     codeartifact: {
         listDomains: 'arn',
+        listRepositories: 'arn',
+        getRepositoryPermissionsPolicy: ''
     },
     codebuild: {
         listProjects: '',
         batchGetProjects: 'arn',
+        listBuilds: '',
+        batchGetBuilds: 'arn',
+    },
+    codecommit: {
+        listRepositories: 'repositoryName',
+        getRepository: 'repositoryMetadata.Arn'
     },
     codepipeline: {
         listPipelines: 'arn:aws:codepipeline:{region}:{cloudAccount}:{name}',
@@ -135,12 +143,18 @@ module.exports = {
     },
     dms: {
         describeReplicationInstances: 'ReplicationInstanceArn',
+        describeEndpoints: 'EndpointArn'
     },
     docdb: {
-        describeDBClusters: 'DBClusterArn'
+        describeDBClusters: 'DBClusterArn',
+        describeDBClusterSnapshots: 'DBClusterSnapshotArn'
+    },
+    drs: {
+        describeReplicationConfigurationTemplates: 'arn'
     },
     devopsguru: {
-        listNotificationChannels: 'Id'
+        listNotificationChannels: 'Id',
+        describeServiceIntegration: ''
     },
     dax: {
         describeClusters: 'ClusterArn'
@@ -204,6 +218,7 @@ module.exports = {
         describeCacheClusters: 'ARN',
         describeReplicationGroups: 'ReplicationGroupId',
         describeReservedCacheNodes: 'ReservationARN',
+        describeSnapshots: 'ARN',
     },
     elb: {
         describeLoadBalancerAttributes: '',
@@ -251,14 +266,17 @@ module.exports = {
     forecastservice: {
         listForecastExportJobs: 'ForecastExportJobArn',
         listDatasets: 'DatasetArn',
-        describeDataset: 'DatasetArn'
+        describeDataset: 'DatasetArn',
+        listPredictors: 'PredictorArn',
+        describePredictor: 'PredictorArn'
     },
     frauddetector: {
         getDetectors: 'arn',
         getKMSEncryptionKey: 'kmsEncryptionKeyArn',
     },
     fsx: {
-        describeFileSystems: 'ResourceARN'
+        describeFileSystems: 'ResourceARN',
+        describeBackups: 'ResourceARN'
     },
     glue: {
         getDataCatalogEncryptionSettings: '',
@@ -306,8 +324,12 @@ module.exports = {
         listGroupsForUser: '',
         getGroupPolicy: '',
         getRolePolicy: '',
-        getPolicy: 'Policy.Arn', 
-        getUser: 'Arn'
+        getPolicy: 'Policy.Arn',
+        getUser: 'Arn',
+        listSAMLProviders: 'Arn',
+        getSAMLProvider: '',
+        listOpenIDConnectProviders: 'Arn',
+        getOpenIDConnectProvider: ''
     },
     imagebuilder: {
         listContainerRecipes: 'arn',
@@ -374,6 +396,9 @@ module.exports = {
         listModels: 'ModelArn',
         describeModel: 'ModelDescription.ModelArn'
     },
+    macie2: {
+        getAutomatedDiscoveryConfiguration: '',
+    },
     managedblockchain: {
         listMembers: 'Arn',
         listNetworks: 'Arn',
@@ -381,6 +406,13 @@ module.exports = {
     },
     memorydb: {
         describeClusters: 'ARN',
+        describeSnapshots: 'ARN',
+    },
+    m2: {
+        listApplications: 'applicationArn',
+        getApplication: 'applicationArn',
+        listEnvironments: 'environmentArn',
+        getEnvironment: 'environmentArn'
     },
     mq: {
         listBrokers: 'BrokerArn',
@@ -395,7 +427,7 @@ module.exports = {
     },
     neptune: {
         describeDBClusters: 'DBClusterArn',
-
+        describeDBClusterSnapshots: 'DBClusterSnapshotArn'
     },
     organizations: {
         describeOrganization: 'MasterAccountArn',
@@ -471,7 +503,9 @@ module.exports = {
         describeParameters: 'Name',
         listAssociations: 'AssociationId',
         getServiceSetting: 'ARN',
-        describeSessions: 'arn:aws:ec2:{region}:{cloudAccount}:/instance/{Target}'
+        describeSessions: 'arn:aws:ec2:{region}:{cloudAccount}:/instance/{Target}',
+        listDocuments: 'Name',
+        describeDocumentPermission: ''
     },
     sagemaker: {
         describeNotebookInstance: 'NotebookInstanceArn',
@@ -490,7 +524,26 @@ module.exports = {
         listDatabases: 'Arn',
     },
     translate: {
-        listTextTranslationJobs: 'arn:aws:translate:{region}:{cloudAccount}:job/{JobName}'
+        listTextTranslationJobs: 'arn:aws:translate:{region}:{cloudAccount}:job/{JobName}',
+        listTerminologies: 'Arn'
+    },
+    transcribeservice: {
+        listTranscriptionJobs: 'TranscriptionJobName',
+        listMedicalTranscriptionJobs: 'MedicalTranscriptionJobName'
+    },
+    storagegateway: {
+        listGateways: 'GatewayARN',
+        listFileShares: 'FileShareARN',
+        describeNFSFileShares: 'FileShareARN',
+        describeSMBFileShares: 'FileShareARN'
+    },
+    personalize: {
+        listSolutions: 'solutionArn',
+        describeSolution: 'solution.solutionArn'
+    },
+    amp: {
+        listWorkspaces: 'arn',
+        describeWorkspace: 'workspace.arn'
     },
     transfer: {
         listServers: 'Arn'

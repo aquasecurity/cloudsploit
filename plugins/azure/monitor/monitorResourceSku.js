@@ -36,7 +36,10 @@ module.exports = {
 
             for (let resource of resources.data) {
                 if (!resource.id || !resource.sku) continue;
-                
+
+                if (resource.type &&
+                    resource.type.toLowerCase() === 'microsoft.machinelearningservices/workspaces') continue;
+
                 if (resource.sku && resource.sku.name && (resource.sku.name.toLowerCase() === 'basic' ||resource.sku.name.toLowerCase() === 'consumption')){
                     helpers.addResult(results, 2, `Resource is using ${resource.sku.name} SKU`, location, resource.id);
                 } else {

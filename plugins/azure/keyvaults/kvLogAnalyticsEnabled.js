@@ -50,15 +50,31 @@ module.exports = {
                 } else if (!diagnosticSettings.data.length) {
                     helpers.addResult(results, 2, 'No existing diagnostics settings', location, vault.id);
                 } else {
-                    var found = false;
-                    diagnosticSettings.data.forEach(function(ds) {
-                        if (ds.logs && ds.logs.length) found = true;
-                    });
+                    const hasDestination = diagnosticSettings.data.some(ds =>
+                        ds.workspaceId || ds.storageAccountId || ds.eventHubAuthorizationRuleId || ds.marketplacePartnerId
+                    );
 
-                    if (found) {
-                        helpers.addResult(results, 0, 'Key vault analytics is enabled for vault', location, vault.id);
+                    if (!hasDestination) {
+                        helpers.addResult(results, 2,
+                            'Key Vault does not have a diagnostic logs destination configured', location, vault.id);
+                        return;
+                    }
+
+                    const requiredCategoryGroups = ['audit', 'allLogs'];
+                    const missingGroups = requiredCategoryGroups.filter(required =>
+                        !diagnosticSettings.data.some(ds =>
+                            ds.logs && ds.logs.some(log =>
+                                log.categoryGroup && log.categoryGroup.toLowerCase() === required.toLowerCase() && log.enabled
+                            )
+                        )
+                    );
+
+                    if (missingGroups.length) {
+                        helpers.addResult(results, 2,
+                            `Key Vault diagnostic logs missing required category groups: ${missingGroups.join(', ')}`, location, vault.id);
                     } else {
-                        helpers.addResult(results, 2, 'Key vault analytics is not enabled for vault', location, vault.id);
+                        helpers.addResult(results, 0,
+                            'Key Vault has diagnostic logs enabled with required category groups', location, vault.id);
                     }
                 }
             });

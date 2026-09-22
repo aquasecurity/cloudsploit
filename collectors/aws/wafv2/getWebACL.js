@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var wafv2 = new AWS.WAFV2(AWSConfig);
 
     async.eachLimit(collection.wafv2.listWebACLs[AWSConfig.region].data, 15, function(acl, cb){        
@@ -12,7 +12,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             'Scope': 'REGIONAL'
         };
 
-        helpers.makeCustomCollectorCall(wafv2, 'getWebACL', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(wafv2, 'getWebACL', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             collection.wafv2.getWebACL[AWSConfig.region][acl.ARN] = {};
 
             if (err) {

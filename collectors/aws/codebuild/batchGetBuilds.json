@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "root": "builds",
+  "description": "The collector stores data.builds."
+}

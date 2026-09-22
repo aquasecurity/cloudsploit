@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "operation": "getMetricStatistics",
+  "description": "The collector stores the whole response, from the sdk's getMetricStatistics - it is filed here under getEsMetricStatistics."
+}

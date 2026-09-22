@@ -125,6 +125,16 @@ module.exports = {
                 }
             }
 
+            // See if user has administrator access or IAM full access (enriched)
+            if (user.attachedPolicies && Array.isArray(user.attachedPolicies) && user.attachedPolicies.length) {
+                for (var policy of user.attachedPolicies) {
+                    if (policy.PolicyArn === adminAccessArn ||
+                        policy.PolicyArn === iamFullAccessArn) {
+                        addPolicyToUserObj(restrictedUser, user, policy.PolicyName);
+                    }
+                }
+            }
+
             // See if user has IAM full access inline policy
             if (listUserPolicies.data && listUserPolicies.data.PolicyNames) {
                 for (var up in listUserPolicies.data.PolicyNames) {
@@ -140,6 +150,29 @@ module.exports = {
                         if (!statements) break;
 
                         // Loop through statements to see if admin privileges
+                        for (var si in statements) {
+                            let statement = statements[si];
+
+                            if (helpers.userGlobalAccess(statement, iamEditAccessPermissions)) {
+                                addPolicyToUserObj(restrictedUser, user, policyName);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // See if user has IAM full access inline policy (enriched)
+            if (user.inlinePolicies && Array.isArray(user.inlinePolicies) && user.inlinePolicies.length) {
+                for (var policyName of user.inlinePolicies) {
+                    if (getUserPolicy &&
+                        getUserPolicy[policyName] &&
+                        getUserPolicy[policyName].data &&
+                        getUserPolicy[policyName].data.PolicyDocument) {
+
+                        let statements = helpers.normalizePolicyDocument(
+                            getUserPolicy[policyName].data.PolicyDocument);
+                        if (!statements) break;
+
                         for (var s in statements) {
                             let statement = statements[s];
 
@@ -169,6 +202,12 @@ module.exports = {
                     var getGroupPolicy = helpers.addSource(cache, source,
                         ['iam', 'getGroupPolicy', region, group.GroupName]);
 
+                    var listGroups = helpers.addSource(cache, source, ['iam', 'listGroups', region]);
+                    var enrichedGroup = null;
+                    if (listGroups && listGroups.data && Array.isArray(listGroups.data)) {
+                        enrichedGroup = listGroups.data.find(g => g.GroupName === group.GroupName);
+                    }
+
                     // See if group has admin managed policy
                     if (listAttachedGroupPolicies &&
                         listAttachedGroupPolicies.data &&
@@ -179,6 +218,16 @@ module.exports = {
                             if (policyAttached.PolicyArn === adminAccessArn ||
                                 policyAttached.PolicyArn === iamFullAccessArn) {
                                 addPolicyToUserObj(restrictedUser, user, policyAttached.PolicyName);
+                            }
+                        }
+                    }
+
+                    // See if group has admin managed policy (enriched)
+                    if (enrichedGroup && enrichedGroup.attachedPolicies && Array.isArray(enrichedGroup.attachedPolicies) && enrichedGroup.attachedPolicies.length) {
+                        for (var enrichedPolicy of enrichedGroup.attachedPolicies) {
+                            if (enrichedPolicy.PolicyArn === adminAccessArn ||
+                                enrichedPolicy.PolicyArn === iamFullAccessArn) {
+                                addPolicyToUserObj(restrictedUser, user, enrichedPolicy.PolicyName);
                             }
                         }
                     }
@@ -195,16 +244,38 @@ module.exports = {
                                 getGroupPolicy[policyGroupName] &&
                                 getGroupPolicy[policyGroupName].data &&
                                 getGroupPolicy[policyGroupName].data.PolicyDocument) {
-                                var statementsGroup = helpers.normalizePolicyDocument(
+                                var groupPolicyStatements = helpers.normalizePolicyDocument(
                                     getGroupPolicy[policyGroupName].data.PolicyDocument);
-                                if (!statementsGroup) break;
+                                if (!groupPolicyStatements) break;
 
                                 // Loop through statements to see if admin privileges
+                                for (var sgi in groupPolicyStatements) {
+                                    let statementGroup = groupPolicyStatements[sgi];
+
+                                    if (helpers.userGlobalAccess(statementGroup, iamEditAccessPermissions)) {
+                                        addPolicyToUserObj(restrictedUser, user, policyGroupName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // See if group has admin inline policy (enriched)
+                    if (enrichedGroup && enrichedGroup.inlinePolicies && Array.isArray(enrichedGroup.inlinePolicies) && enrichedGroup.inlinePolicies.length) {
+                        for (var enrichedPolicyName of enrichedGroup.inlinePolicies) {
+                            if (getGroupPolicy &&
+                                getGroupPolicy[enrichedPolicyName] &&
+                                getGroupPolicy[enrichedPolicyName].data &&
+                                getGroupPolicy[enrichedPolicyName].data.PolicyDocument) {
+
+                                var statementsGroup = helpers.normalizePolicyDocument(
+                                    getGroupPolicy[enrichedPolicyName].data.PolicyDocument);
+                                if (!statementsGroup) break;
+
                                 for (s in statementsGroup) {
                                     let statementGroup = statementsGroup[s];
 
                                     if (helpers.userGlobalAccess(statementGroup, iamEditAccessPermissions)) {
-                                        addPolicyToUserObj(restrictedUser, user, policyGroupName);
+                                        addPolicyToUserObj(restrictedUser, user, enrichedPolicyName);
                                     }
                                 }
                             }

@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "operation": "describeClusters",
+  "description": "The collector files this under describeCluster but calls the sdk's describeClusters, once per cluster arn, and stores the whole response. Paths are read from { clusters, failures } - so a setting is clusters[].settings[].name, not settings.name."
+}

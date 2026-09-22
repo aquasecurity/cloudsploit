@@ -86,7 +86,19 @@ module.exports = {
                 }
             }
 
+            if (role.attachedPolicies && Array.isArray(role.attachedPolicies) && role.attachedPolicies.length) {
+                for (let policy of role.attachedPolicies) {
+                    if (!attachedPolicies.includes(policy.PolicyName)) attachedPolicies.push(policy.PolicyName);
+                }
+            }
+
             if (listRolePolicies.data && listRolePolicies.data.PolicyNames) attachedPolicies = attachedPolicies.concat(listRolePolicies.data.PolicyNames);
+
+            if (role.inlinePolicies && Array.isArray(role.inlinePolicies) && role.inlinePolicies.length) {
+                for (let policy of role.inlinePolicies) {
+                    if (!attachedPolicies.includes(policy)) attachedPolicies.push(policy);
+                }
+            }
 
             for (let policy of config.iam_required_policy_names) {
                 if (!attachedPolicies.includes(policy)) difference.push(policy);

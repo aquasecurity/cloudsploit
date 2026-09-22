@@ -1,0 +1,128 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it. The sdk types Attributes as a map of string to string, which means nothing below it can be proven and every path under it is waved through - so a plugin reading Attributes.Policy.Statement saves and then matches nothing. Attributes is declared here as a structure naming what GetQueueAttributes returns, and the v2 runner parses a document held as text when a path reads into it, so the save-time answer and the scan-time data agree. The remaining attributes are text as sqs returns them, including RedrivePolicy and RedriveAllowPolicy, which are json documents in their own right.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Attributes": {
+        "type": "structure",
+        "members": {
+          "QueueArn": {
+            "type": "string"
+          },
+          "ApproximateNumberOfMessages": {
+            "type": "string"
+          },
+          "ApproximateNumberOfMessagesNotVisible": {
+            "type": "string"
+          },
+          "ApproximateNumberOfMessagesDelayed": {
+            "type": "string"
+          },
+          "CreatedTimestamp": {
+            "type": "string"
+          },
+          "LastModifiedTimestamp": {
+            "type": "string"
+          },
+          "VisibilityTimeout": {
+            "type": "string"
+          },
+          "MaximumMessageSize": {
+            "type": "string"
+          },
+          "MessageRetentionPeriod": {
+            "type": "string"
+          },
+          "DelaySeconds": {
+            "type": "string"
+          },
+          "ReceiveMessageWaitTimeSeconds": {
+            "type": "string"
+          },
+          "KmsMasterKeyId": {
+            "type": "string"
+          },
+          "KmsDataKeyReusePeriodSeconds": {
+            "type": "string"
+          },
+          "SqsManagedSseEnabled": {
+            "type": "string"
+          },
+          "FifoQueue": {
+            "type": "string"
+          },
+          "ContentBasedDeduplication": {
+            "type": "string"
+          },
+          "DeduplicationScope": {
+            "type": "string"
+          },
+          "FifoThroughputLimit": {
+            "type": "string"
+          },
+          "RedrivePolicy": {
+            "type": "string"
+          },
+          "RedriveAllowPolicy": {
+            "type": "string"
+          },
+          "Policy": {
+            "type": "structure",
+            "members": {
+              "Version": {
+                "type": "string"
+              },
+              "Id": {
+                "type": "string"
+              },
+              "Statement": {
+                "type": "list",
+                "member": {
+                  "type": "structure",
+                  "members": {
+                    "Sid": {
+                      "type": "string"
+                    },
+                    "Effect": {
+                      "type": "string"
+                    },
+                    "Principal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "NotPrincipal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "Action": {},
+                    "NotAction": {},
+                    "Resource": {},
+                    "NotResource": {},
+                    "Condition": {
+                      "type": "map",
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

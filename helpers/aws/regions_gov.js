@@ -77,6 +77,7 @@ module.exports = {
     directoryservice: [],
     organizations: regions,
     guardduty: regions,
+    macie2: regions,
     wafregional: [],
     wafv2: regions,
     waf: regions,
@@ -124,5 +125,13 @@ module.exports = {
     appconfig: regions,
     opensearch:regions,
     opensearchserverless: regions,
-    securityhub: regions
+    securityhub: regions,
+    storagegateway: regions,
+    codecommit: regions,
+    transcribeservice: regions,
+    drs: regions,
+    // Not offered in GovCloud
+    personalize: [],
+    m2: [],
+    amp: []
 };

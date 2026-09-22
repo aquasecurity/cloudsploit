@@ -39,6 +39,8 @@ module.exports = {
 
                 if (!account.id) continue;
 
+                if (!account.kind || account.kind.toLowerCase() !== 'openai') continue;
+
                 const publicAccess = account.publicNetworkAccess && account.publicNetworkAccess.toLowerCase();
 
                 if (publicAccess === 'disabled') {

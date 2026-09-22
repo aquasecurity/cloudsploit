@@ -51,6 +51,14 @@ module.exports = {
                     return;
                 }
 
+                if (vault.publicNetworkAccess &&
+                    vault.publicNetworkAccess.toLowerCase() === 'disabled') {
+                    helpers.addResult(results, 0,
+                        'Key Vault public network access is disabled; unable to query Key Vault secrets',
+                        location, vault.id);
+                    return;
+                }
+
                 var secrets = helpers.addSource(cache, source,
                     ['vaults', 'getSecrets', location, vault.id]);
 
@@ -80,7 +88,7 @@ module.exports = {
                                     `Secret in non RBAC vault expired ${Math.abs(difference)} days ago`, location, secretId);
                             }
                         } else {
-                            helpers.addResult(results, 0,
+                            helpers.addResult(results, 2,
                                 'Secret expiration is not enabled in non RBAC vault', location, secretId);
                         }
                     });

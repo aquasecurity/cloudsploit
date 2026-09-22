@@ -18,6 +18,13 @@ const resources = [
     kind: 'StorageV2',
     location: 'eastus',
    },
+   {
+    id: '/subscriptions/123/resourceGroups/devresourcegroup/providers/Microsoft.MachineLearningServices/workspaces/test-ml-workspace',
+    name: 'test-ml-workspace',
+    type: 'Microsoft.MachineLearningServices/workspaces',
+    sku: { name: 'Basic', tier: 'Basic' },
+    location: 'eastus',
+   },
 ];
 
 const createCache = (resource) => {
@@ -73,6 +80,14 @@ describe('resourceAppropriateSKU', function() {
                 expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Resource is using BASIC');
                 expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should skip Machine Learning workspaces that only support Basic SKU', function(done) {
+            const cache = createCache([resources[2]]);
+            resourceAppropriateSKU.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(0);
                 done();
             });
         });

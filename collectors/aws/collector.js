@@ -126,7 +126,7 @@ var collect = function(AWSConfig, settings, callback) {
                     LocalAWSConfig.region = region;
 
                     if (callObj.override) {
-                        collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
+                        collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, settings, AWSConfig, function() {
                             if (callObj.rateLimit) {
                                 setTimeout(function() {
                                     regionCb();
@@ -191,7 +191,14 @@ var collect = function(AWSConfig, settings, callback) {
                                     }
                                 }, function(cb) {
                                     executor[callKey](localParams, function(err, data) {
-                                        return cb(err, data);
+                                        helpers.refreshCredentialsIfTokenExpired(err, settings, AWSConfig, LocalAWSConfig, function(refreshErr, newCreds) {
+                                            if (!newCreds) {
+                                                if (refreshErr) console.log('[WARN] Token refresh failed');
+                                                return cb(err, data);
+                                            }
+                                            var newExecutor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                                            newExecutor[callKey](localParams, cb);
+                                        });
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -215,7 +222,14 @@ var collect = function(AWSConfig, settings, callback) {
                                     }
                                 }, function(cb) {
                                     executor[callKey](function(err, data) {
-                                        return cb(err, data);
+                                        helpers.refreshCredentialsIfTokenExpired(err, settings, AWSConfig, LocalAWSConfig, function(refreshErr, newCreds) {
+                                            if (!newCreds) {
+                                                if (refreshErr) console.log('[WARN] Token refresh failed');
+                                                return cb(err, data);
+                                            }
+                                            var newExecutor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                                            newExecutor[callKey](cb);
+                                        });
                                     });
                                 }, function(err, data){
                                     executorCb(err, data);
@@ -294,7 +308,7 @@ var collect = function(AWSConfig, settings, callback) {
                             if (callObj.signatureVersion) LocalAWSConfig.signatureVersion = callObj.signatureVersion;
 
                             if (callObj.override) {
-                                collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, function() {
+                                collectors[serviceLower][callKey](LocalAWSConfig, collection, retries, settings, AWSConfig, function() {
 
                                     if (callObj.rateLimit) {
                                         setTimeout(function() {
@@ -336,16 +350,32 @@ var collect = function(AWSConfig, settings, callback) {
                                         }
                                     }, function(cb) {
                                         executor[callKey](filter, function(err, data) {
-                                            if (helpers.collectRateError(err, rateError)) {
-                                                return cb(err);
-                                            } else if (err) {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
-                                                helpers.logError(serviceLower, callKey, region, err, errors, apiCallErrors, apiCallTypeErrors, totalApiCallErrors, errorSummary, errorTypeSummary, debugMode);
-                                                return cb();
-                                            } else {
-                                                collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
-                                                return cb();
-                                            }
+                                            helpers.refreshCredentialsIfTokenExpired(err, settings, AWSConfig, LocalAWSConfig, function(refreshErr, newCreds) {
+                                                // No new creds = either not token-expired, or refresh failed: handle original err/data (rate error, store err, or store data)
+                                                if (!newCreds) {
+                                                    if (refreshErr) console.log('[WARN] Token refresh failed');
+                                                    if (helpers.collectRateError(err, rateError)) return cb(err);
+                                                    if (err) {
+                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = err;
+                                                        helpers.logError(serviceLower, callKey, region, err, errors, apiCallErrors, apiCallTypeErrors, totalApiCallErrors, errorSummary, errorTypeSummary, debugMode);
+                                                        return cb();
+                                                    }
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = data;
+                                                    return cb();
+                                                }
+
+                                                var newExecutor = debugMode ? (AWSXRay.captureAWSClient(new AWS[serviceName](LocalAWSConfig))) : new AWS[serviceName](LocalAWSConfig);
+                                                newExecutor[callKey](filter, function(retryErr, retryData) {
+                                                    if (helpers.collectRateError(retryErr, rateError)) return cb(retryErr);
+                                                    if (retryErr) {
+                                                        collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].err = retryErr;
+                                                        helpers.logError(serviceLower, callKey, region, retryErr, errors, apiCallErrors, apiCallTypeErrors, totalApiCallErrors, errorSummary, errorTypeSummary, debugMode);
+                                                        return cb();
+                                                    }
+                                                    collection[serviceLower][callKey][LocalAWSConfig.region][dep[callObj.filterValue]].data = retryData;
+                                                    return cb();
+                                                });
+                                            });
                                         });
                                     }, function(){
 

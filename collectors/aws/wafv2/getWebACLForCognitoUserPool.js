@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
 
     var wafv2 = new AWS.WAFV2(AWSConfig);
     var region = 'us-east-1';
@@ -20,7 +20,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
             'ResourceArn':`arn:${partition}:cognito-idp:${AWSConfig.region}:${collection.sts.getCallerIdentity[region].data}:userpool/${up.Id}`
         };
 
-        helpers.makeCustomCollectorCall(wafv2, 'getWebACLForResource', params, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(wafv2, 'getWebACLForResource', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.wafv2.getWebACLForCognitoUserPool[AWSConfig.region][up.Id].err = err;
             }

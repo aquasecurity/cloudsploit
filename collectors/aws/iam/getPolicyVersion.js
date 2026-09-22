@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 var async = require('async');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var iam = new AWS.IAM(AWSConfig);
 
     if (!collection.iam ||
@@ -25,7 +25,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
         var versionId = collection.iam.getPolicy[AWSConfig.region][policy.Arn].data.Policy.DefaultVersionId;
         collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn] = {};
 
-        helpers.makeCustomCollectorCall(iam, 'getPolicyVersion', {PolicyArn: policy.Arn, VersionId: versionId}, retries, null, null, null, function(err, data) {
+        helpers.makeCustomCollectorCall(iam, 'getPolicyVersion', {PolicyArn: policy.Arn, VersionId: versionId}, retries, null, null, null, settings, scanAWSConfig, AWSConfig, function(err, data) {
             if (err) {
                 collection.iam.getPolicyVersion[AWSConfig.region][policy.Arn].err = err;
             }

@@ -30,6 +30,40 @@ const describeRepositories = [
           "encryptionType": "AES256"
         }
     },
+    {
+        "repositoryArn": "arn:aws:ecr:us-east-1:111111111111:repository/test",
+        "registryId": "111111111111",
+        "repositoryName": "test",
+        "repositoryUri": "111111111111.dkr.ecr.us-east-1.amazonaws.com/test",
+        "createdAt": "2021-07-24T12:20:58.000Z",
+        "imageTagMutability": "IMMUTABLE_WITH_EXCLUSION",
+        "imageTagMutabilityExclusionFilters": [
+          { "filterType": "WILDCARD", "filter": "latest*" }
+        ],
+        "imageScanningConfiguration": {
+          "scanOnPush": false
+        },
+        "encryptionConfiguration": {
+          "encryptionType": "AES256"
+        }
+    },
+    {
+        "repositoryArn": "arn:aws:ecr:us-east-1:111111111111:repository/test",
+        "registryId": "111111111111",
+        "repositoryName": "test",
+        "repositoryUri": "111111111111.dkr.ecr.us-east-1.amazonaws.com/test",
+        "createdAt": "2021-07-24T12:20:58.000Z",
+        "imageTagMutability": "MUTABLE_WITH_EXCLUSION",
+        "imageTagMutabilityExclusionFilters": [
+          { "filterType": "WILDCARD", "filter": "prod*" }
+        ],
+        "imageScanningConfiguration": {
+          "scanOnPush": false
+        },
+        "encryptionConfiguration": {
+          "encryptionType": "AES256"
+        }
+    },
 ]
 
 const createCache = (ecrRepository) => {
@@ -79,6 +113,22 @@ describe('ecrRepositoryTagImmutability', () => {
             ecrRepositoryTagImmutability.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(0);
+            })
+        });
+
+        it('should PASS if repository is immutable with exclusion filters', () => {
+            const cache = createCache([describeRepositories[2]]);
+            ecrRepositoryTagImmutability.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+            })
+        });
+
+        it('should FAIL if repository is mutable with exclusion filters', () => {
+            const cache = createCache([describeRepositories[3]]);
+            ecrRepositoryTagImmutability.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
             })
         });
 

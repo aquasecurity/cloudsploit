@@ -72,7 +72,10 @@ module.exports = {
             }
 
             var listGroupPolicies, listAttachedGroupPolicies;
+            var hasGroupPermissions = false;
             if (listGroupsForUser.data && listGroupsForUser.data.Groups){
+                var listGroups = helpers.addSource(cache, source, ['iam', 'listGroups', region]);
+                
                 for (let group of listGroupsForUser.data.Groups){
                     listGroupPolicies = helpers.addSource(cache, source,
                         ['iam', 'listGroupPolicies', region, group.GroupName]);
@@ -92,19 +95,41 @@ module.exports = {
                         return cb();
                     }
 
-                    if ((listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length) || 
-                        (listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length)){
+                    var hasInlineGroupPolicies = listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length;
+                    var hasAttachedGroupPolicies = listAttachedGroupPolicies.data.AttachedPolicies && listAttachedGroupPolicies.data.AttachedPolicies.length;
+
+                    var enrichedGroup = null;
+                    if ((!hasAttachedGroupPolicies || !hasInlineGroupPolicies) && listGroups && listGroups.data && Array.isArray(listGroups.data)) {
+                        enrichedGroup = listGroups.data.find(g => g.GroupName === group.GroupName);
+                    }
+
+                    if (!hasAttachedGroupPolicies && enrichedGroup && enrichedGroup.attachedPolicies && Array.isArray(enrichedGroup.attachedPolicies) && enrichedGroup.attachedPolicies.length) {
+                        hasAttachedGroupPolicies = true;
+                    }
+
+                    if (!hasInlineGroupPolicies && enrichedGroup && enrichedGroup.inlinePolicies && Array.isArray(enrichedGroup.inlinePolicies) && enrichedGroup.inlinePolicies.length) {
+                        hasInlineGroupPolicies = true;
+                    }
+
+                    if (hasInlineGroupPolicies || hasAttachedGroupPolicies){
+                        hasGroupPermissions = true;
                         break;
                     }
                 }
             }
 
-            if ((listAttachedUserPolicies.data.AttachedPolicies &&
-                listAttachedUserPolicies.data.AttachedPolicies.length) ||
-               (listUserPolicies.data.PolicyNames &&
-                listUserPolicies.data.PolicyNames.length) || (listAttachedGroupPolicies && listAttachedGroupPolicies.data.AttachedPolicies && 
-                listAttachedGroupPolicies.data.AttachedPolicies.length) ||
-                (listGroupPolicies && listGroupPolicies.data.PolicyNames && listGroupPolicies.data.PolicyNames.length)) {
+            var hasAttachedUserPolicies = listAttachedUserPolicies.data.AttachedPolicies && listAttachedUserPolicies.data.AttachedPolicies.length;
+            var hasInlineUserPolicies = listUserPolicies.data.PolicyNames && listUserPolicies.data.PolicyNames.length;
+
+            if (!hasAttachedUserPolicies && user.attachedPolicies && Array.isArray(user.attachedPolicies) && user.attachedPolicies.length) {
+                hasAttachedUserPolicies = true;
+            }
+
+            if (!hasInlineUserPolicies && user.inlinePolicies && Array.isArray(user.inlinePolicies) && user.inlinePolicies.length) {
+                hasInlineUserPolicies = true;
+            }
+
+            if (hasAttachedUserPolicies || hasInlineUserPolicies || hasGroupPermissions) {
                 helpers.addResult(results, 0, 'IAM user has permissions', 'global', user.Arn);
             } else {
                 helpers.addResult(results, 2, 'IAM user does not have any permissions', 'global', user.Arn);

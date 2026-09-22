@@ -414,6 +414,7 @@ var isQuotaError = function(err) {
 function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     let retries = [];
     var apiRetryAttempts = 3;
+    var quotaRetryAttempts = 6; // only for quota/access limit errors
     var apiRetryBackoff = 500;
     var apiRetryCap = 1000;
     var quotaRetryDelay = 60000; // 60 seconds (1 minute) for quota limit errors
@@ -430,9 +431,10 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
     
     // Track the last error to determine retry strategy
     let lastError = null;
+    let failureCount = 0;
     
     async.retry({
-        times: apiRetryAttempts,
+        times: Math.max(apiRetryAttempts, quotaRetryAttempts) + 1,
         interval: function(retryCount){
             // Check if last error was a quota error - apply 1 minute delay for all quota errors
             if (lastError && isQuotaError(lastError)) {
@@ -454,8 +456,9 @@ function makeApiCall(client, originalUrl, callCb, nextToken, config) {
         },
         errorFilter: function(err) {
             lastError = err;
-            // Retry on rate errors or quota errors (for all API calls)
-            return isRateError(err) || isQuotaError(err);
+            failureCount++;
+            var maxRetries = isQuotaError(err) ? quotaRetryAttempts : (isRateError(err) ? apiRetryAttempts : 0);
+            return failureCount <= maxRetries;
         }
     }, function(cb) {
 

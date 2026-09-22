@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var securityhub = new AWS.SecurityHub(AWSConfig);
     collection.securityhub.getFindings[AWSConfig.region] = {};
 
@@ -34,7 +34,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     };
 
     function execute() {
-        helpers.makeCustomCollectorCall(securityhub, 'getFindings', params, retries, null, null, null, paginateCb);
+        helpers.makeCustomCollectorCall(securityhub, 'getFindings', params, retries, null, null, null, settings, scanAWSConfig, AWSConfig, paginateCb);
     }
     execute();
 };

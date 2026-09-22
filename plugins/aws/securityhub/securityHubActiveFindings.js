@@ -3,7 +3,7 @@ var helpers = require('../../../helpers/aws');
 
 module.exports = {
     title: 'Security Hub No Active Findings',
-    category: 'Security Hub',
+    category: 'SecurityHub',
     domain: 'Management and Governance',
     severity: 'Medium',
     description: 'Ensure that Security Hub active findings do not exist in your AWS account.',

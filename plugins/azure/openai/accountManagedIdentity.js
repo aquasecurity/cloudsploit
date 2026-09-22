@@ -37,6 +37,10 @@ module.exports = {
 
             for (let account of accounts.data) {
 
+                if (!account.id) continue;
+
+                if (!account.kind || account.kind.toLowerCase() !== 'openai') continue;
+
                 if (account.identity && account.identity.type && 
                     (account.identity.type.toLowerCase() === 'systemassigned' || account.identity.type.toLowerCase() === 'userassigned')) {
                     helpers.addResult(results, 0,

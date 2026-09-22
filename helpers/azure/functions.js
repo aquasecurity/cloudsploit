@@ -35,7 +35,7 @@ function addResult(results, status, message, region, resource, custom) {
             overrideMsg = 'Aqua does not have permission to list storage account keys. For help fixing this error, see: https://bit.ly/2AhlVP0';
             skipStatusChange = true;
         } else if (message.indexOf('list permission on key vault') > -1) {
-            overrideMsg = 'Aqua does not have permission to list objects in this Key Vault. For help fixing this error, see: https://bit.ly/3cbpFyL';
+            overrideMsg = 'Aqua does not have permission to list objects in this Key Vault. For help fixing this error, see: https://docs.aquasec.com/saas/cspm/plugins/troubleshooting-azure-key-vault-permission-errors/';
             skipStatusChange = true;
         }
 
@@ -391,12 +391,27 @@ function checkFlexibleServerConfigs(servers, cache, source, location, results, s
     });
 }
 
-function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location ) {
+function checkMicrosoftDefender(pricings, serviceName, serviceDisplayName, results, location, requiredExtensions) {
 
     let pricingData = pricings.data.find((pricing) => pricing.name.toLowerCase() === serviceName);
     if (pricingData) {
         if (pricingData.pricingTier.toLowerCase() === 'standard') {
-            addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
+            if (requiredExtensions && requiredExtensions.length) {
+                let extensions = pricingData.extensions || [];
+
+                let missingExtensions = requiredExtensions.filter((extensionName) => {
+                    let extension = extensions.find((ext) => ext.name && ext.name.toLowerCase() === extensionName.toLowerCase());
+                    return !extension || !extension.isEnabled || extension.isEnabled.toString().toLowerCase() !== 'true';
+                });
+
+                if (missingExtensions.length) {
+                    addResult(results, 2, `Azure Defender for ${serviceDisplayName} is enabled but the following extensions are not enabled: ${missingExtensions.join(', ')}`, location, pricingData.id);
+                } else {
+                    addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName} with all required extensions enabled`, location, pricingData.id);
+                }
+            } else {
+                addResult(results, 0, `Azure Defender is enabled for ${serviceDisplayName}`, location, pricingData.id);
+            }
         } else {
             addResult(results, 2, `Azure Defender is not enabled for ${serviceDisplayName}`, location, pricingData.id);
         }

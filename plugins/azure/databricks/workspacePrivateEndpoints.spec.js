@@ -1,0 +1,140 @@
+var expect = require('chai').expect;
+var workspacePrivateEndpoints = require('./workspacePrivateEndpoints.js');
+
+const workspaces = [
+    {
+        "managedResourceGroupId": "/subscriptions/1234/resourceGroups/test",
+        "privateEndpointConnections": [],
+       "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace",
+       "name": "test-workspace",
+       "type": "Microsoft.Databricks/workspaces",
+       "sku": {
+         "name": "premium"
+       },
+       "location": "eastus",
+       "tags": {}
+    },
+    {
+        "managedResourceGroupId": "/subscriptions/1234/resourceGroups/test",
+        "privateEndpointConnections": [
+          {
+            "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace/privateEndpointConnections/test-connection",
+            "name": "test-connection",
+            "type": "Microsoft.Databricks/workspaces/privateEndpointConnections",
+            "properties": {
+              "privateLinkServiceConnectionState": {
+                "status": "Pending",
+                "actionsRequired": "None"
+              }
+            }
+          }
+        ],
+       "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace",
+       "name": "test-workspace",
+       "type": "Microsoft.Databricks/workspaces",
+       "sku": {
+         "name": "premium"
+       },
+       "location": "eastus",
+       "tags": {}
+    },
+    {
+        "managedResourceGroupId": "/subscriptions/1234/resourceGroups/test",
+        "privateEndpointConnections": [
+          {
+            "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace/privateEndpointConnections/test-connection",
+            "name": "test-connection",
+            "type": "Microsoft.Databricks/workspaces/privateEndpointConnections",
+            "properties": {
+              "privateLinkServiceConnectionState": {
+                "status": "Approved",
+                "actionsRequired": "None"
+              }
+            }
+          }
+        ],
+       "id": "/subscriptions/1234/resourceGroups/test/providers/Microsoft.Databricks/workspaces/test-workspace",
+       "name": "test-workspace",
+       "type": "Microsoft.Databricks/workspaces",
+       "sku": {
+         "name": "premium"
+       },
+       "location": "eastus",
+       "tags": {}
+    },
+];
+
+
+const createCache = (workspaces, err) => {
+
+    return {
+        databricks: {
+            listWorkspaces: {
+                'eastus': {
+                    data: workspaces,
+                    err: err
+                }
+            }
+        }
+    };
+};
+
+describe('workspacePrivateEndpoints', function () {
+    describe('run', function () {
+
+        it('should give a passing result if no Databricks workspaces are found', function (done) {
+            const cache = createCache([], null);
+            workspacePrivateEndpoints.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('No existing Databricks Workspaces found');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give unknown result if unable to query for Databricks workspaces', function (done) {
+            const cache = createCache(null, ['error']);
+            workspacePrivateEndpoints.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(3);
+                expect(results[0].message).to.include('Unable to query for Databricks Workspaces');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give passing result if Databricks workspace has an approved private endpoint connection', function (done) {
+            const cache = createCache([workspaces[2]], null);
+            workspacePrivateEndpoints.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Databricks workspace has an approved private endpoint connection');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if Databricks workspace does not have private endpoint connections', function (done) {
+            const cache = createCache([workspaces[0]], null);
+            workspacePrivateEndpoints.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Databricks workspace does not have an approved private endpoint connection');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+
+        it('should give failing result if Databricks workspace private endpoint connection is not approved', function (done) {
+            const cache = createCache([workspaces[1]], null);
+            workspacePrivateEndpoints.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(2);
+                expect(results[0].message).to.include('Databricks workspace does not have an approved private endpoint connection');
+                expect(results[0].region).to.equal('eastus');
+                done();
+            });
+        });
+    });
+});

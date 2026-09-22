@@ -1,0 +1,124 @@
+{
+  "source": "literal",
+  "description": "The collector stores the whole response. Role.AssumeRolePolicyDocument holds the trust policy on the role. The collector replaces it with normalizePolicyDocument(), which url-decodes and parses it into the statement array - so there is no Statement level, and Action and Resource are always arrays. The full stored shape is spelled out here rather than patched onto the sdk shape, so what a plugin may read is visible in one place.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Role": {
+        "type": "structure",
+        "members": {
+          "Path": {
+            "type": "string"
+          },
+          "RoleName": {
+            "type": "string"
+          },
+          "RoleId": {
+            "type": "string"
+          },
+          "Arn": {
+            "type": "string"
+          },
+          "CreateDate": {
+            "type": "timestamp"
+          },
+          "AssumeRolePolicyDocument": {
+            "type": "list",
+            "member": {
+              "type": "structure",
+              "members": {
+                "Sid": {
+                  "type": "string"
+                },
+                "Effect": {
+                  "type": "string"
+                },
+                "Principal": {
+                  "type": "structure",
+                  "members": {
+                    "AWS": {},
+                    "Service": {},
+                    "Federated": {},
+                    "CanonicalUser": {}
+                  }
+                },
+                "NotPrincipal": {
+                  "type": "structure",
+                  "members": {
+                    "AWS": {},
+                    "Service": {},
+                    "Federated": {},
+                    "CanonicalUser": {}
+                  }
+                },
+                "Action": {
+                  "type": "list",
+                  "member": {
+                    "type": "string"
+                  }
+                },
+                "NotAction": {},
+                "Resource": {
+                  "type": "list",
+                  "member": {
+                    "type": "string"
+                  }
+                },
+                "NotResource": {},
+                "Condition": {
+                  "type": "map",
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {}
+                }
+              }
+            }
+          },
+          "Description": {
+            "type": "string"
+          },
+          "MaxSessionDuration": {
+            "type": "integer"
+          },
+          "PermissionsBoundary": {
+            "type": "structure",
+            "members": {
+              "PermissionsBoundaryType": {
+                "type": "string"
+              },
+              "PermissionsBoundaryArn": {
+                "type": "string"
+              }
+            }
+          },
+          "Tags": {
+            "type": "list",
+            "member": {
+              "type": "structure",
+              "members": {
+                "Key": {
+                  "type": "string"
+                },
+                "Value": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "RoleLastUsed": {
+            "type": "structure",
+            "members": {
+              "LastUsedDate": {
+                "type": "timestamp"
+              },
+              "Region": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

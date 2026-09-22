@@ -75,6 +75,7 @@ module.exports = {
     directoryservice: [],
     organizations: ['cn-north-1'],
     guardduty: [],
+    macie2: [],
     wafregional: [],
     wafv2: [],
     waf: regions,
@@ -124,5 +125,13 @@ module.exports = {
     appconfig: regions,
     opensearch:regions,
     opensearchserverless: regions,
-    securityhub: regions
+    securityhub: regions,
+    storagegateway: regions,
+    // Not offered in the China partition
+    codecommit: [],
+    personalize: [],
+    drs: [],
+    m2: [],
+    transcribeservice: [],
+    amp: []
 };

@@ -66,6 +66,12 @@ var calls = [
                 paginate: 'NextToken'
             }
         },
+        Amp: {
+            listWorkspaces: {
+                property: 'workspaces',
+                paginate: 'nextToken'
+            }
+        },
         Appflow: {
             listFlows: {
                 property: 'flows',
@@ -199,6 +205,10 @@ var calls = [
             listDomains: {
                 property: 'domains',
                 paginate: 'nextToken'
+            },
+            listRepositories: {
+                property: 'repositories',
+                paginate: 'nextToken'
             }
         },
         CodeStar: {
@@ -210,6 +220,16 @@ var calls = [
         CodeBuild: {
             listProjects: {
                 property: 'projects',
+                paginate: 'nextToken'
+            },
+            listBuilds: {
+                property: 'ids',
+                paginate: 'nextToken'
+            }
+        },
+        CodeCommit: {
+            listRepositories: {
+                property: 'repositories',
                 paginate: 'nextToken'
             }
         },
@@ -304,6 +324,9 @@ var calls = [
             listNotificationChannels: {
                 property: 'Channels',
                 paginate: 'NextToken'
+            },
+            describeServiceIntegration: {
+                property: 'ServiceIntegration'
             }
         },
         DirectConnect: {
@@ -329,6 +352,16 @@ var calls = [
             describeReplicationInstances: {
                 property: 'ReplicationInstances',
                 paginate: 'Marker'
+            },
+            describeEndpoints: {
+                property: 'Endpoints',
+                paginate: 'Marker'
+            }
+        },
+        Drs: {
+            describeReplicationConfigurationTemplates: {
+                property: 'items',
+                paginate: 'nextToken'
             }
         },
         DocDB: {
@@ -345,6 +378,10 @@ var calls = [
                         }
                     ]
                 }
+            },
+            describeDBClusterSnapshots: {
+                property: 'DBClusterSnapshots',
+                paginate: 'Marker'
             }
         },
         DynamoDB: {
@@ -375,7 +412,11 @@ var calls = [
                 paginate: 'NextToken'
             },
             describeAddresses: {
-                property: 'Addresses'
+                property: 'Addresses',
+                override: true
+            },
+            describeRegions: {
+                property: 'Regions'
             },
             describeVolumes: {
                 property: 'Volumes'
@@ -527,6 +568,10 @@ var calls = [
             describeReservedCacheNodes: {
                 property: 'ReservedCacheNodes',
                 paginate: 'Marker'
+            },
+            describeSnapshots: {
+                property: 'Snapshots',
+                paginate: 'Marker'
             }
         },
         ECR: {
@@ -623,11 +668,19 @@ var calls = [
             listForecastExportJobs: {
                 property: 'ForecastExportJobs',
                 paginate: 'NextToken'
+            },
+            listPredictors: {
+                property: 'Predictors',
+                paginate: 'NextToken'
             }
         },
         FSx: {
             describeFileSystems: {
                 property: 'FileSystems',
+                paginate: 'NextToken'
+            },
+            describeBackups: {
+                property: 'Backups',
                 paginate: 'NextToken'
             }
         },
@@ -703,6 +756,12 @@ var calls = [
             },
             generateCredentialReport: {
                 override: true
+            },
+            listSAMLProviders: {
+                property: 'SAMLProviderList'
+            },
+            listOpenIDConnectProviders: {
+                property: 'OpenIDConnectProviderList'
             }
         },
         IoTSiteWise: {
@@ -806,6 +865,20 @@ var calls = [
             describeClusters: {
                 property:'Clusters',
                 paginate:'NextToken'
+            },
+            describeSnapshots: {
+                property: 'Snapshots',
+                paginate: 'NextToken'
+            }
+        },
+        M2: {
+            listApplications: {
+                property: 'applications',
+                paginate: 'nextToken'
+            },
+            listEnvironments: {
+                property: 'environments',
+                paginate: 'nextToken'
             }
         },
         ManagedBlockchain: {
@@ -834,6 +907,10 @@ var calls = [
             describeDBInstances: {
                 property: 'DBInstances',
                 paginate: 'Marker'
+            },
+            describeDBClusterSnapshots: {
+                property: 'DBClusterSnapshots',
+                paginate: 'Marker'
             }
         },
         Organizations: {
@@ -851,6 +928,12 @@ var calls = [
         Proton: {
             listEnvironmentTemplates: {
                 property: 'templates',
+                paginate: 'nextToken'
+            }
+        },
+        Personalize: {
+            listSolutions: {
+                property: 'solutions',
                 paginate: 'nextToken'
             }
         },
@@ -1014,6 +1097,26 @@ var calls = [
                     State: 'Active'
                 }
             },
+            listDocuments: {
+                property: 'DocumentIdentifiers',
+                paginate: 'NextToken',
+                params: {
+                    Filters: [
+                        {
+                            Key: 'Owner',
+                            Values: [
+                                'Self'
+                            ]
+                        }
+                    ]
+                }
+            },
+        },
+        StorageGateway: {
+            listGateways: {
+                property: 'Gateways',
+                paginate: 'Marker'
+            }
         },
         STS: {
             getCallerIdentity: {
@@ -1065,6 +1168,20 @@ var calls = [
         Translate: {
             listTextTranslationJobs: {
                 property: 'TextTranslationJobPropertiesList',
+                paginate: 'NextToken'
+            },
+            listTerminologies: {
+                property: 'TerminologyPropertiesList',
+                paginate: 'NextToken'
+            }
+        },
+        TranscribeService: {
+            listTranscriptionJobs: {
+                property: 'TranscriptionJobSummaries',
+                paginate: 'NextToken'
+            },
+            listMedicalTranscriptionJobs: {
+                property: 'MedicalTranscriptionJobSummaries',
                 paginate: 'NextToken'
             }
         },
@@ -1133,11 +1250,6 @@ var calls = [
                 paginateReqProp: 'Marker'
             },
             describeTargetGroups: {
-                property: 'TargetGroups',
-                paginate: 'NextMarker',
-                paginateReqProp: 'Marker'
-            },
-            describeTargetHealth: {
                 property: 'TargetGroups',
                 paginate: 'NextMarker',
                 paginateReqProp: 'Marker'
@@ -1386,6 +1498,26 @@ var postcalls = [
                 reliesOnService: 'codebuild',
                 reliesOnCall: 'listProjects',
                 override: true
+            },
+            batchGetBuilds: {
+                reliesOnService: 'codebuild',
+                reliesOnCall: 'listBuilds',
+                override: true
+            }
+        },
+        CodeArtifact: {
+            getRepositoryPermissionsPolicy: {
+                reliesOnService: 'codeartifact',
+                reliesOnCall: 'listRepositories',
+                override: true
+            }
+        },
+        CodeCommit: {
+            getRepository: {
+                reliesOnService: 'codecommit',
+                reliesOnCall: 'listRepositories',
+                filterKey: 'repositoryName',
+                filterValue: 'repositoryName'
             }
         },
         CodePipeline: {
@@ -1706,6 +1838,12 @@ var postcalls = [
                 reliesOnCall: 'listDatasets',
                 filterKey: 'DatasetArn',
                 filterValue: 'DatasetArn'
+            },
+            describePredictor: {
+                reliesOnService: 'forecastservice',
+                reliesOnCall: 'listPredictors',
+                filterKey: 'PredictorArn',
+                filterValue: 'PredictorArn'
             }
         },
         Glacier: {
@@ -1867,6 +2005,20 @@ var postcalls = [
                 reliesOnCall: 'listGroups',
                 filterKey: 'GroupName',
                 filterValue: 'GroupName',
+                rateLimit: 200
+            },
+            getSAMLProvider: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listSAMLProviders',
+                filterKey: 'SAMLProviderArn',
+                filterValue: 'Arn',
+                rateLimit: 200
+            },
+            getOpenIDConnectProvider: {
+                reliesOnService: 'iam',
+                reliesOnCall: 'listOpenIDConnectProviders',
+                filterKey: 'OpenIDConnectProviderArn',
+                filterValue: 'Arn',
                 rateLimit: 200
             },
             listAttachedUserPolicies: {
@@ -2251,6 +2403,61 @@ var postcalls = [
             },
             sendIntegration: {
                 enabled: true
+            }
+        },
+        SSM: {
+            describeDocumentPermission: {
+                reliesOnService: 'ssm',
+                reliesOnCall: 'listDocuments',
+                override: true
+            }
+        },
+        StorageGateway: {
+            // Must stay first: the describe*FileShares calls below read its output
+            listFileShares: {
+                reliesOnService: 'storagegateway',
+                reliesOnCall: 'listGateways',
+                override: true
+            },
+            describeNFSFileShares: {
+                reliesOnService: 'storagegateway',
+                reliesOnCall: 'listFileShares',
+                override: true
+            },
+            describeSMBFileShares: {
+                reliesOnService: 'storagegateway',
+                reliesOnCall: 'listFileShares',
+                override: true
+            }
+        },
+        Personalize: {
+            describeSolution: {
+                reliesOnService: 'personalize',
+                reliesOnCall: 'listSolutions',
+                filterKey: 'solutionArn',
+                filterValue: 'solutionArn'
+            }
+        },
+        M2: {
+            getApplication: {
+                reliesOnService: 'm2',
+                reliesOnCall: 'listApplications',
+                filterKey: 'applicationId',
+                filterValue: 'applicationId'
+            },
+            getEnvironment: {
+                reliesOnService: 'm2',
+                reliesOnCall: 'listEnvironments',
+                filterKey: 'environmentId',
+                filterValue: 'environmentId'
+            }
+        },
+        Amp: {
+            describeWorkspace: {
+                reliesOnService: 'amp',
+                reliesOnCall: 'listWorkspaces',
+                filterKey: 'workspaceId',
+                filterValue: 'workspaceId'
             }
         },
     },

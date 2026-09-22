@@ -1024,7 +1024,32 @@ var isRateError = function(err) {
     return isError;
 };
 
-function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
+function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAttempts, apiRetryCap, apiRetryBackoff, settings, scanAWSConfig, localAWSConfig, callback) {
+    if (apiRetryAttempts == null) apiRetryAttempts = 2;
+    if (apiRetryCap == null) apiRetryCap = 1000;
+    if (apiRetryBackoff == null) apiRetryBackoff = 500;
+
+    var execRef = { current: executor };
+    function runOnce(cb) {
+        execRef.current[callKey](params, function(err, data) {
+            if (!settings || !scanAWSConfig || !localAWSConfig) {
+                return cb(err, data);
+            }
+            refreshCredentialsIfTokenExpired(err, settings, scanAWSConfig, localAWSConfig, function(refreshErr, newCreds) {
+                if (!newCreds) {
+                    if (refreshErr) console.log('[WARN] Token refresh failed');
+                    return cb(err, data);
+                }
+                try {
+                    execRef.current = new execRef.current.constructor(localAWSConfig);
+                } catch (e) {
+                    return cb(err, data);
+                }
+                execRef.current[callKey](params, cb);
+            });
+        });
+    }
+
     async.retry({
         times: apiRetryAttempts,
         interval: function(retryCount){
@@ -1042,13 +1067,48 @@ function makeCustomCollectorCall(executor, callKey, params, retries, apiRetryAtt
             return isRateError(err);
         }
     }, function(cb) {
-        executor[callKey](params, function(err, data) {
-            return cb(err, data);
+        runOnce(cb);
+    }, function(err, result) {
+        callback(err, result);
+    });
+}
+
+function buildV3ClientConfig(AWSConfig) {
+    return {
+        region: AWSConfig.region,
+        credentials: AWSConfig
+    };
+}
+
+function makeCustomCollectorCallV3(client, Command, params, retries, apiRetryAttempts=2, apiRetryCap=1000, apiRetryBackoff=500, callback) {
+    async.retry({
+        times: apiRetryAttempts,
+        interval: function(retryCount){
+            let retryExponential = 3;
+            let retryLeveler = 3;
+            let timestamp = parseInt(((new Date()).getTime()).toString().slice(-1));
+            let retry_temp = Math.min(apiRetryCap, (apiRetryBackoff * (retryExponential + timestamp) ** retryCount));
+            let retry_seconds = Math.round(retry_temp/retryLeveler + Math.random(0, retry_temp) * 5000);
+
+            console.log(`Trying ${Command.name} again in: ${retry_seconds/1000} seconds`);
+            retries.push({seconds: Math.round(retry_seconds/1000)});
+            return retry_seconds;
+        },
+        errorFilter: function(err) {
+            return isRateError(err);
+        }
+    }, function(cb) {
+        var command = new Command(params);
+        client.send(command).then(function(data) {
+            return cb(null, data);
+        }).catch(function(err) {
+            return cb(err, null);
         });
     }, function(err, result) {
         callback(err, result);
     });
 }
+
 
 var debugApiCalls = function(call, service, debugMode, finished) {
     if (!debugMode) return;
@@ -1119,6 +1179,68 @@ var collectRateError = function(err, rateError) {
 
     return isError;
 };
+
+function isTokenExpiredError(err) {
+    if (!err) return false;
+    var code = (err.code || err.name || '').toString();
+    var msg = (err.message || '').toString().toLowerCase();
+    if (code === 'ExpiredToken' || code === 'RequestExpired' || code === 'ExpiredTokenException') return true;
+    return msg.indexOf('the security token included in the request is expired') > -1 ||
+        msg.indexOf('the security token included in the request is invalid') > -1 ||
+        msg.indexOf('the provided token has expired') > -1 ||
+        msg.indexOf('the security token isn\'t valid') > -1 ||
+        msg.indexOf('the security token is not valid') > -1 ||
+        msg.indexOf('security token has expired') > -1 ||
+        msg.indexOf('security token is expired') > -1 ||
+        msg.indexOf('token has expired') > -1 ||
+        msg.indexOf('token is invalid') > -1;
+}
+function assumeRoleForRefresh(roleArn, externalId, callback) {
+    if (!roleArn || !externalId) return callback(new Error('role_arn and external_id required to refresh credentials'));
+    var sts = new AWS.STS();
+    sts.assumeRole({
+        RoleArn: roleArn,
+        RoleSessionName: 'cloudsploit_scan',
+        DurationSeconds: 1800,
+        ExternalId: externalId
+    }, function(err, data) {
+        if (err || !data || !data.Credentials) return callback(err || new Error('No credentials returned'));
+        callback(null, {
+            accessKeyId: data.Credentials.AccessKeyId,
+            secretAccessKey: data.Credentials.SecretAccessKey,
+            sessionToken: data.Credentials.SessionToken
+        });
+    });
+}
+
+function refreshCredentialsIfTokenExpired(err, settings, AWSConfig, LocalAWSConfig, cb) {
+    if (!err || !isTokenExpiredError(err) || !settings.role_arn || !settings.external_id) {
+        return cb(null, null);
+    }
+    if (settings._lastTokenRefresh && (Date.now() - settings._lastTokenRefresh < 60000)) {
+        console.log(`[INFO] Assigning new creds ${settings.role_arn} : ${Date.now()}`);
+        LocalAWSConfig.accessKeyId = AWSConfig.accessKeyId;
+        LocalAWSConfig.secretAccessKey = AWSConfig.secretAccessKey;
+        LocalAWSConfig.sessionToken = AWSConfig.sessionToken;
+        return cb(null, AWSConfig);
+    }
+    return assumeRoleForRefresh(settings.role_arn, settings.external_id, function(refreshErr, newCreds) {
+        if (refreshErr) {
+            console.log('[WARN] Token refresh failed');
+            return cb(refreshErr, null);
+        }
+        settings._lastTokenRefresh = Date.now();
+        console.log(`[INFO] Refresh succeeded, got new creds for role: ${settings.role_arn} : ${settings._lastTokenRefresh}`);
+        AWSConfig.accessKeyId = newCreds.accessKeyId;
+        AWSConfig.secretAccessKey = newCreds.secretAccessKey;
+        AWSConfig.sessionToken = newCreds.sessionToken;
+        LocalAWSConfig.accessKeyId = newCreds.accessKeyId;
+        LocalAWSConfig.secretAccessKey = newCreds.secretAccessKey;
+        LocalAWSConfig.sessionToken = newCreds.sessionToken;
+        return cb(null, newCreds);
+    });
+}
+
 function processFieldSelectors(fieldSelectors,buckets ,startsWithBuckets,notEndsWithBuckets,endsWithBuckets, notStartsWithBuckets) {
     fieldSelectors.forEach(f => {
         if (f.Field === 'resources.ARN') {
@@ -1644,9 +1766,14 @@ module.exports = {
     getPrivateSubnets: getPrivateSubnets,
     getSubnetRTMap: getSubnetRTMap,
     makeCustomCollectorCall: makeCustomCollectorCall,
+    makeCustomCollectorCallV3: makeCustomCollectorCallV3,
+    buildV3ClientConfig: buildV3ClientConfig,
     debugApiCalls: debugApiCalls,
     logError: logError,
     collectRateError: collectRateError,
+    isTokenExpiredError: isTokenExpiredError,
+    assumeRoleForRefresh: assumeRoleForRefresh,
+    refreshCredentialsIfTokenExpired: refreshCredentialsIfTokenExpired,
     checkTags: checkTags,
     checkConditions: checkConditions,
     processFieldSelectors: processFieldSelectors,

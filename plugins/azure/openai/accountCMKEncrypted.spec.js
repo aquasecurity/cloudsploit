@@ -5,17 +5,17 @@ const accounts = [
     {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc1",
         "name": "acc1",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
-        "properties": {
-            "encryption": {
-                'keySource': 'Microsoft.Keyvault'
-            }
+        "encryption": {
+            'keySource': 'Microsoft.Keyvault'
         }
       },
       {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc2",
         "name": "acc2",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus"
       },
@@ -56,6 +56,7 @@ describe('accountCMKEncrypted', function() {
                 expect(results[0].region).to.equal('eastus');
                 done();
             });
+            
         });
 
         it('should give unknown result if unable to query for openai accounts', function(done) {

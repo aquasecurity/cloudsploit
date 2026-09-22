@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "root": "NFSFileShareInfoList",
+  "description": "The collector stores data.NFSFileShareInfoList."
+}

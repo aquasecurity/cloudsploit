@@ -155,10 +155,10 @@ describe('keyVaultSecretExpiry', function() {
             auth.run(createCache(null, [], {}), {}, callback);
         });
 
-        it('should give passing result if secret expiration is not enabled in RBAC vault', function(done) {
+        it('should give failing result if secret expiration is not set in RBAC vault', function(done) {
             const callback = (err, results) => {
                 expect(results.length).to.equal(1);
-                expect(results[0].status).to.equal(0);
+                expect(results[0].status).to.equal(2);
                 expect(results[0].message).to.include('Secret expiration is not enabled in RBAC vault');
                 expect(results[0].region).to.equal('eastus');
                 done()
@@ -213,6 +213,19 @@ describe('keyVaultSecretExpiry', function() {
             };
 
             auth.run(createCache(null, [listKeyVaults[0]], getSecrets[4]), {}, callback);
+        });
+
+        it('should give passing result if Key Vault public network access is disabled', function(done) {
+            const disabledVault = Object.assign({}, listKeyVaults[0], { publicNetworkAccess: 'Disabled' });
+            const callback = (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).to.include('Key Vault public network access is disabled');
+                expect(results[0].region).to.equal('eastus');
+                done()
+            };
+
+            auth.run(createCache(null, [disabledVault], {}), {}, callback);
         });
     })
 });

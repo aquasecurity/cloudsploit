@@ -1,0 +1,116 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it, one record per topic. The sdk types Attributes as a map of string to string, which means nothing below it can be proven and every path under it is waved through - so a plugin reading Attributes.Policy.Statement saves and then matches nothing. Attributes is declared here as a structure naming what GetTopicAttributes returns, and the v2 runner parses a document held as text when a path reads into it, so the save-time answer and the scan-time data agree. The remaining attributes are text as sns returns them, including DeliveryPolicy, EffectiveDeliveryPolicy and ArchivePolicy, which are json documents in their own right.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Attributes": {
+        "type": "structure",
+        "members": {
+          "TopicArn": {
+            "type": "string"
+          },
+          "Owner": {
+            "type": "string"
+          },
+          "DisplayName": {
+            "type": "string"
+          },
+          "SubscriptionsPending": {
+            "type": "string"
+          },
+          "SubscriptionsConfirmed": {
+            "type": "string"
+          },
+          "SubscriptionsDeleted": {
+            "type": "string"
+          },
+          "KmsMasterKeyId": {
+            "type": "string"
+          },
+          "SignatureVersion": {
+            "type": "string"
+          },
+          "TracingConfig": {
+            "type": "string"
+          },
+          "FifoTopic": {
+            "type": "string"
+          },
+          "FifoThroughputScope": {
+            "type": "string"
+          },
+          "ContentBasedDeduplication": {
+            "type": "string"
+          },
+          "DeliveryPolicy": {
+            "type": "string"
+          },
+          "EffectiveDeliveryPolicy": {
+            "type": "string"
+          },
+          "ArchivePolicy": {
+            "type": "string"
+          },
+          "BeginningArchiveTime": {
+            "type": "string"
+          },
+          "Policy": {
+            "type": "structure",
+            "members": {
+              "Version": {
+                "type": "string"
+              },
+              "Id": {
+                "type": "string"
+              },
+              "Statement": {
+                "type": "list",
+                "member": {
+                  "type": "structure",
+                  "members": {
+                    "Sid": {
+                      "type": "string"
+                    },
+                    "Effect": {
+                      "type": "string"
+                    },
+                    "Principal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "NotPrincipal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "Action": {},
+                    "NotAction": {},
+                    "Resource": {},
+                    "NotResource": {},
+                    "Condition": {
+                      "type": "map",
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

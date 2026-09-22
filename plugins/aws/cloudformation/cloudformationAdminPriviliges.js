@@ -62,9 +62,9 @@ module.exports = {
                     return cb();
                 }
 
-                var roleName = describeStacks.data.Stacks[0].RoleARN.split('/')[1] ?
-                    describeStacks.data.Stacks[0].RoleARN.split('/')[1] : describeStacks.data.Stacks[0].RoleARN;
-                var adminPrivileged;
+                var roleNameArr = describeStacks.data.Stacks[0].RoleARN.split('/');
+                var roleName = roleNameArr[roleNameArr.length - 1];
+                var adminPrivileged = false;
 
                 var listAttachedRolePolicies = helpers.addSource(cache, source,
                     ['iam', 'listAttachedRolePolicies', defaultRegion, roleName]);
@@ -75,24 +75,45 @@ module.exports = {
                 var getRolePolicy = helpers.addSource(cache, source,
                     ['iam', 'getRolePolicy', defaultRegion, roleName]);
 
-                if (!listAttachedRolePolicies ||
-                    listAttachedRolePolicies.err ||
-                    !listAttachedRolePolicies.data ||
-                    !listAttachedRolePolicies.data.AttachedPolicies) {
+                if (!listAttachedRolePolicies || !listRolePolicies) {
+                    helpers.addResult(results, 0,
+                        'No IAM Attached Role Found',
+                        region, resource);
+                    return cb();
+                }
+
+                if (listAttachedRolePolicies.err || !listAttachedRolePolicies.data) {
                     helpers.addResult(results, 3,
                         `Unable to query for IAM attached policy for role "${roleName}": ${helpers.addError(listAttachedRolePolicies)}`,
                         region, resource);
                     return cb();
                 }
 
-                if (!listRolePolicies || listRolePolicies.err || !listRolePolicies.data || !listRolePolicies.data.PolicyNames) {
+                if (listRolePolicies.err || !listRolePolicies.data) {
                     helpers.addResult(results, 3,
-                        `Unable to query for IAM role policy for role "${roleName}": ${helpers.addError(listRolePolicies)}`, 
+                        `Unable to query for IAM role policy for role "${roleName}": ${helpers.addError(listRolePolicies)}`,
                         region, resource);
                     return cb();
                 }
 
-                for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
+                var listRoles = helpers.addSource(cache, source, ['iam', 'listRoles', defaultRegion]);
+                var enrichedRole = null;
+                if (listRoles && listRoles.data && Array.isArray(listRoles.data)) {
+                    enrichedRole = listRoles.data.find(r => r.RoleName === roleName);
+                }
+
+                var hasAttachedPolicies = listAttachedRolePolicies.data.AttachedPolicies && listAttachedRolePolicies.data.AttachedPolicies.length;
+                var hasInlinePolicies = listRolePolicies.data.PolicyNames && listRolePolicies.data.PolicyNames.length;
+
+                var attachedPolicies = hasAttachedPolicies
+                    ? listAttachedRolePolicies.data.AttachedPolicies
+                    : (enrichedRole && enrichedRole.attachedPolicies && Array.isArray(enrichedRole.attachedPolicies) && enrichedRole.attachedPolicies.length ? enrichedRole.attachedPolicies : []);
+
+                var inlinePolicyNames = hasInlinePolicies
+                    ? listRolePolicies.data.PolicyNames
+                    : (enrichedRole && enrichedRole.inlinePolicies && Array.isArray(enrichedRole.inlinePolicies) && enrichedRole.inlinePolicies.length ? enrichedRole.inlinePolicies : []);
+
+                for (var policy of attachedPolicies) {
                     if (!policy.PolicyArn) continue;
 
                     if (policy.PolicyArn === managedAdminPolicy) {
@@ -134,13 +155,13 @@ module.exports = {
                     if (adminPrivileged) break;
                 }
 
-                for (var policyName of listRolePolicies.data.PolicyNames) {
+                for (var policyName of inlinePolicyNames) {
                     if (getRolePolicy &&
                         getRolePolicy[policyName] && 
                         getRolePolicy[policyName].data &&
                         getRolePolicy[policyName].data.PolicyDocument) {
-                        let statements = getRolePolicy[policyName].data.PolicyDocument;
-                        if (!statements) break;
+                        let statements = helpers.normalizePolicyDocument(getRolePolicy[policyName].data.PolicyDocument);
+                        if (!statements) continue;
 
                         // Loop through statements to see if admin privileges
                         for (let statement of statements) {

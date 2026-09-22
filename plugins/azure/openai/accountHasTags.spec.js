@@ -5,6 +5,7 @@ const accounts = [
     {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc1",
         "name": "acc1",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus",
         "tags": {
@@ -14,6 +15,7 @@ const accounts = [
       {
         "id": "/subscriptions/12424/resourceGroups/bvttest/providers/Microsoft.CognitiveServices/accounts/acc2",
         "name": "acc2",
+        "kind": "OpenAI",
         "type": "Microsoft.CognitiveServices/accounts",
         "location": "eastus"
       },

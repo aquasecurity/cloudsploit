@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var helpers = require(__dirname + '/../../../helpers/aws');
 
-module.exports = function(AWSConfig, collection, retries, callback) {
+module.exports = function(AWSConfig, collection, retries, settings, scanAWSConfig, callback) {
     var ssm = new AWS.SSM(AWSConfig);
     collection.ssm.describeParameters[AWSConfig.region] = {};
     var params = {};
@@ -33,7 +33,7 @@ module.exports = function(AWSConfig, collection, retries, callback) {
     function execute(marker) {
         var localParams = JSON.parse(JSON.stringify(params || {}));
         if (marker) localParams['NextToken'] = marker;
-        helpers.makeCustomCollectorCall(ssm, 'describeParameters', localParams, retries, null, null, null, paginateCb);
+        helpers.makeCustomCollectorCall(ssm, 'describeParameters', localParams, retries, null, null, null, settings, scanAWSConfig, AWSConfig, paginateCb);
     }
 
     execute();

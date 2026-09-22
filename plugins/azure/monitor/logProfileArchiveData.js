@@ -6,11 +6,12 @@ module.exports = {
     category: 'Monitor',
     domain: 'Management and Governance',
     severity: 'Low',
-    description: 'Ensures the Log Profile is configured to export all activities from the control and management planes in all active locations',
+    description: 'Ensures the Log Profile is configured to export all activities a storage account',
     more_info: 'Exporting log activity for control plane activity allows for audited access to the Azure account with event data in the case of a security incident.',
-    recommended_action: 'Ensure that all activity is logged to the Event Hub or storage account for archiving.' ,
+    recommended_action: 'Ensure that all activity is logged to a storage account for archiving.' ,
     link: 'https://learn.microsoft.com/en-us/azure/azure-monitor/platform/archive-activity-log',
-    apis: ['logProfiles:list'],
+    apis: ['diagnosticSettingsOperations:list'],
+    realtime_triggers: ['microsoftinsights:diagnosticsettings:write', 'microsoftinsights:diagnosticsettings:delete'],
     compliance: {
         hipaa: 'HIPAA has clearly defined audit requirements for environments ' +
             'containing sensitive data. Log Profiles are the recommended ' +
@@ -25,61 +26,34 @@ module.exports = {
         const source = {};
         const locations = helpers.locations(settings.govcloud);
 
-        async.each(locations.logProfiles, (location, rcb) => {
-            const logProfiles = helpers.addSource(cache, source,
-                ['logProfiles', 'list', location]);
+        async.each(locations.diagnosticSettingsOperations, (location, rcb) => {
+            const diagnosticSettings = helpers.addSource(cache, source,
+                ['diagnosticSettingsOperations', 'list', location]);
 
-            if (!logProfiles) return rcb();
+            if (!diagnosticSettings) return rcb();
 
-            if (logProfiles.err || !logProfiles.data) {
+            if (diagnosticSettings.err || !diagnosticSettings.data) {
                 helpers.addResult(results, 3,
-                    'Unable to query for Log Profiles: ' + helpers.addError(logProfiles), location);
+                    'Unable to query for Diagnostic Settings: ' + helpers.addError(diagnosticSettings), location);
                 return rcb();
             }
 
-            if (!logProfiles.data.length) {
-                helpers.addResult(results, 2, 'No existing Log Profiles found', location);
+            if (!diagnosticSettings.data.length) {
+                helpers.addResult(results, 2, 'No existing Diagnostic Settings found', location);
                 return rcb();
             }
 
-            logProfiles.data.forEach(function(logProfile){
-                var issues = [];
-                if (logProfile.locations && logProfile.locations.length) {
-                    var unmatchedRegions = [];
-                    locations.all.forEach(function(region){
-                        if (region !== 'global' && logProfile.locations.indexOf(region) === -1) {
-                            unmatchedRegions.push(region);
-                        }
-                    });
-                    if (unmatchedRegions.length) {
-                        issues.push('the following regions are not being monitored: ' + unmatchedRegions.join(', '));
-                    }
-                } else {
-                    issues.push('no regions are being monitored');
-                }
+            const archivingSetting = diagnosticSettings.data.find(s =>
+                s.storageAccountId && s.storageAccountId.length &&
+                s.logs && s.logs.some(log => log.enabled));
 
-                if (logProfile.categories && logProfile.categories.length) {
-                    var unmatchedCats = [];
-                    ['Write', 'Delete', 'Action'].forEach(function(cat){
-                        if (logProfile.categories.indexOf(cat) === -1) {
-                            unmatchedCats.push(cat);
-                        }
-                    });
-                    if (unmatchedCats.length) {
-                        issues.push('the following categories are not being monitored: ' + unmatchedCats.join(', '));
-                    }
-                } else {
-                    issues.push('no log categories are being monitored');
-                }
-
-                if (issues.length) {
-                    helpers.addResult(results, 2,
-                        'Log Profile has the following issues: ' + issues.join('; '), location, logProfile.id);
-                } else {
-                    helpers.addResult(results, 0,
-                        'Log Profile is archiving all activities in all regions.', location, logProfile.id);
-                }
-            });
+            if (archivingSetting) {
+                helpers.addResult(results, 0,
+                    'Diagnostic Setting is archiving Activity Logs to a storage account.', location, archivingSetting.id);
+            } else {
+                helpers.addResult(results, 2,
+                    'No Diagnostic Setting is archiving Activity Logs to a storage account.', location);
+            }
 
             rcb();
         }, function() {
