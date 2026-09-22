@@ -1,0 +1,178 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it. The sdk types PolicyDocument as a string holding a policy document as json text; the v2 runner parses a document held as text when a path reads into it, so the document itself is addressable. The Statement level is kept, and Action, Resource and the principal members stay as the document wrote them, which is a string or a list. The shape is spelled out here rather than patched onto the sdk shape, so what a plugin may read is visible in one place.",
+  "shape": {
+    "type": "list",
+    "member": {
+      "type": "structure",
+      "members": {
+        "VpcEndpointId": {
+          "type": "string"
+        },
+        "VpcEndpointType": {
+          "type": "string"
+        },
+        "VpcId": {
+          "type": "string"
+        },
+        "ServiceName": {
+          "type": "string"
+        },
+        "State": {
+          "type": "string"
+        },
+        "PolicyDocument": {
+          "type": "structure",
+          "members": {
+            "Version": {
+              "type": "string"
+            },
+            "Id": {
+              "type": "string"
+            },
+            "Statement": {
+              "type": "list",
+              "member": {
+                "type": "structure",
+                "members": {
+                  "Sid": {
+                    "type": "string"
+                  },
+                  "Effect": {
+                    "type": "string"
+                  },
+                  "Principal": {
+                    "type": "structure",
+                    "members": {
+                      "AWS": {},
+                      "Service": {},
+                      "Federated": {},
+                      "CanonicalUser": {}
+                    }
+                  },
+                  "NotPrincipal": {
+                    "type": "structure",
+                    "members": {
+                      "AWS": {},
+                      "Service": {},
+                      "Federated": {},
+                      "CanonicalUser": {}
+                    }
+                  },
+                  "Action": {},
+                  "NotAction": {},
+                  "Resource": {},
+                  "NotResource": {},
+                  "Condition": {
+                    "type": "map",
+                    "key": {
+                      "type": "string"
+                    },
+                    "value": {}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "RouteTableIds": {
+          "type": "list",
+          "member": {
+            "type": "string"
+          }
+        },
+        "SubnetIds": {
+          "type": "list",
+          "member": {
+            "type": "string"
+          }
+        },
+        "Groups": {
+          "type": "list",
+          "member": {
+            "type": "structure",
+            "members": {
+              "GroupId": {
+                "type": "string"
+              },
+              "GroupName": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "IpAddressType": {
+          "type": "string"
+        },
+        "DnsOptions": {
+          "type": "structure",
+          "members": {
+            "DnsRecordIpType": {
+              "type": "string"
+            },
+            "PrivateDnsOnlyForInboundResolverEndpoint": {
+              "type": "boolean"
+            }
+          }
+        },
+        "PrivateDnsEnabled": {
+          "type": "boolean"
+        },
+        "RequesterManaged": {
+          "type": "boolean"
+        },
+        "NetworkInterfaceIds": {
+          "type": "list",
+          "member": {
+            "type": "string"
+          }
+        },
+        "DnsEntries": {
+          "type": "list",
+          "member": {
+            "type": "structure",
+            "members": {
+              "DnsName": {
+                "type": "string"
+              },
+              "HostedZoneId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "CreationTimestamp": {
+          "type": "timestamp"
+        },
+        "Tags": {
+          "type": "list",
+          "member": {
+            "type": "structure",
+            "members": {
+              "Key": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "OwnerId": {
+          "type": "string"
+        },
+        "LastError": {
+          "type": "structure",
+          "members": {
+            "Message": {
+              "type": "string"
+            },
+            "Code": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it. The sdk types SecurityConfiguration as a string holding the emr security configuration as json text; the v2 runner parses a document held as text when a path reads into it, so the document itself is addressable. Unlike every other descriptor here the inner shape is written from the emr documentation rather than derived from sdk metadata, because the sdk describes only the string - so it carries the members the plugins read plus their documented siblings, and will need extending as emr adds options. This is not an iam policy and has no Statement level.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Name": {
+        "type": "string"
+      },
+      "CreationDateTime": {
+        "type": "timestamp"
+      },
+      "SecurityConfiguration": {
+        "type": "structure",
+        "members": {
+          "EncryptionConfiguration": {
+            "type": "structure",
+            "members": {
+              "EnableInTransitEncryption": {
+                "type": "boolean"
+              },
+              "EnableAtRestEncryption": {
+                "type": "boolean"
+              },
+              "InTransitEncryptionConfiguration": {
+                "type": "structure",
+                "members": {
+                  "TLSCertificateConfiguration": {
+                    "type": "structure",
+                    "members": {
+                      "CertificateProviderType": {
+                        "type": "string"
+                      },
+                      "S3Object": {
+                        "type": "string"
+                      },
+                      "CertificateGeneratorClass": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "AtRestEncryptionConfiguration": {
+                "type": "structure",
+                "members": {
+                  "S3EncryptionConfiguration": {
+                    "type": "structure",
+                    "members": {
+                      "EncryptionMode": {
+                        "type": "string"
+                      },
+                      "AwsKmsKey": {
+                        "type": "string"
+                      },
+                      "RsaPublicKey": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "LocalDiskEncryptionConfiguration": {
+                    "type": "structure",
+                    "members": {
+                      "EncryptionKeyProviderType": {
+                        "type": "string"
+                      },
+                      "AwsKmsKey": {
+                        "type": "string"
+                      },
+                      "EnableEbsEncryption": {
+                        "type": "boolean"
+                      },
+                      "RsaPublicKey": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "InstanceMetadataServiceConfiguration": {
+            "type": "structure",
+            "members": {
+              "MinimumInstanceMetadataServiceVersion": {
+                "type": "integer"
+              },
+              "HttpPutResponseHopLimit": {
+                "type": "integer"
+              }
+            }
+          },
+          "AuthenticationConfiguration": {
+            "type": "structure",
+            "members": {
+              "KerberosConfiguration": {
+                "type": "structure",
+                "members": {
+                  "Provider": {
+                    "type": "string"
+                  },
+                  "ClusterDedicatedKdcConfiguration": {
+                    "type": "structure",
+                    "members": {
+                      "TicketLifetimeInHours": {
+                        "type": "integer"
+                      },
+                      "CrossRealmTrustConfiguration": {
+                        "type": "structure",
+                        "members": {
+                          "Realm": {
+                            "type": "string"
+                          },
+                          "Domain": {
+                            "type": "string"
+                          },
+                          "AdminServer": {
+                            "type": "string"
+                          },
+                          "KdcServer": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "AuthorizationConfiguration": {
+            "type": "structure",
+            "members": {
+              "IAMConfiguration": {
+                "type": "structure",
+                "members": {
+                  "EnableApplicationScopedIAMRole": {
+                    "type": "boolean"
+                  },
+                  "ApplicationScopedIAMRoleConfiguration": {
+                    "type": "structure",
+                    "members": {
+                      "PropagateSourceIdentity": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              },
+              "LakeFormationConfiguration": {
+                "type": "structure",
+                "members": {
+                  "IdpMetadataS3Path": {
+                    "type": "string"
+                  },
+                  "EmrRoleForUsersARN": {
+                    "type": "string"
+                  },
+                  "LakeFormationRoleForSAMLPrincipalARN": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "root": "InstanceProfile",
+  "description": "The collector stores data.InstanceProfile."
+}

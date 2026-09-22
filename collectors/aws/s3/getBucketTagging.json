@@ -1,0 +1,4 @@
+{
+  "source": "sdk",
+  "description": "Delegates to the shared s3 collector, which calls getBucketTagging once per bucket and stores the response verbatim."
+}

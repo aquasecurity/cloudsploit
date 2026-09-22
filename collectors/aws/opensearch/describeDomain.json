@@ -1,0 +1,499 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it. The sdk types DomainStatus.AccessPolicies as a string holding a policy document as json text; the v2 runner parses a document held as text when a path reads into it, so the document itself is addressable. The Statement level is kept, and Action, Resource and the principal members stay as the document wrote them, which is a string or a list. The shape is spelled out here rather than patched onto the sdk shape, so what a plugin may read is visible in one place.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "DomainStatus": {
+        "type": "structure",
+        "members": {
+          "DomainId": {
+            "type": "string"
+          },
+          "DomainName": {
+            "type": "string"
+          },
+          "ARN": {
+            "type": "string"
+          },
+          "Created": {
+            "type": "boolean"
+          },
+          "Deleted": {
+            "type": "boolean"
+          },
+          "Endpoint": {
+            "type": "string"
+          },
+          "EndpointV2": {
+            "type": "string"
+          },
+          "Endpoints": {
+            "type": "map",
+            "key": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "DomainEndpointV2HostedZoneId": {
+            "type": "string"
+          },
+          "Processing": {
+            "type": "boolean"
+          },
+          "UpgradeProcessing": {
+            "type": "boolean"
+          },
+          "EngineVersion": {
+            "type": "string"
+          },
+          "ClusterConfig": {
+            "type": "structure",
+            "members": {
+              "InstanceType": {
+                "type": "string"
+              },
+              "InstanceCount": {
+                "type": "integer"
+              },
+              "DedicatedMasterEnabled": {
+                "type": "boolean"
+              },
+              "ZoneAwarenessEnabled": {
+                "type": "boolean"
+              },
+              "ZoneAwarenessConfig": {
+                "type": "structure",
+                "members": {
+                  "AvailabilityZoneCount": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "DedicatedMasterType": {
+                "type": "string"
+              },
+              "DedicatedMasterCount": {
+                "type": "integer"
+              },
+              "WarmEnabled": {
+                "type": "boolean"
+              },
+              "WarmType": {
+                "type": "string"
+              },
+              "WarmCount": {
+                "type": "integer"
+              },
+              "ColdStorageOptions": {
+                "type": "structure",
+                "members": {
+                  "Enabled": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "MultiAZWithStandbyEnabled": {
+                "type": "boolean"
+              }
+            }
+          },
+          "EBSOptions": {
+            "type": "structure",
+            "members": {
+              "EBSEnabled": {
+                "type": "boolean"
+              },
+              "VolumeType": {
+                "type": "string"
+              },
+              "VolumeSize": {
+                "type": "integer"
+              },
+              "Iops": {
+                "type": "integer"
+              },
+              "Throughput": {
+                "type": "integer"
+              }
+            }
+          },
+          "AccessPolicies": {
+            "type": "structure",
+            "members": {
+              "Version": {
+                "type": "string"
+              },
+              "Id": {
+                "type": "string"
+              },
+              "Statement": {
+                "type": "list",
+                "member": {
+                  "type": "structure",
+                  "members": {
+                    "Sid": {
+                      "type": "string"
+                    },
+                    "Effect": {
+                      "type": "string"
+                    },
+                    "Principal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "NotPrincipal": {
+                      "type": "structure",
+                      "members": {
+                        "AWS": {},
+                        "Service": {},
+                        "Federated": {},
+                        "CanonicalUser": {}
+                      }
+                    },
+                    "Action": {},
+                    "NotAction": {},
+                    "Resource": {},
+                    "NotResource": {},
+                    "Condition": {
+                      "type": "map",
+                      "key": {
+                        "type": "string"
+                      },
+                      "value": {}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "IPAddressType": {
+            "type": "string"
+          },
+          "SnapshotOptions": {
+            "type": "structure",
+            "members": {
+              "AutomatedSnapshotStartHour": {
+                "type": "integer"
+              }
+            }
+          },
+          "VPCOptions": {
+            "type": "structure",
+            "members": {
+              "VPCId": {
+                "type": "string"
+              },
+              "SubnetIds": {
+                "type": "list",
+                "member": {
+                  "type": "string"
+                }
+              },
+              "AvailabilityZones": {
+                "type": "list",
+                "member": {
+                  "type": "string"
+                }
+              },
+              "SecurityGroupIds": {
+                "type": "list",
+                "member": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "CognitoOptions": {
+            "type": "structure",
+            "members": {
+              "Enabled": {
+                "type": "boolean"
+              },
+              "UserPoolId": {
+                "type": "string"
+              },
+              "IdentityPoolId": {
+                "type": "string"
+              },
+              "RoleArn": {
+                "type": "string"
+              }
+            }
+          },
+          "EncryptionAtRestOptions": {
+            "type": "structure",
+            "members": {
+              "Enabled": {
+                "type": "boolean"
+              },
+              "KmsKeyId": {
+                "type": "string"
+              }
+            }
+          },
+          "NodeToNodeEncryptionOptions": {
+            "type": "structure",
+            "members": {
+              "Enabled": {
+                "type": "boolean"
+              }
+            }
+          },
+          "AdvancedOptions": {
+            "type": "map",
+            "key": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "LogPublishingOptions": {
+            "type": "map",
+            "key": {
+              "type": "string"
+            },
+            "value": {
+              "type": "structure",
+              "members": {
+                "CloudWatchLogsLogGroupArn": {
+                  "type": "string"
+                },
+                "Enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "ServiceSoftwareOptions": {
+            "type": "structure",
+            "members": {
+              "CurrentVersion": {
+                "type": "string"
+              },
+              "NewVersion": {
+                "type": "string"
+              },
+              "UpdateAvailable": {
+                "type": "boolean"
+              },
+              "Cancellable": {
+                "type": "boolean"
+              },
+              "UpdateStatus": {
+                "type": "string"
+              },
+              "Description": {
+                "type": "string"
+              },
+              "AutomatedUpdateDate": {
+                "type": "timestamp"
+              },
+              "OptionalDeployment": {
+                "type": "boolean"
+              }
+            }
+          },
+          "DomainEndpointOptions": {
+            "type": "structure",
+            "members": {
+              "EnforceHTTPS": {
+                "type": "boolean"
+              },
+              "TLSSecurityPolicy": {
+                "type": "string"
+              },
+              "CustomEndpointEnabled": {
+                "type": "boolean"
+              },
+              "CustomEndpoint": {
+                "type": "string"
+              },
+              "CustomEndpointCertificateArn": {
+                "type": "string"
+              }
+            }
+          },
+          "AdvancedSecurityOptions": {
+            "type": "structure",
+            "members": {
+              "Enabled": {
+                "type": "boolean"
+              },
+              "InternalUserDatabaseEnabled": {
+                "type": "boolean"
+              },
+              "SAMLOptions": {
+                "type": "structure",
+                "members": {
+                  "Enabled": {
+                    "type": "boolean"
+                  },
+                  "Idp": {
+                    "type": "structure",
+                    "members": {
+                      "MetadataContent": {
+                        "type": "string"
+                      },
+                      "EntityId": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "SubjectKey": {
+                    "type": "string"
+                  },
+                  "RolesKey": {
+                    "type": "string"
+                  },
+                  "SessionTimeoutMinutes": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "JWTOptions": {
+                "type": "structure",
+                "members": {
+                  "Enabled": {
+                    "type": "boolean"
+                  },
+                  "SubjectKey": {
+                    "type": "string"
+                  },
+                  "RolesKey": {
+                    "type": "string"
+                  },
+                  "PublicKey": {
+                    "type": "string"
+                  }
+                }
+              },
+              "AnonymousAuthDisableDate": {
+                "type": "timestamp"
+              },
+              "AnonymousAuthEnabled": {
+                "type": "boolean"
+              }
+            }
+          },
+          "AutoTuneOptions": {
+            "type": "structure",
+            "members": {
+              "State": {
+                "type": "string"
+              },
+              "ErrorMessage": {
+                "type": "string"
+              },
+              "UseOffPeakWindow": {
+                "type": "boolean"
+              }
+            }
+          },
+          "ChangeProgressDetails": {
+            "type": "structure",
+            "members": {
+              "ChangeId": {
+                "type": "string"
+              },
+              "Message": {
+                "type": "string"
+              },
+              "ConfigChangeStatus": {
+                "type": "string"
+              },
+              "InitiatedBy": {
+                "type": "string"
+              },
+              "StartTime": {
+                "type": "timestamp"
+              },
+              "LastUpdatedTime": {
+                "type": "timestamp"
+              }
+            }
+          },
+          "OffPeakWindowOptions": {
+            "type": "structure",
+            "members": {
+              "Enabled": {
+                "type": "boolean"
+              },
+              "OffPeakWindow": {
+                "type": "structure",
+                "members": {
+                  "WindowStartTime": {
+                    "type": "structure",
+                    "members": {
+                      "Hours": {
+                        "type": "integer"
+                      },
+                      "Minutes": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "SoftwareUpdateOptions": {
+            "type": "structure",
+            "members": {
+              "AutoSoftwareUpdateEnabled": {
+                "type": "boolean"
+              }
+            }
+          },
+          "DomainProcessingStatus": {
+            "type": "string"
+          },
+          "ModifyingProperties": {
+            "type": "list",
+            "member": {
+              "type": "structure",
+              "members": {
+                "Name": {
+                  "type": "string"
+                },
+                "ActiveValue": {
+                  "type": "string"
+                },
+                "PendingValue": {
+                  "type": "string"
+                },
+                "ValueType": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "AIMLOptions": {
+            "type": "structure",
+            "members": {
+              "NaturalLanguageQueryGenerationOptions": {
+                "type": "structure",
+                "members": {
+                  "DesiredState": {
+                    "type": "string"
+                  },
+                  "CurrentState": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

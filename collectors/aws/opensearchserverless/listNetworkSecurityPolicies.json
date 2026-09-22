@@ -1,0 +1,6 @@
+{
+  "source": "sdk",
+  "operation": "listSecurityPolicies",
+  "root": "securityPolicySummaries",
+  "description": "The collector stores data.securityPolicySummaries, from the sdk's listSecurityPolicies - it is filed here under listNetworkSecurityPolicies."
+}

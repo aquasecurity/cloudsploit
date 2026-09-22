@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "operation": "getSecurityPolicy",
+  "description": "The collector stores the whole response, from the sdk's getSecurityPolicy - it is filed here under getNetworkSecurityPolicy."
+}

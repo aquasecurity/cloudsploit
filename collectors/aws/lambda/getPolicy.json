@@ -1,0 +1,66 @@
+{
+  "source": "literal",
+  "description": "Stores the response as the api returns it. The sdk types Policy as a string holding a policy document as json text; the v2 runner parses a document held as text when a path reads into it, so the document itself is addressable. The Statement level is kept, and Action, Resource and the principal members stay as the document wrote them, which is a string or a list. The shape is spelled out here rather than patched onto the sdk shape, so what a plugin may read is visible in one place.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Policy": {
+        "type": "structure",
+        "members": {
+          "Version": {
+            "type": "string"
+          },
+          "Id": {
+            "type": "string"
+          },
+          "Statement": {
+            "type": "list",
+            "member": {
+              "type": "structure",
+              "members": {
+                "Sid": {
+                  "type": "string"
+                },
+                "Effect": {
+                  "type": "string"
+                },
+                "Principal": {
+                  "type": "structure",
+                  "members": {
+                    "AWS": {},
+                    "Service": {},
+                    "Federated": {},
+                    "CanonicalUser": {}
+                  }
+                },
+                "NotPrincipal": {
+                  "type": "structure",
+                  "members": {
+                    "AWS": {},
+                    "Service": {},
+                    "Federated": {},
+                    "CanonicalUser": {}
+                  }
+                },
+                "Action": {},
+                "NotAction": {},
+                "Resource": {},
+                "NotResource": {},
+                "Condition": {
+                  "type": "map",
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "RevisionId": {
+        "type": "string"
+      }
+    }
+  }
+}

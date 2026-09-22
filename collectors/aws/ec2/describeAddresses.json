@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "root": "Addresses",
+  "description": "The collector stores data.Addresses."
+}

@@ -3,7 +3,7 @@ const helpers = require('../../../helpers/azure');
 
 module.exports = {
     title: 'Key Vault Public Access',
-    category: 'Key Vault',
+    category: 'Key Vaults',
     domain: 'Security',
     severity: 'High',
     description: 'Ensures that Azure Key Vaults do not allow unrestricted public access',

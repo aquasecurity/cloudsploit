@@ -1,0 +1,32 @@
+{
+  "source": "literal",
+  "description": "The sdk returns DkimAttributes as a map keyed by identity. The collector flattens it into an array, folding the key in as identityName, so the members are knowable where the map's were not.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "DkimAttributes": {
+        "type": "list",
+        "member": {
+          "type": "structure",
+          "members": {
+            "identityName": {
+              "type": "string"
+            },
+            "DkimEnabled": {
+              "type": "boolean"
+            },
+            "DkimVerificationStatus": {
+              "type": "string"
+            },
+            "DkimTokens": {
+              "type": "list",
+              "member": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "source": "literal",
+  "description": "The collector stores JSON.parse(data.Policy) - the key policy document itself, not the {Policy: string} envelope the sdk returns.",
+  "shape": {
+    "type": "structure",
+    "members": {
+      "Version": {
+        "type": "string"
+      },
+      "Id": {
+        "type": "string"
+      },
+      "Statement": {
+        "type": "list",
+        "member": {
+          "type": "structure",
+          "members": {
+            "Sid": {
+              "type": "string"
+            },
+            "Effect": {
+              "type": "string"
+            },
+            "Principal": {
+              "type": "structure",
+              "members": {
+                "AWS": {},
+                "Service": {},
+                "Federated": {},
+                "CanonicalUser": {}
+              }
+            },
+            "NotPrincipal": {
+              "type": "structure",
+              "members": {
+                "AWS": {},
+                "Service": {},
+                "Federated": {},
+                "CanonicalUser": {}
+              }
+            },
+            "Action": {},
+            "NotAction": {},
+            "Resource": {},
+            "NotResource": {},
+            "Condition": {
+              "type": "map",
+              "key": {
+                "type": "string"
+              },
+              "value": {}
+            }
+          }
+        }
+      }
+    }
+  }
+}

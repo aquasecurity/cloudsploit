@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "operation": "getWebACLForResource",
+  "description": "The collector stores the whole response, from the sdk's getWebACLForResource - it is filed here under getWebACLForCognitoUserPool."
+}

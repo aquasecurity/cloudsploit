@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "operation": "listInstanceStorageConfigs",
+  "description": "The collector stores the whole response, from the sdk's listInstanceStorageConfigs - it is filed here under listInstanceChatTranscriptStorageConfigs."
+}

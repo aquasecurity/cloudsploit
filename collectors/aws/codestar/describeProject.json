@@ -1,0 +1,4 @@
+{
+  "source": "unvalidated",
+  "reason": "AWS retired CodeStar and the sdk no longer ships a CodeStar client, so there is no response shape to check against. The api stays declarable because the collector tables still list it."
+}

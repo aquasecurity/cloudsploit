@@ -1,0 +1,5 @@
+{
+  "source": "sdk",
+  "root": "FileShareInfoList",
+  "description": "The collector stores data.FileShareInfoList."
+}
