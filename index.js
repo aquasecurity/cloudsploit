@@ -181,6 +181,9 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         client_email: config.credentials.google.client_email,
         private_key: config.credentials.google.private_key,
     };
+    if (config.credentials.google.impersonate_service_account) {
+        cloudConfig.impersonate_service_account = config.credentials.google.impersonate_service_account;
+    }
 } else if (config.credentials.oracle.credential_file && (!settings.cloud || (settings.cloud == 'oracle'))) {
     settings.cloud = 'oracle';
     cloudConfig = loadHelperFile(config.credentials.oracle.credential_file);

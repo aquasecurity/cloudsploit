@@ -62,6 +62,7 @@ module.exports = {
             // project: process.env.GOOGLE_PROJECT_ID || 'my-project',
             // client_email: process.env.GOOGLE_CLIENT_EMAIL || 'cloudsploit@your-project-name.iam.gserviceaccount.com',
             // private_key: process.env.GOOGLE_PRIVATE_KEY || '-----BEGIN PRIVATE KEY-----\nYOUR-PRIVATE-KEY-GOES-HERE\n-----END PRIVATE KEY-----\n'
+            // impersonate_service_account: 'impersonatee@your-project-name.iam.gserviceaccount.com'
         },
         oracle: {
             // OPTION 1: If using a credential JSON file, enter the path below
