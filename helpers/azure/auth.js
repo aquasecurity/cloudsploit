@@ -32,6 +32,25 @@ function reduceProperties(service, collection) {
 
 module.exports = {
     login: function(azureConfig, callback) {
+        // Pre-minted bearer-token shortcut. Allows callers that already hold
+        // valid ARM / Microsoft Graph / Key Vault access tokens (for example
+        // federated workload-identity / OIDC scenarios where no client
+        // secret is available) to bypass the ClientSecretCredential exchange
+        // and inject tokens directly. The three audiences map 1:1 to the
+        // {token, graphToken, vaultToken} contract that plugins already
+        // consume, so no plugin changes are required.
+        if (azureConfig.AccessTokens) {
+            var preMintedEnv = azureConfig.Govcloud
+                ? { name: 'AzureUSGovernment', portalUrl: 'https://portal.azure.us' }
+                : { name: 'AzureCloud',        portalUrl: 'https://portal.azure.com' };
+            return callback(null, {
+                environment: preMintedEnv,
+                token:       azureConfig.AccessTokens.arm,
+                graphToken:  azureConfig.AccessTokens.graph,
+                vaultToken:  azureConfig.AccessTokens.vault,
+            });
+        }
+
         if (!azureConfig.ApplicationID) return callback('No ApplicationID provided');
         if (!azureConfig.KeyValue) return callback('No KeyValue provided');
         if (!azureConfig.DirectoryID) return callback('No DirectoryID provided');

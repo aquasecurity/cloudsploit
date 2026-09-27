@@ -155,6 +155,23 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
         process.exit(1);
     }
     cloudConfig.location = 'East US';
+} else if (config.credentials.azure.AccessTokens && (!settings.cloud || (settings.cloud == 'azure'))) {
+    // Pre-minted bearer-token path. Pairs with the shortcut in
+    // helpers/azure/auth.js login() — callers that already hold valid
+    // ARM / Microsoft Graph / Key Vault tokens (for example federated
+    // workload-identity / OIDC scenarios where no client secret is
+    // available) supply AccessTokens directly instead of application_id /
+    // key_value. Tenant + subscription are still required so plugins can
+    // address the correct directory and subscription.
+    settings.cloud = 'azure';
+    checkRequiredKeys(config.credentials.azure, ['directory_id', 'subscription_id']);
+    cloudConfig = {
+        DirectoryID: config.credentials.azure.directory_id,
+        SubscriptionID: config.credentials.azure.subscription_id,
+        Govcloud: config.credentials.azure.govcloud,
+        AccessTokens: config.credentials.azure.AccessTokens,
+        location: 'East US',
+    };
 } else if (config.credentials.azure.application_id && (!settings.cloud || (settings.cloud == 'azure'))) {
     settings.cloud = 'azure';
     checkRequiredKeys(config.credentials.azure, ['key_value', 'directory_id', 'subscription_id']);
