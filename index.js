@@ -172,6 +172,21 @@ if (config.credentials.aws.credential_file && (!settings.cloud || (settings.clou
     settings.cloud = 'google';
     cloudConfig = loadHelperFile(config.credentials.google.credential_file);
     cloudConfig.project = cloudConfig.project_id;
+} else if (config.credentials.google.access_token && (!settings.cloud || (settings.cloud == 'google'))) {
+    // Pre-minted access-token path. Pairs with the shortcut in
+    // helpers/google/index.js authenticate() — callers that already hold
+    // a valid Google Cloud access token (for example service-account
+    // impersonation, workload-identity federation, or OIDC flows where
+    // no service-account JSON key is available) supply access_token
+    // directly instead of client_email / private_key. Project is still
+    // required so plugins can address the correct GCP project.
+    settings.cloud = 'google';
+    checkRequiredKeys(config.credentials.google, ['project']);
+    cloudConfig = {
+        type: 'service_account',
+        project: config.credentials.google.project,
+        access_token: config.credentials.google.access_token,
+    };
 } else if (config.credentials.google.project && (!settings.cloud || (settings.cloud == 'google'))) {
     settings.cloud = 'google';
     checkRequiredKeys(config.credentials.google, ['client_email', 'private_key']);
