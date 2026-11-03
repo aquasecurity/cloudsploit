@@ -21,7 +21,7 @@ const configurations = [
             'allowedOrigins' :[
                 'https://portal.azure.com'
             ],
-            'supportedCredentials':true
+            'supportCredentials':true
         }
         
     },
@@ -31,7 +31,7 @@ const configurations = [
             'allowedOrigins' :[
                 'https://portal.azure.com'
             ],
-            'supportedCredentials':false
+            'supportCredentials':false
         }
     }
 ];
