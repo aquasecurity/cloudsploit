@@ -62,6 +62,7 @@ module.exports = {
     shield: [],
     sns: regions,
     sqs: regions,
+    stepfunctions: regions,
     ssm: regions,
     // SSE via KMS is only supported in some regions
     // even though SQS is supported in all regions.
@@ -126,6 +127,7 @@ module.exports = {
     opensearch:regions,
     opensearchserverless: regions,
     securityhub: regions,
+    securitylake: [], // not available in the AWS China partition
     storagegateway: regions,
     // Not offered in the China partition
     codecommit: [],

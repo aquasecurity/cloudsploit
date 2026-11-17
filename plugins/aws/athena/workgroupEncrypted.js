@@ -10,7 +10,16 @@ module.exports = {
     more_info: 'Athena workgroups support full server-side encryption for all data at rest which should be enabled.',
     link: 'https://docs.aws.amazon.com/athena/latest/ug/encryption.html',
     recommended_action: 'Enable encryption at rest for all Athena workgroups.',
-    apis: ['Athena:listWorkGroups', 'Athena:getWorkGroup', 'STS:getCallerIdentity'],
+    apis: ['Athena:listWorkGroups', 'Athena:getWorkGroup', 'KMS:listKeys', 'STS:getCallerIdentity'],
+    settings: {
+        athena_require_kms_key: {
+            name: 'Athena Workgroup Require KMS Key',
+            description: 'When set to true, the query results of a workgroup must be encrypted with SSE_KMS or CSE_KMS using a KMS key of the account, ' +
+                'encryption with SSE_S3 fails. When set to false, any encryption option passes.',
+            regex: '^(true|false)$',
+            default: 'false'
+        }
+    },
     remediation_description: 'Encryption for the affected workgroups will be enabled.',
     remediation_min_version: '202011182332',
     apis_remediate: ['Athena:listWorkGroups', 'Athena:getWorkGroup', 'STS:getCallerIdentity'],
@@ -45,6 +54,8 @@ module.exports = {
         var acctRegion = helpers.defaultRegion(settings);
         var accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
 
+        var requireKmsKey = (settings.athena_require_kms_key || this.settings.athena_require_kms_key.default) === 'true';
+
         async.each(regions.athena, function(region, rcb){
             var listWorkGroups = helpers.addSource(cache, source,
                 ['athena', 'listWorkGroups', region]);
@@ -60,6 +71,19 @@ module.exports = {
             if (!listWorkGroups.data.length) {
                 helpers.addResult(results, 0, 'No Athena workgroups found', region);
                 return rcb();
+            }
+
+            var keyArns = [];
+            if (requireKmsKey) {
+                var listKeys = helpers.addSource(cache, source, ['kms', 'listKeys', region]);
+
+                if (!listKeys || listKeys.err || !listKeys.data) {
+                    helpers.addResult(results, 3,
+                        'Unable to list KMS keys: ' + helpers.addError(listKeys), region);
+                    return rcb();
+                }
+
+                keyArns = listKeys.data.map(function(key) { return key.KeyArn; });
             }
 
             // Loop through certificates
@@ -78,8 +102,19 @@ module.exports = {
                            getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration &&
                            getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration &&
                            getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration.EncryptionOption) {
-                    helpers.addResult(results, 0,
-                        'Athena workgroup is using ' + getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration.EncryptionOption + ' encryption', region, arn);
+                    var encryption = getWorkGroup.data.WorkGroup.Configuration.ResultConfiguration.EncryptionConfiguration;
+
+                    if (!requireKmsKey) {
+                        helpers.addResult(results, 0,
+                            'Athena workgroup is using ' + encryption.EncryptionOption + ' encryption', region, arn);
+                    } else if (['SSE_KMS', 'CSE_KMS'].indexOf(encryption.EncryptionOption) > -1 &&
+                               encryption.KmsKey && keyArns.indexOf(encryption.KmsKey) > -1) {
+                        helpers.addResult(results, 0,
+                            'Athena workgroup is using ' + encryption.EncryptionOption + ' encryption with a KMS key of the account', region, arn);
+                    } else {
+                        helpers.addResult(results, 2,
+                            'Athena workgroup is using ' + encryption.EncryptionOption + ' encryption, but not with a KMS key of the account', region, arn);
+                    }
                 } else {
                     // Check for empty primary workgroups
                     if (wg.Name == 'primary' &&

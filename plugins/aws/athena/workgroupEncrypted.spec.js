@@ -136,6 +136,59 @@ describe('workgroupEncrypted', function () {
             });
         });
 
+        describe('with athena_require_kms_key', function () {
+            const keyArn = 'arn:aws:kms:us-east-1:123456789012:key/11111111-2222-3333-4444-555555555555';
+            const settings = { athena_require_kms_key: 'true' };
+            const withKeys = (option, kmsKey, listKeys) => {
+                const cache = createCache([listWorkGroups[1]], {
+                    WorkGroup: { Configuration: { ResultConfiguration: { EncryptionConfiguration: { EncryptionOption: option, KmsKey: kmsKey } } } }
+                });
+                cache.kms = { listKeys: { 'us-east-1': listKeys || { data: [{ KeyId: '1', KeyArn: keyArn }] } } };
+                return cache;
+            };
+
+            ['SSE_KMS', 'CSE_KMS'].forEach((option) => {
+                it('should PASS with ' + option + ' and a key of the account', function (done) {
+                    workgroupEncrypted.run(withKeys(option, keyArn), settings, (err, results) => {
+                        expect(results.length).to.equal(1);
+                        expect(results[0].status).to.equal(0);
+                        done();
+                    });
+                });
+            });
+
+            it('should FAIL with SSE_S3', function (done) {
+                workgroupEncrypted.run(withKeys('SSE_S3'), settings, (err, results) => {
+                    expect(results[0].status).to.equal(2);
+                    expect(results[0].message).to.include('not with a KMS key of the account');
+                    done();
+                });
+            });
+
+            it('should FAIL when the key is not a key of the account', function (done) {
+                const other = 'arn:aws:kms:us-east-1:999999999999:key/aaaaaaaa-2222-3333-4444-555555555555';
+                workgroupEncrypted.run(withKeys('SSE_KMS', other), settings, (err, results) => {
+                    expect(results[0].status).to.equal(2);
+                    done();
+                });
+            });
+
+            it('should still PASS SSE_S3 when the setting is not enabled', function (done) {
+                workgroupEncrypted.run(withKeys('SSE_S3'), {}, (err, results) => {
+                    expect(results[0].status).to.equal(0);
+                    done();
+                });
+            });
+
+            it('should UNKNOWN when the KMS keys cannot be listed', function (done) {
+                workgroupEncrypted.run(withKeys('SSE_KMS', keyArn, { err: { message: 'AccessDenied' } }), settings, (err, results) => {
+                    expect(results.length).to.equal(1);
+                    expect(results[0].status).to.equal(3);
+                    done();
+                });
+            });
+        });
+
         it('should PASS if no Athena workgroups found', function (done) {
             const cache = createCache([]);
             workgroupEncrypted.run(cache, {}, (err, results) => {

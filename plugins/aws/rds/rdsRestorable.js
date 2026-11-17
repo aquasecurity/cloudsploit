@@ -66,8 +66,9 @@ module.exports = {
             for (var i in describeDBInstances.data) {
                 var db = describeDBInstances.data[i];
 
-                // Aurora databases do not list the restore information in this API call
-                if (db.Engine && db.Engine.indexOf('aurora') > -1) {
+                // Instances of a cluster (Aurora, Multi-AZ DB clusters, Neptune, DocumentDB) do not list the
+                // restore information in this API call, it is evaluated on the cluster below
+                if (db.DBClusterIdentifier || (db.Engine && db.Engine.indexOf('aurora') > -1)) {
                     clustersPresent = true;
                     continue;
                 }
