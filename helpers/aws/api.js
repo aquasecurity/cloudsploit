@@ -1203,6 +1203,9 @@ var calls = {
                 ]
             }
         },
+        describeCustomerGateways: {
+            property: 'CustomerGateways'
+        },
         describeVpcEndpointServices: {
             property: 'ServiceDetails',
             paginate: 'NextToken'
@@ -1250,6 +1253,10 @@ var calls = {
         describeReservedCacheNodes: {
             property: 'ReservedCacheNodes',
             paginate: 'Marker'
+        },
+        describeServerlessCaches: {
+            property: 'ServerlessCaches',
+            paginate: 'NextToken'
         },
         describeSnapshots: {
             property: 'Snapshots',
@@ -1353,6 +1360,10 @@ var calls = {
         listRules: {
             property: 'Rules',
             paginate: 'NextToken',
+        },
+        listArchives: {
+            property: 'Archives',
+            paginate: 'NextToken',
         }
     },
     Finspace: {
@@ -1395,6 +1406,18 @@ var calls = {
         }
     },
     Glue: {
+        getCrawlers: {
+            property: 'Crawlers',
+            paginate: 'NextToken'
+        },
+        getJobs: {
+            property: 'Jobs',
+            paginate: 'NextToken'
+        },
+        getDevEndpoints: {
+            property: 'DevEndpoints',
+            paginate: 'NextToken'
+        },
         getDataCatalogEncryptionSettings: {
             property: 'DataCatalogEncryptionSettings',
         },
@@ -1686,6 +1709,14 @@ var calls = {
         describeDBClusterSnapshots: {
             property: 'DBClusterSnapshots',
             paginate: 'Marker'
+        },
+        describeEventSubscriptions: {
+            property: 'EventSubscriptionsList',
+            paginate: 'Marker'
+        },
+        describeDBSubnetGroups: {
+            property: 'DBSubnetGroups',
+            paginate: 'Marker'
         }
     },
     Redshift: {
@@ -1695,6 +1726,14 @@ var calls = {
         },
         describeClusterParameterGroups: {
             property: 'ParameterGroups',
+            paginate: 'Marker'
+        },
+        describeClusterSnapshots: {
+            property: 'Snapshots',
+            paginate: 'Marker'
+        },
+        describeClusterSubnetGroups: {
+            property: 'ClusterSubnetGroups',
             paginate: 'Marker'
         },
         describeReservedNodes: {
@@ -1740,6 +1779,15 @@ var calls = {
             property: 'Findings',
             paginate: 'NextToken',
             override: true
+        }
+    },
+    SecurityLake: {
+        listDataLakes: {
+            property: 'dataLakes'
+        },
+        listLogSources: {
+            property: 'sources',
+            paginate: 'nextToken'
         }
     },
     SageMaker: {
@@ -1796,6 +1844,12 @@ var calls = {
             property: 'Subscriptions',
             paginate: 'NextToken'
         },
+    },
+    StepFunctions: {
+        listStateMachines: {
+            property: 'stateMachines',
+            paginate: 'nextToken'
+        }
     },
     SQS: {
         listQueues: {
@@ -1982,7 +2036,7 @@ var postcalls = [
         },
         EFS: {
             describeFileSystemPolicy: {
-                reliesOnService: 'EFS',
+                reliesOnService: 'efs',
                 reliesOnCall: 'describeFileSystems',
                 filterKey: 'FileSystemId',
                 filterValue: 'FileSystemId'
@@ -1990,6 +2044,12 @@ var postcalls = [
             sendIntegration: serviceMap['EFS']
         },
         EventBridge: {
+            describeArchive: {
+                reliesOnService: 'eventbridge',
+                reliesOnCall: 'listArchives',
+                filterKey: 'ArchiveName',
+                filterValue: 'ArchiveName'
+            },
             sendIntegration: serviceMap['EventBridge']
         },
         CloudWatchLogs: {

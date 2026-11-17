@@ -1265,6 +1265,64 @@ function processFieldSelectors(fieldSelectors,buckets ,startsWithBuckets,notEnds
     return { buckets, startsWithBuckets, endsWithBuckets, notStartsWithBuckets, notEndsWithBuckets };
 }
 
+// Converts the tags of the different AWS APIs ({Key, Value}, {TagKey, TagValue}, {key, value} lists or a key value object) into an object
+var normalizeTags = function(tags) {
+    var result = {};
+    // Some APIs return the tags as an object of keys and values
+    if (tags && !Array.isArray(tags) && typeof tags === 'object') return Object.assign(result, tags);
+    (tags || []).forEach(function(tag) {
+        var key = tag.Key !== undefined ? tag.Key : (tag.TagKey !== undefined ? tag.TagKey : tag.key);
+        var value = tag.Value !== undefined ? tag.Value : (tag.TagValue !== undefined ? tag.TagValue : tag.value);
+        if (key !== undefined) result[key] = value;
+    });
+    return result;
+};
+
+// requiredTags is the JSON object of the required tag keys with the comma separated allowed values.
+// An asterisk as the allowed value accepts any value, as long as it is not empty.
+var evaluateRequiredTags = function(tags, requiredTags) {
+    var tagMap = normalizeTags(tags);
+
+    for (var key of Object.keys(requiredTags)) {
+        if (!tagMap[key]) {
+            return { status: 2, message: 'Resource does not contain the required tag ' + key };
+        }
+
+        var allowedValues = String(requiredTags[key]).split(',');
+        if (allowedValues.length !== 1 || allowedValues[0] !== '*') {
+            if (allowedValues.indexOf(tagMap[key]) === -1) {
+                return { status: 2, message: 'Resource does not contain a correct value for tag ' + key + ', got "' + tagMap[key] + '" (allowed: ' + allowedValues.join(', ') + ')' };
+            }
+        }
+    }
+
+    return { status: 0, message: 'Resource contains the required tags with proper values' };
+};
+
+// Reads the required tags settings: a JSON object with the required tag keys and the allowed values (an empty
+// object requires nothing) and a comma separated list of tag keys that exempt a resource from the check.
+// Throws when the required tags are not valid JSON.
+var getRequiredTagsConfig = function(settings, pluginSettings) {
+    var requiredTags = JSON.parse(settings.required_tags || pluginSettings.required_tags.default);
+    var exemptKeys = (settings.required_tags_exempt_keys || pluginSettings.required_tags_exempt_keys.default)
+        .split(',').map(function(key) { return key.trim(); }).filter(Boolean);
+
+    return { requiredTags: requiredTags, exemptKeys: exemptKeys };
+};
+
+// Adds the result of the required tags check of a resource
+var addRequiredTagsResult = function(results, tags, config, region, resource) {
+    var tagMap = normalizeTags(tags);
+
+    if (config.exemptKeys.some(function(key) { return tagMap[key] !== undefined; })) {
+        addResult(results, 0, 'Resource is out of scope, it has an exempt tag', region, resource);
+        return;
+    }
+
+    var evaluation = evaluateRequiredTags(tags, config.requiredTags);
+    addResult(results, evaluation.status, evaluation.message, region, resource);
+};
+
 var checkTags = function(cache, resourceName, resourceList, region, results, settings={}) {
     const allResources = helpers.addSource(cache, {},
         ['resourcegroupstaggingapi', 'getResources', region]);
@@ -1775,6 +1833,10 @@ module.exports = {
     assumeRoleForRefresh: assumeRoleForRefresh,
     refreshCredentialsIfTokenExpired: refreshCredentialsIfTokenExpired,
     checkTags: checkTags,
+    normalizeTags: normalizeTags,
+    evaluateRequiredTags: evaluateRequiredTags,
+    getRequiredTagsConfig: getRequiredTagsConfig,
+    addRequiredTagsResult: addRequiredTagsResult,
     checkConditions: checkConditions,
     processFieldSelectors: processFieldSelectors,
     checkNetworkInterface: checkNetworkInterface,

@@ -554,6 +554,22 @@ describe('rdsRestorable', function () {
             });
         });
 
+        it('should not FAIL the instances of a Multi-AZ DB cluster that have no restorable time, but evaluate the cluster', function (done) {
+            const clusterMember = {
+                "DBInstanceIdentifier": "mz-1",
+                "Engine": "postgres",
+                "DBClusterIdentifier": "database-2",
+                "DBInstanceArn": "arn:aws:rds:us-east-1:111122223333:db:mz-1"
+            };
+            const cache = createCache([clusterMember, clusterMember], [describeDBClusters[0]]);
+            rdsRestorable.run(cache, {}, (err, results) => {
+                expect(results.length).to.equal(1);
+                expect(results[0].status).to.equal(0);
+                expect(results[0].message).includes('RDS cluster restorable time is');
+                done();
+            });
+        });
+
         it('should PASS if RDS cluster\'s restorable time is less than 6 hours', function (done) {
             const cache = createCache([describeDBInstances[5]], [describeDBClusters[0]]);
             rdsRestorable.run(cache, {}, (err, results) => {
